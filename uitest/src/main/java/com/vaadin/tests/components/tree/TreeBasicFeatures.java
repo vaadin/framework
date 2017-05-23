@@ -21,6 +21,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Grid.SelectionMode;
 
 @Theme("tests-valo-disabled-animations")
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -68,6 +69,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         MenuItem componentMenu = menu.addItem("Component", null);
         createIconMenu(componentMenu.addItem("Icons", null));
         createCaptionMenu(componentMenu.addItem("Captions", null));
+        createSelectionModeMenu(componentMenu.addItem("Selection Mode", null));
         componentMenu.addItem("Item Click Listener", new Command() {
 
             private Registration registration;
@@ -106,6 +108,12 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
                 .setCheckable(true);
 
         return menu;
+    }
+
+    private void createSelectionModeMenu(MenuItem modeMenu) {
+        for (SelectionMode mode : SelectionMode.values()) {
+            modeMenu.addItem(mode.name(), item -> tree.setSelectionMode(mode));
+        }
     }
 
     private void createCaptionMenu(MenuItem captionMenu) {

@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.TreeElement;
@@ -163,5 +165,42 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         tree.collapse(1);
         Assert.assertEquals("Tree should prevent collapsing all nodes.",
                 "2 | 0", tree.getItem(2).getText());
+    }
+
+    @Test
+    public void tree_multiselect() {
+        selectMenuPath("Component", "Selection Mode", "MULTI");
+        TreeElement tree = $(TreeElement.class).first();
+        tree.getItem(0).click();
+        TreeGridElement wrap = tree.wrap(TreeGridElement.class);
+        Assert.assertFalse(
+                "Tree MultiSelection shouldn't have selection column",
+                wrap.getCell(0, 0).isElementPresent(By.tagName("input")));
+        Assert.assertTrue("First row was not selected",
+                wrap.getRow(0).isSelected());
+        new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN, Keys.SPACE)
+                .perform();
+        Assert.assertTrue("First row was deselected",
+                wrap.getRow(0).isSelected());
+        Assert.assertTrue("Second row was not selected",
+                wrap.getRow(1).isSelected());
+    }
+
+    @Test
+    public void tree_multiselect_click() {
+        selectMenuPath("Component", "Selection Mode", "MULTI");
+        TreeElement tree = $(TreeElement.class).first();
+        TreeGridElement wrap = tree.wrap(TreeGridElement.class);
+        tree.getItem(0).click();
+        Assert.assertTrue("First row was not selected",
+                wrap.getRow(0).isSelected());
+        tree.getItem(1).click();
+        Assert.assertTrue("First row was deselected",
+                wrap.getRow(0).isSelected());
+        Assert.assertTrue("Second row was not selected",
+                wrap.getRow(1).isSelected());
+        tree.getItem(0).click();
+        Assert.assertFalse("First row was not deselected",
+                wrap.getRow(0).isSelected());
     }
 }

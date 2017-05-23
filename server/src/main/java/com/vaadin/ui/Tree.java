@@ -43,8 +43,10 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
@@ -187,6 +189,29 @@ public class Tree<T> extends Composite
         @Override
         protected TreeRendererState getState(boolean markAsDirty) {
             return (TreeRendererState) super.getState(markAsDirty);
+        }
+    }
+
+    /**
+     * Custom MultiSelectionModel for Tree. TreeMultiSelectionModel does not
+     * show selection column.
+     *
+     * @param <T>
+     *            the tree item type
+     *
+     * @since 8.1
+     */
+    public final static class TreeMultiSelectionModel<T>
+            extends MultiSelectionModelImpl<T> {
+
+        @Override
+        protected TreeMultiSelectionModelState getState() {
+            return (TreeMultiSelectionModelState) super.getState();
+        }
+
+        @Override
+        protected TreeMultiSelectionModelState getState(boolean markAsDirty) {
+            return (TreeMultiSelectionModelState) super.getState(markAsDirty);
         }
     }
 
@@ -551,7 +576,7 @@ public class Tree<T> extends Composite
 
     /**
      * Gets the item collapse allowed provider.
-     * 
+     *
      * @return the item collapse allowed provider
      */
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
@@ -560,7 +585,7 @@ public class Tree<T> extends Composite
 
     /**
      * Gets the style generator.
-     * 
+     *
      * @see StyleGenerator
      *
      * @return the item style generator
@@ -579,6 +604,35 @@ public class Tree<T> extends Composite
      */
     public Registration addItemClickListener(ItemClickListener<T> listener) {
         return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
+    }
+
+    /**
+     * Sets the tree's selection mode.
+     * <p>
+     * The built-in selection modes are:
+     * <ul>
+     * <li>{@link SelectionMode#SINGLE} <b>the default model</b></li>
+     * <li>{@link SelectionMode#MULTI}</li>
+     * <li>{@link SelectionMode#NONE} preventing selection</li>
+     * </ul>
+     *
+     * @param selectionMode
+     *            the selection mode to switch to, not {@code null}
+     * @return the used selection model
+     *
+     * @see SelectionMode
+     */
+    public SelectionModel<T> setSelectionMode(SelectionMode selectionMode) {
+        Objects.requireNonNull(selectionMode,
+                "Can not set selection mode to null");
+        switch (selectionMode) {
+        case MULTI:
+            TreeMultiSelectionModel<T> model = new TreeMultiSelectionModel<>();
+            treeGrid.setSelectionModel(model);
+            return model;
+        default:
+            return treeGrid.setSelectionMode(selectionMode);
+        }
     }
 
     /**
