@@ -22,7 +22,6 @@ import java.util.Objects;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
@@ -82,10 +81,11 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     private String styleDragEmpty;
 
     /**
-     * The latest row that was dragged on top of, or the grid body if drop is
-     * not applicable for any rows. Need to store this so that can remove drop
-     * hint styling when the target has changed since all browsers don't seem to
-     * always fire the drag-enter drag-exit events in a consistent order.
+     * The latest row that was dragged on top of, or the tablewrapper element
+     * returned by {@link #getDropTargetElement()} if drop is not applicable for
+     * any body rows. Need to store this so that can remove drop hint styling
+     * when the target has changed since all browsers don't seem to always fire
+     * the drag-enter drag-exit events in a consistent order.
      */
     private Element latestTargetElement;
 
@@ -106,7 +106,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
         Element targetElement = getTargetElement(
                 (Element) dropEvent.getEventTarget().cast());
-        // the target element is either the body or one of the rows
+        // the target element is either the tablewrapper or one of the body rows
         if (TableRowElement.is(targetElement)) {
             rowKey = getRowData(targetElement.cast())
                     .getString(GridState.JSONKEY_ROWKEY);
@@ -237,20 +237,43 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     private Element getTargetElement(Element source) {
+        final Element tableWrapper = getDropTargetElement();
         final BodyRowContainer gridBody = getGridBody();
-        final TableSectionElement bodyElement = gridBody.getElement();
-        while (!Objects.equals(source, bodyElement)) {
+        final int rowCount = gridBody.getRowCount();
+
+        while (!Objects.equals(source, tableWrapper)) {
+            // the drop might happen on top of header, body or footer rows
             if (TableRowElement.is(source)) {
-                return source;
+                String parentTagName = source.getParentElement().getTagName();
+                if ("thead".equalsIgnoreCase(parentTagName)) {
+                    // for empty grid or ON_TOP mode, drop as last row,
+                    // otherwise as above first visible row
+                    if (rowCount == 0
+                            || getState().dropMode == DropMode.ON_TOP) {
+                        return tableWrapper;
+                    } else {
+                        return gridBody.getRowElement(0);
+                    }
+                } else if ("tfoot".equalsIgnoreCase(parentTagName)) {
+                    // for empty grid or ON_TOP mode, drop as last row,
+                    // otherwise as below last visible row
+                    if (rowCount == 0
+                            || getState().dropMode == DropMode.ON_TOP) {
+                        return tableWrapper;
+                    } else {
+                        return gridBody.getRowElement(rowCount - 1);
+                    }
+                } else { // parent is tbody
+                    return source;
+                }
             }
             source = source.getParentElement();
         }
-        // the drag is on top of the body
-        final int rowCount = gridBody.getRowCount();
-        // if no rows in grid, or if the drop mode is on top, then there is no
+        // the drag is on top of the tablewrapper
+        // if no rows in grid, or if the drop mode is ON_TOP, then there is no
         // target row for the drop
         if (rowCount == 0 || getState().dropMode == DropMode.ON_TOP) {
-            return bodyElement;
+            return tableWrapper;
         } else { // if dragged under the last row to empty space, drop target
                  // needs to be below the last row
             return gridBody.getRowElement(rowCount - 1);
@@ -259,7 +282,9 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     @Override
     protected Element getDropTargetElement() {
-        return getGridBody().getElement();
+        // use the div v-grid-tablewrapper since it doesn't move when scrolled
+        // horizontally and we can get drop events from the header/footer too
+        return getGridBody().getElement().getParentElement().getParentElement();
     }
 
     private Escalator getEscalator() {
