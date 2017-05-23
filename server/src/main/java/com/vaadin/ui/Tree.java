@@ -233,6 +233,7 @@ public class Tree<T> extends Composite
             treeGrid.removeHeaderRow(0);
         }
         treeGrid.setPrimaryStyleName("v-tree8");
+        treeGrid.setRowHeight(28);
 
         setWidth("100%");
         treeGrid.setHeightUndefined();

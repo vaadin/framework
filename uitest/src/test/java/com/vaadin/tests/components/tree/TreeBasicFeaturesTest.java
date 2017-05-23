@@ -92,7 +92,7 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
             for (int j = 0; j < 3; ++j) {
                 item = tree.getItem(n++);
-                Assert.assertEquals((shouldHaveIcon ? " " : "") + "1 | " + j,
+                Assert.assertEquals((shouldHaveIcon ? "\ue92d" : "") + "1 | " + j,
                         item.getText());
 
                 Assert.assertEquals("Unexpected icon state", shouldHaveIcon,
