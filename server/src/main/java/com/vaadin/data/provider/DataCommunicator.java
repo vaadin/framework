@@ -23,9 +23,11 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -152,16 +154,15 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         /**
-         * Returns the collection of all currently active data.
+         * Returns all currently active data mapped by their id from
+         * DataProvider.
          *
-         * @return collection of active data objects
+         * @return map of ids to active data objects
          */
-        public Collection<T> getActiveData() {
-            HashSet<T> hashSet = new HashSet<>();
-            for (String key : activeData) {
-                hashSet.add(getKeyMapper().get(key));
-            }
-            return hashSet;
+        public Map<Object, T> getActiveData() {
+            Function<T, Object> getId = getDataProvider()::getId;
+            return activeData.stream().map(getKeyMapper()::get)
+                    .collect(Collectors.toMap(getId, i -> i));
         }
 
         @Override
@@ -494,37 +495,24 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Informs the DataProvider that a data object has been updated.
      *
      * @param data
-     *            updated data object
+     *            updated data object; not {@code null}
      */
     public void refresh(T data) {
-        // ActiveDataHandler has always the latest data through KeyMapper.
-        Optional<T> activeData = getActiveDataHandler().getActiveData().stream()
-                .filter(item -> itemEquals(item, data)).findFirst();
+        Objects.requireNonNull(data,
+                "DataCommunicator can not refresh null object");
+        Object id = getDataProvider().getId(data);
 
-        activeData.ifPresent(i -> {
+        // ActiveDataHandler has always the latest data through KeyMapper.
+        Map<Object, T> activeData = getActiveDataHandler().getActiveData();
+
+        if (activeData.containsKey(id)) {
             // Item is currently available at the client-side
             if (updatedData.isEmpty()) {
                 markAsDirty();
             }
 
-            updatedData.add(i);
-        });
-    }
-
-    /**
-     * Compares the equality of two data objects based on their id from
-     * DataProvider.
-     *
-     * @param item1
-     *            the first item to compare
-     * @param item2
-     *            the second item to compare
-     * @return {@code true} if the ids of the two items match; {@code false} if
-     *         not
-     */
-    protected boolean itemEquals(T item1, T item2) {
-        return Objects.equals(getDataProvider().getId(item1),
-                getDataProvider().getId(item2));
+            updatedData.add(activeData.get(id));
+        }
     }
 
     /**

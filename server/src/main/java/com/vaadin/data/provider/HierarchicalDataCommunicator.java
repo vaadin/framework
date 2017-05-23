@@ -530,7 +530,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         Objects.requireNonNull(provider, "Provider can't be null");
         itemCollapseAllowedProvider = provider;
 
-        getActiveDataHandler().getActiveData().forEach(this::refresh);
+        getActiveDataHandler().getActiveData().values().forEach(this::refresh);
     }
 
     /**

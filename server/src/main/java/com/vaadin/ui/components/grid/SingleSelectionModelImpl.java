@@ -261,6 +261,12 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Override
     public boolean isSelected(T item) {
+        // Quick comparison of objects directly
+        if (Objects.equals(item, selectedItem)) {
+            return true;
+        }
+
+        // Id based check
         return item != null && selectedItem != null
                 && getGrid().getDataProvider().getId(selectedItem)
                         .equals(getGrid().getDataProvider().getId(item));
