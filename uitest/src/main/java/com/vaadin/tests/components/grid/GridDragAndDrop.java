@@ -91,8 +91,16 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
             }
         });
 
+        RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
+                "Frozen columns", Arrays.asList(new Integer[] { -1, 0, 1 }));
+        frozenColumnSelect.setValue(left.getFrozenColumnCount());
+        frozenColumnSelect.addValueChangeListener(event -> {
+            left.setFrozenColumnCount(event.getValue());
+            right.setFrozenColumnCount(event.getValue());
+        });
+
         Layout controls = new HorizontalLayout(selectionModeSelect,
-                dropLocationSelect, transitionCheckBox);
+                dropLocationSelect, transitionCheckBox, frozenColumnSelect);
 
         addComponents(controls, grids);
 

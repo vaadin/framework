@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +27,7 @@ import java.util.stream.Stream;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableRowElement;
@@ -169,10 +169,9 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         } else {
             Element draggedRowElement = (Element) dragStartEvent
                     .getEventTarget().cast();
-            Consumer<Element> multiSelectionColumnRemovingCallback = null;
+            Element badge;
             if (draggedItems.size() > 1) {
-
-                Element badge = DOM.createSpan();
+                badge = DOM.createSpan();
                 badge.setClassName(
                         gridConnector.getWidget().getStylePrimaryName() + "-row"
                                 + STYLE_SUFFIX_DRAG_BADGE);
@@ -202,27 +201,64 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                                 mouseXRelativeToGrid - 60, Unit.PX);
                     }
                     badge.getStyle().setMarginTop(-32, Unit.PX);
-                    // remove the multi selection column since it will mess the
-                    // drag image
-                    multiSelectionColumnRemovingCallback = this::removeMultiSelectionColumn;
                 } else {
                     badge.getStyle().setMarginLeft(WidgetUtil.getRelativeX(
                             draggedRowElement, dragStartEvent) + 10, Unit.PX);
                     badge.getStyle().setMarginTop(-20, Unit.PX);
                 }
-
-                draggedRowElement.appendChild(badge);
-
-                // Remove badge on the next animation frame. Drag image will
-                // still contain the badge.
-                // This hack is used instead of setDragImage since IE11 and Edge
-                // don't support that
-                AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-                    badge.removeFromParent();
-                }, (Element) dragStartEvent.getEventTarget().cast());
+            } else {
+                badge = null;
             }
-            fixDragImageOffsetsForDesktop(dragStartEvent, draggedRowElement,
-                    multiSelectionColumnRemovingCallback);
+
+            final int frozenColumnCount = getGrid().getFrozenColumnCount();
+            final Element selectionColumnCell = getGrid().getSelectionColumn()
+                    .isPresent()
+                    // -1 is used when even selection column is not frozen
+                    && frozenColumnCount != -1 ? draggedRowElement
+                            .removeChild(draggedRowElement.getFirstChild())
+                            .cast() : null;
+
+            final List<String> frozenCellsTransforms = new ArrayList<>();
+            for (int i = 0; i < getGrid().getColumnCount(); i++) {
+                if (i >= frozenColumnCount) {
+                    break;
+                }
+                if (getGrid().getColumn(i).isHidden()) {
+                    frozenCellsTransforms.add(null);
+                    continue;
+                }
+                Style style = ((Element) draggedRowElement.getChild(i).cast())
+                        .getStyle();
+                frozenCellsTransforms.add(style.getProperty("transform"));
+                style.clearProperty("transform");
+            }
+
+            if (badge != null) {
+                draggedRowElement.appendChild(badge);
+            }
+
+            // The following hack is used since IE11 doesn't support custom drag
+            // image.
+            // 1. Remove multiple rows drag badge, if used
+            // 2. add selection column cell back, if was removed
+            // 3. reset frozen column transitions, if were cleared
+            AnimationScheduler.get().requestAnimationFrame(timestamp -> {
+                if (badge != null) {
+                    badge.removeFromParent();
+                }
+                for (int i = 0; i < frozenCellsTransforms.size(); i++) {
+                    String transform = frozenCellsTransforms.get(i);
+                    if (transform != null) {
+                        ((Element) draggedRowElement.getChild(i).cast())
+                                .getStyle().setProperty("transform", transform);
+                    }
+                }
+                if (selectionColumnCell != null) {
+                    draggedRowElement.insertFirst(selectionColumnCell);
+                }
+            }, (Element) dragStartEvent.getEventTarget().cast());
+
+            fixDragImageOffsetsForDesktop(dragStartEvent, draggedRowElement);
             fixDragImageTransformForMobile(draggedRowElement);
         }
 
@@ -243,8 +279,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
                         dataMap.put(type, data);
                     } else {
                         // Separate data with new line character when multiple
-                        // rows
-                        // are dragged
+                        // rows are dragged
                         dataMap.put(type, dataMap.get(type) + "\n" + data);
                     }
                 }
@@ -459,17 +494,4 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         return (GridDragSourceState) super.getState();
     }
 
-    /*
-     * Since Safari only shows the drag image for that part of the row that is
-     * visible in grid, removing the selection column from the cloned drag image
-     * element. It would be displayed in the wrong place anyway..
-     */
-    private void removeMultiSelectionColumn(Element clonedRowElement) {
-        getGrid().getSelectionColumn().ifPresent(selectionColumn -> {
-            Element selectionColumnCell = clonedRowElement.getChild(0).cast();
-            clonedRowElement.getStyle()
-                    .setLeft(selectionColumnCell.getOffsetWidth(), Unit.PX);
-            clonedRowElement.removeChild(selectionColumnCell);
-        });
-    }
 }

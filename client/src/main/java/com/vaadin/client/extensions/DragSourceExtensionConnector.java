@@ -17,7 +17,6 @@ package com.vaadin.client.extensions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -234,7 +233,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
     /**
      * Fixes missing or offset drag image caused by using css transform:
      * translate (or such) by using a cloned drag image element, for which the
-     * property has been cleared for.
+     * property has been cleared.
      * <p>
      * This bug only occurs on Desktop with Safari (gets offset and clips the
      * element for the parts that are not inside the element start & end
@@ -247,13 +246,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
      *            the drag start event
      * @param draggedElement
      *            the element being dragged
-     * @param clonedElementCallback
-     *            callback triggered if there was a cloned element made that is
-     *            used for creating a custom drag image, or {@code null} if not
-     *            needed
      */
     protected void fixDragImageOffsetsForDesktop(NativeEvent dragStartEvent,
-            Element draggedElement, Consumer<Element> clonedElementCallback) {
+            Element draggedElement) {
         BrowserInfo browserInfo = BrowserInfo.get();
         final boolean isSafari = browserInfo.isSafari();
         if (browserInfo.isTouchDevice()
@@ -267,18 +262,17 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
         // only relative, absolute and fixed positions work for safari or no
         // drag image is set
         clonedStyle.setPosition(Position.RELATIVE);
-        // need to use z-index -1 or otherwise the cloned node will flash
-        clonedStyle.setZIndex(-1);
 
         int transformXOffset = 0;
         if (isSafari) {
             transformXOffset = fixDragImageTransformForSafari(draggedElement,
                     clonedStyle);
         }
-        if (clonedElementCallback != null) {
-            clonedElementCallback.accept(clonedElement);
-        }
+
+        // need to use z-index -1 or otherwise the cloned node will flash
+        clonedStyle.setZIndex(-1);
         draggedElement.getParentElement().appendChild(clonedElement);
+
         dragStartEvent.getDataTransfer().setDragImage(clonedElement,
                 WidgetUtil.getRelativeX(draggedElement, dragStartEvent)
                         - transformXOffset,
@@ -339,7 +333,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             clonedStyle.setProperty("transform", sb.toString());
         }
         // the x-offset should be taken into account when the drag image is
-        // adjusted according to the mouse position, for y, doesn't matter
+        // adjusted according to the mouse position. The Y-offset doesn't matter
+        // for some reason (TM), at least for grid DnD, and is probably related
+        // to #9408
         return xTransformOffsetForSafari;
     }
 
@@ -367,12 +363,9 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             return Integer.parseInt(x);
         } catch (NumberFormatException nfe) {
             Logger.getLogger(DragSourceExtensionConnector.class.getName())
-                    .warning(
-                            "Unable to parse \"transform: translate(...)\" matrix "
-                                    + n
-                                    + ". value from computed style, matrix \""
-                                    + matrix
-                                    + "\", drag image might not be visible");
+                    .info("Unable to parse \"transform: translate(...)\" matrix "
+                            + n + ". value from computed style, matrix \""
+                            + matrix + "\", drag image might not be visible");
         }
         return 0;
     }
@@ -456,7 +449,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     WidgetUtil.getRelativeX(draggedElement, dragStartEvent),
                     WidgetUtil.getRelativeY(draggedElement, dragStartEvent));
         } else {
-            fixDragImageOffsetsForDesktop(dragStartEvent, draggedElement, null);
+            fixDragImageOffsetsForDesktop(dragStartEvent, draggedElement);
             fixDragImageTransformForMobile(draggedElement);
         }
     }
