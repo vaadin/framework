@@ -55,7 +55,7 @@ public class HugeFileUploadTest {
         });
     }
 
-    @Test
+    @Test(expected = IOException.class, timeout = 60000)
     public void testHugeFileWithoutNewLine() throws IOException {
         FileUploadHandler fileUploadHandler = new FileUploadHandler();
         fileUploadHandler.handleRequest(session, request, response);
