@@ -513,6 +513,10 @@ public class Navigator implements Serializable {
         if (stateManager == null) {
             stateManager = new UriFragmentManager(ui.getPage());
         }
+        if (stateManager != null && this.stateManager != null
+                && stateManager != this.stateManager) {
+            this.stateManager.setNavigator(null);
+        }
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
