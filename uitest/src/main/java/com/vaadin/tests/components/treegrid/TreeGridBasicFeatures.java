@@ -17,6 +17,7 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.ItemCollapseAllowedProvider;
 import com.vaadin.ui.TreeGrid;
 
@@ -68,6 +69,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createExpandMenu();
         createCollapseMenu();
         createListenerMenu();
+        createSelectionModeMenu();
     }
 
     private void initializeDataProviders() {
@@ -137,6 +139,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                 (treeGrid, value, data) -> treeGrid.setHierarchyColumn(value));
     }
 
+    @SuppressWarnings("unchecked")
     private void createCollapseAllowedSelect() {
         LinkedHashMap<String, ItemCollapseAllowedProvider<HierarchicalTestBean>> options = new LinkedHashMap<>();
         options.put("all allowed", t -> true);
@@ -189,5 +192,15 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
                         event -> log("Item expanded (user originated: "
                                 + event.isUserOriginated() + "): "
                                 + event.getExpandedItem())));
+    }
+
+    private void createSelectionModeMenu() {
+        LinkedHashMap<String, SelectionMode> options = new LinkedHashMap<>();
+        options.put("none", SelectionMode.NONE);
+        options.put("single", SelectionMode.SINGLE);
+        options.put("multi", SelectionMode.MULTI);
+
+        createSelectAction("Selection mode", "State", options, "single",
+                (treeGrid, value, data) -> treeGrid.setSelectionMode(value));
     }
 }
