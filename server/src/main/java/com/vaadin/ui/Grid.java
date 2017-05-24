@@ -1472,9 +1472,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * This defines the minimum guaranteed pixel width of the column
          * <em>when it is set to expand</em>.
          *
+         * @param pixels
+         *            the minimum width for the column
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setExpandRatio(int)
+         * @return the column itself
          */
         public Column<T, V> setMinimumWidth(double pixels)
                 throws IllegalStateException {
@@ -1499,6 +1502,53 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public double getMinimumWidth() {
             return getState(false).minWidth;
+        }
+
+        /**
+         * Sets whether the width of the contents in the column should be
+         * considered minimum width for this column.
+         * <p>
+         * If this is set to <code>true</code> (default for backwards
+         * compatibility), then a column will not shrink to smaller than the
+         * width required to show the contents available when calculating the
+         * widths (first N rows).
+         * <p>
+         * If this is set to <code>false</code>, then a column will shrink if
+         * necessary to the minimum width defined by
+         * {@link #setMinimumWidth(double)} <em>when it is set to expand</em>.
+         *
+         * @param contentsDefineMinimumWidth
+         *            <code>true</code> to reserve space for all contents,
+         *            <code>false</code> to allow the column to shrink smaller
+         *            than the contents
+         * @return the column itself
+         * @throws IllegalStateException
+         *             if the column is no longer attached to any grid
+         * @see #setMinimumWidth(double)
+         * @since
+         */
+        public Column<T, V> setContentsDefineMinimumWidth(
+                boolean contentsDefineMinimumWidth)
+                throws IllegalStateException {
+            checkColumnIsAttached();
+
+            getState().contentsDefineMinimumWidth = contentsDefineMinimumWidth;
+            getGrid().markAsDirty();
+            return this;
+        }
+
+        /**
+         * Gets whether the width of the contents in the column should be
+         * considered minimum width for this column.
+         *
+         * @return <code>true</code> to reserve space for all contents,
+         *         <code>false</code> to allow the column to shrink smaller than
+         *         the contents
+         * @see #setContentsDefineMinimumWidth(boolean)
+         * @since
+         */
+        public boolean isContentsDefineMinimumWidth() {
+            return getState(false).contentsDefineMinimumWidth;
         }
 
         /**
@@ -2013,7 +2063,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Gets the DataGenerator for this Column.
-         * 
+         *
          * @return data generator
          */
         private DataGenerator<T> getDataGenerator() {

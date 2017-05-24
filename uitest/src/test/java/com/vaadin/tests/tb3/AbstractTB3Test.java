@@ -1171,18 +1171,23 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void assertNoHorizontalScrollbar(WebElement element,
             String errorMessage) {
+        boolean hasScrollbar = hasHorizontalScrollbar(element);
+        Assert.assertFalse(errorMessage, hasScrollbar);
+    }
+
+    protected void assertHorizontalScrollbar(WebElement element,
+            String errorMessage) {
+        boolean hasScrollbar = hasHorizontalScrollbar(element);
+        Assert.assertTrue(errorMessage, hasScrollbar);
+    }
+
+    private boolean hasHorizontalScrollbar(WebElement element) {
         // IE rounds clientWidth/clientHeight down and scrollHeight/scrollWidth
         // up, so using clientWidth/clientHeight will fail if the element height
         // is not an integer
         int clientWidth = getClientWidth(element);
         int scrollWidth = getScrollWidth(element);
-        boolean hasScrollbar = scrollWidth > clientWidth;
-
-        Assert.assertFalse(
-                "The element should not have a horizontal scrollbar (scrollWidth: "
-                        + scrollWidth + ", clientWidth: " + clientWidth + "): "
-                        + errorMessage,
-                hasScrollbar);
+        return scrollWidth > clientWidth;
     }
 
     protected void assertNoVerticalScrollbar(WebElement element,
