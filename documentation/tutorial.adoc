@@ -277,7 +277,7 @@ In this example, we will use the Grid component for tabular presentation of our 
 
 The following video shows how to do this step of the tutorial:
 
-video::EBCm-Vf_fUs[youtube, width="640", height="400"]
+video::qF31jkBFbR0[youtube, width="640", height="400"]
 
 We start by introducing a [classname]#Grid# to the [classname]#MyUI# class.
 We could of course just introduce the Grid as a variable in the [methodname]#init()# method, but we most likely want to refer to it later.
