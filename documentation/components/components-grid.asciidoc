@@ -344,7 +344,10 @@ value with [methodname]#setWidth()#, or relatively using expand ratios with
 [methodname]#setExpandRatio()#.
 
 When using expand ratios, the columns with a non-zero expand ratio use the extra
-space remaining from other columns, in proportion to the defined ratios.
+space remaining from other columns, in proportion to the defined ratios. Do note
+that the minimum width of an expanded column by default is based on the contents
+of the column (the initially rendered rows). To allow the column to become
+narrower than this, use [methodname]#setContentsDefineMinimumWidth(false)#.
 
 You can specify minimum and maximum widths for the expanding columns with
 [methodname]#setMinimumWidth()# and [methodname]#setMaximumWidth()#,
