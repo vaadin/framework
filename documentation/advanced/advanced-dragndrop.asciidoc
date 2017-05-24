@@ -348,9 +348,9 @@ dropTarget.addGridDropListener(event -> {
 
 The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on and depends on the used [classname]#DropMode#. When the drop happened on top of a row, the possible options for the location are `ON_TOP`, `ABOVE` and `BELOW`.
 
-If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened ´BELOW´ the visible last row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened `BELOW` the last visible row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
 
-When dropping on top of the grid's header or footer, the drop location will be `EMPTY` if there is no rows in the grid or if [classname]#DropMode.ON_TOP# was used. If there are rows in the grid, dropping on top of the header will set the drop location to `ABOVE` and the dropped row will be the first currently visible row in grid. Similarly, if dropping on top of the footer, the drop location will be `BELOW` and the dropped row will be the last currently visible row in the grid.
+When dropping on top of the grid's header or footer, the drop location will be `EMPTY` if there are no rows in the grid or if [classname]#DropMode.ON_TOP# was used. If there are rows in the grid, dropping on top of the header will set the drop location to `ABOVE` and the dropped row will be the first currently visible row in grid. Similarly, if dropping on top of the footer, the drop location will be `BELOW` and the dropped row will be the last visible row in the grid.
 
 ==== CSS Style Rules
 

@@ -832,7 +832,7 @@ $v-grid-drag-indicator-color: $v-focus-color;
 
   // Drag and drop
   .#{$primary-stylename}-row-drag-top, .#{$primary-stylename}-row-drag-bottom, .#{$primary-stylename}-row-drag-bottom {
-    z-index: 100;
+    z-index: 100; // based on what else z-indexes are in grid/escalator
   }
 
   .#{$primary-stylename}-row-drag-top:before,
@@ -892,7 +892,7 @@ $v-grid-drag-indicator-color: $v-focus-color;
     left: 0;
     pointer-events: none;
     border: 2px solid $v-grid-drag-indicator-color;
-    z-index: 100;
+    z-index: 100; // based on what else z-indexes are in grid/escalator
   }
 }
 

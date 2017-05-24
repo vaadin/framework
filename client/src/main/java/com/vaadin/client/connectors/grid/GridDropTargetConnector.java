@@ -282,9 +282,14 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     @Override
     protected Element getDropTargetElement() {
-        // use the div v-grid-tablewrapper since it doesn't move when scrolled
-        // horizontally and we can get drop events from the header/footer too
-        return getGridBody().getElement().getParentElement().getParentElement();
+        /*
+         * The drop target element, the <div class="v-grid-tablewrapper" />.
+         * This is where the event listeners are added since then we can accept
+         * drops on header, body and footer rows and the "empty area" outside
+         * rows. Also it is used since then the drop hints for "empty" area can
+         * be shown properly as the grid body would scroll.
+         */
+        return getEscalator().getTableWrapper();
     }
 
     private Escalator getEscalator() {
