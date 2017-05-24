@@ -6797,8 +6797,9 @@ public class Escalator extends Widget
     }
 
     /**
-     * Returns the {@code <div class="v-grid-tablewrapper" />} element which has
-     * the table inside it.
+     * Returns the {@code <div class="{primary-stylename}-tablewrapper" />}
+     * element which has the table inside it. {primary-stylename} is .e.g
+     * {@code v-grid}.
      * <p>
      * <em>NOTE: you should not do any modifications to the returned element.
      * This API is only available for querying data from the element.</em>
