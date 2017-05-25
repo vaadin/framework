@@ -84,7 +84,7 @@ public class ListDataProvider<T>
 
     @Override
     public int size(Query<T, SerializablePredicate<T>> query) {
-        return (int) getFilteredStream(query).count();
+        return (int) getFilteredStream(query).skip(query.getOffset()).limit(query.getLimit()).count();
     }
 
     private Stream<T> getFilteredStream(
