@@ -22,17 +22,16 @@ _Note that at this point you could import the project to and IDE like IntelliJ._
 
 * You now should have the Vaadin Java project under the directoy `ui`. Since we are doing Scala, delete the `java` directory in `${project_home}/src/main/` and create an empty `scala` directory in the same place. 
 
-* Add the following Scala dependency and plugin to your `pom.xml`:
+* Add the following Scala dependency and...
 ```xml
-<project>
-<dependencies>
   <dependency>
    <groupId>org.scala-lang</groupId>
    <artifactId>scala-library</artifactId>
    <version>2.12.1</version>
   </dependency>
- </dependencies>
- <plugins>
+```
+...plugin to your 'pom.xml'
+```xml
   <plugin>
    <groupId>net.alchim31.maven</groupId>
    <artifactId>scala-maven-plugin</artifactId>
@@ -50,8 +49,6 @@ _Note that at this point you could import the project to and IDE like IntelliJ._
     <scalaVersion>2.12</scalaVersion>
    </configuration>
   </plugin>
- </plugins>
-</project>
 ```
 
 * Create the following class in the new-created `scala` directory.
