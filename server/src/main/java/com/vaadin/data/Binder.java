@@ -711,6 +711,9 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
+            // Mark this step to be bound to prevent modifying multiple times.
+            bound = true;
+
             if (resetNullRepresentation) {
                 getBinder().initialConverters.get(field).setIdentity();
             }
