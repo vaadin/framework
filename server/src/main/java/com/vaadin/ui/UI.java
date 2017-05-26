@@ -467,7 +467,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         components.addAll(windows);
 
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /*
