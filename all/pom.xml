@@ -92,6 +92,24 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-compatibility-server-gae</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-osgi-integration</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vaadin-liferay-integration</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Needed because referenced from javadocs -->
         <dependency>
             <groupId>javax.portlet</groupId>
