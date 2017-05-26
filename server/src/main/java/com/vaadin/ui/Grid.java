@@ -2117,6 +2117,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see #withPropertySet(PropertySet)
      */
     public Grid(Class<T> beanType) {
+        this(beanType, new DataCommunicator<>());
+    }
+
+    /**
+     * Creates a new grid that uses custom data communicator and provided bean type
+     * 
+     * It uses reflection of the provided bean type to automatically set up an initial set of columns. 
+     * All columns will be configured using the same {@link Object#toString()} renderer that is used
+     * by {@link #addColumn(ValueProvider)}.
+     *
+     * @param beanType
+     *            the bean type to use, not <code>null</code>
+     * @param dataCommunicator
+     *            the data communicator to use, not<code>null</code>
+     * @since 8.0.6
+     */
+    protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
         this(BeanPropertySet.get(beanType));
         this.beanType = beanType;
     }
@@ -2129,7 +2146,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the custom data communicator to set
      * @see #Grid()
      * @see #Grid(PropertySet, DataCommunicator)
-     * @since 8.1
+     * @since 8.0.6
      */
     protected Grid(DataCommunicator<T> dataCommunicator) {
         this(new PropertySet<T>() {
@@ -2177,7 +2194,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the property set implementation to use, not <code>null</code>.
      * @param dataCommunicator
      *            the data communicator to use, not<code>null</code>
-     * @since 8.1
+     * @since 8.0.6
      */
     protected Grid(PropertySet<T> propertySet,
             DataCommunicator<T> dataCommunicator) {
