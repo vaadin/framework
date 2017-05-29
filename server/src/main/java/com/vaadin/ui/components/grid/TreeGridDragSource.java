@@ -31,6 +31,12 @@ import com.vaadin.ui.TreeGrid;
  */
 public class TreeGridDragSource<T> extends GridDragSource<T> {
 
+    /**
+     * Extends a TreeGrid and makes it's rows draggable.
+     *
+     * @param target
+     *            TreeGrid to be extended.
+     */
     public TreeGridDragSource(TreeGrid<T> target) {
         super(target);
     }
