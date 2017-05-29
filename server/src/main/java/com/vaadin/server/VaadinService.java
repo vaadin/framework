@@ -1344,6 +1344,22 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Called after {@link #requestStart(VaadinRequest, VaadinResponse)}
+     * but before the framework starts handling the request.
+     * <p>
+     * The default implementation does nothing. Override, to hook into the request/response cycle.
+     *
+     * @param request
+     *            The request
+     * @param response
+     *            The response
+     * @param session
+     *            The Vaadin Session, may be null if the request is not associated with any session.
+     */
+    protected void requestSessionObtained(VaadinRequest request, VaadinResponse response, VaadinSession session) {
+    }
+
+    /**
      * Called after the framework has handled a request and the response has
      * been written.
      *
@@ -1428,6 +1444,7 @@ public abstract class VaadinService implements Serializable {
         try {
             // Find out the service session this request is related to
             vaadinSession = findVaadinSession(request);
+            requestSessionObtained(request, response, vaadinSession);
             if (vaadinSession == null) {
                 return;
             }
