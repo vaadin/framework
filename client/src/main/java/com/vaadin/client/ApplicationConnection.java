@@ -39,6 +39,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
@@ -1478,16 +1479,17 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the active connector for focused element in browser.
+     * Gets the active connector for the focused element in the browser.
      *
-     * @return Connector for focused element or null.
+     * @return the connector for the focused element or <code>null</code> if
+     *         none found or no element is focused.
      */
     private ComponentConnector getActiveConnector() {
         Element focusedElement = WidgetUtil.getFocusedElement();
         if (focusedElement == null) {
             return null;
         }
-        return Util.getConnectorForElement(this, getUIConnector().getWidget(),
+        return Util.getConnectorForElement(this, RootPanel.get(),
                 focusedElement);
     }
 

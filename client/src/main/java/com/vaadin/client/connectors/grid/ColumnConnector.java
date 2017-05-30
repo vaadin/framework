@@ -131,6 +131,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setMinimumWidth(getState().minWidth);
     }
 
+    @OnStateChange("minimumWidthFromContent")
+    void updateMinimumWidthFromContent() {
+        column.setMinimumWidthFromContent(getState().minimumWidthFromContent);
+    }
+
     @OnStateChange("maxWidth")
     void updateMaxWidth() {
         column.setMaximumWidth(getState().maxWidth);

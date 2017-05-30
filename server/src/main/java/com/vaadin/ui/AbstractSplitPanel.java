@@ -226,12 +226,13 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Gets an iterator to the collection of contained components. Using this
+     * iterator it is possible to step through all components contained in this
+     * container and remove components from it.
      *
-     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
+     * @return the component iterator.
      */
-
     @Override
     public Iterator<Component> iterator() {
         return new ComponentIterator();

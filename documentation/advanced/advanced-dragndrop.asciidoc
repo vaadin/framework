@@ -348,14 +348,16 @@ dropTarget.addGridDropListener(event -> {
 
 The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on and depends on the used [classname]#DropMode#. When the drop happened on top of a row, the possible options for the location are `ON_TOP`, `ABOVE` and `BELOW`.
 
-If the grid is empty, or if there was empty space after the last row in grid and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened ´BELOW´ the last row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened `BELOW` the last visible row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+
+When dropping on top of the grid's header or footer, the drop location will be `EMPTY` if there are no rows in the grid or if [classname]#DropMode.ON_TOP# was used. If there are rows in the grid, dropping on top of the header will set the drop location to `ABOVE` and the dropped row will be the first currently visible row in grid. Similarly, if dropping on top of the footer, the drop location will be `BELOW` and the dropped row will be the last visible row in the grid.
 
 ==== CSS Style Rules
 
 A drop target Grid's body has the style name `v-grid-body-droptarget` to indicate that it is a potential target for data to be dropped.
 
 When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row or to the grid body to indicate the drop location.
-When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-body-drag-top` style is applied to the table body element.
+When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 

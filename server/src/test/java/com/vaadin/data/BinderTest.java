@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.server.ErrorMessage;
@@ -669,5 +670,16 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
     private void assertStreamEquals(Stream<?> s1, Stream<?> s2) {
         Assert.assertArrayEquals(s1.toArray(), s2.toArray());
+    }
+
+    /**
+     * Access to old step in binding chain that already has a converter applied
+     * to it is expected to prevent modifications.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void multiple_calls_to_same_binder_throws() {
+        BindingBuilder<Person, String> forField = binder.forField(nameField);
+        forField.withConverter(new StringToDoubleConverter("Failed"));
+        forField.bind(Person::getFirstName, Person::setFirstName);
     }
 }

@@ -116,6 +116,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
      *
      * @param item
      *            the selected item or {@code null} to clear selection
+     * @since 8.1
      */
     protected void doSetSelected(T item) {
         if (getParent() == null) {

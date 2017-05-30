@@ -3393,8 +3393,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 final int expandRatio = defaultExpandRatios ? 1
                         : column.getExpandRatio();
                 final double maxWidth = getMaxWidth(column);
-                final double newWidth = Math.min(maxWidth,
-                        column.getWidthActual());
+                double newWidth;
+                if (column.isMinimumWidthFromContent()) {
+                    newWidth = Math.min(maxWidth, column.getWidthActual());
+                } else {
+                    newWidth = 0;
+                }
+
                 boolean shouldExpand = newWidth < maxWidth && expandRatio > 0
                         && column != selectionColumn;
                 if (shouldExpand) {
@@ -4673,7 +4678,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param <T>
      *            the row type
      */
-    public static abstract class Column<C, T> {
+    public abstract static class Column<C, T> {
 
         /**
          * Default renderer for GridColumns. Renders everything into text
@@ -4736,6 +4741,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
         private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
         private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
+        private boolean minimumWidthFromContent = true;
 
         /**
          * Constructs a new column with a simple TextRenderer.
@@ -5265,6 +5271,43 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
+         * Sets whether the width of the contents in the column should be
+         * considered minimum width for this column.
+         * <p>
+         * If this is set to <code>true</code> (default for backwards
+         * compatibility), then a column will not shrink to smaller than the
+         * width required to show the contents available when calculating the
+         * widths (first N rows).
+         * <p>
+         * If this is set to <code>false</code>, then a column will shrink if
+         * necessary to the minimum width defined by
+         * {@link #setMinimumWidth(double)} <em>when it is set to expand</em>.
+         *
+         * @param minimumWidthFromContent
+         *            <code>true</code> to reserve space for all contents,
+         *            <code>false</code> to allow the column to shrink smaller
+         *            than the contents
+         * @since
+         */
+        public void setMinimumWidthFromContent(
+                boolean minimumWidthFromContent) {
+            this.minimumWidthFromContent = minimumWidthFromContent;
+        }
+
+        /**
+         * Gets whether the width of the contents in the column should be
+         * considered minimum width for this column.
+         *
+         * @return <code>true</code> to reserve space for all contents,
+         *         <code>false</code> to allow the column to shrink smaller than
+         *         the contents
+         * @since
+         */
+        public boolean isMinimumWidthFromContent() {
+            return minimumWidthFromContent;
+        }
+
+        /**
          * Sets the maximum width for this column.
          * <p>
          * This defines the maximum allowed pixel width of the column <em>when
@@ -5435,6 +5478,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         protected void setDefaultHeaderContent(HeaderCell cell) {
             cell.setText(headerCaption);
         }
+
     }
 
     protected class BodyUpdater implements EscalatorUpdater {

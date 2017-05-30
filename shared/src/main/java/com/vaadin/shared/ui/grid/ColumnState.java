@@ -64,5 +64,9 @@ public class ColumnState extends AbstractGridExtensionState {
     public boolean resizable = true;
 
     public Connector renderer;
+    /**
+     * Whether the contents define the minimum width for this column.
+     */
+    public boolean minimumWidthFromContent = true;
 
 }
