@@ -205,8 +205,9 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
     /**
      * Sets the item icon generator that is used to produce custom icons for
-     * showing items in the popup. The generator can return null for items with
-     * no icon.
+     * shown items. The generator can return null for items with no icon.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      *
@@ -225,6 +226,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Gets the currently used item icon generator. The default item icon
      * provider returns null for all items, resulting in no icons being used.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      * @see #setItemIconGenerator(IconGenerator)

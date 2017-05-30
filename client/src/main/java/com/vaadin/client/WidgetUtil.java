@@ -1832,11 +1832,31 @@ public class WidgetUtil {
         return integerPart + ((int) nrFractions) / divisor;
     }
 
+    /**
+     * Returns the X coordinate of an event relative to an element.
+     *
+     * @param element
+     *            base element of the relative coordinates
+     * @param event
+     *            with touch or mouse coordinates
+     * @return relative X coordinate
+     * @since 8.1
+     */
     public static int getRelativeX(Element element, NativeEvent event) {
         int relativeLeft = element.getAbsoluteLeft() - Window.getScrollLeft();
         return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
     }
 
+    /**
+     * Returns the Y coordinate of an event relative to an element.
+     *
+     * @param element
+     *            base element of the relative coordinates
+     * @param event
+     *            with touch or mouse coordinates
+     * @return relative Y coordinate
+     * @since 8.1
+     */
     public static int getRelativeY(Element element, NativeEvent event) {
         int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
         return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
