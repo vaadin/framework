@@ -20,7 +20,7 @@ mvn archetype:generate -DarchetypeGroupId=com.vaadin -DarchetypeArtifactId=vaadi
 ```
 _Note that at this point you could import the project to and IDE like IntelliJ._
 
-* You now should have the Vaadin Java project under the directoy `ui`. Since we are doing Scala, delete the `java` directory in `${project_home}/src/main/` and create an empty `scala` directory in the same place. 
+* You now should have the Vaadin Java project under the directory `ui`. Since we are doing Scala, delete the `java` directory in `${project_home}/src/main/` and create an empty `scala` directory in the same place.
 
 * Add the following Scala dependency and...
 ```xml
@@ -104,7 +104,7 @@ _The important information here is that Jetty is now running on port 8080_
 
 * Go to `localhost:8080` from the web browser and the page should be working:
 
-image::https://cloud.githubusercontent.com/assets/4601281/26378300/da317d92-400b-11e7-9118-fd2b3b9cc942.png[]
+image::img/hello-world-scala-page.png[]
 
 * If you can see the page above, congratulations you have created your first Vaadin with Scala app.
 
