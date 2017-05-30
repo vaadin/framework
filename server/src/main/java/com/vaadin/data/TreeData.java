@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -340,7 +341,7 @@ public class TreeData<T> implements Serializable {
     /**
      * Gets the root items of this structure.
      *
-     * @return the root items of this structure
+     * @return an unmodifiable list of root items of this structure
      */
     public List<T> getRootItems() {
         return getChildren(null);
@@ -352,7 +353,7 @@ public class TreeData<T> implements Serializable {
      * @param item
      *            the item for which to retrieve child items for, null to
      *            retrieve all root items
-     * @return a list of child items for the given item
+     * @return an unmodifiable list of child items for the given item
      *
      * @throws IllegalArgumentException
      *             if the item does not exist in this structure
@@ -362,7 +363,8 @@ public class TreeData<T> implements Serializable {
             throw new IllegalArgumentException(
                     "Item '" + item + "' not in the hierarchy");
         }
-        return itemToWrapperMap.get(item).getChildren();
+        return Collections
+                .unmodifiableList(itemToWrapperMap.get(item).getChildren());
     }
 
     /**
