@@ -15,8 +15,14 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropMode;
-import com.vaadin.shared.ui.grid.TreeGridDropTargetState;
+import com.vaadin.shared.ui.treegrid.TreeGridDropTargetRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridDropTargetState;
 import com.vaadin.ui.TreeGrid;
 
 /**
@@ -24,23 +30,66 @@ import com.vaadin.ui.TreeGrid;
  * counterpart of GridDropTargetExtensionConnector.
  *
  * @param <T>
- *            Type of the TreeGrid bean.
+ *         Type of the TreeGrid bean.
  * @author Vaadin Ltd
  * @since 8.1
  */
 public class TreeGridDropTarget<T> extends GridDropTarget<T> {
 
     /**
-     * Extends a TreeGrid and makes it's rows drop targets for HTML5 drag and drop.
+     * Extends a TreeGrid and makes it's rows drop targets for HTML5 drag and
+     * drop.
      *
      * @param target
-     *            TreeGrid to be extended.
+     *         TreeGrid to be extended.
      * @param dropMode
-     *            Drop mode that describes the allowed drop locations within the
-     *            TreeGrid's row.
+     *         Drop mode that describes the allowed drop locations within the
+     *         TreeGrid's row.
      */
     public TreeGridDropTarget(TreeGrid<T> target, DropMode dropMode) {
         super(target, dropMode);
+    }
+
+    /**
+     * Attaches drop listener for the current drop target. {@link
+     * TreeGridDropListener#drop(TreeGridDropEvent)} is called when drop event
+     * happens on the client side.
+     *
+     * @param listener
+     *         Listener to handle drop event.
+     * @return Handle to be used to remove this listener.
+     */
+    public Registration addTreeGridDropListener(
+            TreeGridDropListener<T> listener) {
+        return addListener(TreeGridDropEvent.class, listener,
+                TreeGridDropListener.DROP_METHOD);
+    }
+
+    @Override
+    protected void registerDropTargetRpc() {
+        registerRpc((TreeGridDropTargetRpc) (types, data, dropEffect, rowKey,
+                depth, collapsed, dropLocation) -> {
+
+            // Create a linked map that preserves the order of types
+            Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
+            types.forEach(type -> dataPreserveOrder.put(type, data.get(type)));
+
+            T dropTargetRow = getParent().getDataCommunicator().getKeyMapper()
+                    .get(rowKey);
+
+            TreeGridDropEvent<T> event = new TreeGridDropEvent<>(getParent(),
+                    dataPreserveOrder,
+                    DropEffect.valueOf(dropEffect.toUpperCase()),
+                    getUI().getActiveDragSource(), dropTargetRow, dropLocation,
+                    depth, collapsed);
+
+            fireEvent(event);
+        });
+    }
+
+    @Override
+    public TreeGrid<T> getParent() {
+        return (TreeGrid<T>) super.getParent();
     }
 
     @Override
