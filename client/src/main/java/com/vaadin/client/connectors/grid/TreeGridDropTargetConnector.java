@@ -15,9 +15,21 @@
  */
 package com.vaadin.client.connectors.grid;
 
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.TableRowElement;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.grid.TreeGridDropTargetState;
+import com.vaadin.shared.ui.grid.DropLocation;
+import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.treegrid.TreeGridDropTargetRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridDropTargetState;
 import com.vaadin.ui.components.grid.TreeGridDropTarget;
+
+import elemental.json.JsonObject;
 
 /**
  * Makes TreeGrid an HTML5 drop target. This is the client side counterpart of
@@ -28,6 +40,38 @@ import com.vaadin.ui.components.grid.TreeGridDropTarget;
  */
 @Connect(TreeGridDropTarget.class)
 public class TreeGridDropTargetConnector extends GridDropTargetConnector {
+
+    @Override
+    protected void sendDropEventToServer(List<String> types,
+            Map<String, String> data, String dropEffect,
+            NativeEvent dropEvent) {
+        String rowKey = null;
+        DropLocation dropLocation = null;
+        Integer rowDepth = null;
+        Boolean rowCollapsed = null;
+
+        Element targetElement = getTargetElement(
+                (Element) dropEvent.getEventTarget().cast());
+        // the target element is either the tablewrapper or one of the body rows
+        if (TableRowElement.is(targetElement)) {
+            JsonObject rowData = getRowData(targetElement.cast());
+            rowKey = rowData.getString(GridState.JSONKEY_ROWKEY);
+            dropLocation = getDropLocation(targetElement, dropEvent);
+
+            // Collect hierarchy information
+            JsonObject hierarchyDescription = rowData.getObject(
+                    HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
+            rowDepth = (int) hierarchyDescription
+                    .getNumber(HierarchicalDataCommunicatorConstants.ROW_DEPTH);
+            rowCollapsed = hierarchyDescription.getBoolean(
+                    HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
+        } else {
+            dropLocation = DropLocation.EMPTY;
+        }
+
+        getRpcProxy(TreeGridDropTargetRpc.class).drop(types, data, dropEffect,
+                rowKey, rowDepth, rowCollapsed, dropLocation);
+    }
 
     @Override
     public TreeGridDropTargetState getState() {
