@@ -54,7 +54,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
             throw new IllegalStateException(
                     BeanValidationBinder.class.getSimpleName()
                             + " cannot be used because a JSR-303 Bean Validation "
-                            + "implementation not found on the classpath. Use "
+                            + "implementation not found on the classpath or could not be initialized. Use "
                             + Binder.class.getSimpleName() + " instead");
         }
         this.beanType = beanType;
