@@ -2141,10 +2141,15 @@ public class Binder<BEAN> implements Serializable {
                         (property, type) -> bindProperty(objectWithMemberFields,
                                 memberField, property, type)))
                 .reduce(0, this::accumulate, Integer::sum);
-        if (numberOfBoundFields == 0) {
+        if (numberOfBoundFields == 0 && bindings.isEmpty()
+                && incompleteBindings.isEmpty()) {
+            // Throwing here for incomplete bindings would be wrong as they
+            // may be completed after this call. If they are not, setBean and
+            // other methods will throw for those cases
             throw new IllegalStateException("There are no instance fields "
                     + "found for automatic binding");
         }
+
     }
 
     private boolean isFieldBound(Field memberField,
