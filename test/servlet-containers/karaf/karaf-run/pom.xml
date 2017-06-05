@@ -13,20 +13,6 @@
     <name>Karaf Runner</name>
 
     <dependencies>
-        <!--Not a real dependency, but this makes sure if the bundle is built before running karaf-->
-        <dependency>
-            <groupId>org.vaadin</groupId>
-            <artifactId>vaadin-karaf-bundle1</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--Not a real dependency, but this makes sure if the bundle is built before running karaf-->
-        <dependency>
-            <groupId>org.vaadin</groupId>
-            <artifactId>vaadin-karaf-bundle2</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <!--Vaadin dependencies should not be in a classpath-->
         <dependency>
             <groupId>com.vaadin</groupId>
