@@ -18,6 +18,7 @@ package com.vaadin.ui.components.grid;
 import java.util.Map;
 import java.util.Optional;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
@@ -59,12 +60,16 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      *            on empty grid
      * @param dropLocation
      *            Location of the drop within the target row.
+     * @param mouseEventDetails
+     *            mouse event details object containing information about the
+     *            drop event
      */
     public GridDropEvent(Grid<T> target, Map<String, String> data,
             DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
-            T dropTargetRow, DropLocation dropLocation) {
-        super(target, data, dropEffect, dragSourceExtension);
+            T dropTargetRow, DropLocation dropLocation,
+            MouseEventDetails mouseEventDetails) {
+        super(target, data, dropEffect, dragSourceExtension, mouseEventDetails);
 
         this.dropTargetRow = dropTargetRow;
         this.dropLocation = dropLocation;
