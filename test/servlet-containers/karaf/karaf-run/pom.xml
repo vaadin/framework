@@ -78,6 +78,8 @@
                             <delay>5</delay>
                             <attempts>150</attempts>
                             <commands>
+                                <!--Scheduled shutdown in 15 minutes-->
+                                <command>system:shutdown -f +10</command>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
                                 <command>bundle:install -s mvn:org.jsoup/jsoup/1.8.3</command>
@@ -93,8 +95,6 @@
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
                                 <command>
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle2/target/vaadin-karaf-bundle2-${project.version}.jar]]></command>
-                                <!--Scheduled shutdown in 10 minutes-->
-                                <command>system:shutdown -f +10</command>
                             </commands>
                         </configuration>
                     </execution>
