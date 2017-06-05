@@ -1,0 +1,12 @@
+@import "../valo/valo.scss";
+
+@mixin karaftesttheme {
+  @include valo;
+  .v-button {
+    color: #FF8080
+  }
+}
+
+.karaftesttheme {
+  @include karaftesttheme;
+}

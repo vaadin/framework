@@ -15,6 +15,7 @@ uitest/src/main/themes/VAADIN/themes/**/styles.css
 
 # Persisted scss cache files
 uitest/src/main/themes/VAADIN/themes/**/styles.scss.cache
+test/servlet-containers/karaf/vaadin-karaf-bundle1/src/main/resources/VAADIN/themes/karaftesttheme/styles.css
 
 # /build/
 /build/result

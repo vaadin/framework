@@ -1,0 +1,6 @@
+Bundle-Name: ${project.name}
+Bundle-Version: ${project.version}
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Export-Package: com.vaadin.test.osgi.myapplication1
+Import-Package: *
+Web-ContentPath: /myapp1
