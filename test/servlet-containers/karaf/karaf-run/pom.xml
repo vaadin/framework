@@ -75,7 +75,7 @@
                         </goals>
                         <configuration>
                             <delay>5</delay>
-                            <attempts>10</attempts>
+                            <attempts>150</attempts>
                             <commands>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
