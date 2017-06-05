@@ -552,4 +552,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
         return itemCollapseAllowedProvider;
     }
+
+    @Override
+    protected int getDataProviderSize() {
+        return mapper.getTreeSize();
+    }
 }
