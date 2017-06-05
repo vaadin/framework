@@ -42,6 +42,7 @@
                         <configuration>
                             <executable>mvn</executable>
                             <async>true</async>
+                            <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
                             <commandlineArgs>karaf:run@run-karaf-server</commandlineArgs>
                         </configuration>
                     </execution>
@@ -92,6 +93,8 @@
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
                                 <command>
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle2/target/vaadin-karaf-bundle2-${project.version}.jar]]></command>
+                                <!--Scheduled shutdown in 10 minutes-->
+                                <command>system:shutdown -f +10</command>
                             </commands>
                         </configuration>
                     </execution>
