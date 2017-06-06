@@ -66,3 +66,33 @@ Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Act
 ----
 
 In addition to these approaches, it is also possible to repackage all the static resources of an application to a single bundle and export the [filename]#/VAADIN# directory. This can be useful e.g. when migrating an old Vaadin OSGi application in an environment that does not support parallel deployments of multiple versions of the application.
+
+[[advanced.osgi.deploy]]
+== Deployment to OSGi container.
+
+In order to have your application running under OSGi container, you need to have Vaadin framework parts deployed, and then the application bundle can be deployed and started.
+Here is a list of required Vaadin bundles, in order of loading:
+
+* `jsoup-1.8.3.jar`
+* `gentyref-1.2.0.vaadin1.jar`
+* `vaadin-shared-8.1.x.jar`
+* `vaadin-server-8.1.x.jar-8.1.x.jar`
+* `vaadin-osgi-integration-8.1.x.jar`
+* `vaadin-client-compiled-8.1.x.jar` (not required, if your project uses its own widgetset)
+* `vaadin-themes-8.1.x.jar`
+
+And here is a complete script ho have Vaadin application up and running unsing link:https://karaf.apache.org/[Apache Karaf 4.0.8] console:
+
+[source]
+----
+feature:install http
+feature:install http-whiteboard
+bundle:install -s mvn:org.jsoup/jsoup/1.8.3
+bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1
+bundle:install -s mvn:com.vaadin/vaadin-shared/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-server/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-client-compiled/8.1.0
+bundle:install -s mvn:com.vaadin/vaadin-themes/8.1.0
+bundle:install -s file:path-to-the-application.jar
+----
