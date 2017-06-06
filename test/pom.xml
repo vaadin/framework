@@ -92,6 +92,7 @@
     </dependencies>
 
     <modules>
+        <module>servlet-containers/karaf</module>
         <module>widget-set-testutil</module>
         <module>default-widget-set</module>
         <module>vaadin7-widget-set</module>
@@ -105,7 +106,6 @@
         <module>servlet-containers/generic</module>
         <module>cdi</module>
         <module>servlet-containers/jsp-integration</module>
-        <module>servlet-containers/karaf</module>
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
         <module>dependency-rewrite-addon</module>

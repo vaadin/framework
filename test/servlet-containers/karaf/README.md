@@ -17,6 +17,8 @@ Tips and Tricks
 
 Running and stopping karaf manually
 ---
+* To start karaf as a foreground process and deploy both vaadin bundles and two existing applications, run `mvn  -f karaf-run-pom.xml clean karaf:run`
+in `karaf-run` module
 * To start karaf as a background process and deploy both vaadin bundles and two existing applications, run `mvn clean pre-integration-test`
 in `karaf-run` module
 * Karaf console is available via ssh at `127.0.0.0:8101` port, username/password is `karaf/karaf` 
@@ -26,4 +28,4 @@ in `karaf-run` module
 Potential problems
 ---
 * Maven executable should be in `PATH`
-* Background karaf process may be left running if the build fails prior `integration-test` phase.
+* Background karaf process may be left running for 10 minutes if the build fails prior `integration-test` phase.

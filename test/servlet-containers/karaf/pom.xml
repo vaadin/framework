@@ -10,7 +10,7 @@
     </parent>
     <artifactId>karaf</artifactId>
     <packaging>pom</packaging>
-    <name>Vaadin Karaf Test</name>
+    <name>Vaadin Karaf TestRoot</name>
 
     <modules>
         <module>vaadin-karaf-bundle1</module>

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>karaf-run</artifactId>
-    <name>Karaf Runner</name>
+    <name>Vaadin Karaf Test Runner</name>
 
     <dependencies>
         <!--Vaadin dependencies should not be in a classpath-->
@@ -43,7 +43,7 @@
                             <executable>mvn</executable>
                             <async>true</async>
                             <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
-                            <commandlineArgs>karaf:run@run-karaf-server</commandlineArgs>
+                            <commandlineArgs>-f karaf-run-pom.xml karaf:run</commandlineArgs>
                         </configuration>
                     </execution>
                 </executions>
@@ -55,20 +55,6 @@
                 <version>4.0.8</version>
                 <executions>
                     <execution>
-                        <!--This should not be run directly, it is started as a background process with
-                        exec:exec goal
-                        -->
-                        <id>run-karaf-server</id>
-                        <phase/>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <deployProjectArtifact>false</deployProjectArtifact>
-                            <startSsh>true</startSsh>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>karaf-client-ctrl</id>
                         <phase>pre-integration-test</phase>
                         <goals>
@@ -79,7 +65,7 @@
                             <attempts>150</attempts>
                             <commands>
                                 <!--Scheduled shutdown in 15 minutes-->
-                                <command>system:shutdown -f +10</command>
+                                <command>shutdown -f +10</command>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
                                 <command>bundle:install -s mvn:org.jsoup/jsoup/1.8.3</command>
