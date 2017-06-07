@@ -607,6 +607,17 @@ public class GridTest {
         assertSingleSortProperty(objectColumn, "foo");
     }
 
+    @Test
+    public void testSize() {
+        Assert.assertEquals(0, grid.size());
+        grid.setItems("foo");
+        Assert.assertEquals(1, grid.size());
+        grid.setItems("foo", "bar", "car");
+        Assert.assertEquals(3, grid.size());
+        grid.setItems();
+        Assert.assertEquals(0, grid.size());
+    }
+
     private static void assertSingleSortProperty(Column<?, ?> column,
             String expectedProperty) {
         QuerySortOrder[] sortOrders = column

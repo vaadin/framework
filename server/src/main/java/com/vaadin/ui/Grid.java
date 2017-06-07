@@ -88,7 +88,6 @@ import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
-import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
@@ -104,7 +103,6 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.Header;
 import com.vaadin.ui.components.grid.Header.Row;
-import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.ItemClickListener;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
@@ -3720,6 +3718,25 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void scrollToEnd() {
         getRpcProxy(GridClientRpc.class).scrollToEnd();
+    }
+
+    /**
+     * Returns the size of this grid's data provider.
+     * <p>
+     * If there has been no changes to the data after the data
+     * has been set to the grid, this is also the number of rows
+     * in the grid.
+     * <p>
+     * <b>NOTE</b> that this method always does a new size query
+     * to the data provider, so avoid calling this method
+     * excessively when using a backend data provider.
+     *
+     * @return the size of grids data
+     * @see DataProvider#size(Query)
+     * @since
+     */
+    public int size() {
+        return getDataProvider().size(new Query<>());
     }
 
     @Override
