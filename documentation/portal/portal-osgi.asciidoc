@@ -59,5 +59,24 @@ public class MyUI extends UI {
 }
 ----
 
+[[portal.osgi.portlet]]
+== Deployment a Portlet With OSGi
 An OSGi portlet should be packaged as a JAR with a proper OSGi bundle
 manifest, and deployed to a portal that has its required bundles installed.
+Maven archetype `com.vaadin:vaadin-archetype-liferay-portlet:8.1.0` is a good starting point to build an OSGi portlet application.
+The required bundles (and the application as well) can be installed using link:https://dev.liferay.com/develop/tutorials/-/knowledge_base/7-0/blade-cli[blade client].
+
+Here is an example script for doing that:
+//TODO change URLs to maven central
+[source, shell]
+----
+java -jar com.liferay.blade.cli.jar sh start https://repo1.maven.org/maven2/org/jsoup/jsoup/1.8.3/jsoup-1.8.3.jar
+java -jar com.liferay.blade.cli.jar sh start https://repo1.maven.org/maven2/com/vaadin/external/gentyref/1.2.0.vaadin1/gentyref-1.2.0.vaadin1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-shared/8.1.0.beta1/vaadin-shared-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-server/8.1.0.beta1/vaadin-server-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-osgi-integration/8.1.0.beta1/vaadin-osgi-integration-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-client-compiled/8.1.0.beta1/vaadin-client-compiled-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-themes/8.1.0.beta1/vaadin-themes-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start https://maven.vaadin.com/vaadin-prereleases/com/vaadin/vaadin-liferay-integration/8.1.0.beta1/vaadin-liferay-integration-8.1.0.beta1.jar
+java -jar com.liferay.blade.cli.jar sh start file:<path_to_liferay_portlet.jar>
+----
