@@ -332,11 +332,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             int offset = requestedRows.getStart();
             int limit = requestedRows.length();
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            List<T> rowsToPush = (List<T>) getDataProvider()
-                    .fetch(new Query(offset, limit, backEndSorting,
-                            inMemorySorting, filter))
-                    .collect(Collectors.toList());
+            List<T> rowsToPush = fetchItemsWithRange(offset, limit);
 
             if (!initial && !reset && rowsToPush.size() == 0) {
                 triggerReset = true;
@@ -357,6 +353,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         setPushRows(Range.withLength(0, 0));
         reset = triggerReset;
         updatedData.clear();
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected List<T> fetchItemsWithRange(int offset, int limit) {
+        return (List<T>) getDataProvider().fetch(new Query(offset, limit,
+                backEndSorting, inMemorySorting, filter))
+                .collect(Collectors.toList());
     }
 
     /**
