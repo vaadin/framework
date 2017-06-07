@@ -17,6 +17,94 @@ To deploy Vaadin applications as OSGi bundles, static resources (including theme
 
 The application is typically packaged as a JAR file, and needs to have a valid OSGi bundle manifest which can be created e.g. by the `bnd-maven-plugin`. All the dependencies of the application should be available as OSGi bundles.
 
+[[advanced.osgi.servlet.maven]]
+== Minimal Vaadin Project For OSGi
+Vaadin application for OSGi should be a valid bundle, i.e. it should bepackaged as a `.jar` file, and it should have proper OSGi manifest inside.
+The easiest way to convert regular maven-based Vaadin application into valid OSGi bundle contains five steps:
+
+* Change packaging type to `jar` in your `pom.xml`:
+[source, xml]
+----
+    <packaging>jar</packaging>
+----
+* For change scope for all vaadin dependencies from default to `provided`, like this:
+[source, xml]
+----
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+----
+* Add osgi-related dependencies to the project
+[source, xml]
+----
+        <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-osgi-integration</artifactId>
+            <version>8.1.0.beta1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.annotation</artifactId>
+            <version>6.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+----
+* Setup necessary plugins for building the project:
+[source, xml]
+----
+ <build>
+        <plugins>
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>bnd-process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+            ...
+        </plugins>
+    </build>
+----
+* Add bundle script (`bnd.bnd`) into the project root folder:
+[source, text]
+----
+Bundle-Name: ${project.name}
+Bundle-Version: ${project.version}
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Export-Package: com.example.osgi.myapplication
+Import-Package: *
+Web-ContentPath: /myapp
+----
+
 [[advanced.osgi.servlet]]
 == Publishing a Servlet With OSGi
 
