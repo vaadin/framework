@@ -231,8 +231,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     private T getParentOfItem(T item) {
+        Objects.requireNonNull(item, "Can not find the parent of null");
+        Object itemId = getDataProvider().getId(item);
         for (Entry<T, List<T>> entry : childMap.entrySet()) {
-            if (entry.getValue().contains(item)) {
+            if (entry.getValue().stream().map(getDataProvider()::getId)
+                    .anyMatch(id -> id.equals(itemId))) {
                 return entry.getKey();
             }
         }
@@ -339,7 +342,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /* Fetch methods. These are used to calculate what to request. */
 
     /**
-     * 
+     * Gets a stream of items in the form of a flattened hierarchy from the
+     * back-end.
      * <p>
      * An example on how this works. Hierarchy contains 3 levels of nodes. Each
      * node on first and second level has 3 children. The first node of the two
@@ -361,9 +365,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * request ranges become {@code (parent -> range)}:
      * 
      * <pre>
-     *   null -> [1..3) // Root nodes
-     *      1 -> [1..3) // Second level
-     *      2 -> [1..3) // Leaves
+     * null -> [1..3) // Root nodes
+     *    1 -> [1..3) // Second level
+     *    2 -> [1..3) // Leaves
      * </pre>
      * 
      * This results into a stream of:
@@ -471,7 +475,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private Stream<T> doFetchDirectChildren(T parent, Range range) {
         return getDataProvider().fetchChildren(new HierarchicalQuery(
-                range.getStart(), range.getEnd(), getBackEndSorting(),
+                range.getStart(), range.length(), getBackEndSorting(),
                 getInMemorySorting(), getFilter(), parent));
     }
 
