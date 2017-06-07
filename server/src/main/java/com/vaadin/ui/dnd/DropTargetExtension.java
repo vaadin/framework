@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -65,12 +66,15 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Override this method if you need to have a custom RPC interface for
      * transmitting the drop event with more data. If just need to do additional
      * things before firing the drop event, then you should override
-     * {@link #onDrop(List, Map, DropEffect)} instead.
+     * {@link #onDrop(List, Map, DropEffect, MouseEventDetails)} instead.
      */
     protected void registerDropTargetRpc() {
-        registerRpc((DropTargetRpc) (types, data, dropEffect) -> {
-            onDrop(types, data, DropEffect.valueOf(dropEffect.toUpperCase()));
-        });
+        registerRpc(
+                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) -> {
+                    onDrop(types, data,
+                            DropEffect.valueOf(dropEffect.toUpperCase()),
+                            mouseEventDetails);
+                });
     }
 
     /**
@@ -84,16 +88,19 @@ public class DropTargetExtension<T extends AbstractComponent>
      *         DataTransfer} object.
      * @param dropEffect
      *         the drop effect
+     * @param mouseEventDetails
+     *         mouse event details object containing information about the drop
+     *         event
      */
     protected void onDrop(List<String> types, Map<String, String> data,
-            DropEffect dropEffect) {
+            DropEffect dropEffect, MouseEventDetails mouseEventDetails) {
 
         // Create a linked map that preserves the order of types
         Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
         types.forEach(type -> dataPreserveOrder.put(type, data.get(type)));
 
         DropEvent<T> event = new DropEvent<>(getParent(), dataPreserveOrder,
-                dropEffect, getUI().getActiveDragSource());
+                dropEffect, getUI().getActiveDragSource(), mouseEventDetails);
 
         fireEvent(event);
     }

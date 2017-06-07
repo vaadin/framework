@@ -203,7 +203,9 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
                                     + event.getDropTargetRow().get()
                                             .getLastName()
                                     : "[BODY]")
-                            + ", location=" + event.getDropLocation());
+                            + ", location=" + event.getDropLocation()
+                            + ", mouseEventDetails="
+                            + event.getMouseEventDetails());
                 }
             });
         });

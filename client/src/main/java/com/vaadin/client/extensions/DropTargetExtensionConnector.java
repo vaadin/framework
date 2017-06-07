@@ -26,8 +26,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -362,7 +364,13 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
     protected void sendDropEventToServer(List<String> types,
             Map<String, String> data, String dropEffect,
             NativeEvent dropEvent) {
-        getRpcProxy(DropTargetRpc.class).drop(types, data, dropEffect);
+        // Build mouse event details for the drop event
+        MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(dropEvent, getDropTargetElement());
+
+        // Send data to server with RPC
+        getRpcProxy(DropTargetRpc.class)
+                .drop(types, data, dropEffect, mouseEventDetails);
     }
 
     /**

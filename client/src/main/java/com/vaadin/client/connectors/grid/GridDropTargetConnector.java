@@ -23,12 +23,14 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.user.client.Window;
+import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widgets.Escalator;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
@@ -115,8 +117,11 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
             dropLocation = DropLocation.EMPTY;
         }
 
+        MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(dropEvent, targetElement);
+
         getRpcProxy(GridDropTargetRpc.class).drop(types, data, dropEffect,
-                rowKey, dropLocation);
+                rowKey, dropLocation, mouseEventDetails);
     }
 
     private JsonObject getRowData(TableRowElement row) {

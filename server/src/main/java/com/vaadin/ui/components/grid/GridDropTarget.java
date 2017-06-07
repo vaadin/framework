@@ -145,7 +145,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     @Override
     protected void registerDropTargetRpc() {
         registerRpc((GridDropTargetRpc) (types, data, dropEffect, rowKey,
-                dropLocation) -> {
+                dropLocation, mouseEventDetails) -> {
 
             // Create a linked map that preserves the order of types
             Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
@@ -157,7 +157,8 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
             GridDropEvent<T> event = new GridDropEvent<>(getParent(),
                     dataPreserveOrder,
                     DropEffect.valueOf(dropEffect.toUpperCase()),
-                    getUI().getActiveDragSource(), dropTargetRow, dropLocation);
+                    getUI().getActiveDragSource(), dropTargetRow, dropLocation,
+                    mouseEventDetails);
 
             fireEvent(event);
         });

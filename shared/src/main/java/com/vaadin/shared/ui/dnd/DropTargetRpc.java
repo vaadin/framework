@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.dnd;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -39,7 +40,10 @@ public interface DropTargetRpc extends ServerRpc {
      *         DataTransfer} object.
      * @param dropEffect
      *         The desired drop effect.
+     * @param mouseEventDetails
+     *         mouse event details object containing information about the drop
+     *         event
      */
     public void drop(List<String> types, Map<String, String> data,
-            String dropEffect);
+            String dropEffect, MouseEventDetails mouseEventDetails);
 }
