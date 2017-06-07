@@ -151,7 +151,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     public void doCollapse(T item) {
         if (mapper.isExpanded(item)) {
             Range removedRows = mapper.collapse(item);
-            if (!removedRows.isEmpty()) {
+            if (!reset && !removedRows.isEmpty()) {
                 getClientRpc().removeRows(removedRows.getStart(),
                         removedRows.length());
             }
@@ -169,7 +169,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     public void doExpand(T item) {
         if (!mapper.isExpanded(item)) {
             Range addedRows = mapper.expand(item);
-            if (!addedRows.isEmpty()) {
+            if (!reset && !addedRows.isEmpty()) {
                 getClientRpc().insertRows(addedRows.getStart(),
                         addedRows.length());
                 pushData(addedRows.getStart(), fetchItemsWithRange(

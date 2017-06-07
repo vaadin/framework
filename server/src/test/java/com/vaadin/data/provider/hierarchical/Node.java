@@ -1,6 +1,8 @@
 package com.vaadin.data.provider.hierarchical;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable{
 
     private static int counter = 0;
 
