@@ -616,7 +616,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                                     .setValue(newItemCaption);
                 }
                 if (isMultiSelect()) {
-                    Set values = new HashSet((Collection) getValue());
+                    Set<String> values = new HashSet<>((Collection<String>) getValue());
                     values.add(newItemCaption);
                     setValue(values);
                 } else {

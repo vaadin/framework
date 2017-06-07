@@ -12,7 +12,7 @@ import com.vaadin.v7.data.util.PropertyFormatter;
 @SuppressWarnings("unchecked")
 public class PropertyFormatterTest {
 
-    class TestFormatter extends PropertyFormatter {
+    class TestFormatter extends PropertyFormatter<Object> {
 
         @Override
         public String format(Object value) {

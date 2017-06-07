@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Set;
 
 import com.vaadin.tests.VaadinClasses;
+import com.vaadin.ui.Component;
 
 public class GraphVizClassHierarchyCreator {
 
     public static void main(String[] args) {
-        String gv = getGraphVizHierarchy((List) VaadinClasses.getComponents(),
+        String gv = getGraphVizHierarchy((List<Class<? extends Component>>) VaadinClasses.getComponents(),
                 "com.vaadin");
         System.out.println(gv);
     }
 
-    private static String getGraphVizHierarchy(List<Class> classes,
+    private static String getGraphVizHierarchy(List<Class<? extends Component>> classes,
             String packageToInclude) {
         boolean includeInterfaces = false;
 
@@ -26,14 +27,14 @@ public class GraphVizClassHierarchyCreator {
 
         StringBuilder sb = new StringBuilder();
 
-        Set<Class> classesAndParents = new HashSet<>();
+        Set<Class<?>> classesAndParents = new HashSet<>();
         for (Class<?> cls : classes) {
             addClassAndParents(classesAndParents, cls, packageToInclude);
         }
 
-        Set<Class> interfaces = new HashSet<>();
+        Set<Class<?>> interfaces = new HashSet<>();
         for (Object cls : classesAndParents.toArray()) {
-            for (Class<?> c : ((Class) cls).getInterfaces()) {
+            for (Class<?> c : ((Class<?>) cls).getInterfaces()) {
                 addClassAndParentInterfaces(classesAndParents, c,
                         packageToInclude);
             }
@@ -67,7 +68,7 @@ public class GraphVizClassHierarchyCreator {
         return header.toString() + sb.toString() + "}";
     }
 
-    private static void addClassAndParents(Set<Class> classesAndParents,
+    private static void addClassAndParents(Set<Class<?>> classesAndParents,
             Class<?> cls, String packageToInclude) {
 
         if (cls == null) {
@@ -89,7 +90,7 @@ public class GraphVizClassHierarchyCreator {
     }
 
     private static void addClassAndParentInterfaces(
-            Set<Class> classesAndParents, Class<?> cls,
+            Set<Class<?>> classesAndParents, Class<?> cls,
             String packageToInclude) {
 
         if (cls == null) {

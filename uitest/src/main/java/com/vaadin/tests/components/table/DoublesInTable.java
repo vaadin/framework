@@ -29,7 +29,7 @@ public class DoublesInTable extends TestBase {
 
     private Log log = new Log(5);
 
-    private ComboBox localeSelect;
+    private ComboBox<?> localeSelect;
 
     private CheckBox useCustomConverters;
 
@@ -54,7 +54,7 @@ public class DoublesInTable extends TestBase {
 
     }
 
-    private ComboBox createLocaleSelect() {
+    private ComboBox<?> createLocaleSelect() {
         ComboBox<Locale> cb = new ComboBox<>(null,
                 Arrays.asList(Locale.getAvailableLocales()));
         cb.setValue(Locale.US);

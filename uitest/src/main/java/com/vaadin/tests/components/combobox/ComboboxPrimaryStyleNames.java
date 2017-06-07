@@ -8,7 +8,7 @@ public class ComboboxPrimaryStyleNames extends TestBase {
 
     @Override
     protected void setup() {
-        final ComboBox<String> box = new ComboBox();
+        final ComboBox<String> box = new ComboBox<>();
         box.setItems("Value 1", "Value 2", "Value 3", "Value 4");
         box.setPrimaryStyleName("my-combobox");
 

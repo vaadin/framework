@@ -26,7 +26,7 @@ public class TextAreaCursorPosition extends TestBase {
         addComponent(new Button("Force position update"));
     }
 
-    public void addListener(AbstractField newField) {
+    public void addListener(AbstractField<?> newField) {
         AbstractTextField newTextField = (AbstractTextField) newField;
         newTextField.setValueChangeMode(ValueChangeMode.EAGER);
         newTextField.addValueChangeListener(event -> {

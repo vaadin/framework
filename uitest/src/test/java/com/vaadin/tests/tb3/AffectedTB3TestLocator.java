@@ -45,7 +45,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
             List<Class<? extends T>> allTestClasses,
             List<Class<? extends T>> changedTestClasses) throws IOException {
 
-        Set testClasses = new HashSet(changedTestClasses);
+        Set<Class<? extends T>> testClasses = new HashSet<Class<? extends T>>(changedTestClasses);
         testClasses
                 .addAll(getTestClassesWithAffectedPackageName(allTestClasses));
 
@@ -60,7 +60,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
         List<Class<? extends T>> affectedTestClasses = new ArrayList<>();
         List<String> affectedFiles = getAffectedFiles();
 
-        for (Class c : classes) {
+        for (Class<? extends T> c : classes) {
             String[] packageParts = c.getName().split("\\.");
             String lastPart = packageParts[packageParts.length - 2];
 

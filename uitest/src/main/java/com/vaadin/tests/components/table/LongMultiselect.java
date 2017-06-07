@@ -37,7 +37,7 @@ public class LongMultiselect extends AbstractReindeerTestUI {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 // Set ItemProperty.COLUMN2 for all selected values of table
-                Collection selectedIds = (Collection) table.getValue();
+                Collection<?> selectedIds = (Collection<?>) table.getValue();
                 for (final Object itemId : selectedIds) {
                     final Property p = table.getItem(itemId)
                             .getItemProperty(ItemProperty.COLUMN2);

@@ -312,7 +312,7 @@ public abstract class Compare implements Filter {
             return true;
         } else if (value instanceof Comparable && otherValue.getClass()
                 .isAssignableFrom(getValue().getClass())) {
-            return ((Comparable) value).compareTo(otherValue) == 0;
+            return ((Comparable<Object>) value).compareTo(otherValue) == 0;
         } else {
             return value.equals(otherValue);
         }

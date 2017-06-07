@@ -18,7 +18,7 @@ public class RemoveListenersOnDetachTest {
     int numValueChanges = 0;
     int numReadOnlyChanges = 0;
 
-    AbstractField field = new AbstractField() {
+    AbstractField<?> field = new AbstractField<Object>() {
         final private VaadinSession application = new AlwaysLockedVaadinSession(
                 null);
         private UI uI = new UI() {

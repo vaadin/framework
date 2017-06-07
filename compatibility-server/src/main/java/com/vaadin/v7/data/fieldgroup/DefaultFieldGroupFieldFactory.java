@@ -94,7 +94,7 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return rta;
     }
 
-    private <T extends Field> T createEnumField(Class<?> type,
+    private <T extends Field<?>> T createEnumField(Class<?> type,
             Class<T> fieldType) {
         // Determine first if we should (or can) create a select for the enum
         Class<AbstractSelect> selectClass = null;
@@ -116,9 +116,9 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return null;
     }
 
-    private <T extends Field> T createDateField(Class<?> type,
+    private <T extends Field<?>> T createDateField(Class<?> type,
             Class<T> fieldType) {
-        AbstractField field;
+        AbstractField<?> field;
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
             field = new InlineDateField();

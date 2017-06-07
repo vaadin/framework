@@ -6,7 +6,7 @@ import com.vaadin.ui.ComboBox;
 
 public class ComboBoxEnablesComboBox extends TestBase {
 
-    private ComboBox cb2;
+    private ComboBox<String> cb2;
 
     @Override
     protected void setup() {

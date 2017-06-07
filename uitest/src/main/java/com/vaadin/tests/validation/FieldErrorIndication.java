@@ -84,12 +84,12 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
 
         vl.addComponents(comboBox, listSelect, nativeSelect, twinColSelect);
 
-        Class<? extends AbstractField>[] textFields = new Class[] {
+        Class<? extends AbstractField<?>>[] textFields = new Class[] {
                 TextField.class, TextArea.class, RichTextArea.class,
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends Field> fieldClass : textFields) {
+        for (Class<? extends Field<?>> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
@@ -100,10 +100,10 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
      * @param fieldClass
      * @return
      */
-    private Component getField(Class<? extends Field> fieldClass) {
-        AbstractField f;
+    private Component getField(Class<? extends Field<?>> fieldClass) {
+        AbstractField<?> f;
         try {
-            f = (AbstractField) fieldClass.newInstance();
+            f = (AbstractField<?>) fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

@@ -499,7 +499,7 @@ public class GridBasicClientFeaturesWidget
                         final Label columnOrderLabel = new Label();
                         columnOrderLabel.getElement().setId("columnvisibility");
                         addLineEnd(columnOrderLabel, 250);
-                        ColumnVisibilityChangeHandler handler = new ColumnVisibilityChangeHandler<List<Data>>() {
+                        ColumnVisibilityChangeHandler<List<Data>> handler = new ColumnVisibilityChangeHandler<List<Data>>() {
 
                             private int eventIndex = 0;
 

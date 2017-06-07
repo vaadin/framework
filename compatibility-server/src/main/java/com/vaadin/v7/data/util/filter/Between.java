@@ -59,7 +59,7 @@ public class Between implements Filter {
             throws UnsupportedOperationException {
         Object value = item.getItemProperty(getPropertyId()).getValue();
         if (value instanceof Comparable) {
-            Comparable comparable = (Comparable) value;
+            Comparable<Object> comparable = (Comparable<Object>) value;
             return isAfterStartValue(comparable)
                     && isBeforeEndValue(comparable);
         } else if (value == null) {
@@ -102,12 +102,12 @@ public class Between implements Filter {
 
     }
 
-    private boolean isAfterStartValue(Comparable comparable) {
+    private boolean isAfterStartValue(Comparable<Object> comparable) {
         return getStartValue() == null
                 || comparable.compareTo(getStartValue()) >= 0;
     }
 
-    private boolean isBeforeEndValue(Comparable comparable) {
+    private boolean isBeforeEndValue(Comparable<Object> comparable) {
         return getEndValue() == null
                 || comparable.compareTo(getEndValue()) <= 0;
     }

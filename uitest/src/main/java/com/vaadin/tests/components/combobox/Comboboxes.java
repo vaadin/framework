@@ -10,7 +10,7 @@ import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 
-public class Comboboxes extends ComponentTestCase<ComboBox> {
+public class Comboboxes extends ComponentTestCase<ComboBox<?>> {
 
     private static class StringBean {
         private String value;
@@ -25,8 +25,8 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
     }
 
     @Override
-    protected Class<ComboBox> getTestClass() {
-        return ComboBox.class;
+    protected Class<ComboBox<?>> getTestClass() {
+        return (Class) ComboBox.class;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Comboboxes extends ComponentTestCase<ComboBox> {
         options.put("64x64", "../runo/icons/64/email-reply.png");
 
         return createSelectAction("Icon", options, "<None>",
-                new Command<ComboBox, String>() {
+                new Command<ComboBox<?>, String>() {
 
                     @SuppressWarnings("unchecked")
                     @Override
