@@ -651,10 +651,25 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
 
             if (!Objects.equals(this.filter, filter)) {
-                this.filter = filter;
+                setFilter(filter);
                 reset();
             }
         };
+    }
+
+    /**
+     * Sets the filter for this DataCommunicator. This method is used by user
+     * through the consumer method from {@link #setDataProvider} and should not
+     * be called elsewhere.
+     * 
+     * @param filter
+     *            the filter
+     * 
+     * @param <F>
+     *            the filter type
+     */
+    protected <F> void setFilter(F filter) {
+        this.filter = filter;
     }
 
     /**

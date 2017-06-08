@@ -15,35 +15,26 @@
  */
 package com.vaadin.data.provider;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.server.SerializableComparator;
 import com.vaadin.shared.Range;
-import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.ui.ItemCollapseAllowedProvider;
 
 import elemental.json.Json;
 import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * Mapper for hierarchical data.
@@ -65,8 +56,9 @@ import elemental.json.JsonValue;
  */
 public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
-    // childMap is only used for finding indices.
-    private Map<T, List<T>> childMap = new HashMap<>();
+    // childMap is only used for finding parents of items and clean up on
+    // removing children of expanded nodes.
+    private Map<T, Set<T>> childMap = new HashMap<>();
 
     private final HierarchicalDataProvider<T, F> provider;
     private F filter;
@@ -221,28 +213,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 hierarchyData);
     }
 
-    private int getDepth(T item) {
-        int depth = -1;
-        while (item != null) {
-            item = getParentOfItem(item);
-            ++depth;
-        }
-        return depth;
-    }
-
-    private T getParentOfItem(T item) {
-        Objects.requireNonNull(item, "Can not find the parent of null");
-        Object itemId = getDataProvider().getId(item);
-        for (Entry<T, List<T>> entry : childMap.entrySet()) {
-            if (entry.getValue().stream().map(getDataProvider()::getId)
-                    .anyMatch(id -> id.equals(itemId))) {
-                return entry.getKey();
-            }
-        }
-        throw new IllegalArgumentException(
-                "Given item does not exist in hierarchy");
-    }
-
     /**
      * Gets the current item collapse allowed provider.
      * 
@@ -281,8 +251,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setInMemorySorting(Comparator<T> inMemorySorting) {
         this.inMemorySorting = inMemorySorting;
-        // Invalidate child map
-        childMap.clear();
     }
 
     /**
@@ -303,8 +271,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setBackEndSorting(List<QuerySortOrder> backEndSorting) {
         this.backEndSorting = backEndSorting;
-        // Invalidate child map
-        childMap.clear();
     }
 
     /**
@@ -325,8 +291,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setFilter(Object filter) {
         this.filter = (F) filter;
-        // Invalidate child map
-        childMap.clear();
     }
 
     /**
@@ -339,125 +303,29 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         return provider;
     }
 
+    /**
+     * Returns whether given item has children.
+     * 
+     * @param item
+     *            the node to test
+     * @return {@code true} if node has children; {@code false} if not
+     */
+    public boolean hasChildren(T item) {
+        return getDataProvider().hasChildren(item);
+    }
+
     /* Fetch methods. These are used to calculate what to request. */
 
     /**
      * Gets a stream of items in the form of a flattened hierarchy from the
-     * back-end.
-     * <p>
-     * An example on how this works. Hierarchy contains 3 levels of nodes. Each
-     * node on first and second level has 3 children. The first node of the two
-     * first levels are expanded:
-     * 
-     * <pre>
-     * 1
-     *  2
-     *   3
-     *   4
-     *   5
-     *  6
-     *  7
-     * 8
-     * 9
-     * </pre>
-     * 
-     * The original request is from index 3 to end of the hierarchy. Different
-     * request ranges become {@code (parent -> range)}:
-     * 
-     * <pre>
-     * null -> [1..3) // Root nodes
-     *    1 -> [1..3) // Second level
-     *    2 -> [1..3) // Leaves
-     * </pre>
-     * 
-     * This results into a stream of:
-     * 
-     * <pre>
-     *  4, 5, 6, 7, 8, 9
-     * </pre>
-     * 
-     * In this particular example, none of the parents were included in the
-     * result. Should a parent be included, the {@link #doFetchItems} method
-     * would take care of recursively expanding it, when fetching its parent.
+     * back-end and filter the wanted results from the list.
      * 
      * @param range
      *            the requested item range
      * @return the stream of items
      */
     public Stream<T> fetchItems(Range range) {
-        boolean pendingFetch = childMap.isEmpty();
-        List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
-        if (pendingFetch) {
-            // A full fetch was pending. Data up to date
-            return flatHierarchy.stream().skip(range.getStart())
-                    .limit(range.length());
-        }
-
-        // Map to store the request ranges for individual items.
-        Map<T, Range> splitRequests = new HashMap<>();
-
-        // The recursive fetch will initiate from these nodes.
-        Set<T> parentNodes = new LinkedHashSet<>();
-
-        final int limit = Math.min(flatHierarchy.size(), range.getEnd());
-        for (int i = range.getStart(); i < limit; ++i) {
-            // Find the parent for given index
-            T parent = getParent(i, flatHierarchy);
-            // Find the corresponding location in parents child list.
-            int parentChildIndex = childMap.get(parent)
-                    .indexOf(flatHierarchy.get(i));
-
-            if (parent == null
-                    || !range.contains(flatHierarchy.indexOf(parent))) {
-                // Parent will not be part of the result set.
-                parentNodes.add(parent);
-            }
-
-            if (!splitRequests.containsKey(parent)) {
-                // First request for this parent
-                splitRequests.put(parent, Range.withOnly(parentChildIndex));
-            } else {
-                // Combine with earlier range
-                Range expand = splitRequests.get(parent)
-                        .combineWith(Range.withOnly(parentChildIndex));
-                splitRequests.put(parent, expand);
-            }
-        }
-
-        // Initiate recursive fetch from parents not in the result set
-        return parentNodes.stream()
-                .flatMap(node -> doFetchItems(node, splitRequests, false));
-    }
-
-    /**
-     * Method used with {@link Stream#flatMap} to recursively fetch and combine
-     * the requested ranges of items into a flat stream.
-     * 
-     * @param parent
-     *            the parent node
-     * @param splitRequests
-     *            the item to range map for making the correct requests
-     * @param includeParent
-     *            {@code true} if parent should be included in result;
-     *            {@code false} if not
-     * @return the flattened hierarchy as a stream
-     */
-    private Stream<T> doFetchItems(T parent, Map<T, Range> splitRequests,
-            boolean includeParent) {
-        List<T> children = new ArrayList<>();
-
-        // Need to fetch children
-        if (splitRequests.containsKey(parent)) {
-            Range range = splitRequests.get(parent);
-            children = doFetchDirectChildren(parent, range)
-                    .collect(Collectors.toList());
-        }
-
-        // Combine parent and children
-        return combineParentAndChildStreams(parent,
-                children.stream()
-                        .flatMap(n -> doFetchItems(n, splitRequests, true)),
-                includeParent);
+        return getHierarchy(null).skip(range.getStart()).limit(range.length());
     }
 
     /* Methods for providing information on the hierarchy. */
@@ -479,15 +347,50 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 getInMemorySorting(), getFilter(), parent));
     }
 
+    private int getDepth(T item) {
+        int depth = -1;
+        while (item != null) {
+            item = getParentOfItem(item);
+            ++depth;
+        }
+        return depth;
+    }
+
+    private T getParentOfItem(T item) {
+        Objects.requireNonNull(item, "Can not find the parent of null");
+        Object itemId = getDataProvider().getId(item);
+        for (Entry<T, Set<T>> entry : childMap.entrySet()) {
+            if (entry.getValue().stream().map(getDataProvider()::getId)
+                    .anyMatch(id -> id.equals(itemId))) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     /**
-     * Returns whether given item has children.
+     * Removes all children of an item identified by a given id. Items removed
+     * by this method as well as the original item are all marked to be
+     * collapsed.
      * 
-     * @param item
-     *            the node to test
-     * @return {@code true} if node has children; {@code false} if not
+     * @param id
+     *            the item id
      */
-    public boolean hasChildren(T item) {
-        return getDataProvider().hasChildren(item);
+    private void removeChildren(Object id) {
+        // Clean up removed nodes from child map
+        Iterator<Entry<T, Set<T>>> iterator = childMap.entrySet().iterator();
+        Set<T> invalidatedChildren = new HashSet<>();
+        while (iterator.hasNext()) {
+            Entry<T, Set<T>> entry = iterator.next();
+            T key = entry.getKey();
+            if (key != null && getDataProvider().getId(key).equals(id)) {
+                invalidatedChildren.addAll(entry.getValue());
+                iterator.remove();
+            }
+        }
+        expandedItemIds.remove(id);
+        invalidatedChildren.stream().map(getDataProvider()::getId)
+                .forEach(this::removeChildren);
     }
 
     /**
@@ -543,16 +446,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of direct children
      */
     private Stream<T> getDirectChildren(T parent) {
-        T key = parent;
-        if (parent != null) {
-            Object id = getDataProvider().getId(parent);
-            key = childMap.keySet().stream().filter(
-                    k -> k != null && getDataProvider().getId(k).equals(id))
-                    .findFirst().orElse(parent);
-        }
-        if (childMap.containsKey(key)) {
-            return childMap.get(key).stream();
-        }
         return doFetchDirectChildren(parent, Range.between(0, getDataProvider()
                 .getChildCount(new HierarchicalQuery<>(filter, parent))));
     }
@@ -585,11 +478,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     private Stream<T> getChildrenStream(T parent, boolean includeParent) {
         List<T> childList = Collections.emptyList();
         if (isExpanded(parent)) {
-            if (!childMap.containsKey(parent)) {
-                Stream<T> children = getDirectChildren(parent);
-                childMap.put(parent, children.collect(Collectors.toList()));
+            childList = getDirectChildren(parent).collect(Collectors.toList());
+            if (childList.isEmpty()) {
+                removeChildren(getDataProvider().getId(parent));
+            } else {
+                childMap.put(parent, new HashSet<>(childList));
             }
-            childList = childMap.get(parent);
         }
         return combineParentAndChildStreams(parent,
                 childList.stream().flatMap(this::getChildrenStream),
