@@ -127,9 +127,9 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
         objectKeyMap.entrySet().stream()
                 .filter(e -> identifierGetter.apply(e.getKey()).equals(id))
                 .findAny().ifPresent(e -> {
-                    String key = objectKeyMap.remove(e.getKey());
-                    objectKeyMap.put(dataObject, key);
-                    keyObjectMap.put(key, dataObject);
+                    objectKeyMap.remove(e.getKey());
+                    objectKeyMap.put(dataObject, e.getValue());
+                    keyObjectMap.put(e.getValue(), dataObject);
                 });
     }
 }
