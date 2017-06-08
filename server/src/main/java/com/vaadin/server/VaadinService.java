@@ -136,6 +136,7 @@ public abstract class VaadinService implements Serializable {
 
     private Iterable<RequestHandler> requestHandlers;
     private Iterable<DependencyFilter> dependencyFilters;
+    private ConnectorIdGenerator connectorIdGenerator;
 
     private boolean atmosphereAvailable = checkAtmosphereSupport();
 
@@ -209,6 +210,11 @@ public abstract class VaadinService implements Serializable {
 
         dependencyFilters = Collections.unmodifiableCollection(
                 initDependencyFilters(event.getAddedDependencyFilters()));
+
+        connectorIdGenerator = initConenctorIdGenerator(
+                event.getAddedConnectorIdGenerators());
+        assert connectorIdGenerator != null;
+
         initialized = true;
     }
 
@@ -1477,6 +1483,49 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Determines the connector id generator to use for the application.
+     * <p>
+     * The connector id generator creates a unique id for each connector
+     * attached to a UI.
+     * <p>
+     * The framework collects generators from the {@link SessionInitEvent} where
+     * session init listeners can add them. This method is called with the
+     * combined list to determine one generator to use.
+     * <p>
+     * If the list is empty, a default implementation based on
+     * {@link VaadinSession#getNextConnectorId()} is used. If the list contains
+     * one item, it is used. If there are multiple generators in the list, an
+     * exception is thrown.
+     *
+     * @since 8.1
+     * @param addedConnectorIdGenerators
+     *            a list of connector id generators collected from the session
+     *            init event, not <code>null</code>
+     * @return the connector id generator to use, not <code>null</code>
+     *
+     * @throws ServiceException
+     *             if something went wrong while determining the filters, e.g.
+     *             if there are multiple implementations to choose from
+     *
+     */
+    protected ConnectorIdGenerator initConenctorIdGenerator(
+            List<ConnectorIdGenerator> addedConnectorIdGenerators)
+            throws ServiceException {
+        assert addedConnectorIdGenerators != null;
+
+        switch (addedConnectorIdGenerators.size()) {
+        case 0:
+            return ConnectorIdGenerator::generateDefaultConnectorId;
+        case 1:
+            return addedConnectorIdGenerators.get(0);
+        default:
+            throw new ServiceException(
+                    "Cannot start application since there are multiple connector id generators. Remove redundant implementations from the classpath or override VaadinService.initConenctorIdGenerator to explicitly select one to use. The found generators are: "
+                            + addedConnectorIdGenerators);
+        }
+    }
+
+    /**
      * Gets the filters which all resource dependencies are passed through
      * before being sent to the client for loading.
      *
@@ -2147,6 +2196,34 @@ public abstract class VaadinService implements Serializable {
      */
     protected String getSessionAttributeName() {
         return VaadinSession.class.getName() + "." + getServiceName();
+    }
+
+    /**
+     * Generates a unique id to use for a newly attached connector.
+     *
+     * @see ConnectorIdGenerator
+     * @see #initConenctorIdGenerator(List)
+     *
+     * @since 8.1
+     *
+     * @param session
+     *            the session to which the connector has been attached, not
+     *            <code>null</code>
+     * @param connector
+     *            the attached connector for which to generate an id, not
+     *            <code>null</code>
+     * @return a string id that is unique within the session, not
+     *         <code>null</code>
+     */
+    public String generateConnectorId(VaadinSession session,
+            ClientConnector connector) {
+        assert session.getService() == this;
+        String connectorId = connectorIdGenerator.generateConnectorId(
+                new ConnectorIdGenerationEvent(session, connector));
+
+        assert connectorId != null;
+
+        return connectorId;
     }
 
 }
