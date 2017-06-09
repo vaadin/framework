@@ -451,6 +451,18 @@ public class GridConnector extends AbstractListingConnector
         idToColumn.remove(id);
     }
 
+    /**
+     * Method called by {@code CustomColumn} when its renderer changes. This
+     * method is used to maintain hierarchical renderer wrap in
+     * {@code TreeGrid}.
+     * 
+     * @param column
+     *            the column which now has a new renderer
+     */
+    public void onColumnRendererChanged(CustomColumn column) {
+        // NO-OP
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
