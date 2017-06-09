@@ -17,9 +17,13 @@ package com.vaadin.navigator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -52,6 +56,11 @@ import com.vaadin.ui.UI;
 public class Navigator implements Serializable {
 
     // TODO investigate relationship with TouchKit navigation support
+
+    private static final String DEFAULT_VIEW_SEPARATOR = "/";
+
+    private static final String DEFAULT_STATE_PARAMETER_SEPARATOR = "&";
+    private static final String DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR = "=";
 
     /**
      * Empty view component.
@@ -739,6 +748,62 @@ public class Navigator implements Serializable {
      */
     public String getState() {
         return getStateManager().getState();
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state. The state parameter separator
+     * character '&' is assumed.
+     * 
+     * @return The navigation state as Map<String, String>.
+     */
+    public Map<String, String> getStateParameterMap() {
+        return getStateParameterMap(DEFAULT_STATE_PARAMETER_SEPARATOR);
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state. The state parameter separator
+     * character needs to be specified with the separator.
+     * 
+     * @param separator
+     *            the separator String used to split the state to parameters.
+     * @return The navigation state as Map<String, String>.
+     */
+    public Map<String, String> getStateParameterMap(String separator) {
+        return parseStateParameterMap(Objects.requireNonNull(separator));
+    }
+
+    /**
+     * Parses the state parameter map using given separator String.
+     * 
+     * @param separator
+     * @return The navigation state as Map<String, String>.
+     */
+    protected Map<String, String> parseStateParameterMap(String separator) {
+        Map<String, String> parameterMap = new HashMap<>();
+        if (getState() == null || getState().isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String state = getState();
+        if (state.contains(DEFAULT_VIEW_SEPARATOR)) {
+            state = state.substring(
+                    Math.max(0, state.indexOf(DEFAULT_VIEW_SEPARATOR) + 1),
+                    state.length());
+        }
+
+        String[] parameters = state.split(separator);
+        for (int i = 0; i < parameters.length; i++) {
+            String[] keyAndValue = parameters[i]
+                    .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
+            parameterMap.put(keyAndValue[0],
+                    keyAndValue.length > 1 ? keyAndValue[1] : "");
+        }
+
+        return parameterMap;
     }
 
     /**
