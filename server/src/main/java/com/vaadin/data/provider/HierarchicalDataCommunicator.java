@@ -18,7 +18,9 @@ package com.vaadin.data.provider;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.vaadin.data.TreeData;
 import com.vaadin.server.SerializableConsumer;
@@ -148,9 +150,25 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * @param item
      *            the item to collapse
      */
-    public void doCollapse(T item) {
+    public void collapse(T item) {
+        collapse(item, mapper.getIndexOf(item));
+    }
+
+    /**
+     * Collapses given item, removing all its subtrees. Calling this method will
+     * have no effect if the row is already collapsed. The index is provided by
+     * the client-side or calculated from a full data request.
+     *
+     * @see #collapse(Object)
+     *
+     * @param item
+     *            the item to collapse
+     * @param index
+     *            the index of the item
+     */
+    public void collapse(T item, Optional<Integer> index) {
         if (mapper.isExpanded(item)) {
-            Range removedRows = mapper.collapse(item);
+            Range removedRows = mapper.collapse(item, index);
             if (!reset && !removedRows.isEmpty()) {
                 getClientRpc().removeRows(removedRows.getStart(),
                         removedRows.length());
@@ -166,14 +184,31 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * @param item
      *            the item to expand
      */
-    public void doExpand(T item) {
+    public void expand(T item) {
+        expand(item, mapper.getIndexOf(item));
+    }
+
+    /**
+     * Expands the given item at given index. Calling this method will have no
+     * effect if the row is already expanded. The index is provided by the
+     * client-side or calculated from a full data request.
+     *
+     * @see #expand(Object)
+     *
+     * @param item
+     *            the item to expand
+     * @param index
+     *            the index of the item
+     */
+    public void expand(T item, Optional<Integer> index) {
         if (!mapper.isExpanded(item)) {
-            Range addedRows = mapper.expand(item);
+            Range addedRows = mapper.expand(item, index);
             if (!reset && !addedRows.isEmpty()) {
-                getClientRpc().insertRows(addedRows.getStart(),
-                        addedRows.length());
-                pushData(addedRows.getStart(), fetchItemsWithRange(
-                        addedRows.getStart(), addedRows.length()));
+                int start = addedRows.getStart();
+                getClientRpc().insertRows(start, addedRows.length());
+                Stream<T> children = mapper.fetchItems(item,
+                        Range.withLength(0, addedRows.length()));
+                pushData(start, children.collect(Collectors.toList()));
             }
             refresh(item);
         }

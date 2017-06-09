@@ -129,13 +129,13 @@ public class TreeGrid<T> extends Grid<T>
                     boolean collapse, boolean userOriginated) {
                 T item = getDataCommunicator().getKeyMapper().get(rowKey);
                 if (collapse && getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().doCollapse(item);
+                    getDataCommunicator().collapse(item, Optional.of(rowIndex));
                     fireCollapseEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey),
                             userOriginated);
                 } else if (!collapse
                         && !getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().doExpand(item);
+                    getDataCommunicator().expand(item, Optional.of(rowIndex));
                     fireExpandEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey),
                             userOriginated);
@@ -346,7 +346,7 @@ public class TreeGrid<T> extends Grid<T>
         items.forEach(item -> {
             if (!communicator.isExpanded(item)
                     && communicator.hasChildren(item)) {
-                communicator.doExpand(item);
+                communicator.expand(item);
                 fireExpandEvent(item, false);
             }
         });
@@ -376,7 +376,7 @@ public class TreeGrid<T> extends Grid<T>
         HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
         items.forEach(item -> {
             if (communicator.isExpanded(item)) {
-                communicator.doCollapse(item);
+                communicator.collapse(item);
                 fireCollapseEvent(item, false);
             }
         });

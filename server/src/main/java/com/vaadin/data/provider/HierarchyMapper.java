@@ -144,20 +144,21 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * 
      * @param item
      *            the item to expand
+     * @param position
+     *            the index of item
      * @return range of rows added by expanding the item
      */
-    public Range expand(T item) {
-        Range addedRows = Range.withLength(0, 0);
+    public Range expand(T item, Optional<Integer> position) {
+        Range rows = Range.withLength(0, 0);
         if (!isExpanded(item) && hasChildren(item)) {
             Object id = getDataProvider().getId(item);
             expandedItemIds.add(id);
-            Optional<Integer> position = getIndexOf(item);
             if (position.isPresent()) {
-                addedRows = Range.withLength(position.get() + 1,
+                rows = Range.withLength(position.get() + 1,
                         (int) getHierarchy(item, false).count());
             }
         }
-        return addedRows;
+        return rows;
     }
 
     /**
@@ -167,11 +168,10 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      *            the item to expand
      * @return range of rows removed by collapsing the item
      */
-    public Range collapse(T item) {
+    public Range collapse(T item, Optional<Integer> position) {
         Range removedRows = Range.withLength(0, 0);
         if (isExpanded(item)) {
             Object id = getDataProvider().getId(item);
-            Optional<Integer> position = getIndexOf(item);
             if (position.isPresent()) {
                 long childCount = getHierarchy(item, false).count();
                 removedRows = Range.withLength(position.get() + 1,
@@ -328,6 +328,21 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         return getHierarchy(null).skip(range.getStart()).limit(range.length());
     }
 
+    /**
+     * Gets a stream of children for the given item in the form of a flattened
+     * hierarchy from the back-end and filter the wanted results from the list.
+     * 
+     * @param parent
+     *            the parent item for the fetch
+     * @param range
+     *            the requested item range
+     * @return the stream of items
+     */
+    public Stream<T> fetchItems(T parent, Range range) {
+        return getHierarchy(parent, false).skip(range.getStart())
+                .limit(range.length());
+    }
+
     /* Methods for providing information on the hierarchy. */
 
     /**
@@ -401,7 +416,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      *            the target object to find
      * @return optional index of given object
      */
-    private Optional<Integer> getIndexOf(T target) {
+    public Optional<Integer> getIndexOf(T target) {
         if (target == null) {
             return Optional.empty();
         }
@@ -480,7 +495,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         if (isExpanded(parent)) {
             childList = getDirectChildren(parent).collect(Collectors.toList());
             if (childList.isEmpty()) {
-                removeChildren(getDataProvider().getId(parent));
+                removeChildren(parent == null ? null
+                        : getDataProvider().getId(parent));
             } else {
                 childMap.put(parent, new HashSet<>(childList));
             }
