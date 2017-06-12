@@ -32,7 +32,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     public static final Type<GridKeyUpHandler> TYPE = new Type<GridKeyUpHandler>(
             BrowserEvents.KEYUP, new GridKeyUpEvent());
@@ -63,7 +63,7 @@ public class GridKeyUpEvent extends AbstractGridKeyEvent<GridKeyUpHandler> {
     }
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     @Override
     public Type<GridKeyUpHandler> getAssociatedType() {

@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
             BrowserEvents.CLICK, new GridClickEvent());
@@ -51,7 +51,7 @@ public class GridClickEvent extends AbstractGridMouseEvent<GridClickHandler> {
     }
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     @Override
     public Type<GridClickHandler> getAssociatedType() {

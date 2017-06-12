@@ -32,7 +32,7 @@ public class GridDoubleClickEvent
         extends AbstractGridMouseEvent<GridDoubleClickHandler> {
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     public static final Type<GridDoubleClickHandler> TYPE = new Type<GridDoubleClickHandler>(
             BrowserEvents.DBLCLICK, new GridDoubleClickEvent());
@@ -52,7 +52,7 @@ public class GridDoubleClickEvent
     }
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     @Override
     public Type<GridDoubleClickHandler> getAssociatedType() {

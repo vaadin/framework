@@ -32,7 +32,7 @@ public class GridKeyPressEvent
         extends AbstractGridKeyEvent<GridKeyPressHandler> {
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     public static final Type<GridKeyPressHandler> TYPE = new Type<GridKeyPressHandler>(
             BrowserEvents.KEYPRESS, new GridKeyPressEvent());
@@ -52,7 +52,7 @@ public class GridKeyPressEvent
     }
 
     /**
-     * @since 7.7.10
+     * @since 7.7.9
      */
     @Override
     public Type<GridKeyPressHandler> getAssociatedType() {
