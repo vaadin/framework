@@ -289,6 +289,12 @@ public class GridConnector extends AbstractListingConnector
                     column.getWidthActual());
         });
 
+        // Handling row height changes
+        getWidget().addRowHeightChangedHandler(event -> {
+            getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
+            getLayoutManager().layoutNow();
+        });
+
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
