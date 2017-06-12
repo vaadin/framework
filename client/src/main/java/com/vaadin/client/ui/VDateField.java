@@ -28,7 +28,7 @@ import com.vaadin.client.DateTimeService;
 
 /**
  * A very base widget class for a date field.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
@@ -100,7 +100,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * The map contains integer representation of values per resolution. The
      * method should construct a date based on the map and set it via
      * {@link #setCurrentDate(Date)}
-     * 
+     *
      * @param dateValues
      *            a map with date values to convert into a date
      */
@@ -183,7 +183,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * Returns a resolution variable name for the given {@code resolution}.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return the resolution variable name
@@ -198,9 +198,9 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * <p>
      * The method uses {@link #doGetResolutions()} to make sure that the order
      * is the correct one.
-     * 
+     *
      * @see #doGetResolutions()
-     * 
+     *
      * @return stream of all available resolutions in the ascending order.
      */
     public Stream<R> getResolutions() {
@@ -211,14 +211,14 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * Returns a current resolution as a string.
      * <p>
      * The method is used to generate a style name for the current resolution.
-     * 
+     *
      * @return the current resolution as a string
      */
     public abstract String resolutionAsString();
 
     /**
      * Checks whether the given {@code resolution} represents an year.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return {@code true} if the {@code resolution} represents an year
@@ -226,10 +226,19 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     public abstract boolean isYear(R resolution);
 
     /**
+     * Checks whether time is supported by this widget.
+     *
+     * @return <code>true</code> if time is supported in addition to date,
+     *         <code>false</code> if only dates are supported
+     * @since
+     */
+    protected abstract boolean supportsTime();
+
+    /**
      * Returns a date based on the provided date values map.
-     * 
+     *
      * @see #setCurrentDate(Map)
-     * 
+     *
      * @param dateValues
      *            a map with date values to convert into a date
      * @return the date based on the dateValues map
@@ -240,9 +249,9 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * Returns all available resolutions as an array.
      * <p>
      * No any order is required (in contrary to {@link #getResolutions()}.
-     * 
+     *
      * @see #getResolutions()
-     * 
+     *
      * @return all available resolutions
      */
     protected abstract R[] doGetResolutions();
