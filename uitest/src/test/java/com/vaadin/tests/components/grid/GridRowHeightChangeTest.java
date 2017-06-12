@@ -25,19 +25,25 @@ public class GridRowHeightChangeTest extends MultiBrowserTest {
 
     @Test
     public void changeThemeAndMeasureGridHeight() {
+        // Initial check
+        verifyGridSize();
+
         for (String theme : themes) {
             // select theme
             $(NativeSelectElement.class).first().selectByText(theme);
 
-            GridElement grid = $(GridElement.class).first();
-
-            int gridHeight = grid.getSize().getHeight();
-            int tabsheetHeight = findElements(
-                    By.className("v-tabsheet-content")).get(0).getSize()
-                            .getHeight();
-
-            assertEquals("Grid's visible height should be equal to Grid height",
-                    gridHeight, tabsheetHeight, 1);
+            verifyGridSize();
         }
+    }
+
+    private void verifyGridSize() {
+        GridElement grid = $(GridElement.class).first();
+
+        int gridHeight = grid.getSize().getHeight();
+        int tabsheetHeight = findElements(By.className("v-tabsheet-content"))
+                .get(0).getSize().getHeight();
+
+        assertEquals("Grid's visible height should be equal to Grid height",
+                gridHeight, tabsheetHeight, 1);
     }
 }
