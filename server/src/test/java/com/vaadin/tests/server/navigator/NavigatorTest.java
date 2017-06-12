@@ -23,6 +23,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
@@ -47,6 +49,25 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class NavigatorTest {
+
+    private final class TestNavigationStateManager
+            implements NavigationStateManager {
+        private String state;
+
+        @Override
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        @Override
+        public void setNavigator(Navigator navigator) {
+        }
+
+        @Override
+        public String getState() {
+            return state;
+        }
+    }
 
     // TODO test internal parameters (and absence of them)
     // TODO test listeners blocking navigation, multiple listeners
@@ -848,24 +869,7 @@ public class NavigatorTest {
 
     @Test
     public void testNavigateTo_navigateSameUriTwice_secondNavigationDoesNothing() {
-        NavigationStateManager manager = new NavigationStateManager() {
-
-            private String state;
-
-            @Override
-            public void setState(String state) {
-                this.state = state;
-            }
-
-            @Override
-            public void setNavigator(Navigator navigator) {
-            }
-
-            @Override
-            public String getState() {
-                return state;
-            }
-        };
+        NavigationStateManager manager = new TestNavigationStateManager();
 
         final String viewName = "view";
 
@@ -903,5 +907,92 @@ public class NavigatorTest {
         // Second time navigation to the same view
         navigator.navigateTo(viewName);
         Assert.assertEquals(1, count[0]);
+    }
+
+    @Test
+    public void parameterMap_noViewSeparator() {
+        Navigator navigator = createNavigatorWithState("fooview");
+        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
+        Assert.assertTrue(navigator.getStateParameterMap("foo").isEmpty());
+    }
+
+    @Test
+    public void parameterMap_noParameters() {
+        Navigator navigator = createNavigatorWithState("fooview/");
+        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
+    }
+
+    @Test
+    public void parameterMap_oneParameterNoValue() {
+        Navigator navigator = createNavigatorWithState("fooview/bar");
+        assertMap(navigator.getStateParameterMap(), entry("bar", ""));
+    }
+
+    @Test
+    public void parameterMap_oneParameterNoValueButEquals() {
+        Navigator navigator = createNavigatorWithState("fooview/bar=");
+        assertMap(navigator.getStateParameterMap(), entry("bar", ""));
+    }
+
+    @Test
+    public void parameterMap_oneParameterWithValue() {
+        Navigator navigator = createNavigatorWithState("fooview/bar=baz");
+        assertMap(navigator.getStateParameterMap(), entry("bar", "baz"));
+    }
+
+    @Test
+    public void parameterMap_twoParameters() {
+        Navigator navigator = createNavigatorWithState("fooview/foo=bar&baz");
+        assertMap(navigator.getStateParameterMap(), entry("foo", "bar"),
+                entry("baz", ""));
+    }
+
+    @Test
+    public void parameterMap_customSeparator() {
+        Navigator navigator = createNavigatorWithState("fooview/foo=bar&baz");
+        assertMap(navigator.getStateParameterMap("a"), entry("foo", "b"),
+                entry("r&b", ""), entry("z", ""));
+    }
+
+    @SafeVarargs
+    private final void assertMap(Map<String, String> map,
+            Entry<String, String>... entries) {
+        Assert.assertEquals(entries.length, map.size());
+        for (Entry<String, String> entry : entries) {
+            Assert.assertTrue(
+                    "Map should contain a key called '" + entry.getKey() + "'",
+                    map.containsKey(entry.getKey()));
+            Assert.assertEquals(entry.getValue(), map.get(entry.getKey()));
+        }
+
+    }
+
+    private Entry<String, String> entry(String key, String value) {
+        return new Entry<String, String>() {
+
+            @Override
+            public String getKey() {
+                return key;
+            }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public String setValue(String value) {
+                throw new UnsupportedOperationException();
+            }
+
+        };
+    }
+
+    private Navigator createNavigatorWithState(String state) {
+        TestNavigationStateManager manager = new TestNavigationStateManager();
+        Navigator navigator = new Navigator(createMockUI(), manager,
+                EasyMock.createMock(ViewDisplay.class));
+        manager.setState(state);
+        return navigator;
     }
 }
