@@ -86,7 +86,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * {@link DataKeyMapper}.
      * <p>
      * When the {@link DataCommunicator} is pushing new data to the client-side
-     * via {@link DataCommunicator#pushData(int, Stream)},
+     * via {@link DataCommunicator#pushData(int, List)},
      * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are called
      * with the same parameter. In the clean up method any dropped data objects
      * that are not in the given collection will be cleaned up and
