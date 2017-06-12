@@ -64,6 +64,12 @@ public class MockVaadinSession extends VaadinSession {
         referenceKeeper.remove();
     }
 
+    @Override
+    public String createConnectorId(ClientConnector connector) {
+        // Don't delegate to service which may be null or a broken mock
+        return getNextConnectorId();
+    }
+
     private int closeCount;
 
     private final ReentrantLock lock = new ReentrantLock();
