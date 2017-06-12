@@ -19,12 +19,14 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
@@ -54,6 +56,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
+    private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String ISO_DATE_PATTERN = "yyyy-MM-dd";
 
     /** For internal use only. May be removed or replaced in the future. */
     public final TextBox text;
@@ -78,6 +82,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             addDomHandler(this, KeyDownEvent.getType());
         }
         add(text);
+        publishJSHelpers(getElement());
     }
 
     /**
@@ -378,9 +383,65 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         fireEvent(event);
     }
 
-    @Override
+    /**
+     * Publish methods/properties on the element to be used from JavaScript.
+     *
+     * @since
+     */
+    private native void publishJSHelpers(Element root)
+    /*-{
+        var self = this;
+        root.setISOValue = $entry(function (value) {
+           self.@VAbstractTextualDate::setISODate(*)(value);
+        });
+        root.getISOValue = $entry(function () {
+           return self.@VAbstractTextualDate::getISODate()();
+        });
+    }-*/;
+
+    /**
+     * Sets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @param isoDate
+     *            the date to set in ISO8601 format, or null to clear the date
+     *            value
+     * @since
+     */
     public void setISODate(String isoDate) {
-        super.setISODate(isoDate);
+        if (isoDate == null) {
+            setDate(null);
+        } else {
+            Date date = getIsoFormatter().parse(isoDate);
+            setDate(date);
+        }
         updateDateVariables();
+    }
+
+    /**
+     * Gets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @return the current date in ISO8601 format, or null if no date is set
+     *
+     * @since
+     */
+    public String getISODate() {
+        Date date = getDate();
+        if (date == null) {
+            return null;
+        } else {
+            return getIsoFormatter().format(date);
+        }
+    }
+
+    private DateTimeFormat getIsoFormatter() {
+        if (supportsTime()) {
+            return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
+        } else {
+            return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+        }
     }
 }
