@@ -377,4 +377,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // Needed for tooltip event handling
         fireEvent(event);
     }
+
+    @Override
+    public void setISODate(String isoDate) {
+        super.setISODate(isoDate);
+        updateDateVariables();
+    }
 }
