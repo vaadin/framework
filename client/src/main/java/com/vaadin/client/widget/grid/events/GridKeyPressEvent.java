@@ -31,6 +31,9 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 public class GridKeyPressEvent
         extends AbstractGridKeyEvent<GridKeyPressHandler> {
 
+    /**
+     * @since 7.7.10
+     */
     public static final Type<GridKeyPressHandler> TYPE = new Type<GridKeyPressHandler>(
             BrowserEvents.KEYPRESS, new GridKeyPressEvent());
 
@@ -48,6 +51,9 @@ public class GridKeyPressEvent
     public GridKeyPressEvent(Grid<?> grid, CellReference<?> targetCell) {
     }
 
+    /**
+     * @since 7.7.10
+     */
     @Override
     public Type<GridKeyPressHandler> getAssociatedType() {
         return TYPE;
