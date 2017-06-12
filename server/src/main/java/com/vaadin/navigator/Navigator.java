@@ -349,23 +349,17 @@ public class Navigator implements Serializable {
 
     /**
      * The {@link UI} bound with the Navigator.
-     *
-     * @since 8.0.3
      */
     protected UI ui;
 
     /**
      * The {@link NavigationStateManager} that is used to get, listen to and
      * manipulate the navigation state used by the Navigator.
-     *
-     * @since 8.0.3
      */
     protected NavigationStateManager stateManager;
 
     /**
      * The {@link ViewDisplay} used by the Navigator.
-     *
-     * @since 8.0.3
      */
     protected ViewDisplay display;
 
@@ -753,10 +747,14 @@ public class Navigator implements Serializable {
     /**
      * Returns the current navigation state reported by this Navigator's
      * {@link NavigationStateManager} as Map<String, String> where each key
-     * represents a parameter in the state. The state parameter separator
-     * character '&' is assumed.
-     * 
-     * @return The navigation state as Map<String, String>.
+     * represents a parameter in the state.
+     *
+     * Uses {@literal &} as parameter separator. If the state contains
+     * {@literal #!view/foo&bar=baz} then this method will return a map
+     * containing {@literal foo => ""} and {@literal bar => baz}.
+     *
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap(String)
      */
     public Map<String, String> getStateParameterMap() {
         return getStateParameterMap(DEFAULT_STATE_PARAMETER_SEPARATOR);
@@ -767,10 +765,12 @@ public class Navigator implements Serializable {
      * {@link NavigationStateManager} as Map<String, String> where each key
      * represents a parameter in the state. The state parameter separator
      * character needs to be specified with the separator.
-     * 
+     *
      * @param separator
-     *            the separator String used to split the state to parameters.
-     * @return The navigation state as Map<String, String>.
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap()
      */
     public Map<String, String> getStateParameterMap(String separator) {
         return parseStateParameterMap(Objects.requireNonNull(separator));
@@ -778,8 +778,10 @@ public class Navigator implements Serializable {
 
     /**
      * Parses the state parameter map using given separator String.
-     * 
+     *
      * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
      * @return The navigation state as Map<String, String>.
      */
     protected Map<String, String> parseStateParameterMap(String separator) {
@@ -789,13 +791,19 @@ public class Navigator implements Serializable {
         }
 
         String state = getState();
-        if (state.contains(DEFAULT_VIEW_SEPARATOR)) {
-            state = state.substring(
-                    Math.max(0, state.indexOf(DEFAULT_VIEW_SEPARATOR) + 1),
+        int viewSeparatorLocation = state.indexOf(DEFAULT_VIEW_SEPARATOR);
+
+        String parameterString;
+        if (viewSeparatorLocation == -1) {
+            parameterString = "";
+        } else {
+            parameterString = state.substring(viewSeparatorLocation + 1,
                     state.length());
         }
-
-        String[] parameters = state.split(separator);
+        if (parameterString.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        String[] parameters = parameterString.split(separator);
         for (int i = 0; i < parameters.length; i++) {
             String[] keyAndValue = parameters[i]
                     .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
@@ -1058,8 +1066,6 @@ public class Navigator implements Serializable {
      * @param state
      *            state string
      * @return suitable provider
-     *
-     * @since 8.0.3
      */
     protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
