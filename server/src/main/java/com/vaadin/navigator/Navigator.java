@@ -170,13 +170,8 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.removeAllComponents();
-                container.addComponent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.removeAllComponents();
+            container.addComponent(view.getViewComponent());
         }
     }
 
@@ -204,12 +199,7 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.setContent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.setContent(view.getViewComponent());
         }
     }
 
