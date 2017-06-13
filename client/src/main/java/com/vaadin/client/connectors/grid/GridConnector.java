@@ -458,6 +458,8 @@ public class GridConnector extends AbstractListingConnector
      * 
      * @param column
      *            the column which now has a new renderer
+     * 
+     * @since 8.1
      */
     public void onColumnRendererChanged(CustomColumn column) {
         // NO-OP
