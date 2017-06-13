@@ -755,6 +755,7 @@ public class Navigator implements Serializable {
      *
      * @return The parameters from the navigation state as a map
      * @see #getStateParameterMap(String)
+     * @since
      */
     public Map<String, String> getStateParameterMap() {
         return getStateParameterMap(DEFAULT_STATE_PARAMETER_SEPARATOR);
@@ -771,21 +772,22 @@ public class Navigator implements Serializable {
      *            from each other
      * @return The parameters from the navigation state as a map
      * @see #getStateParameterMap()
+     * @since
      */
     public Map<String, String> getStateParameterMap(String separator) {
         return parseStateParameterMap(Objects.requireNonNull(separator));
     }
 
     /**
-     * Parses the state parameter map using given separator String.
+     * Parses the state parameter to a map using the given separator string.
      *
      * @param separator
      *            the string (typically one character) used to separate values
      *            from each other
      * @return The navigation state as Map<String, String>.
+     * @since
      */
     protected Map<String, String> parseStateParameterMap(String separator) {
-        Map<String, String> parameterMap = new HashMap<>();
         if (getState() == null || getState().isEmpty()) {
             return Collections.emptyMap();
         }
@@ -800,9 +802,29 @@ public class Navigator implements Serializable {
             parameterString = state.substring(viewSeparatorLocation + 1,
                     state.length());
         }
+        return parseParameterStringToMap(parameterString, separator);
+    }
+
+    /**
+     * Parses the given parameter string to a map using the given separator
+     * string.
+     *
+     * @param parameterString
+     *            the parameter string to parse
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @param
+     * @return The navigation state as Map<String, String>.
+     * @since
+     */
+    protected Map<String, String> parseParameterStringToMap(
+            String parameterString, String separator) {
         if (parameterString.isEmpty()) {
             return Collections.emptyMap();
         }
+
+        Map<String, String> parameterMap = new HashMap<>();
         String[] parameters = parameterString.split(separator);
         for (int i = 0; i < parameters.length; i++) {
             String[] keyAndValue = parameters[i]
