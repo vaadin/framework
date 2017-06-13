@@ -34,9 +34,8 @@ import com.vaadin.ui.Component;
 public interface View extends Serializable {
 
     /**
-     * This view is navigated to.
-     *
-     * This method is always called before the view is shown on screen.
+     * Called before the view is shown on screen.
+     * <p>
      * {@link ViewChangeEvent#getParameters() event.getParameters()} may contain
      * extra parameters relevant to the view.
      *
@@ -47,6 +46,34 @@ public interface View extends Serializable {
      *
      */
     public void enter(ViewChangeEvent event);
+
+    /**
+     * Called when the user is requesting navigation away from the view.
+     * <p>
+     * This method allows the view to accept or prevent navigation away from the
+     * view or optionally delay navigation away until a later stage. For
+     * navigation to take place, the {@link ViewBeforeLeaveEvent#navigate()}
+     * method must be called either directly when handling this event or later
+     * to perform delayed navigation.
+     * <p>
+     * The default implementation calls {@link ViewBeforeLeaveEvent#navigate()}
+     * directly. If you override this and do nothing, the user will never be
+     * able to leave the view.
+     * <p>
+     * This method is triggered before any methods in any
+     * added{@link ViewChangeListener}s. Whenever you call
+     * {@link ViewBeforeLeaveEvent#navigate()}, any {@link ViewChangeListener}s
+     * will be triggered. They will be handled normally and might also prevent
+     * navigation.
+     *
+     * @param event
+     *            an event object providing information about the event and
+     *            containing the {@link ViewBeforeLeaveEvent#navigate()} method
+     *            needed to perform navigation
+     */
+    public default void beforeLeave(ViewBeforeLeaveEvent event) {
+        event.navigate();
+    }
 
     /**
      * Gets the component to show when navigating to the view.
