@@ -79,8 +79,6 @@ public interface DataKeyMapper<T> extends Serializable {
      *
      * @param dataObject
      *            the data object to update
-     * @param identifierGetter
-     *            the function to get an identifier from a data object
      */
-    void refresh(T dataObject, ValueProvider<T, Object> identifierGetter);
+    void refresh(T dataObject);
 }

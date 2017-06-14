@@ -91,7 +91,7 @@ public class KeyMapperTest {
 
     private void assertSize(KeyMapper<?> mapper, int i) {
         try {
-            Field f1 = KeyMapper.class.getDeclaredField("objectKeyMap");
+            Field f1 = KeyMapper.class.getDeclaredField("objectIdKeyMap");
             Field f2 = KeyMapper.class.getDeclaredField("keyObjectMap");
             f1.setAccessible(true);
             f2.setAccessible(true);

@@ -52,7 +52,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     public HierarchicalDataCommunicator() {
         super();
-        setDataProvider(new TreeDataProvider<T>(new TreeData<>()), null);
+        setDataProvider(new TreeDataProvider<>(new TreeData<>()), null);
     }
 
     @Override
@@ -220,7 +220,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Returns whether given item has children.
-     * 
+     *
      * @param item
      *            the item to test
      * @return {@code true} if item has children; {@code false} if not
@@ -231,7 +231,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Returns whether given item is expanded.
-     * 
+     *
      * @param item
      *            the item to test
      * @return {@code true} if item is expanded; {@code false} if not
