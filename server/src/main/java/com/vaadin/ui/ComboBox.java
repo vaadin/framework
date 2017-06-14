@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.vaadin.data.ValueProvider;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasFilterableDataProvider;
@@ -188,7 +189,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public ComboBox() {
         super(new DataCommunicator<T>() {
             @Override
-            protected DataKeyMapper<T> createKeyMapper() {
+            protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
                 return new KeyMapper<T>() {
                     @Override
                     public void remove(T removeobj) {

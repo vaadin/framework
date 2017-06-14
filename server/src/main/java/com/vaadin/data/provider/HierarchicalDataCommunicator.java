@@ -79,7 +79,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     public HierarchicalDataCommunicator() {
         super();
-        dataProvider = new TreeDataProvider<>(new TreeData<>());
+        setDataProvider(new TreeDataProvider<>(new TreeData<>()));
     }
 
     @Override
