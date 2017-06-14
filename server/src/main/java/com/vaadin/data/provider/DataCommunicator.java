@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
@@ -167,7 +168,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             // Make sure KeyMapper is up to date
-            getKeyMapper().refresh(data, dataProvider::getId);
+            getKeyMapper().refresh(data);
 
             // Write the key string for given data object
             jsonObject.put(DataCommunicatorConstants.KEY,
@@ -193,9 +194,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider. */
-    protected DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
+    private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
-    private final DataKeyMapper<T> keyMapper;
+    private DataKeyMapper<T> keyMapper;
 
     /** Boolean for pending hard reset. */
     protected boolean reset = true;
@@ -212,7 +213,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         addDataGenerator(handler);
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
-        keyMapper = createKeyMapper();
+        keyMapper = createKeyMapper(dataProvider::getId);
     }
 
     @Override
@@ -357,13 +358,13 @@ public class DataCommunicator<T> extends AbstractExtension {
 
     /**
      * Fetches a list of items from the DataProvider.
-     * 
+     *
      * @param offset
      *            the starting index of the range
      * @param limit
      *            the max number of results
      * @return the list of items in given range
-     * 
+     *
      * @since 8.1
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -587,8 +588,8 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @return key mapper
      */
-    protected DataKeyMapper<T> createKeyMapper() {
-        return new KeyMapper<>();
+    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
+        return new KeyMapper<T>(identifierGetter);
     }
 
     /**
@@ -633,9 +634,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             DataProvider<T, F> dataProvider, F initialFilter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         filter = initialFilter;
-        detachDataProviderListener();
-        dropAllData();
-        this.dataProvider = dataProvider;
+        setDataProvider(dataProvider);
 
         /*
          * This introduces behavior which influence on the client-server
@@ -672,13 +671,13 @@ public class DataCommunicator<T> extends AbstractExtension {
      * Sets the filter for this DataCommunicator. This method is used by user
      * through the consumer method from {@link #setDataProvider} and should not
      * be called elsewhere.
-     * 
+     *
      * @param filter
      *            the filter
-     * 
+     *
      * @param <F>
      *            the filter type
-     * 
+     *
      * @since 8.1
      */
     protected <F> void setFilter(F filter) {
@@ -725,7 +724,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     /**
      * Getter method for finding the size of DataProvider. Can be overridden by
      * a subclass that uses a specific type of DataProvider and/or query.
-     * 
+     *
      * @return the size of data provider with current filter
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -749,7 +748,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                     getUI().access(() -> {
                         if (event instanceof DataRefreshEvent) {
                             T item = ((DataRefreshEvent<T>) event).getItem();
-                            keyMapper.refresh(item, dataProvider::getId);
+                            getKeyMapper().refresh(item);
                             generators.forEach(g -> g.refreshData(item));
                             refresh(item);
                         } else {
@@ -772,5 +771,12 @@ public class DataCommunicator<T> extends AbstractExtension {
             dataProviderUpdateRegistration.remove();
             dataProviderUpdateRegistration = null;
         }
+    }
+
+    protected void setDataProvider(DataProvider<T, ?> dataProvider) {
+        detachDataProviderListener();
+        dropAllData();
+        this.dataProvider = dataProvider;
+        keyMapper = createKeyMapper(dataProvider::getId);
     }
 }
