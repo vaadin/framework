@@ -15,12 +15,16 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
 
     @Test
-    public void testFaultyUserInput() {
+    public void testEmptyDateFieldOK() {
         openTestURL();
         $(ButtonElement.class).first().click();
         Assert.assertEquals("Empty DateField should be ok", "OK",
                 $(NotificationElement.class).first().getText());
+    }
 
+    @Test
+    public void testFaultyUserInput() {
+        openTestURL();
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.setDate(LocalDate.now());
 
@@ -36,4 +40,20 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
                 "Fail", $(NotificationElement.class).first().getText());
     }
 
+    @Test
+    public void testDateOutOfRange() {
+        openTestURL();
+        DateFieldElement dateField = $(DateFieldElement.class).first();
+        dateField.setDate(LocalDate.now());
+
+        $(ButtonElement.class).first().click();
+        Assert.assertEquals("Current date should be ok", "OK",
+                $(NotificationElement.class).first().getText());
+
+        dateField.setDate(LocalDate.now().minusDays(7));
+
+        $(ButtonElement.class).first().click();
+        Assert.assertEquals("Last week should not be ok", "Fail",
+                $(NotificationElement.class).first().getText());
+    }
 }

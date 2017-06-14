@@ -19,8 +19,9 @@ public class DateFieldFaultyInputNotValid extends AbstractTestUI {
         Binder<Void> binder = new Binder<>();
         binder.forField(df).bind(v -> LocalDate.now(), (v, t) -> {
             /* NO-OP */ });
+        df.setRangeStart(LocalDate.now().minusDays(2));
         addComponent(df);
-        addComponent(new Button("Save if valid", e -> Notification
+        addComponent(new Button("Validate", e -> Notification
                 .show(binder.validate().isOk() ? "OK" : "Fail")));
     }
 
