@@ -31,6 +31,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataChangeEvent.DataRefreshEvent;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.KeyMapper;
@@ -86,7 +87,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * {@link DataKeyMapper}.
      * <p>
      * When the {@link DataCommunicator} is pushing new data to the client-side
-     * via {@link DataCommunicator#pushData(int, Stream)},
+     * via {@link DataCommunicator#pushData(int, List)},
      * {@link #addActiveData(Stream)} and {@link #cleanUp(Stream)} are called
      * with the same parameter. In the clean up method any dropped data objects
      * that are not in the given collection will be cleaned up and
@@ -168,7 +169,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             // Make sure KeyMapper is up to date
-            getKeyMapper().refresh(data, dataProvider::getId);
+            getKeyMapper().refresh(data);
 
             // Write the key string for given data object
             jsonObject.put(DataCommunicatorConstants.KEY,
@@ -194,9 +195,9 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
     /** Empty default data provider */
-    protected DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
+    private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
-    private final DataKeyMapper<T> keyMapper;
+    private DataKeyMapper<T> keyMapper;
 
     protected boolean reset = false;
     private final Set<T> updatedData = new HashSet<>();
@@ -212,7 +213,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         addDataGenerator(handler);
         rpc = getRpcProxy(DataCommunicatorClientRpc.class);
         registerRpc(createRpc());
-        keyMapper = createKeyMapper();
+        keyMapper = createKeyMapper(dataProvider::getId);
     }
 
     @Override
@@ -575,8 +576,8 @@ public class DataCommunicator<T> extends AbstractExtension {
      *
      * @return key mapper
      */
-    protected DataKeyMapper<T> createKeyMapper() {
-        return new KeyMapper<>();
+    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
+        return new KeyMapper<T>(identifierGetter);
     }
 
     /**
@@ -621,9 +622,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             DataProvider<T, F> dataProvider, F initialFilter) {
         Objects.requireNonNull(dataProvider, "data provider cannot be null");
         filter = initialFilter;
-        detachDataProviderListener();
-        dropAllData();
-        this.dataProvider = dataProvider;
+        setDataProvider(dataProvider);
 
         /*
          * This introduces behavior which influence on the client-server
@@ -709,7 +708,7 @@ public class DataCommunicator<T> extends AbstractExtension {
                     getUI().access(() -> {
                         if (event instanceof DataRefreshEvent) {
                             T item = ((DataRefreshEvent<T>) event).getItem();
-                            keyMapper.refresh(item, dataProvider::getId);
+                            getKeyMapper().refresh(item);
                             generators.forEach(g -> g.refreshData(item));
                             refresh(item);
                         } else {
@@ -724,5 +723,12 @@ public class DataCommunicator<T> extends AbstractExtension {
             dataProviderUpdateRegistration.remove();
             dataProviderUpdateRegistration = null;
         }
+    }
+
+    protected void setDataProvider(DataProvider<T, ?> dataProvider) {
+        detachDataProviderListener();
+        dropAllData();
+        this.dataProvider = dataProvider;
+        keyMapper = createKeyMapper(dataProvider::getId);
     }
 }
