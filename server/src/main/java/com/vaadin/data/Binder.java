@@ -1190,7 +1190,8 @@ public class Binder<BEAN> implements Serializable {
         getStatusLabel().ifPresent(label -> label.setValue(""));
 
         return createBinding(field, createNullRepresentationAdapter(field),
-                this::handleValidationStatus);
+                this::handleValidationStatus)
+                        .withValidator(field.getDefaultValidator());
     }
 
     /**

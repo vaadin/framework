@@ -224,7 +224,7 @@ public interface HasValue<V> extends Serializable {
      * Returns the current value of this object, wrapped in an {@code Optional}.
      * <p>
      * The {@code Optional} will be empty if the value is {@code null} or
-     * {@code isEmpty()} returns {@code true}. 
+     * {@code isEmpty()} returns {@code true}.
      *
      * @return the current value, wrapped in an {@code Optional}
      */
@@ -295,5 +295,16 @@ public interface HasValue<V> extends Serializable {
      */
     public default void clear() {
         setValue(getEmptyValue());
+    }
+
+    /**
+     * Returns a validator that checks the internal state of the HasValue. This
+     * can be used eg. when the user is providing a string that is parsed into a
+     * date. A faulty input from user can be seen as a validation failure.
+     * 
+     * @return internal state validator
+     */
+    public default Validator<V> getDefaultValidator() {
+        return Validator.alwaysPass();
     }
 }

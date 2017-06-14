@@ -38,6 +38,7 @@ import org.jsoup.nodes.Element;
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
+import com.vaadin.data.Validator;
 import com.vaadin.data.ValueContext;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -767,4 +768,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Validator<T> getDefaultValidator() {
+        return Validator.from(t -> getComponentError() == null,
+                ctx -> currentParseErrorMessage);
+    }
 }
