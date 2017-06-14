@@ -486,26 +486,6 @@ public class TreeGrid<T> extends Grid<T>
                 childItem -> writeRow(container, childItem, item, context));
     }
 
-    @Override
-    protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
-            AbstractRenderer<? super T, ? super V> renderer) {
-        return new Column<T, V>(valueProvider, renderer) {
-
-            @Override
-            public com.vaadin.ui.Grid.Column<T, V> setRenderer(
-                    Renderer<? super V> renderer) {
-                // Disallow changing renderer for the hierarchy column
-                if (getInternalIdForColumn(this).equals(
-                        TreeGrid.this.getState(false).hierarchyColumnId)) {
-                    throw new IllegalStateException(
-                            "Changing the renderer of the hierarchy column is not allowed.");
-                }
-
-                return super.setRenderer(renderer);
-            }
-        };
-    }
-
     /**
      * Emit an expand event.
      *

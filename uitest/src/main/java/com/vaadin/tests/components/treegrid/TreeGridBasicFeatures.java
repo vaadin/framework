@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
@@ -17,9 +18,12 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Range;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.ItemCollapseAllowedProvider;
 import com.vaadin.ui.TreeGrid;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -29,6 +33,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
     private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
     private LazyHierarchicalDataProvider lazyDataProvider;
     private HierarchicalDataProvider<HierarchicalTestBean, ?> loggingDataProvider;
+    private Column<HierarchicalTestBean, String> hierarchyColumn;
 
     @Override
     public TreeGrid getComponent() {
@@ -45,8 +50,9 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         initializeDataProviders();
         grid = new TreeGrid<>();
         grid.setSizeFull();
-        grid.addColumn(HierarchicalTestBean::toString).setCaption("String")
-                .setId("string");
+        hierarchyColumn = grid.addColumn(HierarchicalTestBean::toString);
+        hierarchyColumn.setCaption("String").setId("string").setStyleGenerator(
+                t -> hierarchyColumn.getRenderer().getClass().getSimpleName());
         grid.addColumn(HierarchicalTestBean::getDepth).setCaption("Depth")
                 .setId("depth").setDescriptionGenerator(
                         t -> "Hierarchy depth: " + t.getDepth());
@@ -66,6 +72,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createDataProviderSelect();
         createHierarchyColumnSelect();
         createCollapseAllowedSelect();
+        createRendererSelect();
         createExpandMenu();
         createCollapseMenu();
         createListenerMenu();
@@ -94,8 +101,7 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
 
         inMemoryDataProvider = new TreeDataProvider<>(data);
         lazyDataProvider = new LazyHierarchicalDataProvider(3, 2);
-        loggingDataProvider = new TreeDataProvider<HierarchicalTestBean>(
-                data) {
+        loggingDataProvider = new TreeDataProvider<HierarchicalTestBean>(data) {
 
             @Override
             public Stream<HierarchicalTestBean> fetchChildren(
@@ -150,6 +156,16 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createSelectAction("Collapse allowed", CATEGORY_FEATURES, options,
                 "all allowed", (treeGrid, value, data) -> treeGrid
                         .setItemCollapseAllowedProvider(value));
+    }
+
+    private void createRendererSelect() {
+        LinkedHashMap<String, Consumer<Column<?, String>>> options = new LinkedHashMap<>();
+        options.put("text", c -> c.setRenderer(new TextRenderer()));
+        options.put("html", c -> c.setRenderer(new HtmlRenderer()));
+
+        createSelectAction("Hierarchy column renderer", CATEGORY_FEATURES,
+                options, "text",
+                (treeGrid, consumer, data) -> consumer.accept(hierarchyColumn));
     }
 
     @SuppressWarnings("unchecked")
