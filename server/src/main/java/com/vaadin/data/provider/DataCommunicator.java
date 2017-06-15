@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -193,12 +192,13 @@ public class DataCommunicator<T> extends AbstractExtension {
     private final Collection<DataGenerator<T>> generators = new LinkedHashSet<>();
     private final ActiveDataHandler handler = new ActiveDataHandler();
 
-    /** Empty default data provider */
+    /** Empty default data provider. */
     protected DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
     private final DataKeyMapper<T> keyMapper;
 
-    protected boolean reset = false;
+    /** Boolean for pending hard reset. */
+    protected boolean reset = true;
     private final Set<T> updatedData = new HashSet<>();
     private int minPushSize = 40;
     private Range pushRows = Range.withLength(0, minPushSize);
@@ -323,9 +323,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
 
         if (initial || reset) {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            int dataProviderSize = getDataProvider().size(new Query(filter));
-            rpc.reset(dataProviderSize);
+            rpc.reset(getDataProviderSize());
         }
 
         Range requestedRows = getPushRows();
@@ -334,11 +332,7 @@ public class DataCommunicator<T> extends AbstractExtension {
             int offset = requestedRows.getStart();
             int limit = requestedRows.length();
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            List<T> rowsToPush = (List<T>) getDataProvider()
-                    .fetch(new Query(offset, limit, backEndSorting,
-                            inMemorySorting, filter))
-                    .collect(Collectors.toList());
+            List<T> rowsToPush = fetchItemsWithRange(offset, limit);
 
             if (!initial && !reset && rowsToPush.size() == 0) {
                 triggerReset = true;
@@ -359,6 +353,13 @@ public class DataCommunicator<T> extends AbstractExtension {
         setPushRows(Range.withLength(0, 0));
         reset = triggerReset;
         updatedData.clear();
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected List<T> fetchItemsWithRange(int offset, int limit) {
+        return (List<T>) getDataProvider().fetch(new Query(offset, limit,
+                backEndSorting, inMemorySorting, filter))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -480,15 +481,15 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Informs the DataProvider that the collection has changed.
+     * Method for internal reset from a change in the component, requiring a
+     * full data update.
      */
     public void reset() {
-        if (reset) {
-            return;
+        // Only needed if a full reset is not pending.
+        if (!reset) {
+            // Soft reset through client-side re-request.
+            getClientRpc().reset(getDataProviderSize());
         }
-
-        reset = true;
-        markAsDirty();
     }
 
     /**
@@ -641,7 +642,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         if (isAttached()) {
             attachDataProviderListener();
         }
-        reset();
+        hardReset();
 
         return filter -> {
             if (this.dataProvider != dataProvider) {
@@ -650,10 +651,25 @@ public class DataCommunicator<T> extends AbstractExtension {
             }
 
             if (!Objects.equals(this.filter, filter)) {
-                this.filter = filter;
+                setFilter(filter);
                 reset();
             }
         };
+    }
+
+    /**
+     * Sets the filter for this DataCommunicator. This method is used by user
+     * through the consumer method from {@link #setDataProvider} and should not
+     * be called elsewhere.
+     * 
+     * @param filter
+     *            the filter
+     * 
+     * @param <F>
+     *            the filter type
+     */
+    protected <F> void setFilter(F filter) {
+        this.filter = filter;
     }
 
     /**
@@ -693,6 +709,17 @@ public class DataCommunicator<T> extends AbstractExtension {
         return minPushSize;
     }
 
+    /**
+     * Getter method for finding the size of DataProvider. Can be overridden by
+     * a subclass that uses a specific type of DataProvider and/or query.
+     * 
+     * @return the size of data provider with current filter
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected int getDataProviderSize() {
+        return getDataProvider().size(new Query(getFilter()));
+    }
+
     @Override
     protected DataCommunicatorState getState(boolean markAsDirty) {
         return (DataCommunicatorState) super.getState(markAsDirty);
@@ -713,10 +740,18 @@ public class DataCommunicator<T> extends AbstractExtension {
                             generators.forEach(g -> g.refreshData(item));
                             refresh(item);
                         } else {
-                            reset();
+                            hardReset();
                         }
                     });
                 });
+    }
+
+    private void hardReset() {
+        if (reset) {
+            return;
+        }
+        reset = true;
+        markAsDirty();
     }
 
     private void detachDataProviderListener() {

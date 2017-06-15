@@ -52,9 +52,6 @@ public class TreeGridChangingHierarchyTest extends SingleBrowserTest {
         grid.expandWithClick(1);
         grid.collapseWithClick(0);
         removeAABtn.click();
-        // Item removed from hierarchy. when encountering less children than
-        // expected, should reset:
-        grid.expandWithClick(0);
         // expand "a" after the reset:
         grid.expandWithClick(0);
         // "a/a" should be removed from a's children:
@@ -92,9 +89,6 @@ public class TreeGridChangingHierarchyTest extends SingleBrowserTest {
         grid.expandWithClick(2);
         removeChildrenOfAAABtn.click();
         grid.collapseWithClick(1);
-        // reset should get triggered here
-        grid.expandWithClick(1);
-        grid.expandWithClick(0);
         grid.expandWithClick(1);
         assertEquals("a/a/a", grid.getCell(2, 0).getText());
         assertFalse(grid.hasExpandToggle(2, 0));
@@ -106,7 +100,9 @@ public class TreeGridChangingHierarchyTest extends SingleBrowserTest {
         grid.expandWithClick(0);
         grid.getCell(1, 0).click();
         removeChildrenOfABtn.click();
-        grid.collapseWithClick(0);
+        // HierarchyMapper will notice the removal of the children of a, and
+        // mark it as collapsed.
+        // grid.collapseWithClick(0);
         grid.getCell(1, 0).click();
         assertTrue(grid.getRow(1).isSelected());
     }

@@ -376,7 +376,7 @@ public class TreeGridConnector extends GridConnector {
                             // navigate up
                             int columnIndex = cell.getColumnIndex();
                             getRpcProxy(FocusParentRpc.class).focusParent(
-                                    cell.getRowIndex(), columnIndex);
+                                    getRowKey(cell.getRow()), columnIndex);
                         } else if (isCollapseAllowed(rowDescription)) {
                             setCollapsed(cell.getRowIndex(), true);
                         }

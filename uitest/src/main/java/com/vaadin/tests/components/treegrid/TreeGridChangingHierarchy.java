@@ -14,8 +14,7 @@ import com.vaadin.ui.TreeGrid;
 
 public class TreeGridChangingHierarchy extends AbstractTestUI {
 
-    private static class TestDataProvider
-            extends TreeDataProvider<String> {
+    private static class TestDataProvider extends TreeDataProvider<String> {
 
         private TreeData<String> treeData;
 
@@ -64,24 +63,34 @@ public class TreeGridChangingHierarchy extends AbstractTestUI {
         Button btn3 = new Button("remove a/a");
         btn3.addClickListener(event -> {
             data.removeItem("a/a");
+            // Inform item removal to DataProvider
+            grid.getDataProvider().refreshAll();
         });
         Button btn4 = new Button("remove children of a/a");
         btn4.addClickListener(event -> {
             data.removeItem("a/a/a");
             data.removeItem("a/a/c");
+            // Inform item removal to DataProvider
+            grid.getDataProvider().refreshAll();
         });
         Button btn5 = new Button("remove a");
         btn5.addClickListener(event -> {
             data.removeItem("a");
+            // Inform item removal to DataProvider
+            grid.getDataProvider().refreshAll();
         });
         Button btn6 = new Button("remove children of a");
         btn6.addClickListener(event -> {
             data.removeItem("a/a");
             data.removeItem("a/b");
+            // Inform item removal to DataProvider
+            grid.getDataProvider().refreshAll();
         });
         Button btn7 = new Button("remove children of a/a/a");
         btn7.addClickListener(event -> {
             data.removeItem("a/a/a/a");
+            // Inform item removal to DataProvider
+            grid.getDataProvider().refreshAll();
         });
 
         addComponents(grid, btn, btn2, btn3, btn4, btn5, btn6, btn7);

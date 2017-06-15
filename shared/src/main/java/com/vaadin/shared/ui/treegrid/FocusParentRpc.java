@@ -28,10 +28,10 @@ public interface FocusParentRpc extends ServerRpc {
     /**
      * Focuses cell in the row parent
      *
-     * @param rowIndex
-     *            the row index
+     * @param rowKey
+     *            the row key
      * @param cellIndex
      *            the cell index
      */
-    void focusParent(int rowIndex, int cellIndex);
+    void focusParent(String rowKey, int cellIndex);
 }
