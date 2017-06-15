@@ -40,10 +40,20 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
     private ValueProvider<V, Object> identifierGetter;
 
+    /**
+     * Constructs a new mapper
+     *
+     * @param identifierGetter has to return an unique key for every bean, and the returned key has to
+     *                         support proper {@code hashCode()} and {@code equals()}
+     * @since 8.1
+     */
     public KeyMapper(ValueProvider<V, Object> identifierGetter) {
         this.identifierGetter = identifierGetter;
     }
 
+    /**
+     * Constructs a new mapper with trivial {@code identifierGetter}
+     */
     public KeyMapper() {
         this(v -> v);
     }

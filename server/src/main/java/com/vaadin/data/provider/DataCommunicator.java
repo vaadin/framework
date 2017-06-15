@@ -574,6 +574,8 @@ public class DataCommunicator<T> extends AbstractExtension {
      * <p>
      * This method is called from the constructor.
      *
+     * @param identifierGetter has to return an unique key for every bean, and the returned key has to
+     *                         support proper {@code hashCode()} and {@code equals()}
      * @return key mapper
      */
     protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
@@ -725,6 +727,12 @@ public class DataCommunicator<T> extends AbstractExtension {
         }
     }
 
+    /**
+     * Sets a new {@code DataProvider} and refreshes all the internal structures
+     *
+     * @param dataProvider
+     * @since 8.1
+     */
     protected void setDataProvider(DataProvider<T, ?> dataProvider) {
         detachDataProviderListener();
         dropAllData();
