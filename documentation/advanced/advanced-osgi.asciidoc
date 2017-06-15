@@ -36,7 +36,7 @@ The easiest way to convert regular maven-based Vaadin application into valid OSG
             <scope>provided</scope>
         </dependency>
 ----
-* Add osgi-related dependencies to the project
+* Add OSGi-related dependencies to the project
 [source, xml]
 ----
         <groupId>com.vaadin</groupId>
@@ -169,7 +169,7 @@ Here is a list of required Vaadin bundles, in order of loading:
 * `vaadin-client-compiled-8.1.x.jar` (not required, if your project uses its own widgetset)
 * `vaadin-themes-8.1.x.jar`
 
-And here is a complete script ho have Vaadin application up and running unsing link:https://karaf.apache.org/[Apache Karaf 4.0.8] console:
+And here is a complete script to have Vaadin application up and running using link:https://karaf.apache.org/[Apache Karaf 4.0.8] console:
 
 [source]
 ----
