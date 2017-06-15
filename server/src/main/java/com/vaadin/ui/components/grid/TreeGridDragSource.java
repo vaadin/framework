@@ -22,7 +22,8 @@ import com.vaadin.ui.TreeGrid;
  * Makes a TreeGrid's rows draggable for HTML5 drag and drop functionality.
  * <p>
  * When dragging a selected row, all the visible selected rows are dragged. Note
- * that ONLY visible rows are taken into account.
+ * that ONLY visible rows are taken into account and the subtree belonging to a
+ * selected row is not dragged either.
  *
  * @param <T>
  *            The TreeGrid bean type.

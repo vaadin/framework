@@ -57,8 +57,10 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
      *         empty grid
      * @param dropLocation
      *         Location of the drop within the target row.
-     *         @param depth
-     *         @param collapsed
+     * @param depth
+     *         depth of the row in the hierarchy
+     * @param collapsed
+     *         whether the target row is collapsed
      */
     public TreeGridDropEvent(TreeGrid<T> target, Map<String, String> data,
             DropEffect dropEffect,
@@ -72,10 +74,21 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
         this.collapsed = collapsed;
     }
 
+    /**
+     * Gets the depth of the drop target row in the hierarchy.
+     *
+     * @return the depth of the drop target row in the hierarchy
+     */
     public Optional<Integer> getDropTargetRowDepth() {
         return Optional.ofNullable(depth);
     }
 
+    /**
+     * Tells whether the drop target row is collapsed.
+     *
+     * @return {@code true} if the drop target row is collapsed, {@code false}
+     * otherwise
+     */
     public Optional<Boolean> isDropTargetRowCollapsed() {
         return Optional.ofNullable(collapsed);
     }
