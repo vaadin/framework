@@ -211,7 +211,7 @@ public abstract class VaadinService implements Serializable {
         dependencyFilters = Collections.unmodifiableCollection(
                 initDependencyFilters(event.getAddedDependencyFilters()));
 
-        connectorIdGenerator = initConenctorIdGenerator(
+        connectorIdGenerator = initConnectorIdGenerator(
                 event.getAddedConnectorIdGenerators());
         assert connectorIdGenerator != null;
 
@@ -1508,7 +1508,7 @@ public abstract class VaadinService implements Serializable {
      *             if there are multiple implementations to choose from
      *
      */
-    protected ConnectorIdGenerator initConenctorIdGenerator(
+    protected ConnectorIdGenerator initConnectorIdGenerator(
             List<ConnectorIdGenerator> addedConnectorIdGenerators)
             throws ServiceException {
         assert addedConnectorIdGenerators != null;
@@ -2202,7 +2202,7 @@ public abstract class VaadinService implements Serializable {
      * Generates a unique id to use for a newly attached connector.
      *
      * @see ConnectorIdGenerator
-     * @see #initConenctorIdGenerator(List)
+     * @see #initConnectorIdGenerator(List)
      *
      * @since 8.1
      *

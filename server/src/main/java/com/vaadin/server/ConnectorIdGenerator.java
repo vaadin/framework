@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Callback for generating the id for new connectors. A generator can be
  * registered to be used with an application by overriding
- * {@link VaadinService#initConenctorIdGenerator(java.util.List)} or by calling
+ * {@link VaadinService#initConnectorIdGenerator(java.util.List)} or by calling
  * {@link ServiceInitEvent#addConnectorIdGenerator(ConnectorIdGenerator)} from a
  * {@link VaadinServiceInitListener}.
  *
