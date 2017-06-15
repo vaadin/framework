@@ -190,7 +190,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         super(new DataCommunicator<T>() {
             @Override
             protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
-                return new KeyMapper<T>() {
+                return new KeyMapper<T>(identifierGetter) {
                     @Override
                     public void remove(T removeobj) {
                         // never remove keys from ComboBox to support selection
