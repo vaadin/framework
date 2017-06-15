@@ -129,13 +129,13 @@ public class TreeGrid<T> extends Grid<T>
                     boolean collapse, boolean userOriginated) {
                 T item = getDataCommunicator().getKeyMapper().get(rowKey);
                 if (collapse && getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().collapse(item, Optional.of(rowIndex));
+                    getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
                     fireCollapseEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey),
                             userOriginated);
                 } else if (!collapse
                         && !getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().expand(item, Optional.of(rowIndex));
+                    getDataCommunicator().doExpand(item, Optional.of(rowIndex));
                     fireExpandEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey),
                             userOriginated);

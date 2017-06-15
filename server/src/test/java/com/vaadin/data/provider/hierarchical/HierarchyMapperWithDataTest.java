@@ -221,8 +221,6 @@ public class HierarchyMapperWithDataTest {
     private void verifyFetchIsCorrect(List<Node> expectedResult, Range range) {
         List<Node> collect = mapper.fetchItems(range)
                 .collect(Collectors.toList());
-        System.err.println(collect.stream().map(Object::toString)
-                .collect(Collectors.joining(", ")));
         for (int i = 0; i < range.length(); ++i) {
             Assert.assertEquals("Unexpected fetch results.",
                     expectedResult.get(i + range.getStart()), collect.get(i));

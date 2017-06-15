@@ -151,7 +151,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            the item to collapse
      */
     public void collapse(T item) {
-        collapse(item, mapper.getIndexOf(item));
+        if (mapper.isExpanded(item)) {
+            doCollapse(item, mapper.getIndexOf(item));
+        }
     }
 
     /**
@@ -166,7 +168,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * @param index
      *            the index of the item
      */
-    public void collapse(T item, Optional<Integer> index) {
+    public void doCollapse(T item, Optional<Integer> index) {
         if (mapper.isExpanded(item)) {
             Range removedRows = mapper.collapse(item, index);
             if (!reset && !removedRows.isEmpty()) {
@@ -185,7 +187,9 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      *            the item to expand
      */
     public void expand(T item) {
-        expand(item, mapper.getIndexOf(item));
+        if (!mapper.isExpanded(item) && mapper.hasChildren(item)) {
+            doExpand(item, mapper.getIndexOf(item));
+        }
     }
 
     /**
@@ -200,7 +204,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      * @param index
      *            the index of the item
      */
-    public void expand(T item, Optional<Integer> index) {
+    public void doExpand(T item, Optional<Integer> index) {
         if (!mapper.isExpanded(item)) {
             Range addedRows = mapper.expand(item, index);
             if (!reset && !addedRows.isEmpty()) {
