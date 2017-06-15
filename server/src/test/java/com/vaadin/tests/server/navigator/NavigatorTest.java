@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
@@ -1059,5 +1060,58 @@ public class NavigatorTest {
                 EasyMock.createMock(ViewDisplay.class));
         manager.setState(state);
         return navigator;
+    }
+
+    @Test
+    public void parameterMapFromViewChangeEvent() {
+        // create navigator to test
+        Navigator navigator = createNavigatorWithState("foo");
+        View view1 = EasyMock.createMock(View.class);
+        View view2 = EasyMock.createMock(View.class);
+        ViewProvider provider = new ViewProvider() {
+
+            @Override
+            public String getViewName(String viewAndParameters) {
+                if (viewAndParameters.contains("/")) {
+                    return viewAndParameters.substring(0,
+                            viewAndParameters.indexOf('/'));
+                } else {
+                    return viewAndParameters;
+                }
+            }
+
+            @Override
+            public View getView(String viewName) {
+                if (viewName.equals("view1")) {
+                    return view1;
+                } else if (viewName.equals("view2")) {
+                    return view2;
+                } else {
+                    return null;
+                }
+            }
+        };
+        navigator.addProvider(provider);
+
+        AtomicReference<Map<String, String>> mapRef = new AtomicReference<>();
+        AtomicReference<Map<String, String>> mapRefB = new AtomicReference<>();
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                mapRef.set(event.getParameterMap());
+                mapRefB.set(event.getParameterMap("b"));
+                return true;
+            }
+        });
+
+        navigator.navigateTo("view1");
+
+        Assert.assertTrue(mapRef.get().isEmpty());
+        Assert.assertTrue(mapRefB.get().isEmpty());
+        navigator.navigateTo("view1/a&b=c&d");
+
+        assertMap(mapRef.get(), entry("a", ""), entry("b", "c"),
+                entry("d", ""));
+        assertMap(mapRefB.get(), entry("a&", ""), entry("", "c&d"));
     }
 }
