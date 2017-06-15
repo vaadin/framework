@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tree;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.Assert;
@@ -11,10 +12,13 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.TreeElement;
 import com.vaadin.testbench.elements.TreeGridElement;
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
+@RunLocally(Browser.PHANTOMJS)
 public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
     private static final Predicate<TestBenchElement> THEME_RESOURCE = e -> {
@@ -92,7 +96,8 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
             for (int j = 0; j < 3; ++j) {
                 item = tree.getItem(n++);
-                Assert.assertEquals((shouldHaveIcon ? "\ue92d" : "") + "1 | " + j,
+                Assert.assertEquals(
+                        (shouldHaveIcon ? "\ue92d" : "") + "1 | " + j,
                         item.getText());
 
                 Assert.assertEquals("Unexpected icon state", shouldHaveIcon,
@@ -202,5 +207,17 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         tree.getItem(0).click();
         Assert.assertFalse("First row was not deselected",
                 wrap.getRow(0).isSelected());
+    }
+
+    @Test
+    public void tree_row_heigth() {
+        TreeElement tree = $(TreeElement.class).first();
+        TreeGridElement wrap = tree.wrap(TreeGridElement.class);
+        Arrays.stream(TreeBasicFeatures.ROW_HEIGHTS).boxed()
+                .map(String::valueOf).forEach(height -> {
+                    selectMenuPath("Component", "Row Height", height);
+                    Assert.assertTrue(wrap.getCell(0, 0).getAttribute("style")
+                            .contains("height: " + height + "px;"));
+                });
     }
 }

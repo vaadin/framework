@@ -762,4 +762,15 @@ public class Tree<T> extends Composite
     public void setComponentError(ErrorMessage componentError) {
         treeGrid.setComponentError(componentError);
     }
+
+    /**
+     * Sets the height of a row. If -1 (default), the row height is calculated
+     * based on the theme for an empty row before the Tree is displayed.
+     * 
+     * @param rowHeight
+     *            The height of a row in pixels or -1 for automatic calculation
+     */
+    public void setRowHeight(double rowHeight) {
+        treeGrid.setRowHeight(rowHeight);
+    }
 }
