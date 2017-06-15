@@ -5,14 +5,11 @@ import java.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
@@ -59,6 +56,17 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
 
         $(ButtonElement.class).first().click();
         Assert.assertEquals("Last week should not be ok", "Fail",
+                $(NotificationElement.class).first().getText());
+    }
+
+    @Test
+    public void testParseErrorClearedOnValidInput() {
+        testFaultyUserInput();
+        $(NotificationElement.class).first().close();
+
+        $(DateFieldElement.class).first().setDate(LocalDate.now());
+        $(ButtonElement.class).first().click();
+        Assert.assertEquals("Current date should be ok", "OK",
                 $(NotificationElement.class).first().getText());
     }
 }

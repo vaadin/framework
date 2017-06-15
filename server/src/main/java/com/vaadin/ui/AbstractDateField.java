@@ -303,7 +303,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
                     markAsDirty();
                 } else {
-                    parsedDate.ifOk(value -> setValue(value, true));
+                    parsedDate.ifOk(value -> {
+                        currentParseErrorMessage = null;
+                        setValue(value, true);
+                    });
 
                     /*
                      * Ensure the value is sent to the client if the value is
@@ -316,6 +319,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             } else if (newDate != oldDate
                     && (newDate == null || !newDate.equals(oldDate))) {
+                currentParseErrorMessage = null;
                 setValue(newDate, true); // Don't require a repaint, client
                 // updates itself
             } else if (!uiHasValidDateString) {
