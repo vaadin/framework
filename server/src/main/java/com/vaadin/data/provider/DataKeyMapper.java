@@ -81,4 +81,12 @@ public interface DataKeyMapper<T> extends Serializable {
      *            the data object to update
      */
     void refresh(T dataObject);
+
+    /**
+     * Takes identifier getter into use and updates existing mappings
+     *
+     * @param identifierGetter
+     *            the new identifier getter
+     */
+    void useIdentifierGetter(ValueProvider<T,Object> identifierGetter);
 }
