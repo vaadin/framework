@@ -244,27 +244,12 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     @Override
-    public void addStyleNames(String... styles) {
-        for (String style : styles) {
-            addStyleName(style);
-        }
-    }
-
-    @Override
     public void removeStyleName(String style) {
         if (ComponentStateUtil.hasStyles(getState())) {
             StringTokenizer tokenizer = new StringTokenizer(style, " ");
             while (tokenizer.hasMoreTokens()) {
                 getState().styles.remove(tokenizer.nextToken());
             }
-        }
-    }
-
-
-    @Override
-    public void removeStyleNames(String... styles) {
-        for (String style : styles) {
-            removeStyleName(style);
         }
     }
 

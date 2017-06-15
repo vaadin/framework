@@ -182,7 +182,11 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see #setStyleName(String)
      * @see #removeStyleName(String)
      */
-    public void addStyleNames(String ... styles);
+    public default void addStyleNames(String ... styles) {
+        for (String style : styles) {
+            addStyleName(style);
+        }
+    }
 
     /**
      * Removes one or more style names from component. Multiple styles can be
@@ -213,7 +217,11 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see #setStyleName(String)
      * @see #addStyleName(String)
      */
-    public void removeStyleNames(String ... styles);
+    public default void removeStyleNames(String ... styles) {
+        for (String style : styles) {
+            removeStyleName(style);
+        }
+    }
 
     /**
      * Gets the primary style name of the component. See
