@@ -196,7 +196,7 @@ public class DataCommunicator<T> extends AbstractExtension {
     /** Empty default data provider. */
     private DataProvider<T, ?> dataProvider = new CallbackDataProvider<>(
             q -> Stream.empty(), q -> 0);
-    private DataKeyMapper<T> keyMapper;
+    private final DataKeyMapper<T> keyMapper;
 
     /** Boolean for pending hard reset. */
     protected boolean reset = true;
@@ -777,6 +777,6 @@ public class DataCommunicator<T> extends AbstractExtension {
         detachDataProviderListener();
         dropAllData();
         this.dataProvider = dataProvider;
-        keyMapper = createKeyMapper(dataProvider::getId);
+        keyMapper.useIdentifierGetter(dataProvider::getId);
     }
 }

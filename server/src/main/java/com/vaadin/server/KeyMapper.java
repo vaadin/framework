@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataKeyMapper;
@@ -37,7 +38,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
     private final HashMap<String, V> keyObjectMap = new HashMap<>();
 
-    private final ValueProvider<V, Object> identifierGetter;
+    private ValueProvider<V, Object> identifierGetter;
 
     public KeyMapper(ValueProvider<V, Object> identifierGetter) {
         this.identifierGetter = identifierGetter;
@@ -128,8 +129,19 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     public void refresh(V dataObject) {
         Object id = identifierGetter.apply(dataObject);
         String key = objectIdKeyMap.get(id);
-        if(key!=null) {
-            keyObjectMap.put(key,dataObject);
+        if (key != null) {
+            keyObjectMap.put(key, dataObject);
+        }
+    }
+
+    @Override
+    public void useIdentifierGetter(ValueProvider<V, Object> identifierGetter) {
+        if (this.identifierGetter != identifierGetter) {
+            this.identifierGetter = identifierGetter;
+            objectIdKeyMap.clear();
+            for (Map.Entry<String, V> entry : keyObjectMap.entrySet()) {
+                objectIdKeyMap.put(identifierGetter.apply(entry.getValue()),entry.getKey());
+            }
         }
     }
 }
