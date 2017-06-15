@@ -27,7 +27,7 @@ import com.vaadin.shared.ui.datefield.DateTimeResolution;
 /**
  * Represents a date-time selection component with a text field and a popup date
  * selector.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @since 8.0
@@ -169,48 +169,45 @@ public class VPopupTimeCalendar extends
     }
 
     @Override
-    protected String getFormatString() {
-        if (formatStr == null) {
-            if (isYear(getCurrentResolution())) {
-                formatStr = "yyyy"; // force full year
-            } else {
+    protected String createFormatString() {
+        if (isYear(getCurrentResolution())) {
+            return "yyyy"; // force full year
+        } else {
 
-                try {
-                    String frmString = LocaleService
-                            .getDateFormat(currentLocale);
-                    frmString = cleanFormat(frmString);
-                    // String delim = LocaleService
-                    // .getClockDelimiter(currentLocale);
+            try {
+                String frmString = LocaleService.getDateFormat(currentLocale);
+                frmString = cleanFormat(frmString);
+                // String delim = LocaleService
+                // .getClockDelimiter(currentLocale);
+                if (getCurrentResolution()
+                        .compareTo(DateTimeResolution.HOUR) <= 0) {
+                    if (dts.isTwelveHourClock()) {
+                        frmString += " hh";
+                    } else {
+                        frmString += " HH";
+                    }
                     if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.HOUR) <= 0) {
-                        if (dts.isTwelveHourClock()) {
-                            frmString += " hh";
-                        } else {
-                            frmString += " HH";
-                        }
+                            .compareTo(DateTimeResolution.MINUTE) <= 0) {
+                        frmString += ":mm";
                         if (getCurrentResolution()
-                                .compareTo(DateTimeResolution.MINUTE) <= 0) {
-                            frmString += ":mm";
-                            if (getCurrentResolution().compareTo(
-                                    DateTimeResolution.SECOND) <= 0) {
-                                frmString += ":ss";
-                            }
+                                .compareTo(DateTimeResolution.SECOND) <= 0) {
+                            frmString += ":ss";
                         }
-                        if (dts.isTwelveHourClock()) {
-                            frmString += " aaa";
-                        }
-
+                    }
+                    if (dts.isTwelveHourClock()) {
+                        frmString += " aaa";
                     }
 
-                    formatStr = frmString;
-                } catch (LocaleNotLoadedException e) {
-                    // TODO should die instead? Can the component survive
-                    // without format string?
-                    VConsole.error(e);
                 }
+
+                return frmString;
+            } catch (LocaleNotLoadedException e) {
+                // TODO should die instead? Can the component survive
+                // without format string?
+                VConsole.error(e);
+                return null;
             }
         }
-        return formatStr;
     }
 
     @Override
@@ -223,6 +220,11 @@ public class VPopupTimeCalendar extends
             format = format.replaceAll("M", "");
         }
         return super.cleanFormat(format);
+    }
+
+    @Override
+    protected boolean supportsTime() {
+        return true;
     }
 
 }

@@ -14,11 +14,10 @@ public class TreeGridTest {
     private boolean expandEventFired = false;
     private boolean collapseEventFired = false;
 
-    @Test(expected = IllegalStateException.class)
     public void testChangeRendererOfHierarchyColumn() {
         treeGrid.addColumn(Object::toString).setId("foo");
         treeGrid.setHierarchyColumn("foo");
-        // This should not be allowed.
+        // This should be allowed.
         treeGrid.getColumn("foo").setRenderer(new TextRenderer());
     }
 
@@ -28,8 +27,7 @@ public class TreeGridTest {
         treeData.addItem(null, "Foo");
         treeData.addItem("Foo", "Bar");
         treeData.addItem("Foo", "Baz");
-        treeGrid.setDataProvider(
-                new TreeDataProvider<>(treeData));
+        treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
 
         treeGrid.addExpandListener(e -> expandEventFired = true);
         treeGrid.addCollapseListener(e -> collapseEventFired = true);

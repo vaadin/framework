@@ -151,7 +151,8 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
                     log(event.getComponent().getValue() + " drop received "
                             + source.getValue() + ", dropEffect="
-                            + event.getDropEffect());
+                            + event.getDropEffect() + ", mouseEventDetails="
+                            + event.getMouseEventDetails());
                 } else {
                     log(event.getComponent().getValue()
                             + " drop received something else than card");

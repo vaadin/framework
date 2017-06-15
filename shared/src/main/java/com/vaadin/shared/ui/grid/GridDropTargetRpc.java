@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.grid;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -43,8 +44,11 @@ public interface GridDropTargetRpc extends ServerRpc {
      *         Key of the row on which the drop event occured.
      * @param dropLocation
      *         Location of the drop within the row.
+     * @param mouseEventDetails
+     *         Mouse event details object containing information about the drop
+     *         event
      */
     public void drop(List<String> types, Map<String, String> data,
             String dropEffect, String rowKey,
-            DropLocation dropLocation);
+            DropLocation dropLocation, MouseEventDetails mouseEventDetails);
 }

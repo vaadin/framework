@@ -15,6 +15,9 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
@@ -70,6 +73,40 @@ public class DateFieldElement extends AbstractDateFieldElement {
      */
     public void openPopup() {
         findElement(By.tagName("button")).click();
+    }
+
+    /**
+     * Sets the value to the given date and time.
+     *
+     * @param value
+     *            the date and time to set.
+     */
+    public void setDate(LocalDate value) {
+        setISOValue(value.format(getISOFormatter()));
+    }
+
+    /**
+     * Gets the value as a LocalDate object.
+     *
+     * @return the current value as a date object, or null if a date is not set
+     *         or if the text field contains an invalid date
+     */
+    public LocalDate getDate() {
+        String value = getISOValue();
+        if (value == null) {
+            return null;
+        }
+        return LocalDate.parse(value, getISOFormatter());
+    }
+
+    /**
+     * Gets a date and time formatter for ISO-8601 dates.
+     *
+     * @return a date formatter for ISO-8601
+     * @since
+     */
+    protected DateTimeFormatter getISOFormatter() {
+        return DateTimeFormatter.ISO_LOCAL_DATE;
     }
 
 }

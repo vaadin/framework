@@ -1906,6 +1906,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Gets the Renderer for this Column.
+         * 
+         * @return the renderer
+         * @since
+         */
+        public Renderer<? super V> getRenderer() {
+            return (Renderer<? super V>) getState().renderer;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
@@ -4006,7 +4016,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 column = addColumn(id);
             } else {
                 DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-                column = new Column<>(provider, new HtmlRenderer());
+                column = createColumn(provider, new HtmlRenderer());
                 addColumn(getGeneratedIdentifier(), column);
                 if (id != null) {
                     column.setId(id);

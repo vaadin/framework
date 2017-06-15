@@ -18,6 +18,7 @@ package com.vaadin.ui.dnd.event;
 import java.util.Map;
 import java.util.Optional;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.AbstractComponent;
@@ -39,6 +40,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
     private final DragSourceExtension<? extends AbstractComponent> dragSourceExtension;
     private final AbstractComponent dragSource;
     private final DropEffect dropEffect;
+    private final MouseEventDetails mouseEventDetails;
 
     /**
      * Creates a server side drop event.
@@ -53,9 +55,13 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      * @param dragSourceExtension
      *         Drag source extension of the component that initiated the drop
      *         event.
+     * @param mouseEventDetails
+     *         Mouse event details object containing information about the drop
+     *         event
      */
     public DropEvent(T target, Map<String, String> data, DropEffect dropEffect,
-            DragSourceExtension<? extends AbstractComponent> dragSourceExtension) {
+            DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
+            MouseEventDetails mouseEventDetails) {
         super(target);
 
         this.data = data;
@@ -63,6 +69,7 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
         this.dragSourceExtension = dragSourceExtension;
         this.dragSource = Optional.ofNullable(dragSourceExtension)
                 .map(DragSourceExtension::getParent).orElse(null);
+        this.mouseEventDetails = mouseEventDetails;
     }
 
     /**
@@ -162,6 +169,16 @@ public class DropEvent<T extends AbstractComponent> extends Component.Event {
      */
     public Optional<Object> getDragData() {
         return getDragSourceExtension().map(DragSourceExtension::getDragData);
+    }
+
+    /**
+     * Gets the mouse event details for the drop event.
+     *
+     * @return Mouse event details object containing information about the drop
+     * event.
+     */
+    public MouseEventDetails getMouseEventDetails() {
+        return mouseEventDetails;
     }
 
     /**

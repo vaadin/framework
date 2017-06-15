@@ -289,6 +289,12 @@ public class GridConnector extends AbstractListingConnector
                     column.getWidthActual());
         });
 
+        // Handling row height changes
+        getWidget().addRowHeightChangedHandler(event -> {
+            getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
+            getLayoutManager().layoutNow();
+        });
+
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
@@ -449,6 +455,20 @@ public class GridConnector extends AbstractListingConnector
         getWidget().removeColumn(column);
         String id = columnToIdMap.remove(column);
         idToColumn.remove(id);
+    }
+
+    /**
+     * Method called by {@code CustomColumn} when its renderer changes. This
+     * method is used to maintain hierarchical renderer wrap in
+     * {@code TreeGrid}.
+     * 
+     * @param column
+     *            the column which now has a new renderer
+     * 
+     * @since 8.1
+     */
+    public void onColumnRendererChanged(CustomColumn column) {
+        // NO-OP
     }
 
     @Override
