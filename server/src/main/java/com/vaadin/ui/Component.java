@@ -175,10 +175,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * Adds one or more style names to this component by using one or multiple parameters.
-     *
      * @param styles
-     *            the new style to be added to the component
-     * @see #getStyleName()
+     *            the style name or style names to be added to the component
+     * @see #addStyleName(String)
      * @see #setStyleName(String)
      * @see #removeStyleName(String)
      */
@@ -210,10 +209,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     /**
      * Removes one or more style names from component. Multiple styles can be
      * specified by using multiple parameters.
-     *
      * @param styles
      *            the style name or style names to be removed
-     * @see #getStyleName()
+     * @see #removeStyleName(String)
      * @see #setStyleName(String)
      * @see #addStyleName(String)
      */
