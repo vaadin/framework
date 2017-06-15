@@ -12,13 +12,10 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.TreeElement;
 import com.vaadin.testbench.elements.TreeGridElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-@RunLocally(Browser.PHANTOMJS)
 public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
     private static final Predicate<TestBenchElement> THEME_RESOURCE = e -> {
