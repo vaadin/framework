@@ -230,7 +230,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *
      * @return <code>true</code> if time is supported in addition to date,
      *         <code>false</code> if only dates are supported
-     * @since
+     * @since 8.1
      */
     protected abstract boolean supportsTime();
 

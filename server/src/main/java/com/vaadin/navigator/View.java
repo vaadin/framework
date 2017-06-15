@@ -54,7 +54,7 @@ public interface View extends Serializable {
      * By default casts this View to a {@link Component} if possible, otherwise
      * throws an IllegalStateException.
      *
-     * @since
+     * @since 8.1
      * @return the component to show, by default the view instance itself
      */
     public default Component getViewComponent() {
