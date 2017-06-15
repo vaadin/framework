@@ -229,7 +229,7 @@ public class TreeGridConnector extends GridConnector {
             GridEventHandler<?> eventHandler)
     /*-{
         var browserEventHandlers = grid.@com.vaadin.client.widgets.Grid::browserEventHandlers;
-
+    
         // FocusEventHandler is initially 5th in the list of browser event handlers
         browserEventHandlers.@java.util.List::set(*)(5, eventHandler);
     }-*/;
@@ -352,7 +352,8 @@ public class TreeGridConnector extends GridConnector {
                 // Hierarchy metadata
                 JsonObject rowData = cell.getRow();
                 if (rowData == null) {
-                    // Row data is lost from the cache, i.e. the row is at least outside the visual area,
+                    // Row data is lost from the cache, i.e. the row is at least
+                    // outside the visual area,
                     // let's scroll the row into the view
                     getWidget().scrollToRow(cell.getRowIndex());
                 } else if (rowData.hasKey(
@@ -363,21 +364,21 @@ public class TreeGridConnector extends GridConnector {
                             HierarchicalDataCommunicatorConstants.ROW_LEAF);
                     boolean collapsed = isCollapsed(rowData);
                     switch (domEvent.getKeyCode()) {
-                        case KeyCodes.KEY_RIGHT:
-                            if (collapsed && !leaf) {
-                                setCollapsed(cell.getRowIndex(), false);
-                            }
-                            break;
-                        case KeyCodes.KEY_LEFT:
-                            if (collapsed || leaf) {
-                                // navigate up
-                                int columnIndex = cell.getColumnIndex();
-                                getRpcProxy(FocusParentRpc.class).focusParent(
-                                        cell.getRowIndex(), columnIndex);
-                            } else if (isCollapseAllowed(rowDescription)) {
-                                setCollapsed(cell.getRowIndex(), true);
-                            }
-                            break;
+                    case KeyCodes.KEY_RIGHT:
+                        if (collapsed && !leaf) {
+                            setCollapsed(cell.getRowIndex(), false);
+                        }
+                        break;
+                    case KeyCodes.KEY_LEFT:
+                        if (collapsed || leaf) {
+                            // navigate up
+                            int columnIndex = cell.getColumnIndex();
+                            getRpcProxy(FocusParentRpc.class).focusParent(
+                                    getRowKey(cell.getRow()), columnIndex);
+                        } else if (isCollapseAllowed(rowDescription)) {
+                            setCollapsed(cell.getRowIndex(), true);
+                        }
+                        break;
                     }
 
                 }
@@ -419,14 +420,17 @@ public class TreeGridConnector extends GridConnector {
         return rowData
                 .getObject(
                         HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION)
-                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
+                .getBoolean(
+                        HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
     }
 
     /**
      * Checks if the item can be collapsed
      *
-     * @param row the item row
-     * @return {@code true} if the item is allowed to be collapsed, {@code false} otherwise.
+     * @param row
+     *            the item row
+     * @return {@code true} if the item is allowed to be collapsed,
+     *         {@code false} otherwise.
      */
     public static boolean isCollapseAllowed(JsonObject row) {
         return row.getBoolean(

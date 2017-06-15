@@ -129,7 +129,8 @@ public class TreeGrid<T> extends Grid<T>
                     boolean collapse, boolean userOriginated) {
                 T item = getDataCommunicator().getKeyMapper().get(rowKey);
                 if (collapse && getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
+                    getDataCommunicator().doCollapse(item,
+                            Optional.of(rowIndex));
                     fireCollapseEvent(
                             getDataCommunicator().getKeyMapper().get(rowKey),
                             userOriginated);
@@ -145,9 +146,9 @@ public class TreeGrid<T> extends Grid<T>
 
         registerRpc(new FocusParentRpc() {
             @Override
-            public void focusParent(int rowIndex, int cellIndex) {
-                Integer parentIndex = getDataCommunicator()
-                        .getParentIndex(rowIndex);
+            public void focusParent(String rowKey, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(
+                        getDataCommunicator().getKeyMapper().get(rowKey));
                 if (parentIndex != null) {
                     getRpcProxy(FocusRpc.class).focusCell(parentIndex,
                             cellIndex);

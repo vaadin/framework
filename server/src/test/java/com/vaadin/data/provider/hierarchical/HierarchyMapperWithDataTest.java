@@ -113,11 +113,11 @@ public class HierarchyMapperWithDataTest {
     public void findParentIndexOfLeaf() {
         expand(testData.get(0));
         Assert.assertEquals("Could not find the root node of a parent",
-                Integer.valueOf(0), mapper.getParentIndex(1));
+                Integer.valueOf(0), mapper.getParentIndex(testData.get(1)));
 
         expand(testData.get(1));
         Assert.assertEquals("Could not find the parent of a leaf",
-                Integer.valueOf(1), mapper.getParentIndex(1 + LEAF_COUNT));
+                Integer.valueOf(1), mapper.getParentIndex(testData.get(2)));
     }
 
     @Test
@@ -211,11 +211,11 @@ public class HierarchyMapperWithDataTest {
     }
 
     private void expand(Node node) {
-        insertRows(mapper.expand(node, mapper.getIndexOf(node)));
+        insertRows(mapper.doExpand(node, mapper.getIndexOf(node)));
     }
 
     private void collapse(Node node) {
-        removeRows(mapper.collapse(node, mapper.getIndexOf(node)));
+        removeRows(mapper.doCollapse(node, mapper.getIndexOf(node)));
     }
 
     private void verifyFetchIsCorrect(List<Node> expectedResult, Range range) {

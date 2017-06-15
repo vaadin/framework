@@ -170,7 +170,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     public void doCollapse(T item, Optional<Integer> index) {
         if (mapper.isExpanded(item)) {
-            Range removedRows = mapper.collapse(item, index);
+            Range removedRows = mapper.doCollapse(item, index);
             if (!reset && !removedRows.isEmpty()) {
                 getClientRpc().removeRows(removedRows.getStart(),
                         removedRows.length());
@@ -206,7 +206,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
      */
     public void doExpand(T item, Optional<Integer> index) {
         if (!mapper.isExpanded(item)) {
-            Range addedRows = mapper.expand(item, index);
+            Range addedRows = mapper.doExpand(item, index);
             if (!reset && !addedRows.isEmpty()) {
                 int start = addedRows.getStart();
                 getClientRpc().insertRows(start, addedRows.length());
@@ -264,12 +264,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     /**
      * Returns parent index for the row or {@code null}.
      *
-     * @param rowIndex
-     *            the row index
+     * @param item
+     *            the item to find the parent of
      * @return the parent index or {@code null} for top-level items
      */
-    public Integer getParentIndex(int rowIndex) {
-        return mapper.getParentIndex(rowIndex);
+    public Integer getParentIndex(T item) {
+        return mapper.getParentIndex(item);
     }
 
     /**

@@ -90,38 +90,17 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Finds the index of the parent of the item in given target index.
      * 
-     * @param target
-     *            the target index
+     * @param item
+     *            the item to get the parent of
      * @return the parent index
      * 
      * @throws IllegalArgumentException
      *             if given target index is not found
      */
-    public Integer getParentIndex(int target) throws IllegalArgumentException {
+    public Integer getParentIndex(T item) throws IllegalArgumentException {
+        // TODO: This can be optimised.
         List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
-        return flatHierarchy.indexOf(getParent(target, flatHierarchy));
-    }
-
-    /**
-     * Finds the parent item for given index.
-     * 
-     * @param target
-     *            the index of target
-     * @param list
-     *            the flattened hierarchy
-     * @return the parent node
-     * 
-     * @throws IllegalArgumentException
-     *             if given target index is not found
-     */
-    public T getParent(int target, List<T> list)
-            throws IllegalArgumentException {
-        if (0 <= target && target < list.size()) {
-            T item = list.get(target);
-            return getParentOfItem(item);
-        }
-        throw new IllegalArgumentException(
-                "Unable to determine parent for index: " + target);
+        return flatHierarchy.indexOf(getParentOfItem(item));
     }
 
     /**
@@ -148,7 +127,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      *            the index of item
      * @return range of rows added by expanding the item
      */
-    public Range expand(T item, Optional<Integer> position) {
+    public Range doExpand(T item, Optional<Integer> position) {
         Range rows = Range.withLength(0, 0);
         if (!isExpanded(item) && hasChildren(item)) {
             Object id = getDataProvider().getId(item);
@@ -166,9 +145,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * 
      * @param item
      *            the item to expand
+     * @param position
+     *            the index of item
+     * 
      * @return range of rows removed by collapsing the item
      */
-    public Range collapse(T item, Optional<Integer> position) {
+    public Range doCollapse(T item, Optional<Integer> position) {
         Range removedRows = Range.withLength(0, 0);
         if (isExpanded(item)) {
             Object id = getDataProvider().getId(item);
