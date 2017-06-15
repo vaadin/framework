@@ -112,7 +112,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return a date format string to use when formatting and parsing the text
      *         in the input field
-     * @since
+     * @since 8.1
      */
     protected String createFormatString() {
         if (isYear(getCurrentResolution())) {
@@ -136,7 +136,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @param formatString
      *            the format string to use, or null to force re-creating the
      *            format string from the locale the next time it is needed
-     * @since
+     * @since 8.1
      */
     public void setFormatString(String formatString) {
         this.formatStr = formatString;
@@ -386,7 +386,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /**
      * Publish methods/properties on the element to be used from JavaScript.
      *
-     * @since
+     * @since 8.1
      */
     private native void publishJSHelpers(Element root)
     /*-{
@@ -407,7 +407,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @param isoDate
      *            the date to set in ISO8601 format, or null to clear the date
      *            value
-     * @since
+     * @since 8.1
      */
     public void setISODate(String isoDate) {
         if (isoDate == null) {
@@ -426,7 +426,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return the current date in ISO8601 format, or null if no date is set
      *
-     * @since
+     * @since 8.1
      */
     public String getISODate() {
         Date date = getDate();

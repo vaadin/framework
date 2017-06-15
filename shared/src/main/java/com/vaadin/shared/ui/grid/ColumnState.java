@@ -66,6 +66,8 @@ public class ColumnState extends AbstractGridExtensionState {
     public Connector renderer;
     /**
      * Whether the contents define the minimum width for this column.
+     * 
+     * @since 8.1
      */
     public boolean minimumWidthFromContent = true;
 

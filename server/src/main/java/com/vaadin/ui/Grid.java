@@ -1528,7 +1528,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setMinimumWidth(double)
-         * @since
+         * @since 8.1
          */
         public Column<T, V> setMinimumWidthFromContent(
                 boolean minimumWidthFromContent) throws IllegalStateException {
@@ -1549,7 +1549,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *         <code>false</code> to allow the column to shrink smaller than
          *         the contents
          * @see #setMinimumWidthFromContent(boolean)
-         * @since
+         * @since 8.1
          */
         public boolean isMinimumWidthFromContent() {
             return getState(false).minimumWidthFromContent;
@@ -1907,9 +1907,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Gets the Renderer for this Column.
-         * 
+         *
          * @return the renderer
-         * @since
+         * @since 8.1
          */
         public Renderer<? super V> getRenderer() {
             return (Renderer<? super V>) getState().renderer;

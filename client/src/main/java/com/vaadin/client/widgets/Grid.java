@@ -5287,7 +5287,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *            <code>true</code> to reserve space for all contents,
          *            <code>false</code> to allow the column to shrink smaller
          *            than the contents
-         * @since
+         * @since 8.1
          */
         public void setMinimumWidthFromContent(
                 boolean minimumWidthFromContent) {
@@ -5301,7 +5301,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @return <code>true</code> to reserve space for all contents,
          *         <code>false</code> to allow the column to shrink smaller than
          *         the contents
-         * @since
+         * @since 8.1
          */
         public boolean isMinimumWidthFromContent() {
             return minimumWidthFromContent;
