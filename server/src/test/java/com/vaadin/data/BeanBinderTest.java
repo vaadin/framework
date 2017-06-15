@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -33,6 +34,9 @@ public class BeanBinderTest
     private class TestClass {
         private CheckBoxGroup<TestEnum> enums;
         private TextField number = new TextField();
+    }
+
+    private class TestClassWithoutFields {
     }
 
     private static class TestBean implements Serializable {
@@ -145,6 +149,22 @@ public class BeanBinderTest
         }
     }
 
+    public static class Person {
+        LocalDate mydate;
+
+        public LocalDate getMydate() {
+            return mydate;
+        }
+
+        public void setMydate(LocalDate mydate) {
+            this.mydate = mydate;
+        }
+    }
+
+    public static class PersonForm {
+        private TextField mydate = new TextField();
+    }
+
     @Before
     public void setUp() {
         binder = new BeanValidationBinder<>(BeanToValidate.class);
@@ -192,6 +212,35 @@ public class BeanBinderTest
         // Should throw an IllegalStateException since the binding for number is
         // not completed with bind
         otherBinder.bindInstanceFields(testClass);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void bindInstanceFields_throw_if_no_fields_bound() {
+        Binder<TestBean> otherBinder = new Binder<>(TestBean.class);
+        TestClassWithoutFields testClass = new TestClassWithoutFields();
+
+        // Should throw an IllegalStateException no fields are bound
+        otherBinder.bindInstanceFields(testClass);
+    }
+
+    @Test
+    public void bindInstanceFields_does_not_throw_if_fields_are_bound_manually() {
+        PersonForm form = new PersonForm();
+        Binder<Person> binder = new Binder<>(Person.class);
+        binder.forMemberField(form.mydate)
+                .withConverter(str -> LocalDate.now(), date -> "Hello")
+                .bind("mydate");
+        binder.bindInstanceFields(form);
+
+    }
+
+    @Test
+    public void bindInstanceFields_does_not_throw_if_there_are_incomplete_bindings() {
+        PersonForm form = new PersonForm();
+        Binder<Person> binder = new Binder<>(Person.class);
+        binder.forMemberField(form.mydate).withConverter(str -> LocalDate.now(),
+                date -> "Hello");
+        binder.bindInstanceFields(form);
     }
 
     @Test(expected = IllegalStateException.class)

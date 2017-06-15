@@ -414,8 +414,8 @@ public class BinderInstanceFieldTest {
         Assert.assertEquals("90", form.age.getValue());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void bindInstanceFields_explicitelyBoundFieldAndNotBoundField_throwNoBoundFields() {
+    @Test
+    public void bindInstanceFields_explicitelyBoundFieldAndNotBoundField() {
         BindOnlyOneField form = new BindOnlyOneField();
         Binder<Person> binder = new Binder<>(Person.class);
 
@@ -424,8 +424,8 @@ public class BinderInstanceFieldTest {
         binder.bindInstanceFields(form);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void bindInstanceFields_tentativelyBoundFieldAndNotBoundField_throwNoBoundFields() {
+    @Test
+    public void bindInstanceFields_tentativelyBoundFieldAndNotBoundField() {
         BindOnlyOneField form = new BindOnlyOneField();
         Binder<Person> binder = new Binder<>(Person.class);
 
@@ -436,8 +436,9 @@ public class BinderInstanceFieldTest {
         // manually
         binder.forMemberField(field);
 
-        // bindInstance expects at least one auto configured field (there is no
-        // such, only incomplete one) and fails
+        // bindInstanceFields will not complain even though it can't bind
+        // anything as there is a binding in progress (an exception will be
+        // thrown later if the binding is not completed)
         binder.bindInstanceFields(form);
     }
 }
