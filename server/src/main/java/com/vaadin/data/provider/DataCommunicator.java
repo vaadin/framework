@@ -355,6 +355,17 @@ public class DataCommunicator<T> extends AbstractExtension {
         updatedData.clear();
     }
 
+    /**
+     * Fetches a list of items from the DataProvider.
+     * 
+     * @param offset
+     *            the starting index of the range
+     * @param limit
+     *            the max number of results
+     * @return the list of items in given range
+     * 
+     * @since 8.1
+     */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected List<T> fetchItemsWithRange(int offset, int limit) {
         return (List<T>) getDataProvider().fetch(new Query(offset, limit,
@@ -667,6 +678,8 @@ public class DataCommunicator<T> extends AbstractExtension {
      * 
      * @param <F>
      *            the filter type
+     * 
+     * @since 8.1
      */
     protected <F> void setFilter(F filter) {
         this.filter = filter;
