@@ -356,7 +356,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         dropFromCache(cacheParition[2]);
     }
 
-    private void dropFromCache(Range range) {
+    /**
+     * Drop the given range of rows from this data source's cache.
+     *
+     * @param range
+     *            the range of rows to drop
+     */
+    protected void dropFromCache(Range range) {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
             // Called after dropping from cache. Dropped row is passed as a
             // parameter, but is no longer present in the DataSource
@@ -898,7 +904,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      */
     protected void resetDataAndSize(int newSize) {
         size = newSize;
-        dropFromCache(getCachedRange());
+        indexToRowMap.clear();
+        keyToIndexMap.clear();
         cached = Range.withLength(0, 0);
 
         getHandlers().forEach(dch -> dch.resetDataAndSize(newSize));

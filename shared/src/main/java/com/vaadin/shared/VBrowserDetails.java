@@ -611,21 +611,29 @@ public class VBrowserDetails implements Serializable {
      * @since 8.1
      */
     public boolean isEs6Supported() {
-        if (isTooOldToFunctionProperly()) {
-            return false;
+        // Safari 10+
+        if (isSafari() && getBrowserMajorVersion() >= 10) {
+            return true;
         }
-
-        // assumes evergreen browsers support ES6
-        if (isChrome() || isFirefox() || isOpera() || isEdge()) {
+        // Firefox 51+
+        if (isFirefox() && getBrowserMajorVersion() >= 51) {
+            return true;
+        }
+        // Opera 36+
+        if (isOpera() && getBrowserMajorVersion() >= 36) {
+            return true;
+        }
+        // Chrome 49+
+        if (isChrome() && getBrowserMajorVersion() >= 49) {
+            return true;
+        }
+        // Edge 15.15063+
+        if (isEdge() && (getBrowserMajorVersion() > 15
+                || (getBrowserMajorVersion() == 15
+                        && getBrowserMinorVersion() >= 15063))) {
             return true;
         }
 
-        // Safari > 9
-        if (isSafari() && getBrowserMajorVersion() > 9) {
-            return true;
-        }
-
-        // IE11 and Safari 9
         return false;
     }
 

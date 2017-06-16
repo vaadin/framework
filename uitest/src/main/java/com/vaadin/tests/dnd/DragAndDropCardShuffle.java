@@ -15,14 +15,25 @@
  */
 package com.vaadin.tests.dnd;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropTargetExtension;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.dnd.DropEffect;
+import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+@Theme("valo")
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
     // Create cards
@@ -32,13 +43,47 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
     private final Label king = new Label("K");
 
     // Create desk
-    private final HorizontalLayout desk = new HorizontalLayout();
+    private HorizontalLayout desk = new HorizontalLayout();
+
+    private final List<DragSourceExtension<Label>> sources = new ArrayList<>();
+    private final List<DropTargetExtension<Label>> targets = new ArrayList<>();
 
     @Override
     protected void setup(VaadinRequest request) {
+        NativeSelect<EffectAllowed> effectAllowed = new NativeSelect<>(
+                "Effect Allowed (source)");
+        effectAllowed.setItems(EffectAllowed.values());
+        effectAllowed.setValue(EffectAllowed.UNINITIALIZED);
+        effectAllowed.setEmptySelectionAllowed(false);
+        effectAllowed.addValueChangeListener(event -> sources
+                .forEach(source -> source.setEffectAllowed(event.getValue())));
 
-        // Create UI and add extensions
+        NativeSelect<DropEffect> dropEffect = new NativeSelect<>(
+                "Drop Effect (target)");
+        dropEffect.setItems(DropEffect.values());
+        dropEffect.addValueChangeListener(event -> targets
+                .forEach(target -> target.setDropEffect(event.getValue())));
+        CheckBox enableMobileSupport = new CheckBox("Mobile Support", false);
+        enableMobileSupport.addValueChangeListener(event -> {
+            setMobileHtml5DndEnabled(event.getValue());
+
+            removeExtensions();
+            setupExtensions();
+        });
+
+        setupExtensions();
+
         desk.addComponents(ace, jack, queen, king);
+
+        addComponents(new HorizontalLayout(effectAllowed, dropEffect,
+                enableMobileSupport), desk);
+
+        // Add styling
+        setStyle();
+    }
+
+    private void setupExtensions() {
+        // Create UI and add extensions
 
         ace.setStyleName("card");
         addDragSourceExtension(ace);
@@ -55,11 +100,20 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         king.setStyleName("card");
         addDragSourceExtension(king);
         addDropTargetExtension(king);
+    }
 
-        addComponent(desk);
+    private void removeExtensions() {
+        ace.removeExtension(ace.getExtensions().iterator().next());
+        ace.removeExtension(ace.getExtensions().iterator().next());
 
-        // Add styling
-        setStyle();
+        jack.removeExtension(jack.getExtensions().iterator().next());
+        jack.removeExtension(jack.getExtensions().iterator().next());
+
+        queen.removeExtension(queen.getExtensions().iterator().next());
+        queen.removeExtension(queen.getExtensions().iterator().next());
+
+        king.removeExtension(king.getExtensions().iterator().next());
+        king.removeExtension(king.getExtensions().iterator().next());
     }
 
     private void addDragSourceExtension(Label source) {
@@ -69,15 +123,16 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
 
         // Add listeners
         dragSource.addDragStartListener(event -> {
-            event.getComponent().addStyleName("dragged");
-            log(event.getComponent().getValue() + " dragstart");
+            log(event.getComponent().getValue() + " dragstart, effectsAllowed="
+                    + event.getEffectAllowed());
         });
 
         dragSource.addDragEndListener(event -> {
-            event.getComponent().removeStyleName("dragged");
             log(event.getComponent().getValue() + " dragend, dropEffect="
                     + event.getDropEffect());
         });
+
+        sources.add(dragSource);
     }
 
     private void addDropTargetExtension(Label target) {
@@ -94,29 +149,29 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
                     // Swap source and target components
                     desk.replaceComponent(target, source);
 
-                    log(source.getValue() + " dropped onto " + event
-                            .getComponent().getValue());
+                    log(event.getComponent().getValue() + " drop received "
+                            + source.getValue() + ", dropEffect="
+                            + event.getDropEffect() + ", mouseEventDetails="
+                            + event.getMouseEventDetails());
+                } else {
+                    log(event.getComponent().getValue()
+                            + " drop received something else than card");
                 }
             });
         });
+
+        targets.add(dropTarget);
     }
 
     private void setStyle() {
         Page.Styles styles = Page.getCurrent().getStyles();
 
-        styles.add(".card {"
-                + "width: 150px;"
-                + "height: 200px;"
-                + "border: 1px solid black;"
-                + "border-radius: 7px;"
-                + "padding-left: 10px;"
-                + "color: red;"
-                + "font-weight: bolder;"
-                + "font-size: 25px;"
-                + "background-color: gainsboro;"
-                + "}");
-        styles.add(".v-drag-over {border-style: dashed;}");
-        styles.add(".dragged {opacity: .4;}");
+        styles.add(".card {" + "width: 150px;" + "height: 200px;"
+                + "border: 1px solid black;" + "border-radius: 7px;"
+                + "padding-left: 10px;" + "color: red;" + "font-weight: bolder;"
+                + "font-size: 25px;" + "background-color: gainsboro;" + "}");
+        styles.add(".v-label-drag-center {border-style: dashed;}");
+        styles.add(".v-label-dragged {opacity: .4;}");
     }
 
     @Override

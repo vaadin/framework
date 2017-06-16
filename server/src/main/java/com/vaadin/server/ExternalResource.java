@@ -24,7 +24,7 @@ import com.vaadin.util.FileTypeResolver;
 /**
  * <code>ExternalResource</code> implements source for resources fetched from
  * location specified by URL:s. The resources are fetched directly by the client
- * terminal and are not fetched trough the terminal adapter.
+ * terminal and are not fetched through the terminal adapter.
  *
  * @author Vaadin Ltd.
  * @since 3.0

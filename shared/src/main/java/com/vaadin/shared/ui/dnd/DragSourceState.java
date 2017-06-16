@@ -15,6 +15,11 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.vaadin.shared.communication.SharedState;
 
 /**
@@ -40,6 +45,19 @@ public class DragSourceState extends SharedState {
      */
     public static final String DATA_TYPE_TEXT = "text";
 
+    /**
+     * Data type {@code "Text"}. IE 11 stores data dragged from the desktop as
+     * "Text" with capital letter.
+     */
+    public static final String DATA_TYPE_TEXT_IE = "Text";
+
+    /**
+     * Data type {@code "text/plain"} for reading data from {@code DataTransfer}
+     * object. Some browsers convert store data with {@code "text"} as {@code
+     * "text/plain"} when transferring data.
+     */
+    public static final String DATA_TYPE_TEXT_PLAIN = "text/plain";
+
     public static final String RESOURCE_DRAG_IMAGE = "drag-image";
 
     /**
@@ -48,8 +66,13 @@ public class DragSourceState extends SharedState {
     public EffectAllowed effectAllowed = EffectAllowed.UNINITIALIZED;
 
     /**
-     * Used to store text data in {@code DataTransfer} object for the drag
-     * event.
+     * {@code DataTransfer.types} parameter. Used to keep track of data formats
+     * set for the drag event.
      */
-    public String dataTransferText;
+    public List<String> types = new ArrayList<>();
+
+    /**
+     * Used to store data in the {@code DataTransfer} object for the drag event.
+     */
+    public Map<String, String> data = new HashMap<>();
 }

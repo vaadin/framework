@@ -344,7 +344,11 @@ value with [methodname]#setWidth()#, or relatively using expand ratios with
 [methodname]#setExpandRatio()#.
 
 When using expand ratios, the columns with a non-zero expand ratio use the extra
-space remaining from other columns, in proportion to the defined ratios.
+space remaining from other columns, in proportion to the defined ratios. Do note
+that the minimum width of an expanded column by default is based on the contents
+of the column (the initially rendered rows). To allow the column to become
+narrower than this, use [methodname]#setMinimumWidthFromContent(false)#
+(introduced in 8.1).
 
 You can specify minimum and maximum widths for the expanding columns with
 [methodname]#setMinimumWidth()# and [methodname]#setMaximumWidth()#,
@@ -448,7 +452,7 @@ Grid<Person> grid = new Grid<>(people);
 // Render a button that deletes the data row (item)
 grid.addColumn(person -> "Delete",
       new ButtonRenderer(clickEvent -> {
-          people.remove(clickEvent.getValue());
+          people.remove(clickEvent.getItem());
           grid.setItems(people);
     }));
 ----
@@ -576,12 +580,12 @@ the height of all rows in the Grid.
 Use [classname]#Button# in [classname]#Grid#:
 +
 ----
-grid.addColumn(person -> {
+grid.addComponentColumn(person -> {
       Button button = new Button("Click me!");
       button.addClickListener(click ->
             Notification.show("Clicked: " + person.toString()));
       return button;
-}, new ComponentRenderer());
+});
 // make sure the buttons fit in the cells of the Grid
 grid.setRowHeight(40);
 ----

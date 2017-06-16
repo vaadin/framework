@@ -19,6 +19,7 @@ import java.util.function.BiConsumer;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -29,10 +30,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.connectors.treegrid.TreeGridConnector;
+import com.vaadin.client.ui.treegrid.TreeGridConnector;
+import com.vaadin.client.widget.escalator.FlyweightCell;
 import com.vaadin.client.widget.grid.RendererCellReference;
-import com.vaadin.client.widget.treegrid.HierarchyRendererCellReferenceWrapper;
-import com.vaadin.shared.ui.treegrid.TreeGridCommunicationConstants;
+import com.vaadin.client.widget.grid.RowReference;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 
 import elemental.json.JsonObject;
 
@@ -43,6 +45,42 @@ import elemental.json.JsonObject;
  * @since 8.1
  */
 public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
+
+    /**
+     * Wrapper for cell references. Used to get the correct inner element to
+     * render.
+     *
+     * @author Vaadin Ltd
+     * @since 8.1
+     */
+    private static class HierarchyRendererCellReferenceWrapper
+            extends RendererCellReference {
+
+        private Element element;
+
+        public HierarchyRendererCellReferenceWrapper(RendererCellReference cell,
+                Element element) {
+            super(getRowReference(cell));
+            set(getFlyweightCell(cell), cell.getColumnIndex(),
+                    cell.getColumn());
+            this.element = element;
+        }
+
+        @Override
+        public TableCellElement getElement() {
+            return (TableCellElement) element;
+        }
+
+        private native static RowReference<Object> getRowReference(
+                RendererCellReference cell) /*-{
+            return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference()();
+        }-*/;
+
+        private native static FlyweightCell getFlyweightCell(
+                RendererCellReference cell) /*-{
+            return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
+        }-*/;
+    }
 
     private String nodeStyleName;
     private String expanderStyleName;
@@ -92,10 +130,17 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         setStyleNames(styleName);
     }
 
-    public void setStyleNames(String primaryStyleName) {
-        nodeStyleName = primaryStyleName + "-node";
-        expanderStyleName = primaryStyleName + "-expander";
-        cellContentStyleName = primaryStyleName + "-cell-content";
+    /**
+     * Set the style name prefix for the node, expander and cell-content
+     * elements.
+     *
+     * @param styleName
+     *            the style name to set
+     */
+    public void setStyleNames(String styleName) {
+        nodeStyleName = styleName + "-node";
+        expanderStyleName = styleName + "-expander";
+        cellContentStyleName = styleName + "-cell-content";
     }
 
     @Override
@@ -119,7 +164,8 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             leaf = isLeaf(rowDescription);
             if (!leaf) {
                 collapsed = isCollapsed(rowDescription);
-                collapseAllowed = TreeGridConnector.isCollapseAllowed(rowDescription);
+                collapseAllowed = TreeGridConnector
+                        .isCollapseAllowed(rowDescription);
             }
         }
 
@@ -154,30 +200,30 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
     private int getDepth(JsonObject rowDescription) {
         return (int) rowDescription
-                .getNumber(TreeGridCommunicationConstants.ROW_DEPTH);
+                .getNumber(HierarchicalDataCommunicatorConstants.ROW_DEPTH);
     }
 
     private JsonObject getHierarchyData(JsonObject row) {
         return row.getObject(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
     }
 
     private boolean hasHierarchyData(JsonObject row) {
         return row.hasKey(
-                TreeGridCommunicationConstants.ROW_HIERARCHY_DESCRIPTION);
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION);
     }
 
     private boolean isLeaf(JsonObject rowDescription) {
         boolean leaf;
         leaf = rowDescription
-                .getBoolean(TreeGridCommunicationConstants.ROW_LEAF);
+                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_LEAF);
         return leaf;
     }
 
     private boolean isCollapsed(JsonObject rowDescription) {
         boolean collapsed;
         collapsed = rowDescription
-                .getBoolean(TreeGridCommunicationConstants.ROW_COLLAPSED);
+                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
         return collapsed;
     }
 
@@ -198,14 +244,14 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
      * @return Wrapped renderer.
      */
     public Renderer getInnerRenderer() {
-        return this.innerRenderer;
+        return innerRenderer;
     }
 
     /**
      * Decides whether the element was rendered by {@link HierarchyRenderer}
      */
     public static boolean isElementInHierarchyWidget(Element element) {
-        Widget w = WidgetUtil.findWidget(element, null);
+        Widget w = WidgetUtil.findWidget(element);
 
         while (w != null) {
             if (w instanceof HierarchyItem) {
@@ -311,7 +357,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         }
     }
 
-    enum ExpanderState {
+    private enum ExpanderState {
         EXPANDED, COLLAPSED, LEAF;
     }
 }

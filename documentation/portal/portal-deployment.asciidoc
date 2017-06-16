@@ -7,6 +7,10 @@ layout: page
 [[portal.deployment]]
 = Deploying to a Portal
 
+For OSGi portlets in Liferay 7, see
+<<dummy/../../../framework/portal/portal-osgi#portal.osgi.portlet,"Publishing a Portlet With OSGi">>.
+The text below applies mostly to non-OSGi portlets.
+
 To deploy a portlet WAR in a portal, you need to provide a
 [filename]#portlet.xml# descriptor specified in the Java Portlet API 2.0
 standard (JSR-286). In addition, you may need to include possible portal vendor
@@ -32,9 +36,6 @@ changes to the UI itself, but only the following:
 * Themes installed to portal (optional)
 * Vaadin libraries installed to portal (optional)
 * Portal configuration settings (optional)
-
-The Vaadin Plugin for Eclipse creates these files for you, when you create a
-portlet project as described in <<portal-eclipse#portal.eclipse,"Creating a Generic Portlet in Eclipse">>.
 
 Installing the widget set and themes to the portal is required for running two or more Vaadin portlets simultaneously in a single portal page.
 As this situation occurs quite easily, we recommend installing them in any case.

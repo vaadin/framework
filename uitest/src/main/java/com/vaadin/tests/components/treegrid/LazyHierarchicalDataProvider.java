@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.vaadin.data.provider.AbstractHierarchicalDataProvider;
+import com.vaadin.data.provider.AbstractBackEndHierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.tests.components.treegrid.TreeGridBasicFeatures.HierarchicalTestBean;
+import com.vaadin.tests.data.bean.HierarchicalTestBean;
 
-public class LazyHierarchicalDataProvider
-        extends AbstractHierarchicalDataProvider<HierarchicalTestBean, Void> {
+public class LazyHierarchicalDataProvider extends
+        AbstractBackEndHierarchicalDataProvider<HierarchicalTestBean, Void> {
 
     private final int nodesPerLevel;
     private final int depth;
@@ -32,7 +32,16 @@ public class LazyHierarchicalDataProvider
     }
 
     @Override
-    public Stream<HierarchicalTestBean> fetchChildren(
+    public boolean hasChildren(HierarchicalTestBean item) {
+        return internalHasChildren(item);
+    }
+
+    private boolean internalHasChildren(HierarchicalTestBean node) {
+        return node.getDepth() < depth;
+    }
+
+    @Override
+    protected Stream<HierarchicalTestBean> fetchChildrenFromBackEnd(
             HierarchicalQuery<HierarchicalTestBean, Void> query) {
         final int depth = query.getParentOptional().isPresent()
                 ? query.getParent().getDepth() + 1 : 0;
@@ -45,19 +54,5 @@ public class LazyHierarchicalDataProvider
                     i + query.getOffset()));
         }
         return list.stream();
-    }
-
-    @Override
-    public boolean hasChildren(HierarchicalTestBean item) {
-        return internalHasChildren(item);
-    }
-
-    private boolean internalHasChildren(HierarchicalTestBean node) {
-        return node.getDepth() < depth;
-    }
-
-    @Override
-    public boolean isInMemory() {
-        return false;
     }
 }

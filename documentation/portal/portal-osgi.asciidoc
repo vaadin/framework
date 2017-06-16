@@ -1,0 +1,63 @@
+---
+title: OSGi Portlets on Liferay 7
+order: 3
+layout: page
+---
+
+[[portal.osgi]]
+= OSGi Portlets on Liferay 7
+
+IMPORTANT: The OSGi support as described above is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
+
+Lifeary 7 supports modular portlet development using OSGi, and enables e.g.
+using multiple different Vaadin versions in different portlets on a page. 
+
+For general OSGi considerations with Vaadin Framework such as packaging and
+bundle manifests, and how to publish static resources such as themes and
+widget sets, see
+<<dummy/../../../framework/advanced/advanced-osgi#advanced.osgi,"Vaadin OSGi Support">>.
+
+
+[[portal.osgi.portlet]]
+== Publishing a Portlet With OSGi
+
+Publishing an OSGi portlet on Liferay 7+ can be done in two ways: using
+annotations or using properties.
+
+Annotating a UI class with [interfacename]#@VaadinLiferayPortletConfiguration#
+(available in `vaadin-liferay-integration`) and making it an OSGi service of type
+[classname]#UI# is the easiest way to automatically publish the UI as a portlet
+and configure it to use the correct static resources.
+
+[source, java]
+----
+@Theme(MyTheme.THEME_NAME)
+@VaadinLiferayPortletConfiguration(name = "Vaadin.Tutorial.1", displayName = "Vaadin Tutorial App")
+@Component(service = UI.class)
+public class MyUI extends UI {
+  ...
+}
+----
+
+When using this approach, it is not necessary to create all the portlet
+property files that plain JSR-362 portlets require.
+
+Alternatively, the property [literal]#com.vaadin.osgi.liferay.portlet-ui=true#
+can be used when publishing a UI as an OSGi service to publish the UI as a portlet.
+
+[source, java]
+----
+@Theme(MyTheme.THEME_NAME)
+@Component(service = UI.class, property = {
+        "com.liferay.portlet.display-category=category.vaadin",
+        "javax.portlet.name=my.vaadin.app.app.1.0.0",
+        "javax.portlet.display-name=Tutorial Portlet",
+        "javax.portlet.security-role-ref=power-user,user",
+        "com.vaadin.osgi.liferay.portlet-ui=true"})
+public class MyUI extends UI {
+  ...
+}
+----
+
+An OSGi portlet should be packaged as a JAR with a proper OSGi bundle
+manifest, and deployed to a portal that has its required bundles installed.

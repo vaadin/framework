@@ -8,7 +8,7 @@ $v-textfield-background-color: if(is-dark-color($v-app-background-color), darken
  * The background color for read-only text fields.
  * @group textfield
  */
-$v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%));
+$v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%)) !default;
 
 /**
  * The bevel style for text fields. See the documentation for $v-bevel.

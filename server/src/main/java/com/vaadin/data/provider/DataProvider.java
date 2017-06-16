@@ -120,6 +120,9 @@ public interface DataProvider<T, F> extends Serializable {
      * Default is to use item itself as its own identifier. If the item has
      * {@link Object#equals(Object)} and {@link Object#hashCode()} implemented
      * in a way that it can be compared to other items, no changes are required.
+     * <p>
+     * <strong>Note:</strong> This method will be called often by the Framework.
+     * It should not do any expensive operations.
      *
      * @param item
      *            the item to get identifier for; not {@code null}
@@ -277,8 +280,8 @@ public interface DataProvider<T, F> extends Serializable {
      * <p>
      * <strong>Using big streams is not recommended, you should instead use a
      * lazy data provider.</strong> See
-     * {@link #fromCallbacks(FetchCallback, CountCallback)}
-     * or {@link BackEndDataProvider} for more info.
+     * {@link #fromCallbacks(FetchCallback, CountCallback)} or
+     * {@link BackEndDataProvider} for more info.
      *
      * @param <T>
      *            the data item type

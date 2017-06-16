@@ -17,26 +17,10 @@ package com.vaadin.testbench.elements;
 
 import com.vaadin.testbench.elementsbase.ServerClass;
 
+/**
+ * Element class for testing InlineDateField.
+ */
 @ServerClass("com.vaadin.ui.InlineDateField")
-public class InlineDateFieldElement extends DateFieldElement {
+public class InlineDateFieldElement extends AbstractFieldElement {
 
-    /**
-     * Operation is not supported
-     * 
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public String getValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Operation is not supported
-     * 
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void setValue(CharSequence chars) throws ReadOnlyException {
-        throw new UnsupportedOperationException();
-    }
 }

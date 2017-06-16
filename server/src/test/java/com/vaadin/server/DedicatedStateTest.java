@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.tests.VaadinClasses;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.components.colorpicker.ColorPickerHistory;
 import com.vaadin.ui.components.colorpicker.ColorPickerPopup;
@@ -47,7 +48,8 @@ public class DedicatedStateTest {
     }
 
     private void checkState(Class<?> clazz) {
-        if (WHITE_LIST.contains(clazz.getCanonicalName())) {
+        if (WHITE_LIST.contains(clazz.getCanonicalName())
+                || Composite.class.isAssignableFrom(clazz)) {
             return;
         }
         Method getStateNoArg = getStateNoArg(clazz);

@@ -41,12 +41,12 @@ public static class MyUIServlet extends VaadinServlet {
 
 Vaadin Framework 8.1 and later versions provide two supported ways of publishing static resources for OSGi: by making OSGi services implementing an interface or by explicit calls to a service.
 
-The easiest way to publish a theme or a widgetset is to create a class implementing the interface [interfacename]#OSGiVaadinTheme# or [interfacename]#OSGiVaadinWidgetset# and annotating it with [interfacename]#@Component# to make it an OSGi service. This automatically publishes the theme or the widget set from the bundle at a path that contains the Vaadin Framework version used by the application.
+The easiest way to publish a theme or a widgetset is to create a class implementing the interface [interfacename]#OsgiVaadinTheme# or [interfacename]#OsgiVaadinWidgetset# and annotating it with [interfacename]#@Component# to make it an OSGi service. This automatically publishes the theme or the widget set from the bundle at a path that contains the Vaadin Framework version used by the application.
 
 [source, java]
 ----
 @Component
-public class MyTheme extends ValoTheme implements OSGiVaadinTheme {
+public class MyTheme extends ValoTheme implements OsgiVaadinTheme {
     public static final String THEME_NAME = "mytheme";
 
     @Override
@@ -57,46 +57,12 @@ public class MyTheme extends ValoTheme implements OSGiVaadinTheme {
 }
 ----
 
-Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Activate# method can obtain an instance of [classname]#VaadinResourceService# from [classname]#OSGiVaadinResources# and explicitly call its methods to publish a theme, a widget set or an individual file in the bundle as a static resource at the correct path.
+Alternatively, an OSGi bundle activator or an SCR Component [interfacename]#@Activate# method can obtain an instance of [classname]#VaadinResourceService# from [classname]#OsgiVaadinResources# and explicitly call its methods to publish a theme, a widget set or an individual file in the bundle as a static resource at the correct path.
 
 [source, java]
 ----
-  VaadinResourceService service = OSGiVaadinResources.getService();
+  VaadinResourceService service = OsgiVaadinResources.getService();
   service.publishTheme("mytheme", httpService);
 ----
 
 In addition to these approaches, it is also possible to repackage all the static resources of an application to a single bundle and export the [filename]#/VAADIN# directory. This can be useful e.g. when migrating an old Vaadin OSGi application in an environment that does not support parallel deployments of multiple versions of the application.
-
-
-[[advanced.osgi.portlet]]
-== Publishing a Portlet With OSGi
-
-Publishing an OSGi portlet on Liferay 7+ can be done in two ways: using annotations or using properties.
-
-Annotating a UI class with [interfacename]#@VaadinLiferayPortletConfiguration# (available in `vaadin-liferay-integration`) and making it an OSGi service of type [classname]#UI# is the easiest way to automatically publish the UI as a portlet and configure it to use the correct static resources.
-
-[source, java]
-----
-@Theme(MyTheme.THEME_NAME)
-@VaadinLiferayPortletConfiguration(name = "Vaadin.Tutorial.1", displayName = "Vaadin Tutorial App")
-@Component(service = UI.class)
-public class MyUI extends UI {
-  ...
-}
-----
-
-Alternatively, the property [literal]#com.vaadin.osgi.liferay.portlet-ui=true# can be used when publishing a UI as an OSGi service to publish the UI as a portlet.
-
-[source, java]
-----
-@Theme(MyTheme.THEME_NAME)
-@Component(service = UI.class, property = {
-        "com.liferay.portlet.display-category=category.vaadin",
-        "javax.portlet.name=my.vaadin.app.app.1.0.0",
-        "javax.portlet.display-name=Tutorial Portlet",
-        "javax.portlet.security-role-ref=power-user,user",
-        "com.vaadin.osgi.liferay.portlet-ui=true"})
-public class MyUI extends UI {
-  ...
-}
-----

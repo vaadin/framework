@@ -55,10 +55,10 @@ public class MenuBarTooltipsNearEdge extends AbstractReindeerTestUI {
         MenuBar menu = new MenuBar();
         MenuItem item = menu.addItem(label, null);
 
-        item.addItem("Item 1", null).setDescription("TOOLTIP 1");
-        item.addItem("Item 2", null).setDescription("TOOLTIP 2");
-        item.addItem("Item 3", null).setDescription("TOOLTIP 3");
-        item.addItem("Item 4", null).setDescription("TOOLTIP 4");
+        item.addItem("Item 1", null).setDescription("TOOLTIP FOR ITEM 1");
+        item.addItem("Item 2", null).setDescription("TOOLTIP FOR ITEM 2");
+        item.addItem("Item 3", null).setDescription("TOOLTIP FOR ITEM 3");
+        item.addItem("Item 4", null).setDescription("TOOLTIP FOR ITEM 4");
 
         return menu;
     }

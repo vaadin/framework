@@ -23,6 +23,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
@@ -40,13 +43,35 @@ import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class NavigatorTest {
+
+    private final class TestNavigationStateManager
+            implements NavigationStateManager {
+        private String state;
+
+        @Override
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        @Override
+        public void setNavigator(Navigator navigator) {
+        }
+
+        @Override
+        public String getState() {
+            return state;
+        }
+    }
 
     // TODO test internal parameters (and absence of them)
     // TODO test listeners blocking navigation, multiple listeners
@@ -462,12 +487,15 @@ public class NavigatorTest {
 
     @Test
     public void testComponentContainerViewDisplay() {
-        abstract class TestView implements Component, View {
+        class TestView extends VerticalLayout implements View {
+            @Override
+            public void enter(ViewChangeEvent event) {
+
+            }
         }
 
-        TestView tv1 = EasyMock.createNiceMock(TestView.class);
-        TestView tv2 = EasyMock.createNiceMock(TestView.class);
-        EasyMock.replay(tv1, tv2);
+        TestView tv1 = new TestView();
+        TestView tv2 = new TestView();
 
         VerticalLayout container = new VerticalLayout();
         ViewDisplay display = new Navigator.ComponentContainerViewDisplay(
@@ -848,24 +876,7 @@ public class NavigatorTest {
 
     @Test
     public void testNavigateTo_navigateSameUriTwice_secondNavigationDoesNothing() {
-        NavigationStateManager manager = new NavigationStateManager() {
-
-            private String state;
-
-            @Override
-            public void setState(String state) {
-                this.state = state;
-            }
-
-            @Override
-            public void setNavigator(Navigator navigator) {
-            }
-
-            @Override
-            public String getState() {
-                return state;
-            }
-        };
+        NavigationStateManager manager = new TestNavigationStateManager();
 
         final String viewName = "view";
 
@@ -903,5 +914,204 @@ public class NavigatorTest {
         // Second time navigation to the same view
         navigator.navigateTo(viewName);
         Assert.assertEquals(1, count[0]);
+    }
+
+    public static class ViewIsNotAComponent implements View {
+
+        private HorizontalLayout layout = new HorizontalLayout(
+                new Label("Hello"));
+
+        @Override
+        public Component getViewComponent() {
+            return layout;
+        }
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+
+        }
+    }
+
+    @Test
+    public void viewWhichIsNotAComponent() {
+        UI ui = new UI() {
+
+            private Page page;
+            {
+                page = new Page(this, new PageState()) {
+                    private String fragment = "";
+
+                    @Override
+                    public String getUriFragment() {
+                        return fragment;
+                    };
+
+                    @Override
+                    public void setUriFragment(String newUriFragment,
+                            boolean fireEvents) {
+                        fragment = newUriFragment;
+                    };
+                };
+            }
+
+            @Override
+            protected void init(VaadinRequest request) {
+            }
+
+            @Override
+            public Page getPage() {
+                return page;
+            }
+        };
+
+        Navigator navigator = new Navigator(ui, ui);
+        ui.setNavigator(navigator);
+        navigator.addView("foo", ViewIsNotAComponent.class);
+        navigator.navigateTo("foo");
+
+        Assert.assertEquals(HorizontalLayout.class, ui.getContent().getClass());
+        Assert.assertEquals("Hello",
+                ((Label) ((HorizontalLayout) ui.getContent()).getComponent(0))
+                        .getValue());
+    }
+
+    @Test
+    public void parameterMap_noViewSeparator() {
+        Navigator navigator = createNavigatorWithState("fooview");
+        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
+        Assert.assertTrue(navigator.getStateParameterMap("foo").isEmpty());
+    }
+
+    @Test
+    public void parameterMap_noParameters() {
+        Navigator navigator = createNavigatorWithState("fooview/");
+        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
+    }
+
+    @Test
+    public void parameterMap_oneParameterNoValue() {
+        Navigator navigator = createNavigatorWithState("fooview/bar");
+        assertMap(navigator.getStateParameterMap(), entry("bar", ""));
+    }
+
+    @Test
+    public void parameterMap_oneParameterNoValueButEquals() {
+        Navigator navigator = createNavigatorWithState("fooview/bar=");
+        assertMap(navigator.getStateParameterMap(), entry("bar", ""));
+    }
+
+    @Test
+    public void parameterMap_oneParameterWithValue() {
+        Navigator navigator = createNavigatorWithState("fooview/bar=baz");
+        assertMap(navigator.getStateParameterMap(), entry("bar", "baz"));
+    }
+
+    @Test
+    public void parameterMap_twoParameters() {
+        Navigator navigator = createNavigatorWithState("fooview/foo=bar&baz");
+        assertMap(navigator.getStateParameterMap(), entry("foo", "bar"),
+                entry("baz", ""));
+    }
+
+    @Test
+    public void parameterMap_customSeparator() {
+        Navigator navigator = createNavigatorWithState("fooview/foo=bar&baz");
+        assertMap(navigator.getStateParameterMap("a"), entry("foo", "b"),
+                entry("r&b", ""), entry("z", ""));
+    }
+
+    @SafeVarargs
+    private final void assertMap(Map<String, String> map,
+            Entry<String, String>... entries) {
+        Assert.assertEquals(entries.length, map.size());
+        for (Entry<String, String> entry : entries) {
+            Assert.assertTrue(
+                    "Map should contain a key called '" + entry.getKey() + "'",
+                    map.containsKey(entry.getKey()));
+            Assert.assertEquals(entry.getValue(), map.get(entry.getKey()));
+        }
+
+    }
+
+    private Entry<String, String> entry(String key, String value) {
+        return new Entry<String, String>() {
+
+            @Override
+            public String getKey() {
+                return key;
+            }
+
+            @Override
+            public String getValue() {
+                return value;
+            }
+
+            @Override
+            public String setValue(String value) {
+                throw new UnsupportedOperationException();
+            }
+
+        };
+    }
+
+    private Navigator createNavigatorWithState(String state) {
+        TestNavigationStateManager manager = new TestNavigationStateManager();
+        Navigator navigator = new Navigator(createMockUI(), manager,
+                EasyMock.createMock(ViewDisplay.class));
+        manager.setState(state);
+        return navigator;
+    }
+
+    @Test
+    public void parameterMapFromViewChangeEvent() {
+        // create navigator to test
+        Navigator navigator = createNavigatorWithState("foo");
+        View view1 = EasyMock.createMock(View.class);
+        View view2 = EasyMock.createMock(View.class);
+        ViewProvider provider = new ViewProvider() {
+
+            @Override
+            public String getViewName(String viewAndParameters) {
+                if (viewAndParameters.contains("/")) {
+                    return viewAndParameters.substring(0,
+                            viewAndParameters.indexOf('/'));
+                } else {
+                    return viewAndParameters;
+                }
+            }
+
+            @Override
+            public View getView(String viewName) {
+                if (viewName.equals("view1")) {
+                    return view1;
+                } else if (viewName.equals("view2")) {
+                    return view2;
+                } else {
+                    return null;
+                }
+            }
+        };
+        navigator.addProvider(provider);
+
+        AtomicReference<Map<String, String>> mapRef = new AtomicReference<>();
+        AtomicReference<Map<String, String>> mapRefB = new AtomicReference<>();
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                mapRef.set(event.getParameterMap());
+                mapRefB.set(event.getParameterMap("b"));
+                return true;
+            }
+        });
+
+        navigator.navigateTo("view1");
+
+        Assert.assertTrue(mapRef.get().isEmpty());
+        Assert.assertTrue(mapRefB.get().isEmpty());
+        navigator.navigateTo("view1/a&b=c&d");
+
+        assertMap(mapRef.get(), entry("a", ""), entry("b", "c"),
+                entry("d", ""));
+        assertMap(mapRefB.get(), entry("a&", ""), entry("", "c&d"));
     }
 }

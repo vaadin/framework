@@ -21,6 +21,8 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -74,11 +76,27 @@ public class ComboBoxEmptyCaptionTest extends MultiBrowserTest {
                 "item6", "item7", "item8", "item9", "item10");
     }
 
+    @Test
+    public void emptyItemCaptionInTextBox() {
+        ComboBoxElement combo = $(ComboBoxElement.class).first();
+
+        Assert.assertEquals("", combo.getInputField().getAttribute("value"));
+
+        // set some caption for the empty selection element
+        $(ButtonElement.class).first().click();
+
+        Assert.assertEquals("empty",
+                combo.getInputField().getAttribute("value"));
+
+    }
+
     private void ensureSuggestions(ComboBoxElement element,
             String... suggestions) {
         element.openPopup();
-        System.out.println(element.getPopupSuggestions());
         Assert.assertEquals(Arrays.asList(suggestions),
                 new ArrayList<>(element.getPopupSuggestions()));
+        // Close popup
+        new Actions(getDriver()).sendKeys(Keys.ESCAPE).perform();
     }
+
 }

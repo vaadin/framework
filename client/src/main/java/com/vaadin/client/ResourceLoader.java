@@ -481,6 +481,15 @@ public class ResourceLoader {
         }));
     }-*/;
 
+    /**
+     * Executes a Runnable when all HTML imports are ready. If the browser does
+     * not support triggering an event when HTML imports are ready, the Runnable
+     * is executed immediately.
+     *
+     * @param runnable
+     *            the code to execute
+     * @since 8.1
+     */
     protected void runWhenHtmlImportsReady(Runnable runnable) {
         if (GWT.isClient() && supportsHtmlWhenReady()) {
             addHtmlImportsReadyHandler(() -> {

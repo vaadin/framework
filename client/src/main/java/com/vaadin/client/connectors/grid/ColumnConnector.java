@@ -36,7 +36,8 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    static abstract class CustomColumn extends Column<Object, JsonObject> {
+    public static abstract class CustomColumn
+            extends Column<Object, JsonObject> {
 
         private final String connectorId;
 
@@ -99,6 +100,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("renderer")
     void updateRenderer() {
         column.setRenderer(getRendererConnector().getRenderer());
+        getParent().onColumnRendererChanged(column);
     }
 
     @OnStateChange("hidingToggleCaption")
@@ -129,6 +131,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("minWidth")
     void updateMinWidth() {
         column.setMinimumWidth(getState().minWidth);
+    }
+
+    @OnStateChange("minimumWidthFromContent")
+    void updateMinimumWidthFromContent() {
+        column.setMinimumWidthFromContent(getState().minimumWidthFromContent);
     }
 
     @OnStateChange("maxWidth")

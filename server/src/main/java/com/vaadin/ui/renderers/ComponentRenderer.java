@@ -17,6 +17,8 @@ package com.vaadin.ui.renderers;
 
 import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
 
 import elemental.json.Json;
 import elemental.json.JsonValue;
@@ -34,10 +36,18 @@ import elemental.json.JsonValue;
  * runtime e.g. when selection changes. If your component has an internal state
  * that is not stored into the object, you should reuse the same component
  * instances.
+ * <p>
+ * Example of how to add a {@link Label} component to {@link Grid}:
+ * <pre>
+ * Grid<Person> grid;
+ * grid.addColumn(person -> new Label(person.getFullName()), 
+ *     new ComponentRenderer()).setCaption("Full Name");
+ * </pre>
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
+@SuppressWarnings("serial")
 public class ComponentRenderer extends AbstractRenderer<Object, Component> {
 
     /**

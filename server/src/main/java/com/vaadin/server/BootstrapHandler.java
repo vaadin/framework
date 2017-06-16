@@ -44,6 +44,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.communication.AtmospherePushConnection;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.VaadinUriResolver;
@@ -248,6 +249,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
          * Gets the URI resolver to use for bootstrap resources.
          *
          * @return the URI resolver
+         * @since 8.1
          */
         public BootstrapUriResolver getUriResolver() {
             if (uriResolver == null) {
@@ -260,6 +262,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * The URI resolver used in the bootstrap process.
+     * 
+     * @since 8.1
      */
     protected static class BootstrapUriResolver extends VaadinUriResolver {
         private final BootstrapContext context;
@@ -351,6 +355,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
      *            the session of the user to resolve the protocol for
      * @return the URL that frontend:// resolves to, possibly using another
      *         internal protocol
+     * @since 8.1
      */
     public static String resolveFrontendUrl(VaadinSession session) {
         DeploymentConfiguration configuration = session.getConfiguration();
@@ -574,7 +579,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         Collection<? extends Dependency> deps = Dependency.findDependencies(
                 Collections.singletonList(uiClass),
-                context.getSession().getCommunicationManager());
+                context.getSession().getCommunicationManager(),
+                new FilterContext(context.getSession()));
         for (Dependency dependency : deps) {
             Type type = dependency.getType();
             String url = context.getUriResolver()

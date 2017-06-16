@@ -21,8 +21,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 
-import com.vaadin.osgi.resources.OSGiVaadinResources;
-import com.vaadin.osgi.resources.OSGiVaadinResources.ResourceBundleInactiveException;
+import com.vaadin.osgi.resources.OsgiVaadinResources;
+import com.vaadin.osgi.resources.OsgiVaadinResources.ResourceBundleInactiveException;
 import com.vaadin.osgi.resources.VaadinResourceService;
 
 /**
@@ -40,7 +40,7 @@ public class BootstrapContribution {
 
     @Activate
     void startup() throws NamespaceException, ResourceBundleInactiveException {
-        VaadinResourceService service = OSGiVaadinResources.getService();
+        VaadinResourceService service = OsgiVaadinResources.getService();
         for (String resourceName : RESOURCES) {
             service.publishResource(resourceName, httpService);
         }

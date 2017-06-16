@@ -118,6 +118,7 @@ public abstract class BootstrapResponse extends EventObject {
      *
      * @param uriResolver
      *            the uri resolver which is used
+     * @since 8.1
      */
     public void setUriResolver(VaadinUriResolver uriResolver) {
         assert this.uriResolver == null : "URI resolver should never be changed";
@@ -129,6 +130,7 @@ public abstract class BootstrapResponse extends EventObject {
      * Gets the URI resolver used in the bootstrap process.
      *
      * @return the URI resolver
+     * @since 8.1
      */
     public VaadinUriResolver getUriResolver() {
         return uriResolver;

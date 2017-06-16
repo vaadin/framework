@@ -24,7 +24,10 @@ import com.vaadin.annotations.HtmlImport;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DependencyFilter;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.VaadinService;
 
 /**
  * Represents a stylesheet or JavaScript to include on the page.
@@ -152,10 +155,10 @@ public class Dependency implements Serializable {
      * @param manager
      *            a reference to the communication manager which tracks
      *            dependencies
-     * @return
+     * @return the list of found dependencies
      */
     @SuppressWarnings("deprecation")
-    public static List<Dependency> findDependencies(
+    private static List<Dependency> findDependencies(
             List<Class<? extends ClientConnector>> connectorTypes,
             LegacyCommunicationManager manager) {
         List<Dependency> dependencies = new ArrayList<>();
@@ -169,6 +172,34 @@ public class Dependency implements Serializable {
                     dependencies);
         }
 
+        return dependencies;
+    }
+
+    /**
+     * Finds all the URLs defined for the given classes, registers the URLs to
+     * the communication manager, passes the registered dependencies through any
+     * defined filters and returns the filtered collection of dependencies to
+     * load.
+     *
+     * @since 8.1
+     * @param connectorTypes
+     *            the collection of connector classes to scan
+     * @param manager
+     *            a reference to the communication manager which tracks
+     *            dependencies
+     * @param context
+     *            the context information for the filtering operation
+     * @return the list of found and filtered dependencies
+     */
+    public static List<Dependency> findDependencies(
+            List<Class<? extends ClientConnector>> connectorTypes,
+            LegacyCommunicationManager manager, FilterContext context) {
+        List<Dependency> dependencies = findDependencies(connectorTypes,
+                manager);
+        VaadinService service = context.getService();
+        for (DependencyFilter filter : service.getDependencyFilters()) {
+            dependencies = filter.filter(dependencies, context);
+        }
         return dependencies;
     }
 

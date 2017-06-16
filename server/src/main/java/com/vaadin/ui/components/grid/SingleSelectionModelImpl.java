@@ -107,28 +107,18 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
      *         item (or {@code null} if no selection), {@code false} otherwise.
      */
     protected boolean isKeySelected(String key) {
-        return Objects.equals(key, getSelectedKey());
+        return isSelected(getData(key));
     }
 
     /**
-     * Returns the communication key of the selected item or {@code null} if no
-     * item is selected.
+     * Sets the selected item. If the item is {@code null}, clears the current
+     * selection if any.
      *
-     * @return the key of the selected item if any, {@code null} otherwise.
+     * @param item
+     *            the selected item or {@code null} to clear selection
+     * @since 8.1
      */
-    protected String getSelectedKey() {
-        return itemToKey(selectedItem);
-    }
-
-    /**
-     * Sets the selected item based on the given communication key. If the key
-     * is {@code null}, clears the current selection if any.
-     *
-     * @param key
-     *            the key of the selected item or {@code null} to clear
-     *            selection
-     */
-    protected void doSetSelectedKey(String key) {
+    protected void doSetSelected(T item) {
         if (getParent() == null) {
             throw new IllegalStateException(
                     "Trying to update selection for grid selection model that has been detached from the grid.");
@@ -137,7 +127,7 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
         if (selectedItem != null) {
             getGrid().getDataCommunicator().refresh(selectedItem);
         }
-        selectedItem = getData(key);
+        selectedItem = item;
         if (selectedItem != null) {
             getGrid().getDataCommunicator().refresh(selectedItem);
         }
@@ -158,12 +148,13 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
             throw new IllegalStateException("Client tried to update selection"
                     + " although user selection is disallowed");
         }
-        if (isKeySelected(key)) {
+        T item = getData(key);
+        if (isSelected(item)) {
             return;
         }
 
-        T oldSelection = this.getSelectedItem().orElse(null);
-        doSetSelectedKey(key);
+        T oldSelection = selectedItem;
+        doSetSelected(item);
         fireEvent(new SingleSelectionEvent<>(getGrid(), asSingleSelect(),
                 oldSelection, true));
     }
@@ -177,34 +168,16 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
      *            the item to select or {@code null} to clear selection
      */
     protected void setSelectedFromServer(T item) {
-        // TODO creates a key if item not in data provider
-        String key = itemToKey(item);
-
-        if (isSelected(item) || isKeySelected(key)) {
+        if (isSelected(item)) {
+            // Avoid generating an extra key when item matches a stale one.
             return;
         }
 
         T oldSelection = this.getSelectedItem()
                 .orElse(asSingleSelect().getEmptyValue());
-        doSetSelectedKey(key);
+        doSetSelected(item);
         fireEvent(new SingleSelectionEvent<>(getGrid(), asSingleSelect(),
                 oldSelection, false));
-    }
-
-    /**
-     * Returns the communication key assigned to the given item.
-     *
-     * @param item
-     *            the item whose key to return
-     * @return the assigned key
-     */
-    protected String itemToKey(T item) {
-        if (item == null) {
-            return null;
-        } else {
-            // TODO creates a key if item not in data provider
-            return getGrid().getDataCommunicator().getKeyMapper().key(item);
-        }
     }
 
     @Override
@@ -289,6 +262,12 @@ public class SingleSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
     @Override
     public boolean isSelected(T item) {
+        // Quick comparison of objects directly
+        if (Objects.equals(item, selectedItem)) {
+            return true;
+        }
+
+        // Id based check
         return item != null && selectedItem != null
                 && getGrid().getDataProvider().getId(selectedItem)
                         .equals(getGrid().getDataProvider().getId(item));

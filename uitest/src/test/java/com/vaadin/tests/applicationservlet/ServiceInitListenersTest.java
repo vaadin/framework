@@ -28,6 +28,7 @@ public class ServiceInitListenersTest extends SingleBrowserTest {
 
         Assert.assertNotEquals(getLogRow(0), 0, extractCount(getLogRow(0)));
         Assert.assertNotEquals(getLogRow(1), 0, extractCount(getLogRow(1)));
+        Assert.assertNotEquals(getLogRow(2), 0, extractCount(getLogRow(2)));
     }
 
     private int extractCount(String logRow) {

@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.customelements.AbstractDateFieldElement;
+import com.vaadin.testbench.elements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -56,14 +56,14 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
      * @param widgetEnabled
      * @param textInputEnabled
      */
-    private void assertState(DateFieldElement id, boolean widgetEnabled,
+    private void assertState(AbstractDateFieldElement id, boolean widgetEnabled,
             boolean textInputEnabled) {
         assertDateFieldEnabled(id, widgetEnabled);
         assertTextInputEnabled(id, textInputEnabled);
 
     }
 
-    private void assertDateFieldEnabled(DateFieldElement id,
+    private void assertDateFieldEnabled(AbstractDateFieldElement id,
             boolean assertEnabled) {
         boolean hasClass = hasCssClass(id, "v-disabled");
         boolean fieldEnabled = !hasClass;
@@ -79,7 +79,8 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
 
     }
 
-    private void assertTextInputEnabled(DateFieldElement id, boolean enabled) {
+    private void assertTextInputEnabled(AbstractDateFieldElement id,
+            boolean enabled) {
         String disabledAttr = id.findElement(By.xpath("./input"))
                 .getAttribute("disabled");
         boolean textinputEnabled = (disabledAttr == null);

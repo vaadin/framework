@@ -28,7 +28,7 @@ public class AbstractFieldElement extends AbstractComponentElement {
      *
      * NOTE: When testing with firefox browser window should have focus in it
      *
-     * @since
+     * @since 8.0
      * @param elem
      *            element which context will be select
      */

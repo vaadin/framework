@@ -125,10 +125,22 @@ public class MultiSelectionModelConnector
 
     @Override
     protected void initSelectionModel() {
-        getGrid().setSelectionModel(new MultiSelectionModel());
+        getGrid().setSelectionModel(createSelectionModel());
         // capture current rows so that can show selection update immediately
         dataAvailable = getGrid().addDataAvailableHandler(
                 event -> availableRows = event.getAvailableRows());
+    }
+
+    /**
+     * Creates an instance of MultiSelectionModel. Method provided overriding
+     * features of the selection model without copying all logic.
+     *
+     * @since 8.1
+     *
+     * @return selection model instance, not {@code null}
+     */
+    protected MultiSelectionModel createSelectionModel() {
+        return new MultiSelectionModel();
     }
 
     @Override

@@ -711,6 +711,9 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
+            // Mark this step to be bound to prevent modifying multiple times.
+            bound = true;
+
             if (resetNullRepresentation) {
                 getBinder().initialConverters.get(field).setIdentity();
             }
@@ -1561,7 +1564,10 @@ public class Binder<BEAN> implements Serializable {
      * Clear all the bound fields for this binder.
      */
     private void clearFields() {
-        bindings.forEach(binding -> binding.getField().clear());
+        bindings.forEach(binding -> {
+            binding.getField().clear();
+            clearError(binding.getField());
+        });
         if (hasChanges()) {
             fireStatusChangeEvent(false);
         }
@@ -2135,10 +2141,15 @@ public class Binder<BEAN> implements Serializable {
                         (property, type) -> bindProperty(objectWithMemberFields,
                                 memberField, property, type)))
                 .reduce(0, this::accumulate, Integer::sum);
-        if (numberOfBoundFields == 0) {
+        if (numberOfBoundFields == 0 && bindings.isEmpty()
+                && incompleteBindings.isEmpty()) {
+            // Throwing here for incomplete bindings would be wrong as they
+            // may be completed after this call. If they are not, setBean and
+            // other methods will throw for those cases
             throw new IllegalStateException("There are no instance fields "
                     + "found for automatic binding");
         }
+
     }
 
     private boolean isFieldBound(Field memberField,
@@ -2360,5 +2371,15 @@ public class Binder<BEAN> implements Serializable {
 
     private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {
         getEventRouter().fireEvent(event);
+    }
+
+    /**
+     * Returns the fields this binder has been bound to.
+     *
+     * @return the fields with bindings
+     * @since 8.1
+     */
+    public Stream<HasValue<?>> getFields() {
+        return bindings.stream().map(Binding::getField);
     }
 }

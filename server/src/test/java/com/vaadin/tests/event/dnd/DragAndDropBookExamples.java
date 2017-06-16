@@ -2,14 +2,14 @@ package com.vaadin.tests.event.dnd;
 
 import java.util.Optional;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class DragAndDropBookExamples {

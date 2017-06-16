@@ -128,4 +128,5 @@ public class ButtonConnector extends AbstractComponentConnector
         getRpcProxy(ButtonServerRpc.class).click(details);
 
     }
+
 }

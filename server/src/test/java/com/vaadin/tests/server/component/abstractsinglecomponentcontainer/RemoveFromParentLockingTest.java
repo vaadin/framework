@@ -15,14 +15,12 @@
  */
 package com.vaadin.tests.server.component.abstractsinglecomponentcontainer;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
@@ -37,14 +35,7 @@ public class RemoveFromParentLockingTest {
     }
 
     private static VerticalLayout createTestComponent() {
-        VaadinSession session = new VaadinSession(null) {
-            private final ReentrantLock lock = new ReentrantLock();
-
-            @Override
-            public Lock getLockInstance() {
-                return lock;
-            }
-        };
+        VaadinSession session = new MockVaadinSession(null);
 
         session.getLockInstance().lock();
         try {

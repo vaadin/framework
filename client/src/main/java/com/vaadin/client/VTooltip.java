@@ -153,6 +153,7 @@ public class VTooltip extends VOverlay {
                 break;
             case PREFORMATTED:
                 PreElement preElement = Document.get().createPreElement();
+                preElement.addClassName(CLASSNAME + "-pre");
                 preElement.setInnerText(info.getTitle());
                 // clear existing content
                 description.setHTML("");

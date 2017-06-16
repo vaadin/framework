@@ -309,6 +309,8 @@ public class Escalator extends Widget
 
             public static final String POINTER_EVENT_TYPE_TOUCH = "touch";
 
+            public static final int SIGNIFICANT_MOVE_THRESHOLD = 3;
+
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -389,6 +391,9 @@ public class Escalator extends Widget
             private boolean touching = false;
             // Two movement objects for storing status and processing touches
             private Movement yMov, xMov;
+            // true if moved significantly since touch start
+            private boolean movedSignificantly = false;
+            private double touchStartTime;
             final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500, F_ACC = 0.7,
                     F_AXIS = 1;
 
@@ -525,7 +530,9 @@ public class Escalator extends Widget
                     }
                     xMov.startTouch(event);
                     yMov.startTouch(event);
+                    touchStartTime = Duration.currentTimeMillis();
                     touching = true;
+                    movedSignificantly = false;
                 } else {
                     touching = false;
                     animation.cancel();
@@ -535,6 +542,26 @@ public class Escalator extends Widget
 
             public void touchMove(final CustomTouchEvent event) {
                 if (touching) {
+                    if (!movedSignificantly) {
+                        double distanceSquared = Math.abs(xMov.delta)
+                                * Math.abs(xMov.delta)
+                                + Math.abs(yMov.delta) * Math.abs(yMov.delta);
+                        movedSignificantly = distanceSquared > SIGNIFICANT_MOVE_THRESHOLD
+                                * SIGNIFICANT_MOVE_THRESHOLD;
+                    }
+                    // allow handling long press differently, without triggering
+                    // scrolling
+                    if (escalator.getDelayToCancelTouchScroll() >= 0
+                            && !movedSignificantly
+                            && Duration.currentTimeMillis()
+                                    - touchStartTime > escalator
+                                            .getDelayToCancelTouchScroll()) {
+                        // cancel touch handling, don't prevent event
+                        touching = false;
+                        animation.cancel();
+                        acceleration = 1;
+                        return;
+                    }
                     xMov.moveTouch(event);
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
@@ -702,13 +729,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             return $entry(function(e) {
                 var target = e.target;
-
+        
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -729,29 +756,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // Delta mode 0 is in pixels; we don't need to do anything...
-
+        
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if(e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-
+        
                 // Other delta modes aren't supported
                 if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-
+        
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -4010,9 +4037,9 @@ public class Escalator extends Widget
         }
 
         @Override
-        public void setNewEscalatorRowCallback(
+        public void setNewRowCallback(
                 Consumer<List<TableRowElement>> callback) {
-            this.newEscalatorRowCallback = callback;
+            newEscalatorRowCallback = callback;
         }
     }
 
@@ -5624,6 +5651,8 @@ public class Escalator extends Widget
 
     private HeightMode heightMode = HeightMode.CSS;
 
+    private double delayToCancelTouchScroll = -1;
+
     private boolean layoutIsScheduled = false;
     private ScheduledCommand layoutCommand = new ScheduledCommand() {
         @Override
@@ -6415,7 +6444,7 @@ public class Escalator extends Widget
             @SuppressWarnings("deprecation")
             com.google.gwt.user.client.Element castElement = (com.google.gwt.user.client.Element) possibleWidgetNode
                     .cast();
-            Widget w = WidgetUtil.findWidget(castElement, null);
+            Widget w = WidgetUtil.findWidget(castElement);
 
             // Ensure findWidget did not traverse past the cell element in the
             // DOM hierarchy
@@ -6461,7 +6490,7 @@ public class Escalator extends Widget
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
-        if (rows <= 0) {
+        if (rows < 0) {
             throw new IllegalArgumentException(
                     "The number of rows must be a positive number.");
         } else if (Double.isInfinite(rows)) {
@@ -6649,6 +6678,49 @@ public class Escalator extends Widget
         return addHandler(handler, ScrollEvent.TYPE);
     }
 
+    /**
+     * Returns true if the Escalator is currently scrolling by touch, or has not
+     * made the decision yet whether to accept touch actions as scrolling or
+     * not.
+     *
+     * @see #setDelayToCancelTouchScroll(double)
+     *
+     * @return true when the component is touch scrolling at the moment
+     * @since 8.1
+     */
+    public boolean isTouchScrolling() {
+        return scroller.touchHandlerBundle.touching;
+    }
+
+    /**
+     * Returns the time after which to not consider a touch event a scroll event
+     * if the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @return delay in milliseconds after which to cancel touch scrolling if
+     *         there is no movement, -1 means scrolling is always allowed
+     * @since 8.1
+     */
+    public double getDelayToCancelTouchScroll() {
+        return delayToCancelTouchScroll;
+    }
+
+    /**
+     * Sets the time after which to not consider a touch event a scroll event if
+     * the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @param delayToCancelTouchScroll
+     *            delay in milliseconds after which to cancel touch scrolling if
+     *            there is no movement, -1 to always allow scrolling
+     * @since 8.1
+     */
+    public void setDelayToCancelTouchScroll(double delayToCancelTouchScroll) {
+        this.delayToCancelTouchScroll = delayToCancelTouchScroll;
+    }
+
     @Override
     public boolean isWorkPending() {
         return body.domSorter.waiting || verticalScrollbar.isWorkPending()
@@ -6722,6 +6794,21 @@ public class Escalator extends Widget
         }
 
         return null;
+    }
+
+    /**
+     * Returns the {@code <div class="{primary-stylename}-tablewrapper" />}
+     * element which has the table inside it. {primary-stylename} is .e.g
+     * {@code v-grid}.
+     * <p>
+     * <em>NOTE: you should not do any modifications to the returned element.
+     * This API is only available for querying data from the element.</em>
+     *
+     * @return the table wrapper element
+     * @since 8.1
+     */
+    public Element getTableWrapper() {
+        return tableWrapper;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {

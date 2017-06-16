@@ -431,7 +431,7 @@ public class GridElement extends AbstractComponentElement {
     /**
      * Gets the element that contains the details of a row.
      *
-     * @since
+     * @since 8.0
      * @param rowIndex
      *            the index of the row for the details
      * @return the element that contains the details of a row. <code>null</code>
@@ -444,6 +444,13 @@ public class GridElement extends AbstractComponentElement {
         return getSubPart("#details[" + rowIndex + "]");
     }
 
+    /**
+     * Toggles the column visibility. Column is identified by its hiding toggle
+     * caption.
+     *
+     * @param toggleCaption
+     * @since 8.0.6
+     */
     public void toggleColumnHidden(String toggleCaption) {
         if (!isElementPresent(By.className("v-grid-sidebar-content"))) {
             // Open sidebar menu

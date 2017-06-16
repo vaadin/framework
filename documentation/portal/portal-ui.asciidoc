@@ -1,6 +1,6 @@
 ---
 title: Portlet UI
-order: 4
+order: 2
 layout: page
 ---
 
@@ -32,34 +32,19 @@ public class MyportletUI extends UI {
 }
 ----
 
-If you created the project as a Servlet 3.0 project, the generated UI stub
-includes a static servlet class annotated with [classname]#@WebServlet#, as
-described in
-<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.exploring,"Exploring
-the Project">>.
-
-
-----
-    @WebServlet(value = "/*", asyncSupported = true)
-    @VaadinServletConfiguration(productionMode = false,
-                                ui = MyportletUI.class)
-    public static class Servlet extends VaadinServlet {
-    }
-----
-
-This enables running the portlet UI in a servlet container while developing it,
-which may be easier than deploying to a portal. For Servlet 2.4 projects, a
-[filename]#web.xml# is created.
+For OSGi portlets in Liferay 7, use additional annotations as described in
+<<dummy/../../../framework/portal/portal-osgi#portal.osgi,"OSGi Portlets on Liferay 7">>.
 
 The portlet theme is defined with the [classname]#@Theme# annotation as usual.
 The theme for the UI must match a theme installed in the portal. You can use any
 of the built-in themes in Vaadin. If you use a custom theme, you need to
 compile it to CSS with the theme compiler and install it in the portal under the
-[filename]#VAADIN/themes# context to be served statically.
+[filename]#VAADIN/themes# context to be served statically, or use the OSGi
+portlet mechanisms to publish the theme.
 
 In addition to the UI class, you need the portlet descriptor files, Vaadin
 libraries, and other files as described later.
-<<figure.portal.helloworld.project>> shows the complete project structure under
+<<figure.portal.helloworld.project>> shows a complete project structure under
 Eclipse.
 
 [[figure.portal.helloworld.project]]
@@ -72,6 +57,28 @@ application will show as illustrated in <<figure.portal.helloworld>>.
 [[figure.portal.helloworld]]
 .Hello World Portlet
 image::img/liferay-helloworld.png[]
+
+[[portal.ui.servlet]]
+== Testing Portlet UIs as Servlets
+
+If a portlet does not use any specific portlet APIs, deploying it as a servlet
+can make testing it easier than deploying it to a portal.
+
+If you created the project as a Servlet 3.0 project, the generated UI stub
+includes a static servlet class annotated with [classname]#@WebServlet#, as
+described in
+<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.exploring,"Exploring
+the Project">>.
+
+Otherwise, the following snippet can be used.
+
+----
+    @WebServlet(value = "/*", asyncSupported = true)
+    @VaadinServletConfiguration(productionMode = false,
+                                ui = MyportletUI.class)
+    public static class Servlet extends VaadinServlet {
+    }
+----
 
 
 

@@ -47,7 +47,7 @@ public class NotificationElement extends AbstractElement {
     /**
      * Returns the caption of the Notification element
      *
-     * @since
+     * @since 8.0
      * @return the caption of the Notification element
      */
     public String getCaption() {

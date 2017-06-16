@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -201,7 +200,17 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         }
     }
 
-    private static class NestedBeanPropertyDefinition<T, V>
+    /**
+     * Contains properties for a bean type which is nested in another
+     * definition.
+     *
+     * @since 8.1
+     * @param <T>
+     *            the bean type
+     * @param <V>
+     *            the value type returned by the getter and set by the setter
+     */
+    public static class NestedBeanPropertyDefinition<T, V>
             extends AbstractBeanPropertyDefinition<T, V> {
 
         private final PropertyDefinition<T, ?> parent;
@@ -249,6 +258,15 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              */
             return new SerializedPropertyDefinition(getPropertySet().beanType,
                     parent.getName() + "." + getName());
+        }
+
+        /**
+         * Gets the parent property definition.
+         *
+         * @return the property definition for the parent
+         */
+        public PropertyDefinition<T, ?> getParent() {
+            return parent;
         }
     }
 

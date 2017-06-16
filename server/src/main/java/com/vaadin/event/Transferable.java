@@ -18,9 +18,9 @@ package com.vaadin.event;
 import java.io.Serializable;
 import java.util.Collection;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * Transferable wraps the data that is to be imported into another component.

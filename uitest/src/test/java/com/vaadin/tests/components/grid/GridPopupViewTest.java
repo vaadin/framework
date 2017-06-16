@@ -50,7 +50,7 @@ public class GridPopupViewTest extends MultiBrowserTest {
             Assert.assertEquals(500, rect.width);
             Assert.assertEquals(38, rect.height);
             findElement(By.className("v-ui")).click();
-            Assert.assertTrue($(GridElement.class).all().isEmpty());
+            waitForElementNotPresent(By.className("v-grid"));
         }
 
     }

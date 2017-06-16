@@ -52,7 +52,7 @@ public class TreeGridClickEvent extends GridClickEvent {
         if (!Element.is(target)) {
             return null;
         }
-        return WidgetUtil.findWidget(Element.as(target), TreeGrid.class);
+        return WidgetUtil.findWidget(Element.as(target), TreeGrid.class, false);
     }
 
     @Override
