@@ -7,12 +7,13 @@ layout: page
 [[getting-started.kotlin]]
 = Using Vaadin with Kotlin
 
-You can use Vaadin with any the Kotlin language as well. Kotlin offers
+You can use Vaadin with the link:https://kotlinlang.org/[Kotlin] language as well. Kotlin offers
 awesome tooling which includes a plugin for Intellij IDEA, Eclipse and Netbeans.
-The Kotlin plugin allows you to convert any Java class to Kotlin, so the easiest way
+The plugin includes the possibility to convert any Java class to Kotlin, therefore the easiest way
 is to generate the sample link:https://vaadin.com/maven[Java Vaadin Maven project] and
 then convert the [filename]#MyUI# class to Kotlin, by pressing
-kbd:[Ctrl+Alt+Shift+K].
+kbd:[Ctrl+Alt+Shift+K]. The Kotlin plugin will convert the class and include Kotlin Maven plugin
+to your [filename]#pom.xml#.
 
 The link:https://github.com/mvysny/karibu-dsl[Karibu-DSL] library offers a more Kotlin-like
 API for Vaadin. The library will allow you to create
@@ -44,6 +45,7 @@ class MyUI : UI() {
 }
 ----
 
-If you need to include a database support to your application, you can also include the
-link:http://www.vaadinonkotlin.eu/[Vaadin-on-Kotlin] library to your application. Just follow
-the Getting Started tutorial there, to set up everything.
+It is also possible to use Kotlin to access your database, allowing you to build full-blown
+web applications. For details please see the
+link:http://www.vaadinonkotlin.eu/[Vaadin-on-Kotlin] library. Just follow
+the Getting Started tutorial there - the tutorial will guide you step-by-step.
