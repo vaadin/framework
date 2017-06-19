@@ -1,9 +1,5 @@
 package com.vaadin.tests.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.fail;
-
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -11,23 +7,25 @@ import org.junit.Test;
 
 import com.vaadin.server.KeyMapper;
 
+import static org.junit.Assert.*;
+
 public class KeyMapperTest {
 
     @Test
     public void testAdd() {
-        KeyMapper<Object> mapper = new KeyMapper<>();
-        Object o1 = new Object();
-        Object o2 = new Object();
-        Object o3 = new Object();
+        KeyMapper<Object> mapper = createKeyMapper();
+        Object o1 = createObject();
+        Object o2 = createObject();
+        Object o3 = createObject();
 
         // Create new ids
         String key1 = mapper.key(o1);
         String key2 = mapper.key(o2);
         String key3 = mapper.key(o3);
 
-        assertEquals(mapper.get(key1), o1);
-        assertEquals(mapper.get(key2), o2);
-        assertEquals(mapper.get(key3), o3);
+        assertSame(mapper.get(key1), o1);
+        assertSame(mapper.get(key2), o2);
+        assertSame(mapper.get(key3), o3);
         assertNotSame(key1, key2);
         assertNotSame(key1, key3);
         assertNotSame(key2, key3);
@@ -45,12 +43,20 @@ public class KeyMapperTest {
 
     }
 
+    protected Object createObject() {
+        return new Object();
+    }
+
+    protected KeyMapper<Object> createKeyMapper() {
+        return new KeyMapper<>();
+    }
+
     @Test
     public void testRemoveAll() {
-        KeyMapper<Object> mapper = new KeyMapper<>();
-        Object o1 = new Object();
-        Object o2 = new Object();
-        Object o3 = new Object();
+        KeyMapper<Object> mapper = createKeyMapper();
+        Object o1 = createObject();
+        Object o2 = createObject();
+        Object o3 = createObject();
 
         // Create new ids
         mapper.key(o1);
@@ -65,10 +71,10 @@ public class KeyMapperTest {
 
     @Test
     public void testRemove() {
-        KeyMapper<Object> mapper = new KeyMapper<>();
-        Object o1 = new Object();
-        Object o2 = new Object();
-        Object o3 = new Object();
+        KeyMapper<Object> mapper = createKeyMapper();
+        Object o1 = createObject();
+        Object o2 = createObject();
+        Object o3 = createObject();
 
         // Create new ids
         mapper.key(o1);
