@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.tree;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
 
 /**
@@ -25,4 +26,5 @@ import com.vaadin.shared.ui.grid.renderers.AbstractRendererState;
  */
 public class TreeRendererState extends AbstractRendererState {
 
+    public ContentMode mode = ContentMode.TEXT;
 }

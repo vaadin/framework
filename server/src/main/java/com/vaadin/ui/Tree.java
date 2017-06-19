@@ -218,13 +218,14 @@ public class Tree<T> extends Composite
     private TreeGrid<T> treeGrid = new TreeGrid<>();
     private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
     private IconGenerator<T> iconProvider = t -> null;
+    private final TreeRenderer renderer;
 
     /**
      * Constructs a new Tree Component.
      */
     public Tree() {
         setCompositionRoot(treeGrid);
-        TreeRenderer renderer = new TreeRenderer();
+        renderer = new TreeRenderer();
         treeGrid.getDataCommunicator().addDataGenerator(renderer);
         treeGrid.addColumn(i -> captionGenerator.apply(i), renderer)
                 .setId("column");
@@ -772,5 +773,15 @@ public class Tree<T> extends Composite
      */
     public void setRowHeight(double rowHeight) {
         treeGrid.setRowHeight(rowHeight);
+    }
+
+    /**
+     * Sets the content mode of the item caption.
+     * 
+     * @param contentMode
+     *            the content mode
+     */
+    public void setContentMode(ContentMode contentMode) {
+        renderer.getState().mode = contentMode;
     }
 }

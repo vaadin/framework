@@ -42,9 +42,8 @@ public class TreeRendererConnector
 
             @Override
             public void render(RendererCellReference cell, String htmlString) {
-                String content = "<span class=\"v-captiontext\">" +
-                        SafeHtmlUtils.htmlEscape(htmlString)
-                        + "</span>";
+                String content = "<span class=\"v-captiontext\">"
+                        + getContentString(htmlString) + "</span>";
 
                 JsonObject row = getParent().getParent().getDataSource()
                         .getRow(cell.getRowIndex());
@@ -55,6 +54,18 @@ public class TreeRendererConnector
                     content = element.getString() + content;
                 }
                 super.render(cell, content);
+            }
+
+            private String getContentString(String htmlString) {
+                switch (getState().mode) {
+                case HTML:
+                    return htmlString;
+                case PREFORMATTED:
+                    return "<pre>" + SafeHtmlUtils.htmlEscape(htmlString)
+                            + "</pre>";
+                default:
+                    return SafeHtmlUtils.htmlEscape(htmlString);
+                }
             }
         };
     }

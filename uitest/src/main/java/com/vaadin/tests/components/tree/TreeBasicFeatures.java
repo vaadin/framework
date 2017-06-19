@@ -13,6 +13,7 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
 import com.vaadin.ui.Component;
@@ -28,7 +29,7 @@ import com.vaadin.ui.VerticalLayout;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
-    public static final double[] ROW_HEIGHTS = new double[] { 35.5d, 62.78d };
+    public static final double[] ROW_HEIGHTS = new double[] { 35.5d, 72.78d };
 
     private Tree<HierarchicalTestBean> tree;
     private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
@@ -127,13 +128,21 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void createCaptionMenu(MenuItem captionMenu) {
-        captionMenu.addItem("String.valueOf",
-                menu -> tree.setItemCaptionGenerator(String::valueOf));
-        captionMenu
-                .addItem("Custom caption",
-                        menu -> tree.setItemCaptionGenerator(i -> "Id: "
-                                + i.getId() + ", Depth: " + i.getDepth()
-                                + ", Index: " + i.getIndex()));
+        captionMenu.addItem("String.valueOf", menu -> {
+            tree.setItemCaptionGenerator(String::valueOf);
+            tree.setContentMode(ContentMode.TEXT);
+        });
+        captionMenu.addItem("Custom caption", menu -> {
+            tree.setItemCaptionGenerator(i -> "Id: " + i.getId() + "\nDepth: "
+                    + i.getDepth() + ", Index: " + i.getIndex());
+            tree.setContentMode(ContentMode.PREFORMATTED);
+        });
+        captionMenu.addItem("HTML caption", menu -> {
+            tree.setItemCaptionGenerator(
+                    i -> "Id: " + i.getId() + "<br/>Depth: " + i.getDepth()
+                            + "<br/>Index: " + i.getIndex());
+            tree.setContentMode(ContentMode.HTML);
+        });
     }
 
     private void createIconMenu(MenuItem iconMenu) {
