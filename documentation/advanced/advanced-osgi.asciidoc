@@ -19,15 +19,15 @@ The application is typically packaged as a JAR file, and needs to have a valid O
 
 [[advanced.osgi.servlet.maven]]
 == Minimal Vaadin Project For OSGi
-Vaadin application for OSGi should be a valid bundle, i.e. it should bepackaged as a `.jar` file, and it should have proper OSGi manifest inside.
-The easiest way to convert regular maven-based Vaadin application into valid OSGi bundle contains five steps:
+Vaadin application for OSGi should be a valid bundle, i.e. it should be packaged as a `.jar` file, and it should have a proper OSGi manifest inside.
+The easiest way to convert regular maven-based Vaadin application into a valid OSGi bundle consists of five steps:
 
 * Change packaging type to `jar` in your `pom.xml`:
 [source, xml]
 ----
     <packaging>jar</packaging>
 ----
-* For change scope for all vaadin dependencies from default to `provided`, like this:
+* Change the scope for all vaadin dependencies from default to `provided`, like this:
 [source, xml]
 ----
         <dependency>
@@ -158,7 +158,7 @@ In addition to these approaches, it is also possible to repackage all the static
 [[advanced.osgi.deploy]]
 == Deployment to OSGi container.
 
-In order to have your application running under OSGi container, you need to have Vaadin framework parts deployed, and then the application bundle can be deployed and started.
+In order to have your application running under OSGi container, you need to have Vaadin framework bundles deployed, and then the application bundle can be deployed and started.
 Here is a list of required Vaadin bundles, in order of loading:
 
 * `jsoup-1.8.3.jar`
