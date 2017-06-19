@@ -1,0 +1,51 @@
+---
+title: Using Vaadin with Kotlin
+order: 1100
+layout: page
+---
+
+[[getting-started.kotlin]]
+= Using Vaadin with Kotlin
+
+You can use Vaadin with the link:https://kotlinlang.org/[Kotlin] language as well. Kotlin offers
+awesome tooling which includes a plugin for Intellij IDEA, Eclipse and Netbeans.
+The plugin includes the possibility to convert any Java class to Kotlin, therefore the easiest way
+is to generate the sample link:https://vaadin.com/maven[Java Vaadin Maven project] and
+then convert the [filename]#MyUI# class to Kotlin, by pressing
+kbd:[Ctrl+Alt+Shift+K]. The Kotlin plugin will convert the class and include Kotlin Maven plugin
+to your [filename]#pom.xml#.
+
+The link:https://github.com/mvysny/karibu-dsl[Karibu-DSL] library offers a more Kotlin-like
+API for Vaadin. The library will allow you to create
+your UI in a hierarchical way. For more details please see
+link:https://kotlinlang.org/docs/reference/type-safe-builders.html[Kotlin Type-Safe Builders].
+There is a link:https://github.com/mvysny/karibu-helloworld-application[Karibu Helloworld Application]
+sample which demonstrates this technique. It is a standard Gradle project, thus you
+only need to `git clone` the project and open it in your IDE. The hierarchical code looks as follows:
+
+[source, kotlin]
+----
+@Theme("mytheme")
+class MyUI : UI() {
+
+    private lateinit var layout: VerticalLayout
+
+    @Override
+    override fun init(vaadinRequest: VaadinRequest) {
+        layout = verticalLayout {
+            val name = textField {
+                caption = "Type your name here:"
+            }
+            button("Click Me", {
+                println("Thanks ${name.value}, it works!")
+                layout.label("Thanks ${name.value}, it works!")
+            })
+        }
+    }
+}
+----
+
+It is also possible to use Kotlin to access your database, allowing you to build full-blown
+web applications. For details please see the
+link:http://www.vaadinonkotlin.eu/[Vaadin-on-Kotlin] library. Just follow
+the Getting Started tutorial there - the tutorial will guide you step-by-step.
