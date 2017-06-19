@@ -4220,6 +4220,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private void setSortOrder(List<GridSortOrder<T>> order,
             boolean userOriginated) {
         Objects.requireNonNull(order, "Sort order list cannot be null");
+
+        // Update client state to display sort order.
+        List<String> sortColumns = new ArrayList<>();
+        List<SortDirection> directions = new ArrayList<>();
+        order.stream().forEach(sortOrder -> {
+            sortColumns.add(sortOrder.getSorted().getInternalId());
+            directions.add(sortOrder.getDirection());
+        });
+
+        getState().sortColumns = sortColumns.toArray(new String[0]);
+        getState().sortDirs = directions.toArray(new SortDirection[0]);
+
         sortOrder.clear();
         if (order.isEmpty()) {
             // Grid is not sorted anymore.

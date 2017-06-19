@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -419,6 +420,21 @@ public class GridConnector extends AbstractListingConnector
         }
     }
 
+    @OnStateChange({ "sortColumns", "sortDirs" })
+    void updateSortOrder() {
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+
+        String[] sortColumns = getState().sortColumns;
+        SortDirection[] sortDirs = getState().sortDirs;
+
+        for (int i = 0; i < sortColumns.length; i++) {
+            sortOrder
+                    .add(new SortOrder(getColumn(sortColumns[i]), sortDirs[i]));
+        }
+
+        getWidget().setSortOrder(sortOrder);
+    }
+
     @Override
     public void setDataSource(DataSource<JsonObject> dataSource) {
         super.setDataSource(dataSource);
@@ -501,9 +517,15 @@ public class GridConnector extends AbstractListingConnector
                 sortDirections.add(so.getDirection());
             }
         }
-        getRpcProxy(GridServerRpc.class).sort(columnIds.toArray(new String[0]),
-                sortDirections.toArray(new SortDirection[0]),
-                event.isUserOriginated());
+        String[] colArray = columnIds.toArray(new String[0]);
+        SortDirection[] dirArray = sortDirections.toArray(new SortDirection[0]);
+
+        if (!Arrays.equals(colArray, getState().sortColumns)
+                || !Arrays.equals(dirArray, getState().sortDirs)) {
+            // State has actually changed, send to server
+            getRpcProxy(GridServerRpc.class).sort(colArray, dirArray,
+                    event.isUserOriginated());
+        }
     }
     /* HasComponentsConnector */
 
