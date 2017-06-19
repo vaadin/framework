@@ -339,7 +339,7 @@ public class Button extends AbstractFocusable
     /**
      * Simulates a button click, notifying all server-side listeners.
      *
-     * No action is taken is the button is disabled.
+     * No action is taken if the button is disabled.
      */
     public void click() {
         if (isEnabled()) {
