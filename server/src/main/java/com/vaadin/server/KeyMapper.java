@@ -72,7 +72,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
         // If the object is already mapped, use existing key
         Object id = identifierGetter.apply(o);
-        String key = objectIdKeyMap.get(o);
+        String key = objectIdKeyMap.get(id);
         if (key != null) {
             return key;
         }
