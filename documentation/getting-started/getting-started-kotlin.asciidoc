@@ -20,8 +20,8 @@ API for Vaadin. The library will allow you to create
 your UI in a hierarchical way. For more details please see
 link:https://kotlinlang.org/docs/reference/type-safe-builders.html[Kotlin Type-Safe Builders].
 There is a link:https://github.com/mvysny/karibu-helloworld-application[Karibu Helloworld Application]
-sample which demonstrates this technique. It's a standard Gradle project, so you
-just need to git clone the project and open it in your IDE. The hierarchical code looks as follows:
+sample which demonstrates this technique. It is a standard Gradle project, thus you
+only need to `git clone` the project and open it in your IDE. The hierarchical code looks as follows:
 
 [source, kotlin]
 ----
