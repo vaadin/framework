@@ -27,6 +27,9 @@ $v-treegrid-class-depth: depth !default;
 
 
   .#{$primary-stylename}-expander {
+    display: inline-block;
+    vertical-align: top;
+
     &::before {
       display: inline-block;
       width: $v-treegrid-expander-width;
@@ -62,6 +65,7 @@ $v-treegrid-class-depth: depth !default;
   // Expander and cell content in same line
   .#{$primary-stylename}-cell-content {
     display: inline-block;
+    vertical-align: middle;
   }
 
   .#{$primary-stylename}-row-focused {
