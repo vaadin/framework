@@ -32,6 +32,7 @@ public class ServletIntegrationUI extends UI {
         table.setSelectable(true);
         table.setVisibleColumns(new Object[] { "country" });
         layout.addComponent(table);
+        table.setWidth("110px");
 
         Item item = table.addItem("FI");
         item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
