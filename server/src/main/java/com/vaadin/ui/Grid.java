@@ -906,13 +906,16 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         /**
          * Constructs a new Column configuration with given renderer and value
          * provider.
+         * <p>
+         * For a more complete explanation on presentation provider, see
+         * {@link #setRenderer(ValueProvider, Renderer)}.
          *
          * @param valueProvider
          *            the function to get values from items, not
          *            <code>null</code>
          * @param presentationProvider
-         *            the function to get presentations for this column values,
-         *            not <code>null</code>
+         *            the function to get presentations from the value of this
+         *            column, not <code>null</code>
          * @param renderer
          *            the presentation renderer, not <code>null</code>
          * @param <P>
