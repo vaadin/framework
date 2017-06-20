@@ -1,7 +1,10 @@
 package com.vaadin.tests.components.tree;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
@@ -73,6 +76,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         MenuItem componentMenu = menu.addItem("Component", null);
         createIconMenu(componentMenu.addItem("Icons", null));
         createCaptionMenu(componentMenu.addItem("Captions", null));
+        createContentModeMenu(componentMenu.addItem("ContentMode", null));
         createSelectionModeMenu(componentMenu.addItem("Selection Mode", null));
         createRowHeightMenu(componentMenu.addItem("Row Height", null));
         componentMenu.addItem("Item Click Listener", new Command() {
@@ -143,6 +147,11 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
                             + "<br/>Index: " + i.getIndex());
             tree.setContentMode(ContentMode.HTML);
         });
+    }
+
+    private void createContentModeMenu(MenuItem contentModeMenu) {
+        Arrays.stream(ContentMode.values()).forEach(mode -> contentModeMenu
+                .addItem(mode.toString(), item -> tree.setContentMode(mode)));
     }
 
     private void createIconMenu(MenuItem iconMenu) {

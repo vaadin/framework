@@ -152,6 +152,19 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
+    public void tree_html_caption_text_mode() {
+        // Set row height big enough to show whole content.
+        selectMenuPath("Component", "Captions", "HTML caption");
+        selectMenuPath("Component", "ContentMode", "TEXT");
+
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertEquals("Id: /0/0<br/>Depth: 0<br/>Index: 0",
+                tree.getItem(0).getText());
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
     public void tree_item_click() {
         selectMenuPath("Component", "Item Click Listener");
         $(TreeElement.class).first().getItem(1).click();

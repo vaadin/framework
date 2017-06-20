@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Element;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
@@ -27,7 +28,7 @@ import com.vaadin.ui.Tree.TreeRenderer;
 import elemental.json.JsonObject;
 
 /**
- * Connector for TreeRenderer
+ * Connector for TreeRenderer.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -68,6 +69,15 @@ public class TreeRendererConnector
                 }
             }
         };
+    }
+
+    @OnStateChange("mode")
+    void updateContentMode() {
+        // Redraw content
+        getParent().getParent().getWidget().requestRefreshBody();
+
+        // Some pre-formatted content might change size of content.
+        getParent().getParent().getWidget().recalculateColumnWidths();
     }
 
     @Override
