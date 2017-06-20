@@ -6381,8 +6381,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Request delayed refresh of all body rows.
+     * 
+     * @since 8.1
      */
-    private void requestRefreshBody() {
+    public void requestRefreshBody() {
         if (!refreshBodyRequested) {
             refreshBodyRequested = true;
             Scheduler.get().scheduleFinally(() -> {

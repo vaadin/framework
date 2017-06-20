@@ -1,7 +1,11 @@
 package com.vaadin.tests.components.tree;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
@@ -12,20 +16,23 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.data.bean.HierarchicalTestBean;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.IconGenerator;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Grid.SelectionMode;
 
 @Theme("tests-valo-disabled-animations")
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
+
+    public static final double[] ROW_HEIGHTS = new double[] { 35.5d, 72.78d };
 
     private Tree<HierarchicalTestBean> tree;
     private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
@@ -69,7 +76,9 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         MenuItem componentMenu = menu.addItem("Component", null);
         createIconMenu(componentMenu.addItem("Icons", null));
         createCaptionMenu(componentMenu.addItem("Captions", null));
+        createContentModeMenu(componentMenu.addItem("ContentMode", null));
         createSelectionModeMenu(componentMenu.addItem("Selection Mode", null));
+        createRowHeightMenu(componentMenu.addItem("Row Height", null));
         componentMenu.addItem("Item Click Listener", new Command() {
 
             private Registration registration;
@@ -110,6 +119,12 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         return menu;
     }
 
+    private void createRowHeightMenu(MenuItem rowHeightMenu) {
+        Stream.concat(Stream.of(-1d), Arrays.stream(ROW_HEIGHTS).boxed())
+                .forEach(height -> rowHeightMenu.addItem(String.valueOf(height),
+                        item -> tree.setRowHeight(height)));
+    }
+
     private void createSelectionModeMenu(MenuItem modeMenu) {
         for (SelectionMode mode : SelectionMode.values()) {
             modeMenu.addItem(mode.name(), item -> tree.setSelectionMode(mode));
@@ -117,13 +132,26 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void createCaptionMenu(MenuItem captionMenu) {
-        captionMenu.addItem("String.valueOf",
-                menu -> tree.setItemCaptionGenerator(String::valueOf));
-        captionMenu
-                .addItem("Custom caption",
-                        menu -> tree.setItemCaptionGenerator(i -> "Id: "
-                                + i.getId() + ", Depth: " + i.getDepth()
-                                + ", Index: " + i.getIndex()));
+        captionMenu.addItem("String.valueOf", menu -> {
+            tree.setItemCaptionGenerator(String::valueOf);
+            tree.setContentMode(ContentMode.TEXT);
+        });
+        captionMenu.addItem("Custom caption", menu -> {
+            tree.setItemCaptionGenerator(i -> "Id: " + i.getId() + "\nDepth: "
+                    + i.getDepth() + ", Index: " + i.getIndex());
+            tree.setContentMode(ContentMode.PREFORMATTED);
+        });
+        captionMenu.addItem("HTML caption", menu -> {
+            tree.setItemCaptionGenerator(
+                    i -> "Id: " + i.getId() + "<br/>Depth: " + i.getDepth()
+                            + "<br/>Index: " + i.getIndex());
+            tree.setContentMode(ContentMode.HTML);
+        });
+    }
+
+    private void createContentModeMenu(MenuItem contentModeMenu) {
+        Arrays.stream(ContentMode.values()).forEach(mode -> contentModeMenu
+                .addItem(mode.toString(), item -> tree.setContentMode(mode)));
     }
 
     private void createIconMenu(MenuItem iconMenu) {

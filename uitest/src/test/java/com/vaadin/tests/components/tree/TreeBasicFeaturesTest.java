@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tree;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 import org.junit.Assert;
@@ -92,7 +93,8 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
             for (int j = 0; j < 3; ++j) {
                 item = tree.getItem(n++);
-                Assert.assertEquals((shouldHaveIcon ? "\ue92d" : "") + "1 | " + j,
+                Assert.assertEquals(
+                        (shouldHaveIcon ? "\ue92d" : "") + "1 | " + j,
                         item.getText());
 
                 Assert.assertEquals("Unexpected icon state", shouldHaveIcon,
@@ -111,22 +113,57 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
     @Test
     public void tree_custom_caption() {
+        // Set row height big enough to show whole content.
+        selectMenuPath("Component", "Row Height",
+                String.valueOf(TreeBasicFeatures.ROW_HEIGHTS[1]));
+
         selectMenuPath("Component", "Captions", "Custom caption");
         TreeElement tree = $(TreeElement.class).first();
-        Assert.assertEquals("Id: /0/0, Depth: 0, Index: 0",
+        Assert.assertEquals("Id: /0/0\nDepth: 0, Index: 0",
                 tree.getItem(0).getText());
-        Assert.assertEquals("Id: /0/1, Depth: 0, Index: 1",
+        Assert.assertEquals("Id: /0/1\nDepth: 0, Index: 1",
                 tree.getItem(1).getText());
         tree.expand(0);
-        Assert.assertEquals("Id: /0/0/1/0, Depth: 1, Index: 0",
+        Assert.assertEquals("Id: /0/0/1/0\nDepth: 1, Index: 0",
                 tree.getItem(1).getText());
-        Assert.assertEquals("Id: /0/0/1/1, Depth: 1, Index: 1",
+        Assert.assertEquals("Id: /0/0/1/1\nDepth: 1, Index: 1",
                 tree.getItem(2).getText());
         tree.expand(1);
-        Assert.assertEquals("Id: /0/0/1/0/2/0, Depth: 2, Index: 0",
+        Assert.assertEquals("Id: /0/0/1/0/2/0\nDepth: 2, Index: 0",
                 tree.getItem(2).getText());
-        Assert.assertEquals("Id: /0/0/1/0/2/1, Depth: 2, Index: 1",
+        Assert.assertEquals("Id: /0/0/1/0/2/1\nDepth: 2, Index: 1",
                 tree.getItem(3).getText());
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void tree_html_caption_and_expander_position() {
+        // Set row height big enough to show whole content.
+        selectMenuPath("Component", "Row Height",
+                String.valueOf(TreeBasicFeatures.ROW_HEIGHTS[1]));
+
+        selectMenuPath("Component", "Captions", "HTML caption");
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertEquals("Id: /0/0\nDepth: 0\nIndex: 0",
+                tree.getItem(0).getText());
+
+        Assert.assertEquals("Expander element not aligned to top",
+                tree.getExpandElement(0).getLocation().getY(),
+                tree.getItem(0).getLocation().getY());
+
+        assertNoErrorNotifications();
+    }
+
+    @Test
+    public void tree_html_caption_text_mode() {
+        // Set row height big enough to show whole content.
+        selectMenuPath("Component", "Captions", "HTML caption");
+        selectMenuPath("Component", "ContentMode", "TEXT");
+
+        TreeElement tree = $(TreeElement.class).first();
+        Assert.assertEquals("Id: /0/0<br/>Depth: 0<br/>Index: 0",
+                tree.getItem(0).getText());
 
         assertNoErrorNotifications();
     }
@@ -202,5 +239,17 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         tree.getItem(0).click();
         Assert.assertFalse("First row was not deselected",
                 wrap.getRow(0).isSelected());
+    }
+
+    @Test
+    public void tree_row_heigth() {
+        TreeElement tree = $(TreeElement.class).first();
+        TreeGridElement wrap = tree.wrap(TreeGridElement.class);
+        Arrays.stream(TreeBasicFeatures.ROW_HEIGHTS).boxed()
+                .map(String::valueOf).forEach(height -> {
+                    selectMenuPath("Component", "Row Height", height);
+                    Assert.assertTrue(wrap.getCell(0, 0).getAttribute("style")
+                            .contains("height: " + height + "px;"));
+                });
     }
 }

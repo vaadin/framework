@@ -17,6 +17,7 @@ package com.vaadin.client.connectors.grid;
 
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Element;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.renderers.HtmlRenderer;
 import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
@@ -27,7 +28,7 @@ import com.vaadin.ui.Tree.TreeRenderer;
 import elemental.json.JsonObject;
 
 /**
- * Connector for TreeRenderer
+ * Connector for TreeRenderer.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -42,9 +43,8 @@ public class TreeRendererConnector
 
             @Override
             public void render(RendererCellReference cell, String htmlString) {
-                String content = "<span class=\"v-captiontext\">" +
-                        SafeHtmlUtils.htmlEscape(htmlString)
-                        + "</span>";
+                String content = "<span class=\"v-captiontext\">"
+                        + getContentString(htmlString) + "</span>";
 
                 JsonObject row = getParent().getParent().getDataSource()
                         .getRow(cell.getRowIndex());
@@ -56,7 +56,28 @@ public class TreeRendererConnector
                 }
                 super.render(cell, content);
             }
+
+            private String getContentString(String htmlString) {
+                switch (getState().mode) {
+                case HTML:
+                    return htmlString;
+                case PREFORMATTED:
+                    return "<pre>" + SafeHtmlUtils.htmlEscape(htmlString)
+                            + "</pre>";
+                default:
+                    return SafeHtmlUtils.htmlEscape(htmlString);
+                }
+            }
         };
+    }
+
+    @OnStateChange("mode")
+    void updateContentMode() {
+        // Redraw content
+        getParent().getParent().getWidget().requestRefreshBody();
+
+        // Some pre-formatted content might change size of content.
+        getParent().getParent().getWidget().recalculateColumnWidths();
     }
 
     @Override
