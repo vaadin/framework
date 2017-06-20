@@ -138,7 +138,7 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
     }
 
     @Test
-    public void tree_html_caption() {
+    public void tree_html_caption_and_expander_position() {
         // Set row height big enough to show whole content.
         selectMenuPath("Component", "Row Height",
                 String.valueOf(TreeBasicFeatures.ROW_HEIGHTS[1]));
@@ -147,6 +147,10 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         TreeElement tree = $(TreeElement.class).first();
         Assert.assertEquals("Id: /0/0\nDepth: 0\nIndex: 0",
                 tree.getItem(0).getText());
+
+        Assert.assertEquals("Expander element not aligned to top",
+                tree.getExpandElement(0).getLocation().getY(),
+                tree.getItem(0).getLocation().getY());
 
         assertNoErrorNotifications();
     }
