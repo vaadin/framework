@@ -895,6 +895,21 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param valueProvider
          *            the function to get values from items, not
          *            <code>null</code>
+         * @param renderer
+         *            the value renderer, not <code>null</code>
+         */
+        protected Column(ValueProvider<T, V> valueProvider,
+                Renderer<? super V> renderer) {
+            this(valueProvider, ValueProvider.identity(), renderer);
+        }
+
+        /**
+         * Constructs a new Column configuration with given renderer and value
+         * provider.
+         *
+         * @param valueProvider
+         *            the function to get values from items, not
+         *            <code>null</code>
          * @param presentationProvider
          *            the function to get presentations for this column values,
          *            not <code>null</code>
@@ -902,6 +917,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            the presentation renderer, not <code>null</code>
          * @param <P>
          *            the presentation type
+         * 
+         * @since 8.1
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
                 ValueProvider<V, P> presentationProvider,
@@ -1900,17 +1917,23 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @since 8.0.3
          */
         public Column<T, V> setRenderer(Renderer<? super V> renderer) {
-            return this;
+            return setRenderer(ValueProvider.identity(), renderer);
         }
 
         /**
          * Sets the Renderer for this Column. Setting the renderer will cause
          * all currently available row data to be recreated and sent to the
          * client.
+         * <p>
+         * The presentation provider is a method that takes the value of this
+         * column on a single row, and maps that to a value that the renderer
+         * accepts. This feature can be used for storing a complex value in a
+         * column for editing, but providing a simplified presentation for the
+         * user when not editing.
          *
          * @param presentationProvider
-         *            the function to get presentations for this column values,
-         *            not {@code null}
+         *            the function to get presentations from the value of this
+         *            column, not {@code null}
          * @param renderer
          *            the new renderer, not {@code null}
          * 
@@ -2557,6 +2580,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Adds a new column to this {@link Grid} with value provider and
      * presentation provider.
+     * <p>
+     * <strong>Note:</strong> The presentation type for this method is set to be
+     * String. To use any custom renderer with the presentation provider, use
+     * {@link #addColumn(ValueProvider, ValueProvider, AbstractRenderer)}.
      *
      * @param valueProvider
      *            the value provider
@@ -2564,13 +2591,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the value presentation provider
      * @param <V>
      *            the column value type
-     * @param <P>
-     *            the column presentation type
+     * 
+     * @see #addColumn(ValueProvider, ValueProvider, AbstractRenderer)
      *
      * @return the new column
+     * @since 8.1
      */
-    public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
-            ValueProvider<V, P> presentationProvider) {
+    public <V> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
+            ValueProvider<V, String> presentationProvider) {
         return addColumn(valueProvider, presentationProvider,
                 new TextRenderer());
     }
@@ -2578,6 +2606,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Adds a new column to this {@link Grid} with value provider, presentation
      * provider and typed renderer.
+     * 
+     * <p>
+     * The presentation provider is a method that takes the value from the value
+     * provider, and maps that to a value that the renderer accepts. This
+     * feature can be used for storing a complex value in a column for editing,
+     * but providing a simplified presentation for the user when not editing.
      *
      * @param valueProvider
      *            the value provider
@@ -2593,6 +2627,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the new column
      *
      * @see AbstractRenderer
+     * @since 8.1
      */
     public <V, P> Column<T, V> addColumn(ValueProvider<T, V> valueProvider,
             ValueProvider<V, P> presentationProvider,
@@ -2624,10 +2659,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Creates a column instance from a value provider and a renderer.
+     * Creates a column instance from a value provider, presentation provider
+     * and a renderer.
      *
      * @param valueProvider
      *            the value provider
+     * @param presentationProvider
+     *            the presentation provider
      * @param renderer
      *            the renderer
      * @return a new column instance
@@ -2636,7 +2674,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param <P>
      *            the column presentation type
      *
-     * @since 8.0.3
+     * @since 8.1
      */
     protected <V, P> Column<T, V> createColumn(
             ValueProvider<T, V> valueProvider,
@@ -4108,7 +4146,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 column = addColumn(id);
             } else {
                 DeclarativeValueProvider<T> provider = new DeclarativeValueProvider<>();
-                column = createColumn(provider, t -> t, new HtmlRenderer());
+                column = createColumn(provider, ValueProvider.identity(),
+                        new HtmlRenderer());
                 addColumn(getGeneratedIdentifier(), column);
                 if (id != null) {
                     column.setId(id);
