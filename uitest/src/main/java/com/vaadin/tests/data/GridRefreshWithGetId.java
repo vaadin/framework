@@ -35,6 +35,13 @@ public class GridRefreshWithGetId extends AbstractTestUI {
             this.name = name;
         }
 
+        /**
+         * The class intentionally has strange {@code hashCode()} and {@code equals()}
+         * implementation to ensure if {@code Grid} relies on bean id rather than on
+         * bean hashcode/equals identification.
+         *
+         * {@see Object.equals}
+         */
         @Override
         public boolean equals(Object o) {
             if (this == o)
@@ -50,6 +57,13 @@ public class GridRefreshWithGetId extends AbstractTestUI {
                     : myObject.name == null;
         }
 
+        /**
+         * The class intentionally has strange {@code hashCode()} and {@code equals()}
+         * implementation to ensure if {@code Grid} relies on bean id rather than on
+         * bean hashcode/equals identification.
+         *
+         * {@see Object.hashCode}
+         */
         @Override
         public int hashCode() {
             int result = id;

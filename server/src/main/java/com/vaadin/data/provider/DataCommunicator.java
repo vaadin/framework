@@ -586,9 +586,13 @@ public class DataCommunicator<T> extends AbstractExtension {
      * <p>
      * This method is called from the constructor.
      *
-     * @param identifierGetter has to return an unique key for every bean, and the returned key has to
-     *                         support proper {@code hashCode()} and {@code equals()}
+     * @param identifierGetter has to return a unique key for every bean, and the returned key has to
+     *                         follow general {@code hashCode()} and {@code equals()} contract,
+     *                         see {@link Object#hashCode()} for details.
      * @return key mapper
+     *
+     * @since 8.1
+     *
      */
     protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
         return new KeyMapper<T>(identifierGetter);
