@@ -35,7 +35,7 @@ public class KeyMapperIdGetterTest extends KeyMapperTest {
     protected KeyMapper<Object> createKeyMapper() {
 
         KeyMapper<BrokenBean> keyMapper = new KeyMapper<>();
-        keyMapper.useIdentifierGetter(BrokenBean::getId);
+        keyMapper.setIdentifierGetter(BrokenBean::getId);
         return (KeyMapper) keyMapper;
     }
 

@@ -789,6 +789,6 @@ public class DataCommunicator<T> extends AbstractExtension {
         detachDataProviderListener();
         dropAllData();
         this.dataProvider = dataProvider;
-        keyMapper.useIdentifierGetter(dataProvider::getId);
+        keyMapper.setIdentifierGetter(dataProvider::getId);
     }
 }

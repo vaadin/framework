@@ -146,7 +146,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     }
 
     @Override
-    public void useIdentifierGetter(ValueProvider<V, Object> identifierGetter) {
+    public void setIdentifierGetter(ValueProvider<V, Object> identifierGetter) {
         if (this.identifierGetter != identifierGetter) {
             this.identifierGetter = identifierGetter;
             objectIdKeyMap.clear();

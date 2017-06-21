@@ -93,5 +93,5 @@ public interface DataKeyMapper<T> extends Serializable {
      *                         see {@link Object#hashCode()} for details.
      * @since 8.1
      */
-    void useIdentifierGetter(ValueProvider<T, Object> identifierGetter);
+    void setIdentifierGetter(ValueProvider<T, Object> identifierGetter);
 }
