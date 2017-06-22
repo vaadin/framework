@@ -36,16 +36,19 @@ public interface View extends Serializable {
     /**
      * Called before the view is shown on screen.
      * <p>
-     * {@link ViewChangeEvent#getParameters() event.getParameters()} may contain
-     * extra parameters relevant to the view.
+     * The event object contains information about parameters used when showing
+     * the view, in addition to references to the old view and the new view.
+     * <p>
+     * Override this method to perform initialization of your view.
+     * <p>
+     * By default does nothing.
      *
      * @param event
-     *            ViewChangeEvent representing the view change that is
-     *            occurring. {@link ViewChangeEvent#getNewView()
-     *            event.getNewView()} returns <code>this</code>.
-     *
+     *            an event object containing information about the parameters
+     *            given by the user and references to the old view (if any)
      */
-    public void enter(ViewChangeEvent event);
+    public default void enter(ViewChangeEvent event) {
+    }
 
     /**
      * Called when the user is requesting navigation away from the view.
@@ -66,6 +69,7 @@ public interface View extends Serializable {
      * will be triggered. They will be handled normally and might also prevent
      * navigation.
      *
+     * @since 8.1
      * @param event
      *            an event object providing information about the event and
      *            containing the {@link ViewBeforeLeaveEvent#navigate()} method
