@@ -64,9 +64,12 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         @Override
         public void setSplitterPosition(float position) {
+            float oldPosition = getSplitPosition();
+
             getSplitterState().position = position;
-            fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this,
-                    position, getSplitPositionUnit()));
+
+            fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, true,
+                    oldPosition, getSplitPositionUnit(), position, getSplitPositionUnit()));
         }
     };
 
@@ -331,13 +334,16 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         if (unit != Unit.PERCENTAGE) {
             pos = Math.round(pos);
         }
+        float oldPosition = getSplitPosition();
+        Unit oldUnit = getSplitPositionUnit();
+
         SplitterState splitterState = getSplitterState();
         splitterState.position = pos;
         splitterState.positionUnit = unit.getSymbol();
         splitterState.positionReversed = reverse;
         posUnit = unit;
-        fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, pos,
-                posUnit));
+        fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, false,
+                oldPosition, oldUnit, pos, posUnit));
     }
 
     /**
@@ -559,24 +565,74 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      */
     public static class SplitPositionChangeEvent extends Component.Event {
 
+        private final float oldPosition;
+        private final Unit oldUnit;
+
         private final float position;
         private final Unit unit;
 
+        private final boolean userOriginated;
+
         public SplitPositionChangeEvent(final Component source,
-                final float position, final Unit unit) {
+                                        final boolean userOriginated,
+                                        final float oldPosition, final Unit oldUnit,
+                                        final float position, final Unit unit) {
             super(source);
+            this.userOriginated = userOriginated;
+            this.oldUnit = oldUnit;
+            this.oldPosition = oldPosition;
             this.position = position;
             this.unit = unit;
         }
 
+        /**
+         * Returns the new split position that triggered this change event.
+         *
+         * @return the new value of split position
+         */
         public float getSplitPosition() {
             return position;
         }
 
+        /**
+         * Returns the new split position unit that triggered this change event.
+         *
+         * @return the new value of split position
+         */
         public Unit getSplitPositionUnit() {
             return unit;
         }
 
+        /**
+         * Returns the position of the split before this change event occurred.
+         *
+         * @return the split position previously set to the source of this event
+         */
+        public float getOldSplitPosition() {
+            return oldPosition;
+        }
+
+        /**
+         * Returns the position unit of the split before this change event
+         * occurred.
+         *
+         * @return the split position unit previously set to the source of
+         *         this event
+         */
+        public Unit getOldSplitPositionUnit() {
+            return oldUnit;
+        }
+
+        /**
+         * Returns whether this event was triggered by user interaction, on the
+         * client side, or programmatically, on the server side.
+         *
+         * @return {@code true} if this event originates from the client,
+         *         {@code false} otherwise.
+         */
+        public boolean isUserOriginated() {
+            return userOriginated;
+        }
     }
 
     public Registration addSplitterClickListener(
