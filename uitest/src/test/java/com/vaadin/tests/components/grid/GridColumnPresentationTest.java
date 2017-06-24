@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * (c) elmot on 24.6.2017.
  */
-@RunLocally
 @TestCategory("grid")
 public class GridColumnPresentationTest extends SingleBrowserTest {
 
