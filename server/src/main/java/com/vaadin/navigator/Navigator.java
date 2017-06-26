@@ -594,6 +594,67 @@ public class Navigator implements Serializable {
      *            parameters passed in the navigation state to the view
      */
     protected void navigateTo(View view, String viewName, String parameters) {
+        runAfterLeaveConfirmation(() -> {
+            performNavigateTo(view, viewName, parameters);
+        });
+
+    }
+
+    /**
+     * Triggers {@link View#beforeLeave(ViewBeforeLeaveEvent)} for the current
+     * view with the given action.
+     * <p>
+     * This method is typically called by
+     * {@link #navigateTo(View, String, String)} but can be called from
+     * application code when you want to e.g. show a confirmation dialog before
+     * perfoming an action which is not a navigation but which would cause the
+     * view to be hidden, e.g. logging out.
+     * <p>
+     * Note that this method will not trigger any {@link ViewChangeListener}s as
+     * it does not navigate to a new view. Use {@link #navigateTo(String)} to
+     * change views and trigger all listeners.
+     *
+     * @param action
+     *            the action to execute when the view confirms it is ok to leave
+     * @since 8.1
+     */
+    public void runAfterLeaveConfirmation(ViewLeaveAction action) {
+        View currentView = getCurrentView();
+        if (currentView == null) {
+            action.run();
+        } else {
+            ViewBeforeLeaveEvent beforeLeaveEvent = new ViewBeforeLeaveEvent(
+                    this, action);
+            currentView.beforeLeave(beforeLeaveEvent);
+            if (!beforeLeaveEvent.isNavigateRun()) {
+                // The event handler prevented navigation
+                // Revert URL to previous state in case the navigation was
+                // caused by the back-button
+                revertNavigation();
+            }
+        }
+    }
+
+    /**
+     * Internal method for activating a view, setting its parameters and calling
+     * listeners.
+     * <p>
+     * Invoked after the current view has confirmed that leaving is ok.
+     * <p>
+     * This method also verifies that the user is allowed to perform the
+     * navigation operation.
+     *
+     * @param view
+     *            view to activate
+     * @param viewName
+     *            (optional) name of the view or null not to change the
+     *            navigation state
+     * @param parameters
+     *            parameters passed in the navigation state to the view
+     * @since 8.1
+     */
+    protected void performNavigateTo(View view, String viewName,
+            String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
         boolean navigationAllowed = beforeViewChange(event);
@@ -1112,4 +1173,5 @@ public class Navigator implements Serializable {
         stateManager.setNavigator(null);
         ui.setNavigator(null);
     }
+
 }

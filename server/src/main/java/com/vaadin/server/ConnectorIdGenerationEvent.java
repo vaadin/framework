@@ -17,8 +17,6 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
-import com.vaadin.shared.Connector;
-
 /**
  * Event object containing information related to connector id generation.
  *
@@ -28,7 +26,7 @@ import com.vaadin.shared.Connector;
 public class ConnectorIdGenerationEvent extends EventObject {
 
     private final VaadinSession session;
-    private final Connector connector;
+    private final ClientConnector connector;
 
     /**
      * Creates a new event for the given session and connector.
@@ -40,7 +38,7 @@ public class ConnectorIdGenerationEvent extends EventObject {
      *            the connector that should get an id, not <code>null</code>
      */
     public ConnectorIdGenerationEvent(VaadinSession session,
-            Connector connector) {
+            ClientConnector connector) {
         super(session.getService());
 
         assert session != null;
@@ -64,7 +62,7 @@ public class ConnectorIdGenerationEvent extends EventObject {
      *
      * @return the connector, not <code>null</code>
      */
-    public Connector getConnector() {
+    public ClientConnector getConnector() {
         return connector;
     }
 

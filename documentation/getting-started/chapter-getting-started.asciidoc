@@ -22,3 +22,5 @@ include::getting-started-maven.asciidoc[leveloffset=+2]
 include::getting-started-package.asciidoc[leveloffset=+2]
 
 include::getting-started-scala.asciidoc[leveloffset=+2]
+
+include::getting-started-kotlin.asciidoc[leveloffset=+2]

@@ -338,8 +338,8 @@ public class Button extends AbstractFocusable
 
     /**
      * Simulates a button click, notifying all server-side listeners.
-     *
-     * No action is taken is the button is disabled.
+     * <p>
+     * No action is taken if the button is disabled.
      */
     public void click() {
         if (isEnabled()) {
@@ -349,7 +349,7 @@ public class Button extends AbstractFocusable
 
     /**
      * Fires a click event to all listeners without any event details.
-     *
+     * <p>
      * In subclasses, override {@link #fireClick(MouseEventDetails)} instead of
      * this method.
      */
@@ -411,7 +411,6 @@ public class Button extends AbstractFocusable
     /**
      * A {@link ShortcutListener} specifically made to define a keyboard
      * shortcut that invokes a click on the given button.
-     *
      */
     public static class ClickShortcut extends ShortcutListener {
         protected Button button;
@@ -504,7 +503,7 @@ public class Button extends AbstractFocusable
 
     /**
      * Sets the component's icon and alt text.
-     *
+     * <p>
      * An alt text is shown when an image could not be loaded, and read by
      * assisitve devices.
      *

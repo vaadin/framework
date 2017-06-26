@@ -13,25 +13,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.treegrid;
+package com.vaadin.navigator;
 
-import com.vaadin.shared.communication.ServerRpc;
+import java.io.Serializable;
 
 /**
- * RPC to handle client originated parent focusing in TreeGrid.
+ * An action to execute when navigating away from a view.
  *
- * @author Vaadin Ltd
  * @since 8.1
  */
-public interface FocusParentRpc extends ServerRpc {
-
+@FunctionalInterface
+public interface ViewLeaveAction extends Serializable {
     /**
-     * Focuses cell in the row parent
-     *
-     * @param rowKey
-     *            the row key
-     * @param cellIndex
-     *            the cell index
+     * Executes the action.
      */
-    void focusParent(String rowKey, int cellIndex);
+    public void run();
 }

@@ -77,6 +77,8 @@ public class TreeGridConnector extends GridConnector {
 
     private AwaitingRowsState awaitingRowsState = AwaitingRowsState.NONE;
 
+    private boolean hierarchyColumnUpdateScheduled = false;
+
     @Override
     public TreeGrid getWidget() {
         return (TreeGrid) super.getWidget();
@@ -92,13 +94,16 @@ public class TreeGridConnector extends GridConnector {
      * between state change handling for the Grid and its columns. The renderer
      * of the column is set in a state change handler, and might not be
      * available when this method is executed.
-     * <p>
-     * TODO: This might need some clean up if we decide to allow setting a new
-     * renderer for hierarchy columns.
      */
     @OnStateChange("hierarchyColumnId")
     void updateHierarchyColumn() {
+        if (hierarchyColumnUpdateScheduled) {
+            return;
+        }
+
         Scheduler.get().scheduleFinally(() -> {
+            hierarchyColumnUpdateScheduled = false;
+
             // Id of old hierarchy column
             String oldHierarchyColumnId = hierarchyColumnId;
 
@@ -143,6 +148,7 @@ public class TreeGridConnector extends GridConnector {
                         "Couldn't find column: " + newHierarchyColumnId);
             }
         });
+        hierarchyColumnUpdateScheduled = true;
     }
 
     private HierarchyRenderer getHierarchyRenderer() {
@@ -376,7 +382,7 @@ public class TreeGridConnector extends GridConnector {
                             // navigate up
                             int columnIndex = cell.getColumnIndex();
                             getRpcProxy(FocusParentRpc.class).focusParent(
-                                    cell.getRowIndex(), columnIndex);
+                                    getRowKey(cell.getRow()), columnIndex);
                         } else if (isCollapseAllowed(rowDescription)) {
                             setCollapsed(cell.getRowIndex(), true);
                         }

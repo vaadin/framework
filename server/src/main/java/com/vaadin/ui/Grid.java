@@ -1528,7 +1528,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
          * @see #setMinimumWidth(double)
-         * @since
+         * @since 8.1
          */
         public Column<T, V> setMinimumWidthFromContent(
                 boolean minimumWidthFromContent) throws IllegalStateException {
@@ -1549,7 +1549,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *         <code>false</code> to allow the column to shrink smaller than
          *         the contents
          * @see #setMinimumWidthFromContent(boolean)
-         * @since
+         * @since 8.1
          */
         public boolean isMinimumWidthFromContent() {
             return getState(false).minimumWidthFromContent;
@@ -1907,9 +1907,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Gets the Renderer for this Column.
-         * 
+         *
          * @return the renderer
-         * @since
+         * @since 8.1
          */
         public Renderer<? super V> getRenderer() {
             return (Renderer<? super V>) getState().renderer;
@@ -3682,11 +3682,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
      * <p>
-     * If the item has visible details, its size will also be taken into
+     * If the item has an open details row, its size will also be taken into
      * account.
      *
      * @param row
-     *            id of item to scroll to.
+     *            zero based index of the item to scroll to in the current
+     *            view.
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
      */
@@ -3697,10 +3698,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Scrolls to a certain item, using user-specified scroll destination.
      * <p>
-     * If the row has visible details, its size will also be taken into account.
+     * If the item has an open details row, its size will also be taken into
+     * account.
      *
      * @param row
-     *            id of item to scroll to.
+     *            zero based index of the item to scroll to in the current
+     *            view.
      * @param destination
      *            value specifying desired position of scrolled-to row, not
      *            {@code null}
@@ -4220,6 +4223,18 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     private void setSortOrder(List<GridSortOrder<T>> order,
             boolean userOriginated) {
         Objects.requireNonNull(order, "Sort order list cannot be null");
+
+        // Update client state to display sort order.
+        List<String> sortColumns = new ArrayList<>();
+        List<SortDirection> directions = new ArrayList<>();
+        order.stream().forEach(sortOrder -> {
+            sortColumns.add(sortOrder.getSorted().getInternalId());
+            directions.add(sortOrder.getDirection());
+        });
+
+        getState().sortColumns = sortColumns.toArray(new String[0]);
+        getState().sortDirs = directions.toArray(new SortDirection[0]);
+
         sortOrder.clear();
         if (order.isEmpty()) {
             // Grid is not sorted anymore.

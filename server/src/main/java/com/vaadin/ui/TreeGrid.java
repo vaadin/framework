@@ -127,26 +127,28 @@ public class TreeGrid<T> extends Grid<T>
             @Override
             public void setNodeCollapsed(String rowKey, int rowIndex,
                     boolean collapse, boolean userOriginated) {
-                if (collapse) {
-                    if (getDataCommunicator().doCollapse(rowKey, rowIndex)
-                            && userOriginated) {
-                        fireCollapseEvent(getDataCommunicator().getKeyMapper()
-                                .get(rowKey), true);
-                    }
-                } else {
-                    if (getDataCommunicator().doExpand(rowKey, rowIndex,
-                            userOriginated) && userOriginated) {
-                        fireExpandEvent(getDataCommunicator().getKeyMapper()
-                                .get(rowKey), true);
-                    }
+                T item = getDataCommunicator().getKeyMapper().get(rowKey);
+                if (collapse && getDataCommunicator().isExpanded(item)) {
+                    getDataCommunicator().doCollapse(item,
+                            Optional.of(rowIndex));
+                    fireCollapseEvent(
+                            getDataCommunicator().getKeyMapper().get(rowKey),
+                            userOriginated);
+                } else if (!collapse
+                        && !getDataCommunicator().isExpanded(item)) {
+                    getDataCommunicator().doExpand(item, Optional.of(rowIndex));
+                    fireExpandEvent(
+                            getDataCommunicator().getKeyMapper().get(rowKey),
+                            userOriginated);
                 }
             }
         });
+
         registerRpc(new FocusParentRpc() {
             @Override
-            public void focusParent(int rowIndex, int cellIndex) {
-                Integer parentIndex = getDataCommunicator()
-                        .getParentIndex(rowIndex);
+            public void focusParent(String rowKey, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(
+                        getDataCommunicator().getKeyMapper().get(rowKey));
                 if (parentIndex != null) {
                     getRpcProxy(FocusRpc.class).focusCell(parentIndex,
                             cellIndex);
@@ -341,15 +343,14 @@ public class TreeGrid<T> extends Grid<T>
      *            the items to expand
      */
     public void expand(Collection<T> items) {
-        List<String> expandedKeys = new ArrayList<>();
-        List<T> expandedItems = new ArrayList<>();
-        items.forEach(item -> getDataCommunicator().setPendingExpand(item)
-                .ifPresent(key -> {
-                    expandedKeys.add(key);
-                    expandedItems.add(item);
-                }));
-        getRpcProxy(TreeGridClientRpc.class).setExpanded(expandedKeys);
-        expandedItems.forEach(item -> fireExpandEvent(item, false));
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (!communicator.isExpanded(item)
+                    && communicator.hasChildren(item)) {
+                communicator.expand(item);
+                fireExpandEvent(item, false);
+            }
+        });
     }
 
     /**
@@ -373,15 +374,13 @@ public class TreeGrid<T> extends Grid<T>
      *            the collection of items to collapse
      */
     public void collapse(Collection<T> items) {
-        List<String> collapsedKeys = new ArrayList<>();
-        List<T> collapsedItems = new ArrayList<>();
-        items.forEach(item -> getDataCommunicator().collapseItem(item)
-                .ifPresent(key -> {
-                    collapsedKeys.add(key);
-                    collapsedItems.add(item);
-                }));
-        getRpcProxy(TreeGridClientRpc.class).setCollapsed(collapsedKeys);
-        collapsedItems.forEach(item -> fireCollapseEvent(item, false));
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (communicator.isExpanded(item)) {
+                communicator.collapse(item);
+                fireCollapseEvent(item, false);
+            }
+        });
     }
 
     @Override
