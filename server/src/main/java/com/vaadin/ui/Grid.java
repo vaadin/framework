@@ -3686,7 +3686,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * account.
      *
      * @param row
-     *            zero based index in of the item to scroll to in the current
+     *            zero based index of the item to scroll to in the current
      *            view.
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
@@ -3702,7 +3702,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * account.
      *
      * @param row
-     *            zero based index in of the item to scroll to in the current
+     *            zero based index of the item to scroll to in the current
      *            view.
      * @param destination
      *            value specifying desired position of scrolled-to row, not
