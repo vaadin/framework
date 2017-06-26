@@ -3682,11 +3682,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
      * <p>
-     * If the item has visible details, its size will also be taken into
+     * If the item has an open details row, its size will also be taken into
      * account.
      *
      * @param row
-     *            id of item to scroll to.
+     *            zero based index of the item to scroll to in the current
+     *            view.
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
      */
@@ -3697,10 +3698,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Scrolls to a certain item, using user-specified scroll destination.
      * <p>
-     * If the row has visible details, its size will also be taken into account.
+     * If the item has an open details row, its size will also be taken into
+     * account.
      *
      * @param row
-     *            id of item to scroll to.
+     *            zero based index of the item to scroll to in the current
+     *            view.
      * @param destination
      *            value specifying desired position of scrolled-to row, not
      *            {@code null}
