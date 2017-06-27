@@ -21,6 +21,8 @@ import java.util.Map;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.TableRowElement;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
@@ -69,8 +71,12 @@ public class TreeGridDropTargetConnector extends GridDropTargetConnector {
             dropLocation = DropLocation.EMPTY;
         }
 
+        MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                .buildMouseEventDetails(dropEvent, targetElement);
+
         getRpcProxy(TreeGridDropTargetRpc.class).drop(types, data, dropEffect,
-                rowKey, rowDepth, rowCollapsed, dropLocation);
+                rowKey, rowDepth, rowCollapsed, dropLocation,
+                mouseEventDetails);
     }
 
     @Override

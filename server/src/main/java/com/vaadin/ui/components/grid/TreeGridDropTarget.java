@@ -68,7 +68,7 @@ public class TreeGridDropTarget<T> extends GridDropTarget<T> {
     @Override
     protected void registerDropTargetRpc() {
         registerRpc((TreeGridDropTargetRpc) (types, data, dropEffect, rowKey,
-                depth, collapsed, dropLocation) -> {
+                depth, collapsed, dropLocation, mouseEventDetails) -> {
 
             // Create a linked map that preserves the order of types
             Map<String, String> dataPreserveOrder = new LinkedHashMap<>();
@@ -81,7 +81,7 @@ public class TreeGridDropTarget<T> extends GridDropTarget<T> {
                     dataPreserveOrder,
                     DropEffect.valueOf(dropEffect.toUpperCase()),
                     getUI().getActiveDragSource(), dropTargetRow, dropLocation,
-                    depth, collapsed);
+                    mouseEventDetails, depth, collapsed);
 
             fireEvent(event);
         });

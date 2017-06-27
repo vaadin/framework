@@ -18,7 +18,7 @@ package com.vaadin.ui.components.grid;
 import java.util.Map;
 import java.util.Optional;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.AbstractComponent;
@@ -57,6 +57,9 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
      *         empty grid
      * @param dropLocation
      *         Location of the drop within the target row.
+     * @param mouseEventDetails
+     *         Mouse event details object containing information about the drop
+     *         event
      * @param depth
      *         depth of the row in the hierarchy
      * @param collapsed
@@ -65,10 +68,11 @@ public class TreeGridDropEvent<T> extends GridDropEvent<T> {
     public TreeGridDropEvent(TreeGrid<T> target, Map<String, String> data,
             DropEffect dropEffect,
             DragSourceExtension<? extends AbstractComponent> dragSourceExtension,
-            T dropTargetRow, DropLocation dropLocation, Integer depth,
+            T dropTargetRow, DropLocation dropLocation,
+            MouseEventDetails mouseEventDetails, Integer depth,
             Boolean collapsed) {
         super(target, data, dropEffect, dragSourceExtension, dropTargetRow,
-                dropLocation);
+                dropLocation, mouseEventDetails);
 
         this.depth = depth;
         this.collapsed = collapsed;

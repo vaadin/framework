@@ -18,6 +18,7 @@ package com.vaadin.shared.ui.treegrid;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.grid.DropLocation;
 
@@ -48,8 +49,11 @@ public interface TreeGridDropTargetRpc extends ServerRpc {
      *         whether the target row is collapsed
      * @param dropLocation
      *         location of the drop within the row
+     * @param mouseEventDetails
+     *         Mouse event details object containing information about the drop
+     *         event
      */
     public void drop(List<String> types, Map<String, String> data,
             String dropEffect, String rowKey, Integer depth, Boolean collapsed,
-            DropLocation dropLocation);
+            DropLocation dropLocation, MouseEventDetails mouseEventDetails);
 }
