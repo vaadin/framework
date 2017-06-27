@@ -613,6 +613,7 @@ grid.addColumn(person -> {
       }, new ComponentRenderer());
 ----
 
+
 [[components.grid.renderer.custom]]
 === Custom Renderers
 
@@ -894,6 +895,34 @@ image::img/grid-editor-errors.png[width=50%, scaledwidth=75%]
 
 You can modify the error message by implementing a custom
 [interfacename]#EditorErrorGenerator# with for the [classname]#Editor#.
+
+
+[[components.grid.presentation.provider]]
+=== Presentation Value Providers
+
+By default, a renderer displays the column value. If you want to edit an
+internal value (such as an address object) but show a simpler representation
+when not editing a row, a presentation value provider can be used. 
+
+A presentation value provider converts the value of a cell (obtained with a
+value provider, and used by the editor) to a different representation to be
+shown by renderers when the cell is not being edited. A custom renderer can
+optionally be used for the presentation values.
+
+In the following example, we demonstrate one way to use a simplified
+presentation of an address column while allowing editing the full address:
+
+[source, java]
+----
+Column<Person, Address> column = grid.addColumn(Person::getAddress);
+// alternatively, the presentation provider can be given as an extra parameter
+// to addColumn()
+column.setRenderer(
+    address -> address.getCity() + " " + address.getCountry(),
+    new TextRenderer());
+column.setCaption("Address");
+column.setEditorComponent(new AddressField(), Person::setAddress);
+----
 
 
 ////
