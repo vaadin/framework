@@ -1,17 +1,12 @@
 package com.vaadin.tests.components.grid;
 
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * (c) elmot on 24.6.2017.
- */
 @TestCategory("grid")
 public class GridColumnPresentationTest extends SingleBrowserTest {
 
