@@ -363,8 +363,8 @@ When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-gri
 
 === Drag and Drop Rows in TreeGrid
 
-To make a TreeGrid component's rows draggable or to make them a drop target, apply [classname]#TreeGridDragSource# or [classname]#TreeGridDropTarget# extensions to the component, respectively.
-In addition to the drag and drop features for Grid above, [classname]#TreeGridDropEvent# provides information about the node's status (expanded or collapsed) and it's depth in the hierarchy.
+To make the rows of a TreeGrid component draggable or to make them a drop target, apply [classname]#TreeGridDragSource# or [classname]#TreeGridDropTarget# extensions to the component, respectively.
+In addition to the drag and drop features for Grid above, [classname]#TreeGridDropEvent# provides information about the status of the node (expanded or collapsed) and its depth in the hierarchy.
 
 == Drag and Drop Files
 
