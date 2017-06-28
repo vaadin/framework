@@ -588,6 +588,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         /**
          * Returns the new split position that triggered this change event.
          *
+         * @since 7.5.0
+         *
          * @return the new value of split position
          */
         public float getSplitPosition() {
@@ -597,6 +599,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         /**
          * Returns the new split position unit that triggered this change event.
          *
+         * @since 7.5.0
+         *
          * @return the new value of split position
          */
         public Unit getSplitPositionUnit() {
@@ -605,6 +609,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         /**
          * Returns the position of the split before this change event occurred.
+         *
+         * @since 8.1
          *
          * @return the split position previously set to the source of this event
          */
@@ -616,6 +622,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
          * Returns the position unit of the split before this change event
          * occurred.
          *
+         * @since 8.1
+         *
          * @return the split position unit previously set to the source of
          *         this event
          */
@@ -626,6 +634,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         /**
          * Returns whether this event was triggered by user interaction, on the
          * client side, or programmatically, on the server side.
+         *
+         * @since 8.1
          *
          * @return {@code true} if this event originates from the client,
          *         {@code false} otherwise.
