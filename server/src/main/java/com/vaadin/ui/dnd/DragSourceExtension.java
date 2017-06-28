@@ -23,6 +23,7 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -38,7 +39,7 @@ import com.vaadin.ui.dnd.event.DragStartListener;
  * functionality.
  *
  * @param <T>
- *            Type of the component to be extended.
+ *         Type of the component to be extended.
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -58,7 +59,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Extends {@code target} component and makes it a drag source.
      *
      * @param target
-     *            Component to be extended.
+     *         Component to be extended.
      */
     public DragSourceExtension(T target) {
         super.extend(target);
@@ -125,7 +126,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * side. Fires the {@link DragEndEvent}.
      *
      * @param dropEffect
-     *            the drop effect on the dragend
+     *         the drop effect on the dragend
      */
     protected void onDragEnd(DropEffect dropEffect) {
         DragEndEvent<T> event = new DragEndEvent<>(getParent(), dropEffect);
@@ -150,7 +151,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * equivalent to {@link EffectAllowed#ALL}.
      *
      * @param effect
-     *            Effects to allow for this draggable element. Cannot be {@code
+     *         Effects to allow for this draggable element. Cannot be {@code
      *         null}.
      */
     public void setEffectAllowed(EffectAllowed effect) {
@@ -293,6 +294,23 @@ public class DragSourceExtension<T extends AbstractComponent>
         getState().data.clear();
     }
 
+    public void setPayload(String key, String value) {
+        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_STRING);
+    }
+
+    public void setPayload(String key, int value) {
+        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_INTEGER);
+    }
+
+    public void setPayload(String key, double value) {
+        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_DOUBLE);
+    }
+
+    private void setPayload(String key, String value, String valueType) {
+        setDataTransferData(new Criterion(key, value, valueType).getTypeName(),
+                value);
+    }
+
     /**
      * Set server side drag data. This data is available in the drop event and
      * can be used to transfer data between drag source and drop target if they
@@ -322,7 +340,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * dragstart event happens on the client side.
      *
      * @param listener
-     *            Listener to handle dragstart event.
+     *         Listener to handle dragstart event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragStartListener(DragStartListener<T> listener) {
@@ -337,7 +355,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * event happens on the client side.
      *
      * @param listener
-     *            Listener to handle dragend event.
+     *         Listener to handle dragend event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addDragEndListener(DragEndListener<T> listener) {
@@ -349,7 +367,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * Set a custom drag image for the current drag source.
      *
      * @param imageResource
-     *            Resource of the image to be displayed as drag image.
+     *         Resource of the image to be displayed as drag image.
      */
     public void setDragImage(Resource imageResource) {
         setResource(DragSourceState.RESOURCE_DRAG_IMAGE, imageResource);

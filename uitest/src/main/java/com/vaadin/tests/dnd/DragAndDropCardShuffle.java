@@ -22,6 +22,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.dnd.CriterionOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -86,20 +87,20 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         // Create UI and add extensions
 
         ace.setStyleName("card");
-        addDragSourceExtension(ace);
-        addDropTargetExtension(ace);
+        addDragSourceExtension(ace, 14);
+        addDropTargetExtension(ace, 14);
 
         jack.setStyleName("card");
-        addDragSourceExtension(jack);
-        addDropTargetExtension(jack);
+        addDragSourceExtension(jack, 11);
+        addDropTargetExtension(jack, 11);
 
         queen.setStyleName("card");
-        addDragSourceExtension(queen);
-        addDropTargetExtension(queen);
+        addDragSourceExtension(queen, 12);
+        addDropTargetExtension(queen, 12);
 
         king.setStyleName("card");
-        addDragSourceExtension(king);
-        addDropTargetExtension(king);
+        addDragSourceExtension(king, 13);
+        addDropTargetExtension(king, 13);
     }
 
     private void removeExtensions() {
@@ -116,10 +117,13 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         king.removeExtension(king.getExtensions().iterator().next());
     }
 
-    private void addDragSourceExtension(Label source) {
+    private void addDragSourceExtension(Label source, int cardValue) {
         // Create and attach extension
         DragSourceExtension<Label> dragSource = new DragSourceExtension<>(
                 source);
+
+        // Set card value via criteria API for acceptance criteria
+        dragSource.setPayload("card_value", cardValue);
 
         // Add listeners
         dragSource.addDragStartListener(event -> {
@@ -135,10 +139,14 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         sources.add(dragSource);
     }
 
-    private void addDropTargetExtension(Label target) {
+    private void addDropTargetExtension(Label target, int cardValue) {
         // Create and attach extension
         DropTargetExtension<Label> dropTarget = new DropTargetExtension<>(
                 target);
+
+        // Cards can be dropped onto others with smaller value
+        dropTarget.setDropCriteria("card_value", CriterionOperator.SMALLER_THAN,
+                cardValue);
 
         // Add listener
         dropTarget.addDropListener(event -> {

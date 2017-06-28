@@ -23,6 +23,8 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.CriterionOperator;
+import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
@@ -186,6 +188,28 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     public String getDropCriteria() {
         return getState(false).dropCriteria;
+    }
+
+    public void setDropCriteria(String key, String value) {
+        setDropCriteria(key, value, Criterion.VALUE_TYPE_STRING,
+                CriterionOperator.EQUALS);
+    }
+
+    public void setDropCriteria(String key, CriterionOperator operator,
+            int value) {
+        setDropCriteria(key, String.valueOf(value),
+                Criterion.VALUE_TYPE_INTEGER, operator);
+    }
+
+    public void setDropCriteria(String key, CriterionOperator operator,
+            double value) {
+        setDropCriteria(key, String.valueOf(value), Criterion.VALUE_TYPE_DOUBLE,
+                operator);
+    }
+
+    private void setDropCriteria(String key, String value, String valueType,
+            CriterionOperator operator) {
+        getState().criterion = new Criterion(key, value, valueType, operator);
     }
 
     /**

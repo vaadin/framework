@@ -31,6 +31,8 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.dnd.CriterionOperator;
+import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
@@ -320,12 +322,75 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // Currently Safari, Edge and IE don't follow the spec by allowing drop
         // if those don't match
 
+        // Allow by default when criteria not set
+        boolean allowed = true;
+
+        // Execute criteria script
         if (getState().dropCriteria != null) {
-            return executeScript(event, getState().dropCriteria);
+            allowed = executeScript(event, getState().dropCriteria);
         }
 
-        // Allow when criteria not set
-        return true;
+        // Execute criteria defined via API
+        if (allowed && getState().criterion != null) {
+
+            String criterionTypePrefix = getState().criterion
+                    .getTypeNamePrefix();
+
+            JsArrayString typesJsArray = getTypes(event.getDataTransfer());
+
+            for (int i = 0; i < typesJsArray.length(); i++) {
+                String type = typesJsArray.get(i);
+
+                if (type.startsWith(criterionTypePrefix)) {
+                    String dragSourcePayloadValue = type
+                            .substring(type.lastIndexOf(':') + 1);
+
+                    switch (getState().criterion.getValueType()) {
+                    case Criterion.VALUE_TYPE_STRING:
+                        allowed = getState().criterion.getValue()
+                                .equals(dragSourcePayloadValue);
+                        break;
+                    case Criterion.VALUE_TYPE_INTEGER:
+                        allowed = compareCriterionValue(
+                                Integer.valueOf(dragSourcePayloadValue),
+                                Integer.valueOf(
+                                        getState().criterion.getValue()),
+                                getState().criterion.getOperator());
+                        break;
+                    case Criterion.VALUE_TYPE_DOUBLE:
+                        allowed = compareCriterionValue(
+                                Double.valueOf(dragSourcePayloadValue),
+                                Double.valueOf(getState().criterion.getValue()),
+                                getState().criterion.getOperator());
+                        break;
+                    default:
+                        allowed = false;
+                    }
+                }
+            }
+        }
+
+        return allowed;
+    }
+
+    private <T> boolean compareCriterionValue(T dragSourcePayloadValue,
+            Comparable<T> dropTargetCriterionValue,
+            CriterionOperator operator) {
+        int result = dropTargetCriterionValue.compareTo(dragSourcePayloadValue);
+
+        switch (operator) {
+        case SMALLER_THAN:
+            return result < 0;
+        case SMALLER_THAN_OR_EQUALS:
+            return result <= 0;
+        case EQUALS:
+        default:
+            return result == 0;
+        case GREATER_THAN_OR_EQUALS:
+            return result >= 0;
+        case GREATER_THAN:
+            return result > 0;
+        }
     }
 
     /**

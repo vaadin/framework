@@ -33,4 +33,6 @@ public class DropTargetState extends SharedState {
      * Criteria script to allow drop event on the element
      */
     public String dropCriteria;
+
+    public Criterion criterion;
 }
