@@ -124,7 +124,14 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                 rowKey, dropLocation, mouseEventDetails);
     }
 
-    private JsonObject getRowData(TableRowElement row) {
+    /**
+     * Get the row data as json object for the given row.
+     *
+     * @param row
+     *         table row element
+     * @return row data as json object for the given row
+     */
+    protected JsonObject getRowData(TableRowElement row) {
         int rowIndex = ((Escalator.AbstractRowContainer) getGridBody())
                 .getLogicalRowIndex(row);
         return gridConnector.getDataSource().getRow(rowIndex);
@@ -132,8 +139,13 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     /**
      * Returns the location of the event within the row.
+     *
+     * @param target
+     *         drop target element
+     * @param event
+     *         drop event
      */
-    private DropLocation getDropLocation(Element target, NativeEvent event) {
+    protected DropLocation getDropLocation(Element target, NativeEvent event) {
         if (TableRowElement.is(target)) {
             if (getState().dropMode == DropMode.BETWEEN) {
                 if (getRelativeY(target,
@@ -241,7 +253,14 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         element.removeClassName(styleDragEmpty);
     }
 
-    private Element getTargetElement(Element source) {
+    /**
+     * Gets the target element for a dragover or drop event.
+     *
+     * @param source
+     *         the event target of the event
+     * @return the element that should be handled as the target of the event
+     */
+    protected Element getTargetElement(Element source) {
         final Element tableWrapper = getDropTargetElement();
         final BodyRowContainer gridBody = getGridBody();
         final int rowCount = gridBody.getRowCount();
