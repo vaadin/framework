@@ -35,11 +35,13 @@ public class TreeGridTest {
         // Test expand event
         Assert.assertFalse(expandEventFired);
         treeGrid.expand("Foo");
+        Assert.assertTrue("Item not expanded", treeGrid.isExpanded("Foo"));
         Assert.assertTrue("Expand event not fired", expandEventFired);
 
         // Test collapse event
         Assert.assertFalse(collapseEventFired);
         treeGrid.collapse("Foo");
+        Assert.assertFalse("Item not collapsed", treeGrid.isExpanded("Foo"));
         Assert.assertTrue("Collapse event not fired", collapseEventFired);
     }
 }

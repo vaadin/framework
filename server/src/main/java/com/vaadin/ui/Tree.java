@@ -413,6 +413,17 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Returns whether a given item is expanded or collapsed.
+     *
+     * @param item
+     *            the item to check
+     * @return true if the item is expanded, false if collapsed
+     */
+    public boolean isExpanded(T item) {
+        return treeGrid.isExpanded(item);
+    }
+
+    /**
      * This method is a shorthand that delegates to the currently set selection
      * model.
      *
@@ -767,7 +778,7 @@ public class Tree<T> extends Composite
     /**
      * Sets the height of a row. If -1 (default), the row height is calculated
      * based on the theme for an empty row before the Tree is displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      */
@@ -777,7 +788,7 @@ public class Tree<T> extends Composite
 
     /**
      * Sets the content mode of the item caption.
-     * 
+     *
      * @param contentMode
      *            the content mode
      */
