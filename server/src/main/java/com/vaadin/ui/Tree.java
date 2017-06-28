@@ -111,6 +111,9 @@ public class Tree<T> extends Composite
          *            the tree component
          * @param item
          *            the clicked item
+         * @param mouseEventDetails
+         *            information about the original mouse event (mouse button
+         *            clicked, coordinates if available etc.)
          */
         protected ItemClick(Tree<T> source, T item,
                 MouseEventDetails mouseEventDetails) {
