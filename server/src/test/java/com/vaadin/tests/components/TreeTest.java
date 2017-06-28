@@ -56,8 +56,7 @@ public class TreeTest {
         treeData.addItem(null, "Foo");
         treeData.addItem("Foo", "Bar");
         treeData.addItem("Foo", "Baz");
-        tree.setDataProvider(
-                new TreeDataProvider<>(treeData));
+        tree.setDataProvider(new TreeDataProvider<>(treeData));
 
         TreeCollapseExpandListener listener = new TreeCollapseExpandListener(
                 tree);
@@ -66,9 +65,11 @@ public class TreeTest {
 
         Assert.assertFalse(listener.isExpanded());
         tree.expand("Foo");
+        Assert.assertTrue("Item not expanded", tree.isExpanded("Foo"));
         Assert.assertTrue("Expand event not fired", listener.isExpanded());
         Assert.assertFalse(listener.isCollapsed());
         tree.collapse("Foo");
+        Assert.assertFalse("Item not collapsed", tree.isExpanded("Foo"));
         Assert.assertTrue("Collapse event not fired", listener.isCollapsed());
     }
 

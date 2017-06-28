@@ -52,8 +52,6 @@ import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.ui.renderers.AbstractRenderer;
-import com.vaadin.ui.renderers.Renderer;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -381,6 +379,17 @@ public class TreeGrid<T> extends Grid<T>
                 fireCollapseEvent(item, false);
             }
         });
+    }
+
+    /**
+     * Returns whether a given item is expanded or collapsed.
+     *
+     * @param item
+     *            the item to check
+     * @return true if the item is expanded, false if collapsed
+     */
+    public boolean isExpanded(T item) {
+        return getDataCommunicator().isExpanded(item);
     }
 
     @Override
