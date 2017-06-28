@@ -40,6 +40,7 @@ import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
@@ -101,6 +102,7 @@ public class Tree<T> extends Composite
     public static class ItemClick<T> extends ConnectorEvent {
 
         private final T item;
+        private final MouseEventDetails mouseEventDetails;
 
         /**
          * Constructs a new item click.
@@ -110,9 +112,11 @@ public class Tree<T> extends Composite
          * @param item
          *            the clicked item
          */
-        protected ItemClick(Tree<T> source, T item) {
+        protected ItemClick(Tree<T> source, T item,
+                MouseEventDetails mouseEventDetails) {
             super(source);
             this.item = item;
+            this.mouseEventDetails = mouseEventDetails;
         }
 
         /**
@@ -128,6 +132,15 @@ public class Tree<T> extends Composite
         @Override
         public Tree<T> getSource() {
             return (Tree<T>) super.getSource();
+        }
+
+        /**
+         * Returns the mouse event details.
+         *
+         * @return the mouse event details
+         */
+        public MouseEventDetails getMouseEventDetails() {
+            return mouseEventDetails;
         }
     }
 
@@ -244,8 +257,8 @@ public class Tree<T> extends Composite
                 e.isUserOriginated()));
         treeGrid.addCollapseListener(e -> fireCollapseEvent(
                 e.getCollapsedItem(), e.isUserOriginated()));
-        treeGrid.addItemClickListener(
-                e -> fireEvent(new ItemClick<>(this, e.getItem())));
+        treeGrid.addItemClickListener(e -> fireEvent(
+                new ItemClick<>(this, e.getItem(), e.getMouseEventDetails())));
     }
 
     /**
@@ -767,7 +780,7 @@ public class Tree<T> extends Composite
     /**
      * Sets the height of a row. If -1 (default), the row height is calculated
      * based on the theme for an empty row before the Tree is displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      */
@@ -777,7 +790,7 @@ public class Tree<T> extends Composite
 
     /**
      * Sets the content mode of the item caption.
-     * 
+     *
      * @param contentMode
      *            the content mode
      */
