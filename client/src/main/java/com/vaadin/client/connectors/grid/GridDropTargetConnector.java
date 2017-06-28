@@ -29,6 +29,9 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
+import com.vaadin.client.widget.grid.AutoScroller;
+import com.vaadin.client.widget.grid.AutoScroller.AutoScrollerCallback;
+import com.vaadin.client.widget.grid.AutoScroller.ScrollAxis;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Range;
@@ -92,6 +95,11 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      */
     private Element latestTargetElement;
 
+    private AutoScroller autoScroller;
+    private int pageY;
+
+    private double timeStamp;
+
     @Override
     protected void extend(ServerConnector target) {
         gridConnector = (GridConnector) target;
@@ -145,6 +153,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      *            drop target element
      * @param event
      *            drop event
+     * @return the drop location
      */
     protected DropLocation getDropLocation(Element target, NativeEvent event) {
         if (TableRowElement.is(target)) {
@@ -191,6 +200,19 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     }
 
     @Override
+    protected void onDragOver(Event event) {
+        super.onDragOver(event);
+
+        int pageY = WidgetUtil.getTouchOrMouseClientY((NativeEvent) event);
+        double timeStamp = event.getTimeStamp();
+        if (this.pageY != pageY && ((timeStamp - this.timeStamp > 150))) {
+            autoScroller.updatePointerCoordinates(0, pageY);
+            this.pageY = pageY;
+            this.timeStamp = timeStamp;
+        }
+    }
+
+    @Override
     protected void addDragOverStyle(NativeEvent event) {
         Element targetElement = getTargetElement(
                 ((Element) event.getEventTarget().cast()));
@@ -214,6 +236,13 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
             }
             targetElement.addClassName(className);
             currentStyleName = className;
+        }
+
+        // initialize auto scroller
+        if (autoScroller == null) {
+            autoScroller = new AutoScroller(gridConnector.getWidget());
+            autoScroller.start(event, ScrollAxis.VERTICAL,
+                    new NooplAutoScrollerCallback(), false);
         }
     }
 
@@ -245,6 +274,11 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         Element targetElement = getTargetElement(
                 (Element) event.getEventTarget().cast());
         removeStyles(targetElement);
+
+        if (autoScroller != null) {
+            autoScroller.stop();
+            autoScroller = null;
+        }
     }
 
     private void removeStyles(Element element) {
@@ -331,5 +365,22 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     @Override
     public GridDropTargetState getState() {
         return (GridDropTargetState) super.getState();
+    }
+
+    private final class NooplAutoScrollerCallback
+            implements AutoScrollerCallback {
+
+        @Override
+        public void onAutoScroll(int scrollDiff) {
+        }
+
+        @Override
+        public void onAutoScrollReachedMin() {
+        }
+
+        @Override
+        public void onAutoScrollReachedMax() {
+        }
+
     }
 }

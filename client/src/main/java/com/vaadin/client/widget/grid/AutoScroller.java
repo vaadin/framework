@@ -15,6 +15,9 @@
  */
 package com.vaadin.client.widget.grid;
 
+import java.util.Date;
+import java.util.logging.Logger;
+
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
@@ -123,7 +126,9 @@ public class AutoScroller {
             }
 
             case Event.ONTOUCHMOVE:
-                event.cancel();
+                if (cancelEvent) {
+                    event.cancel();
+                }
                 break;
 
             case Event.ONTOUCHEND:
@@ -331,6 +336,8 @@ public class AutoScroller {
 
         public void updatePointerCoords(int pageX, int pageY) {
             final int pageCordinate;
+            Logger.getLogger("UPDATE").warning("X:" + pageX + " Y:" + pageY
+                    + " time:" + new Date().getTime());
             if (scrollDirection == ScrollAxis.VERTICAL) {
                 pageCordinate = pageY;
             } else {
@@ -447,6 +454,8 @@ public class AutoScroller {
 
     private AutoScrollerCallback callback;
 
+    private boolean cancelEvent;
+
     /**
      * Creates a new instance for scrolling the given grid.
      *
@@ -469,12 +478,32 @@ public class AutoScroller {
      */
     public void start(final NativeEvent startEvent, ScrollAxis scrollAxis,
             AutoScrollerCallback callback) {
+        start(startEvent, scrollAxis, callback, true);
+    }
+
+    /**
+     * Starts the automatic scrolling detection.
+     *
+     * @param startEvent
+     *            the event that starts the automatic scroll
+     * @param scrollAxis
+     *            the axis along which the scrolling should happen
+     * @param callback
+     *            the callback for getting info about the automatic scrolling
+     * @param cancelEvent
+     *            should auto scroller cancel the native events or not
+     */
+    public void start(final NativeEvent startEvent, ScrollAxis scrollAxis,
+            AutoScrollerCallback callback, boolean cancelEvent) {
         scrollDirection = scrollAxis;
         this.callback = callback;
+        this.cancelEvent = cancelEvent;
         injectNativeHandler();
         start();
-        startEvent.preventDefault();
-        startEvent.stopPropagation();
+        if (cancelEvent) {
+            startEvent.preventDefault();
+            startEvent.stopPropagation();
+        }
     }
 
     /**
@@ -644,5 +673,22 @@ public class AutoScroller {
     private double getMaxScrollTop() {
         return grid.getScrollHeight() - getTfootElement().getOffsetHeight()
                 - getTheadElement().getOffsetHeight();
+    }
+
+    /**
+     * Update the current page coordinates.
+     * <p>
+     * This method exists if there is no onmousemove or ontouchmove events
+     * happening, but the automatic scrolling should still be happening. This
+     * can be the case when e.g. HTML5 DnD is used (no onmousemove fired).
+     *
+     * @param pageX
+     *            the page X coordinate
+     * @param pageY
+     *            the page Y coordinate
+     * @since 8.1
+     */
+    public void updatePointerCoordinates(int pageX, int pageY) {
+        autoScroller.updatePointerCoords(pageX, pageY);
     }
 }
