@@ -196,6 +196,9 @@ public class DropTargetExtension<T extends AbstractComponent>
      * dragged on top of the drop target, the given value is compared to the
      * drag source's payload with the same key. Drop is allowed if the value of
      * the payload and the value given here are equal.
+     * <p>
+     * Note that only one criterion is supported and calling this method will
+     * override the previously set criterion.
      *
      * @param key
      *         key of the payload to be compared
@@ -213,6 +216,9 @@ public class DropTargetExtension<T extends AbstractComponent>
      * dragged on top of the drop target, the given value is compared to the
      * drag source's payload with the same key. Drop is allowed if the value of
      * the payload compared to the given value using the given operator holds.
+     * <p>
+     * Note that only one criterion is supported and calling this method will
+     * override the previously set criterion.
      *
      * @param key
      *         key of the payload to be compared
@@ -233,6 +239,9 @@ public class DropTargetExtension<T extends AbstractComponent>
      * dragged on top of the drop target, the given value is compared to the
      * drag source's payload with the same key. Drop is allowed if the value of
      * the payload compared to the given value using the given operator holds.
+     * <p>
+     * Note that only one criterion is supported and calling this method will
+     * override the previously set criterion.
      *
      * @param key
      *         key of the payload to be compared

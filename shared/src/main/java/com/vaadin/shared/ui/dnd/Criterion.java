@@ -20,6 +20,9 @@ import java.io.Serializable;
 /**
  * Stores parameters for the drag and drop acceptance criterion defined using
  * the criteria API.
+ * <p>
+ * When data is dragged over a drop target, the value here is compared to the
+ * payload added in DropTargetExtension with same key and value type.
  *
  * @author Vaadin Ltd
  * @since 8.1
@@ -82,7 +85,7 @@ public class Criterion implements Serializable {
      * @param valueType
      *         type of the payload to be compared
      * @param operator
-     *         compare operator
+     *         comparison operator
      */
     public Criterion(String key, String value, String valueType,
             ComparisonOperator operator) {
@@ -169,20 +172,22 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Gets the beginning of the payload as stored in data transfer object as
-     * data type when dragging a drag source.
+     * Gets the prefix of the payload string to be set as data type in the data
+     * transfer object.
      *
-     * @return beginning of the payload transferred as data type
+     * @return start of the payload string, not containing the value of the
+     * payload, e.g. {@code "v-item:string:key"}
      */
     public String getTypeNamePrefix() {
         return ITEM_PREFIX + ":" + valueType + ":" + key;
     }
 
     /**
-     * Gets the complete payload as stored in data transfer object as data type
-     * when dragging a drag source.
+     * Gets the payload string to be set as data type in the data transfer
+     * object.
      *
-     * @return complete payload transferred as data type
+     * @return payload string as transferred in data transfer object's data
+     * type, e.g. {@code "v-item:string:key:value"}
      */
     public String getTypeName() {
         return getTypeNamePrefix() + ":" + value;
