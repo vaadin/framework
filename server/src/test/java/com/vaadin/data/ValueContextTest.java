@@ -66,6 +66,7 @@ public class ValueContextTest extends UI {
         setLocale(null);
         ValueContext fromComponent = new ValueContext(new CheckBox(), textField, Locale.CANADA);
         Assert.assertEquals(textField, fromComponent.getHasValue().get());
+        Assert.assertEquals(Locale.CANADA, fromComponent.getLocale().get());
     }
 
     @Before
