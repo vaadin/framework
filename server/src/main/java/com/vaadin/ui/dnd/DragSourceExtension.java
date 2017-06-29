@@ -23,6 +23,7 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.dnd.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
@@ -294,14 +295,55 @@ public class DragSourceExtension<T extends AbstractComponent>
         getState().data.clear();
     }
 
+    /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:string:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, String)
+     */
     public void setPayload(String key, String value) {
         setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_STRING);
     }
 
+    /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:integer:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     * int)
+     */
     public void setPayload(String key, int value) {
         setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_INTEGER);
     }
 
+    /**
+     * Sets payload for this drag source to use with acceptance criterion. The
+     * payload is transferred as data type in the data transfer object in the
+     * following format: {@code "v-item:double:key:value"}. The given value is
+     * compared to the criterion value when the drag source is dragged on top of
+     * a drop target that has the suitable criterion.
+     *
+     * @param key
+     *         key of the payload to be transferred
+     * @param value
+     *         value of the payload to be transferred
+     * @see DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     * double)
+     */
     public void setPayload(String key, double value) {
         setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_DOUBLE);
     }

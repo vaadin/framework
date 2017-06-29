@@ -23,7 +23,7 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.CriterionOperator;
+import com.vaadin.shared.ui.dnd.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -159,13 +159,14 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Example:
      *
      * <pre>
-     * target.setDropCriteria(
-     *         // If dragged source contains a URL, allow it to be dropped
-     *         "if (event.dataTransfer.types.includes('text/uri-list')) {"
-     *                 + "    return true;" + "}" +
+     * target.setDropCriterion(
+     *     // If dragged source contains a URL, allow it to be dropped
+     *     "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *     "    return true;" +
+     *     "}" +
      *
-     *                 // Otherwise cancel the event"
-     *                 "return false;");
+     *     // Otherwise cancel the event
+     *     "return false;");
      * </pre>
      *
      * @param criteriaScript
@@ -190,25 +191,65 @@ public class DropTargetExtension<T extends AbstractComponent>
         return getState(false).dropCriteria;
     }
 
-    public void setDropCriteria(String key, String value) {
-        setDropCriteria(key, value, Criterion.VALUE_TYPE_STRING,
-                CriterionOperator.EQUALS);
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. Drop is allowed if the value of
+     * the payload and the value given here are equal.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, String)
+     */
+    public void setDropCriterion(String key, String value) {
+        setDropCriterion(key, value, Criterion.VALUE_TYPE_STRING,
+                ComparisonOperator.EQUALS);
     }
 
-    public void setDropCriteria(String key, CriterionOperator operator,
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. Drop is allowed if the value of
+     * the payload compared to the given value using the given operator holds.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param operator
+     *         comparison operator to be used
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, int)
+     */
+    public void setDropCriterion(String key, ComparisonOperator operator,
             int value) {
-        setDropCriteria(key, String.valueOf(value),
+        setDropCriterion(key, String.valueOf(value),
                 Criterion.VALUE_TYPE_INTEGER, operator);
     }
 
-    public void setDropCriteria(String key, CriterionOperator operator,
+    /**
+     * Set a drop criterion to allow drop on this drop target. When data is
+     * dragged on top of the drop target, the given value is compared to the
+     * drag source's payload with the same key. Drop is allowed if the value of
+     * the payload compared to the given value using the given operator holds.
+     *
+     * @param key
+     *         key of the payload to be compared
+     * @param operator
+     *         comparison operator to be used
+     * @param value
+     *         value to be compared to the payload's value
+     * @see DragSourceExtension#setPayload(String, double)
+     */
+    public void setDropCriterion(String key, ComparisonOperator operator,
             double value) {
-        setDropCriteria(key, String.valueOf(value), Criterion.VALUE_TYPE_DOUBLE,
-                operator);
+        setDropCriterion(key, String.valueOf(value),
+                Criterion.VALUE_TYPE_DOUBLE, operator);
     }
 
-    private void setDropCriteria(String key, String value, String valueType,
-            CriterionOperator operator) {
+    private void setDropCriterion(String key, String value, String valueType,
+            ComparisonOperator operator) {
         getState().criterion = new Criterion(key, value, valueType, operator);
     }
 

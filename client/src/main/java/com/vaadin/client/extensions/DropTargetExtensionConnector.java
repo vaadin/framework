@@ -31,7 +31,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.CriterionOperator;
+import com.vaadin.shared.ui.dnd.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
@@ -330,7 +330,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             allowed = executeScript(event, getState().dropCriteria);
         }
 
-        // Execute criteria defined via API
+        // Execute criterion defined via API
         if (allowed && getState().criterion != null) {
 
             String criterionTypePrefix = getState().criterion
@@ -376,7 +376,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
     private <T> boolean compareCriterionValue(T dragSourcePayloadValue,
             Comparable<T> dropTargetCriterionValue,
-            CriterionOperator operator) {
+            ComparisonOperator operator) {
         int result = dropTargetCriterionValue.compareTo(dragSourcePayloadValue);
 
         switch (operator) {

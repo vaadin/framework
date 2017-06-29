@@ -22,7 +22,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.dnd.CriterionOperator;
+import com.vaadin.shared.ui.dnd.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -145,7 +145,7 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
                 target);
 
         // Cards can be dropped onto others with smaller value
-        dropTarget.setDropCriteria("card_value", CriterionOperator.SMALLER_THAN,
+        dropTarget.setDropCriterion("card_value", ComparisonOperator.SMALLER_THAN,
                 cardValue);
 
         // Add listener
