@@ -60,6 +60,7 @@ import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ContextClickEvent;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.SortEvent;
 import com.vaadin.event.SortEvent.SortListener;
 import com.vaadin.event.SortEvent.SortNotifier;
@@ -257,7 +258,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * An event that is fired when the columns are reordered.
      */
-    public static class ColumnReorderEvent extends Component.Event {
+    public static class ColumnReorderEvent extends Component.Event
+            implements HasUserOriginated {
 
         private final boolean userOriginated;
 
@@ -280,6 +282,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return <code>true</code> if event is a result of user interaction
          */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }
@@ -289,7 +292,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * An event that is fired when a column is resized, either programmatically
      * or by the user.
      */
-    public static class ColumnResizeEvent extends Component.Event {
+    public static class ColumnResizeEvent extends Component.Event
+            implements HasUserOriginated {
 
         private final Column<?, ?> column;
         private final boolean userOriginated;
@@ -324,6 +328,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return <code>true</code> if event is a result of user interaction
          */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }
@@ -482,7 +487,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @since 7.5.0
      */
-    public static class ColumnVisibilityChangeEvent extends Component.Event {
+    public static class ColumnVisibilityChangeEvent extends Component.Event
+            implements HasUserOriginated {
 
         private final Column<?, ?> column;
         private final boolean userOriginated;
@@ -530,12 +536,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return hidden;
         }
 
-        /**
-         * Returns <code>true</code> if the column reorder was done by the user,
-         * <code>false</code> if not and it was triggered by server side code.
-         *
-         * @return <code>true</code> if event is a result of user interaction
-         */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }
@@ -915,12 +916,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            <code>null</code>
          * @param presentationProvider
          *            the function to get presentations from the value of this
-         *            column, not <code>null</code>. For more details, see {@link #setRenderer(ValueProvider, Renderer)}
+         *            column, not <code>null</code>. For more details, see
+         *            {@link #setRenderer(ValueProvider, Renderer)}
          * @param renderer
          *            the presentation renderer, not <code>null</code>
          * @param <P>
          *            the presentation type
-         * 
+         *
          * @since 8.1
          */
         protected <P> Column(ValueProvider<T, V> valueProvider,
@@ -1939,10 +1941,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            column, not {@code null}
          * @param renderer
          *            the new renderer, not {@code null}
-         * 
+         *
          * @param <P>
          *            the presentation type
-         * 
+         *
          * @return this column
          *
          * @since 8.1
@@ -2594,7 +2596,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *            the value presentation provider
      * @param <V>
      *            the column value type
-     * 
+     *
      * @see #addColumn(ValueProvider, ValueProvider, AbstractRenderer)
      *
      * @return the new column
@@ -2609,7 +2611,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * Adds a new column to this {@link Grid} with value provider, presentation
      * provider and typed renderer.
-     * 
+     *
      * <p>
      * The presentation provider is a method that takes the value from the value
      * provider, and maps that to a value that the renderer accepts. This
@@ -3819,8 +3821,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * account.
      *
      * @param row
-     *            zero based index of the item to scroll to in the current
-     *            view.
+     *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
      *             if the provided id is not recognized by the data source.
      */
@@ -3835,8 +3836,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * account.
      *
      * @param row
-     *            zero based index of the item to scroll to in the current
-     *            view.
+     *            zero based index of the item to scroll to in the current view.
      * @param destination
      *            value specifying desired position of scrolled-to row, not
      *            {@code null}

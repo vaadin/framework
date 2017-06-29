@@ -13,14 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.data;
+package com.vaadin.event;
 
 import java.io.Serializable;
 
 /**
  * Marker for events which provides information of the event origin.
  *
- * @since
+ * @since 8.1
  */
 public interface HasUserOriginated extends Serializable {
     /**

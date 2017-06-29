@@ -29,7 +29,7 @@ import java.util.Set;
  * @param <T>
  *            the data type of the selection model
  */
-public interface SelectionEvent<T> extends Serializable {
+public interface SelectionEvent<T> extends HasUserOriginated, Serializable {
 
     /**
      * Get first selected data item.
@@ -51,13 +51,4 @@ public interface SelectionEvent<T> extends Serializable {
      * @return return all the selected items, if any, never {@code null}
      */
     Set<T> getAllSelectedItems();
-
-    /**
-     * Returns whether this selection event was triggered by user interaction,
-     * on the client side, or programmatically, on the server side.
-     *
-     * @return {@code true} if this event originates from the client,
-     *         {@code false} otherwise.
-     */
-    boolean isUserOriginated();
 }
