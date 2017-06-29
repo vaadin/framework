@@ -391,6 +391,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             return result >= 0;
         case GREATER_THAN:
             return result > 0;
+        case NOT_EQUALS:
+            return result != 0;
         }
     }
 

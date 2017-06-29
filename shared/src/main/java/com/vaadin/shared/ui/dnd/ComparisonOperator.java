@@ -29,22 +29,27 @@ public enum ComparisonOperator {
     SMALLER_THAN,
 
     /**
-     * Smaller than or equals to operator ("<=")
+     * Smaller than or equals to operator ("<=").
      */
     SMALLER_THAN_OR_EQUALS,
 
     /**
-     * Equals to operator ("==")
+     * Equals to operator ("==").
      */
     EQUALS,
 
     /**
-     * Greater than or equals to operator (">=")
+     * Greater than or equals to operator (">=").
      */
     GREATER_THAN_OR_EQUALS,
 
     /**
      * Greater than operator (">").
      */
-    GREATER_THAN
+    GREATER_THAN,
+
+    /**
+     * Not equals operator ("!=").
+     */
+    NOT_EQUALS
 }
