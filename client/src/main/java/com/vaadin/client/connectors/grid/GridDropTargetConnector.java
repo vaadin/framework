@@ -31,6 +31,7 @@ import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
 import com.vaadin.client.widgets.Escalator;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
@@ -128,7 +129,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      * Get the row data as json object for the given row.
      *
      * @param row
-     *         table row element
+     *            table row element
      * @return row data as json object for the given row
      */
     protected JsonObject getRowData(TableRowElement row) {
@@ -141,9 +142,9 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      * Returns the location of the event within the row.
      *
      * @param target
-     *         drop target element
+     *            drop target element
      * @param event
-     *         drop event
+     *            drop event
      */
     protected DropLocation getDropLocation(Element target, NativeEvent event) {
         if (TableRowElement.is(target)) {
@@ -257,13 +258,13 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
      * Gets the target element for a dragover or drop event.
      *
      * @param source
-     *         the event target of the event
+     *            the event target of the event
      * @return the element that should be handled as the target of the event
      */
     protected Element getTargetElement(Element source) {
         final Element tableWrapper = getDropTargetElement();
         final BodyRowContainer gridBody = getGridBody();
-        final int rowCount = gridBody.getRowCount();
+        final Range visibleRowRange = getEscalator().getVisibleRowRange();
 
         while (!Objects.equals(source, tableWrapper)) {
             // the drop might happen on top of header, body or footer rows
@@ -272,20 +273,22 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                 if ("thead".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as above first visible row
-                    if (rowCount == 0
+                    if (visibleRowRange.length() == 0
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
-                        return gridBody.getRowElement(0);
+                        return gridBody
+                                .getRowElement(visibleRowRange.getStart());
                     }
                 } else if ("tfoot".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as below last visible row
-                    if (rowCount == 0
+                    if (visibleRowRange.length() == 0
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
-                        return gridBody.getRowElement(rowCount - 1);
+                        return gridBody
+                                .getRowElement(visibleRowRange.getEnd() - 1);
                     }
                 } else { // parent is tbody
                     return source;
@@ -296,11 +299,12 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         // the drag is on top of the tablewrapper
         // if no rows in grid, or if the drop mode is ON_TOP, then there is no
         // target row for the drop
-        if (rowCount == 0 || getState().dropMode == DropMode.ON_TOP) {
+        if (visibleRowRange.length() == 0
+                || getState().dropMode == DropMode.ON_TOP) {
             return tableWrapper;
         } else { // if dragged under the last row to empty space, drop target
                  // needs to be below the last row
-            return gridBody.getRowElement(rowCount - 1);
+            return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
         }
     }
 
