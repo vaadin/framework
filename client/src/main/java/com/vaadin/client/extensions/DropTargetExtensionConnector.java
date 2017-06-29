@@ -326,8 +326,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         boolean allowed = true;
 
         // Execute criteria script
-        if (getState().dropCriteria != null) {
-            allowed = executeScript(event, getState().dropCriteria);
+        if (getState().criteriaScript != null) {
+            allowed = executeScript(event, getState().criteriaScript);
         }
 
         // Execute criterion defined via API

@@ -174,8 +174,8 @@ public class DropTargetExtension<T extends AbstractComponent>
      *            {@code null} to clear.
      */
     public void setDropCriteria(String criteriaScript) {
-        if (!Objects.equals(getState(false).dropCriteria, criteriaScript)) {
-            getState().dropCriteria = criteriaScript;
+        if (!Objects.equals(getState(false).criteriaScript, criteriaScript)) {
+            getState().criteriaScript = criteriaScript;
         }
     }
 
@@ -188,7 +188,7 @@ public class DropTargetExtension<T extends AbstractComponent>
      * @see #setDropCriteria(String)
      */
     public String getDropCriteria() {
-        return getState(false).dropCriteria;
+        return getState(false).criteriaScript;
     }
 
     /**
