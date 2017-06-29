@@ -35,7 +35,8 @@ import com.vaadin.ui.Component;
  * @since 8.0
  * @author Vaadin Ltd
  */
-public class SortEvent<T extends SortOrder<?>> extends Component.Event {
+public class SortEvent<T extends SortOrder<?>> extends Component.Event
+        implements HasUserOriginated {
 
     private final List<T> sortOrder;
     private final boolean userOriginated;
@@ -67,11 +68,7 @@ public class SortEvent<T extends SortOrder<?>> extends Component.Event {
         return sortOrder;
     }
 
-    /**
-     * Returns whether this event originated from actions done by the user.
-     *
-     * @return true if sort event originated from user interaction
-     */
+    @Override
     public boolean isUserOriginated() {
         return userOriginated;
     }

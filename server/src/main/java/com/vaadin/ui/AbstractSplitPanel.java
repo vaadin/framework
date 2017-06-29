@@ -24,6 +24,7 @@ import java.util.Iterator;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.server.SizeWithUnit;
 import com.vaadin.server.Sizeable;
@@ -68,8 +69,9 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
             getSplitterState().position = position;
 
-            fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this, true,
-                    oldPosition, getSplitPositionUnit(), position, getSplitPositionUnit()));
+            fireEvent(new SplitPositionChangeEvent(AbstractSplitPanel.this,
+                    true, oldPosition, getSplitPositionUnit(), position,
+                    getSplitPositionUnit()));
         }
     };
 
@@ -563,7 +565,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *
      * @since 7.5.0
      */
-    public static class SplitPositionChangeEvent extends Component.Event {
+    public static class SplitPositionChangeEvent extends Component.Event
+            implements HasUserOriginated {
 
         private final float oldPosition;
         private final Unit oldUnit;
@@ -574,9 +577,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         private final boolean userOriginated;
 
         public SplitPositionChangeEvent(final Component source,
-                                        final boolean userOriginated,
-                                        final float oldPosition, final Unit oldUnit,
-                                        final float position, final Unit unit) {
+                final boolean userOriginated, final float oldPosition,
+                final Unit oldUnit, final float position, final Unit unit) {
             super(source);
             this.userOriginated = userOriginated;
             this.oldUnit = oldUnit;
@@ -588,8 +590,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         /**
          * Returns the new split position that triggered this change event.
          *
-         * @since 7.5.0
-         *
          * @return the new value of split position
          */
         public float getSplitPosition() {
@@ -598,8 +598,6 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         /**
          * Returns the new split position unit that triggered this change event.
-         *
-         * @since 7.5.0
          *
          * @return the new value of split position
          */
@@ -624,22 +622,14 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
          *
          * @since 8.1
          *
-         * @return the split position unit previously set to the source of
-         *         this event
+         * @return the split position unit previously set to the source of this
+         *         event
          */
         public Unit getOldSplitPositionUnit() {
             return oldUnit;
         }
 
-        /**
-         * Returns whether this event was triggered by user interaction, on the
-         * client side, or programmatically, on the server side.
-         *
-         * @since 8.1
-         *
-         * @return {@code true} if this event originates from the client,
-         *         {@code false} otherwise.
-         */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }

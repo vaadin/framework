@@ -21,6 +21,7 @@ import java.util.EventObject;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.Registration;
