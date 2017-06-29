@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
 
+import com.vaadin.event.HasUserOriginated;
+
 /**
  * A selection event that unifies the way to access to selection event for multi
  * selection and single selection components (in case when only one selected
