@@ -299,10 +299,14 @@ public interface HasValue<V> extends Serializable {
 
     /**
      * Returns a validator that checks the internal state of the HasValue. This
-     * can be used eg. when the user is providing a string that is parsed into a
-     * date. A faulty input from user can be seen as a validation failure.
+     * should be overridden for components with internal value conversion or
+     * validation, eg. when the user is providing a string that has to be parsed
+     * into a date. An invalid input from user will be exposed to
+     * a {@link Binder} and can be seen as a validation failure.
      * 
+     * @since 8.1
      * @return internal state validator
+     * @see Binder#validate()
      */
     public default Validator<V> getDefaultValidator() {
         return Validator.alwaysPass();
