@@ -170,7 +170,11 @@ class MyValidator implements Validator<String> {
 Since [interfacename]#Validator# is a functional
 interface, you can often simply write a lambda expression instead of a full class
 declaration. There is also an [methodname]#withValidator# overload that creates a
-validator from a boolean function and an error message.
+validator from a boolean function and an error message. If the application requires
+more sophisticated validation diagnostics (e.g. locale-specific), there is a
+method [methodname]#withValidator#, which uses a boolean function and an [classname]#ErrorMessageProvider#.
+The [classname]#ErrorMessageProvider# can compose diagnostic messages based on the locale of the validation
+and the source component value, which are provided with the [classname]#ValueContext#.
 
 [source, java]
 ----

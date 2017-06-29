@@ -872,9 +872,9 @@ public class Binder<BEAN> implements Serializable {
          */
         protected ValueContext createValueContext() {
             if (field instanceof Component) {
-                return new ValueContext((Component) field);
+                return new ValueContext((Component) field, field);
             }
-            return new ValueContext(findLocale());
+            return new ValueContext(null, field, findLocale());
         }
 
         /**

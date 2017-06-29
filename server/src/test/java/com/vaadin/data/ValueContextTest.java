@@ -3,6 +3,7 @@ package com.vaadin.data;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.vaadin.ui.CheckBox;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,28 @@ public class ValueContextTest extends UI {
         Objects.requireNonNull(locale);
         Assert.assertEquals("Unexpected locale from component",
                 Locale.getDefault(), locale);
+    }
+
+    @Test
+    public void testHasValue1() {
+        setLocale(null);
+        ValueContext fromComponent = new ValueContext(textField);
+        Assert.assertEquals(textField, fromComponent.getHasValue().get());
+    }
+
+    @Test
+    public void testHasValue2() {
+        setLocale(null);
+        ValueContext fromComponent = new ValueContext(new CheckBox(), textField);
+        Assert.assertEquals(textField, fromComponent.getHasValue().get());
+    }
+
+    @Test
+    public void testHasValue3() {
+        setLocale(null);
+        ValueContext fromComponent = new ValueContext(new CheckBox(), textField, Locale.CANADA);
+        Assert.assertEquals(textField, fromComponent.getHasValue().get());
+        Assert.assertEquals(Locale.CANADA, fromComponent.getLocale().get());
     }
 
     @Before
