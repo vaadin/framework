@@ -347,8 +347,9 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
 
                     switch (getState().criterion.getValueType()) {
                     case Criterion.VALUE_TYPE_STRING:
-                        allowed = getState().criterion.getValue()
-                                .equals(dragSourcePayloadValue);
+                        allowed = compareCriterionValue(dragSourcePayloadValue,
+                                getState().criterion.getValue(),
+                                getState().criterion.getOperator());
                         break;
                     case Criterion.VALUE_TYPE_INTEGER:
                         allowed = compareCriterionValue(
