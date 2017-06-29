@@ -47,7 +47,8 @@ public interface HasValue<V> extends Serializable {
      * @param <V>
      *            the value type
      */
-    public class ValueChangeEvent<V> extends EventObject {
+    public class ValueChangeEvent<V> extends EventObject
+            implements HasUserOriginated {
 
         private final boolean userOriginated;
         private final Component component;
@@ -101,7 +102,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Returns the value of the source before this value change event
          * occurred.
-         * 
+         *
          * @return the value previously held by the source of this event
          */
         public V getOldValue() {
@@ -117,13 +118,7 @@ public interface HasValue<V> extends Serializable {
             return value;
         }
 
-        /**
-         * Returns whether this event was triggered by user interaction, on the
-         * client side, or programmatically, on the server side.
-         *
-         * @return {@code true} if this event originates from the client,
-         *         {@code false} otherwise.
-         */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }
@@ -224,7 +219,7 @@ public interface HasValue<V> extends Serializable {
      * Returns the current value of this object, wrapped in an {@code Optional}.
      * <p>
      * The {@code Optional} will be empty if the value is {@code null} or
-     * {@code isEmpty()} returns {@code true}. 
+     * {@code isEmpty()} returns {@code true}.
      *
      * @return the current value, wrapped in an {@code Optional}
      */
