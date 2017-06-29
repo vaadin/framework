@@ -61,7 +61,7 @@ The following preferences need to be set to keep the project consistent. You nee
 1. Type in <code>jetty:run-exploded</code> into *Goals* and click *Run*
 1. Open URL [http://localhost:8888/run/&lt;testUI&gt;](http://localhost:8888/run/<testUI>)
 
-## Setting up IntelliJ IDEA to Develop Vaadin 7
+## Setting up IntelliJ IDEA to Develop Vaadin Framework 8
 
 1. Intall and run IDEA. Ultimate Edition is better but Community Edition should also work.
 1. Ensure if Git and Maven plugins are installed, properly configured and enabled.
