@@ -229,7 +229,7 @@ public final class Range implements Serializable {
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [" + getStart() + ".." + getEnd()
-                + "[" + (isEmpty() ? " (empty)" : "");
+                + "]" + (isEmpty() ? " (empty)" : "");
     }
 
     @Override
