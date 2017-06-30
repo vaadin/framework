@@ -18,6 +18,8 @@ package com.vaadin.data.provider;
 import java.util.Collections;
 import java.util.concurrent.Future;
 
+import elemental.json.Json;
+import elemental.json.JsonArray;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -191,4 +193,25 @@ public class DataCommunicatorTest {
                 TEST_OBJECT, generator.generated);
     }
 
+    @Test
+    public void testDestroyData() {
+        session.lock();
+        UI ui = new TestUI(session);
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider, null);
+        communicator.extend(ui);
+        // Put a test object into a cache
+        communicator.pushData(1, Collections.singletonList(TEST_OBJECT));
+        // Drop the test object from the cache
+        String key = communicator.getKeyMapper().key(TEST_OBJECT);
+        JsonArray keys = Json.createArray();
+        keys.set(0,key);
+        communicator.onDropRows(keys);
+        // Drop everything
+        communicator.dropAllData();
+        // The communicator does not have to throw exceptions during
+        // request finalization
+        communicator.beforeClientResponse(false);
+    }
 }

@@ -185,6 +185,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
         @Override
         public void destroyAllData() {
+            droppedData.clear();
             activeData.clear();
             getKeyMapper().removeAll();
         }
