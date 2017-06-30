@@ -332,7 +332,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
 
         // Execute criterion defined via API
-        if (allowed && getState().criterion != null) {
+        if (allowed && getState().criteria != null && !getState().criteria
+                .isEmpty()) {
 
             // Collect payload data types
             Set<Payload> payloadSet = new HashSet<>();
@@ -345,8 +346,17 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                 }
             }
 
-            // Compare payload against criterion
-            allowed = getState().criterion.resolve(payloadSet);
+            // Compare payload against criteria
+            switch (getState().criteriaMatch) {
+            case ALL:
+                allowed = getState().criteria.stream()
+                        .allMatch(criterion -> criterion.resolve(payloadSet));
+                break;
+            case ANY:
+            default:
+                allowed = getState().criteria.stream()
+                        .anyMatch(criterion -> criterion.resolve(payloadSet));
+            }
         }
 
         return allowed;

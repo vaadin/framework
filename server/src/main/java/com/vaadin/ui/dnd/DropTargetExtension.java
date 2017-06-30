@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.dnd;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,7 +208,7 @@ public class DropTargetExtension<T extends AbstractComponent>
      * @see DragSourceExtension#setPayload(String, String)
      */
     public void setDropCriterion(String key, String value) {
-        setDropCriterion(new Criterion(key, value));
+        setDropCriteria(Criterion.Match.ANY, new Criterion(key, value));
     }
 
     /**
@@ -229,7 +230,8 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
             int value) {
-        setDropCriterion(new Criterion(key, value, operator));
+        setDropCriteria(Criterion.Match.ANY,
+                new Criterion(key, operator, value));
     }
 
     /**
@@ -251,11 +253,31 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
             double value) {
-        setDropCriterion(new Criterion(key, value, operator));
+        setDropCriteria(Criterion.Match.ANY,
+                new Criterion(key, operator, value));
     }
 
-    private void setDropCriterion(Criterion criterion) {
-        getState().criterion = criterion;
+    /**
+     * Sets multiple drop criteria to allow drop on this drop target. When data
+     * is dragged on top of the drop target, the value of the given criteria is
+     * compared to the drag source's payload with the same key.
+     * <p>
+     * Drop is allowed if, depending on {@code match}, any or all of the
+     * criteria matches the payload, that is the value of the payload compared
+     * to the value of the criterion using the criterion's operator holds.
+     * <p>
+     * Note that calling this method will overwrite the previously set
+     * criteria.
+     *
+     * @param match
+     *         defines whether any or all of the given criteria should match to
+     *         allow drop on this drop target
+     * @param criteria
+     *         criteria to be compared to the payload
+     */
+    public void setDropCriteria(Criterion.Match match, Criterion... criteria) {
+        getState().criteriaMatch = match;
+        getState().criteria = Arrays.asList(criteria);
     }
 
     /**

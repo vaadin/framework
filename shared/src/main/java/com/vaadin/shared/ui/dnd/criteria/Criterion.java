@@ -31,6 +31,24 @@ import java.util.Optional;
  */
 public class Criterion implements Serializable {
 
+    /**
+     * Declares whether all or any of the given criteria should match when
+     * compared against the payload.
+     */
+    public enum Match {
+        /**
+         * When compared to the payload, the drop will be accepted if any of the
+         * criteria matches.
+         */
+        ANY,
+
+        /**
+         * When compared to the payload, the drop will be accepted only if all
+         * of the given criteria matches.
+         */
+        ALL
+    }
+
     private String key;
     private String value;
     private Payload.ValueType valueType;
@@ -44,7 +62,8 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Creates a criterion object.
+     * Creates a criterion object with the default comparison operator {@link
+     * ComparisonOperator#EQUALS}.
      *
      * @param key
      *         key of the payload to be compared
@@ -60,12 +79,12 @@ public class Criterion implements Serializable {
      *
      * @param key
      *         key of the payload to be compared
-     * @param value
-     *         value of the payload to be compared
      * @param operator
      *         comparison operator
+     * @param value
+     *         value of the payload to be compared
      */
-    public Criterion(String key, int value, ComparisonOperator operator) {
+    public Criterion(String key, ComparisonOperator operator, int value) {
         this(key, String.valueOf(value), Payload.ValueType.INTEGER, operator);
     }
 
@@ -74,13 +93,12 @@ public class Criterion implements Serializable {
      *
      * @param key
      *         key of the payload to be compared
-     * @param value
-     *         value of the payload to be compared
      * @param operator
      *         comparison operator
+     * @param value
+     *         value of the payload to be compared
      */
-    public Criterion(String key, double value,
-            ComparisonOperator operator) {
+    public Criterion(String key, ComparisonOperator operator, double value) {
         this(key, String.valueOf(value), Payload.ValueType.DOUBLE, operator);
     }
 

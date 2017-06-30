@@ -15,6 +15,9 @@
  */
 package com.vaadin.shared.ui.dnd;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dnd.criteria.Criterion;
 
@@ -35,5 +38,14 @@ public class DropTargetState extends SharedState {
      */
     public String criteriaScript;
 
-    public Criterion criterion;
+    /**
+     * List of criterion to compare against the payload.
+     */
+    public List<Criterion> criteria = new ArrayList<>();
+
+    /**
+     * Declares whether any or all of the given criteria should match the
+     * payload
+     */
+    public Criterion.Match criteriaMatch = Criterion.Match.ANY;
 }
