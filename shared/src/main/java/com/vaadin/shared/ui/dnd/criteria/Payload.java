@@ -96,8 +96,7 @@ public class Payload implements Serializable {
      *
      * @return the string representation of this payload
      */
-    @Override
-    public String toString() {
+    public String getPayloadString() {
         return ITEM_PREFIX + ":" + valueType.name().toLowerCase() + ":" + key
                 + ":" + value;
     }

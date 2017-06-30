@@ -415,7 +415,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
 
         // Add payload for comparing against acceptance criteria
         getState().payload.values().forEach(payload -> orderedData
-                .put(payload.toString(), payload.getValue()));
+                .put(payload.getPayloadString(), payload.getValue()));
 
         return orderedData;
     }
