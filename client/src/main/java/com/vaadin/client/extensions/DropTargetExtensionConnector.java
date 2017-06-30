@@ -17,8 +17,10 @@ package com.vaadin.client.extensions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DataTransfer;
@@ -31,11 +33,10 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.dnd.ComparisonOperator;
-import com.vaadin.shared.ui.dnd.Criterion;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 import com.vaadin.ui.dnd.DropTargetExtension;
 
 import elemental.events.Event;
@@ -333,67 +334,22 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // Execute criterion defined via API
         if (allowed && getState().criterion != null) {
 
-            String criterionTypePrefix = getState().criterion
-                    .getTypeNamePrefix();
-
+            // Collect payload data types
+            Set<Payload> payloadSet = new HashSet<>();
             JsArrayString typesJsArray = getTypes(event.getDataTransfer());
-
             for (int i = 0; i < typesJsArray.length(); i++) {
                 String type = typesJsArray.get(i);
 
-                if (type.startsWith(criterionTypePrefix)) {
-                    String dragSourcePayloadValue = type
-                            .substring(type.lastIndexOf(':') + 1);
-
-                    switch (getState().criterion.getValueType()) {
-                    case Criterion.VALUE_TYPE_STRING:
-                        allowed = compareCriterionValue(dragSourcePayloadValue,
-                                getState().criterion.getValue(),
-                                getState().criterion.getOperator());
-                        break;
-                    case Criterion.VALUE_TYPE_INTEGER:
-                        allowed = compareCriterionValue(
-                                Integer.valueOf(dragSourcePayloadValue),
-                                Integer.valueOf(
-                                        getState().criterion.getValue()),
-                                getState().criterion.getOperator());
-                        break;
-                    case Criterion.VALUE_TYPE_DOUBLE:
-                        allowed = compareCriterionValue(
-                                Double.valueOf(dragSourcePayloadValue),
-                                Double.valueOf(getState().criterion.getValue()),
-                                getState().criterion.getOperator());
-                        break;
-                    default:
-                        allowed = false;
-                    }
+                if (type.startsWith(Payload.ITEM_PREFIX)) {
+                    payloadSet.add(Payload.parse(type));
                 }
             }
+
+            // Compare payload against criterion
+            allowed = getState().criterion.resolve(payloadSet);
         }
 
         return allowed;
-    }
-
-    private <T> boolean compareCriterionValue(T dragSourcePayloadValue,
-            Comparable<T> dropTargetCriterionValue,
-            ComparisonOperator operator) {
-        int result = dropTargetCriterionValue.compareTo(dragSourcePayloadValue);
-
-        switch (operator) {
-        case SMALLER_THAN:
-            return result < 0;
-        case SMALLER_THAN_OR_EQUALS:
-            return result <= 0;
-        case EQUALS:
-        default:
-            return result == 0;
-        case GREATER_THAN_OR_EQUALS:
-            return result >= 0;
-        case GREATER_THAN:
-            return result > 0;
-        case NOT_EQUALS:
-            return result != 0;
-        }
     }
 
     /**

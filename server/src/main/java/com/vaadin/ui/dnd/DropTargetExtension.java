@@ -23,11 +23,11 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.ComparisonOperator;
-import com.vaadin.shared.ui.dnd.Criterion;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.shared.ui.dnd.criteria.Criterion;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.dnd.event.DropEvent;
 import com.vaadin.ui.dnd.event.DropListener;
@@ -207,8 +207,7 @@ public class DropTargetExtension<T extends AbstractComponent>
      * @see DragSourceExtension#setPayload(String, String)
      */
     public void setDropCriterion(String key, String value) {
-        setDropCriterion(key, value, Criterion.VALUE_TYPE_STRING,
-                ComparisonOperator.EQUALS);
+        setDropCriterion(new Criterion(key, value));
     }
 
     /**
@@ -230,8 +229,7 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
             int value) {
-        setDropCriterion(key, String.valueOf(value),
-                Criterion.VALUE_TYPE_INTEGER, operator);
+        setDropCriterion(new Criterion(key, value, operator));
     }
 
     /**
@@ -253,13 +251,11 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
             double value) {
-        setDropCriterion(key, String.valueOf(value),
-                Criterion.VALUE_TYPE_DOUBLE, operator);
+        setDropCriterion(new Criterion(key, value, operator));
     }
 
-    private void setDropCriterion(String key, String value, String valueType,
-            ComparisonOperator operator) {
-        getState().criterion = new Criterion(key, value, valueType, operator);
+    private void setDropCriterion(Criterion criterion) {
+        getState().criterion = criterion;
     }
 
     /**

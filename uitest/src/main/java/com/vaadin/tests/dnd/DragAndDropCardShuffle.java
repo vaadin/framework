@@ -22,7 +22,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.dnd.ComparisonOperator;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.tests.components.AbstractTestUIWithLog;

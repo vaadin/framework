@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.dnd;
 
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.dnd.criteria.Criterion;
 
 /**
  * State class containing parameters for DropTargetExtension.

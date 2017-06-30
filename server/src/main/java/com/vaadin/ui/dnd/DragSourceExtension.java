@@ -23,12 +23,12 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.ComparisonOperator;
-import com.vaadin.shared.ui.dnd.Criterion;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.dnd.event.DragEndEvent;
 import com.vaadin.ui.dnd.event.DragEndListener;
@@ -309,7 +309,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * @see DropTargetExtension#setDropCriterion(String, String)
      */
     public void setPayload(String key, String value) {
-        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_STRING);
+        setPayload(key, String.valueOf(value), Payload.ValueType.STRING);
     }
 
     /**
@@ -327,7 +327,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * int)
      */
     public void setPayload(String key, int value) {
-        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_INTEGER);
+        setPayload(key, String.valueOf(value), Payload.ValueType.INTEGER);
     }
 
     /**
@@ -345,12 +345,12 @@ public class DragSourceExtension<T extends AbstractComponent>
      * double)
      */
     public void setPayload(String key, double value) {
-        setPayload(key, String.valueOf(value), Criterion.VALUE_TYPE_DOUBLE);
+        setPayload(key, String.valueOf(value), Payload.ValueType.DOUBLE);
     }
 
-    private void setPayload(String key, String value, String valueType) {
-        setDataTransferData(new Criterion(key, value, valueType).getTypeName(),
-                value);
+    private void setPayload(String key, String value,
+            Payload.ValueType valueType) {
+        getState().payload.put(key, new Payload(key, value, valueType));
     }
 
     /**
