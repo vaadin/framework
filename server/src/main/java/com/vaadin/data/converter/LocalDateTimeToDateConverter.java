@@ -15,17 +15,17 @@
  */
 package com.vaadin.data.converter;
 
-import com.vaadin.data.Converter;
-import com.vaadin.data.Result;
-import com.vaadin.data.ValueContext;
-import com.vaadin.ui.DateTimeField;
-import com.vaadin.ui.InlineDateTimeField;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
+
+import com.vaadin.data.Converter;
+import com.vaadin.data.Result;
+import com.vaadin.data.ValueContext;
+import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.InlineDateTimeField;
 
 /**
  * A converter that converts between <code>LocalDateTime</code> and
@@ -35,8 +35,7 @@ import java.util.Objects;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public class LocalDateTimeToDateConverter
-    implements Converter<LocalDateTime, Date> {
+public class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
 
     private ZoneId zoneId;
 
@@ -46,13 +45,11 @@ public class LocalDateTimeToDateConverter
      * @param zoneId the time zone to use, not <code>null</code>
      */
     public LocalDateTimeToDateConverter(ZoneId zoneId) {
-        this.zoneId = Objects.requireNonNull(zoneId,
-                                             "Zone identifier cannot be null");
+        this.zoneId = Objects.requireNonNull(zoneId, "Zone identifier cannot be null");
     }
 
     @Override
-    public Result<Date> convertToModel(LocalDateTime localDate,
-                                       ValueContext context) {
+    public Result<Date> convertToModel(LocalDateTime localDate, ValueContext context) {
         if (localDate == null) {
             return Result.ok(null);
         }
@@ -61,8 +58,7 @@ public class LocalDateTimeToDateConverter
     }
 
     @Override
-    public LocalDateTime convertToPresentation(Date date,
-                                               ValueContext context) {
+    public LocalDateTime convertToPresentation(Date date, ValueContext context) {
         if (date == null) {
             return null;
         }
