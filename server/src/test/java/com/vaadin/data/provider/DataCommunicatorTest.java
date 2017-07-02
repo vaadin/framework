@@ -33,6 +33,8 @@ import com.vaadin.ui.UI;
 
 import elemental.json.JsonObject;
 
+import static org.junit.Assert.assertFalse;
+
 /**
  * @author Vaadin Ltd
  *
@@ -41,11 +43,11 @@ public class DataCommunicatorTest {
 
     private static final Object TEST_OBJECT = new Object();
 
-    private static class TestUI extends UI {
+    public static class TestUI extends UI {
 
         private final VaadinSession session;
 
-        TestUI(VaadinSession session) {
+        public TestUI(VaadinSession session) {
             this.session = session;
         }
 
@@ -128,7 +130,7 @@ public class DataCommunicatorTest {
         TestDataProvider dataProvider = new TestDataProvider();
         communicator.setDataProvider(dataProvider, null);
 
-        Assert.assertFalse(dataProvider.isListenerAdded());
+        assertFalse(dataProvider.isListenerAdded());
 
         communicator.extend(ui);
 
@@ -152,7 +154,7 @@ public class DataCommunicatorTest {
 
         communicator.detach();
 
-        Assert.assertFalse(dataProvider.isListenerAdded());
+        assertFalse(dataProvider.isListenerAdded());
     }
 
     @Test
@@ -203,15 +205,19 @@ public class DataCommunicatorTest {
         communicator.extend(ui);
         // Put a test object into a cache
         communicator.pushData(1, Collections.singletonList(TEST_OBJECT));
+        // Put the test object into an update queue
+        communicator.refresh(TEST_OBJECT);
         // Drop the test object from the cache
         String key = communicator.getKeyMapper().key(TEST_OBJECT);
         JsonArray keys = Json.createArray();
-        keys.set(0,key);
+        keys.set(0, key);
         communicator.onDropRows(keys);
-        // Drop everything
-        communicator.dropAllData();
+        // Replace everything
+        communicator.setDataProvider(new ListDataProvider<>(Collections.singleton(new Object())));
         // The communicator does not have to throw exceptions during
         // request finalization
         communicator.beforeClientResponse(false);
+        assertFalse("Stalled object in KeyMapper",
+                communicator.getKeyMapper().has(TEST_OBJECT));
     }
 }

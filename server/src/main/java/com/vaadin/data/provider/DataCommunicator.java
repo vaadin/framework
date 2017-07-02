@@ -187,6 +187,7 @@ public class DataCommunicator<T> extends AbstractExtension {
         public void destroyAllData() {
             droppedData.clear();
             activeData.clear();
+            updatedData.clear();
             getKeyMapper().removeAll();
         }
     }
@@ -524,7 +525,6 @@ public class DataCommunicator<T> extends AbstractExtension {
             if (updatedData.isEmpty()) {
                 markAsDirty();
             }
-
             updatedData.add(activeData.get(id));
         }
     }

@@ -274,7 +274,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Gets the item collapse allowed provider.
-     * 
+     *
      * @return the item collapse allowed provider
      */
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
@@ -308,5 +308,13 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
             mapper.setFilter(filter);
         }
         super.setFilter(filter);
+    }
+
+    @Override
+    protected void dropAllData() {
+        if (mapper != null) {
+            mapper.destroyAllData();
+        }
+        super.dropAllData();
     }
 }
