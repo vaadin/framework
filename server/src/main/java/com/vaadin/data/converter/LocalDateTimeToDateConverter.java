@@ -15,17 +15,17 @@
  */
 package com.vaadin.data.converter;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Objects;
-
 import com.vaadin.data.Converter;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValueContext;
 import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.InlineDateTimeField;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * A converter that converts between <code>LocalDateTime</code> and
@@ -36,40 +36,38 @@ import com.vaadin.ui.InlineDateTimeField;
  * @since 8.0
  */
 public class LocalDateTimeToDateConverter
-        implements Converter<LocalDateTime, Date> {
+    implements Converter<LocalDateTime, Date> {
 
-    private ZoneOffset zoneOffset;
+    private ZoneId zoneId;
 
     /**
      * Creates a new converter using the given time zone.
      *
-     * @param zoneOffset
-     *            the time zone offset to use, not <code>null</code>
+     * @param zoneId the time zone to use, not <code>null</code>
      */
-    public LocalDateTimeToDateConverter(ZoneOffset zoneOffset) {
-        this.zoneOffset = Objects.requireNonNull(zoneOffset,
-                "Zone offset cannot be null");
+    public LocalDateTimeToDateConverter(ZoneId zoneId) {
+        this.zoneId = Objects.requireNonNull(zoneId,
+                                             "Zone identifier cannot be null");
     }
 
     @Override
     public Result<Date> convertToModel(LocalDateTime localDate,
-            ValueContext context) {
+                                       ValueContext context) {
         if (localDate == null) {
             return Result.ok(null);
         }
 
-        return Result.ok(Date.from(localDate.toInstant(zoneOffset)));
+        return Result.ok(Date.from(localDate.atZone(zoneId).toInstant()));
     }
 
     @Override
     public LocalDateTime convertToPresentation(Date date,
-            ValueContext context) {
+                                               ValueContext context) {
         if (date == null) {
             return null;
         }
 
-        return Instant.ofEpochMilli(date.getTime()).atZone(zoneOffset)
-                .toLocalDateTime();
+        return Instant.ofEpochMilli(date.getTime()).atZone(zoneId).toLocalDateTime();
     }
 
 }
