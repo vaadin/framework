@@ -61,15 +61,16 @@ public class ValueContext implements Serializable {
      * Constructor for {@code ValueContext}.
      *
      * @param component
-     *            The component related to current value. Can be null.
-     *            If the component implements {@link HasValue}, it will be returned by {@link #getHasValue()} as well.
+     *            The component related to current value. Can be null. If the
+     *            component implements {@link HasValue}, it will be returned by
+     *            {@link #getHasValue()} as well.
      */
     @SuppressWarnings("unchecked")
     public ValueContext(Component component) {
         Objects.requireNonNull(component,
                 "Component can't be null in ValueContext construction");
         this.component = component;
-        if(component instanceof HasValue) {
+        if (component instanceof HasValue) {
             hasValue = (HasValue<?>) component;
         } else {
             hasValue = null;
@@ -84,6 +85,7 @@ public class ValueContext implements Serializable {
      *            The component related to current value. Can be null.
      * @param hasValue
      *            The value source related to current value. Can be null.
+     * @since 8.1
      */
     public ValueContext(Component component, HasValue<?> hasValue) {
         Objects.requireNonNull(component,
@@ -96,15 +98,17 @@ public class ValueContext implements Serializable {
     /**
      * Constructor for {@code ValueContext}.
      *
-     * @param
-     *      component
+     * @param component
      *            The component can be {@code null}.
      * @param locale
      *            The locale used with conversion. Can be {@code null}.
      * @param hasValue
-     *            The value source related to current value. Can be {@code null}.
+     *            The value source related to current value. Can be
+     *            {@code null}.
+     * @since 8.1
      */
-    public ValueContext(Component component, HasValue<?> hasValue, Locale locale) {
+    public ValueContext(Component component, HasValue<?> hasValue,
+            Locale locale) {
         this.component = component;
         this.hasValue = hasValue;
         this.locale = locale;
@@ -146,9 +150,11 @@ public class ValueContext implements Serializable {
 
     /**
      * Returns an {@code Optional} for the {@code HasValue} used in the value
-     * conversion. In certain complicated cases, ex. cross-field validation, HasValue might be not available.
+     * conversion. In certain complicated cases, ex. cross-field validation,
+     * HasValue might be not available.
      *
      * @return the optional of {@code HasValue}
+     * @since 8.1
      */
     @SuppressWarnings("unused")
     public Optional<HasValue<?>> getHasValue() {

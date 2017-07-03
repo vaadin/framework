@@ -562,6 +562,7 @@ public class TabSheet extends AbstractComponentContainer
      * @param userOriginated
      *            <code>true</code> if the event originates from the client
      *            side, <code>false</code> otherwise
+     * @since 8.1
      */
     public void setSelectedTab(Component component, boolean userOriginated) {
         if (component != null && components.contains(component)
@@ -811,6 +812,7 @@ public class TabSheet extends AbstractComponentContainer
          * @param userOriginated
          *            <code>true</code> if the event originates from the client
          *            side, <code>false</code> otherwise
+         * @since 8.1
          */
         public SelectedTabChangeEvent(Component source,
                 boolean userOriginated) {
@@ -827,6 +829,11 @@ public class TabSheet extends AbstractComponentContainer
             return (TabSheet) getSource();
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @since 8.1
+         */
         @Override
         public boolean isUserOriginated() {
             return userOriginated;
@@ -906,7 +913,7 @@ public class TabSheet extends AbstractComponentContainer
      * @param userOriginated
      *            <code>true</code> if the event originates from the client
      *            side, <code>false</code> otherwise
-     * @since
+     * @since 8.1
      */
     protected void fireSelectedTabChange(boolean userOriginated) {
         fireEvent(new SelectedTabChangeEvent(this, userOriginated));
