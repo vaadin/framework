@@ -42,7 +42,7 @@ public class GridEditorEventsTest extends MultiBrowserTest {
         editor.save();
 
         Assert.assertEquals((index * 4 + 1) + ". editor is opened",
-                getLogRow(0));
+                getLogRow(1));
         Assert.assertEquals((index * 4 + 2) + ". editor is saved",
                 getLogRow(0));
 
@@ -50,7 +50,7 @@ public class GridEditorEventsTest extends MultiBrowserTest {
         editor.cancel();
 
         Assert.assertEquals((index * 4 + 3) + ". editor is opened",
-                getLogRow(0));
+                getLogRow(1));
         Assert.assertEquals((index * 4 + 4) + ". editor is canceled",
                 getLogRow(0));
     }
