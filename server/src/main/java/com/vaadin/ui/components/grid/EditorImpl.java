@@ -238,6 +238,8 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     getState().columnFields.put(getInternalIdForColumn(c),
                             component.getConnectorId());
                 });
+
+        eventRouter.fireEvent(new EditorOpenEvent<T>(this, edited));
     }
 
     @Override
@@ -343,6 +345,12 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     public Registration addCancelListener(EditorCancelListener<T> listener) {
         return eventRouter.addListener(EditorCancelEvent.class, listener,
                 EditorCancelListener.class.getDeclaredMethods()[0]);
+    }
+
+    @Override
+    public Registration addOpenListener(EditorOpenListener<T> listener) {
+        return eventRouter.addListener(EditorOpenEvent.class, listener,
+                EditorOpenListener.class.getDeclaredMethods()[0]);
     }
 
     @Override
