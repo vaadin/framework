@@ -92,12 +92,10 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * 
      * @param item
      *            the item to get the parent of
-     * @return the parent index
+     * @return the parent index or a negative value if the parent is not found
      * 
-     * @throws IllegalArgumentException
-     *             if given target index is not found
      */
-    public Integer getParentIndex(T item) throws IllegalArgumentException {
+    public Integer getParentIndex(T item) {
         // TODO: This can be optimised.
         List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
         return flatHierarchy.indexOf(getParentOfItem(item));
@@ -508,5 +506,10 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         Stream<T> parentStream = parentIncluded ? Stream.of(parent)
                 : Stream.empty();
         return Stream.concat(parentStream, children);
+    }
+
+    @Override
+    public void destroyAllData() {
+        childMap.clear();
     }
 }
