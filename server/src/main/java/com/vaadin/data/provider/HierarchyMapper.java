@@ -95,7 +95,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the parent index or a negative value if the parent is not found
      * 
      */
-    public Integer getParentIndex(T item) throws IllegalArgumentException {
+    public Integer getParentIndex(T item) {
         // TODO: This can be optimised.
         List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
         return flatHierarchy.indexOf(getParentOfItem(item));

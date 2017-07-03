@@ -310,11 +310,4 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         super.setFilter(filter);
     }
 
-    @Override
-    protected void dropAllData() {
-        if (mapper != null) {
-            mapper.destroyAllData();
-        }
-        super.dropAllData();
-    }
 }
