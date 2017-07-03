@@ -64,7 +64,7 @@ public class DragEndEvent<T extends AbstractComponent> extends Component.Event {
      * dragend event.
      * @see DragSourceExtension#setEffectAllowed(EffectAllowed)
      * @see DropTargetExtension#setDropEffect(DropEffect)
-     * @see DropTargetExtension#setDropCriteria(String)
+     * @see DropTargetExtension#setDropCriteriaScript(String)
      */
     public DropEffect getDropEffect() {
         return dropEffect;

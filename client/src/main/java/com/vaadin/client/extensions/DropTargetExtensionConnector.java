@@ -17,8 +17,10 @@ package com.vaadin.client.extensions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DataTransfer;
@@ -34,6 +36,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.shared.ui.dnd.criteria.Payload;
 import com.vaadin.ui.dnd.DropTargetExtension;
 
 import elemental.events.Event;
@@ -320,12 +323,43 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         // Currently Safari, Edge and IE don't follow the spec by allowing drop
         // if those don't match
 
-        if (getState().dropCriteria != null) {
-            return executeScript(event, getState().dropCriteria);
+        // Allow by default when criteria not set
+        boolean allowed = true;
+
+        // Execute criteria script
+        if (getState().criteriaScript != null) {
+            allowed = executeScript(event, getState().criteriaScript);
         }
 
-        // Allow when criteria not set
-        return true;
+        // Execute criterion defined via API
+        if (allowed && getState().criteria != null && !getState().criteria
+                .isEmpty()) {
+
+            // Collect payload data types
+            Set<Payload> payloadSet = new HashSet<>();
+            JsArrayString typesJsArray = getTypes(event.getDataTransfer());
+            for (int i = 0; i < typesJsArray.length(); i++) {
+                String type = typesJsArray.get(i);
+
+                if (type.startsWith(Payload.ITEM_PREFIX)) {
+                    payloadSet.add(Payload.parse(type));
+                }
+            }
+
+            // Compare payload against criteria
+            switch (getState().criteriaMatch) {
+            case ALL:
+                allowed = getState().criteria.stream()
+                        .allMatch(criterion -> criterion.resolve(payloadSet));
+                break;
+            case ANY:
+            default:
+                allowed = getState().criteria.stream()
+                        .anyMatch(criterion -> criterion.resolve(payloadSet));
+            }
+        }
+
+        return allowed;
     }
 
     /**
