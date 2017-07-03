@@ -872,7 +872,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             @Override
             public void destroyData(T item) {
-                removeComponent(item);
+                removeComponent(getGrid().getDataProvider().getId(item));
             }
 
             @Override
@@ -885,7 +885,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         };
 
         private Binding<T, ?> editorBinding;
-        private Map<T, Component> activeComponents = new HashMap<>();
+        private Map<Object, Component> activeComponents = new HashMap<>();
 
         private String userId;
 
@@ -1038,12 +1038,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             // Make Grid track components.
             if (renderer instanceof ComponentRenderer
                     && presentationValue instanceof Component) {
-                addComponent(item, (Component) presentationValue);
+                addComponent(getGrid().getDataProvider().getId(item),
+                        (Component) presentationValue);
             }
             return ((Renderer<P>) renderer).encode(presentationValue);
         }
 
-        private void addComponent(T item, Component component) {
+        private void addComponent(Object item, Component component) {
             if (activeComponents.containsKey(item)) {
                 if (activeComponents.get(item).equals(component)) {
                     // Reusing old component
@@ -1055,7 +1056,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             getGrid().addExtensionComponent(component);
         }
 
-        private void removeComponent(T item) {
+        private void removeComponent(Object item) {
             Component component = activeComponents.remove(item);
             if (component != null) {
                 getGrid().removeExtensionComponent(component);
