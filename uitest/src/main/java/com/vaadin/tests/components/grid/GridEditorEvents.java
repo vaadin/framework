@@ -50,6 +50,7 @@ public class GridEditorEvents extends AbstractTestUIWithLog {
                 Person::getFirstName, Person::setFirstName);
         column.setEditorBinding(binding);
 
+        grid.getEditor().addOpenListener(event -> log("editor is opened"));
         grid.getEditor().addCancelListener(event -> log("editor is canceled"));
         grid.getEditor().addSaveListener(event -> log("editor is saved"));
         addComponent(grid);
