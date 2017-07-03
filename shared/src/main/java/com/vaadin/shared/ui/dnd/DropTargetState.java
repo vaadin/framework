@@ -39,7 +39,7 @@ public class DropTargetState extends SharedState {
     public String criteriaScript;
 
     /**
-     * List of criterion to compare against the payload.
+     * List of criteria to compare against the payload.
      */
     public List<Criterion> criteria = new ArrayList<>();
 

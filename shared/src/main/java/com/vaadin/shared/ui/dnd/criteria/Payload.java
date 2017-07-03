@@ -117,6 +117,8 @@ public class Payload implements Serializable {
                     "Data type does not have a valid payload format");
         }
 
+        // Create payload object of the given parts. Value type is converted to
+        // upper case to match the enum's case.
         return new Payload(parts[2], parts[3],
                 ValueType.valueOf(parts[1].toUpperCase()));
     }

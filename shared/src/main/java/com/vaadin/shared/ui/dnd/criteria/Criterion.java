@@ -71,7 +71,7 @@ public class Criterion implements Serializable {
      *         value of the payload to be compared
      */
     public Criterion(String key, String value) {
-        this(key, value, Payload.ValueType.STRING, ComparisonOperator.EQUALS);
+        this(key, ComparisonOperator.EQUALS, value, Payload.ValueType.STRING);
     }
 
     /**
@@ -85,7 +85,7 @@ public class Criterion implements Serializable {
      *         value of the payload to be compared
      */
     public Criterion(String key, ComparisonOperator operator, int value) {
-        this(key, String.valueOf(value), Payload.ValueType.INTEGER, operator);
+        this(key, operator, String.valueOf(value), Payload.ValueType.INTEGER);
     }
 
     /**
@@ -99,7 +99,7 @@ public class Criterion implements Serializable {
      *         value of the payload to be compared
      */
     public Criterion(String key, ComparisonOperator operator, double value) {
-        this(key, String.valueOf(value), Payload.ValueType.DOUBLE, operator);
+        this(key, operator, String.valueOf(value), Payload.ValueType.DOUBLE);
     }
 
     /**
@@ -107,15 +107,15 @@ public class Criterion implements Serializable {
      *
      * @param key
      *         key of the payload to be compared
+     * @param operator
+     *         comparison operator
      * @param value
      *         value of the payload to be compared
      * @param valueType
      *         type of the payload to be compared
-     * @param operator
-     *         comparison operator
      */
-    private Criterion(String key, String value,
-            Payload.ValueType valueType, ComparisonOperator operator) {
+    private Criterion(String key, ComparisonOperator operator, String value,
+            Payload.ValueType valueType) {
         this.key = key;
         this.value = value;
         this.valueType = valueType;
@@ -160,7 +160,9 @@ public class Criterion implements Serializable {
 
     /**
      * Compares this criterion's value to the given payload's value and returns
-     * whether the result matches the criterion's operator.
+     * whether the result matches the criterion's operator. The comparison is
+     * done with the payload whose key and value type match the criterion's key
+     * and value type.
      *
      * @param payloadCollection
      *         collection of payloads to compare the criterion against

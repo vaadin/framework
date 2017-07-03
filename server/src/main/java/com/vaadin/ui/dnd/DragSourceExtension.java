@@ -301,6 +301,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      * following format: {@code "v-item:string:key:value"}. The given value is
      * compared to the criterion value when the drag source is dragged on top of
      * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
      *
      * @param key
      *         key of the payload to be transferred
@@ -318,6 +321,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      * following format: {@code "v-item:integer:key:value"}. The given value is
      * compared to the criterion value when the drag source is dragged on top of
      * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
      *
      * @param key
      *         key of the payload to be transferred
@@ -336,6 +342,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      * following format: {@code "v-item:double:key:value"}. The given value is
      * compared to the criterion value when the drag source is dragged on top of
      * a drop target that has the suitable criterion.
+     * <p>
+     * Note that setting payload in Internet Explorer 11 is not possible due to
+     * the browser's limitations.
      *
      * @param key
      *         key of the payload to be transferred
