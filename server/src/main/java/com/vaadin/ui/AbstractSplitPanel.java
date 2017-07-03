@@ -576,6 +576,23 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
 
         private final boolean userOriginated;
 
+        /**
+         * Creates a split position change event.
+         *
+         * @param source
+         *            split panel from which the event originates
+         * @param userOriginated
+         *            true if the event is directly based on user actions
+         * @param oldPosition
+         *            old split position
+         * @param oldUnit
+         *            old unit of split position
+         * @param position
+         *            new split position
+         * @param unit
+         *            new split position unit
+         * @since 8.1
+         */
         public SplitPositionChangeEvent(final Component source,
                 final boolean userOriginated, final float oldPosition,
                 final Unit oldUnit, final float position, final Unit unit) {
@@ -629,6 +646,11 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
             return oldUnit;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @since 8.1
+         */
         @Override
         public boolean isUserOriginated() {
             return userOriginated;
