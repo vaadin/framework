@@ -81,4 +81,23 @@ public class VaadinServletResponse extends HttpServletResponseWrapper
     public VaadinServletService getService() {
         return vaadinService;
     }
+
+    /**
+     * Gets the currently processed Vaadin servlet response. The current
+     * response is automatically defined when the request is started. The
+     * current response can not be used in e.g. background threads because of
+     * the way server implementations reuse response instances.
+     *
+     * @return the current Vaadin servlet response instance if available,
+     *         otherwise <code>null</code>
+     */
+    public static VaadinServletResponse getCurrent() {
+        VaadinResponse currentResponse = VaadinResponse.getCurrent();
+        if (currentResponse instanceof VaadinServletResponse) {
+            return (VaadinServletResponse) currentResponse;
+        } else {
+            return null;
+        }
+    }
+
 }

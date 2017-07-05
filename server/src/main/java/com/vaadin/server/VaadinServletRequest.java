@@ -76,4 +76,24 @@ public class VaadinServletRequest extends HttpServletRequestWrapper
     public VaadinServletService getService() {
         return vaadinService;
     }
+
+    /**
+     * Gets the currently processed Vaadin servlet request. The current request
+     * is automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     *
+     *
+     * @return the current Vaadin servlet request instance if available,
+     *         otherwise <code>null</code>
+     */
+    public static VaadinServletRequest getCurrent() {
+        VaadinRequest currentRequest = VaadinRequest.getCurrent();
+        if (currentRequest instanceof VaadinServletRequest) {
+            return (VaadinServletRequest) currentRequest;
+        } else {
+            return null;
+        }
+    }
+
 }
