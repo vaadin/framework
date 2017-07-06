@@ -633,6 +633,7 @@ public class Tree<T> extends Composite
      * @param listener
      *            the item click listener, not null
      * @return a registration for the listener
+     * @see #addContextClickListener
      */
     public Registration addItemClickListener(ItemClickListener<T> listener) {
         return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
@@ -815,6 +816,19 @@ public class Tree<T> extends Composite
         renderer.getState().mode = contentMode;
     }
 
+    /**
+     * Adds a context click listener that gets notified when a context click
+     * happens.
+     *
+     * @param listener
+     *            the context click listener to add, not null
+     *            actual event provided to the listener is {@link TreeContextClickEvent}
+     * @return a registration object for removing the listener
+     *
+     * @since 8.1
+     * @see #addItemClickListener
+     * @see Registration
+     */
     @Override
     public Registration addContextClickListener(ContextClickEvent.ContextClickListener listener) {
         Registration registration =
@@ -855,6 +869,13 @@ public class Tree<T> extends Composite
 
     /**
      * ContextClickEvent for the Tree Component.
+     * <p>
+     * Usage:
+     * <pre>
+     * tree.addContextClickListener(event -&gt; Notification.show(
+     *       ((TreeContextClickEvent&lt;Person&gt;)event).getItem() + " Clicked")
+     * );
+     * </pre>
      *
      * @param <T> the tree bean type
      */
@@ -867,7 +888,8 @@ public class Tree<T> extends Composite
          *
          * @param source            the tree where the context click occurred
          * @param mouseEventDetails details about mouse position
-         * @param item              the item which was clicked
+         * @param item              the item which was clicked or {@code null}
+         *                          if the click happened outside any item
          */
         public TreeContextClickEvent(Tree<T> source,
                                      MouseEventDetails mouseEventDetails,
@@ -879,7 +901,8 @@ public class Tree<T> extends Composite
         /**
          * Returns the item of context clicked row.
          *
-         * @return item of clicked row; <code>null</code> if header or footer
+         * @return clicked item; {@code null}
+         *          the click happened outside any item
          */
         public T getItem() {
             return item;
