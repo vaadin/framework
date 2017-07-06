@@ -237,7 +237,6 @@ with an [interfacename]#ItemClickListener#. The [classname]#ItemClickEvent#
 object contains various information, most importantly the ID of the clicked row
 and column.
 
-
 [source, java]
 ----
 grid.addCellClickListener(event ->
@@ -250,7 +249,16 @@ The focus indication is themed so that the focused cell has a visible focus
 indicator style by default, while the row does not. You can enable row focus, as
 well as disable cell focus, in a custom theme. See <<components.grid.css>>.
 
+[[components.grid.right.clicks]]
+=== Right-clicks
+Right-clicks are supported similar way via `addContextClickListener()` method
 
+[source, java]
+----
+  grid.addContextClickListener(event -> Notification.show(
+        ((GridContextClickEvent<Person>)event).getItem() + " Clicked")
+  );
+----
 
 [[components.grid.columns]]
 == Configuring Columns
