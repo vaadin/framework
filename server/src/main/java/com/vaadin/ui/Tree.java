@@ -828,6 +828,7 @@ public class Tree<T> extends Composite
     }
 
     @Override
+    @Deprecated
     public void removeContextClickListener(ContextClickEvent.ContextClickListener listener) {
         super.removeContextClickListener(listener);
         setupContextClickListener();

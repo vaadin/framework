@@ -591,10 +591,12 @@ public class ServerRpcHandler implements Serializable {
              * corresponding to the received method invocation has been
              * registered.
              */
-            getLogger().warning("Ignoring RPC call to " + interfaceName + "."
+            String message = "Ignoring RPC call to " + interfaceName + "."
                     + methodName + " in connector "
                     + connector.getClass().getName() + "(" + connectorId
-                    + ") as no RPC implementation is registered");
+                    + ") as no RPC implementation is registered";
+            assert rpcManager != null : message;
+            getLogger().warning(message);
             return null;
         }
 
