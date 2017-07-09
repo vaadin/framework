@@ -33,13 +33,38 @@ import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
-    private final VaadinServlet servlet;
+    private VaadinServlet servlet;
 
     public VaadinServletService(VaadinServlet servlet,
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
-        super(deploymentConfiguration);
+        init(servlet, deploymentConfiguration);
+    }
+
+    /**
+     * Creates a servlet service. This method is for use by dependency
+     * injection frameworks etc. and must be followed by a call to
+     * {@link #init(VaadinServlet, DeploymentConfiguration)} before use.
+     *
+     * @since 8.1
+     */
+    protected VaadinServletService() {
+    }
+
+    protected void init(VaadinServlet servlet,
+                   DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        super.init(deploymentConfiguration);
         this.servlet = servlet;
+    }
+
+    /**
+     * @deprecated use {@link #init(VaadinServlet, DeploymentConfiguration)}
+     */
+    @Override
+    @Deprecated
+    protected void init(DeploymentConfiguration deploymentConfiguration) throws ServiceException {
+        throw new ServiceException("Call VaadinServletService#init(VaadinServlet, DeploymentConfiguration) instead");
     }
 
     @Override

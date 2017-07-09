@@ -114,7 +114,7 @@ public abstract class VaadinService implements Serializable {
 
     private static final String REQUEST_START_TIME_ATTRIBUTE = "requestStartTime";
 
-    private final DeploymentConfiguration deploymentConfiguration;
+    private DeploymentConfiguration deploymentConfiguration;
 
     /*
      * Can't use EventRouter for these listeners since it's not thread safe. One
@@ -148,9 +148,14 @@ public abstract class VaadinService implements Serializable {
     private boolean pushWarningEmitted = false;
 
     /**
+     * Has {@link #init(DeploymentConfiguration)} been run?
+     */
+    private boolean semiInitialized = false;
+
+    /**
      * Has {@link #init()} been run?
      */
-    private boolean initialized = false;
+    private boolean fullyInitialized = false;
 
     /**
      * Creates a new vaadin service based on a deployment configuration
@@ -159,6 +164,25 @@ public abstract class VaadinService implements Serializable {
      *            the deployment configuration for the service
      */
     public VaadinService(DeploymentConfiguration deploymentConfiguration) {
+        try {
+            init(deploymentConfiguration);
+        } catch (ServiceException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates a servlet service. This method is for use by dependency
+     * injection frameworks etc. and must be followed by a call to
+     * {@link #init(DeploymentConfiguration)} before use.
+     *
+     * @since 8.1
+     */
+    protected VaadinService() {
+    }
+
+    protected void init(DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
         this.deploymentConfiguration = deploymentConfiguration;
 
         final String classLoaderName = getDeploymentConfiguration()
@@ -172,7 +196,7 @@ public abstract class VaadinService implements Serializable {
                 setClassLoader((ClassLoader) c
                         .newInstance(getClass().getClassLoader()));
             } catch (final Exception e) {
-                throw new RuntimeException(
+                throw new ServiceException(
                         "Could not find specified class loader: "
                                 + classLoaderName,
                         e);
@@ -182,10 +206,12 @@ public abstract class VaadinService implements Serializable {
         if (getClassLoader() == null) {
             setDefaultClassLoader();
         }
+
+        semiInitialized = true;
     }
 
     /**
-     * Initializes this service. The service should be initialized before it is
+     * Fully initializes this service. The service should be initialized before it is
      * used.
      *
      * @since 7.1
@@ -193,6 +219,11 @@ public abstract class VaadinService implements Serializable {
      *             if a problem occurs when creating the service
      */
     public void init() throws ServiceException {
+        if (!semiInitialized) {
+            throw new ServiceException(
+                    "init(DeploymentConfiguration) has not run yet");
+        }
+
         List<RequestHandler> handlers = createRequestHandlers();
 
         ServiceInitEvent event = new ServiceInitEvent(this);
@@ -215,7 +246,7 @@ public abstract class VaadinService implements Serializable {
                 event.getAddedConnectorIdGenerators());
         assert connectorIdGenerator != null;
 
-        initialized = true;
+        fullyInitialized = true;
     }
 
     /**
@@ -1386,7 +1417,7 @@ public abstract class VaadinService implements Serializable {
      *            The response
      */
     public void requestStart(VaadinRequest request, VaadinResponse response) {
-        if (!initialized) {
+        if (!fullyInitialized) {
             throw new IllegalStateException(
                     "Can not process requests before init() has been called");
         }
@@ -2225,5 +2256,4 @@ public abstract class VaadinService implements Serializable {
 
         return connectorId;
     }
-
 }
