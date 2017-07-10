@@ -401,6 +401,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     /**
      * ContextClickEvent for the Grid Component.
      *
+     * <p>
+     * Usage:
+     * <pre>
+     * grid.addContextClickListener(event -&gt; Notification.show(
+     *       ((GridContextClickEvent&lt;Person&gt;)event).getItem() + " Clicked")
+     * );
+     * </pre>
      * @param <T>
      *            the grid bean type
      */
@@ -3376,11 +3383,30 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param listener
      *            the item click listener, not null
      * @return a registration for the listener
+     * @see #addContextClickListener
      */
     public Registration addItemClickListener(
             ItemClickListener<? super T> listener) {
         return addListener(GridConstants.ITEM_CLICK_EVENT_ID, ItemClick.class,
                 listener, ITEM_CLICK_METHOD);
+    }
+
+    /**
+     * Adds a context click listener that gets notified when a context click
+     * happens.
+     *
+     * @param listener
+     *            the context click listener to add, not null
+     *            actual event provided to the listener is {@link GridContextClickEvent}
+     * @return a registration object for removing the listener
+     *
+     * @since 8.1
+     * @see #addItemClickListener
+     * @see Registration
+     */
+    @Override
+    public Registration addContextClickListener(ContextClickEvent.ContextClickListener listener) {
+        return super.addContextClickListener(listener);
     }
 
     /**
