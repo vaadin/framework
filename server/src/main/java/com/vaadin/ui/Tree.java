@@ -34,12 +34,14 @@ import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
 import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ExpandEvent;
 import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
@@ -69,6 +71,7 @@ public class Tree<T> extends Composite
     @Deprecated
     private static final Method ITEM_CLICK_METHOD = ReflectTools
             .findMethod(ItemClickListener.class, "itemClick", ItemClick.class);
+    private Registration contextClickRegistration = null;
 
     /**
      * A listener for item click events.
@@ -483,7 +486,7 @@ public class Tree<T> extends Composite
      * Adds a selection listener to the current selection model.
      * <p>
      * <strong>NOTE:</strong> If selection mode is switched with
-     * {@link setSelectionMode(SelectionMode)}, then this listener is not
+     * {@link #setSelectionMode(SelectionMode)}, then this listener is not
      * triggered anymore when selection changes!
      *
      * @param listener
@@ -492,7 +495,7 @@ public class Tree<T> extends Composite
      *
      * @throws UnsupportedOperationException
      *             if selection has been disabled with
-     *             {@link SelectionMode.NONE}
+     *             {@link SelectionMode#NONE}
      */
     public Registration addSelectionListener(SelectionListener<T> listener) {
         return treeGrid.addSelectionListener(listener);
@@ -630,6 +633,7 @@ public class Tree<T> extends Composite
      * @param listener
      *            the item click listener, not null
      * @return a registration for the listener
+     * @see #addContextClickListener
      */
     public Registration addItemClickListener(ItemClickListener<T> listener) {
         return addListener(ItemClick.class, listener, ITEM_CLICK_METHOD);
@@ -655,12 +659,12 @@ public class Tree<T> extends Composite
         Objects.requireNonNull(selectionMode,
                 "Can not set selection mode to null");
         switch (selectionMode) {
-        case MULTI:
-            TreeMultiSelectionModel<T> model = new TreeMultiSelectionModel<>();
-            treeGrid.setSelectionModel(model);
-            return model;
-        default:
-            return treeGrid.setSelectionMode(selectionMode);
+            case MULTI:
+                TreeMultiSelectionModel<T> model = new TreeMultiSelectionModel<>();
+                treeGrid.setSelectionModel(model);
+                return model;
+            default:
+                return treeGrid.setSelectionMode(selectionMode);
         }
     }
 
@@ -810,5 +814,103 @@ public class Tree<T> extends Composite
      */
     public void setContentMode(ContentMode contentMode) {
         renderer.getState().mode = contentMode;
+    }
+
+    /**
+     * Adds a context click listener that gets notified when a context click
+     * happens.
+     *
+     * @param listener
+     *            the context click listener to add, not null
+     *            actual event provided to the listener is {@link TreeContextClickEvent}
+     * @return a registration object for removing the listener
+     *
+     * @since 8.1
+     * @see #addItemClickListener
+     * @see Registration
+     */
+    @Override
+    public Registration addContextClickListener(ContextClickEvent.ContextClickListener listener) {
+        Registration registration =
+                addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,
+                        listener, ContextClickEvent.CONTEXT_CLICK_METHOD);
+        setupContextClickListener();
+        return () -> {
+            registration.remove();
+            setupContextClickListener();
+        };
+    }
+
+    @Override
+    @Deprecated
+    public void removeContextClickListener(ContextClickEvent.ContextClickListener listener) {
+        super.removeContextClickListener(listener);
+        setupContextClickListener();
+    }
+
+    private void setupContextClickListener() {
+        if (hasListeners(ContextClickEvent.class)) {
+            if (contextClickRegistration == null) {
+                contextClickRegistration = treeGrid.addContextClickListener(
+                        event -> {
+                            T item = null;
+                            if (event instanceof Grid.GridContextClickEvent) {
+                                item = ((Grid.GridContextClickEvent<T>) event).getItem();
+                            }
+                            fireEvent(new TreeContextClickEvent<>(this, event.getMouseEventDetails(), item));
+                        }
+                );
+            }
+        } else if (contextClickRegistration != null) {
+            contextClickRegistration.remove();
+            contextClickRegistration = null;
+        }
+    }
+
+    /**
+     * ContextClickEvent for the Tree Component.
+     * <p>
+     * Usage:
+     * <pre>
+     * tree.addContextClickListener(event -&gt; Notification.show(
+     *       ((TreeContextClickEvent&lt;Person&gt;)event).getItem() + " Clicked")
+     * );
+     * </pre>
+     *
+     * @param <T> the tree bean type
+     */
+    public static class TreeContextClickEvent<T> extends ContextClickEvent {
+
+        private final T item;
+
+        /**
+         * Creates a new context click event.
+         *
+         * @param source            the tree where the context click occurred
+         * @param mouseEventDetails details about mouse position
+         * @param item              the item which was clicked or {@code null}
+         *                          if the click happened outside any item
+         */
+        public TreeContextClickEvent(Tree<T> source,
+                                     MouseEventDetails mouseEventDetails,
+                                     T item) {
+            super(source, mouseEventDetails);
+            this.item = item;
+        }
+
+        /**
+         * Returns the item of context clicked row.
+         *
+         * @return clicked item; {@code null}
+         *          the click happened outside any item
+         */
+        public T getItem() {
+            return item;
+        }
+
+        @Override
+        public Tree<T> getComponent() {
+            return (Tree<T>) super.getComponent();
+        }
     }
 }

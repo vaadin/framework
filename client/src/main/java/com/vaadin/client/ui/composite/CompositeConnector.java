@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.composite;
 
+import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -22,6 +23,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.Composite;
@@ -92,5 +94,11 @@ public class CompositeConnector extends AbstractHasComponentsConnector {
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent event) {
         // Handled in getChildConnector
+    }
+
+    @Override
+    protected void sendContextClickEvent(MouseEventDetails details, EventTarget eventTarget) {
+        //Do nothing, because Composite is not an actual component, and the event
+        //must be handled in inner components.
     }
 }

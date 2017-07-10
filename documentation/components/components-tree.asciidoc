@@ -98,6 +98,17 @@ tree.addItemClickListener(event ->
 );
 ----
 
+[[components.tree.right.clicks]]
+=== Right-clicks
+Right-clicks are supported similar way via `addContextClickListener()` method
+
+[source, java]
+----
+  tree.addContextClickListener(event -> Notification.show(
+        ((TreeContextClickEvent<Person>)event).getItem() + " Clicked")
+  );
+----
+
 [[components.tree.expandcollapse]]
 == Expanding and Collapsing Nodes
 

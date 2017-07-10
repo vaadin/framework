@@ -330,7 +330,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * interface.
      *
      * @since 7.6
-     * @param event
+     * @param details
+     * @param eventTarget
      */
     protected void sendContextClickEvent(MouseEventDetails details,
             EventTarget eventTarget) {

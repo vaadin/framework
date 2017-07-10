@@ -182,6 +182,17 @@ public interface MouseEvents {
         public String getButtonName() {
             return details.getButtonName();
         }
+
+        /**
+         * Returns an information about mouse event like position, buttons
+         * pressed etc.
+         *
+         * @since 8.1
+         * @return An information about mouse event
+         */
+        public MouseEventDetails getMouseEventDetails() {
+            return details;
+        }
     }
 
     /**
