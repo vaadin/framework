@@ -2489,19 +2489,19 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
         focused = false;
         updatePlaceholder();
+        removeStyleDependentName("focus");
 
         // Send new items when clicking out with the mouse.
-        if (!readonly && textInputEnabled && allowNewItems) {
-            if (currentSuggestion == null || tb.getText()
-                    .equals(currentSuggestion.getReplacementString())) {
+        if (!readonly) {
+            if (textInputEnabled && allowNewItems
+                    && (currentSuggestion == null || tb.getText().equals(
+                            currentSuggestion.getReplacementString()))) {
                 dataReceivedHandler.reactOnInputWhenReady(tb.getText());
             } else {
                 reset();
             }
             suggestionPopup.hide();
         }
-
-        removeStyleDependentName("focus");
 
         connector.sendBlurEvent();
     }
