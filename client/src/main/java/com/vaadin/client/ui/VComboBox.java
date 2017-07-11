@@ -2826,6 +2826,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     /**
      * Gets the empty selection caption.
      * 
+     * @since 8.0.7
      * @return the empty selection caption
      */
     public String getEmptySelectionCaption() {
@@ -2838,6 +2839,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      * 
      * @param emptySelectionCaption
      *            the empty selection caption
+     * 
+     * @since 8.0.7
      */
     public void setEmptySelectionCaption(String emptySelectionCaption) {
         this.emptySelectionCaption = emptySelectionCaption;
