@@ -7,6 +7,8 @@ layout: page
 [[getting-started.first-project]]
 = Creating and Running a Project in Eclipse
 
+TIP: If you are new to Vaadin, we suggest to start with <<dummy/../../../framework/tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
+
 This section gives instructions for creating a new Eclipse project using the
 Vaadin Plugin. The task will include the following steps:
 

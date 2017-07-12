@@ -7,6 +7,8 @@ layout: page
 [[installing.eclipse]]
 = Installing the Eclipse IDE and Plugin
 
+TIP: If you are new to Vaadin, we suggest to start with <<dummy/../../../framework/tutorial#tutorial,"the tutorial">>. It also contains instructions how to set up Eclipse based development environment.
+
 If you are using the Eclipse IDE, using the Vaadin Plugin for Eclipse helps
 greatly. The plugin includes wizards for creating new Vaadin-based projects,
 themes, and client-side widgets and widget sets. Notice that you can also create
