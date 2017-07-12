@@ -185,6 +185,16 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Creates a service. This method is for use by dependency
+     * injection frameworks etc.
+     *
+     * @since 8.1
+     */
+    protected VaadinService() {
+        this.deploymentConfiguration = null;
+    }
+
+    /**
      * Initializes this service. The service should be initialized before it is
      * used.
      *

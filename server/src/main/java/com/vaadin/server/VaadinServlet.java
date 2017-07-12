@@ -200,32 +200,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws ServletException {
         CurrentInstance.clearAll();
         super.init(servletConfig);
-        Properties initParameters = new Properties();
-
-        readUiFromEnclosingClass(initParameters);
-
-        readConfigurationAnnotation(initParameters);
-
-        // Read default parameters from server.xml
-        final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name, context.getInitParameter(name));
-        }
-
-        // Override with application config from web.xml
-        for (final Enumeration<String> e = servletConfig
-                .getInitParameterNames(); e.hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name,
-                    servletConfig.getInitParameter(name));
-        }
-
-        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(
-                initParameters);
         try {
-            servletService = createServletService(deploymentConfiguration);
+            servletService = createServletService();
         } catch (ServiceException e) {
             throw new ServletException("Could not initialize VaadinServlet", e);
         }
@@ -321,9 +297,40 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
+    protected DeploymentConfiguration createDeploymentConfiguration() throws ServletException {
+        Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
+
+        readConfigurationAnnotation(initParameters);
+
+        // Read default parameters from server.xml
+        final ServletContext context = getServletConfig().getServletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name, context.getInitParameter(name));
+        }
+
+        // Override with application config from web.xml
+        for (final Enumeration<String> e = getServletConfig()
+                .getInitParameterNames(); e.hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name,
+                    getServletConfig().getInitParameter(name));
+        }
+
+        return createDeploymentConfiguration(initParameters);
+    }
+
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
+    }
+
+    protected VaadinServletService createServletService()
+            throws ServletException, ServiceException {
+        return createServletService(createDeploymentConfiguration());
     }
 
     protected VaadinServletService createServletService(

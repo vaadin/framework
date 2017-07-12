@@ -42,6 +42,16 @@ public class VaadinServletService extends VaadinService {
         this.servlet = servlet;
     }
 
+    /**
+     * Creates a servlet service. This method is for use by dependency
+     * injection frameworks etc.
+     *
+     * @since 8.1
+     */
+    protected VaadinServletService() {
+        this.servlet = null;
+    }
+
     @Override
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
