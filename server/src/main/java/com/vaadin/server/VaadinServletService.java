@@ -42,6 +42,16 @@ public class VaadinServletService extends VaadinService {
         this.servlet = servlet;
     }
 
+    /**
+     * Creates a servlet service. This method is for use by dependency
+     * injection frameworks etc.
+     *
+     * @since 8.1
+     */
+    protected VaadinServletService() {
+        this.servlet = null;
+    }
+
     @Override
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
@@ -167,7 +177,7 @@ public class VaadinServletService extends VaadinService {
     @Override
     public File getBaseDirectory() {
         final String realPath = VaadinServlet
-                .getResourcePath(servlet.getServletContext(), "/");
+                .getResourcePath(getServlet().getServletContext(), "/");
         if (realPath == null) {
             return null;
         }
@@ -231,12 +241,12 @@ public class VaadinServletService extends VaadinService {
             String resource) throws IOException {
         String filename = "/" + VaadinServlet.THEME_DIR_PATH + '/' + themeName
                 + "/" + resource;
-        URL resourceUrl = servlet.findResourceURL(filename);
+        URL resourceUrl = getServlet().findResourceURL(filename);
 
         if (resourceUrl != null) {
             // security check: do not permit navigation out of the VAADIN
             // directory
-            if (!servlet.isAllowedVAADINResourceUrl(null, resourceUrl)) {
+            if (!getServlet().isAllowedVAADINResourceUrl(null, resourceUrl)) {
                 throw new IOException(String.format(
                         "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
                         filename));
