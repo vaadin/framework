@@ -27,7 +27,7 @@ Collection<Project> projects = service.getProjects();
 
 TreeData<Project> data = new TreeData<>();
 // add root level items
-data.addItems(null, Project::getSubProjects);
+data.addItems(null, projects);
 
 // add children for the root level items
 projects.forEach(project -> data.addItems(project, project.getChildren()));
