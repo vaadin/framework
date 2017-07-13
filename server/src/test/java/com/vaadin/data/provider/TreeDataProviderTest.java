@@ -81,6 +81,51 @@ public class TreeDataProviderTest
     }
 
     @Test
+    public void treeData_set_parent() {
+        StrBean item1 = rootData.get(0);
+        StrBean item2 = rootData.get(1);
+        Assert.assertEquals(0, data.getChildren(item2).size());
+        Assert.assertEquals(10, data.getRootItems().size());
+
+        // Move item1 as item2's child
+        data.setParent(item1, item2);
+        Assert.assertEquals(1, data.getChildren(item2).size());
+        Assert.assertEquals(9, data.getRootItems().size());
+        Assert.assertEquals(item1, data.getChildren(item2).get(0));
+
+        // Move back to root
+        data.setParent(item1, null);
+        Assert.assertEquals(0, data.getChildren(item2).size());
+        Assert.assertEquals(10, data.getRootItems().size());
+    }
+
+    @Test
+    public void treeData_move_after_sibling() {
+        StrBean root0 = rootData.get(0);
+        StrBean root9 = rootData.get(9);
+        Assert.assertEquals(root0, data.getRootItems().get(0));
+        Assert.assertEquals(root9, data.getRootItems().get(9));
+
+        // Move to last position
+        data.moveAfterSibling(root0, root9);
+        Assert.assertEquals(root0, data.getRootItems().get(9));
+        Assert.assertEquals(root9, data.getRootItems().get(8));
+
+        // Move back to first position
+        data.moveAfterSibling(root0, null);
+        Assert.assertEquals(root0, data.getRootItems().get(0));
+        Assert.assertEquals(root9, data.getRootItems().get(9));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void treeData_move_after_sibling_different_parents() {
+        StrBean root0 = rootData.get(0);
+        StrBean wrongSibling = data.getChildren(root0).get(0);
+
+        data.moveAfterSibling(root0, wrongSibling);
+    }
+
+    @Test
     public void treeData_root_items() {
         TreeData<String> data = new TreeData<>();
         TreeData<String> dataVarargs = new TreeData<>();
