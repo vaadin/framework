@@ -27,6 +27,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -49,7 +50,6 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
@@ -109,13 +109,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private String defaultParseErrorMessage = "Date format not recognized";
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
-
-    /**
-     * Determines whether the ValueChangeEvent should be fired. Used to prevent
-     * firing the event when UI has invalid string until uiHasValidDateString
-     * flag is set
-     */
-    private boolean preventValueChangeEvent;
 
     /* Constructors */
 
@@ -218,116 +211,42 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             // Old and new dates
             final T oldDate = getValue();
-            T newDate = null;
 
             // this enables analyzing invalid input on the server
             final String newDateString = (String) variables.get("dateString");
-            dateString = newDateString;
 
-            // Gets the new date in parts
-            boolean hasChanges = false;
-            Map<R, Integer> calendarFields = new HashMap<>();
+            T newDate;
 
-            for (R resolution : getResolutionsHigherOrEqualTo(
-                    getResolution())) {
-                // Only handle what the client is allowed to send. The same
-                // resolutions that are painted
-                String variableName = getResolutionVariable(resolution);
-
-                int value = getDatePart(oldDate, resolution);
-                if (variables.containsKey(variableName)) {
-                    Integer newValue = (Integer) variables.get(variableName);
-                    if (newValue >= 0) {
-                        hasChanges = true;
-                        value = newValue;
-                    }
-                }
-                calendarFields.put(resolution, value);
-            }
-
-            // If no new variable values were received, use the previous value
-            if (!hasChanges) {
+            if("".equals(newDateString)) {
                 newDate = null;
+                uiHasValidDateString = true;
+                currentParseErrorMessage = null;
             } else {
-                newDate = buildDate(calendarFields);
+                newDate = reconstructDateFromFields(variables, oldDate);
             }
 
-            if (newDate == null && dateString != null
-                    && !dateString.isEmpty()) {
-                Result<T> parsedDate = handleUnparsableDateString(dateString);
-                if (parsedDate.isError()) {
+            boolean hasChanges = !Objects.equals(dateString, newDateString) ||
+                    !Objects.equals(oldDate, newDate);
 
-                    /*
-                     * Saves the localized message of parse error. This can be
-                     * overridden in handleUnparsableDateString. The message
-                     * will later be used to show a validation error.
-                     */
-                    currentParseErrorMessage = parsedDate.getMessage().get();
+            if (hasChanges) {
+                dateString = newDateString;
 
-                    /*
-                     * The value of the DateField should be null if an invalid
-                     * value has been given. Not using setValue() since we do
-                     * not want to cause the client side value to change.
-                     */
-                    uiHasValidDateString = false;
-
-                    /*
-                     * Datefield now contains some text that could't be parsed
-                     * into date. ValueChangeEvent is fired after the value is
-                     * changed and the flags are set
-                     */
-                    if (oldDate != null) {
-                        /*
-                         * Set the logic value to null without firing the
-                         * ValueChangeEvent
-                         */
-                        preventValueChangeEvent = true;
-                        try {
-                            setValue(null);
-                        } finally {
-                            preventValueChangeEvent = false;
-                        }
-
-                        /*
-                         * Reset the dateString (overridden to null by setValue)
-                         */
-                        dateString = newDateString;
-                    }
-
-                    /*
-                     * If value was changed fire the ValueChangeEvent
-                     */
-                    if (oldDate != null) {
-                        fireEvent(createValueChange(oldDate, true));
-                    }
-
-                    markAsDirty();
-                } else {
-                    parsedDate.ifOk(value -> {
+                if (newDateString != null && !newDateString.isEmpty()) {
+                    Result<T> parsedDate = handleUnparsableDateString(dateString);
+                    uiHasValidDateString = parsedDate.isError();
+                    if (!uiHasValidDateString) {
+                        currentParseErrorMessage = parsedDate.getMessage().get();
+                    } else {
                         currentParseErrorMessage = null;
-                        setValue(value, true);
-                    });
-
-                    /*
-                     * Ensure the value is sent to the client if the value is
-                     * set to the same as the previous (#4304). Does not repaint
-                     * if handleUnparsableDateString throws an exception. In
-                     * this case the invalid text remains in the DateField.
-                     */
-                    markAsDirty();
+                        //todo RangeCheck
+                        parsedDate.ifOk(this::setValue);
+                    }
                 }
-
-            } else if (newDate != oldDate
-                    && (newDate == null || !newDate.equals(oldDate))) {
-                currentParseErrorMessage = null;
-                setValue(newDate, true); // Don't require a repaint, client
-                // updates itself
-            } else if (!uiHasValidDateString) {
-                // oldDate ==
-                // newDate == null
-                // Empty value set, previously contained unparsable date string,
-                // clear related internal fields
-                setValue(null);
+                else {
+                    //todo RangeCheck
+                    setValue(newDate,true);
+                }
+                markAsDirty();
             }
         }
 
@@ -340,14 +259,32 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         }
     }
 
+    protected T reconstructDateFromFields(Map<String, Object> variables, T oldDate) {
+        Map<R, Integer> calendarFields = new HashMap<>();
+
+        for (R resolution : getResolutionsHigherOrEqualTo(
+                getResolution())) {
+            // Only handle what the client is allowed to send. The same
+            // resolutions that are painted
+            String variableName = getResolutionVariable(resolution);
+
+            Integer newValue = (Integer) variables.get(variableName);
+            if (newValue != null && newValue >= 0) {
+                calendarFields.put(resolution, newValue);
+            } else {
+                calendarFields.put(resolution, getDatePart(oldDate, resolution));
+            }
+        }
+        return buildDate(calendarFields);
+    }
+
     /**
      * Sets the start range for this component. If the value is set before this
      * date (taking the resolution into account), the component will not
      * validate. If <code>startDate</code> is set to <code>null</code>, any
      * value before <code>endDate</code> will be accepted by the range
      *
-     * @param startDate
-     *            - the allowed range's start date
+     * @param startDate - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
         Date date = convertToDate(startDate);
@@ -613,6 +550,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             .info("cannot parse " + design.attr("value")
                                     + " as date");
                 }
+                dateString = value.toString();//todo locale
                 doSetValue(date);
             } else {
                 throw new RuntimeException("Cannot detect resoluton type "
@@ -628,17 +566,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         if (getValue() != null) {
             design.attr("value",
                     DesignAttributeHandler.getFormatter().format(getValue()));
-        }
-    }
-
-    @Override
-    protected void fireEvent(EventObject event) {
-        if (event instanceof ValueChangeEvent) {
-            if (!preventValueChangeEvent) {
-                super.fireEvent(event);
-            }
-        } else {
-            super.fireEvent(event);
         }
     }
 
@@ -677,21 +604,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         if (value != null) {
             dateString = value.toString();
         } else {
-            dateString = null;
+            dateString = "";
         }
 
         this.value = value;
-        setComponentError(null);
-        if (!uiHasValidDateString) {
-            // clear component error and parsing flag
-            uiHasValidDateString = true;
-            setComponentError(new UserError(currentParseErrorMessage));
-        } else {
+        if (uiHasValidDateString) {
             RangeValidator<T> validator = getRangeValidator();
             ValidationResult result = validator.apply(value,
                     new ValueContext(this, this));
             if (result.isError()) {
-                setComponentError(new UserError(getDateOutOfRangeMessage()));
+                currentParseErrorMessage = getDateOutOfRangeMessage();
             }
         }
     }
