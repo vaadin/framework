@@ -180,7 +180,7 @@ public class AtmospherePushConnection implements PushConnection {
      * @param message
      *            The message to send
      */
-    void sendMessage(String message) {
+    protected void sendMessage(String message) {
         assert (isConnected());
         // "Broadcast" the changes to the single client only
         outgoingMessage = getResource().getBroadcaster().broadcast(message,
