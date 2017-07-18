@@ -248,11 +248,7 @@ public class ComboBoxSelectingWithNewItemsAllowedTest extends MultiBrowserTest {
     }
 
     private void cancelSelection() {
-        if (BrowserUtil.isFirefox(getDesiredCapabilities())) {
-            findElement(By.className("v-app")).click();
-        } else {
-            sendKeysToInput(Keys.ESCAPE);
-        }
+        sendKeysToInput(Keys.ESCAPE);
     }
 
     private void assertThatSelectedValueIs(final String value) {
