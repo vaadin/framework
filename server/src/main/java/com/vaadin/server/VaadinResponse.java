@@ -28,6 +28,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.util.CurrentInstance;
+
 /**
  * A generic response from the server, wrapping a more specific response type,
  * e.g. HttpServletResponse or PortletResponse.
@@ -182,4 +184,18 @@ public interface VaadinResponse extends Serializable {
      * @since 7.3.8
      */
     public void setContentLength(int len);
+
+    /**
+     * Gets the currently processed Vaadin response. The current response is
+     * automatically defined when the request is started. The current response
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse response instances.
+     *
+     * @return the current Vaadin response instance if available, otherwise
+     *         <code>null</code>
+     * @since 8.1
+     */
+    public static VaadinResponse getCurrent() {
+        return CurrentInstance.get(VaadinResponse.class);
+    }
 }

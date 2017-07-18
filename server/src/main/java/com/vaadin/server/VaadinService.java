@@ -1010,7 +1010,7 @@ public abstract class VaadinService implements Serializable {
      * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
     public static VaadinRequest getCurrentRequest() {
-        return CurrentInstance.get(VaadinRequest.class);
+        return VaadinRequest.getCurrent();
     }
 
     /**
@@ -1025,7 +1025,7 @@ public abstract class VaadinService implements Serializable {
      * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
     public static VaadinResponse getCurrentResponse() {
-        return CurrentInstance.get(VaadinResponse.class);
+        return VaadinResponse.getCurrent();
     }
 
     /**
@@ -1320,7 +1320,8 @@ public abstract class VaadinService implements Serializable {
      */
     private int getUidlRequestTimeout(VaadinSession session) {
         return getDeploymentConfiguration().isCloseIdleSessions()
-                ? session.getSession().getMaxInactiveInterval() : -1;
+                ? session.getSession().getMaxInactiveInterval()
+                : -1;
     }
 
     /**
@@ -1353,9 +1354,10 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns whether the given session is active or whether it can be closed.
      * <p>
-     * A session is active if and only if its {@link VaadinSession#getState()} returns {@link State#OPEN}
-     * and {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout}
-     * is negative or has not yet expired.
+     * A session is active if and only if its {@link VaadinSession#getState()}
+     * returns {@link State#OPEN} and
+     * {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout} is
+     * negative or has not yet expired.
      *
      * @param session
      *            The session whose status to check
@@ -1458,8 +1460,8 @@ public abstract class VaadinService implements Serializable {
      * <p>
      * The framework collects filters from the {@link SessionInitEvent} where
      * session init listeners can add them. This method is called with the
-     * combined list to optionally modify it, and the result is then stored
-     * by the caller as the final list to use.
+     * combined list to optionally modify it, and the result is then stored by
+     * the caller as the final list to use.
      * <p>
      * The filters are called in the order the session init listeners are
      * called, which is undefined. If you need a specific order, you can
