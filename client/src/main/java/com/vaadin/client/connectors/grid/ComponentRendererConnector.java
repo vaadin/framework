@@ -49,9 +49,13 @@ public class ComponentRendererConnector
             @Override
             public void render(RendererCellReference cell, String connectorId,
                     SimplePanel widget) {
-                ComponentConnector connector = (ComponentConnector) ConnectorMap
-                        .get(getConnection()).getConnector(connectorId);
-                widget.setWidget(connector.getWidget());
+                if (connectorId != null) {
+                    ComponentConnector connector = (ComponentConnector) ConnectorMap
+                            .get(getConnection()).getConnector(connectorId);
+                    widget.setWidget(connector.getWidget());
+                } else if (widget.getWidget() != null) {
+                    widget.remove(widget.getWidget());
+                }
             }
         };
     }

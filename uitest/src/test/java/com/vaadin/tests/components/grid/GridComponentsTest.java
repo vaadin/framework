@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -83,6 +86,13 @@ public class GridComponentsTest extends MultiBrowserTest {
     }
 
     @Test
+    public void testRow30() {
+        openTestURL();
+        Stream.of(30, 130, 230, 330).forEach(this::assertNoButton);
+        IntStream.range(300, 310).forEach(this::assertNoButton);
+    }
+
+    @Test
     public void testHeaders() {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
@@ -101,5 +111,11 @@ public class GridComponentsTest extends MultiBrowserTest {
         Assert.assertTrue("Notification should contain given text",
                 $(NotificationElement.class).first().getText()
                         .contains(string));
+    }
+
+    private void assertNoButton(int i) {
+        GridRowElement row = $(GridElement.class).first().getRow(i);
+        Assert.assertFalse("Row " + i + " should not have a button",
+                row.getCell(2).isElementPresent(ButtonElement.class));
     }
 }
