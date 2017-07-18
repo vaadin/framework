@@ -668,33 +668,6 @@ public class Tree<T> extends Composite
         }
     }
 
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeight(String height) {
-    }
-
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeight(float height, Unit unit) {
-    }
-
-    /**
-     * @deprecated This component's height is always set to be undefined.
-     *             Calling this method will have no effect.
-     */
-    @Override
-    @Deprecated
-    public void setHeightUndefined() {
-    }
-
     @Override
     public void setCaption(String caption) {
         treeGrid.setCaption(caption);
