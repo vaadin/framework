@@ -25,7 +25,8 @@ public class GridComponents extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         Grid<String> grid = new Grid<>();
-        grid.addColumn(string -> new Label(string), new ComponentRenderer());
+        grid.addColumn(string -> new Label(string), new ComponentRenderer())
+                .setCaption("Label");
         grid.addComponentColumn(string -> {
             if (textFields.containsKey(string)) {
                 log("Reusing old text field for: " + string);
@@ -41,7 +42,7 @@ public class GridComponents extends AbstractTestUIWithLog {
                 textFields.put(string, textField);
             });
             return textField;
-        });
+        }).setId("textField").setCaption("TextField");
         grid.addColumn(string -> {
             Button button = new Button("Click Me!",
                     e -> Notification.show(
@@ -49,9 +50,12 @@ public class GridComponents extends AbstractTestUIWithLog {
                             Type.WARNING_MESSAGE));
             button.setId(string.replace(' ', '_').toLowerCase());
             return button;
-        }, new ComponentRenderer());
+        }, new ComponentRenderer()).setId("button").setCaption("Button");
         // make sure the buttons and focus outlines fit completely in a row
         grid.setRowHeight(40);
+
+        grid.getDefaultHeaderRow().join("textField", "button")
+                .setText("Other Components");
 
         addComponent(grid);
         grid.setSizeFull();

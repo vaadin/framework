@@ -20,6 +20,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnState;
@@ -47,6 +48,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         public String getConnectorId() {
             return connectorId;
+        }
+
+        @Override
+        protected void setDefaultHeaderContent(HeaderCell cell) {
+            // NO-OP, Server takes care of header contents.
         }
     }
 

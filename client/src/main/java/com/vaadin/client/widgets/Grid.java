@@ -4853,7 +4853,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private void updateHeader() {
             HeaderRow row = grid.getHeader().getDefaultRow();
             if (row != null) {
-                row.getCell(this).setText(headerCaption);
+                setDefaultHeaderContent(row.getCell(this));
                 if (isHidable()) {
                     grid.columnHider.updateHidingToggle(this);
                 }
