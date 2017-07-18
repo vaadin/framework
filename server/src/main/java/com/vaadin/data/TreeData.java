@@ -370,13 +370,15 @@ public class TreeData<T> implements Serializable {
     /**
      * Moves an item to become a child of the given parent item. The new parent
      * item must exist in the hierarchy. Setting the parent to {@code null}
-     * makes the item a root item.
+     * makes the item a root item. After making changes to the tree data, {@link
+     * TreeDataProvider#refreshAll()} should be called.
      *
      * @param item
      *         the item to be set as the child of {@code parent}
      * @param parent
      *         the item to be set as parent or {@code null} to set the item as
      *         root
+     * @since 8.1
      */
     public void setParent(T item, T parent) {
         if (!contains(item)) {
@@ -411,12 +413,14 @@ public class TreeData<T> implements Serializable {
 
     /**
      * Moves an item to the position immediately after a sibling item. The two
-     * items must have the same parent.
+     * items must have the same parent. After making changes to the tree data,
+     * {@link TreeDataProvider#refreshAll()} should be called.
      *
      * @param item
      *         the item to be moved
      * @param sibling
      *         the item after which the moved item will be located
+     * @since 8.1
      */
     public void moveAfterSibling(T item, T sibling) {
         if (!contains(item)) {
