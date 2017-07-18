@@ -248,7 +248,7 @@ public class TreeGrid<T> extends Grid<T>
      *         has been explicitly set
      */
     public Column<T, ?> getHierarchyColumn() {
-        return getColumn(getState(false).hierarchyColumnId);
+        return getColumnByInternalId(getState(false).hierarchyColumnId);
     }
 
     /**
