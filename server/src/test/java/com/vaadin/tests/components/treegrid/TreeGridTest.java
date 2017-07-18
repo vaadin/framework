@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TreeGrid;
 import com.vaadin.ui.renderers.TextRenderer;
 
@@ -14,6 +15,7 @@ public class TreeGridTest {
     private boolean expandEventFired = false;
     private boolean collapseEventFired = false;
 
+    @Test
     public void testChangeRendererOfHierarchyColumn() {
         treeGrid.addColumn(Object::toString).setId("foo");
         treeGrid.setHierarchyColumn("foo");
@@ -44,4 +46,14 @@ public class TreeGridTest {
         Assert.assertFalse("Item not collapsed", treeGrid.isExpanded("Foo"));
         Assert.assertTrue("Collapse event not fired", collapseEventFired);
     }
+
+    @Test
+    public void testSetAndGetHierarchyColumn() {
+        Column<String, String> column = treeGrid.addColumn(Object::toString)
+                .setId("foo");
+        treeGrid.setHierarchyColumn("foo");
+        Assert.assertEquals("Hierarchy column was not correctly returned",
+                column, treeGrid.getHierarchyColumn());
+    }
+
 }
