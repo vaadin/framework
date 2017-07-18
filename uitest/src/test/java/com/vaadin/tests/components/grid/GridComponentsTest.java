@@ -82,6 +82,15 @@ public class GridComponentsTest extends MultiBrowserTest {
         assertRowExists(999, "Row 999");
     }
 
+    @Test
+    public void testHeaders() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+        Assert.assertEquals("Label", grid.getHeaderCell(0, 0).getText());
+        Assert.assertEquals("Other Components",
+                grid.getHeaderCell(0, 1).getText());
+    }
+
     private void assertRowExists(int i, String string) {
         GridRowElement row = $(GridElement.class).first().getRow(i);
         Assert.assertEquals("Label text did not match", string,
