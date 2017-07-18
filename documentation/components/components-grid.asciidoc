@@ -621,7 +621,7 @@ grid.addColumn(person -> {
       }, new ComponentRenderer());
 ----
 
-Components in Grid ComponentRenderer are wrapped in a [literal]#++div++# with the style name [literal]#++component-wrap++#. This can be used to style the alignment and size of the component.
+[classname]#Components# in [classname]#Grid# [classname]#ComponentRenderer# are wrapped in a [literal]#++div++# with the style name [literal]#++component-wrap++#. This can be used to style the alignment and size of the [classname]#Component#.
 
 [[components.grid.renderer.custom]]
 === Custom Renderers
