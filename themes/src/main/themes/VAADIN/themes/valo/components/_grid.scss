@@ -222,6 +222,11 @@ $v-grid-details-border-bottom-stripe: 1px solid darken($v-grid-row-background-co
         }
       }
     }
+
+    // Style for ComponentRenderer wrap
+    div.component-wrap {
+        width: 100%;
+      }
   }
 
   // Rows

@@ -35,6 +35,7 @@ public class GridComponents extends AbstractTestUIWithLog {
 
             TextField textField = new TextField();
             textField.setValue(string);
+            textField.setWidth("100%");
             // Make sure all changes are sent immediately
             textField.setValueChangeMode(ValueChangeMode.EAGER);
             textField.addValueChangeListener(e -> {
