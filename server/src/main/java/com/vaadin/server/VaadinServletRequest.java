@@ -86,6 +86,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper
      *
      * @return the current Vaadin servlet request instance if available,
      *         otherwise <code>null</code>
+     * @since 8.1
      */
     public static VaadinServletRequest getCurrent() {
         VaadinRequest currentRequest = VaadinRequest.getCurrent();

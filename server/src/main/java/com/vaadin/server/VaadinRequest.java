@@ -497,6 +497,7 @@ public interface VaadinRequest extends Serializable {
      *
      * @return the current Vaadin request instance if available, otherwise
      *         <code>null</code>
+     * @since 8.1
      */
     public static VaadinRequest getCurrent() {
         return CurrentInstance.get(VaadinRequest.class);

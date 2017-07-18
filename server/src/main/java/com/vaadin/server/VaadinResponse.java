@@ -193,6 +193,7 @@ public interface VaadinResponse extends Serializable {
      *
      * @return the current Vaadin response instance if available, otherwise
      *         <code>null</code>
+     * @since 8.1
      */
     public static VaadinResponse getCurrent() {
         return CurrentInstance.get(VaadinResponse.class);
