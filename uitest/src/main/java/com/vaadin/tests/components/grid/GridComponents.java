@@ -45,6 +45,9 @@ public class GridComponents extends AbstractTestUIWithLog {
             return textField;
         }).setId("textField").setCaption("TextField");
         grid.addColumn(string -> {
+            if (string.contains("30")) {
+                return null;
+            }
             Button button = new Button("Click Me!",
                     e -> Notification.show(
                             "Clicked button on row for: " + string,
