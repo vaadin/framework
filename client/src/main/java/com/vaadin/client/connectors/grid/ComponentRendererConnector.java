@@ -43,7 +43,9 @@ public class ComponentRendererConnector
 
             @Override
             public SimplePanel createWidget() {
-                return GWT.create(SimplePanel.class);
+                SimplePanel panel = GWT.create(SimplePanel.class);
+                panel.setStyleName("component-wrap");
+                return panel;
             }
 
             @Override

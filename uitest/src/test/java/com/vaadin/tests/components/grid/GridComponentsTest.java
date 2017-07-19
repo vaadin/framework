@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -53,6 +54,21 @@ public class GridComponentsTest extends MultiBrowserTest {
         assertRowExists(5, "Row 5");
         $(ButtonElement.class).caption("Reset data").first().click();
         assertRowExists(5, "Row 1005");
+    }
+
+    @Test
+    public void testTextFieldSize() {
+        openTestURL();
+        GridCellElement cell = $(GridElement.class).first().getCell(0, 1);
+        int cellWidth = cell.getSize().getWidth();
+        int fieldWidth = cell.findElement(By.tagName("input")).getSize()
+                .getWidth();
+        // padding left and right, +1 to fix sub pixel issues
+        int padding = 18 * 2 + 1;
+
+        int extraSpace = Math.abs(fieldWidth - cellWidth);
+        Assert.assertTrue("Too much unused space in cell. Expected: " + padding
+                + " Actual: " + extraSpace, extraSpace <= padding);
     }
 
     private void editTextFieldInCell(GridElement grid, int row, int col) {
