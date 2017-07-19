@@ -21,6 +21,8 @@ import java.io.Serializable;
  * Stores key/value pairs and the value type. Payload is set in
  * DragSourceExtension and is transferred during drag operation. It is used for
  * comparing values to acceptance criteria.
+ *
+ * @since 8.1
  */
 public class Payload implements Serializable {
 
