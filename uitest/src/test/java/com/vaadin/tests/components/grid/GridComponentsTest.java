@@ -12,6 +12,7 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -108,11 +109,24 @@ public class GridComponentsTest extends MultiBrowserTest {
         IntStream.range(300, 310).forEach(this::assertNoButton);
     }
 
+    @Test(expected = AssertionError.class)
+    public void testRow31() {
+        openTestURL();
+        // There is a button on row 31. This should fail.
+        assertNoButton(31);
+    }
+
     @Test
     public void testHeaders() {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Label", grid.getHeaderCell(0, 0).getText());
+        GridCellElement headerCell = grid.getHeaderCell(0, 0);
+        Assert.assertTrue("First header should contain a Label",
+                headerCell.isElementPresent(LabelElement.class));
+        Assert.assertEquals("Label",
+                headerCell.$(LabelElement.class).first().getText());
+        Assert.assertFalse("Second header should not contain a component",
+                grid.getHeaderCell(0, 1).isElementPresent(LabelElement.class));
         Assert.assertEquals("Other Components",
                 grid.getHeaderCell(0, 1).getText());
     }
