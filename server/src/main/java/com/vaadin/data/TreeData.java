@@ -368,6 +368,25 @@ public class TreeData<T> implements Serializable {
     }
 
     /**
+     * Get the parent item for the given item.
+     *
+     * @param item
+     *         the item for which to retrieve the parent item for
+     * @return parent item for the given item or {@code null} if the item is a
+     * root item.
+     * @throws IllegalArgumentException
+     *         if the item does not exist in this structure
+     * @since
+     */
+    public T getParent(T item) {
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in hierarchy");
+        }
+        return itemToWrapperMap.get(item).getParent();
+    }
+
+    /**
      * Moves an item to become a child of the given parent item. The new parent
      * item must exist in the hierarchy. Setting the parent to {@code null}
      * makes the item a root item. After making changes to the tree data, {@link
