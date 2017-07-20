@@ -34,6 +34,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A navigator utility that allows switching of views in a part of an
@@ -315,15 +316,7 @@ public class Navigator implements Serializable {
         @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
-                try {
-                    View view = viewClass.newInstance();
-                    return view;
-                } catch (InstantiationException | IllegalAccessException e) {
-                    // TODO error handling
-                    throw new RuntimeException(e);
-                }
-                // TODO error handling
-
+                return ReflectTools.createInstance(viewClass);
             }
             return null;
         }
@@ -1061,11 +1054,7 @@ public class Navigator implements Serializable {
         setErrorProvider(new ViewProvider() {
             @Override
             public View getView(String viewName) {
-                try {
-                    return viewClass.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                return ReflectTools.createInstance(viewClass);
             }
 
             @Override
