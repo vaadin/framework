@@ -10,7 +10,6 @@ from shutil import copy, rmtree
 from glob import glob
 
 # Directory where the resulting war files are stored
-# TODO: deploy results
 resultPath = join("result", "demos")
 
 if not exists(resultPath):
@@ -39,26 +38,27 @@ def parseArgs():
 		args = parser.parse_args()
 	return args
 
-# Function for determining the path for maven executable
-def getMavenCommand():
+# Function for determining the path for an executable
+def getCommand(command):
 	# This method uses .split("\n")[0] which basically chooses the first result where/which returns.
 	# Fixes the case with multiple maven installations available on PATH
 	if platform.system() == "Windows":
 		try:
-			return subprocess.check_output(["where", "mvn.cmd"], universal_newlines=True).split("\n")[0]
+			return subprocess.check_output(["where", "%s.cmd" % (command)], universal_newlines=True).split("\n")[0]
 		except:
 			try:
-				return subprocess.check_output(["where", "mvn.bat"], universal_newlines=True).split("\n")[0]
+				return subprocess.check_output(["where", "%s.bat" % (command)], universal_newlines=True).split("\n")[0]
 			except:
-				print("Unable to locate mvn with where. Is the maven executable in your PATH?")
+				print("Unable to locate command %s with where. Is it in your PATH?" % (command))
 	else:
 		try:
-			return subprocess.check_output(["which", "mvn"], universal_newlines=True).split("\n")[0]
+			return subprocess.check_output(["which", command], universal_newlines=True).split("\n")[0]
 		except:
-			print("Unable to locate maven executable with which. Is the maven executable in your PATH?")
+			print("Unable to locate command %s with which. Is it in your PATH?" % (command))
 	return None
 
-mavenCmd = getMavenCommand()
+mavenCmd = getCommand("mvn")
+dockerCmd = getCommand("docker")
 
 # Get command line arguments. Parses arguments if needed.
 def getArgs():
@@ -176,3 +176,53 @@ def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdou
 	cmd.append("-DpomFile=%s" % (pomFile))
 	print("executing: %s" % (" ".join(cmd)))
 	subprocess.check_call(cmd, stdout=logFile)	
+
+def dockerWrap(imageName):
+	dockerFileContent = """FROM jetty:jre8-alpine
+MAINTAINER juhani@vaadin.com
+
+RUN apk add --update sed
+
+#Autodeploy folder:
+#/var/lib/jetty/webapps/
+
+COPY ./*.war /var/lib/jetty/webapps/
+COPY ./index-generate.sh /opt/
+RUN chmod +x /opt/index-generate.sh
+
+RUN /opt/index-generate.sh
+
+RUN mkdir -p /var/lib/jetty/webapps/root && \
+    cp /opt/index.html /var/lib/jetty/webapps/root && \
+    chmod 644 /var/lib/jetty/webapps/root/index.html
+
+EXPOSE 8080
+"""
+	indexGenerateScript = """#!/bin/ash
+
+wars="/var/lib/jetty/webapps"
+OUTPUT="/opt/index.html"
+
+echo "<UL>" > $OUTPUT
+cd $wars
+for war in `ls -1 *.war`; do
+  nowar=`echo "$war" | sed -e 's/\(^.*\)\(.war$\)/\\1/'`
+  echo "<LI><a href=\"/$nowar/\">$nowar</a></LI>" >> $OUTPUT
+done
+echo "</UL>" >> $OUTPUT
+"""
+	with open(join(resultPath, "Dockerfile"), "w") as dockerFile:
+		dockerFile.write(dockerFileContent)
+	with open(join(resultPath, "index-generate.sh"), "w") as indexScript:
+		indexScript.write(indexGenerateScript)
+	# build image
+	cmd = [dockerCmd, "build", "-t", imageName, resultPath]
+	subprocess.check_call(cmd)
+	# save to tgz
+	cmd = [dockerCmd, "save", imageName]
+	dockerSave = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+	subprocess.check_call(["gzip"], stdin=dockerSave.stdout, stdout=open(join(resultPath, "%s.tgz" % (imageName)), "w"))
+	dockerSave.wait()
+	# delete from docker
+	cmd = [dockerCmd, "rmi", imageName]
+	subprocess.check_call(cmd)

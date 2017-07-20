@@ -44,7 +44,7 @@ if __name__ == "__main__":
 		log_status("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 		dump_status(True)
 		sys.exit(1)
-	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser
+	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser, dockerWrap
 	from DeployHelpers import deployWar
 	# Add command line agrument for ignoring failing demos
 	parser.add_argument("--ignore", type=str, help="Ignored demos", default="")
@@ -82,12 +82,16 @@ if __name__ == "__main__":
 			pass
 		print("")
 
-	for war in wars:
-		try:
-			deployWar(war)
-		except Exception as e:
-			log_status("War %s failed to deploy: %s" % (war, e))
-			demosFailed = True
+	if args.deploy_mode:
+		for war in wars:
+			try:
+				deployWar(war)
+			except Exception as e:
+				log_status("War %s failed to deploy: %s" % (war, e))
+				demosFailed = True
+	else:
+		dockerWrap(args.version)
+
 
 	if demosFailed:
 		dump_status(True)
