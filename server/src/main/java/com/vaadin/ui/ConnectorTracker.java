@@ -272,17 +272,7 @@ public class ConnectorTracker implements Serializable {
         }
 
         cleanStreamVariables();
-    }
 
-    /**
-     * Performs expensive checks to ensure that the connector tracker is cleaned
-     * properly and in a consistent state.
-     * <p>
-     * This should only be called by the framework.
-     *
-     * @since 8.1
-     */
-    public void ensureCleanedAndConsistent() {
         // Do this expensive check only with assertions enabled
         assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
                 + "Check for missing calls to super.setParent(), super.attach() and super.detach() "
@@ -315,6 +305,10 @@ public class ConnectorTracker implements Serializable {
             } else if (!uninitializedConnectors.contains(connector)
                     && !LegacyCommunicationManager
                             .isConnectorVisibleToClient(connector)) {
+                // Connector was visible to the client but is no longer (e.g.
+                // setVisible(false) has been called or SelectiveRenderer tells
+                // it's no longer shown) -> make sure that the full state is
+                // sent again when/if made visible
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);
                 assert isRemovalSentToClient(connector) : "Connector "
