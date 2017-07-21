@@ -28,7 +28,7 @@ The [interfacename]#@WebServlet# annotation settings will be used to configure t
 ----
 import org.osgi.service.component.annotations.Component;
 ...
-@Component(service = VaadinServlet.class)
+@Component(service = HttpServlet.class)
 @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
 @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
 public static class MyUIServlet extends VaadinServlet {
