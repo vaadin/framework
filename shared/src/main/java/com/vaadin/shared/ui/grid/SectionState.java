@@ -79,4 +79,7 @@ public class SectionState implements Serializable {
 
     /** The rows in this section. */
     public List<RowState> rows = new ArrayList<>();
+
+    /** Visibility of this section. */
+    public boolean visible = true;
 }
