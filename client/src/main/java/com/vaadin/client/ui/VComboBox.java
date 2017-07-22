@@ -1989,12 +1989,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     ClickEvent.getType());
             selectedItemIcon.addDomHandler(VComboBox.this,
                     MouseDownEvent.getType());
-            iconUpdating = true;
             selectedItemIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {
                     afterSelectedItemIconChange();
-                    iconUpdating = false;
                 }
             }, LoadEvent.getType());
             panel.insert(selectedItemIcon, 0);
@@ -2449,7 +2447,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     boolean preventNextBlurEventInIE = false;
 
     private String explicitSelectedCaption;
-    private boolean iconUpdating = false;
 
     /*
      * (non-Javadoc)
@@ -2709,7 +2706,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     @Override
     public boolean isWorkPending() {
         return dataReceivedHandler.isWaitingForFilteringResponse()
-                || suggestionPopup.lazyPageScroller.isRunning() || iconUpdating;
+                || suggestionPopup.lazyPageScroller.isRunning();
     }
 
     /**
