@@ -184,3 +184,53 @@ bundle:install -s mvn:com.vaadin/vaadin-client-compiled/8.1.0
 bundle:install -s mvn:com.vaadin/vaadin-themes/8.1.0
 bundle:install -s file:path-to-the-application.jar
 ----
+
+To add push support to your container, add the following bundles:
+
+[source]
+----
+bundle:install -s mvn:com.vaadin.external.slf4j/vaadin-slf4j-jdk14/1.6.1
+bundle:install -s mvn:com.vaadin.external.atmosphere/atmosphere-runtime/2.4.11.vaadin1
+bundle:install -s mvn:com.vaadin/vaadin-push/8.1.0
+----
+
+Here is a Karaf feature specification:
+
+[source]
+----
+feature:install vaadin-all
+----
+
+[source, xml]
+----
+<features name="vaadin-osgi" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+
+    <feature name="vaadin-osgi-deps">
+        <bundle>mvn:org.jsoup/jsoup/1.8.3</bundle>
+        <bundle>mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</bundle>
+    </feature>
+
+    <feature name="vaadin-osgi-core">
+        <feature>http-whiteboard</feature>
+        <feature>vaadin-osgi-deps</feature>
+
+        <bundle>mvn:com.vaadin/vaadin-shared/8.1.0</bundle>
+        <bundle>mvn:com.vaadin/vaadin-server/8.1.0</bundle>
+        <bundle>mvn:com.vaadin/vaadin-osgi-integration/8.1.0</bundle>
+        <bundle>mvn:com.vaadin/vaadin-client-compiled/8.1.0</bundle>
+        <bundle>mvn:com.vaadin/vaadin-themes/8.1.0</bundle>
+    </feature>
+
+    <feature name="vaadin-osgi-push">
+        <bundle>mvn:com.vaadin/vaadin-push/8.1.0</bundle>
+        <bundle>mvn:com.vaadin.external.atmosphere/atmosphere-runtime/2.4.11.vaadin1</bundle>
+        <bundle>mvn:com.vaadin.external.slf4j/vaadin-slf4j-jdk14/1.6.1</bundle>
+    </feature>
+
+    <feature name="vaadin-all">
+        <feature>vaadin-osgi-core</feature>
+        <feature>vaadin-osgi-push</feature>
+    </feature>
+
+</features>
+----
