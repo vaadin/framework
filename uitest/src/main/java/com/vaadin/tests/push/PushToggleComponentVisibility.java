@@ -37,7 +37,7 @@ public class PushToggleComponentVisibility extends UI {
         label.setVisible(false);
         mainLayout.addComponent(label);
 
-        Button button = new Button("Hide me 3 secondes");
+        Button button = new Button("Hide me for 3 seconds");
         button.setId("hide");
         button.addClickListener(event1 -> {
             button.setVisible(false);

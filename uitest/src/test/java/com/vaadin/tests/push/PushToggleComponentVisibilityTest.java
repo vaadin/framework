@@ -17,7 +17,6 @@ package com.vaadin.tests.push;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
@@ -35,7 +34,7 @@ public class PushToggleComponentVisibilityTest extends SingleBrowserTest {
         Assert.assertEquals("Please wait",
                 $(LabelElement.class).first().getText());
 
-        waitForElementPresent(By.id(HIDE));
+        waitUntil(driver -> isElementPresent(ButtonElement.class));
         $(ButtonElement.class).id(HIDE).click();
         Assert.assertEquals("Please wait",
                 $(LabelElement.class).first().getText());
