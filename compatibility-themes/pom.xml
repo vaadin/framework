@@ -288,12 +288,6 @@
 
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <configuration>
-                        <skipSource>true</skipSource>
-                    </configuration>
-                </plugin>
                 <!--This plugin's configuration is used to store Eclipse 
                     m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
