@@ -804,6 +804,8 @@ public abstract class VaadinService implements Serializable {
 
         VaadinSession session = createVaadinSession(request);
 
+	VaadinSession.setCurrent(session);
+
         // Initial WebBrowser data comes from the request
         session.getBrowser().updateRequestDetails(request);
 
@@ -814,11 +816,10 @@ public abstract class VaadinService implements Serializable {
         session.setCommunicationManager(
                 new LegacyCommunicationManager(session));
 
+        storeSession(session, request.getWrappedSession());
+
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
-		
-        VaadinSession.setCurrent(session);
-        storeSession(session, request.getWrappedSession());
 
         return session;
     }
