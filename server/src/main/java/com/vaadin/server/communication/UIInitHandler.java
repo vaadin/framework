@@ -80,9 +80,8 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            VaadinSession.setCurrent(session);
             session.getService().storeSession(session, session.getSession());			
-			
+	
             return commitJsonResponse(request, response,
                     JsonUtil.stringify(params));
         } catch (JsonException e) {
