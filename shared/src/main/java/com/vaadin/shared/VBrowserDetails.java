@@ -218,7 +218,7 @@ public class VBrowserDetails implements Serializable {
             } else {
                 os = OperatingSystem.MACOSX;
             }
-        } else if (userAgent.contains("cros")){
+        } else if (userAgent.contains("; cros ")){
             os = OperatingSystem.CHROMEOS;
             isChromeOS = true;
             parseChromeOSVersion(userAgent);
@@ -227,7 +227,7 @@ public class VBrowserDetails implements Serializable {
 
     // (X11; CrOS armv7l 6946.63.0)
     private void parseChromeOSVersion(String userAgent) {
-        int start = userAgent.indexOf("cros");
+        int start = userAgent.indexOf("; cros ");
         if (start == -1) {
             return;
         }
