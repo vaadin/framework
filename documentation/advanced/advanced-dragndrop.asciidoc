@@ -9,8 +9,6 @@ layout: page
 
 ((("Drag and Drop", id="term.advanced.dragndrop", range="startofrange")))
 
-IMPORTANT: This feature is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
-
 Dragging an object from one location to another by grabbing it with mouse,
 holding the mouse button pressed, and then releasing the button to "drop" it to
 the other location is a common way to move, copy, or associate objects. For

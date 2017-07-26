@@ -528,8 +528,6 @@ Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
 must be between 0.0 and 1.0.
 
-IMPORTANT: The following renderers are to be released in version 8.1 and are currently only available in link:https://vaadin.com/releases[pre-release versions] of the framework, starting from 8.1.0.alpha3.
-
 [classname]#LocalDateRenderer#::
 Formats a column with the [classname]#LocalDate# type.
 The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
