@@ -7,8 +7,6 @@ layout: page
 [[portal.osgi]]
 = OSGi Portlets on Liferay 7
 
-IMPORTANT: The OSGi support as described above is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.beta1.
-
 Lifeary 7 supports modular portlet development using OSGi, and enables e.g.
 using multiple different Vaadin versions in different portlets on a page. 
 
