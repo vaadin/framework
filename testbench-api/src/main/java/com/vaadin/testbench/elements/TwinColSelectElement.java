@@ -166,7 +166,7 @@ public class TwinColSelectElement extends AbstractSelectElement {
      * the available options.
      *
      * @return the select element containing options inside the component
-     * @since
+     * @since 8.1.1
      */
     public WebElement getOptionsElement() {
         return optionsElement;
@@ -177,7 +177,7 @@ public class TwinColSelectElement extends AbstractSelectElement {
      * the selected options.
      *
      * @return the select element containing selection inside the component
-     * @since
+     * @since 8.1.1
      */
     public WebElement getSelectionsElement() {
         return selectionsElement;

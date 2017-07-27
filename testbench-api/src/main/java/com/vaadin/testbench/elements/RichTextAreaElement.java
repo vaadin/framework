@@ -28,7 +28,7 @@ public class RichTextAreaElement extends AbstractFieldElement {
      * editor.
      *
      * @return the iframe element containing the editor
-     * @since
+     * @since 8.1.1
      */
     public WebElement getEditorIframe() {
         return findElement(By.tagName("iframe"));
