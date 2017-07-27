@@ -72,7 +72,7 @@ public abstract class AbstractTextField extends AbstractField<String>
         }
     }
 
-    private int lastKnownCursorPosition = -1;
+    private int lastKnownCursorPosition = 0;
 
     /**
      * Creates a new instance.
