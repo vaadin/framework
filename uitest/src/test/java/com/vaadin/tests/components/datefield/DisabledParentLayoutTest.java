@@ -54,7 +54,7 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
         button.click();
 
         Assert.assertTrue(
-                "Date input text field shoud be enabled for enabled DateField",
+                "Date input text field should be enabled for enabled DateField",
                 textField.isEnabled());
 
         textField.click();
