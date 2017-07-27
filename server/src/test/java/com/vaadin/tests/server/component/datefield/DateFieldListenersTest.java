@@ -50,6 +50,10 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
             return null;
         }
 
+        @Override
+        protected String formatDate(T value) {
+            return value.toString();
+        }
     }
 
     @Test
