@@ -42,7 +42,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.portlet.PortletSession;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -56,8 +55,9 @@ import com.vaadin.util.ReflectTools;
 
 /**
  * Contains everything that Vaadin needs to store for a specific user. This is
- * typically stored in a {@link HttpSession} or {@link PortletSession}, but
- * others storage mechanisms might also be used.
+ * typically stored in a javax.servlet.http.HttpSession or
+ * javax.portlet.PortletSession, but others storage mechanisms might also be
+ * used.
  * <p>
  * Everything inside a {@link VaadinSession} should be serializable to ensure
  * compatibility with schemes using serialization for persisting the session
