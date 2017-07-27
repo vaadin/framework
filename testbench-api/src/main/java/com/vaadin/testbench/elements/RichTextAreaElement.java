@@ -15,8 +15,22 @@
  */
 package com.vaadin.testbench.elements;
 
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.RichTextArea")
 public class RichTextAreaElement extends AbstractFieldElement {
+
+    /**
+     * Gets the {@code <iframe>} element inside the component, containing the
+     * editor.
+     *
+     * @return the iframe element containing the editor
+     * @since
+     */
+    public WebElement getEditorIframe() {
+        return findElement(By.tagName("iframe"));
+    }
 }

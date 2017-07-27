@@ -123,4 +123,14 @@ public class ListSelectElement extends AbstractSelectElement {
 
     }
 
+    /**
+     * Gets the {@code <select>} element inside the component.
+     *
+     * @return the select element inside the component
+     * @since
+     */
+    public WebElement getSelectElement() {
+        return selectElement;
+    }
+
 }
