@@ -230,6 +230,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
 
+        // Set diffstate to something that will always send selection to client
+        updateDiffstate("selectedItemKey", Json.createObject());
+
         fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 oldSelection, true));
     }

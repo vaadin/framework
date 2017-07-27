@@ -47,6 +47,18 @@ public class RadioButtonGroupSelectOnInitTest extends SingleBrowserTest {
                 rbg.getValue());
     }
 
+    @Test
+    public void testSelectOnClientAndResetValueOnServerInListener() {
+        openTestURL();
+        assertInitial();
+
+        RadioButtonGroupElement rbg = getRadioButtonGroup();
+        rbg.selectByText("Reset");
+        // Selecting "Reset" selects "Bar" on server. Value was initially "Bar"
+        Assert.assertEquals("Original value should be selected again", "Bar",
+                rbg.getValue());
+    }
+
     private void assertInitial() {
         Assert.assertEquals("Initial state unexpected", "Bar",
                 getRadioButtonGroup().getValue());

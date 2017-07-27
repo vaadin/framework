@@ -12,8 +12,14 @@ public class RadioButtonGroupSelectOnInit extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         RadioButtonGroup<String> rbg = new RadioButtonGroup<>();
-        rbg.setItems("Foo", "Bar", "Baz");
+        rbg.setItems("Foo", "Bar", "Baz", "Reset");
         rbg.setSelectedItem("Bar");
+
+        rbg.addValueChangeListener(e -> {
+            if ("Reset".equals(e.getValue())) {
+                rbg.setSelectedItem("Bar");
+            }
+        });
 
         addComponent(rbg);
         addComponent(new Button("Deselect", e -> rbg.setSelectedItem(null)));
