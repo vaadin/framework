@@ -77,6 +77,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
                 + getWidget().resolutionAsString(), true);
 
         getWidget().setCurrentDate(getTimeValues(uidl));
+        getWidget().setDefaultDate(getDefaultValues(uidl));
     }
 
     private void updateResolution(UIDL uidl) {
@@ -96,6 +97,16 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
                                 ? uidl.getIntVariable(
                                         getWidget().getResolutionVariable(res))
                                 : -1));
+    }
+
+    protected Map<R, Integer> getDefaultValues(UIDL uidl) {
+        Stream<R> resolutions = getWidget().getResolutions();
+        R resolution = getWidget().getCurrentResolution();
+        return resolutions.collect(Collectors.toMap(Function.identity(),
+                res -> (resolution.compareTo(res) <= 0)
+                        ? uidl.getIntVariable("default-"
+                                + getWidget().getResolutionVariable(res))
+                        : -1));
     }
 
     @SuppressWarnings("unchecked")

@@ -80,6 +80,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private T value;
 
     /**
+     * Default value of the field, displayed when nothing has been selected.
+     */
+    private T defaultValue = null;
+    /**
      * Specified smallest modifiable unit for the date field.
      */
     private R resolution;
@@ -199,7 +203,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             if (currentDate != null) {
                 value = getDatePart(currentDate, res);
             }
-            target.addVariable(this, getResolutionVariable(res), value);
+            String variableName = getResolutionVariable(res);
+            target.addVariable(this, variableName, value);
+            if (defaultValue != null) {
+                int defaultValuePart = getDatePart(defaultValue, res);
+                target.addVariable(this, "default-" + variableName,
+                        defaultValuePart);
+            } else {
+                target.addVariable(this, "default-" + variableName, -1);
+            }
         }
     }
 
@@ -501,6 +513,27 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     @Override
     public T getValue() {
         return value;
+    }
+
+    /**
+     * Returns the current default value.
+     *
+     * @see #setDefaultValue(Temporal)
+     * @return the default value
+     */
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Sets the default value for the field. The default value is the starting
+     * point for the date field when nothing has been selected yet. If no
+     * default value is set, current date/time is used.
+     *
+     * @param defaultValue
+     */
+    public void setDefaultValue(T defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     /**

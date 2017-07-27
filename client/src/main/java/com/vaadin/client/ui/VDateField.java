@@ -54,6 +54,12 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     protected boolean enabled;
 
     /**
+     * The date that is displayed the date field before a value is selected. If
+     * null, display the current date.
+     */
+    private Date defaultDate = null;
+
+    /**
      * The date that is selected in the date field. Null if an invalid date is
      * specified.
      */
@@ -94,6 +100,10 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         this.date = date;
     }
 
+    public void setDefaultDate(Date date) {
+        this.defaultDate = date;
+    }
+
     /**
      * Set the current date using a map with date values.
      * <p>
@@ -106,6 +116,20 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      */
     public void setCurrentDate(Map<R, Integer> dateValues) {
         setCurrentDate(getDate(dateValues));
+    }
+
+    /**
+     * Set the default date using a map with date values.
+     *
+     * @see #setCurrentDate(Map)
+     * @param defaultValues
+     */
+    public void setDefaultDate(Map<R, Integer> defaultValues) {
+        setDefaultDate(getDate(defaultValues));
+    }
+
+    public Date getDefaultDate() {
+        return defaultDate;
     }
 
     public boolean isReadonly() {
