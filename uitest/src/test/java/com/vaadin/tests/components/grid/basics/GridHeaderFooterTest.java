@@ -397,10 +397,10 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertEquals("There should be one footer row", 1,
                 getGridElement().getFooterCount());
         selectMenuPath("Component", "Footer", "Toggle footer visibility");
-        assertEquals("There should be no header rows", 0,
+        assertEquals("There should be no footer rows", 0,
                 getGridElement().getFooterCount());
         selectMenuPath("Component", "Footer", "Toggle footer visibility");
-        assertEquals("There should be one header row again", 1,
+        assertEquals("There should be one footer row again", 1,
                 getGridElement().getFooterCount());
     }
 
