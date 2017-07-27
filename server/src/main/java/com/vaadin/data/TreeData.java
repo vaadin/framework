@@ -373,10 +373,10 @@ public class TreeData<T> implements Serializable {
      * @param item
      *         the item for which to retrieve the parent item for
      * @return parent item for the given item or {@code null} if the item is a
-     * root item.
+     *         root item.
      * @throws IllegalArgumentException
      *         if the item does not exist in this structure
-     * @since
+     * @since 8.1.1
      */
     public T getParent(T item) {
         if (!contains(item)) {
