@@ -30,7 +30,7 @@ public class InlineDateFieldElement extends AbstractFieldElement {
      * Returns the element which receives focus when the component is focused.
      *
      * @return the element which receives focus when the component is focused
-     * @since
+     * @since 8.1.1
      */
     public WebElement getFocusElement() {
         return findElement(By.tagName("table"));
