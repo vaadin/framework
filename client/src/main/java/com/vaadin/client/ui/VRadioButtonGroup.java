@@ -227,9 +227,13 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
     }
 
     public void selectItemKey(String selectedItemKey) {
-        RadioButton radioButton = keyToOptions.get(selectedItemKey);
-        if (radioButton != null) {// Items might not be loaded yet
-            radioButton.setValue(true);
+        if (selectedItemKey != null) {
+            RadioButton radioButton = keyToOptions.get(selectedItemKey);
+            if (radioButton != null) { // Items might not be loaded yet
+                radioButton.setValue(true);
+            }
+        } else {
+            keyToOptions.values().forEach(button -> button.setValue(false));
         }
     }
 }
