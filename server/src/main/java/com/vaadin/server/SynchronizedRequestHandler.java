@@ -41,7 +41,6 @@ public abstract class SynchronizedRequestHandler implements RequestHandler {
             return synchronizedHandleRequest(session, request, response);
         } finally {
             session.unlock();
-            session.getService().storeSession(session, session.getSession());
         }
     }
 
