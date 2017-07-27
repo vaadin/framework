@@ -2,6 +2,7 @@ package com.vaadin.tests.data;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
+import com.vaadin.data.Result;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -9,6 +10,8 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+
+import java.time.LocalDate;
 
 /**
  * Created by elmot on 7/11/2017.
@@ -19,7 +22,16 @@ public class DateValidationUI extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final VerticalLayout layout = new VerticalLayout();
 
-        DateField dateField = new DateField("Date");
+        DateField dateField = new DateField("Date") {
+            @Override
+            protected Result<LocalDate> handleUnparsableDateString(String dateString) {
+                if (dateString.equalsIgnoreCase("Y2K")) {
+                    return Result.ok(LocalDate.of(2000,1,1));
+                } else {
+                    return super.handleUnparsableDateString(dateString);
+                }
+            };
+        };
         dateField.setParseErrorMessage("Parse error");
         dateField.setDateOutOfRangeMessage("Out of range");
         layout.addComponent(dateField);

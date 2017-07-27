@@ -212,7 +212,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             T newDate;
 
-            if("".equals(newDateString)) {
+            if(newDateString==null || "".equals(newDateString)) {
                 newDate = null;
                 uiHasValidDateString = true;
                 currentParseErrorMessage = null;
@@ -225,17 +225,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             if (hasChanges) {
                 dateString = newDateString;
-
                 if (newDateString != null && !newDateString.isEmpty()) {
                     String invalidDateString = (String) variables.get("lastInvalidDateString");
                     if (invalidDateString != null) {
                         Result<T> parsedDate = handleUnparsableDateString(dateString);
-                        uiHasValidDateString = false;
-                        currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
-                        setComponentError(new UserError(getParseErrorMessage()));
+                        parsedDate.ifOk(this::setValue);
+                        if(parsedDate.isError()) {
+                            currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
+                            setComponentError(new UserError(getParseErrorMessage()));
+                        }
                     } else {
-                        uiHasValidDateString = true;
-                        currentParseErrorMessage = null;
                         setValue(newDate,true);
                     }
                 } else {
@@ -546,7 +545,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             .info("cannot parse " + design.attr("value")
                                     + " as date");
                 }
-                dateString = formatDate(value);
                 doSetValue(date);
             } else {
                 throw new RuntimeException("Cannot detect resoluton type "
@@ -604,6 +602,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     @Override
     protected void doSetValue(T value) {
+        uiHasValidDateString = true;
+        currentParseErrorMessage = null;
         // Also set the internal dateString
         if (value != null) {
             dateString = formatDate(value);
@@ -705,12 +705,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     @Override
     public Validator<T> getDefaultValidator() {
-        return (Validator<T>) (value, context) -> {
-            if (currentParseErrorMessage != null) {
-                return ValidationResult.error(currentParseErrorMessage);
+        return new Validator<T>() {
+            @Override
+            public ValidationResult apply(T value, ValueContext context) {
+                if (currentParseErrorMessage != null) {
+                    return ValidationResult.error(currentParseErrorMessage);
+                }
+                // Pass to range validator.
+                return getRangeValidator().apply(value, context);
             }
-            // Pass to range validator.
-            return getRangeValidator().apply(value, context);
         };
     }
 }
