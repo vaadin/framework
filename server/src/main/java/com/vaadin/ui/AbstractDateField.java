@@ -60,15 +60,10 @@ import com.vaadin.ui.declarative.DesignContext;
 /**
  * A date editor component with {@link LocalDate} as an input value.
  *
+ * @param <T> type of date ({@code LocalDate} or {@code LocalDateTime}).
+ * @param <R> resolution enumeration type
  * @author Vaadin Ltd
- *
  * @since 8.0
- *
- * @param <T>
- *            type of date ({@code LocalDate} or {@code LocalDateTime}).
- * @param <R>
- *            resolution enumeration type
- *
  */
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
         extends AbstractField<T>
@@ -116,8 +111,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Constructs an empty <code>AbstractDateField</code> with no caption and
      * specified {@code resolution}.
      *
-     * @param resolution
-     *            initial resolution for the field
+     * @param resolution initial resolution for the field
      */
     public AbstractDateField(R resolution) {
         this.resolution = resolution;
@@ -126,10 +120,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Constructs an empty <code>AbstractDateField</code> with caption.
      *
-     * @param caption
-     *            the caption of the datefield.
-     * @param resolution
-     *            initial resolution for the field
+     * @param caption    the caption of the datefield.
+     * @param resolution initial resolution for the field
      */
     public AbstractDateField(String caption, R resolution) {
         this(resolution);
@@ -140,12 +132,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Constructs a new <code>AbstractDateField</code> with the given caption
      * and initial text contents.
      *
-     * @param caption
-     *            the caption <code>String</code> for the editor.
-     * @param value
-     *            the date/time value.
-     * @param resolution
-     *            initial resolution for the field
+     * @param caption    the caption <code>String</code> for the editor.
+     * @param value      the date/time value.
+     * @param resolution initial resolution for the field
      */
     public AbstractDateField(String caption, T value, R resolution) {
         this(caption, resolution);
@@ -212,7 +201,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             T newDate;
 
-            if(newDateString==null || "".equals(newDateString)) {
+            if ("".equals(newDateString)) {
                 newDate = null;
                 uiHasValidDateString = true;
                 currentParseErrorMessage = null;
@@ -230,15 +219,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                     if (invalidDateString != null) {
                         Result<T> parsedDate = handleUnparsableDateString(dateString);
                         parsedDate.ifOk(this::setValue);
-                        if(parsedDate.isError()) {
+                        if (parsedDate.isError()) {
+                            uiHasValidDateString = true;
                             currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
                             setComponentError(new UserError(getParseErrorMessage()));
                         }
                     } else {
-                        setValue(newDate,true);
+                        setValue(newDate, true);
                     }
                 } else {
-                    setValue(newDate,true);
+                    setValue(newDate, true);
                 }
                 markAsDirty();
             }
@@ -278,8 +268,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If <code>startDate</code> is set to <code>null</code>, any
      * value before <code>endDate</code> will be accepted by the range
      *
-     * @param startDate
-     *            - the allowed range's start date
+     * @param startDate - the allowed range's start date
      */
     public void setRangeStart(T startDate) {
         Date date = convertToDate(startDate);
@@ -295,9 +284,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Sets the current error message if the range validation fails.
      *
-     * @param dateOutOfRangeMessage
-     *            - Localizable message which is shown when value (the date) is
-     *            set outside allowed range
+     * @param dateOutOfRangeMessage - Localizable message which is shown when value (the date) is
+     *                              set outside allowed range
      */
     public void setDateOutOfRangeMessage(String dateOutOfRangeMessage) {
         this.dateOutOfRangeMessage = dateOutOfRangeMessage;
@@ -306,8 +294,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns current date-out-of-range error message.
      *
-     * @see #setDateOutOfRangeMessage(String)
      * @return Current error message for dates out of range.
+     * @see #setDateOutOfRangeMessage(String)
      */
     public String getDateOutOfRangeMessage() {
         return dateOutOfRangeMessage;
@@ -324,11 +312,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Sets the resolution of the DateField.
-     *
+     * <p>
      * The default resolution is {@link DateResolution#DAY} since Vaadin 7.0.
      *
-     * @param resolution
-     *            the resolution to set, not {@code null}
+     * @param resolution the resolution to set, not {@code null}
      */
     public void setResolution(R resolution) {
         this.resolution = resolution;
@@ -341,9 +328,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * validate. If <code>endDate</code> is set to <code>null</code>, any value
      * after <code>startDate</code> will be accepted by the range.
      *
-     * @param endDate
-     *            - the allowed range's end date (inclusive, based on the
-     *            current resolution)
+     * @param endDate - the allowed range's end date (inclusive, based on the
+     *                current resolution)
      */
     public void setRangeEnd(T endDate) {
         Date date = convertToDate(endDate);
@@ -377,14 +363,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Sets formatting used by some component implementations. See
      * {@link SimpleDateFormat} for format details.
-     *
+     * <p>
      * By default it is encouraged to used default formatting defined by Locale,
      * but due some JVM bugs it is sometimes necessary to use this method to
      * override formatting. See Vaadin issue #2200.
      *
-     * @param dateFormat
-     *            the dateFormat to set
-     *
+     * @param dateFormat the dateFormat to set
      * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
      */
     public void setDateFormat(String dateFormat) {
@@ -406,12 +390,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Specifies whether or not date/time interpretation in component is to be
      * lenient.
      *
+     * @param lenient true if the lenient mode is to be turned on; false if it is to
+     *                be turned off.
      * @see Calendar#setLenient(boolean)
      * @see #isLenient()
-     *
-     * @param lenient
-     *            true if the lenient mode is to be turned on; false if it is to
-     *            be turned off.
      */
     public void setLenient(boolean lenient) {
         this.lenient = lenient;
@@ -421,10 +403,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns whether date/time interpretation is to be lenient.
      *
-     * @see #setLenient(boolean)
-     *
      * @return true if the interpretation mode of this calendar is lenient;
-     *         false otherwise.
+     * false otherwise.
+     * @see #setLenient(boolean)
      */
     public boolean isLenient() {
         return lenient;
@@ -439,8 +420,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Sets the value of this object. If the new value is not equal to
      * {@code getValue()}, fires a {@link ValueChangeEvent} .
      *
-     * @param value
-     *            the new value, may be {@code null}
+     * @param value the new value, may be {@code null}
      */
     @Override
     public void setValue(T value) {
@@ -477,8 +457,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * 8601 defines that a week always starts with a Monday so the week numbers
      * are only shown if this is the case.
      *
-     * @param showWeekNumbers
-     *            true if week numbers should be shown, false otherwise.
+     * @param showWeekNumbers true if week numbers should be shown, false otherwise.
      */
     public void setShowISOWeekNumbers(boolean showWeekNumbers) {
         showISOWeekNumbers = showWeekNumbers;
@@ -493,10 +472,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * {@link Exception#getLocalizedMessage()} will be used instead of the value
      * returned by this method.
      *
-     * @see #setParseErrorMessage(String)
-     *
      * @return the error message that the DateField uses when it can't parse the
-     *         textual input from user to a Date object
+     * textual input from user to a Date object
+     * @see #setParseErrorMessage(String)
      */
     public String getParseErrorMessage() {
         return defaultParseErrorMessage;
@@ -508,9 +486,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * {@link #handleUnparsableDateString(String)} method is overridden, the
      * localized message from its exception is used.
      *
+     * @param parsingErrorMessage
      * @see #getParseErrorMessage()
      * @see #handleUnparsableDateString(String)
-     * @param parsingErrorMessage
      */
     public void setParseErrorMessage(String parsingErrorMessage) {
         defaultParseErrorMessage = parsingErrorMessage;
@@ -549,7 +527,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             } else {
                 throw new RuntimeException("Cannot detect resoluton type "
                         + Optional.ofNullable(dateType).map(Type::getTypeName)
-                                .orElse(null));
+                        .orElse(null));
             }
         }
     }
@@ -574,16 +552,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * This method is called to handle a non-empty date string from the client
      * if the client could not parse it as a Date.
-     *
+     * <p>
      * By default, an error result is returned whose error message is
      * {@link #getParseErrorMessage()}.
-     *
+     * <p>
      * This can be overridden to handle conversions, to return a result with
      * {@code null} value (equivalent to empty input) or to return a custom
      * error.
      *
-     * @param dateString
-     *            date string to handle
+     * @param dateString date string to handle
      * @return result that contains parsed Date as a value or an error
      */
     protected Result<T> handleUnparsableDateString(String dateString) {
@@ -604,21 +581,19 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     protected void doSetValue(T value) {
         uiHasValidDateString = true;
         currentParseErrorMessage = null;
+
+        this.value = value;
         // Also set the internal dateString
         if (value != null) {
             dateString = formatDate(value);
         } else {
             dateString = formatDate(getEmptyValue());
         }
-
-        this.value = value;
-        if (uiHasValidDateString) {
-            RangeValidator<T> validator = getRangeValidator();
-            ValidationResult result = validator.apply(value,
-                    new ValueContext(this, this));
-            if (result.isError()) {
-                currentParseErrorMessage = getDateOutOfRangeMessage();
-            }
+        RangeValidator<T> validator = getRangeValidator();
+        ValidationResult result = validator.apply(value,
+                new ValueContext(this, this));
+        if (result.isError()) {
+            currentParseErrorMessage = getDateOutOfRangeMessage();
         }
         if (currentParseErrorMessage == null) {
             setComponentError(null);
@@ -631,10 +606,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Returns a date integer value part for the given {@code date} for the
      * given {@code resolution}.
      *
-     * @param date
-     *            the given date
-     * @param resolution
-     *            the resolution to extract a value from the date by
+     * @param date       the given date
+     * @param resolution the resolution to extract a value from the date by
      * @return the integer value part of the date by the given resolution
      */
     protected abstract int getDatePart(T date, R resolution);
@@ -645,8 +618,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * <p>
      * This is the opposite to {@link #getDatePart(Temporal, Enum)}.
      *
-     * @param resolutionValues
-     *            date values to construct a date
+     * @param resolutionValues date values to construct a date
      * @return date built from the given map of date values
      */
     protected abstract T buildDate(Map<R, Integer> resolutionValues);
@@ -662,8 +634,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Converts {@link Date} to date type {@code T}.
      *
-     * @param date
-     *            a date to convert
+     * @param date a date to convert
      * @return object of type {@code T} representing the {@code date}
      */
     protected abstract T convertFromDate(Date date);
@@ -673,8 +644,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * <p>
      * This is the opposite to {@link #convertFromDate(Date)}.
      *
-     * @param date
-     *            the date of type {@code T}
+     * @param date the date of type {@code T}
      * @return converted date of type {@code Date}
      */
     protected abstract Date convertToDate(T date);
@@ -694,7 +664,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         } else {
             throw new RuntimeException("Cannot detect resoluton type "
                     + Optional.ofNullable(resolutionType).map(Type::getTypeName)
-                            .orElse(null));
+                    .orElse(null));
         }
     }
 
