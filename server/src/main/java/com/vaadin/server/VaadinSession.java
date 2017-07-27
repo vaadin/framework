@@ -1014,6 +1014,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                         }
                     }
                 }
+                // Store session after modifications have been done so that
+                // Spring Session and possibly other implementations realize
+                // that something has changed inside the session attribute
+                service.storeSession(this, session);                
             }
         } finally {
             getLockInstance().unlock();
