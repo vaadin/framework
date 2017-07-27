@@ -816,11 +816,11 @@ public abstract class VaadinService implements Serializable {
         session.setCommunicationManager(
                 new LegacyCommunicationManager(session));
 
-        storeSession(session, request.getWrappedSession());
-
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
 
+        storeSession(session, request.getWrappedSession());
+        
         return session;
     }
 
