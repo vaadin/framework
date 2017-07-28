@@ -201,26 +201,29 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             T newDate;
 
+            boolean hasChanges = false;
+
             if ("".equals(newDateString)) {
                 newDate = null;
+                hasChanges = !uiHasValidDateString;
                 uiHasValidDateString = true;
                 currentParseErrorMessage = null;
             } else {
                 newDate = reconstructDateFromFields(variables, oldDate);
             }
 
-            boolean hasChanges = !Objects.equals(dateString, newDateString) ||
+            hasChanges |= !Objects.equals(dateString, newDateString) ||
                     !Objects.equals(oldDate, newDate);
 
             if (hasChanges) {
                 dateString = newDateString;
                 if (newDateString != null && !newDateString.isEmpty()) {
-                    String invalidDateString = (String) variables.get("lastInvalidDateString");
-                    if (invalidDateString != null) {
+                    if (variables.get("lastInvalidDateString") != null) {
                         Result<T> parsedDate = handleUnparsableDateString(dateString);
                         parsedDate.ifOk(this::setValue);
                         if (parsedDate.isError()) {
-                            uiHasValidDateString = true;
+                            doSetValue(null);
+                            uiHasValidDateString = false;
                             currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
                             setComponentError(new UserError(getParseErrorMessage()));
                         }
