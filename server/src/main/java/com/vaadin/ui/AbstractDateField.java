@@ -217,7 +217,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             if (hasChanges) {
                 dateString = newDateString;
-                if (newDateString != null && !newDateString.isEmpty()) {
+                if (newDateString == null || newDateString.isEmpty()) {
+                    setValue(newDate, true);
+                    uiHasValidDateString = true;
+                    currentParseErrorMessage = null;
+                    setComponentError(null);
+                } else {
                     if (variables.get("lastInvalidDateString") != null) {
                         Result<T> parsedDate = handleUnparsableDateString(dateString);
                         parsedDate.ifOk(this::setValue);
@@ -230,8 +235,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                     } else {
                         setValue(newDate, true);
                     }
-                } else {
-                    setValue(newDate, true);
                 }
                 markAsDirty();
             }
