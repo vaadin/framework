@@ -228,6 +228,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         parsedDate.ifOk(this::setValue);
                         if (parsedDate.isError()) {
                             doSetValue(null);
+                            dateString = null;
                             uiHasValidDateString = false;
                             currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
                             setComponentError(new UserError(getParseErrorMessage()));
