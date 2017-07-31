@@ -241,6 +241,11 @@ public class GridConnector extends AbstractListingConnector
                     }
                 });
             }
+
+            @Override
+            public void recalculateColumnWidths() {
+                getWidget().recalculateColumnWidths();
+            }
         });
 
         getWidget().addSortHandler(this::handleSortEvent);
