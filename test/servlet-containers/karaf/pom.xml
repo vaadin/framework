@@ -8,7 +8,7 @@
         <version>8.1-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
-    <artifactId>karaf</artifactId>
+    <artifactId>vaadin-test-karaf</artifactId>
     <packaging>pom</packaging>
     <name>Vaadin Karaf TestRoot</name>
 
@@ -18,17 +18,8 @@
         <module>karaf-run</module>
     </modules>
 
-    <prerequisites>
-        <maven>3</maven>
-    </prerequisites>
-
     <properties>
-        <vaadin.version>8.1-SNAPSHOT</vaadin.version>
-        <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <karaf.plugin.version>4.0.8</karaf.plugin.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <vaadin.widgetset.mode>local</vaadin.widgetset.mode>
     </properties>
     <build>

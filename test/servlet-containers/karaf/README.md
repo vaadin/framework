@@ -22,7 +22,7 @@ in `karaf-run` module
 * To start karaf as a background process and deploy both vaadin bundles and two existing applications, run `mvn clean pre-integration-test`
 in `karaf-run` module
 * Karaf console is available via ssh at `127.0.0.0:8101` port, username/password is `karaf/karaf` 
-* To stop background karaf process , run `karaf:client@karaf-client-shutdown`
+* To stop background karaf process, run `mvn karaf:client@karaf-client-shutdown`
 in `karaf-run` module
 
 Potential problems

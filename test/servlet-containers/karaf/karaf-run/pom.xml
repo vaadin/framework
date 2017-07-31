@@ -3,8 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>karaf</artifactId>
+        <artifactId>vaadin-test-karaf</artifactId>
         <groupId>com.vaadin</groupId>
+        <relativePath>..</relativePath>
         <version>8.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -72,10 +73,8 @@
                                 <command>bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-shared/${vaadin.version}</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-server/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}
-                                </command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}
-                                </command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}</command>
                                 <command>bundle:install -s mvn:com.vaadin/vaadin-themes/${vaadin.version}</command>
                                 <command>
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>

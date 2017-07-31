@@ -5,26 +5,13 @@
 
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>karaf</artifactId>
+        <artifactId>vaadin-test-karaf</artifactId>
         <version>8.1-SNAPSHOT</version>
+        <relativePath>..</relativePath>
     </parent>
     <artifactId>vaadin-karaf-bundle1</artifactId>
     <packaging>jar</packaging>
     <name>Vaadin Karaf test bundle 1</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <vaadin.widgetset.mode>local</vaadin.widgetset.mode>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>vaadin-addons</id>
-            <url>http://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -39,12 +26,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-server</artifactId>

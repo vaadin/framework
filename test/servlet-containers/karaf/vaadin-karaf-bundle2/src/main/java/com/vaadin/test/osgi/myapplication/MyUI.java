@@ -16,27 +16,27 @@ import com.vaadin.ui.VerticalLayout;
 
 public class MyUI extends UI {
 
-	@Override
-	protected void init(VaadinRequest vaadinRequest) {
-		final VerticalLayout layout = new VerticalLayout();
+    @Override
+    protected void init(VaadinRequest vaadinRequest) {
+        final VerticalLayout layout = new VerticalLayout();
 
-		final TextField name = new TextField();
-		name.setCaption("Type your name here:");
+        final TextField name = new TextField();
+        name.setCaption("Type your name here:");
 
-		Button button = new Button("Click Me");
-		button.addClickListener(e -> {
-			layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
-		});
+        Button button = new Button("Click Me");
+        button.addClickListener(e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
+        });
 
-		layout.addComponents(name, button);
+        layout.addComponents(name, button);
 
-		setContent(layout);
-	}
+        setContent(layout);
+    }
 
-	@Component(service = VaadinServlet.class)
-	@WebServlet(urlPatterns = "/myapp2/*", name = "MyUIServlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
-	public static class MyUIServlet extends VaadinServlet {
-	}
+    @Component(service = VaadinServlet.class)
+    @WebServlet(urlPatterns = "/myapp2/*", name = "MyUIServlet", asyncSupported = true)
+    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+    public static class MyUIServlet extends VaadinServlet {
+    }
 
 }
