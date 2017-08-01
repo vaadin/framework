@@ -2261,12 +2261,10 @@ public class Binder<BEAN> implements Serializable {
     private HasValue<?> makeFieldInstance(
             Class<? extends HasValue<?>> fieldClass) {
         try {
-            return fieldClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException(
-                    String.format("Couldn't create an '%s' type instance",
-                            fieldClass.getName()),
-                    e);
+            return ReflectTools.createInstance(fieldClass);
+        } catch (IllegalArgumentException e) {
+            // Rethrow as the exception type declared for bindInstanceFields
+            throw new IllegalStateException(e);
         }
     }
 

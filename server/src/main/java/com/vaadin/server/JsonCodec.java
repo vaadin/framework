@@ -46,6 +46,7 @@ import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
@@ -611,7 +612,7 @@ public class JsonCodec implements Serializable {
         Class<?> targetClass = getClassForType(targetType);
 
         try {
-            Object decodedObject = targetClass.newInstance();
+            Object decodedObject = ReflectTools.createInstance(targetClass);
             for (BeanProperty property : getProperties(targetClass)) {
 
                 String fieldName = property.getName();

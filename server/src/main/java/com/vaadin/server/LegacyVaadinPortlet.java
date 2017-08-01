@@ -20,6 +20,8 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
+import com.vaadin.util.ReflectTools;
+
 public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private static final LegacyApplicationUIProvider provider = new LegacyApplicationUIProvider() {
@@ -70,7 +72,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
             throws PortletException {
         try {
             Class<? extends LegacyApplication> applicationClass = getApplicationClass();
-            return applicationClass.newInstance();
+            return ReflectTools.createInstance(applicationClass);
         } catch (Exception e) {
             throw new PortletException(e);
         }

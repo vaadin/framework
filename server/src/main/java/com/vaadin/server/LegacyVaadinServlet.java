@@ -20,6 +20,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.vaadin.util.ReflectTools;
+
 public class LegacyVaadinServlet extends VaadinServlet {
 
     private static final UIProvider provider = new LegacyApplicationUIProvider() {
@@ -69,7 +71,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
             throws ServletException {
         try {
             Class<? extends LegacyApplication> applicationClass = getApplicationClass();
-            return applicationClass.newInstance();
+            return ReflectTools.createInstance(applicationClass);
         } catch (Exception e) {
             throw new ServletException(e);
         }
