@@ -30,7 +30,7 @@ public class AbstractSingleSelection extends AbstractTestUI {
         });
 
         addComponent(componentSelect);
-        addComponent(component);
+        addComponent(component); // This will be replaced in createComponent
         addComponent(
                 new Button("Deselect", e -> component.setSelectedItem(null)));
         addComponent(new Button("Select Bar",
@@ -38,7 +38,7 @@ public class AbstractSingleSelection extends AbstractTestUI {
         addComponent(new Button("Refresh",
                 e -> component.getDataProvider().refreshAll()));
 
-        // Trigger component creation through selection event.
+        // Select a value from native select to create the initial component
         componentSelect.getDataProvider().fetch(new Query<>()).findFirst()
                 .ifPresent(componentSelect::setSelectedItem);
     }

@@ -19,6 +19,8 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
  * A common base element class for all single select components.
+ * 
+ * @since 8.1.1
  */
 @ServerClass("com.vaadin.ui.AbstractSingleSelect")
 public abstract class AbstractSingleSelectElement
@@ -35,8 +37,11 @@ public abstract class AbstractSingleSelectElement
 
     /**
      * Return value of this single select component.
+     * <p>
+     * <strong>Note:</strong> If there is no value selected the behavior of
+     * subclasses varies. Pay attention on the actual implementation.
      *
-     * @return the value; {@code null} if no value is selected
+     * @return the value
      */
     public abstract String getValue();
 }

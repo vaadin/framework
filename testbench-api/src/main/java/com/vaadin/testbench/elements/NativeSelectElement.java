@@ -58,14 +58,13 @@ public class NativeSelectElement extends AbstractSingleSelectElement {
     /**
      * Return value of the selected item in the native select element.
      *
-     * @return value of the selected item; {@code null} if no value is selected
+     * @return value of the selected item
+     * 
+     * @throws NoSuchElementException
+     *             if no value is selected
      */
-    public String getValue() {
-        try {
-            return selectElement.getFirstSelectedOption().getText();
-        } catch (NoSuchElementException e) {
-            return null;
-        }
+    public String getValue() throws NoSuchElementException {
+        return selectElement.getFirstSelectedOption().getText();
     }
 
     /**

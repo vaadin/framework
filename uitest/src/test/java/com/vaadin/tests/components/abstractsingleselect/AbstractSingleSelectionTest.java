@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.elements.AbstractSingleSelectElement;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -53,8 +54,24 @@ public class AbstractSingleSelectionTest extends SingleBrowserTest {
         assertInitial();
 
         $(ButtonElement.class).caption("Deselect").first().click();
-        Assert.assertNull("No value should be selected",
-                getSelectElement().getValue());
+
+        AbstractSingleSelectElement selectElement = getSelectElement();
+        // TODO: TB API behavior should be unified.
+        if (selectElement instanceof RadioButtonGroupElement) {
+            Assert.assertNull("No value should be selected",
+                    selectElement.getValue());
+        } else if (selectElement instanceof ComboBoxElement) {
+            Assert.assertTrue("No value should be selected",
+                    selectElement.getValue().isEmpty());
+        } else {
+            // NativeSelectElement throws if no value is selected.
+            try {
+                selectElement.getValue();
+                Assert.fail("No value should be selected");
+            } catch (NoSuchElementException e) {
+                // All is fine.
+            }
+        }
     }
 
     @Test

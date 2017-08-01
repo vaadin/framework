@@ -204,11 +204,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
      * @return value of the combo box element
      */
     public String getValue() {
-        String value = getInputField().getAttribute("value");
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-        return value;
+        return getInputField().getAttribute("value");
     }
 
     /**
