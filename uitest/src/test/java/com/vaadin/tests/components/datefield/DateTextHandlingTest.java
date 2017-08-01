@@ -21,8 +21,7 @@ public class DateTextHandlingTest extends SingleBrowserTest {
         openTestURL();
         DateFieldElement dateFieldElement = $(DateFieldElement.class).first();
         ButtonElement validate = $(ButtonElement.class).first();
-        WebElement dateTextbox = dateFieldElement
-                .findElement(com.vaadin.testbench.By.className("v-textfield"));
+        WebElement dateTextbox = dateFieldElement.getInputElement();
 
         dateTextbox.sendKeys("Y2K",Keys.TAB);
         validate.click();

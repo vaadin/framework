@@ -47,8 +47,8 @@ public class DateTextHandling extends AbstractTestUI {
         Binder<Void> binder = new Binder<>();
         binder.forField(dateField).withStatusLabel(errorLabel).bind(o -> dateField.getValue(), null);
 
-        Button button = new Button("Validate!");
-        button.addClickListener(event1 -> {
+        Button buttonValidate = new Button("Validate!");
+        buttonValidate.addClickListener(event1 -> {
             binder.validate();
             if (dateField.getValue() == null) {
                 Notification.show("NULL");
@@ -57,8 +57,11 @@ public class DateTextHandling extends AbstractTestUI {
             }
 
         });
-        layout.addComponent(button);
+        layout.addComponent(buttonValidate);
 
+        Button setValueButton = new Button("Set 2011-12-13",
+                e -> dateField.setValue(LocalDate.of(2011, 12, 13)));
+        layout.addComponent(setValueButton);
         addComponent(layout);
     }
 }

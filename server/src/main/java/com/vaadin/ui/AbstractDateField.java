@@ -208,6 +208,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             final T oldDate = getValue();
 
             // this enables analyzing invalid input on the server
+            // this variable is null if the date was chosen with popup calendar
+            // or containds user-typed string
             final String newDateString = (String) variables.get("dateString");
 
             T newDate;
@@ -215,10 +217,11 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             boolean hasChanges = false;
 
             if ("".equals(newDateString)) {
+
                 newDate = null;
-                hasChanges = !uiHasValidDateString;
-                uiHasValidDateString = true;
-                currentParseErrorMessage = null;
+                hasChanges = !uiHasValidDateString;//TODO check if those 3 lines
+                uiHasValidDateString = true;       // TODO are necessary and
+                currentParseErrorMessage = null;   //TODO not handled with latter hasChanges checks
             } else {
                 newDate = reconstructDateFromFields(variables, oldDate);
             }
@@ -600,7 +603,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         } else {
             dateString = formatDate(getEmptyValue());
         }
-        RangeValidator<T> validator = getRangeValidator();
+        RangeValidator<T> validator = getRangeValidator();// TODO move range check to internal validator?
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
         if (result.isError()) {
