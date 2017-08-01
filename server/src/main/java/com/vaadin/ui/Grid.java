@@ -2773,7 +2773,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * but this method can be used to force recalculation in situations when
      * grid does not recalculate automatically.
      *
-     * @since
+     * @since 8.1.1
      */
     public void recalculateColumnWidths() {
         getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
