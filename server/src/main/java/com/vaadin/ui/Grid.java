@@ -3207,6 +3207,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Sets the visibility of the Header in this Grid.
+     * 
+     * @param headerVisible
+     *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public void setHeaderVisible(boolean headerVisible) {
+        getHeader().setVisible(headerVisible);
+    }
+
+    /**
+     * Gets the visibility of the Header in this Grid.
+     * 
+     * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public boolean isHeaderVisible() {
+        return getHeader().isVisible();
+    }
+
+    /**
      * Returns the current default row of the header.
      *
      * @return the default row or null if no default row set
@@ -3354,6 +3377,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void removeFooterRow(int index) {
         getFooter().removeRow(index);
+    }
+
+    /**
+     * Sets the visibility of the Footer in this Grid.
+     * 
+     * @param footerVisible
+     *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public void setFooterVisible(boolean footerVisible) {
+        getFooter().setVisible(footerVisible);
+    }
+
+    /**
+     * Gets the visibility of the Footer in this Grid.
+     * 
+     * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public boolean isFooterVisible() {
+        return getFooter().isVisible();
     }
 
     /**

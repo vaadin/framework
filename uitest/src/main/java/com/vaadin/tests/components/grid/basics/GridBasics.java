@@ -603,6 +603,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createHeaderMenu(MenuItem headerMenu) {
+        headerMenu.addItem("Toggle header visibility",
+                menuitem -> grid.setHeaderVisible(!grid.isHeaderVisible()));
+
         headerMenu.addItem("Append header row", menuItem -> {
             HeaderRow row = grid.appendHeaderRow();
 
@@ -662,6 +665,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createFooterMenu(MenuItem footerMenu) {
+        footerMenu.addItem("Toggle footer visibility",
+                menuitem -> grid.setFooterVisible(!grid.isFooterVisible()));
+
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
             grid.getColumns().forEach(
