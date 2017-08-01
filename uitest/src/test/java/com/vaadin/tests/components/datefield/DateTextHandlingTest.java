@@ -13,18 +13,20 @@ import org.openqa.selenium.WebElement;
 import static org.junit.Assert.assertEquals;
 
 public class DateTextHandlingTest extends SingleBrowserTest {
+
+    public static final String Y2K_GB_LOCALE = "01-Jan-2000";
+
     @Test
     public void testSpecialValue() throws InterruptedException {
         openTestURL();
         DateFieldElement dateFieldElement = $(DateFieldElement.class).first();
         ButtonElement validate = $(ButtonElement.class).first();
-        LabelElement validateResult = $(LabelElement.class).first();
         WebElement dateTextbox = dateFieldElement
                 .findElement(com.vaadin.testbench.By.className("v-textfield"));
 
         dateTextbox.sendKeys("Y2K",Keys.TAB);
         validate.click();
-        assertNotification("Y2K Sould be converted to 1-JAN-2000", "01-Jan-2000");
+        assertNotification("Y2K Should be converted to " + Y2K_GB_LOCALE, Y2K_GB_LOCALE);
 
         dateTextbox.clear();
         validate.click();

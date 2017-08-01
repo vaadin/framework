@@ -45,7 +45,7 @@ public class DateTextHandling extends AbstractTestUI {
         layout.addComponent(errorLabel);
 
         Binder<Void> binder = new Binder<>();
-        binder.forField(dateField).withStatusLabel(errorLabel).bind(o -> dateField.getEmptyValue(), null);
+        binder.forField(dateField).withStatusLabel(errorLabel).bind(o -> dateField.getValue(), null);
 
         Button button = new Button("Validate!");
         button.addClickListener(event1 -> {
