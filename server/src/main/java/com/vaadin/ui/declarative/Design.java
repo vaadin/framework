@@ -44,6 +44,7 @@ import com.vaadin.ui.Composite;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Design is used for reading a component hierarchy from an html string or input
@@ -175,7 +176,7 @@ public class Design implements Serializable {
                             + " which is not a Vaadin Component class";
 
             try {
-                return componentClass.newInstance();
+                return ReflectTools.createInstance(componentClass);
             } catch (Exception e) {
                 throw new DesignException(
                         "Could not create component " + fullyQualifiedClassName,

@@ -39,6 +39,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
@@ -124,7 +125,7 @@ public class LegacyCommunicationManager implements Serializable {
         }
 
         try {
-            SharedState referenceState = stateType.newInstance();
+            SharedState referenceState = ReflectTools.createInstance(stateType);
             EncodeResult encodeResult = JsonCodec.encode(referenceState, null,
                     stateType, null);
             return encodeResult.getEncodedValue();

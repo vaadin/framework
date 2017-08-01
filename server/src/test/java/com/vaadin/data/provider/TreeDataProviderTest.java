@@ -81,6 +81,14 @@ public class TreeDataProviderTest
     }
 
     @Test
+    public void treeData_get_parent() {
+        StrBean root = rootData.get(0);
+        StrBean firstChild = data.getChildren(root).get(0);
+        Assert.assertNull(data.getParent(root));
+        Assert.assertEquals(root, data.getParent(firstChild));
+    }
+
+    @Test
     public void treeData_set_parent() {
         StrBean item1 = rootData.get(0);
         StrBean item2 = rootData.get(1);

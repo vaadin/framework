@@ -18,6 +18,7 @@ package com.vaadin.testbench.elements;
 import java.util.List;
 
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
@@ -26,23 +27,35 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.NativeSelect")
 public class NativeSelectElement extends AbstractSingleSelectElement {
-    private Select selectElement;
+    private Select select;
+    private WebElement selectElement;
 
     @Override
     protected void init() {
         super.init();
-        selectElement = new Select(findElement(By.tagName("select")));
+        selectElement = findElement(By.tagName("select"));
+        select = new Select(selectElement);
+    }
+
+    /**
+     * Gets the {@code <select>} element inside the component.
+     *
+     * @return the select element inside the component
+     * @since 8.1.1
+     */
+    public WebElement getSelectElement() {
+        return selectElement;
     }
 
     public List<TestBenchElement> getOptions() {
-        return wrapElements(selectElement.getOptions(), getCommandExecutor());
+        return wrapElements(select.getOptions(), getCommandExecutor());
     }
 
     public void selectByText(String text) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
-        selectElement.selectByVisibleText(text);
+        select.selectByVisibleText(text);
         waitForVaadin();
     }
 
@@ -63,12 +76,13 @@ public class NativeSelectElement extends AbstractSingleSelectElement {
      * @throws NoSuchElementException
      *             if no value is selected
      */
+
     public String getValue() throws NoSuchElementException {
-        return selectElement.getFirstSelectedOption().getText();
+        return select.getFirstSelectedOption().getText();
     }
 
     /**
-     * Select item of the native select element with the specified value
+     * Select item of the native select element with the specified value.
      *
      * @param chars
      *            value of the native select item will be selected
