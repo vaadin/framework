@@ -229,22 +229,28 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             if (hasChanges) {
                 dateString = newDateString;
                 if (newDateString == null || newDateString.isEmpty()) {
-                    setValue(newDate, true);
                     uiHasValidDateString = true;
                     currentParseErrorMessage = null;
+                    setValue(newDate, true);
                     setComponentError(null);
                 } else {
                     if (variables.get("lastInvalidDateString") != null) {
                         Result<T> parsedDate = handleUnparsableDateString(dateString);
-                        parsedDate.ifOk(this::setValue);
+                        parsedDate.ifOk(v-> {
+                            uiHasValidDateString = true;
+                            currentParseErrorMessage = null;
+                            setValue(v,true);
+                        });
                         if (parsedDate.isError()) {
-                            doSetValue(null);
                             dateString = null;
                             uiHasValidDateString = false;
                             currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
                             setComponentError(new UserError(getParseErrorMessage()));
+                            setValue(null,true);
                         }
                     } else {
+                        uiHasValidDateString = true;
+                        currentParseErrorMessage = null;
                         setValue(newDate, true);
                     }
                 }
@@ -444,34 +450,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Sets the value of this object. If the new value is not equal to
-     * {@code getValue()}, fires a {@link ValueChangeEvent} .
-     *
-     * @param value
-     *            the new value, may be {@code null}
-     */
-    @Override
-    public void setValue(T value) {
-        /*
-         * First handle special case when the client side component have a date
-         * string but value is null (e.g. unparsable date string typed in by the
-         * user). No value changes should happen, but we need to do some
-         * internal housekeeping.
-         */
-        if (value == null && !uiHasValidDateString) {
-            /*
-             * Side-effects of doSetValue clears possible previous strings and
-             * flags about invalid input.
-             */
-            doSetValue(null);
-
-            markAsDirty();
-            return;
-        }
-        super.setValue(value);
-    }
-
-    /**
      * Checks whether ISO 8601 week numbers are shown in the date selector.
      *
      * @return true if week numbers are shown, false otherwise.
@@ -564,11 +542,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Formats date according to the components locale.
+     * To be reimplemented in subclasses.
      *
      * @param value the date or {@code null}
      * @return textual representation of the date or empty string for {@code null}
+     * @since 8.1
      */
-    protected abstract String formatDate(T value);
+    protected String formatDate(T value) {
+        return Objects.toString(value, "");
+    }
 
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
@@ -610,8 +592,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     @Override
     protected void doSetValue(T value) {
-        uiHasValidDateString = true;
-        currentParseErrorMessage = null;
 
         this.value = value;
         // Also set the internal dateString
