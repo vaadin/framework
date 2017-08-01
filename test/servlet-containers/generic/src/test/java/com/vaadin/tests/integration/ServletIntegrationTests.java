@@ -23,9 +23,6 @@ public class ServletIntegrationTests {
         notWebsocketCompatible.add("weblogic10");
         notWebsocketCompatible.add("wildfly9-nginx");
 
-        // Jetty 9 but no ws support by default
-        notWebsocketCompatible.add("karaf4");
-
         notJSR356Compatible.add("jetty8");
         notJSR356Compatible.add("tomcat7");
     }
