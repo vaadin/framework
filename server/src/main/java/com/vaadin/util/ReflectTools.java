@@ -32,7 +32,7 @@ import java.lang.reflect.Modifier;
 public class ReflectTools implements Serializable {
 
     static final String CREATE_INSTANCE_FAILED = "Unable to create an instance of {0}. Make sure it has a no-arg constructor";
-    static final String CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS = "Unable to create an instance of {0}. Make sure the class is static if it is an inner class.";
+    static final String CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS = "Unable to create an instance of {0}. Make sure the class is static if it is a nested class.";
     static final String CREATE_INSTANCE_FAILED_ACCESS_EXCEPTION = "Unable to create an instance of {0}. Make sure the class is public and that is has a public no-arg constructor.";
     static final String CREATE_INSTANCE_FAILED_NO_PUBLIC_NOARG_CONSTRUCTOR = "Unable to create an instance of {0}. Make sure the class has a public no-arg constructor.";
     static final String CREATE_INSTANCE_FAILED_LOCAL_CLASS = "Cannot instantiate local class '%s'. Move class declaration outside the method.";
@@ -269,6 +269,7 @@ public class ReflectTools implements Serializable {
      * @param cls
      *            the class to instantiate
      * @return an instance of the class
+     * @since 8.1.1
      */
     public static <T> T createInstance(Class<T> cls) {
         checkClassAccessibility(cls);
