@@ -3198,6 +3198,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * 
      * @param headerVisible
      *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public void setHeaderVisible(boolean headerVisible) {
         getHeader().setVisible(headerVisible);
@@ -3207,6 +3209,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Gets the visibility of the Header in this Grid.
      * 
      * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public boolean isHeaderVisible() {
         return getHeader().isVisible();
@@ -3367,6 +3371,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * 
      * @param footerVisible
      *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public void setFooterVisible(boolean footerVisible) {
         getFooter().setVisible(footerVisible);
@@ -3376,6 +3382,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Gets the visibility of the Footer in this Grid.
      * 
      * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public boolean isFooterVisible() {
         return getFooter().isVisible();

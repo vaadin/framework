@@ -803,6 +803,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
      * 
      * @param visible
      *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public void setVisible(boolean visible) {
         if (getState(false).visible != visible) {
@@ -814,6 +816,8 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
      * Gets the visibility of this section.
      * 
      * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
      */
     public boolean isVisible() {
         return getState(false).visible;
