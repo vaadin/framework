@@ -46,14 +46,15 @@ public class DateTimeFieldIsValidTest extends MultiBrowserTest {
         assertLogText("2. buttonClick: value: 01/01/01 1.12, is valid: true");
 
         dateTextbox.sendKeys("lala", Keys.TAB);
+        assertLogText("3. valueChange: value: null, is valid: false");
         button.click();
-        assertLogText("3. buttonClick: value: null, is valid: false");
+        assertLogText("4. buttonClick: value: null, is valid: false");
 
         dateTextbox.clear();
         dateTextbox.sendKeys("02/02/02 2.34", Keys.TAB);
-        assertLogText("4. valueChange: value: 02/02/02 2.34, is valid: true");
+        assertLogText("5. valueChange: value: 02/02/02 2.34, is valid: true");
         button.click();
-        assertLogText("5. buttonClick: value: 02/02/02 2.34, is valid: true");
+        assertLogText("6. buttonClick: value: 02/02/02 2.34, is valid: true");
     }
 
     private void assertLogText(String expected) throws Exception {
