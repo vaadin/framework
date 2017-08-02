@@ -238,6 +238,7 @@ public class Tree<T> extends Composite
     private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
     private IconGenerator<T> iconProvider = t -> null;
     private final TreeRenderer renderer;
+    private boolean autoRecalculateWidth = true;
 
     /**
      * Constructs a new Tree Component.
@@ -259,10 +260,18 @@ public class Tree<T> extends Composite
         treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
-        treeGrid.addExpandListener(e -> fireExpandEvent(e.getExpandedItem(),
-                e.isUserOriginated()));
-        treeGrid.addCollapseListener(e -> fireCollapseEvent(
-                e.getCollapsedItem(), e.isUserOriginated()));
+        treeGrid.addExpandListener(e -> {
+            fireExpandEvent(e.getExpandedItem(), e.isUserOriginated());
+            if (autoRecalculateWidth) {
+                treeGrid.recalculateColumnWidths();
+            }
+        });
+        treeGrid.addCollapseListener(e -> {
+            fireCollapseEvent(e.getCollapsedItem(), e.isUserOriginated());
+            if (autoRecalculateWidth) {
+                treeGrid.recalculateColumnWidths();
+            }
+        });
         treeGrid.addItemClickListener(e -> fireEvent(
                 new ItemClick<>(this, e.getItem(), e.getMouseEventDetails())));
     }
@@ -787,6 +796,35 @@ public class Tree<T> extends Composite
      */
     public void setContentMode(ContentMode contentMode) {
         renderer.getState().mode = contentMode;
+    }
+
+    /**
+     * Returns the current state of automatic width recalculation.
+     * 
+     * @return {@code true} if enabled; {@code false} if disabled
+     * 
+     * @since 8.1.1
+     */
+    public boolean isAutoRecalculateWidth() {
+        return autoRecalculateWidth;
+    }
+
+    /**
+     * Sets the automatic width recalculation on or off. This feature is on by
+     * default.
+     * 
+     * @param autoRecalculateWidth
+     *            {@code true} to enable recalculation; {@code false} to turn it
+     *            off
+     * 
+     * @since 8.1.1
+     */
+    public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
+        this.autoRecalculateWidth = autoRecalculateWidth;
+
+        treeGrid.getColumns().get(0)
+                .setMinimumWidthFromContent(autoRecalculateWidth);
+        treeGrid.recalculateColumnWidths();
     }
 
     /**
