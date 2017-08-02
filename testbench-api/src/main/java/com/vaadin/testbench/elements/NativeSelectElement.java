@@ -17,6 +17,7 @@ package com.vaadin.testbench.elements;
 
 import java.util.List;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -25,7 +26,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.NativeSelect")
-public class NativeSelectElement extends AbstractSelectElement {
+public class NativeSelectElement extends AbstractSingleSelectElement {
     private Select select;
     private WebElement selectElement;
 
@@ -70,9 +71,13 @@ public class NativeSelectElement extends AbstractSelectElement {
     /**
      * Return value of the selected item in the native select element.
      *
-     * @return value of the selected item in the native select element
+     * @return value of the selected item
+     * 
+     * @throws NoSuchElementException
+     *             if no value is selected
      */
-    public String getValue() {
+
+    public String getValue() throws NoSuchElementException {
         return select.getFirstSelectedOption().getText();
     }
 
