@@ -48,7 +48,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
-import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.renderers.AbstractRenderer;
@@ -803,6 +802,8 @@ public class Tree<T> extends Composite
      * Returns the current state of automatic width recalculation.
      * 
      * @return {@code true} if enabled; {@code false} if disabled
+     * 
+     * @since 8.1.1
      */
     public boolean isAutoRecalculateWidth() {
         return autoRecalculateWidth;
@@ -815,18 +816,15 @@ public class Tree<T> extends Composite
      * @param autoRecalculateWidth
      *            {@code true} to enable recalculation; {@code false} to turn it
      *            off
+     * 
+     * @since 8.1.1
      */
     public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
         this.autoRecalculateWidth = autoRecalculateWidth;
 
+        treeGrid.getColumns().get(0)
+                .setMinimumWidthFromContent(autoRecalculateWidth);
         treeGrid.recalculateColumnWidths();
-
-        Column<T, ?> column = treeGrid.getColumns().get(0);
-        if (autoRecalculateWidth) {
-            column.setMinimumWidthFromContent(true);
-        } else {
-            column.setMinimumWidthFromContent(false);
-        }
     }
 
     /**
