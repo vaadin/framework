@@ -251,6 +251,9 @@ public abstract class VaadinService implements Serializable {
         ArrayList<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
+        if (!getDeploymentConfiguration().isProductionMode()) {
+            handlers.add(new RefreshHandler());
+        }
         handlers.add(new HeartbeatHandler());
         handlers.add(new FileUploadHandler());
         handlers.add(new UidlRequestHandler());

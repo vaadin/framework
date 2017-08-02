@@ -149,6 +149,11 @@ public class ServletPortletHelper implements Serializable {
         return isPathInfo(request, ApplicationConstants.PUSH_PATH);
     }
 
+    public static boolean isRefreshRequest(VaadinRequest request) {
+        return request instanceof VaadinServletRequest
+                && hasPathPrefix(request, ApplicationConstants.REFRESH_PATH);
+    }
+
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()

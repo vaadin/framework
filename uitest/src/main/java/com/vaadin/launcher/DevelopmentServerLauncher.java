@@ -47,6 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -181,6 +183,19 @@ public class DevelopmentServerLauncher {
         }
 
         final WebAppContext webappcontext = new WebAppContext();
+
+        /*
+         * Store session to help testing how the functionality works when the
+         * session is persisted between restarts.
+         */
+        SessionHandler sessionHandler = webappcontext.getSessionHandler();
+        final HashSessionManager sessionManager = (HashSessionManager) sessionHandler
+                .getSessionManager();
+
+        File sessionDir = new File("work/sessions/");
+        sessionDir.mkdirs();
+        sessionManager.setStoreDirectory(sessionDir);
+
         webappcontext.setContextPath(serverArgs.get("context"));
         webappcontext.setWar(serverArgs.get("webroot"));
         server.setHandler(webappcontext);
@@ -253,6 +268,8 @@ public class DevelopmentServerLauncher {
                     @Override
                     public void filesChanged(List<String> filenames)
                             throws Exception {
+                        sessionManager.saveSessions(false);
+
                         webappcontext.stop();
                         server.stop();
                         webappcontext.start();
