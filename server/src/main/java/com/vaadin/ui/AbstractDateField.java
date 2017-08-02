@@ -209,7 +209,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
             // this enables analyzing invalid input on the server
             // this variable is null if the date was chosen with popup calendar
-            // or containds user-typed string
+            // or contains user-typed string
             final String newDateString = (String) variables.get("dateString");
 
             T newDate;
@@ -219,9 +219,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             if ("".equals(newDateString)) {
 
                 newDate = null;
-                hasChanges = !uiHasValidDateString;//TODO check if those 3 lines
-                uiHasValidDateString = true;       // TODO are necessary and
-                currentParseErrorMessage = null;   //TODO not handled with latter hasChanges checks
+                // TODO check if the following 3 lines are necessary
+                hasChanges = !uiHasValidDateString;
+                uiHasValidDateString = true;
+                currentParseErrorMessage = null;
             } else {
                 newDate = reconstructDateFromFields(variables, oldDate);
             }
@@ -270,6 +271,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         }
     }
 
+    /**
+     * Construct a date object from the individual field values received from the
+     * client.
+     *
+     * @since 8.1.1
+     */
     protected T reconstructDateFromFields(Map<String, Object> variables, T oldDate) {
         Map<R, Integer> calendarFields = new HashMap<>();
 
@@ -549,7 +556,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *
      * @param value the date or {@code null}
      * @return textual representation of the date or empty string for {@code null}
-     * @since 8.1
+     * @since 8.1.1
      */
     protected String formatDate(T value) {
         return Objects.toString(value, "");
