@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -107,6 +108,21 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
             }
         }
         return null;
+    }
+
+    /**
+     * Remove any cached resources that use the specified classloader.
+     * OSGi frameworks should call this method with the bundle classloader when bundles are removed.
+     * @param classLoader
+     */
+    public void invalidateCachedResources(ClassLoader classLoader) {
+        Iterator<Map.Entry<String, Method>> it = invocationMethodCache.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Method> entry = it.next();
+            if (entry.getValue().getDeclaringClass().getClassLoader() == classLoader) {
+                it.remove();
+            }
+        }
     }
 
 }
