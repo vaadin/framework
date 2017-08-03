@@ -20,6 +20,7 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.ui.Grid;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ import java.util.Set;
  * @author Stephan Knitelius
  * @since 8.1
  */
-public class GridDragger<T> {
+public class GridDragger<T> implements Serializable {
 
     /**
      * Drop target grid.
