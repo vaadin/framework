@@ -37,9 +37,10 @@ content += createTableRow(getTrafficLight(tagOk), "Tag ok on github.com")
 content += createTableRow("", "<a href=\"{url}\">Tag and pin build</a>".format(url=buildResultUrl))
 
 # Traffic light for archetype metadata
+# TODO check all three metadata files, based on pre-release or not
 archetypeMetadataUrl = ""
 if not prerelease:
-    archetypeMetadataUrl = "http://vaadin.com/download/maven-archetypes.xml"
+    archetypeMetadataUrl = "http://vaadin.com/download/eclipse-maven-archetypes.xml"
 else:
     archetypeMetadataUrl ="http://vaadin.com/download/maven-archetypes-prerelease.xml"
 
