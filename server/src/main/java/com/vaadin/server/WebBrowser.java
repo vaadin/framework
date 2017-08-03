@@ -332,8 +332,9 @@ public class WebBrowser implements Serializable {
     /**
      * Tests if the browser is run on ChromeOS (e.g. a Chromebook).
      *
-     * @return true if run on ChromeOS false if the user is not using ChromeOS or if no
-     *         information on the browser is present
+     * @return true if run on ChromeOS false if the user is not using ChromeOS
+     *         or if no information on the browser is present
+     * @since 8.1.1
      */
     public boolean isChromeOS() {
         return browserDetails.isChromeOS();

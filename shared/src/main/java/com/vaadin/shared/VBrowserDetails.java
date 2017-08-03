@@ -218,7 +218,7 @@ public class VBrowserDetails implements Serializable {
             } else {
                 os = OperatingSystem.MACOSX;
             }
-        } else if (userAgent.contains("; cros ")){
+        } else if (userAgent.contains("; cros ")) {
             os = OperatingSystem.CHROMEOS;
             isChromeOS = true;
             parseChromeOSVersion(userAgent);
@@ -262,7 +262,7 @@ public class VBrowserDetails implements Serializable {
             }
         }
     }
-    
+
     private void parseAndroidVersion(String userAgent) {
         // Android 5.1;
         if (!userAgent.contains("android")) {
@@ -605,6 +605,7 @@ public class VBrowserDetails implements Serializable {
      * Tests if the browser is run on Chrome OS (e.g. a Chromebook).
      *
      * @return true if run on Chrome OS, false otherwise
+     * @since 8.1.1
      */
     public boolean isChromeOS() {
         return isChromeOS;
