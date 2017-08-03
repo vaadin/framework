@@ -54,7 +54,7 @@ public class GridDragger<T> implements Serializable {
     /**
      * Extends a Grid and makes it's row ordrable by dragging entries up or down.
      *
-     * @param target Grid to be extended.
+     * @param grid Grid to be extended.
      */
     public GridDragger(Grid<T> grid) {
         this(grid, grid, DropMode.ON_TOP_OR_BETWEEN);
@@ -63,7 +63,7 @@ public class GridDragger<T> implements Serializable {
     /**
      * Extends a Grid and makes it's row ordrable by dragging entries up or down.
      *
-     * @param target Grid to be extended.
+     * @param grid Grid to be extended.
      * @param dropMode DropMode to be used.
      */
     public GridDragger(Grid<T> grid, DropMode dropMode) {
@@ -128,5 +128,5 @@ public class GridDragger<T> implements Serializable {
     public GridDragSource<T> getGridDragSource() {
         return gridDragSource;
     }
-
+    
 }
