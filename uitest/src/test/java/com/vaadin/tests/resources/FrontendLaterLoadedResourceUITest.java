@@ -38,6 +38,8 @@ public class FrontendLaterLoadedResourceUITest extends MultiBrowserTest {
             es = "es6";
         }
         testBench().disableWaitForVaadin(); // For some reason needed by IE11
+        // PhantomJS needs a small wait as standard wait is disabled
+        sleep(1000);
 
         Assert.assertEquals("/VAADIN/frontend/" + es + "/logFilename.js",
                 findElement(By.tagName("body")).getText());
