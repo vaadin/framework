@@ -33,7 +33,9 @@ public class JavaScriptPreloadingTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersExcludingPhantomJS();
+        // the test works on Firefox under low load, but often fails under high
+        // load - seems to be a Firefox bug
+        return getBrowsersExcludingFirefox();
     }
 
     @Test
