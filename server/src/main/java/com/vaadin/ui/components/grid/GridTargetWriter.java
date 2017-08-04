@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Collection;
  * @param <T>
  *            the bean type
  */
-public interface GridTargetWriter<T> {
+public interface GridTargetWriter<T> extends Serializable {
     /**
      * Called when items have been dropped on the target Grid.
      * 

@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.io.Serializable;
+
 /**
  * An event listener for a GridDragger Drop.
  * 
@@ -26,7 +28,7 @@ package com.vaadin.ui.components.grid;
  * @param <T>
  *            the bean type
  */
-public interface GridDropTargetIndex<T> {
+public interface GridDropTargetIndex<T> extends Serializable {
     /**
      * Called when Items are dropped onto a target grid.
      * 

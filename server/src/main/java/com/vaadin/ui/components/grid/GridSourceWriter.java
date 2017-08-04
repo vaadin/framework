@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Collection;
  * @param <T>
  *            the bean type
  */
-public interface GridSourceWriter<T> {
+public interface GridSourceWriter<T> extends Serializable {
     /**
      * Called when Items have been dragged.
      * 
