@@ -47,6 +47,7 @@ public class GridDragger<T> {
      */
     private Set<T> draggedItems;
     private boolean addToEnd;
+    private boolean removeFromSource;
 
     /**
      * Extends a Grid and makes it's row orderable by dragging entries up or
@@ -130,7 +131,10 @@ public class GridDragger<T> {
      */
     public GridDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
         checkAndInitalizeGridWriter(source, target);
-        gridDragSource = new GridDragSource(source);
+
+        if (removeFromSource) {
+            gridDragSource = new GridDragSource(source);
+        }
 
         gridDropTarget = new GridDropTarget(target, dropMode);
 
@@ -156,15 +160,15 @@ public class GridDragger<T> {
     public void setGrid(GridDropTargetIndex<T> gridDropTargetIndex) {
         this.gridDropTargetIndex = gridDropTargetIndex;
     }
-    
+
     /**
-     * Exposes the GridDropTarget to perform customizations such 
-     * as DropEffect.MOVE.
+     * Exposes the GridDropTarget to perform customizations such as
+     * DropEffect.MOVE.
      */
     public GridDropTarget<T> getGridDropTarget() {
         return gridDropTarget;
     }
-    
+
     /**
      * Exposes the GridDragSource for customizations.
      */
@@ -180,6 +184,15 @@ public class GridDragger<T> {
      */
     public void setAddToEnd(boolean addToEnd) {
         this.addToEnd = addToEnd;
+    }
+
+    /**
+     * By default the dragged Items are removed from the source Grid.
+     * 
+     * @param removeFromSource set to false to keep items in source Grid. 
+     */
+    public void removeFromSourceGrid(boolean removeFromSource) {
+        this.removeFromSource = removeFromSource;
     }
 
     /**
