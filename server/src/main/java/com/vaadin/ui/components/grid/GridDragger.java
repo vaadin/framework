@@ -16,43 +16,41 @@
 package com.vaadin.ui.components.grid;
 
 import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.ui.Grid;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Allows dragging rows for reording within a Grid and between seperate Grids.
+ * Allows dragging rows for reordering within a Grid and between separate Grids.
  * <p>
- * When dragging a selected row, all the visible selected rows are dragged. Note that ONLY visible rows are taken into account.
+ * When dragging a selected row, all the visible selected rows are dragged. Note
+ * that ONLY visible rows are taken into account.
  *
  * @param <T> The Grid bean type.
  * @author Stephan Knitelius
  * @since 8.1
  */
-public class GridDragger<T> implements Serializable {
+public class GridDragger<T> {
 
-    /**
-     * Drop target grid.
-     */
     private final GridDropTarget<T> gridDropTarget;
-
-    /**
-     * Source drag grid.
-     */
     private final GridDragSource<T> gridDragSource;
 
-    /**
-     * Items that are currently dragged.
-     */
-    private Set<T> draggedItems;
+    private GridDropTargetIndex gridDropTargetIndex;
+    private GridSourceWriter<T> gridSourceWriter;
+    private GridTargetWriter<T> gridTargetWriter;
 
     /**
-     * Extends a Grid and makes it's row ordrable by dragging entries up or down.
+     * Set of items currently being dragged.
+     */
+    private Set<T> draggedItems;
+    private boolean addToEnd;
+
+    /**
+     * Extends a Grid and makes it's row orderable by dragging entries up or
+     * down.
      *
      * @param grid Grid to be extended.
      */
@@ -61,7 +59,8 @@ public class GridDragger<T> implements Serializable {
     }
 
     /**
-     * Extends a Grid and makes it's row ordrable by dragging entries up or down.
+     * Extends the Grid and makes it's row orderable by dragging entries up or
+     * down.
      *
      * @param grid Grid to be extended.
      * @param dropMode DropMode to be used.
@@ -71,62 +70,153 @@ public class GridDragger<T> implements Serializable {
     }
 
     /**
-     * Extends a the source and target grid so that rows can be dragged from the source to the target grid.
+     * Extends the source and target grid so that rows can be dragged from the
+     * source to the target grid.
      *
-     * @param target Grid to be extended.
+     * @param source Grid dragged from.
+     * @param target Grid dropped to.
      */
     public GridDragger(Grid<T> source, Grid<T> target) {
         this(source, target, DropMode.ON_TOP_OR_BETWEEN);
     }
 
     /**
-     * Extends a the source and target grid so that rows can be dragged from the source to the target grid.
+     * Extends the grid so that items can be reordered, use the gridTargetWriter
+     * to write to non-standard DataProvider.
+     *
+     * @param grid Grid to be reorderable.
+     * @param gridTargetWriter callback for writing to custom DataProvider.
+     */
+    public GridDragger(Grid<T> grid, GridTargetWriter gridTargetWriter) {
+        this(grid, grid, gridTargetWriter, null);
+    }
+
+    /**
+     * Extends the source and target grid so that items can be reordered, use
+     * the gridTargetWriter to write to non-standard DataProviders.
+     *
+     * @param source Grid dragged from.
+     * @param target Grid dragged to.
+     * @param gridTargetWriter callback for writing to custom target
+     * DataProvider.
+     */
+    public GridDragger(Grid<T> source, Grid<T> target, GridTargetWriter gridTargetWriter) {
+        this(source, target, gridTargetWriter, null);
+    }
+
+    /**
+     * Extends the source and target grid so that items can be reordered, use
+     * the gridTargetWriter to write to non-standard DataProviders and
+     * gridSourceWriter to update source Grid.
+     *
+     * @param source Grid dragged from.
+     * @param target Grid dragged to.
+     * @param gridTargetWriter callback for writing to custom target
+     * DataProvider.
+     * @param gridSourceWriter callback for updating custom source DataProvider.
+     */
+    public GridDragger(Grid<T> source, Grid<T> target, GridTargetWriter gridTargetWriter, GridSourceWriter gridSourceWriter) {
+        this(source, target, DropMode.ON_TOP_OR_BETWEEN);
+        this.gridTargetWriter = gridTargetWriter;
+        this.gridSourceWriter = gridSourceWriter;
+    }
+
+    /**
+     * Extends a the source and target grid so that rows can be dragged from the
+     * source to the target grid.
      *
      * @param target Grid to be extended.
      * @param dropMode DropMode to be used.
      */
     public GridDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
+        checkAndInitalizeGridWriter(source, target);
         gridDragSource = new GridDragSource(source);
 
         gridDropTarget = new GridDropTarget(target, dropMode);
-        gridDropTarget.setDropEffect(DropEffect.MOVE);
 
         gridDragSource.addGridDragStartListener(event -> {
             draggedItems = event.getDraggedItems();
         });
 
         gridDropTarget.addGridDropListener(event -> {
-            ListDataProvider sourceDataProvider = (ListDataProvider) source.getDataProvider();
-            List<T> sourceItems = new ArrayList(sourceDataProvider.getItems());
-            sourceItems.removeAll(draggedItems);
-            source.setItems(sourceItems);
-
-            ListDataProvider targetDataProvider = (ListDataProvider) target.getDataProvider();
-            List<T> items = new ArrayList(targetDataProvider.getItems());
-            int index = items.size();
-            if (event.getDropTargetRow().isPresent()) {
-                index = items.indexOf(event.getDropTargetRow().get())
-                        + (event.getDropLocation() == DropLocation.BELOW ? 1 : 0);
-            }
-
-            items.addAll(index, draggedItems);
-
-            source.setItems(items);
+            gridSourceWriter.removeItems(draggedItems);
+            int index = gridDropTargetIndex.calculateDropIndex(event);
+            gridTargetWriter.addItems(index, draggedItems);
         });
     }
 
+    public void setGridTargetWriter(GridTargetWriter<T> gridTargetWriter) {
+        this.gridTargetWriter = gridTargetWriter;
+    }
+
+    public void setGridSourceWriter(GridSourceWriter<T> gridSourceWriter) {
+        this.gridSourceWriter = gridSourceWriter;
+    }
+
+    public void setGrid(GridDropTargetIndex<T> gridDropTargetIndex) {
+        this.gridDropTargetIndex = gridDropTargetIndex;
+    }
+    
     /**
-     * Gets the GridDropTarget extension, for the target grid.
+     * Exposes the GridDropTarget to perform customizations such 
+     * as DropEffect.MOVE.
      */
     public GridDropTarget<T> getGridDropTarget() {
         return gridDropTarget;
     }
-
+    
     /**
-     * Gets the GridDragSource extension, for the source grid.
+     * Exposes the GridDragSource for customizations.
      */
     public GridDragSource<T> getGridDragSource() {
         return gridDragSource;
     }
-    
+
+    /**
+     * By default items are dropped into the selected position. Set addToEnd
+     * will add the items to the end of the grid instead.
+     *
+     * @param addToEnd add items to end of Grid.
+     */
+    public void setAddToEnd(boolean addToEnd) {
+        this.addToEnd = addToEnd;
+    }
+
+    /**
+     * Checks if custom implementations have been set otherwise the default
+     * ListDataProvider implementation is used.
+     */
+    private void checkAndInitalizeGridWriter(final Grid<T> source, final Grid<T> target) {
+        if (gridSourceWriter == null) {
+            this.gridSourceWriter = (items) -> {
+                ListDataProvider listDataProvider = (ListDataProvider) source.getDataProvider();
+                List<T> sourceItems = new ArrayList(listDataProvider.getItems());
+                sourceItems.removeAll(items);
+                source.setItems(sourceItems);
+            };
+        }
+        if (gridDropTargetIndex == null) {
+            this.gridDropTargetIndex = event -> {
+                if (!addToEnd) {
+                    ListDataProvider targetDataProvider = (ListDataProvider) target.getDataProvider();
+                    List<T> items = new ArrayList(targetDataProvider.getItems());
+                    int index = items.size();
+                    if (event.getDropTargetRow().isPresent()) {
+                        index = items.indexOf(event.getDropTargetRow().get())
+                                + (event.getDropLocation() == DropLocation.BELOW ? 1 : 0);
+                    }
+                    return index;
+                }
+                return Integer.MAX_VALUE;
+            };
+        }
+        if (gridTargetWriter == null) {
+            this.gridTargetWriter = (index, items) -> {
+                ListDataProvider listDataProvider = (ListDataProvider) target.getDataProvider();
+                List<T> targetItems = new ArrayList(listDataProvider.getItems());
+                targetItems.addAll(index, items);
+                target.setItems(targetItems);
+            };
+        }
+    }
 }
