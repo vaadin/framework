@@ -38,16 +38,16 @@ public class GridDragger<T> {
     private final GridDropTarget<T> gridDropTarget;
     private final GridDragSource<T> gridDragSource;
 
-    private GridDropTargetIndex gridDropTargetIndex;
-    private GridSourceWriter<T> gridSourceWriter;
-    private GridTargetWriter<T> gridTargetWriter;
+    private GridDropTargetIndex gridDropTargetIndex = null;
+    private GridSourceWriter<T> gridSourceWriter = null;
+    private GridTargetWriter<T> gridTargetWriter = null;
 
     /**
      * Set of items currently being dragged.
      */
     private Set<T> draggedItems;
-    private boolean addToEnd;
-    private boolean removeFromSource;
+    private boolean addToEnd = false;
+    private boolean removeFromSource = true;
 
     /**
      * Extends a Grid and makes it's row orderable by dragging entries up or
@@ -132,9 +132,7 @@ public class GridDragger<T> {
     public GridDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
         checkAndInitalizeGridWriter(source, target);
 
-        if (removeFromSource) {
-            gridDragSource = new GridDragSource(source);
-        }
+        gridDragSource = new GridDragSource(source);
 
         gridDropTarget = new GridDropTarget(target, dropMode);
 
@@ -143,7 +141,10 @@ public class GridDragger<T> {
         });
 
         gridDropTarget.addGridDropListener(event -> {
-            gridSourceWriter.removeItems(draggedItems);
+            if (removeFromSource) {
+                gridSourceWriter.removeItems(draggedItems);
+            }
+
             int index = gridDropTargetIndex.calculateDropIndex(event);
             gridTargetWriter.addItems(index, draggedItems);
         });
@@ -188,8 +189,8 @@ public class GridDragger<T> {
 
     /**
      * By default the dragged Items are removed from the source Grid.
-     * 
-     * @param removeFromSource set to false to keep items in source Grid. 
+     *
+     * @param removeFromSource set to false to keep items in source Grid.
      */
     public void removeFromSourceGrid(boolean removeFromSource) {
         this.removeFromSource = removeFromSource;
