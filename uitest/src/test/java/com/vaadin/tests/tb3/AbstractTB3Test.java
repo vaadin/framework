@@ -309,7 +309,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Used to determine what port the test is running on
      *
-     * @return The port teh test is running on, by default 8888
+     * @return The port the test is running on, by default 8888
      */
     protected abstract int getDeploymentPort();
 
@@ -1112,7 +1112,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementPresent(By by) {
         Assert.assertTrue("Element is not present", isElementPresent(by));
@@ -1122,7 +1122,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is not present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementNotPresent(By by) {
         Assert.assertFalse("Element is present", isElementPresent(by));
