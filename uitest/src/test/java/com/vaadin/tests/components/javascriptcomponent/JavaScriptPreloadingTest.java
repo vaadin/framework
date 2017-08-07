@@ -27,13 +27,16 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class JavaScriptPreloadingTest extends MultiBrowserTest {
 
     @Override
     public List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsersExcludingPhantomJS();
+        // the test works on Firefox under low load, but often fails under high
+        // load - seems to be a Firefox bug
+        return getBrowserCapabilities(Browser.IE11, Browser.CHROME);
     }
 
     @Test
