@@ -35,7 +35,10 @@ public class FrontendInitialResourceUITest extends MultiBrowserTest {
         } else {
             es = "es6";
         }
-        testBench().disableWaitForVaadin(); // For some reason needed by IE11
+        if (BrowserUtil.isIE(getDesiredCapabilities())) {
+            // For some reason needed by IE11
+            testBench().disableWaitForVaadin();
+        }
 
         Assert.assertEquals("/VAADIN/frontend/" + es + "/logFilename.js",
                 findElement(By.tagName("body")).getText());
