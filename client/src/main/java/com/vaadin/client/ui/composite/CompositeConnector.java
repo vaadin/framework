@@ -20,8 +20,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
@@ -35,7 +37,8 @@ import com.vaadin.ui.Composite;
  * @since 8.1
  */
 @Connect(value = Composite.class, loadStyle = LoadStyle.EAGER)
-public class CompositeConnector extends AbstractHasComponentsConnector {
+public class CompositeConnector extends AbstractHasComponentsConnector
+        implements SimpleManagedLayout {
 
     private ComponentConnector childConnector;
 
@@ -97,8 +100,20 @@ public class CompositeConnector extends AbstractHasComponentsConnector {
     }
 
     @Override
-    protected void sendContextClickEvent(MouseEventDetails details, EventTarget eventTarget) {
-        //Do nothing, because Composite is not an actual component, and the event
-        //must be handled in inner components.
+    protected void sendContextClickEvent(MouseEventDetails details,
+            EventTarget eventTarget) {
+        // Do nothing, because Composite is not an actual component, and the
+        // event must be handled in inner components.
+    }
+
+    @Override
+    public void layout() {
+        // Pass on the layout to the appropriate method in child connector
+        if (childConnector instanceof SimpleManagedLayout) {
+            ((SimpleManagedLayout) childConnector).layout();
+        } else if (childConnector instanceof DirectionalManagedLayout) {
+            ((DirectionalManagedLayout) childConnector).layoutVertically();
+            ((DirectionalManagedLayout) childConnector).layoutHorizontally();
+        }
     }
 }
