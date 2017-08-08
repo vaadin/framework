@@ -36,9 +36,19 @@ public class AbstractMediaState extends AbstractComponentState {
     @NoLayout
     public boolean muted;
 
+    /**
+     * Preload mode for the media.
+     *
+     * @since 7.7.11
+     */
     @NoLayout
     public PreloadMode preload;
 
+    /**
+     * Looping of media active (true) or not.
+     *
+     * @since 7.7.11
+     */
     @NoLayout
     public boolean loop;
 

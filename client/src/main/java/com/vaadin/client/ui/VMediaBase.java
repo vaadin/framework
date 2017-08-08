@@ -68,10 +68,27 @@ public abstract class VMediaBase extends Widget {
         media.setMuted(mediaMuted);
     }
 
+    /**
+     * Sets the preload attribute that is intended to provide a hint to the
+     * browser how the media should be preloaded. See
+     * AbstractMedia.setPreload(PreloadMode) and PreloadMode for more
+     * information.
+     *
+     * @param preload
+     *            preload mode
+     * @since 7.7.11
+     */
     public void setPreload(final String preload) {
         media.setPreload(preload);
     }
 
+    /**
+     * Enables or disables looping.
+     *
+     * @param loop
+     *            if true, enable looping
+     * @since 7.7.11
+     */
     public void setLoop(final boolean loop) {
         media.setLoop(loop);
     }

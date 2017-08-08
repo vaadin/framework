@@ -200,14 +200,15 @@ public abstract class AbstractMedia extends AbstractComponent {
     }
 
     /**
-     * Sets the preload attribute that is intended to provide a hint to the browser
-     * how the media should be preloaded. Valid values are 'none', 'metadata',
-     * 'preload', see the <a href=
+     * Sets the preload attribute that is intended to provide a hint to the
+     * browser how the media should be preloaded. Valid values are 'none',
+     * 'metadata', 'preload', see the <a href=
      * "https://developer.mozilla.org/en/docs/Web/HTML/Element/video#attr-preload">
      * Mozilla Developer Network</a> for details.
      *
      * @param preload
      *            preload mode
+     * @since 7.7.11
      */
     public void setPreload(final PreloadMode preload) {
         getState().preload = preload;
@@ -215,6 +216,7 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * @return the configured media preload value
+     * @since 7.7.11
      */
     public PreloadMode getPreload() {
         return getState(false).preload;
@@ -225,6 +227,7 @@ public abstract class AbstractMedia extends AbstractComponent {
      *
      * @param loop
      *            if true, enable looping
+     * @since 7.7.11
      */
     public void setLoop(final boolean loop) {
         getState().loop = loop;
@@ -232,6 +235,7 @@ public abstract class AbstractMedia extends AbstractComponent {
 
     /**
      * @return true if looping is enabled
+     * @since 7.7.11
      */
     public boolean isLoop() {
         return getState(false).loop;

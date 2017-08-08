@@ -16,12 +16,15 @@
 package com.vaadin.shared.ui;
 
 /**
- * Enumeration that provides a hint to the browser how media should be preloaded.
+ * Enumeration that provides a hint to the browser how media should be
+ * preloaded.
+ *
+ * @since 7.7.11
  */
 public enum PreloadMode {
     /**
-     * Indicates that the whole video/audio file could be downloaded, even if the user is not expected to use it. This
-     * is the default value.
+     * Indicates that the whole video/audio file could be downloaded, even if
+     * the user is not expected to use it. This is the default value.
      */
     AUTO,
 
@@ -33,5 +36,14 @@ public enum PreloadMode {
     /**
      * Indicates that the video/audio should not be preloaded.
      */
-    NONE
+    NONE;
+
+    /**
+     * Returns the preload mode string used by the browser.
+     * 
+     * @return corresponding preload attribute value string
+     */
+    public String getValue() {
+        return name().toLowerCase();
+    }
 }
