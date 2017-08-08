@@ -173,7 +173,15 @@ public class ConnectorTracker implements Serializable {
         }
 
         dirtyConnectors.remove(connector);
-        if (unregisteredConnectors.add(connector)) {
+
+        if (!isClientSideInitialized(connector)) {
+            // Client side has never known about this connector so there is no
+            // point in tracking it
+            removeUnregisteredConnector(connector,
+                    uI.getSession().getGlobalResourceHandler(false));
+        } else if (unregisteredConnectors.add(connector)) {
+            // Client side knows about the connector, track it for a while if it
+            // becomes reattached
             if (getLogger().isLoggable(Level.FINE)) {
                 getLogger().log(Level.FINE, "Unregistered {0} ({1})",
                         new Object[] { connector.getClass().getSimpleName(),
@@ -263,14 +271,14 @@ public class ConnectorTracker implements Serializable {
             removeUnregisteredConnectors();
         }
 
+        cleanStreamVariables();
+
         // Do this expensive check only with assertions enabled
         assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
                 + "Check for missing calls to super.setParent(), super.attach() and super.detach() "
                 + "and that all custom component containers call child.setParent(this) when a child is added and child.setParent(null) when the child is no longer used. "
                 + "See previous log messages for details.";
 
-        // remove detached components from paintableIdMap so they
-        // can be GC'ed
         Iterator<ClientConnector> iterator = connectorIdToConnector.values()
                 .iterator();
         GlobalResourceHandler globalResourceHandler = uI.getSession()
@@ -283,14 +291,11 @@ public class ConnectorTracker implements Serializable {
                 // remove it from the map. If it is re-attached to the
                 // application at some point it will be re-added through
                 // registerConnector(connector)
-
                 // This code should never be called as cleanup should take place
                 // in detach()
-
                 getLogger().log(Level.WARNING,
                         "cleanConnectorMap unregistered connector {0}. This should have been done when the connector was detached.",
                         getConnectorAndParentInfo(connector));
-
                 if (globalResourceHandler != null) {
                     globalResourceHandler.unregisterConnector(connector);
                 }
@@ -300,13 +305,15 @@ public class ConnectorTracker implements Serializable {
             } else if (!uninitializedConnectors.contains(connector)
                     && !LegacyCommunicationManager
                             .isConnectorVisibleToClient(connector)) {
+                // Connector was visible to the client but is no longer (e.g.
+                // setVisible(false) has been called or SelectiveRenderer tells
+                // it's no longer shown) -> make sure that the full state is
+                // sent again when/if made visible
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);
-
                 assert isRemovalSentToClient(connector) : "Connector "
                         + connector + " (id = " + connector.getConnectorId()
-                        + ") is no longer visible to the client, but no corresponding hierarchy change is being sent.";
-
+                        + ") is no longer visible to the client, but no corresponding hierarchy change was sent.";
                 if (getLogger().isLoggable(Level.FINE)) {
                     getLogger().log(Level.FINE,
                             "cleanConnectorMap removed state for {0} as it is not visible",
@@ -314,8 +321,6 @@ public class ConnectorTracker implements Serializable {
                 }
             }
         }
-
-        cleanStreamVariables();
     }
 
     private boolean isRemovalSentToClient(ClientConnector connector) {
@@ -398,24 +403,48 @@ public class ConnectorTracker implements Serializable {
         return null;
     }
 
+    /**
+     * Removes all references and information about connectors marked as
+     * unregistered.
+     *
+     */
     private void removeUnregisteredConnectors() {
         GlobalResourceHandler globalResourceHandler = uI.getSession()
                 .getGlobalResourceHandler(false);
 
         for (ClientConnector connector : unregisteredConnectors) {
-            ClientConnector removedConnector = connectorIdToConnector
-                    .remove(connector.getConnectorId());
-            assert removedConnector == connector;
-
-            if (globalResourceHandler != null) {
-                globalResourceHandler.unregisterConnector(connector);
-            }
-            uninitializedConnectors.remove(connector);
-            diffStates.remove(connector);
+            removeUnregisteredConnector(connector, globalResourceHandler);
         }
         unregisteredConnectors.clear();
     }
 
+    /**
+     * Removes all references and information about the given connector, which
+     * must not be registered.
+     *
+     * @param connector
+     * @param globalResourceHandler
+     */
+    private void removeUnregisteredConnector(ClientConnector connector,
+            GlobalResourceHandler globalResourceHandler) {
+        ClientConnector removedConnector = connectorIdToConnector
+                .remove(connector.getConnectorId());
+        assert removedConnector == connector;
+
+        if (globalResourceHandler != null) {
+            globalResourceHandler.unregisterConnector(connector);
+        }
+        uninitializedConnectors.remove(connector);
+        diffStates.remove(connector);
+    }
+
+    /**
+     * Checks that the connector hierarchy is consistent.
+     *
+     * @return <code>true</code> if the hierarchy is consistent,
+     *         <code>false</code> otherwise
+     * @since
+     */
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
 
