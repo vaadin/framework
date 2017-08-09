@@ -112,8 +112,8 @@ public class CompositeConnector extends AbstractHasComponentsConnector
         if (childConnector instanceof SimpleManagedLayout) {
             ((SimpleManagedLayout) childConnector).layout();
         } else if (childConnector instanceof DirectionalManagedLayout) {
-            ((DirectionalManagedLayout) childConnector).layoutVertically();
             ((DirectionalManagedLayout) childConnector).layoutHorizontally();
+            ((DirectionalManagedLayout) childConnector).layoutVertically();
         }
     }
 }
