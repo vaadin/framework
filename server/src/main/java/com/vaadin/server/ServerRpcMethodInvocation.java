@@ -16,7 +16,6 @@
 package com.vaadin.server;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -66,23 +65,26 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
             int parameterCount) {
         // TODO currently only using method name and number of parameters as the
         // signature
-        String signature = targetType.getName() + "." + methodName + "("
-                + parameterCount;
-        Method invocationMethod = invocationMethodCache.get(signature);
+        Method invocationMethod;
+        synchronized (invocationMethodCache) {
+            String signature = targetType.getName() + "." + methodName + "("
+                    + parameterCount;
+            invocationMethod = invocationMethodCache.get(signature);
 
-        if (invocationMethod == null) {
-            invocationMethod = doFindInvocationMethod(targetType, methodName,
-                    parameterCount);
-
-            if (invocationMethod != null) {
-                invocationMethodCache.put(signature, invocationMethod);
+            if (invocationMethod == null) {
+                invocationMethod = doFindInvocationMethod(targetType, methodName,
+                        parameterCount);
+    
+                if (invocationMethod != null) {
+                    invocationMethodCache.put(signature, invocationMethod);
+                }
             }
-        }
 
-        if (invocationMethod == null) {
-            throw new IllegalStateException("Can't find method " + methodName
-                    + " with " + parameterCount + " parameters in "
-                    + targetType.getName());
+            if (invocationMethod == null) {
+                throw new IllegalStateException("Can't find method " + methodName
+                        + " with " + parameterCount + " parameters in "
+                        + targetType.getName());
+            }
         }
 
         return invocationMethod;
@@ -115,13 +117,9 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
      * OSGi frameworks should call this method with the bundle classloader when bundles are removed.
      * @param classLoader
      */
-    public void invalidateCachedResources(ClassLoader classLoader) {
-        Iterator<Map.Entry<String, Method>> it = invocationMethodCache.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Method> entry = it.next();
-            if (entry.getValue().getDeclaringClass().getClassLoader() == classLoader) {
-                it.remove();
-            }
+    static public void invalidateCachedResources(ClassLoader classLoader) {
+        synchronized (invocationMethodCache){
+            invocationMethodCache.entrySet().removeIf(entry -> entry.getValue().getDeclaringClass().getClassLoader() == classLoader);
         }
     }
 
