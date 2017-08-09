@@ -482,11 +482,21 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
         if (platformOverride != null) {
             // LINUX_Firefox_17_bufferingdemo_valo
-            parameters = platformOverride.name()
+            parameters = getPlatformName(platformOverride)
                     + parameters.substring(parameters.indexOf("_"));
         }
 
         return parameters;
+    }
+
+    private String getPlatformName(Platform platform) {
+        switch (platform) {
+        case WINDOWS:
+            // Reference file names have Windows instead of WINDOWS
+            return "Windows";
+        default:
+            return platform.name();
+        }
     }
 
     /**
