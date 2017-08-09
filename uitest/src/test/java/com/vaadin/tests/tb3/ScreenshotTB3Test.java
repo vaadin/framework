@@ -29,6 +29,7 @@ import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -383,7 +384,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      *         fails
      */
     private String getScreenshotFailureName() {
-        return getScreenshotBaseName() + "_" + getUniqueIdentifier(null)
+        return getScreenshotBaseName() + "_" + getUniqueIdentifier(null, null)
                 + "-failure.png";
     }
 
@@ -408,24 +409,54 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     }
 
     /**
-     * Returns the name of the reference file based on the given parameters. The
-     * version given in {@literal capabilities} is used unless it is overridden
-     * by the {@literal versionOverride} parameter.
+     * Returns the name of the reference file based on the given parameters.
+     * This method takes in a {@code versionOverride} parameter to find a
+     * specific version in the reference name. If the {@link Platform} defined
+     * in the {@link DesiredCapabilities} is {@code ANY}, this method will
+     * attempt different platforms in the reference file names if needed.
      *
-     * @param testName
-     * @param capabilities
      * @param identifier
+     * @param versionOverride
      * @return the full path of the reference
      */
     private String getScreenshotReferenceName(String identifier,
             Integer versionOverride) {
-        return getScreenshotReferenceDirectory() + File.separator
-                + getScreenshotBaseName() + "_"
-                + getUniqueIdentifier(versionOverride) + "_" + identifier
-                + ".png";
+        String fileName = getScreenshotReferenceName(identifier,
+                versionOverride, null);
+        File refFile = new File(fileName);
+        if (!refFile.exists()
+                && getDesiredCapabilities().getPlatform() == Platform.ANY) {
+            for (Platform p : Platform.values()) {
+                String tmpName = getScreenshotReferenceName(identifier,
+                        versionOverride, p);
+                if (new File(tmpName).exists()) {
+                    return tmpName;
+                }
+            }
+        }
+        return fileName;
     }
 
-    private String getUniqueIdentifier(Integer versionOverride) {
+    /**
+     * Returns the name of the reference file based on the given parameters.This
+     * method takes in {@code versionOverride} and {@code platformOverride}
+     * parameters.
+     *
+     * @param identifier
+     * @param versionOverride
+     * @param platformOverride
+     * @return the full path of the reference
+     */
+    private String getScreenshotReferenceName(String identifier,
+            Integer versionOverride, Platform platformOverride) {
+        return getScreenshotReferenceDirectory() + File.separator
+                + getScreenshotBaseName() + "_"
+                + getUniqueIdentifier(versionOverride, platformOverride) + "_"
+                + identifier + ".png";
+    }
+
+    private String getUniqueIdentifier(Integer versionOverride,
+            Platform platformOverride) {
         String testNameAndParameters = testName.getMethodName();
         // runTest-wildfly9-nginx[Windows_Firefox_24][/buffering/demo][valo]
 
@@ -446,6 +477,13 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
                     "_" + getDesiredCapabilities().getVersion(),
                     "_" + versionOverride);
         }
+
+        if (platformOverride != null) {
+            // LINUX_Firefox_17_bufferingdemo_valo
+            parameters = platformOverride.name()
+                    + parameters.substring(parameters.indexOf("_"));
+        }
+
         return parameters;
     }
 

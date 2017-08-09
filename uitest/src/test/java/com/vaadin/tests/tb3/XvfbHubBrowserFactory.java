@@ -15,11 +15,10 @@ public class XvfbHubBrowserFactory extends DefaultBrowserFactory {
         case PHANTOMJS:
             return create(browser, "2", Platform.LINUX);
         case CHROME:
-            return create(browser, "", Platform.LINUX);
+            return create(browser, "", Platform.ANY);
         case FIREFOX:
         default:
-            DesiredCapabilities dc = create(Browser.FIREFOX, "",
-                    Platform.LINUX);
+            DesiredCapabilities dc = create(Browser.FIREFOX, "", Platform.ANY);
             dc.setCapability("marionette", "false");
             return dc;
         }

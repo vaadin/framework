@@ -12,6 +12,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 @TestCategory("xvfb-test")
 public class ComboBoxItemIconTest extends MultiBrowserTest {
+
     @Test
     public void testIconsInComboBox() throws Exception {
         openTestURL();
