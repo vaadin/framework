@@ -515,6 +515,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         head.appendElement("meta").attr("http-equiv", "Content-Type").attr(
                 "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
+        // Force IE 11 to use IE 11 mode.
+        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible").attr("content", "IE=11");
+
         Class<? extends UI> uiClass = context.getUIClass();
 
         String viewportContent = null;
