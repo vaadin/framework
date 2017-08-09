@@ -39,6 +39,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
+import com.vaadin.shared.ui.PreloadMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 
@@ -196,6 +197,48 @@ public abstract class AbstractMedia extends AbstractComponent {
      */
     public String getAltText() {
         return getState(false).altText;
+    }
+
+    /**
+     * Sets the preload attribute that is intended to provide a hint to the
+     * browser how the media should be preloaded. Valid values are 'none',
+     * 'metadata', 'preload', see the <a href=
+     * "https://developer.mozilla.org/en/docs/Web/HTML/Element/video#attr-preload">
+     * Mozilla Developer Network</a> for details.
+     *
+     * @param preload
+     *            preload mode
+     * @since 7.7.11
+     */
+    public void setPreload(final PreloadMode preload) {
+        getState().preload = preload;
+    }
+
+    /**
+     * @return the configured media preload value
+     * @since 7.7.11
+     */
+    public PreloadMode getPreload() {
+        return getState(false).preload;
+    }
+
+    /**
+     * Enables or disables looping.
+     *
+     * @param loop
+     *            if true, enable looping
+     * @since 7.7.11
+     */
+    public void setLoop(final boolean loop) {
+        getState().loop = loop;
+    }
+
+    /**
+     * @return true if looping is enabled
+     * @since 7.7.11
+     */
+    public boolean isLoop() {
+        return getState(false).loop;
     }
 
     /**

@@ -1009,6 +1009,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                                 "Exception while cleaning connector map for ui "
                                         + ui.getUIId(),
                                 e);
+                    } catch (AssertionError e) {
+                        getLogger().log(Level.SEVERE,
+                                "Exception while cleaning connector map for ui "
+                                        + ui.getUIId(),
+                                e);
                     }
                 }
             }

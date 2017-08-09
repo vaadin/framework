@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -60,15 +61,15 @@ public class MissingHierarchyDetection extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         // Catch log messages so we can see if there is an error
-        final Logger vaadinServiceLogger = Logger
-                .getLogger(VaadinService.class.getName());
-        vaadinServiceLogger.addHandler(new Handler() {
+        final Logger vaadinSessionLogger = Logger
+                .getLogger(VaadinSession.class.getName());
+        vaadinSessionLogger.addHandler(new Handler() {
 
             @Override
             public void publish(LogRecord record) {
                 if (record.getThrown() instanceof AssertionError) {
                     pendingErrors.add(record);
-                    vaadinServiceLogger.removeHandler(this);
+                    vaadinSessionLogger.removeHandler(this);
                 }
             }
 
