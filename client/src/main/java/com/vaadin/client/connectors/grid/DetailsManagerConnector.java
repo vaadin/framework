@@ -19,14 +19,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.Registration;
@@ -52,6 +56,21 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private boolean refreshing;
     /* Registration for data change handler. */
     private Registration dataChangeRegistration;
+
+    private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
+    private final ElementResizeListener detailsRowResizeListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            if (elementToResizeCommand.containsKey(e.getElement())) {
+                Scheduler.get().scheduleFinally(
+                        elementToResizeCommand.get(e.getElement()));
+            }
+        }
+    };
+
+    /* calculated when the first details row is opened */
+    private Double spacerCellBorderHeights = null;
 
     /**
      * DataChangeHandler for updating the visibility of detail widgets.
@@ -107,7 +126,31 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 return null;
             }
 
-            return getConnector(id).getWidget();
+            Widget widget = getConnector(id).getWidget();
+            getLayoutManager().addElementResizeListener(widget.getElement(),
+                    detailsRowResizeListener);
+            elementToResizeCommand.put(widget.getElement(),
+                    createResizeCommand(rowIndex, widget.getElement()));
+
+            return widget;
+        }
+
+        private ScheduledCommand createResizeCommand(final int rowIndex,
+                final Element element) {
+            return new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    if (spacerCellBorderHeights != null
+                            && !getLayoutManager().isLayoutRunning()
+                            && getDetailsComponentConnectorId(
+                                    rowIndex) != null) {
+                        double height = getLayoutManager().getOuterHeightDouble(
+                                element) + spacerCellBorderHeights;
+                        getWidget().setDetailsHeight(rowIndex, height);
+                    }
+                }
+            };
         }
 
         @Override
@@ -120,8 +163,14 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             getLayoutManager().setNeedsMeasureRecursively(componentConnector);
             getLayoutManager().layoutNow();
 
-            return getLayoutManager().getOuterHeightDouble(
-                    componentConnector.getWidget().getElement());
+            Element element = componentConnector.getWidget().getElement();
+            if (spacerCellBorderHeights == null) {
+                spacerCellBorderHeights = WidgetUtil
+                        .getBorderTopAndBottomThickness(
+                                element.getParentElement());
+            }
+
+            return getLayoutManager().getOuterHeightDouble(element);
         }
 
         private ComponentConnector getConnector(String id) {
@@ -144,6 +193,12 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
             }
 
             // New Details component, hide old one
+            Element element = ((ComponentConnector) ConnectorMap
+                    .get(getConnection()).getConnector(id)).getWidget()
+                            .getElement();
+            elementToResizeCommand.remove(element);
+            getLayoutManager().removeElementResizeListener(element,
+                    detailsRowResizeListener);
             getWidget().setDetailsVisible(rowIndex, false);
             indexToDetailConnectorId.remove(rowIndex);
         }
