@@ -20,6 +20,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
+import com.vaadin.shared.ui.PreloadMode;
 
 public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
@@ -53,6 +54,8 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
         final AbstractMediaState state = getState();
 
         setAltText(state.altText); // must do before loading sources
+        setPreload(state.preload);
+        widget.setLoop(state.loop);
         widget.setAutoplay(state.autoplay);
         widget.setMuted(state.muted);
         widget.setControls(state.showControls);
@@ -81,6 +84,12 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
             altText = WidgetUtil.escapeHTML(altText);
         }
         getWidget().setAltText(altText);
+    }
+
+    private void setPreload(final PreloadMode preload) {
+        if (preload != null) {
+            getWidget().setPreload(preload.getValue());
+        }
     }
 
     /**
