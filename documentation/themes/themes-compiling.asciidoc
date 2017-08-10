@@ -30,7 +30,9 @@ production, you must compile the theme to CSS, as described next.
 
 NOTE: If the on-the-fly compilation does not seem to work, ensure that your build script has not generated a pre-compiled CSS file.
 If a [filename]#styles.css# file is found by the servlet, the compilation is skipped.
-Delete such an existing [filename]#styles.css# file, disable theme compilation temporarily and re-enable it to start on-the-fly compilation again.
+Disable team compilation in your local development encironment and delete such an
+existing [filename]#styles.css# file to enable on-the-fly compilation. Note that
+theme compilation should not be disabled for production builds.
 
 [[themes.compiling.eclipse]]
 == Compiling in Eclipse
