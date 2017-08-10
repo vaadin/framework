@@ -116,9 +116,10 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
      * Remove any cached resources that use the specified classloader.
      * OSGi frameworks should call this method with the bundle classloader when bundles are removed.
      * @param classLoader
+     * @since TBD
      */
     static public void invalidateCachedResources(ClassLoader classLoader) {
-        synchronized (invocationMethodCache){
+        synchronized (invocationMethodCache) {
             invocationMethodCache.entrySet().removeIf(entry -> entry.getValue().getDeclaringClass().getClassLoader() == classLoader);
         }
     }
