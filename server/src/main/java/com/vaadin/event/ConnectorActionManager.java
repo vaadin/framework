@@ -77,10 +77,6 @@ public class ConnectorActionManager extends ActionManager {
         super.handleAction(action, sender, target);
     }
 
-    String getConnectorId() {
-        return connector.getConnectorId();
-    }
-
     private static final Logger getLogger() {
         return Logger.getLogger(ConnectorActionManager.class.getName());
     }
