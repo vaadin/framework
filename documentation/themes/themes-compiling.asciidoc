@@ -29,8 +29,10 @@ all its dependencies to be in the class path of the servlet. At least for
 production, you must compile the theme to CSS, as described next.
 
 NOTE: If the on-the-fly compilation does not seem to work, ensure that your build script has not generated a pre-compiled CSS file.
-If [filename]#styles.css# file is found the servlet, the compilation is skipped.
-Delete such an existing [filename]#styles.css# file and disable theme compilation temporarily.
+If a [filename]#styles.css# file is found by the servlet, the compilation is skipped.
+Disable theme compilation in your local development environment and delete the existing
+[filename]#styles.css# file to enable on-the-fly compilation. Note that
+theme compilation should not be disabled for production builds.
 
 [[themes.compiling.eclipse]]
 == Compiling in Eclipse
