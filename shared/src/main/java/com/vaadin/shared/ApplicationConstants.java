@@ -75,14 +75,6 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * Configuration parameter giving the (in some cases relative) URL to the
-     * web application context root.
-     *
-     * @since 8.0.3
-     */
-    public static final String CONTEXT_ROOT_URL = "contextRootUrl";
-
-    /**
-     * Configuration parameter giving the (in some cases relative) URL to the
      * VAADIN folder from where themes and widgetsets are loaded.
      * <p>
      * <b>Refactor warning:</b> This value is also hardcoded in
@@ -120,6 +112,8 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * Name of the parameter used to transmit the push connection identifier.
+     *
+     * @since 7.7.11
      */
     public static final String PUSH_ID_PARAMETER = "v-pushId";
 

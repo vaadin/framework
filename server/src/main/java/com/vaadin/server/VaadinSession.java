@@ -508,8 +508,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private void refreshLock() {
         assert lock == null || lock == service.getSessionLock(
                 session) : "Cannot change the lock from one instance to another";
-        assert hasLock(service, session);
-        lock = service.getSessionLock(session);
+                assert hasLock(service, session);
+                lock = service.getSessionLock(session);
     }
 
     public void setCommunicationManager(
@@ -1010,12 +1010,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                         getLogger().log(Level.SEVERE,
                                 "Exception while cleaning connector map for ui "
                                         + ui.getUIId(),
-                                e);
+                                        e);
                     } catch (AssertionError e) {
                         getLogger().log(Level.SEVERE,
                                 "Exception while cleaning connector map for ui "
                                         + ui.getUIId(),
-                                e);
+                                        e);
                     }
                 }
             }
@@ -1091,7 +1091,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         }
         if (value != null && !type.isInstance(value)) {
             throw new IllegalArgumentException("value of type " + type.getName()
-                    + " expected but got " + value.getClass().getName());
+            + " expected but got " + value.getClass().getName());
         }
         setAttribute(type.getName(), value);
     }
@@ -1289,7 +1289,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     protected void setState(State state) {
         assert hasLock();
         assert this.state.isValidChange(state) : "Invalid session state change "
-                + this.state + "->" + state;
+        + this.state + "->" + state;
 
         this.state = state;
     }
@@ -1429,6 +1429,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * establishing a push connection with the client.
      *
      * @return the push connection identifier string
+     * @since 7.7.11
      */
     public String getPushId() {
         assert hasLock();
