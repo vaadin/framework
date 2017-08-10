@@ -44,6 +44,7 @@ import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -117,6 +118,7 @@ public class GridConnector extends AbstractListingConnector
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
+    private boolean rowHeightScheduled = false;
 
     /**
      * Gets the string identifier of the given column in this grid.
@@ -347,19 +349,32 @@ public class GridConnector extends AbstractListingConnector
         grid.setHeaderVisible(state.visible);
     }
 
-    @OnStateChange("rowHeight")
+    @OnStateChange({ "bodyRowHeight", "headerRowHeight", "footerRowHeight" })
     void updateRowHeight() {
-        double rowHeight = getState().rowHeight;
-        if (rowHeight >= 0) {
-            getWidget().getEscalator().getHeader()
-                    .setDefaultRowHeight(rowHeight);
-            getWidget().getEscalator().getBody().setDefaultRowHeight(rowHeight);
-            getWidget().getEscalator().getFooter()
-                    .setDefaultRowHeight(rowHeight);
-        } else if (getWidget().isAttached()) {
-            // finally to make sure column sizes have been set before this
-            Scheduler.get()
-                    .scheduleFinally(() -> getWidget().resetSizesFromDom());
+        if (rowHeightScheduled) {
+            return;
+        }
+
+        Scheduler.get().scheduleFinally(() -> {
+            if (getWidget().isAttached()) {
+                getWidget().resetSizesFromDom();
+            }
+            updateContainerRowHeigth(getWidget().getEscalator().getBody(),
+                    getState().bodyRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getHeader(),
+                    getState().headerRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getFooter(),
+                    getState().footerRowHeight);
+            rowHeightScheduled = false;
+        });
+
+        rowHeightScheduled = true;
+    }
+
+    private void updateContainerRowHeigth(RowContainer container,
+            double height) {
+        if (height > 0) {
+            container.setDefaultRowHeight(height);
         }
     }
 

@@ -539,6 +539,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         rowMenu.addItem("Deselect all", menuItem -> {
             grid.getSelectionModel().deselectAll();
         });
+
+        MenuItem rowHeight = rowMenu.addItem("Body Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setBodyRowHeight(i)));
     }
 
     private void createSelectionMenu(MenuItem stateItem) {
@@ -640,6 +644,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
             mergeHeaderСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = headerMenu.addItem("Header Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setHeaderRowHeight(i)));
     }
 
     private void mergeHeaderСells(int rowIndex, String jointCellText,
@@ -703,6 +711,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
             mergeFooterСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = footerMenu.addItem("Footer Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setFooterRowHeight(i)));
     }
 
     /* DetailsGenerator related things */
