@@ -8,44 +8,70 @@ layout: page
 = Using Vaadin with Scala
 
 You can use Vaadin with any JVM compatible language, such as Scala or Groovy.
-There are, however, some caveats related to libraries and project set-up. In the
-following, we give instructions for creating a Scala UI in Eclipse, with the
-Scala IDE for Eclipse and the Vaadin Plugin for Eclipse.
 
-. Install the link:http://scala-ide.org/[Scala IDE for Eclipse], either from an
-Eclipse update site or as a bundled Eclipse distribution.
+This document will help you to set up a **Hello World** project in Vaadin with Scala using Maven.
 
-. Open an existing Vaadin Java project or create a new one as outlined in
-<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project,"Creating
-and Running a Project with Eclipse">>. You can delete the UI class created by
-the wizard.
+*It is assumed you already have Java and Maven pre-installed.*
 
-. Switch to the Scala perspective by clicking the perspective in the upper-right
-corner of the Eclipse window.
+## Getting Started
+* Run the Maven archetype below to get a simple app created:
+```bash
+mvn archetype:generate -DarchetypeGroupId=com.vaadin -DarchetypeArtifactId=vaadin-archetype-application -DarchetypeVersion=8.0.5 -DgroupId=com.pany -DartifactId=ui -Dversion=1.0-SNAPSHOT -Dpackaging=war
+```
+_Note that at this point you could import the project to and IDE like IntelliJ._
 
-. Right-click on the project folder in [guilabel]#Project Explorer# and select
-"Configure > Add Scala Nature".
+* You now should have the Vaadin Java project under the directory `ui`. Since we are doing Scala, delete the `java` directory in `${project_home}/src/main/` and create an empty `scala` directory in the same place.
 
-. The web application needs [filename]#scala-library.jar# in its class path. If
-using Scala IDE, you can copy it from somewhere under your Eclipse installation
-to the class path of the web application, that is, either to the
-[filename]#WebContent/WEB-INF/lib# folder in the project or to the library path
-of the application server. If copying outside Eclipse to a project, refresh the
-project by selecting it and pressing kbd:[F5].
+* Add the following Scala dependency and...
+```xml
+  <dependency>
+   <groupId>org.scala-lang</groupId>
+   <artifactId>scala-library</artifactId>
+   <version>2.12.1</version>
+  </dependency>
+```
+...plugin to your 'pom.xml'
+```xml
+  <plugin>
+   <groupId>net.alchim31.maven</groupId>
+   <artifactId>scala-maven-plugin</artifactId>
+   <version>3.2.2</version>
+   <executions>
+    <execution>
+     <goals>
+      <goal>compile</goal>
+      <goal>testCompile</goal>
+     </goals>
+    </execution>
+   </executions>
+   <configuration>
+    <scalaCompatVersion>2.12</scalaCompatVersion>
+    <scalaVersion>2.12</scalaVersion>
+   </configuration>
+  </plugin>
+```
 
-+
-You could also get it with a Maven dependency, just make sure that the
-version is same as what the Scala IDE uses.
+* Create the following class in the new-created `scala` directory.
+```scala
+package com.mycompany.myproject
 
+import java.util.Date
+import javax.servlet.annotation.WebServlet
 
-You should now be able to create a Scala UI class, such as the following:
+import com.vaadin.annotations.{Theme, VaadinServletConfiguration}
+import com.vaadin.server.{VaadinRequest, VaadinServlet}
+import com.vaadin.ui.Button.{ClickEvent, ClickListener}
+import com.vaadin.ui._
 
+@WebServlet(urlPatterns = Array("/*"), name = "MyScalaUIServlet", asyncSupported = true)
+@VaadinServletConfiguration(ui = classOf[MyScalaUI], productionMode = false)
+class MyScalaUIServlet extends VaadinServlet {
+}
 
-[source, scala]
-----
 @Theme("mytheme")
 class MyScalaUI extends UI {
-  override def init(request: VaadinRequest) = {
+
+  override def init(request: VaadinRequest): Unit = {
     val content: VerticalLayout = new VerticalLayout
     setContent(content)
 
@@ -53,28 +79,34 @@ class MyScalaUI extends UI {
     content addComponent label
 
     // Handle user interaction
-    content addComponent new Button("Click Me!",
+    content addComponent new Button("Click Me from Scala!",
       new ClickListener {
-        override def buttonClick(event: ClickEvent) =
+        override def buttonClick(event: ClickEvent): Unit =
           Notification.show("The time is " + new Date)
       })
   }
 }
-----
+```
 
-Eclipse and Scala IDE should be able to import the Vaadin classes automatically
-when you press kbd:[Ctrl+Shift+O].
+* Now just execute:
+```bash
+mvn clean package jetty:run -Dvaadin.productionMode=true
+```
 
-You need to define the Scala UI class either in a servlet class (in Servlet 3.0
-project) or in a [filename]#web.xml# deployment descriptor, just like described
-in
-<<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.first-project.exploring,"Exploring
-the Project">> for Java UIs.
+* You should get logs containing something similar to:
+```bash
+[INFO] Started ServerConnector@15e41fff{HTTP/1.1,[http/1.1]}{0.0.0.0:8080}
+[INFO] Started @9194ms
+[INFO] Started Jetty Server
+[INFO] Using Non-Native Java sun.nio.fs.PollingWatchService
+```
+_The important information here is that Jetty is now running on port 8080_
 
-ifdef::web[]
-The link:https://github.com/henrikerola/scaladin[Scaladin add-on] offers a more
-Scala-like API for Vaadin. A Vaadin 7 compatible version is under development.
-endif::web[]
+* Go to `localhost:8080` from the web browser and the page should be working:
+
+image::img/hello-world-scala-page.png[]
+
+* If you can see the page above, congratulations you have created your first Vaadin with Scala app.
 
 ifdef::web[]
 [[getting-started.scala.lambdas]]

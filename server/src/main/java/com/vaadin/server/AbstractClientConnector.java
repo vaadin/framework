@@ -45,6 +45,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
@@ -295,7 +296,7 @@ public abstract class AbstractClientConnector
      */
     protected SharedState createState() {
         try {
-            return getStateType().newInstance();
+            return ReflectTools.createInstance(getStateType());
         } catch (Exception e) {
             throw new RuntimeException("Error creating state of type "
                     + getStateType().getName() + " for " + getClass().getName(),
