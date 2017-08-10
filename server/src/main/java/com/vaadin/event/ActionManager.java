@@ -243,7 +243,7 @@ public class ActionManager
     }
 
     private LinkedHashSet<Action> getActionSet(Object target, Object sender) {
-        LinkedHashSet<Action> actions = new LinkedHashSet<Action>();
+        LinkedHashSet<Action> actions = new LinkedHashSet<>();
         if (ownActions != null) {
             actions.addAll(ownActions);
         }
