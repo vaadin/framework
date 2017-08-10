@@ -80,6 +80,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private T value;
 
     /**
+     * Default value of the field, displayed when nothing has been selected.
+     * 
+     * @since 8.1.2
+     */
+    private T defaultValue = null;
+    /**
      * Specified smallest modifiable unit for the date field.
      */
     private R resolution;
@@ -187,7 +193,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             if (currentDate != null) {
                 value = getDatePart(currentDate, res);
             }
-            target.addVariable(this, getResolutionVariable(res), value);
+            String variableName = getResolutionVariable(res);
+            target.addVariable(this, variableName, value);
+            if (defaultValue != null) {
+                int defaultValuePart = getDatePart(defaultValue, res);
+                target.addVariable(this, "default-" + variableName,
+                        defaultValuePart);
+            } else {
+                target.addVariable(this, "default-" + variableName, -1);
+            }
         }
     }
 
@@ -227,8 +241,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 newDate = reconstructDateFromFields(variables, oldDate);
             }
 
-            hasChanges |= !Objects.equals(dateString, newDateString) ||
-                    !Objects.equals(oldDate, newDate);
+            hasChanges |= !Objects.equals(dateString, newDateString)
+                    || !Objects.equals(oldDate, newDate);
 
             if (hasChanges) {
                 dateString = newDateString;
@@ -239,18 +253,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                     setComponentError(null);
                 } else {
                     if (variables.get("lastInvalidDateString") != null) {
-                        Result<T> parsedDate = handleUnparsableDateString(dateString);
-                        parsedDate.ifOk(v-> {
+                        Result<T> parsedDate = handleUnparsableDateString(
+                                dateString);
+                        parsedDate.ifOk(v -> {
                             uiHasValidDateString = true;
                             currentParseErrorMessage = null;
-                            setValue(v,true);
+                            setValue(v, true);
                         });
                         if (parsedDate.isError()) {
                             dateString = null;
                             uiHasValidDateString = false;
-                            currentParseErrorMessage = parsedDate.getMessage().orElse("Parsing error");
-                            setComponentError(new UserError(getParseErrorMessage()));
-                            setValue(null,true);
+                            currentParseErrorMessage = parsedDate.getMessage()
+                                    .orElse("Parsing error");
+                            setComponentError(
+                                    new UserError(getParseErrorMessage()));
+                            setValue(null, true);
                         }
                     } else {
                         uiHasValidDateString = true;
@@ -272,16 +289,16 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Construct a date object from the individual field values received from the
-     * client.
+     * Construct a date object from the individual field values received from
+     * the client.
      *
      * @since 8.1.1
      */
-    protected T reconstructDateFromFields(Map<String, Object> variables, T oldDate) {
+    protected T reconstructDateFromFields(Map<String, Object> variables,
+            T oldDate) {
         Map<R, Integer> calendarFields = new HashMap<>();
 
-        for (R resolution : getResolutionsHigherOrEqualTo(
-                getResolution())) {
+        for (R resolution : getResolutionsHigherOrEqualTo(getResolution())) {
             // Only handle what the client is allowed to send. The same
             // resolutions that are painted
             String variableName = getResolutionVariable(resolution);
@@ -290,7 +307,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             if (newValue != null && newValue >= 0) {
                 calendarFields.put(resolution, newValue);
             } else {
-                calendarFields.put(resolution, getDatePart(oldDate, resolution));
+                calendarFields.put(resolution,
+                        getDatePart(oldDate, resolution));
             }
         }
         return buildDate(calendarFields);
@@ -460,6 +478,57 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
+     * Returns the current default value.
+     *
+     * @see #setDefaultValue(Temporal)
+     * @return the default value
+     * @since 8.1.2
+     */
+    public T getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * Sets the default value for the field. The default value is the starting
+     * point for the date field when nothing has been selected yet. If no
+     * default value is set, current date/time is used.
+     *
+     * @param defaultValue
+     * @since 8.1.2
+     */
+    public void setDefaultValue(T defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    /**
+     * Sets the value of this object. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent} .
+     *
+     * @param value
+     *            the new value, may be {@code null}
+     */
+    @Override
+    public void setValue(T value) {
+        /*
+         * First handle special case when the client side component have a date
+         * string but value is null (e.g. unparsable date string typed in by the
+         * user). No value changes should happen, but we need to do some
+         * internal housekeeping.
+         */
+        if (value == null && !uiHasValidDateString) {
+            /*
+             * Side-effects of doSetValue clears possible previous strings and
+             * flags about invalid input.
+             */
+            doSetValue(null);
+
+            markAsDirty();
+            return;
+        }
+        super.setValue(value);
+    }
+
+    /**
      * Checks whether ISO 8601 week numbers are shown in the date selector.
      *
      * @return true if week numbers are shown, false otherwise.
@@ -545,17 +614,19 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             } else {
                 throw new RuntimeException("Cannot detect resoluton type "
                         + Optional.ofNullable(dateType).map(Type::getTypeName)
-                        .orElse(null));
+                                .orElse(null));
             }
         }
     }
 
     /**
-     * Formats date according to the components locale.
-     * To be reimplemented in subclasses.
+     * Formats date according to the components locale. To be reimplemented in
+     * subclasses.
      *
-     * @param value the date or {@code null}
-     * @return textual representation of the date or empty string for {@code null}
+     * @param value
+     *            the date or {@code null}
+     * @return textual representation of the date or empty string for
+     *         {@code null}
      * @since 8.1.1
      */
     protected String formatDate(T value) {
@@ -610,7 +681,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         } else {
             dateString = formatDate(getEmptyValue());
         }
-        RangeValidator<T> validator = getRangeValidator();// TODO move range check to internal validator?
+        RangeValidator<T> validator = getRangeValidator();// TODO move range
+                                                          // check to internal
+                                                          // validator?
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
         if (result.isError()) {
