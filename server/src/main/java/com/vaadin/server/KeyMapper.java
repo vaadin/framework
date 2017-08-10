@@ -95,7 +95,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
      * This method can be overridden to customize the keys used.
      *
      * @return new key
-     * @since
+     * @since 8.1.2
      */
     protected String createKey() {
         return String.valueOf(++lastKey);

@@ -262,7 +262,7 @@ public class ActionManager
      * Extension of KeyMapper that avoids reusing keys even across different
      * instances.
      *
-     * @since
+     * @since 8.1.2
      */
     private static class ActionKeyMapper extends KeyMapper<Action> {
         private static int lastKey = 0;
