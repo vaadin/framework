@@ -100,6 +100,14 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         this.date = date;
     }
 
+    /**
+     * Set the default date to open popup when no date is selected.
+     *
+     * @param date
+     *            default date to show as the initial (non-selected) value when
+     *            opening a popup with no value selected
+     * @since 8.1.2
+     */
     public void setDefaultDate(Date date) {
         this.defaultDate = date;
     }
@@ -123,11 +131,18 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *
      * @see #setCurrentDate(Map)
      * @param defaultValues
+     * @since 8.1.2
      */
     public void setDefaultDate(Map<R, Integer> defaultValues) {
         setDefaultDate(getDate(defaultValues));
     }
 
+    /**
+     * Sets the default date when no date is selected.
+     *
+     * @return the default date
+     * @since 8.1.2
+     */
     public Date getDefaultDate() {
         return defaultDate;
     }

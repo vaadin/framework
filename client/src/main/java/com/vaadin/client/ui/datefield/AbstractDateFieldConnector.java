@@ -99,6 +99,15 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
                                 : -1));
     }
 
+    /**
+     * Returns the default date (when no date is selected) components as a map
+     * from Resolution to the corresponding value.
+     * 
+     * @param uidl
+     *            UIDL with corresponding variables
+     * @return default date component map
+     * @since 8.1.2
+     */
     protected Map<R, Integer> getDefaultValues(UIDL uidl) {
         Stream<R> resolutions = getWidget().getResolutions();
         R resolution = getWidget().getCurrentResolution();
