@@ -2418,7 +2418,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Element targetElement = Element.as(target);
-            if (grid.isElementInChildWidget(targetElement)) {
+            if (!grid.isEventsFromWidgetsEnabled()
+                    && grid.isElementInChildWidget(targetElement)) {
                 // Target is some widget inside of Grid
                 return;
             }
@@ -4207,6 +4208,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private AutoScroller autoScroller = new AutoScroller(this);
 
     private ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
+
+    private boolean eventsFromWidgets = false;
 
     private final List<GridEventHandler<T>> browserEventHandlers = new ArrayList<>();
 
@@ -6205,6 +6208,27 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 new RendererEventHandler(),
                 // Moving cell focus by keyboard or mouse
                 new CellFocusEventHandler()));
+    }
+
+    /**
+     * Returns whether events that originate from a widget inside the Grid are
+     * fired.
+     * 
+     * @return {@code true} if firing events is enabled; {@code false} if not
+     */
+    public boolean isEventsFromWidgetsEnabled() {
+        return eventsFromWidgets;
+    }
+
+    /**
+     * Sets whether to fire events that originate from a widget inside the Grid.
+     * The default is to not fire events.
+     * 
+     * @param fireEvents
+     *            {@code true} to fire events; {@code false} if not
+     */
+    public void setEventsFromWidgetsEnabled(boolean fireEvents) {
+        eventsFromWidgets = fireEvents;
     }
 
     @Override
