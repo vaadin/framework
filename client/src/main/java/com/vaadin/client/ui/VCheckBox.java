@@ -54,8 +54,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
 
         Element el = DOM.getFirstChild(getElement());
         while (el != null) {
-            DOM.sinkEvents(el,
-                    (DOM.getEventsSunk(el) | VTooltip.TOOLTIP_EVENTS));
+            DOM.sinkEvents(el, DOM.getEventsSunk(el) | VTooltip.TOOLTIP_EVENTS);
             el = DOM.getNextSibling(el);
         }
 
@@ -73,8 +72,8 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
 
     @Override
     public void onBrowserEvent(Event event) {
-        if (icon != null && (event.getTypeInt() == Event.ONCLICK)
-                && (DOM.eventGetTarget(event) == icon.getElement())) {
+        if (icon != null && event.getTypeInt() == Event.ONCLICK
+                && DOM.eventGetTarget(event) == icon.getElement()) {
             // Click on icon should do nothing if widget is disabled
             if (isEnabled()) {
                 setValue(!getValue());

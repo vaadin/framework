@@ -24,8 +24,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.event.SelectionEvent.SelectionListener;
+import com.vaadin.shared.ui.grid.selection.SingleSelectionModelServerRpc;
+import com.vaadin.ui.ComponentTest;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.Grid.SelectionModel.HasUserSelectionAllowed;
 import com.vaadin.ui.Grid.SingleSelectionModel;
 
 public class SingleSelectionModelTest {
@@ -150,4 +153,14 @@ public class SingleSelectionModelTest {
             }
         });
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void refuseSelectionWhenUserSelectionDisallowed() {
+        ((HasUserSelectionAllowed) grid.getSelectionModel())
+                .setUserSelectionAllowed(false);
+        SingleSelectionModelServerRpc serverRpc = ComponentTest.getRpcProxy(
+                grid.getSelectionModel(), SingleSelectionModelServerRpc.class);
+        serverRpc.select("a");
+    }
+
 }

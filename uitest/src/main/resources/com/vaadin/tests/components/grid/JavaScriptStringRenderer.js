@@ -4,4 +4,9 @@ com_vaadin_tests_components_grid_JavaScriptStringRenderer = function() {
 		// This one is for IE8
 		cell.element.innerText = data;
 	}
+
+	this.destroy = function(cell) {
+		document.getElementById("clientLog").innerHTML += "destroy: "+cell.rowIndex+"/"+cell.columnIndex+"<br>";
+	}
+
 }

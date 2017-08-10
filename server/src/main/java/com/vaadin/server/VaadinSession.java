@@ -508,8 +508,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private void refreshLock() {
         assert lock == null || lock == service.getSessionLock(
                 session) : "Cannot change the lock from one instance to another";
-        assert hasLock(service, session);
-        lock = service.getSessionLock(session);
+                assert hasLock(service, session);
+                lock = service.getSessionLock(session);
     }
 
     public void setCommunicationManager(
@@ -747,6 +747,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private final String csrfToken = UUID.randomUUID().toString();
 
+    private final String pushId = UUID.randomUUID().toString();
+
     /**
      * Generate an id for the given Connector. Connectors must not call this
      * method more than once, the first time they need an id.
@@ -884,9 +886,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *
      * @param createOnDemand
      *            <code>true</code> if a resource handler should be initialized
-     *            if there is no handler associated with this application.
-     *            </code>false</code> if </code>null</code> should be returned
-     *            if there is no registered handler.
+     *            if there is no handler associated with this application,
+     *            <code>false</code> if <code>null</code> should be returned if
+     *            there is no registered handler.
      * @return this session's global resource handler, or <code>null</code> if
      *         there is no handler and the createOnDemand parameter is
      *         <code>false</code>.
@@ -1002,6 +1004,19 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                             CurrentInstance.restoreInstances(oldCurrent);
                         }
                     }
+                    try {
+                        ui.getConnectorTracker().cleanConnectorMap();
+                    } catch (Exception e) {
+                        getLogger().log(Level.SEVERE,
+                                "Exception while cleaning connector map for ui "
+                                        + ui.getUIId(),
+                                        e);
+                    } catch (AssertionError e) {
+                        getLogger().log(Level.SEVERE,
+                                "Exception while cleaning connector map for ui "
+                                        + ui.getUIId(),
+                                        e);
+                    }
                 }
             }
         } finally {
@@ -1076,7 +1091,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         }
         if (value != null && !type.isInstance(value)) {
             throw new IllegalArgumentException("value of type " + type.getName()
-                    + " expected but got " + value.getClass().getName());
+            + " expected but got " + value.getClass().getName());
         }
         setAttribute(type.getName(), value);
     }
@@ -1274,7 +1289,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     protected void setState(State state) {
         assert hasLock();
         assert this.state.isValidChange(state) : "Invalid session state change "
-                + this.state + "->" + state;
+        + this.state + "->" + state;
 
         this.state = state;
     }
@@ -1407,6 +1422,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public String getCsrfToken() {
         assert hasLock();
         return csrfToken;
+    }
+
+    /**
+     * Gets the push connection identifier for this session. Used when
+     * establishing a push connection with the client.
+     *
+     * @return the push connection identifier string
+     * @since 7.7.11
+     */
+    public String getPushId() {
+        assert hasLock();
+        return pushId;
     }
 
     /**

@@ -31,8 +31,32 @@ import com.vaadin.shared.ui.grid.GridConstants.Section;
 public class GridKeyPressEvent
         extends AbstractGridKeyEvent<GridKeyPressHandler> {
 
+    /**
+     * @since 7.7.9
+     */
+    public static final Type<GridKeyPressHandler> TYPE = new Type<GridKeyPressHandler>(
+            BrowserEvents.KEYPRESS, new GridKeyPressEvent());
+
+    /**
+     * @since 7.7.9
+     */
+    public GridKeyPressEvent() {
+    }
+
+    /**
+     * @deprecated This constructor's arguments are no longer used. Use the
+     *             no-args constructor instead.
+     */
+    @Deprecated
     public GridKeyPressEvent(Grid<?> grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
+    }
+
+    /**
+     * @since 7.7.9
+     */
+    @Override
+    public Type<GridKeyPressHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override

@@ -74,8 +74,6 @@ SE site].
 Also make sure you have the latest version of your IDE.
 Eclipse is available in various packages; be sure to download the *Eclipse IDE for Java EE Developers* from http://www.eclipse.org/downloads/[eclipse.org].
 
-Please refer to <<getting-started/getting-started-environment#getting-started.environment, "Setting up the Development Environment">> for more information regarding installing the tools or watch the video of the next step.
-
 [[framework.tutorial.archetype]]
 == Creating a Project from an Archetype
 
@@ -263,9 +261,9 @@ clipboard. Select the text content of the whole class from your browser, choose
 "Edit > Copy", focus the node representing the [packagename]#my.vaadin.app# Java package in Eclipse's Java Resources view and choose "Edit > Paste".
 Eclipse is smart enough to automatically create a properly named Java file for the class.
 
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerStatus.java[CustomerStatus] - this is a simple enum class
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we will be using in our example
- * https://raw.githubusercontent.com/vaadin/tutorial/master/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify [classname]#Customer# instances.
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/CustomerStatus.java[CustomerStatus] - this is a simple enum class
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/Customer.java[Customer] - this is the main domain object, a basic Java bean that we will be using in our example
+ * https://raw.githubusercontent.com/vaadin/tutorial/v7/src/main/java/my/vaadin/app/CustomerService.java[CustomerService] - this is a simple facade via which you can request and modify [classname]#Customer# instances.
  You can think of this as your entry point to your fake database.
 
 In the next steps, we will be using these classes and build a UI around them.
@@ -274,7 +272,7 @@ The actual implementation of these classes is not relevant for this tutorial, bu
 [[framework.tutorial.grid]]
 == Listing entities in a Grid
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step3.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step3.zip[Download the project] for this step, extract the zip file and choose "Import... > Maven > Existing Maven project".
 
 Often when you start building a UI for a data-centric application, the first
 thing you want to do is to list your data from your back-end.
@@ -391,7 +389,7 @@ You can do this at any point during the rest of the tutorial as well.
 [[framework.tutorial.filtering]]
 == Creating live filtering for entities
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step4.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 A search functionality is expected in every modern application and it is
 also a nice Vaadin development exercise. Let's add a filtering functionality to
@@ -502,7 +500,7 @@ that. Pick either of them.
 [[framework.tutorial.form.designer]]
 === Creating a form using Vaadin Designer
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step5.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 The form to edit Customer objects can be built using several methods of which
 the visual composition by drag 'n' drop is the most intuitive. Vaadin
@@ -880,7 +878,7 @@ simplicity.
 [[framework.tutorial.form-connection]]
 == Connecting the form to the application
 
-TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/step6.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
+TIP: Starting from this step directly? https://github.com/vaadin/tutorial/archive/v7-step6.zip[Download the project] for this step, extract the zip file and choose menu:Import...[Maven>Existing Maven project].
 
 In this part, we'll use the CustomerForm class, which we created in the
 previous step, from the MyUI class. We will use it for both editing the existing

@@ -28,8 +28,8 @@ import com.vaadin.ui.ColorPickerArea;
 
 /**
  * A class that defines an implementation for a color picker connector. Connects
- * the server side {@link com.vaadin.ui.ColorPickerArea} with the client side
- * counterpart {@link VColorPickerArea}
+ * the server side {@link ColorPickerArea} with the client side counterpart
+ * {@link VColorPickerArea}
  *
  * @since 7.0.0
  */

@@ -36,11 +36,6 @@ import com.vaadin.ui.DateField;
 @Connect(DateField.class)
 public class DateFieldConnector extends TextualDateConnector {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.client.ui.AbstractConnector#init()
-     */
     @Override
     protected void init() {
         getWidget().popup.addCloseHandler(new CloseHandler<PopupPanel>() {

@@ -17,6 +17,8 @@ package com.vaadin.data.util;
 
 import java.util.Collection;
 
+import com.vaadin.data.Container;
+
 /**
  * An in-memory container for JavaBeans.
  *
@@ -186,7 +188,7 @@ public class BeanItemContainer<BEANTYPE>
      * @param newItemId
      *            the bean (of type BT) to add (not null)
      *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
+     * @see Container.Ordered#addItemAfter(Object, Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -219,7 +221,7 @@ public class BeanItemContainer<BEANTYPE>
      *
      * The bean is used both as the item contents and as the item identifier.
      *
-     * @see com.vaadin.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -232,7 +234,7 @@ public class BeanItemContainer<BEANTYPE>
      *
      * The bean is used both as the item contents and as the item identifier.
      *
-     * @see com.vaadin.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     @Override
     public BeanItem<BEANTYPE> addBean(BEANTYPE bean) {

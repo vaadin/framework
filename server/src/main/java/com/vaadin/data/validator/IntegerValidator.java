@@ -19,8 +19,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 
 /**
- * String validator for integers. See
- * {@link com.vaadin.data.validator.AbstractStringValidator} for more
+ * String validator for integers. See {@link AbstractStringValidator} for more
  * information.
  *
  * @author Vaadin Ltd.

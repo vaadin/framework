@@ -55,6 +55,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
@@ -587,7 +588,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 output += "</a>";
             }
             getService().writeStringResponse(response,
-                    "text/html; charset=UTF-8", output);
+                    ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8, output);
         }
     }
 
@@ -1156,6 +1157,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
             // Vaadin JAR in development environments and in similar cases.
@@ -1165,8 +1167,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // However, performing a check in case some servers or class loaders
             // try to normalize the path by collapsing ".." before the class
             // loader sees it.
-
-            if (!resourceUrl.getPath().contains("!/VAADIN/")) {
+            if (!resourcePath.contains("!/VAADIN/")
+                    && !resourcePath.contains("!/META-INF/resources/VAADIN/")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
                         resourceUrl);
@@ -1182,8 +1184,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // Check that the URL is in a VAADIN directory and does not contain
             // "/../"
-            if (!resourceUrl.getPath().contains("/VAADIN/")
-                    || resourceUrl.getPath().contains("/../")) {
+            if (!resourcePath.contains("/VAADIN/")
+                    || resourcePath.contains("/../")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access file: {0}", resourceUrl);
                 return false;

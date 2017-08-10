@@ -171,11 +171,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         model = BeanItem.getPropertyDescriptors((Class<BEANTYPE>) type);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getType(java.lang.Object)
-     */
     @Override
     public Class<?> getType(Object propertyId) {
         VaadinPropertyDescriptor<BEANTYPE> descriptor = model.get(propertyId);
@@ -208,21 +203,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         return type;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getContainerPropertyIds()
-     */
     @Override
     public Collection<String> getContainerPropertyIds() {
         return model.keySet();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeAllItems()
-     */
     @Override
     public boolean removeAllItems() {
         int origSize = size();
@@ -245,11 +230,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getItem(java.lang.Object)
-     */
     @Override
     public BeanItem<BEANTYPE> getItem(Object itemId) {
         // TODO return only if visible?
@@ -261,23 +241,12 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         return itemIdToItem.get(itemId);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getItemIds()
-     */
     @Override
     @SuppressWarnings("unchecked")
     public List<IDTYPE> getItemIds() {
         return (List<IDTYPE>) super.getItemIds();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
-     * java.lang.Object)
-     */
     @Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
@@ -287,11 +256,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         return item.getItemProperty(propertyId);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container#removeItem(java.lang.Object)
-     */
     @Override
     public boolean removeItem(Object itemId) {
         // TODO should also remove items that are filtered out
@@ -327,13 +291,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         filterAll();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.Container.Filterable#addContainerFilter(java.lang.Object,
-     * java.lang.String, boolean, boolean)
-     */
     @Override
     public void addContainerFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
@@ -346,11 +303,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Filterable#removeAllContainerFilters()
-     */
     @Override
     public void removeAllContainerFilters() {
         if (!getFilters().isEmpty()) {
@@ -361,13 +313,6 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.Container.Filterable#removeContainerFilters(java.lang
-     * .Object)
-     */
     @Override
     public void removeContainerFilters(Object propertyId) {
         Collection<Filter> removedFilters = super.removeFilters(propertyId);
@@ -390,21 +335,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         removeFilter(filter);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.AbstractInMemoryContainer#hasContainerFilters()
-     */
     @Override
     public boolean hasContainerFilters() {
         return super.hasContainerFilters();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
-     */
     @Override
     public Collection<Filter> getContainerFilters() {
         return super.getContainerFilters();
@@ -458,22 +393,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
-     */
     @Override
     public Collection<?> getSortableContainerPropertyIds() {
         return getSortablePropertyIds();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
-     * boolean[])
-     */
     @Override
     public void sort(Object[] propertyId, boolean[] ascending) {
         sortContainer(propertyId, ascending);
@@ -524,7 +448,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
      * added at the very end of the unfiltered container and not after the last
      * visible item if filtering is used.
      *
-     * @see com.vaadin.data.Container#addItem(Object)
+     * @see Container#addItem(Object)
      */
     protected BeanItem<BEANTYPE> addItem(IDTYPE itemId, BEANTYPE bean) {
         if (!validateBean(bean)) {
@@ -536,7 +460,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * Adds the bean after the given bean.
      *
-     * @see com.vaadin.data.Container.Ordered#addItemAfter(Object, Object)
+     * @see Container.Ordered#addItemAfter(Object, Object)
      */
     protected BeanItem<BEANTYPE> addItemAfter(IDTYPE previousItemId,
             IDTYPE newItemId, BEANTYPE bean) {
@@ -795,7 +719,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * @deprecated As of 7.0, replaced by
-     *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
+     *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
      **/
     @Deprecated
     @Override

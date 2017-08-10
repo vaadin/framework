@@ -571,7 +571,7 @@ public abstract class AbstractColorPicker extends AbstractComponent
         DesignAttributeHandler.writeAttribute("color", attribute,
                 color.getCSS(), Color.WHITE.getCSS(), String.class);
         DesignAttributeHandler.writeAttribute("popup-style", attribute,
-                (popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple"),
+                popupStyle == PopupStyle.POPUP_NORMAL ? "normal" : "simple",
                 "normal", String.class);
         DesignAttributeHandler.writeAttribute("position", attribute,
                 positionX + "," + positionY, "0,0", String.class);
