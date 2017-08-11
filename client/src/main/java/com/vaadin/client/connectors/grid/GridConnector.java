@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.Scheduler;
@@ -374,7 +373,6 @@ public class GridConnector extends AbstractListingConnector
     }
 
     private boolean rowHeightNeedsReset() {
-        // TODO: This could be optimized even more.
         GridState state = getState();
         // Body
         boolean bodyAutoCalc = state.bodyRowHeight < 0;
@@ -386,9 +384,6 @@ public class GridConnector extends AbstractListingConnector
         // Footer
         boolean footerAutoCalc = state.footerRowHeight < 0;
         boolean footerReset = footerAutoCalc && hasVisibleContent(state.footer);
-
-        Logger.getLogger("Foo").warning("Going to reset: "
-                + (bodyAutoCalc || headerReset || footerReset));
 
         return bodyAutoCalc || headerReset || footerReset;
     }
