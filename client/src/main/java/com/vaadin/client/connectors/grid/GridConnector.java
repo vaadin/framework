@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.Scheduler;
@@ -356,24 +357,49 @@ public class GridConnector extends AbstractListingConnector
         }
 
         Scheduler.get().scheduleFinally(() -> {
-            if (getWidget().isAttached()) {
+            GridState state = getState();
+            if (getWidget().isAttached() && rowHeightNeedsReset()) {
                 getWidget().resetSizesFromDom();
             }
             updateContainerRowHeigth(getWidget().getEscalator().getBody(),
-                    getState().bodyRowHeight);
+                    state.bodyRowHeight);
             updateContainerRowHeigth(getWidget().getEscalator().getHeader(),
-                    getState().headerRowHeight);
+                    state.headerRowHeight);
             updateContainerRowHeigth(getWidget().getEscalator().getFooter(),
-                    getState().footerRowHeight);
+                    state.footerRowHeight);
             rowHeightScheduled = false;
         });
 
         rowHeightScheduled = true;
     }
 
+    private boolean rowHeightNeedsReset() {
+        // TODO: This could be optimized even more.
+        GridState state = getState();
+        // Body
+        boolean bodyAutoCalc = state.bodyRowHeight < 0;
+
+        // Header
+        boolean headerAutoCalc = state.headerRowHeight < 0;
+        boolean headerReset = headerAutoCalc && hasVisibleContent(state.header);
+
+        // Footer
+        boolean footerAutoCalc = state.footerRowHeight < 0;
+        boolean footerReset = footerAutoCalc && hasVisibleContent(state.footer);
+
+        Logger.getLogger("Foo").warning("Going to reset: "
+                + (bodyAutoCalc || headerReset || footerReset));
+
+        return bodyAutoCalc || headerReset || footerReset;
+    }
+
+    private boolean hasVisibleContent(SectionState state) {
+        return state.visible && !state.rows.isEmpty();
+    }
+
     private void updateContainerRowHeigth(RowContainer container,
             double height) {
-        if (height > 0) {
+        if (height >= 0) {
             container.setDefaultRowHeight(height);
         }
     }
