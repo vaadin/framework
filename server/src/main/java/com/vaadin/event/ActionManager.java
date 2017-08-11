@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.vaadin.event.Action.Container;
 import com.vaadin.event.Action.Handler;
@@ -166,14 +167,16 @@ public class ActionManager
          * removed but still exist on client side
          */
         if (!actions.isEmpty() || clientHasActions) {
-            actionMapper = new KeyMapper<>();
+            actionMapper = new ActionKeyMapper();
 
             paintTarget.addVariable((VariableOwner) viewer, "action", "");
             paintTarget.startTag("actions");
 
             for (final Action a : actions) {
+
                 paintTarget.startTag("action");
                 final String akey = actionMapper.key(a);
+
                 paintTarget.addAttribute("key", akey);
                 if (a.getCaption() != null) {
                     paintTarget.addAttribute("caption", a.getCaption());
@@ -244,7 +247,6 @@ public class ActionManager
         LinkedHashSet<Action> actions = new LinkedHashSet<>();
         if (ownActions != null) {
             actions.addAll(ownActions);
-
         }
         if (actionHandlers != null) {
             for (Action.Handler h : actionHandlers) {
@@ -256,4 +258,20 @@ public class ActionManager
         }
         return actions;
     }
+
+    /**
+     * Extension of KeyMapper that avoids reusing keys even across different
+     * instances.
+     *
+     * @since 8.1.2
+     */
+    private static class ActionKeyMapper extends KeyMapper<Action> {
+        private static AtomicInteger lastKey = new AtomicInteger(0);
+
+        @Override
+        protected String createKey() {
+            return String.valueOf(lastKey.incrementAndGet());
+        }
+    }
+
 }
