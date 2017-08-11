@@ -403,11 +403,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * <p>
      * Usage:
+     * 
      * <pre>
      * grid.addContextClickListener(event -&gt; Notification.show(
-     *       ((GridContextClickEvent&lt;Person&gt;)event).getItem() + " Clicked")
-     * );
+     *         ((GridContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
      * </pre>
+     * 
      * @param <T>
      *            the grid bean type
      */
@@ -2766,6 +2767,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Requests that the column widths should be recalculated.
+     * <p>
+     * In most cases Grid will know when column widths need to be recalculated
+     * but this method can be used to force recalculation in situations when
+     * grid does not recalculate automatically.
+     *
+     * @since 8.1.1
+     */
+    public void recalculateColumnWidths() {
+        getRpcProxy(GridClientRpc.class).recalculateColumnWidths();
+    }
+
+    /**
      * Sets the details component generator.
      *
      * @param generator
@@ -3193,6 +3207,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Sets the visibility of the Header in this Grid.
+     * 
+     * @param headerVisible
+     *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public void setHeaderVisible(boolean headerVisible) {
+        getHeader().setVisible(headerVisible);
+    }
+
+    /**
+     * Gets the visibility of the Header in this Grid.
+     * 
+     * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public boolean isHeaderVisible() {
+        return getHeader().isVisible();
+    }
+
+    /**
      * Returns the current default row of the header.
      *
      * @return the default row or null if no default row set
@@ -3343,6 +3380,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
+     * Sets the visibility of the Footer in this Grid.
+     * 
+     * @param footerVisible
+     *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public void setFooterVisible(boolean footerVisible) {
+        getFooter().setVisible(footerVisible);
+    }
+
+    /**
+     * Gets the visibility of the Footer in this Grid.
+     * 
+     * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public boolean isFooterVisible() {
+        return getFooter().isVisible();
+    }
+
+    /**
      * Returns the footer section of this grid.
      *
      * @return the footer section
@@ -3396,8 +3456,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * happens.
      *
      * @param listener
-     *            the context click listener to add, not null
-     *            actual event provided to the listener is {@link GridContextClickEvent}
+     *            the context click listener to add, not null actual event
+     *            provided to the listener is {@link GridContextClickEvent}
      * @return a registration object for removing the listener
      *
      * @since 8.1
@@ -3405,7 +3465,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @see Registration
      */
     @Override
-    public Registration addContextClickListener(ContextClickEvent.ContextClickListener listener) {
+    public Registration addContextClickListener(
+            ContextClickEvent.ContextClickListener listener) {
         return super.addContextClickListener(listener);
     }
 

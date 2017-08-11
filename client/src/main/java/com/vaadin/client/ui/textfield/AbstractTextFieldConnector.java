@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.textfield;
 
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.annotations.OnStateChange;
@@ -28,7 +29,7 @@ import com.vaadin.ui.AbstractTextField;
 
 /**
  * Connector class for AbstractTextField.
- * 
+ *
  * @since 8.0
  */
 public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
@@ -70,6 +71,13 @@ public abstract class AbstractTextFieldConnector extends AbstractFieldConnector
                 new AbstractTextFieldClientRpcImpl());
         ConnectorFocusAndBlurHandler.addHandlers(this);
         valueChangeHandler = new ValueChangeHandler(this);
+
+        // Ensures that the cursor position is sent when leaving the field
+        // (if it has changed)
+        if (getWidget() instanceof HasBlurHandlers) {
+            ((HasBlurHandlers) getWidget())
+                    .addBlurHandler(event -> sendValueChange());
+        }
     }
 
     protected ValueChangeHandler getValueChangeHandler() {

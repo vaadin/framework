@@ -59,12 +59,13 @@
 
         <p>
             Vaadin Framework @version@ is a
-            feature release that includes
+            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below.
+<!--            feature release that includes -->
 <!--            pre-release for evaluating -->
-            a number of new features and bug fixes, as listed in the <a
+<!--            a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
-                href="#changelog">change log</a> below.
-		The API in this beta version is not considered final and may change based on your feedback.
+                href="#changelog">change log</a> below. -->
+<!--		The API in this beta version is not considered final and may change based on your feedback. -->
 	</p>
 
         <!-- ================================================================ -->
@@ -98,7 +99,7 @@
             to Vaadin Framework 8</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
         
         <li>The <tt>TreeGrid</tt> component replaces <tt>TreeTable</tt> component</li>
         <li>The <tt>Tree</tt> component replaces old <tt>Tree</tt> component</li>
@@ -114,6 +115,7 @@
         <li>The <tt>HasValue</tt> interface now has an additional method <tt>getDefaultValidator()</tt> with a default implementation.</li>
         <li><tt>TreeGrid.createColumn()</tt> has an additional parameter.</li>
         <li><tt>LocalDateTimeToDateConverter</tt> now uses <tt>ZoneId</tt> instead of <tt>ZoneOffset</tt>.</li>
+        <li><tt>FontAwesome</tt> icon alignment in <tt>ComboBox</tt> has changed in the theme.</li>
 
         <h2>For incompatible or behaviour-altering changes in 8.0, please see <a href="https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#incompatible">8.0 release notes</a></h2>
         
@@ -136,7 +138,7 @@
                 <li>Push is currently not supported in portals (See <a
                     href="https://github.com/vaadin/framework/issues/3741">#3741</a>)
                 </li>
-                <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
+                <li>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
                      nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
@@ -393,11 +395,11 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox (latest version, currently 48)</li>
-            <li>Mozilla Firefox ESR (latest version, currently 45 ESR)</li>
+            <li>Mozilla Firefox (latest version, currently 54)</li>
+            <li>Mozilla Firefox ESR (latest version, currently 52 ESR)</li>
             <li>Internet Explorer 11, Edge (latest version)</li>
             <li>Safari 9+</li>
-            <li>Google Chrome (latest version, currently 52)</li>
+            <li>Google Chrome (latest version, currently 59)</li>
         </ul>
 
         <p>

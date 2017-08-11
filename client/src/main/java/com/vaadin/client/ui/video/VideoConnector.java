@@ -34,7 +34,11 @@ public class VideoConnector extends MediaBaseConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setPoster(getResourceUrl(VideoConstants.POSTER_RESOURCE));
+
+        String resourceUrl = getResourceUrl(VideoConstants.POSTER_RESOURCE);
+        if (resourceUrl != null) {
+            getWidget().setPoster(resourceUrl);
+        }
     }
 
     @Override

@@ -3119,7 +3119,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                 @Override
                 public void run() {
-                    UserSorter.this.sort(column, scheduledMultisort);
+                    scheduledMultisort = true;
                 }
             };
         }
@@ -3185,32 +3185,44 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Perform a sort after a delay.
+         * Invoked on touchstart, marks itself that we will perform sorting on
+         * touchend. By default single sort is performed, however on long touch
+         * we will perform multitouch.
+         *
+         * Actual sorting is only performed after {@link #onTouchEnd()} is
+         * invoked.
          *
          * @param delay
          *            delay, in milliseconds
          */
-        public void sortAfterDelay(int delay, boolean multisort) {
+        public void awaitForTouchEnd(int delay) {
+            cancelAwaitForTouchEnd();
             column = eventCell.getColumn();
-            scheduledMultisort = multisort;
+            scheduledMultisort = false;
             timer.schedule(delay);
         }
 
         /**
-         * Check if a delayed sort command has been issued but not yet carried
-         * out.
+         * Notifies that the finger has been lifted from the tablet/mobile.
+         * Depending on how much time has passed, we need to perform singlesort
+         * or multisort.
          *
-         * @return a boolean value
+         * Does nothing if the await has been canceled by a call to
+         * {@link #cancelAwaitForTouchEnd()}.
          */
-        public boolean isDelayedSortScheduled() {
-            return timer.isRunning();
+        public void onTouchEnd() {
+            if (column != null) {
+                sort(column, scheduledMultisort);
+                cancelAwaitForTouchEnd();
+            }
         }
 
         /**
          * Cancel a scheduled sort.
          */
-        public void cancelDelayedSort() {
+        public void cancelAwaitForTouchEnd() {
             timer.cancel();
+            column = null;
         }
 
     }
@@ -7651,7 +7663,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         headerCellDndCallback);
                 event.getDomEvent().preventDefault();
                 event.getDomEvent().stopPropagation();
-                event.setHandled(true);
+
+                // fixes https://github.com/vaadin/framework/issues/8632
+                // don't mark the event as handled, in order for the next handler
+                // in the handler chain (HeaderDefaultRowEventHandler) to be able to
+                // receive it. This should be safe since the next handlers in the
+                // chain (RendererEventHandler and CellFocusEventHandler) do not
+                // react to header touches/clicks.
+//                event.setHandled(true);
             }
         }
     };
@@ -7697,12 +7716,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 rowEventTouchStartingPoint = new Point(touch.getClientX(),
                         touch.getClientY());
 
-                sorter.sortAfterDelay(GridConstants.LONG_TAP_DELAY, true);
+                sorter.awaitForTouchEnd(GridConstants.LONG_TAP_DELAY);
 
                 event.setHandled(true);
             } else if (BrowserEvents.TOUCHMOVE
                     .equals(event.getDomEvent().getType())) {
                 if (event.getDomEvent().getTouches().length() > 1) {
+                    return;
+                }
+
+                if (rowEventTouchStartingPoint == null) {
                     return;
                 }
 
@@ -7718,7 +7741,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // starting point
                 if (diffX > GridConstants.LONG_TAP_THRESHOLD
                         || diffY > GridConstants.LONG_TAP_THRESHOLD) {
-                    sorter.cancelDelayedSort();
+                    sorter.cancelAwaitForTouchEnd();
                 }
 
                 event.setHandled(true);
@@ -7728,11 +7751,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     return;
                 }
 
-                if (sorter.isDelayedSortScheduled()) {
-                    // Not a long tap yet, perform single sort
-                    sorter.cancelDelayedSort();
-                    sorter.sort(event.getCell().getColumn(), false);
+                if (rowEventTouchStartingPoint == null) {
+                    return;
                 }
+
+                sorter.onTouchEnd();
 
                 event.setHandled(true);
             } else if (BrowserEvents.TOUCHCANCEL
@@ -7741,7 +7764,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     return;
                 }
 
-                sorter.cancelDelayedSort();
+                sorter.cancelAwaitForTouchEnd();
 
                 event.setHandled(true);
             } else if (BrowserEvents.CLICK

@@ -580,6 +580,7 @@ public class CalendarTest extends GridLayout implements View {
         int rollAmount = calendar.get(GregorianCalendar.DAY_OF_MONTH) - 1;
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -rollAmount);
         currentMonthsFirstDate = calendar.getTime();
+        calendar.setTime(today);
 
         updateCaptionLabel();
 

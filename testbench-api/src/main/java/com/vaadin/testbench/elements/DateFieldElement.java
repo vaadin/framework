@@ -36,8 +36,7 @@ public class DateFieldElement extends AbstractDateFieldElement {
      */
     @Override
     public void clear() {
-        WebElement elem = findElement(By.tagName("input"));
-        elem.clear();
+        getInputElement().clear();
     }
 
     /**
@@ -46,7 +45,7 @@ public class DateFieldElement extends AbstractDateFieldElement {
      * @return value of the date field element
      */
     public String getValue() {
-        return findElement(By.tagName("input")).getAttribute("value");
+        return getInputElement().getAttribute("value");
     }
 
     /**
@@ -61,7 +60,7 @@ public class DateFieldElement extends AbstractDateFieldElement {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
-        WebElement elem = findElement(By.tagName("input"));
+        WebElement elem = getInputElement();
         TestBenchElement tbElement = (TestBenchElement) elem;
         clearElementClientSide(tbElement);
         tbElement.sendKeys(chars);
@@ -103,10 +102,20 @@ public class DateFieldElement extends AbstractDateFieldElement {
      * Gets a date and time formatter for ISO-8601 dates.
      *
      * @return a date formatter for ISO-8601
-     * @since
+     * @since 8.1.0
      */
     protected DateTimeFormatter getISOFormatter() {
         return DateTimeFormatter.ISO_LOCAL_DATE;
+    }
+
+    /**
+     * Gets the {@code <input>} element inside the component.
+     *
+     * @return the input element inside the component
+     * @since 8.1.1
+     */
+    public WebElement getInputElement() {
+        return findElement(By.tagName("input"));
     }
 
 }

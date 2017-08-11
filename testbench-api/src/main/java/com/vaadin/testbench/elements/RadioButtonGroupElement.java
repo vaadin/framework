@@ -25,7 +25,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.RadioButtonGroup")
-public class RadioButtonGroupElement extends AbstractSelectElement {
+public class RadioButtonGroupElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySelectOption = By
             .className("v-select-option");

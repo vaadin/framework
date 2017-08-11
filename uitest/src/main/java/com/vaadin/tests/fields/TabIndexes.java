@@ -3,37 +3,60 @@ package com.vaadin.tests.fields;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.NativeSelect;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.ListSelect;
-import com.vaadin.v7.ui.NativeSelect;
-import com.vaadin.v7.ui.OptionGroup;
-import com.vaadin.v7.ui.PasswordField;
-import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.TextField;
-import com.vaadin.v7.ui.Tree;
-import com.vaadin.v7.ui.TreeTable;
-import com.vaadin.v7.ui.TwinColSelect;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.TreeGrid;
+import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.VerticalLayout;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class TabIndexes extends AbstractTestUIWithLog {
 
-    private List<Focusable> fields;
+    public static final String FIELD_CONTAINER_ID = "field-container";
+    private List<Focusable> fields = new ArrayList<>();
 
     @Override
     protected void setup(VaadinRequest request) {
+        fields.add(new ComboBox());
+        fields.add(new NativeSelect());
+        fields.add(new ListSelect());
+        fields.add(new TextField());
+        fields.add(new DateField());
+        fields.add(new InlineDateField());
+        TreeGrid<String> tt = new TreeGrid<>();
+        tt.addColumn(s -> s);
+        tt.setItems("Foo", "Bar");
+
+        fields.add(tt);
+        fields.add(new TwinColSelect<String>());
+        fields.add(new PasswordField());
+        fields.add(new TextArea());
+        fields.add(new RichTextArea());
+        fields.add(new CheckBox());
+        fields.add(new Slider());
+        MenuBar menubar = new MenuBar();
+        menubar.addItem("foo", item -> {
+        });
+        fields.add(menubar);
+
         HorizontalLayout buttonLayout = new HorizontalLayout();
         addComponent(buttonLayout);
         Button clearTabIndexes = new Button("Set all tab indexes to 0");
@@ -87,51 +110,19 @@ public class TabIndexes extends AbstractTestUIWithLog {
                 updateCaptions();
             }
         });
-        fields = new ArrayList<>();
-        Table t = new Table();
-        t.setSelectable(true);
-        t.addContainerProperty("foo", String.class, "bar");
-        t.addItem();
-        fields.add(t);
-        fields.add(new ComboBox());
-        fields.add(new NativeSelect());
-        fields.add(new ListSelect());
-        fields.add(new TextField());
-        fields.add(new DateField());
-        fields.add(new InlineDateField());
-        OptionGroup og = new OptionGroup();
-        og.addItem("Item 1");
-        og.addItem("Item 2");
-        fields.add(og);
-        TreeTable tt = new TreeTable();
-        tt.setSelectable(true);
-        tt.addContainerProperty("foo", String.class, "bar");
-        tt.addItem();
-
-        fields.add(tt);
-        Tree tree = new Tree();
-        tree.addItem("Item 1");
-        fields.add(tree);
-        fields.add(new TwinColSelect());
-        fields.add(new PasswordField());
-        fields.add(new TextField());
-        fields.add(new TextArea());
-        fields.add(new RichTextArea());
-        fields.add(new CheckBox());
-        fields.add(new Slider());
 
         clearTabIndexes.click();
 
         buttonLayout.addComponents(clearTabIndexes, setTabIndexesToOne,
                 setTabIndexesInOrder, setTabIndexesInReverseOrder);
 
-        int fieldId = 1;
-        GridLayout gl = new GridLayout(4, 4);
+        VerticalLayout vl = new VerticalLayout();
+        vl.setId(FIELD_CONTAINER_ID);
         for (Component f : fields) {
-            f.setId("field-" + fieldId++);
-            gl.addComponent(f);
+            f.setId("field-" + f.getClass().getSimpleName());
+            vl.addComponent(f);
         }
-        addComponent(gl);
+        addComponent(vl);
 
     }
 

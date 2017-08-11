@@ -53,6 +53,7 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.Dependency;
 import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.Json;
 import elemental.json.JsonException;
@@ -262,7 +263,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     /**
      * The URI resolver used in the bootstrap process.
-     * 
+     *
      * @since 8.1
      */
     protected static class BootstrapUriResolver extends VaadinUriResolver {
@@ -515,11 +516,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         head.appendElement("meta").attr("http-equiv", "Content-Type").attr(
                 "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
-        /*
-         * Enable Chrome Frame in all versions of IE if installed.
-         */
-        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=11;chrome=1");
+        // Force IE 11 to use IE 11 mode.
+        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible").attr("content", "IE=11");
 
         Class<? extends UI> uiClass = context.getUIClass();
 
@@ -541,7 +539,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             Class<? extends ViewportGenerator> viewportGeneratorClass = viewportGeneratorClassAnnotation
                     .value();
             try {
-                viewportContent = viewportGeneratorClass.newInstance()
+                viewportContent = ReflectTools
+                        .createInstance(viewportGeneratorClass)
                         .getViewport(context.getRequest());
             } catch (Exception e) {
                 throw new RuntimeException(

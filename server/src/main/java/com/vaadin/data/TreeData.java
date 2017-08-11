@@ -368,6 +368,25 @@ public class TreeData<T> implements Serializable {
     }
 
     /**
+     * Get the parent item for the given item.
+     *
+     * @param item
+     *         the item for which to retrieve the parent item for
+     * @return parent item for the given item or {@code null} if the item is a
+     *         root item.
+     * @throws IllegalArgumentException
+     *         if the item does not exist in this structure
+     * @since 8.1.1
+     */
+    public T getParent(T item) {
+        if (!contains(item)) {
+            throw new IllegalArgumentException(
+                    "Item '" + item + "' not in hierarchy");
+        }
+        return itemToWrapperMap.get(item).getParent();
+    }
+
+    /**
      * Moves an item to become a child of the given parent item. The new parent
      * item must exist in the hierarchy. Setting the parent to {@code null}
      * makes the item a root item. After making changes to the tree data, {@link
@@ -419,7 +438,8 @@ public class TreeData<T> implements Serializable {
      * @param item
      *         the item to be moved
      * @param sibling
-     *         the item after which the moved item will be located
+     *         the item after which the moved item will be located, or {@code
+     *         null} to move item to first position
      * @since 8.1
      */
     public void moveAfterSibling(T item, T sibling) {
@@ -428,26 +448,34 @@ public class TreeData<T> implements Serializable {
                     "Item '" + item + "' not in the hierarchy");
         }
 
-        if (!contains(sibling)) {
-            throw new IllegalArgumentException(
-                    "Item '" + sibling + "' not in the hierarchy");
+        if (sibling == null) {
+            List<T> children = itemToWrapperMap.get(getParent(item))
+                    .getChildren();
+
+            // Move item to first position
+            children.remove(item);
+            children.add(0, item);
+        } else {
+            if (!contains(sibling)) {
+                throw new IllegalArgumentException(
+                        "Item '" + sibling + "' not in the hierarchy");
+            }
+
+            T parent = itemToWrapperMap.get(item).getParent();
+
+            if (!Objects.equals(parent,
+                    itemToWrapperMap.get(sibling).getParent())) {
+                throw new IllegalArgumentException(
+                        "Items '" + item + "' and '" + sibling
+                                + "' don't have the same parent");
+            }
+
+            List<T> children = itemToWrapperMap.get(parent).getChildren();
+
+            // Move item to the position after the sibling
+            children.remove(item);
+            children.add(children.indexOf(sibling) + 1, item);
         }
-
-        T parent = itemToWrapperMap.get(item).getParent();
-
-        if (!Objects
-                .equals(parent, itemToWrapperMap.get(sibling).getParent())) {
-            throw new IllegalArgumentException(
-                    "Items '" + item + "' and '" + sibling
-                            + "' don't have the same parent");
-        }
-
-        List<T> children = itemToWrapperMap.get(parent).getChildren();
-
-        // Move item to the position after the sibling
-        // If sibling is null, item is moved to the first position
-        children.remove(item);
-        children.add(children.indexOf(sibling) + 1, item);
     }
 
     /**

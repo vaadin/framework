@@ -121,10 +121,11 @@ in the following example.
 DateField date = new DateField("My Date") {
     @Override
     protected Result<LocalDate> handleUnparsableDateString(
-          String dateString) {        
+          String dateString) {
         try {
             // try to parse with alternative format
-            return Result.ok(LocalDate.of(dateString, myFormat));
+            LocalDate parsedAtServer = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE);
+            return Result.ok(parsedAtServer);
         } catch (DateTimeParseException e) {
            return Result.error("Bad date");
         }

@@ -105,6 +105,7 @@
         <module>servlet-containers/generic</module>
         <module>cdi</module>
         <module>servlet-containers/jsp-integration</module>
+        <module>servlet-containers/karaf</module>
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
         <module>dependency-rewrite-addon</module>
