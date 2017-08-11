@@ -51,13 +51,15 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
             time = time.substring(0, time.length() - 2);
         }
         if (highResTimeSupported) {
-            if (BrowserUtil.isChrome(getDesiredCapabilities())) {
+            if (BrowserUtil.isChrome(getDesiredCapabilities())
+                    || BrowserUtil.isFirefox(getDesiredCapabilities())) {
                 // Chrome (version 33 at least) sometimes doesn't use high res
-                // time if number of ms is less then 1
+                // time for very short times
                 Assert.assertTrue(
                         "High resolution time is not used in "
                                 + "JSON parsing mesurement. Time=" + time,
-                        time.equals("0") || time.indexOf('.') > 0);
+                        time.equals("0") || time.equals("1")
+                                || time.indexOf('.') > 0);
             } else {
                 Assert.assertTrue(
                         "High resolution time is not used in "
