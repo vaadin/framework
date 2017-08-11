@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.vaadin.event.Action.Container;
 import com.vaadin.event.Action.Handler;
@@ -265,11 +266,11 @@ public class ActionManager
      * @since 8.1.2
      */
     private static class ActionKeyMapper extends KeyMapper<Action> {
-        private static int lastKey = 0;
+        private static AtomicInteger lastKey = new AtomicInteger(0);
 
         @Override
         protected String createKey() {
-            return String.valueOf(++lastKey);
+            return String.valueOf(lastKey.incrementAndGet());
         }
     }
 
