@@ -40,8 +40,9 @@ public class CurrentTimeMillisTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        boolean highResTimeSupported = !BrowserUtil
-                .isPhantomJS(getDesiredCapabilities())
+        boolean phantomJs1 = BrowserUtil.isPhantomJS(getDesiredCapabilities())
+                && "1".equals(getDesiredCapabilities().getVersion());
+        boolean highResTimeSupported = !phantomJs1
                 && !BrowserUtil.isSafari(getDesiredCapabilities());
 
         String time = getJsonParsingTime();
