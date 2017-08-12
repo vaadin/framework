@@ -782,8 +782,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         ErrorMessage error = getErrorMessage();
         if (null != error) {
             getState().errorMessage = error.getFormattedHtmlMessage();
+            getState().errorLevel = error.getErrorLevel().convertToShared();
         } else {
             getState().errorMessage = null;
+            getState().errorLevel = null;
         }
 
         getState().immediate = isImmediate();
