@@ -70,6 +70,25 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
     @include valo-textfield-error-style;
   }
 
+  .#{$primary-stylename}-error-info {
+    @include valo-textfield-error-level-info-style;
+  }
+
+  .#{$primary-stylename}-error-warning {
+    @include valo-textfield-error-level-warning-style;
+  }
+
+  .#{$primary-stylename}-error-error {
+    @include valo-textfield-error-level-error-style;
+  }
+
+  .#{$primary-stylename}-error-critical {
+    @include valo-textfield-error-level-critical-style;
+  }
+
+  .#{$primary-stylename}-error-system {
+    @include valo-textfield-error-level-system-style;
+  }
 
   @if $include-additional-styles {
     .#{$primary-stylename}-borderless {
@@ -319,11 +338,56 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
  *
  * @group textfield
  */
-@mixin valo-textfield-error-style {
-  border-color: $v-error-indicator-color !important;
-  $bg: scale-color($v-error-indicator-color, $lightness: 98%);
+@mixin valo-textfield-error-style($indicator-color: $v-error-indicator-color) {
+  border-color: $indicator-color !important;
+  $bg: scale-color($indicator-color, $lightness: 98%);
   background: $bg;
   color: valo-font-color($bg);
+}
+
+/**
+ * Outputs the styles for a text field error state with error level 'info'.
+ *
+ * @group textfield
+ */
+@mixin valo-textfield-error-level-info-style {
+  @include valo-textfield-error-style($v-error-indicator-level-info-color);
+}
+
+/**
+ * Outputs the styles for a text field error state with error level 'warning'.
+ *
+ * @group textfield
+ */
+@mixin valo-textfield-error-level-warning-style {
+  @include valo-textfield-error-style($v-error-indicator-level-warning-color);
+}
+
+/**
+ * Outputs the styles for a text field error state with error level 'error'.
+ *
+ * @group textfield
+ */
+@mixin valo-textfield-error-level-error-style {
+  @include valo-textfield-error-style($v-error-indicator-level-error-color);
+}
+
+/**
+ * Outputs the styles for a text field error state with error level 'critical'.
+ *
+ * @group textfield
+ */
+@mixin valo-textfield-error-level-critical-style {
+  @include valo-textfield-error-style($v-error-indicator-level-critical-color);
+}
+
+/**
+ * Outputs the styles for a text field error state with error level 'system'.
+ *
+ * @group textfield
+ */
+@mixin valo-textfield-error-level-system-style {
+  @include valo-textfield-error-style($v-error-indicator-level-system-color);
 }
 
 
