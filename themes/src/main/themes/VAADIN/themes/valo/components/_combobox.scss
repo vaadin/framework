@@ -35,6 +35,61 @@
     }
   }
 
+  .#{$primary-stylename}-error-info {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-level-info-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-level-info-color;
+      border-color: $v-error-indicator-level-info-color;
+    }
+  }
+
+  .#{$primary-stylename}-error-warning {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-level-warning-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-level-warning-color;
+      border-color: $v-error-indicator-level-warning-color;
+    }
+  }
+
+  .#{$primary-stylename}-error-error {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-level-error-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-level-error-color;
+      border-color: $v-error-indicator-level-error-color;
+    }
+  }
+
+  .#{$primary-stylename}-error-critical {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-level-critical-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-level-critical-color;
+      border-color: $v-error-indicator-level-critical-color;
+    }
+  }
+
+  .#{$primary-stylename}-error-system {
+    .#{$primary-stylename}-input {
+      @include valo-textfield-error-level-system-style;
+    }
+
+    .#{$primary-stylename}-button {
+      color: $v-error-indicator-level-system-color;
+      border-color: $v-error-indicator-level-system-color;
+    }
+  }
+
   .#{$primary-stylename}-suggestpopup {
     @include valo-combobox-popup-style;
   }
