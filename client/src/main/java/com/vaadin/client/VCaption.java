@@ -35,6 +35,7 @@ import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 
 public class VCaption extends HTML {
 
@@ -328,6 +329,14 @@ public class VCaption extends HTML {
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, String iconURL,
             String iconAltText) {
+        return updateCaptionWithoutOwner(caption, disabled, hasDescription,
+                hasError, null, iconURL, iconAltText);
+    }
+
+    @Deprecated
+    public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
+            boolean hasDescription, boolean hasError, ErrorLevel errorLevel,
+            String iconURL, String iconAltText) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -411,11 +420,15 @@ public class VCaption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
+                        ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
             }
+
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+
         } else if (errorIndicatorElement != null) {
             // Remove existing
             getElement().removeChild(errorIndicatorElement);
