@@ -14,6 +14,7 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -41,6 +42,7 @@ public class ErrorLevels extends AbstractTestUI {
     private FormLayout formLayout;
     private TextField formLayoutTextField;
     private Panel panel;
+    private DateField dateField;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -90,6 +92,10 @@ public class ErrorLevels extends AbstractTestUI {
         textFieldBorderless.setValue("text");
 
         addComponent(new HorizontalLayout(textField, textFieldBorderless));
+
+        // Date field
+        dateField = new DateField("Date field");
+        addComponent(dateField);
 
         // Check box
         checkBox = new CheckBox("Check box");
@@ -149,6 +155,7 @@ public class ErrorLevels extends AbstractTestUI {
         formLayoutTextField.setComponentError(
                 createErrorMessage("Form layout text field error"));
         panel.setComponentError(createErrorMessage("Panel error"));
+        dateField.setComponentError(createErrorMessage("Date field error"));
     }
 
     private ErrorMessage createErrorMessage(String text) {
