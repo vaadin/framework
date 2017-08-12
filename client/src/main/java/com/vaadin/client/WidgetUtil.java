@@ -45,6 +45,7 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -1821,5 +1822,41 @@ public class WidgetUtil {
 
         // 12 + int(30.6) / 60 = 12 + 30/60 = 12.5
         return integerPart + ((int) nrFractions) / divisor;
+    }
+
+    /**
+     * Utility methods for displaying error message on components.
+     */
+    public static class ErrorUtil {
+
+        /**
+         * Style name and style name prefix for the error indicator element.
+         */
+        public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
+
+        /**
+         * Sets the error level style name for the given element and removes all
+         * previously applied error level style names. The style name has the
+         * {@code prefix-errorLevel} format.
+         *
+         * @param element
+         *         element to apply the style name to
+         * @param prefix
+         *         part of the style name before the error level string
+         * @param errorLevel
+         *         error level for which the style will be applied
+         */
+        public static void setErrorLevelStyle(Element element, String prefix,
+                ErrorLevel errorLevel) {
+            for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
+                String className =
+                        prefix + "-" + errorLevelValue.toString().toLowerCase();
+                if (errorLevel == errorLevelValue) {
+                    element.addClassName(className);
+                } else {
+                    element.removeClassName(className);
+                }
+            }
+        }
     }
 }
