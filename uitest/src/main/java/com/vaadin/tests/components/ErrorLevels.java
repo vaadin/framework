@@ -21,6 +21,7 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("valo")
@@ -41,6 +42,7 @@ public class ErrorLevels extends AbstractTestUI {
     private TextField formLayoutTextField;
     private Panel panel;
     private DateField dateField;
+    private TwinColSelect twinColSelect;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -123,6 +125,10 @@ public class ErrorLevels extends AbstractTestUI {
         panel.setWidth("400px");
         addComponent(panel);
 
+        // TwinColSelect
+        twinColSelect = new TwinColSelect("Twin col select");
+        addComponent(twinColSelect);
+
         setErrorMessages();
 
         getLayout().setSpacing(true);
@@ -149,6 +155,7 @@ public class ErrorLevels extends AbstractTestUI {
                 createErrorMessage("Form layout text field error"));
         panel.setComponentError(createErrorMessage("Panel error"));
         dateField.setComponentError(createErrorMessage("Date field error"));
+        twinColSelect.setComponentError(createErrorMessage("Twin col select error"));
     }
 
     private ErrorMessage createErrorMessage(String text) {
