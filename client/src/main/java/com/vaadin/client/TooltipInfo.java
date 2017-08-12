@@ -16,6 +16,7 @@
 package com.vaadin.client;
 
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 public class TooltipInfo {
@@ -25,6 +26,8 @@ public class TooltipInfo {
     private ContentMode contentMode;
 
     private String errorMessageHtml;
+
+    private ErrorLevel errorLevel;
 
     // Contains the tooltip's identifier. If a tooltip's contents and this
     // identifier haven't changed, the tooltip won't be updated in subsequent
@@ -41,12 +44,12 @@ public class TooltipInfo {
     /**
      * Constructs a new instance using the {@code tooltip} for the title and
      * {@code errorMessage} as a description.
-     * 
+     *
      * @param tooltip
      *            tooltip title
      * @param errorMessage
      *            error description
-     * 
+     *
      * @deprecated use {@link #TooltipInfo(String, ContentMode, String)} instead
      */
     @Deprecated
@@ -57,19 +60,40 @@ public class TooltipInfo {
     /**
      * Constructs a new instance using the {@code tooltip} for the title,
      * {@code errorMessage} as a description and {@code identifier} as its id.
-     * 
+     *
      * @param tooltip
      *            tooltip title
      * @param errorMessage
      *            error description
      * @param identifier
-     * 
+     *
      * @deprecated use {@link #TooltipInfo(String, ContentMode, String, Object)}
      *             instead
      */
     @Deprecated
     public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
         this(tooltip, ContentMode.HTML, errorMessage, identifier);
+    }
+
+    /**
+     * Constructs a new instance using the {@code tooltip} for the title,
+     * {@code errorMessage} as a description and {@code identifier} as its id.
+     *
+     * @param tooltip
+     *            tooltip title
+     * @param errorMessage
+     *            error description
+     * @param identifier
+     * @param errorLevel
+     *            error level
+     *
+     * @deprecated use {@link #TooltipInfo(String, ContentMode, String, Object,
+     *             ErrorLevel)} instead
+     */
+    @Deprecated
+    public TooltipInfo(String tooltip, String errorMessage, Object identifier,
+            ErrorLevel errorLevel) {
+        this(tooltip, ContentMode.HTML, errorMessage, identifier, errorLevel);
     }
 
     public TooltipInfo(String tooltip, ContentMode mode) {
@@ -83,10 +107,16 @@ public class TooltipInfo {
 
     public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
             Object identifier) {
+        this(tooltip, mode, errorMessage, identifier, null);
+    }
+
+    public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
+            Object identifier, ErrorLevel errorLevel) {
         setIdentifier(identifier);
         setTitle(tooltip);
         setContentMode(mode);
         setErrorMessage(errorMessage);
+        setErrorLevel(errorLevel);
     }
 
     public void setIdentifier(Object identifier) {
@@ -119,6 +149,14 @@ public class TooltipInfo {
 
     public void setContentMode(ContentMode contentMode) {
         this.contentMode = contentMode;
+    }
+
+    public ErrorLevel getErrorLevel() {
+        return errorLevel;
+    }
+
+    public void setErrorLevel(ErrorLevel errorLevel) {
+        this.errorLevel = errorLevel;
     }
 
     /**

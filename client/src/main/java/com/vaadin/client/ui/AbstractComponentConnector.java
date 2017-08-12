@@ -769,7 +769,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description,
-                getState().descriptionContentMode, getState().errorMessage);
+                getState().descriptionContentMode, getState().errorMessage,
+                null, getState().errorLevel);
     }
 
     @Override
