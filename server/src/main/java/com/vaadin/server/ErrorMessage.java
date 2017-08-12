@@ -80,6 +80,26 @@ public interface ErrorMessage extends Serializable {
             return text;
         }
 
+        /**
+         * Converts this to an error level that can be used on the client side.
+         *
+         * @return error level for the client side
+         */
+        public com.vaadin.shared.ui.ErrorLevel convertToShared() {
+            switch (this) {
+            case INFORMATION:
+                return com.vaadin.shared.ui.ErrorLevel.INFO;
+            case WARNING:
+                return com.vaadin.shared.ui.ErrorLevel.WARNING;
+            case ERROR:
+            default:
+                return com.vaadin.shared.ui.ErrorLevel.ERROR;
+            case CRITICAL:
+                return com.vaadin.shared.ui.ErrorLevel.CRITICAL;
+            case SYSTEMERROR:
+                return com.vaadin.shared.ui.ErrorLevel.SYSTEM;
+            }
+        }
     }
 
     /**
