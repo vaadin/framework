@@ -255,7 +255,8 @@ public class FormLayoutConnector extends AbstractLayoutConnector
         }
 
         getWidget().table.updateError(component.getWidget(),
-                component.getState().errorMessage, hideErrors);
+                component.getState().errorMessage,
+                component.getState().errorLevel, hideErrors);
     }
 
     @Override
