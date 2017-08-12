@@ -24,8 +24,10 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
+import com.vaadin.shared.ui.ErrorLevel;
 
 public class VPanel extends SimplePanel
         implements ShortcutActionHandlerOwner, Focusable {
@@ -134,15 +136,20 @@ public class VPanel extends SimplePanel
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public void setErrorIndicatorVisible(boolean showError) {
+    public void setErrorIndicatorVisible(boolean showError,
+            ErrorLevel errorLevel) {
         if (showError) {
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createSpan();
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
+                        ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
                 DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
                 sinkEvents(Event.MOUSEEVENTS);
             }
+
+            ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+
             DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
         } else if (errorIndicatorElement != null) {
             DOM.removeChild(captionNode, errorIndicatorElement);
