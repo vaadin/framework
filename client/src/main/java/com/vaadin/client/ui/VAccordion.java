@@ -364,8 +364,10 @@ public class VAccordion extends VTabsheetBase {
             caption.updateCaptionWithoutOwner(tabState.caption,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     connector.getResourceUrl(
-                            ComponentConstants.ICON_RESOURCE + tabState.key));
+                            ComponentConstants.ICON_RESOURCE + tabState.key),
+                    "");
         }
 
         private boolean hasAttribute(String string) {
