@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
@@ -50,14 +51,19 @@ public class ButtonConnector extends AbstractComponentConnector
         ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
-    @OnStateChange("errorMessage")
+    @OnStateChange({"errorMessage", "errorLevel"})
     void setErrorMessage() {
         if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement
-                        .setClassName("v-errorindicator");
+                        .setClassName(ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
             }
+
+            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
+                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    getState().errorLevel);
+
             getWidget().wrapper.insertFirst(getWidget().errorIndicatorElement);
 
         } else if (getWidget().errorIndicatorElement != null) {
