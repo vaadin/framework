@@ -352,6 +352,7 @@ public class VTabsheet extends VTabsheetBase
             boolean ret = updateCaptionWithoutOwner(captionString,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     tab.getTabsheet().connector.getResourceUrl(
                             ComponentConstants.ICON_RESOURCE + tabState.key),
                     tabState.iconAltText);
