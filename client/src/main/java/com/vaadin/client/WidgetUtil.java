@@ -44,6 +44,7 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
@@ -794,7 +795,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-    
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -809,7 +810,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-    
+
      }-*/;
 
     /**
@@ -823,7 +824,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-    
+
         }
     }-*/;
 
@@ -1176,7 +1177,7 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-    
+
        return null;
      }-*/;
 
@@ -1247,11 +1248,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1260,12 +1261,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-    
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1705,7 +1706,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-    
+
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1860,5 +1861,41 @@ public class WidgetUtil {
     public static int getRelativeY(Element element, NativeEvent event) {
         int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
         return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
+    }
+
+    /**
+     * Utility methods for displaying error message on components.
+     */
+    public static class ErrorUtil {
+
+        /**
+         * Style name and style name prefix for the error indicator element.
+         */
+        public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
+
+        /**
+         * Sets the error level style name for the given element and removes all
+         * previously applied error level style names. The style name has the
+         * {@code prefix-errorLevel} format.
+         *
+         * @param element
+         *         element to apply the style name to
+         * @param prefix
+         *         part of the style name before the error level string
+         * @param errorLevel
+         *         error level for which the style will be applied
+         */
+        public static void setErrorLevelStyle(Element element, String prefix,
+                ErrorLevel errorLevel) {
+            for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
+                String className =
+                        prefix + "-" + errorLevelValue.toString().toLowerCase();
+                if (errorLevel == errorLevelValue) {
+                    element.addClassName(className);
+                } else {
+                    element.removeClassName(className);
+                }
+            }
+        }
     }
 }
