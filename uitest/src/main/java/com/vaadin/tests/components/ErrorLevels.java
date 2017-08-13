@@ -44,6 +44,12 @@ public class ErrorLevels extends AbstractTestUI {
     private DateField dateField;
     private TwinColSelect twinColSelect;
 
+    private com.vaadin.v7.ui.ComboBox comboBoxCompat;
+    private com.vaadin.v7.ui.TextField textFieldCompat;
+    private com.vaadin.v7.ui.CheckBox checkBoxCompat;
+    private com.vaadin.v7.ui.DateField dateFieldCompat;
+    private com.vaadin.v7.ui.TwinColSelect twinColSelectCompat;
+
     @Override
     protected void setup(VaadinRequest request) {
 
@@ -129,6 +135,33 @@ public class ErrorLevels extends AbstractTestUI {
         twinColSelect = new TwinColSelect("Twin col select");
         addComponent(twinColSelect);
 
+        Label subtitleCompat = new Label("Compatibility components");
+        subtitleCompat.setStyleName(ValoTheme.LABEL_H3);
+        addComponent(subtitleCompat);
+
+        // Compatibility combo box
+        comboBoxCompat = new com.vaadin.v7.ui.ComboBox(
+                "Compatibility combo box");
+        addComponent(comboBoxCompat);
+
+        // Compatibility text field
+        textFieldCompat = new com.vaadin.v7.ui.TextField(
+                "Compatibility text field");
+        textFieldCompat.setValue("text");
+
+        // Compatibility check box
+        checkBoxCompat = new com.vaadin.v7.ui.CheckBox("Check box");
+        addComponent(checkBoxCompat);
+
+        // Compatibility date field
+        dateFieldCompat = new com.vaadin.v7.ui.DateField("Date field");
+        addComponent(dateFieldCompat);
+
+        // Compatibility twin col select
+        twinColSelectCompat = new com.vaadin.v7.ui.TwinColSelect(
+                "Twin col select");
+        addComponent(twinColSelectCompat);
+
         setErrorMessages();
 
         getLayout().setSpacing(true);
@@ -155,7 +188,18 @@ public class ErrorLevels extends AbstractTestUI {
                 createErrorMessage("Form layout text field error"));
         panel.setComponentError(createErrorMessage("Panel error"));
         dateField.setComponentError(createErrorMessage("Date field error"));
-        twinColSelect.setComponentError(createErrorMessage("Twin col select error"));
+        twinColSelect
+                .setComponentError(createErrorMessage("Twin col select error"));
+        comboBoxCompat.setComponentError(
+                createErrorMessage("Compatibility combo box error"));
+        textFieldCompat.setComponentError(
+                createErrorMessage("Compatibility text field error"));
+        checkBoxCompat.setComponentError(
+                createErrorMessage("Compatibility check box error"));
+        dateFieldCompat.setComponentError(
+                createErrorMessage("Compatibility date field error"));
+        twinColSelectCompat.setComponentError(
+                createErrorMessage("Compatibility twin col select error"));
     }
 
     private ErrorMessage createErrorMessage(String text) {
