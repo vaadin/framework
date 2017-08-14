@@ -493,6 +493,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
+     * Stores this VaadinSession in the HTTP or portlet session.
+     *
+     * @since
+     */
+    public void storeInSession() {
+        service.storeSession(this, session);
+    }
+
+    /**
      * Updates the transient session lock from VaadinService.
      */
     private void refreshLock() {
@@ -1361,9 +1370,14 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             old = CurrentInstance.setCurrent(this);
             runnable.run();
         } finally {
-            unlock();
-            if (old != null) {
-                CurrentInstance.restoreInstances(old);
+            try {
+                // mark the session as dirty for clustering etc.
+                getService().storeSession(this, getSession());
+            } finally {
+                unlock();
+                if (old != null) {
+                    CurrentInstance.restoreInstances(old);
+                }
             }
         }
 
