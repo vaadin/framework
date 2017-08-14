@@ -177,7 +177,7 @@ def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdou
 	print("executing: %s" % (" ".join(cmd)))
 	subprocess.check_call(cmd, stdout=logFile)	
 
-def dockerWrap(imageName):
+def dockerWrap(imageVersion, imageName = "demo-validation"):
 	dockerFileContent = """FROM jetty:jre8-alpine
 MAINTAINER juhani@vaadin.com
 
@@ -216,13 +216,13 @@ echo "</UL>" >> $OUTPUT
 	with open(join(resultPath, "index-generate.sh"), "w") as indexScript:
 		indexScript.write(indexGenerateScript)
 	# build image
-	cmd = [dockerCmd, "build", "-t", imageName, resultPath]
+	cmd = [dockerCmd, "build", "-t", "%s:%s" % (imageName, imageVersion), resultPath]
 	subprocess.check_call(cmd)
 	# save to tgz
 	cmd = [dockerCmd, "save", imageName]
 	dockerSave = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-	subprocess.check_call(["gzip"], stdin=dockerSave.stdout, stdout=open(join(resultPath, "%s.tgz" % (imageName)), "w"))
+	subprocess.check_call(["gzip"], stdin=dockerSave.stdout, stdout=open(join(resultPath, "%s-%s.tgz" % (imageName, imageVersion)), "w"))
 	dockerSave.wait()
 	# delete from docker
-	cmd = [dockerCmd, "rmi", imageName]
+	cmd = [dockerCmd, "rmi", "%s:%s" % (imageName, imageVersion)]
 	subprocess.check_call(cmd)
