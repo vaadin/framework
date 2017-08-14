@@ -1432,9 +1432,14 @@ public abstract class UI extends AbstractSingleComponentContainer
             old = CurrentInstance.setCurrent(this);
             runnable.run();
         } finally {
-            session.unlock();
-            if (old != null) {
-                CurrentInstance.restoreInstances(old);
+            try {
+                // mark the session as dirty for clustering etc.
+                session.storeInSession();
+            } finally {
+                session.unlock();
+                if (old != null) {
+                    CurrentInstance.restoreInstances(old);
+                }
             }
         }
 
