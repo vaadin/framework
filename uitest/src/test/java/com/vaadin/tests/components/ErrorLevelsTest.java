@@ -16,6 +16,7 @@ import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.AccordionElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.FormLayoutElement;
 import com.vaadin.testbench.elements.LinkElement;
@@ -25,7 +26,6 @@ import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.elements.TwinColSelectElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ErrorLevelsTest extends SingleBrowserTest {
 
