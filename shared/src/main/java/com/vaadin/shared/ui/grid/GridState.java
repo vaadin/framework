@@ -147,26 +147,11 @@ public class GridState extends AbstractSingleSelectState {
     public boolean columnReorderingAllowed;
 
     /**
-     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * Explicit row height in pixels for grid rows, or -1 to calculate
      * automatically based on the theme.
      *
-     * @since 8.1.2
+     * @since 8.1
      */
-    public double bodyRowHeight = -1;
+    public double rowHeight = -1;
 
-    /**
-     * Explicit body row height in pixels for grid rows, or -1 to calculate
-     * automatically based on the theme.
-     *
-     * @since 8.1.2
-     */
-    public double headerRowHeight = -1;
-
-    /**
-     * Explicit body row height in pixels for grid rows, or -1 to calculate
-     * automatically based on the theme.
-     *
-     * @since 8.1.2
-     */
-    public double footerRowHeight = -1;
 }

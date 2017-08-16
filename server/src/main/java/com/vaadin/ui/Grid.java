@@ -3012,113 +3012,27 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Sets the height of body, header and footer rows. If -1 (default), the row
-     * height is calculated based on the theme for an empty row before the Grid
-     * is displayed.
+     * Sets the height of a row. If -1 (default), the row height is calculated
+     * based on the theme for an empty row before the Grid is displayed.
      * <p>
      * Note that all header, body and footer rows get the same height if
      * explicitly set. In automatic mode, each section is calculated separately
      * based on an empty row of that type.
-     * 
-     * @see #setBodyRowHeight(double)
-     * @see #setHeaderRowHeight(double)
-     * @see #setFooterRowHeight(double)
      *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      */
     public void setRowHeight(double rowHeight) {
-        setBodyRowHeight(rowHeight);
-        setHeaderRowHeight(rowHeight);
-        setFooterRowHeight(rowHeight);
+        getState().rowHeight = rowHeight;
     }
 
     /**
-     * Sets the height of a body row. If -1 (default), the row height is
-     * calculated based on the theme for an empty row before the Grid is
-     * displayed.
-     * 
-     * @param rowHeight
-     *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
-     */
-    public void setBodyRowHeight(double rowHeight) {
-        getState().bodyRowHeight = rowHeight;
-    }
-
-    /**
-     * Sets the height of a header row. If -1 (default), the row height is
-     * calculated based on the theme for an empty row before the Grid is
-     * displayed.
+     * Returns the currently explicitly set row height or -1 if automatic.
      *
-     * @param rowHeight
-     *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
+     * @return explicitly set row height in pixels or -1 if in automatic mode
      */
-    public void setHeaderRowHeight(double rowHeight) {
-        getState().headerRowHeight = rowHeight;
-    }
-
-    /**
-     * Sets the height of a footer row. If -1 (default), the row height is
-     * calculated based on the theme for an empty row before the Grid is
-     * displayed.
-     *
-     * @param rowHeight
-     *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
-     */
-    public void setFooterRowHeight(double rowHeight) {
-        getState().footerRowHeight = rowHeight;
-    }
-
-    /**
-     * Returns the current body row height.-1 if row height is in automatic
-     * calculation mode.
-     *
-     * @see #getBodyRowHeight()
-     * @see #getHeaderRowHeight()
-     * @see #getFooterRowHeight()
-     *
-     * @return body row height
-     * @deprecated replaced by three separate row height controls
-     */
-    @Deprecated
     public double getRowHeight() {
-        return getBodyRowHeight();
-    }
-
-    /**
-     * Returns the current body row height. -1 if row height is in automatic
-     * calculation mode.
-     *
-     * @return body row height
-     * @since 8.1.2
-     */
-    public double getBodyRowHeight() {
-        return getState(false).bodyRowHeight;
-    }
-
-    /**
-     * Returns the current header row height. -1 if row height is in automatic
-     * calculation mode.
-     *
-     * @return header row height
-     * @since 8.1.2
-     */
-    public double getHeaderRowHeight() {
-        return getState(false).headerRowHeight;
-    }
-
-    /**
-     * Returns the current footer row height. -1 if row height is in automatic
-     * calculation mode.
-     *
-     * @return footer row height
-     * @since 8.1.2
-     */
-    public double getFooterRowHeight() {
-        return getState(false).footerRowHeight;
+        return getState(false).rowHeight;
     }
 
     /**
