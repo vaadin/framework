@@ -3040,7 +3040,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * 
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
+     * @since 8.2
      */
     public void setBodyRowHeight(double rowHeight) {
         getState().bodyRowHeight = rowHeight;
@@ -3053,7 +3053,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
+     * @since 8.2
      */
     public void setHeaderRowHeight(double rowHeight) {
         getState().headerRowHeight = rowHeight;
@@ -3066,7 +3066,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
-     * @since 8.1.2
+     * @since 8.2
      */
     public void setFooterRowHeight(double rowHeight) {
         getState().footerRowHeight = rowHeight;
@@ -3093,7 +3093,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * calculation mode.
      *
      * @return body row height
-     * @since 8.1.2
+     * @since 8.2
      */
     public double getBodyRowHeight() {
         return getState(false).bodyRowHeight;
@@ -3104,7 +3104,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * calculation mode.
      *
      * @return header row height
-     * @since 8.1.2
+     * @since 8.2
      */
     public double getHeaderRowHeight() {
         return getState(false).headerRowHeight;
@@ -3115,7 +3115,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * calculation mode.
      *
      * @return footer row height
-     * @since 8.1.2
+     * @since 8.2
      */
     public double getFooterRowHeight() {
         return getState(false).footerRowHeight;
