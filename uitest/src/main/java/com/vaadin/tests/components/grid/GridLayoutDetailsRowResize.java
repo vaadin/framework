@@ -27,6 +27,8 @@ import com.vaadin.ui.Grid.DetailsGenerator;
 import com.vaadin.ui.Grid.RowReference;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Tests that details row resizes along with the contents properly.
@@ -96,6 +98,29 @@ public class GridLayoutDetailsRowResize extends AbstractTestUI {
                 grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
             }
         });
+
+        addComponent(new Button("Toggle theme", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (ValoTheme.THEME_NAME.equals(getUI().getTheme())) {
+                    getUI().setTheme(Reindeer.THEME_NAME);
+                } else {
+                    getUI().setTheme(ValoTheme.THEME_NAME);
+                }
+            }
+        }));
+
+        addComponent(new Button("Open details", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                for (Object itemId : grid.getContainerDataSource()
+                        .getItemIds()) {
+                    grid.setDetailsVisible(itemId, true);
+                }
+            }
+        }));
     }
 
     @Override
