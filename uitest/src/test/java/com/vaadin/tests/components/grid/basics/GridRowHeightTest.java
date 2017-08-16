@@ -6,26 +6,6 @@ import org.junit.Test;
 public class GridRowHeightTest extends GridBasicsTest {
 
     @Test
-    public void testSeparateRowHeights() {
-        selectMenuPath("Component", "Footer", "Add default footer row");
-
-        int initialHeaderHeight = getHeaderHeight();
-
-        Assert.assertNotEquals("Header height should not be 50px initially", 50,
-                initialHeaderHeight);
-
-        selectMenuPath("Component", "Body rows", "Body Row Height", "" + 100);
-        selectMenuPath("Component", "Header", "Header Row Height", "" + 20);
-        selectMenuPath("Component", "Footer", "Footer Row Height", "" + 50);
-
-        checkRowHeights(20, 100, 50);
-
-        selectMenuPath("Component", "Header", "Header Row Height", "" + -1);
-
-        checkRowHeights(initialHeaderHeight, 100, 50);
-    }
-
-    @Test
     public void testRowHeights() {
         selectMenuPath("Component", "Footer", "Add default footer row");
 
