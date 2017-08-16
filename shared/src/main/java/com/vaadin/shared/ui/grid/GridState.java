@@ -150,7 +150,7 @@ public class GridState extends AbstractSingleSelectState {
      * Explicit body row height in pixels for grid rows, or -1 to calculate
      * automatically based on the theme.
      *
-     * @since 8.1.2
+     * @since 8.2
      */
     public double bodyRowHeight = -1;
 
@@ -158,7 +158,7 @@ public class GridState extends AbstractSingleSelectState {
      * Explicit body row height in pixels for grid rows, or -1 to calculate
      * automatically based on the theme.
      *
-     * @since 8.1.2
+     * @since 8.2
      */
     public double headerRowHeight = -1;
 
@@ -166,7 +166,7 @@ public class GridState extends AbstractSingleSelectState {
      * Explicit body row height in pixels for grid rows, or -1 to calculate
      * automatically based on the theme.
      *
-     * @since 8.1.2
+     * @since 8.2
      */
     public double footerRowHeight = -1;
 }
