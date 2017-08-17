@@ -365,6 +365,12 @@ public class GridBasics extends AbstractTestUIWithLog {
                 item -> grid.setColumnResizeMode(item.isChecked()
                         ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
+
+        columnsMenu
+                .addItem("All columns hidable",
+                        item -> grid.getColumns().forEach(
+                                col -> col.setHidable(item.isChecked())))
+                .setCheckable(true);
     }
 
     private void createSizeMenu(MenuItem sizeMenu) {
