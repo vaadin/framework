@@ -20,6 +20,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Grid;
@@ -27,6 +28,7 @@ import com.vaadin.v7.ui.Grid.DetailsGenerator;
 import com.vaadin.v7.ui.Grid.RowReference;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.v7.ui.themes.Reindeer;
 
 /**
  * Tests that details row resizes along with the contents properly.
@@ -97,6 +99,29 @@ public class GridLayoutDetailsRowResize extends AbstractTestUI {
                 grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
             }
         });
+
+        addComponent(new Button("Toggle theme", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (ValoTheme.THEME_NAME.equals(getUI().getTheme())) {
+                    getUI().setTheme(Reindeer.THEME_NAME);
+                } else {
+                    getUI().setTheme(ValoTheme.THEME_NAME);
+                }
+            }
+        }));
+
+        addComponent(new Button("Open details", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                for (Object itemId : grid.getContainerDataSource()
+                        .getItemIds()) {
+                    grid.setDetailsVisible(itemId, true);
+                }
+            }
+        }));
     }
 
     @Override

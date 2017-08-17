@@ -141,6 +141,10 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
                 @Override
                 public void execute() {
+                    // It should not be possible to get here without calculating
+                    // the spacerCellBorderHeights or without having the details
+                    // row open, nor for this command to be triggered while
+                    // layout is running, but it's safer to check anyway.
                     if (spacerCellBorderHeights != null
                             && !getLayoutManager().isLayoutRunning()
                             && getDetailsComponentConnectorId(
@@ -165,6 +169,8 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
             Element element = componentConnector.getWidget().getElement();
             if (spacerCellBorderHeights == null) {
+                // If theme is changed, new details generator is created from
+                // scratch, so this value doesn't need to be updated elsewhere.
                 spacerCellBorderHeights = WidgetUtil
                         .getBorderTopAndBottomThickness(
                                 element.getParentElement());
@@ -192,13 +198,21 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
                 return;
             }
 
-            // New Details component, hide old one
-            Element element = ((ComponentConnector) ConnectorMap
-                    .get(getConnection()).getConnector(id)).getWidget()
-                            .getElement();
-            elementToResizeCommand.remove(element);
-            getLayoutManager().removeElementResizeListener(element,
-                    detailsRowResizeListener);
+            if (id == null) {
+                // Details have been hidden, listeners attached to the old
+                // component need to be removed
+                id = indexToDetailConnectorId.get(rowIndex);
+            }
+
+            // New or removed Details component, hide old one
+            ComponentConnector connector = (ComponentConnector) ConnectorMap
+                    .get(getConnection()).getConnector(id);
+            if (connector != null) {
+                Element element = connector.getWidget().getElement();
+                elementToResizeCommand.remove(element);
+                getLayoutManager().removeElementResizeListener(element,
+                        detailsRowResizeListener);
+            }
             getWidget().setDetailsVisible(rowIndex, false);
             indexToDetailConnectorId.remove(rowIndex);
         }

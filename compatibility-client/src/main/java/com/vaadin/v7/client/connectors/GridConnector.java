@@ -537,6 +537,10 @@ public class GridConnector extends AbstractHasComponentsConnector
 
                 @Override
                 public void execute() {
+                    // It should not be possible to get here without calculating
+                    // the spacerCellBorderHeights or without having the details
+                    // row open, nor for this command to be triggered while
+                    // layout is running, but it's safer to check anyway.
                     if (spacerCellBorderHeights != null
                             && !getLayoutManager().isLayoutRunning()
                             && hasDetailsOpen(rowIndex)) {
@@ -569,6 +573,8 @@ public class GridConnector extends AbstractHasComponentsConnector
 
             Element element = componentConnector.getWidget().getElement();
             if (spacerCellBorderHeights == null) {
+                // If theme is changed, new details generator is created from
+                // scratch, so this value doesn't need to be updated elsewhere.
                 spacerCellBorderHeights = WidgetUtil
                         .getBorderTopAndBottomThickness(
                                 element.getParentElement());

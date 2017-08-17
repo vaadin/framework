@@ -16,20 +16,23 @@
 package com.vaadin.v7.tests.components.grid;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.VerticalLayoutElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -41,15 +44,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 @TestCategory("grid")
 public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
-    @Override
-    public List<DesiredCapabilities> getBrowsersToTest() {
-        List<DesiredCapabilities> browsersToTest = super.getBrowsersToTest();
-        // for some reason PhantomJS doesn't find the label even if it detects
-        // the presence
-        browsersToTest.remove(Browser.PHANTOMJS.getDesiredCapabilities());
-        return browsersToTest;
-    }
-
     @Test
     public void testLabelHeights() {
         openTestURL();
@@ -57,7 +51,7 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        grid.getRow(2).click();
+        grid.getCell(2, 0).click();
         waitForElementPresent(By.id("lbl2"));
 
         VerticalLayoutElement layout = $(VerticalLayoutElement.class)
@@ -91,6 +85,63 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
         assertLabelHeight("lbl4", expectedLabelHeight);
 
         assertDetailsRowHeight(layoutHeight);
+    }
+
+    @Test
+    public void testMultipleDetailsRows() {
+        openTestURL();
+        waitForElementPresent(By.className("v-grid"));
+
+        ButtonElement detailsButton = $(ButtonElement.class)
+                .caption("Open details").first();
+
+        detailsButton.click();
+        waitForElementPresent(By.id("lbl2"));
+
+        List<ButtonElement> buttons = $(ButtonElement.class)
+                .caption("Toggle visibility").all();
+        assertThat("Unexpected amount of details rows.", buttons.size(), is(3));
+
+        Map<ButtonElement, Integer> positions = new LinkedHashMap<ButtonElement, Integer>();
+        Map<Integer, ButtonElement> ordered = new TreeMap<Integer, ButtonElement>();
+        for (ButtonElement button : buttons) {
+            positions.put(button, button.getLocation().getY());
+            ordered.put(button.getLocation().getY(), button);
+        }
+        int labelHeight = 0;
+        for (LabelElement label : $(LabelElement.class).all()) {
+            if ("test1".equals(label.getText())) {
+                labelHeight = label.getSize().height;
+            }
+        }
+
+        // toggle the contents
+        for (ButtonElement button : buttons) {
+            button.click();
+        }
+
+        int i = 0;
+        for (Entry<Integer, ButtonElement> entry : ordered.entrySet()) {
+            ++i;
+            ButtonElement button = entry.getValue();
+            assertThat(
+                    String.format("Unexpected button position: details row %s.",
+                            i),
+                    (double) button.getLocation().getY(),
+                    closeTo(positions.get(button) + (i * labelHeight), 1d));
+        }
+
+        // toggle the contents
+        for (ButtonElement button : buttons) {
+            button.click();
+        }
+
+        // assert original positions back
+        for (ButtonElement button : buttons) {
+            assertThat(String.format("Unexpected button position."),
+                    (double) button.getLocation().getY(),
+                    closeTo(positions.get(button), 1d));
+        }
     }
 
     private void assertLabelHeight(String id, double expectedHeight) {
