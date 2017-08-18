@@ -1468,6 +1468,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 @Override
                 public void onClick(ClickEvent event) {
                     save();
+                    FocusUtil.setFocus(grid, true);
                 }
             });
 
@@ -1477,6 +1478,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 @Override
                 public void onClick(ClickEvent event) {
                     cancel();
+                    FocusUtil.setFocus(grid, true);
                 }
             });
         }
@@ -7665,12 +7667,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 event.getDomEvent().stopPropagation();
 
                 // fixes https://github.com/vaadin/framework/issues/8632
-                // don't mark the event as handled, in order for the next handler
-                // in the handler chain (HeaderDefaultRowEventHandler) to be able to
-                // receive it. This should be safe since the next handlers in the
-                // chain (RendererEventHandler and CellFocusEventHandler) do not
-                // react to header touches/clicks.
-//                event.setHandled(true);
+                // don't mark the event as handled, in order for the next
+                // handler in the handler chain (HeaderDefaultRowEventHandler)
+                // to be able to receive it. This should be safe since the next
+                // handlers in the chain (RendererEventHandler and
+                // CellFocusEventHandler) do not react to header touches/clicks.
+
+                // event.setHandled(true);
             }
         }
     };
