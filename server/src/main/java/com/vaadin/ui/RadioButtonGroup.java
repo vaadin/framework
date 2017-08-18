@@ -38,6 +38,7 @@ import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.RadioButtonGroupState;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
@@ -56,6 +57,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
 
     private SerializablePredicate<T> itemEnabledProvider = item -> true;
+    private DescriptionGenerator<T> descriptionGenerator = item -> null;
 
     /**
      * Constructs a new RadioButtonGroup with caption.
@@ -111,6 +113,12 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
                             caption);
                 } else {
                     jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE, "");
+                }
+                String description = getItemDescriptionGenerator().apply(data);
+                if (description != null) {
+                    jsonObject.put(
+                            ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
+                            description);
                 }
                 Resource icon = getItemIconGenerator().apply(data);
                 if (icon != null) {
@@ -217,6 +225,32 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
             SerializablePredicate<T> itemEnabledProvider) {
         Objects.requireNonNull(itemEnabledProvider);
         this.itemEnabledProvider = itemEnabledProvider;
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for items.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        Objects.requireNonNull(descriptionGenerator);
+        if (this.descriptionGenerator != descriptionGenerator) {
+            this.descriptionGenerator = descriptionGenerator;
+            getDataProvider().refreshAll();
+        }
+    }
+
+    /**
+     * Gets the item description generator.
+     *
+     * @return the item description generator
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return descriptionGenerator;
     }
 
     @Override

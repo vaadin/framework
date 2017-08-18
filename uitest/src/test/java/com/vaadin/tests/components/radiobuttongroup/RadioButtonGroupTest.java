@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -187,6 +188,28 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Selection", "Toggle Item 5");
         Assert.assertEquals("6. Selected: Optional[Item 5]", getLogRow(0));
         assertSelected("Item 5");
+    }
+
+    @Test
+    public void testItemDescriptionGenerators() {
+        TestBenchElement label;
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Default Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        Assert.assertEquals("Tooltip should contain the same text as caption",
+                label.getText(), getTooltipElement().getText());
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Custom Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        Assert.assertEquals("Tooltip should contain caption + ' Description'",
+                label.getText() + " Description",
+                getTooltipElement().getText());
     }
 
     private void assertSelected(String expectedSelection) {

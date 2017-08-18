@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -92,6 +93,12 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
             updateItem(new VCheckBox(), items.get(i), true);
             i++;
         }
+    }
+
+    public JsonObject getItem(Element element) {
+        return optionsToItems.entrySet().stream()
+                .filter(e -> e.getKey().getElement().isOrHasChild(element))
+                .map(e -> e.getValue()).findFirst().orElse(null);
     }
 
     private void remove(Widget widget) {

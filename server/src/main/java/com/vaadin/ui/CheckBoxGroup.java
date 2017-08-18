@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
@@ -32,9 +33,13 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.ListingJsonConstants;
 import com.vaadin.shared.ui.optiongroup.CheckBoxGroupState;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
+
+import elemental.json.JsonObject;
 
 /**
  * A group of Checkboxes. Individual checkboxes are made from items supplied by
@@ -47,6 +52,8 @@ import com.vaadin.ui.declarative.DesignFormatter;
  */
 public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
         implements FocusNotifier, BlurNotifier, HasDataProvider<T> {
+
+    private DescriptionGenerator<T> descriptionGenerator = item -> null;
 
     /**
      * Constructs a new CheckBoxGroup with caption.
@@ -92,6 +99,22 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      */
     public CheckBoxGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
+    }
+
+    @Override
+    protected MultiSelectDataGenerator createDataGenerator() {
+        return new MultiSelectDataGenerator() {
+            public void generateData(T item, JsonObject jsonObject) {
+                super.generateData(item, jsonObject);
+
+                String description = getItemDescriptionGenerator().apply(item);
+                if (description != null) {
+                    jsonObject.put(
+                            ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
+                            description);
+                }
+            }
+        };
     }
 
     /**
@@ -160,6 +183,32 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
     public Registration addBlurListener(BlurListener listener) {
         return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for items.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        Objects.requireNonNull(descriptionGenerator);
+        if (this.descriptionGenerator != descriptionGenerator) {
+            this.descriptionGenerator = descriptionGenerator;
+            getDataProvider().refreshAll();
+        }
+    }
+
+    /**
+     * Gets the item description generator.
+     *
+     * @return the item description generator
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return descriptionGenerator;
     }
 
     @Override
