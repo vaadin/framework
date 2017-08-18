@@ -1559,6 +1559,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 throw new IllegalStateException(
                         "Cannot edit row: editor is not enabled");
             }
+            
+            // if column is not editable just return
+            Column<?, T> column = grid.getVisibleColumn(columnIndexDOM);
+            if(column != null && !column.isEditable()) {
+                return;
+            }
 
             if (isWorkPending()) {
                 // Request pending a response, don't move try to start another
