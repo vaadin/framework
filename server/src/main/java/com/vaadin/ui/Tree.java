@@ -49,6 +49,7 @@ import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
@@ -596,6 +597,19 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Sets the description generator that is used for generating descriptions
+     * for items.
+     *
+     * @param descriptionGenerator
+     *            the item description generator to set, or <code>null</code> to
+     *            remove a previously set generator
+     */
+    public void setItemDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator) {
+        treeGrid.setDescriptionGenerator(descriptionGenerator);
+    }
+
+    /**
      * Gets the item caption generator.
      *
      * @return the item caption generator
@@ -633,6 +647,15 @@ public class Tree<T> extends Composite
      */
     public StyleGenerator<T> getStyleGenerator() {
         return treeGrid.getStyleGenerator();
+    }
+
+    /**
+     * Gets the item description generator.
+     *
+     * @return the item description generator
+     */
+    public DescriptionGenerator<T> getItemDescriptionGenerator() {
+        return treeGrid.getDescriptionGenerator();
     }
 
     /**
