@@ -14,12 +14,17 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
     public void testReuseTextFieldOnScroll() {
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            // skip test on PhantomJS as it often crashes the browser
+            return;
+        }
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         editTextFieldInCell(grid, 0, 1);
