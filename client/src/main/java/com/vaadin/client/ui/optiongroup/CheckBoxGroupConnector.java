@@ -112,4 +112,9 @@ public class CheckBoxGroupConnector
         }
         return super.getTooltipInfo(element);
     }
+
+    @Override
+    public boolean hasTooltip() {
+        return true;
+    }
 }

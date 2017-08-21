@@ -134,4 +134,9 @@ public class RadioButtonGroupConnector
         }
         return super.getTooltipInfo(element);
     }
+
+    @Override
+    public boolean hasTooltip() {
+        return true;
+    }
 }
