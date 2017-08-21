@@ -95,6 +95,14 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Returns the JsonObject used to populate the CheckBox widget that contains
+     * given Element.
+     * 
+     * @param element
+     *            the element to search for
+     * @return the related JsonObject; {@code null} if not found
+     */
     public JsonObject getItem(Element element) {
         return optionsToItems.entrySet().stream()
                 .filter(e -> e.getKey().getElement().isOrHasChild(element))

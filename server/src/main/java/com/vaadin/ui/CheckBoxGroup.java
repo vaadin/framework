@@ -39,8 +39,6 @@ import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
-import elemental.json.JsonObject;
-
 /**
  * A group of Checkboxes. Individual checkboxes are made from items supplied by
  * a {@link DataProvider}. Checkboxes may have captions and icons.
@@ -99,22 +97,13 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      */
     public CheckBoxGroup() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-    }
-
-    @Override
-    protected MultiSelectDataGenerator createDataGenerator() {
-        return new MultiSelectDataGenerator() {
-            public void generateData(T item, JsonObject jsonObject) {
-                super.generateData(item, jsonObject);
-
-                String description = getItemDescriptionGenerator().apply(item);
-                if (description != null) {
-                    jsonObject.put(
-                            ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
-                            description);
-                }
+        addDataGenerator((item, jsonObject) -> {
+            String description = getItemDescriptionGenerator().apply(item);
+            if (description != null) {
+                jsonObject.put(ListingJsonConstants.JSONKEY_ITEM_DESCRIPTION,
+                        description);
             }
-        };
+        });
     }
 
     /**
@@ -187,11 +176,15 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
 
     /**
      * Sets the description generator that is used for generating descriptions
-     * for items.
+     * for items. Description is shown as a tooltip when hovering on
+     * corresponding element. If the generator returns {@code null}, no tooltip
+     * is shown.
+     *
      *
      * @param descriptionGenerator
-     *            the item description generator to set, or <code>null</code> to
-     *            remove a previously set generator
+     *            the item description generator to set, not {@code null
+     * 
+     * @since}
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
@@ -206,6 +199,8 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      * Gets the item description generator.
      *
      * @return the item description generator
+     * 
+     * @since
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
         return descriptionGenerator;

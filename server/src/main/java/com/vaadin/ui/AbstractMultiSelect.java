@@ -89,7 +89,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
     }
 
-    protected class MultiSelectDataGenerator implements DataGenerator<T> {
+    private final class MultiSelectDataGenerator implements DataGenerator<T> {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             String caption = getItemCaptionGenerator().apply(data);
@@ -145,11 +145,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
         // #FIXME it should be the responsibility of the SelectionModel
         // (AbstractSelectionModel) to add selection data for item
-        addDataGenerator(createDataGenerator());
-    }
-
-    protected MultiSelectDataGenerator createDataGenerator() {
-        return new MultiSelectDataGenerator();
+        addDataGenerator(new MultiSelectDataGenerator());
     }
 
     /**

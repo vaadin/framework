@@ -229,11 +229,14 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
 
     /**
      * Sets the description generator that is used for generating descriptions
-     * for items.
+     * for items. Description is shown as a tooltip when hovering on
+     * corresponding element. If the generator returns {@code null}, no tooltip
+     * is shown.
      *
      * @param descriptionGenerator
-     *            the item description generator to set, or <code>null</code> to
-     *            remove a previously set generator
+     *            the item description generator to set, not {@code null}
+     * 
+     * @since
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
@@ -248,6 +251,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      * Gets the item description generator.
      *
      * @return the item description generator
+     * 
+     * @since
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
         return descriptionGenerator;
