@@ -252,4 +252,12 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
                             .contains("height: " + height + "px;"));
                 });
     }
+
+    @Test
+    public void tree_item_description() {
+        selectMenuPath("Component", "Descriptions", "String.valueOf");
+
+        $(TreeElement.class).first().getItem(0).showTooltip();
+        Assert.assertEquals("", "0 | 0", getTooltipElement().getText());
+    }
 }
