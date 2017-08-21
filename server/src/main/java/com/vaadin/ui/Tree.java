@@ -597,9 +597,10 @@ public class Tree<T> extends Composite
     }
 
     /**
-     * Sets the description generator that is used for generating descriptions
-     * for items.
-     *
+     * Sets the description generator that is used for generating tooltip
+     * descriptions for items.
+     * 
+     * @since
      * @param descriptionGenerator
      *            the item description generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -652,6 +653,7 @@ public class Tree<T> extends Composite
     /**
      * Gets the item description generator.
      *
+     * @since
      * @return the item description generator
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
