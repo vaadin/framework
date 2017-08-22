@@ -107,6 +107,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
      * Returns the JsonObject used to populate the RadioButton widget that
      * contains given Element.
      * 
+     * @since
      * @param element
      *            the element to search for
      * @return the related JsonObject; {@code null} if not found

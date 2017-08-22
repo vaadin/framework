@@ -182,9 +182,9 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
      *
      *
      * @param descriptionGenerator
-     *            the item description generator to set, not {@code null
+     *            the item description generator to set, not {@code null}
      * 
-     * @since}
+     * @since
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
