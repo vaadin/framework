@@ -16,6 +16,13 @@
 
 package com.vaadin.ui;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.Collection;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -30,12 +37,8 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.util.ReflectTools;
+
 import elemental.json.Json;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
 
 /**
  * A generic button component.
@@ -117,21 +120,6 @@ public class Button extends AbstractFocusable
      */
     public Button(String caption, ClickListener listener) {
         this(caption);
-        addClickListener(listener);
-    }
-
-    /**
-     * Creates a new push button with a click listener.
-     *
-     * @param icon
-     *            the Button icon.
-     * @param listener
-     *            the Button click listener.
-     * @since 8.2
-     */
-    public Button(Resource icon, ClickListener listener) {
-        this();
-        setIcon(icon);
         addClickListener(listener);
     }
 
