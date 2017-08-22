@@ -33,5 +33,8 @@ public class ListingJsonConstants implements Serializable {
 
     public static final String JSONKEY_ITEM_SELECTED = "s";
 
+    /**
+     * @since
+     */
     public static final String JSONKEY_ITEM_DESCRIPTION = "dsc";
 }
