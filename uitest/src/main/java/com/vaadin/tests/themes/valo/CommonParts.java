@@ -261,7 +261,7 @@ public class CommonParts extends VerticalLayout implements View {
                 delay.setValue("1000");
                 group.addComponent(delay);
 
-                Button clear = new Button(null, new ClickListener() {
+                Button clear = new Button("", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         delay.setValue("");
