@@ -9119,6 +9119,19 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
+     * Update details row height.
+     *
+     * @since
+     * @param rowIndex
+     *            the index of the row for which to update details height
+     * @param height
+     *            new height of the details row
+     */
+    public void setDetailsHeight(int rowIndex, double height) {
+        escalator.getBody().setSpacer(rowIndex, height);
+    }
+
+    /**
      * Requests that the column widths should be recalculated.
      * <p>
      * The actual recalculation is not necessarily done immediately so you
