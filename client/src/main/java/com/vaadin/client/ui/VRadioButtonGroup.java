@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.google.gwt.aria.client.Roles;
@@ -111,9 +112,16 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
      * @return the related JsonObject; {@code null} if not found
      */
     public JsonObject getItem(Element element) {
+        // The HTML populated in updateItem does not match RadioButton directly,
+        // which is why tryGetItem is also attempted on the parent element
+        return tryGetItem(element)
+                .orElse(tryGetItem(element.getParentElement()).orElse(null));
+    }
+
+    private Optional<JsonObject> tryGetItem(Element element) {
         return optionsToItems.entrySet().stream()
                 .filter(e -> e.getKey().getElement().equals(element))
-                .map(e -> e.getValue()).findFirst().orElse(null);
+                .map(e -> e.getValue()).findFirst();
     }
 
     private void remove(Widget widget) {
