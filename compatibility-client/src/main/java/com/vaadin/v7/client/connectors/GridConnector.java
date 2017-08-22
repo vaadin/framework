@@ -50,6 +50,8 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
@@ -496,17 +498,67 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         private final Map<String, ComponentConnector> idToDetailsMap = new HashMap<String, ComponentConnector>();
         private final Map<String, Integer> idToRowIndex = new HashMap<String, Integer>();
+        private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
+        private final ElementResizeListener detailsRowResizeListener = new ElementResizeListener() {
+
+            @Override
+            public void onElementResize(ElementResizeEvent e) {
+                if (elementToResizeCommand.containsKey(e.getElement())) {
+                    Scheduler.get().scheduleFinally(
+                            elementToResizeCommand.get(e.getElement()));
+                }
+            }
+        };
+
+        /* calculated when the first details row is opened */
+        private Double spacerCellBorderHeights = null;
 
         @Override
         public Widget getDetails(int rowIndex) {
             String id = getId(rowIndex);
-            if (id == null) {
+            if (id == null || !hasDetailsOpen(rowIndex)) {
                 return null;
             }
             ComponentConnector componentConnector = idToDetailsMap.get(id);
             idToRowIndex.put(id, rowIndex);
 
-            return componentConnector.getWidget();
+            Widget widget = componentConnector.getWidget();
+            getLayoutManager().addElementResizeListener(widget.getElement(),
+                    detailsRowResizeListener);
+            elementToResizeCommand.put(widget.getElement(),
+                    createResizeCommand(rowIndex, widget.getElement()));
+
+            return widget;
+        }
+
+        private ScheduledCommand createResizeCommand(final int rowIndex,
+                final Element element) {
+            return new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    // It should not be possible to get here without calculating
+                    // the spacerCellBorderHeights or without having the details
+                    // row open, nor for this command to be triggered while
+                    // layout is running, but it's safer to check anyway.
+                    if (spacerCellBorderHeights != null
+                            && !getLayoutManager().isLayoutRunning()
+                            && hasDetailsOpen(rowIndex)) {
+                        double height = getLayoutManager().getOuterHeightDouble(
+                                element) + spacerCellBorderHeights;
+                        getWidget().setDetailsHeight(rowIndex, height);
+                    }
+                }
+            };
+        }
+
+        private boolean hasDetailsOpen(int rowIndex) {
+            JsonObject row = getWidget().getDataSource().getRow(rowIndex);
+            if (row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)) {
+                String id = row.getString(GridState.JSONKEY_DETAILS_VISIBLE);
+                return id != null && !id.isEmpty();
+            }
+            return false;
         }
 
         @Override
@@ -519,8 +571,16 @@ public class GridConnector extends AbstractHasComponentsConnector
             getLayoutManager().setNeedsMeasureRecursively(componentConnector);
             getLayoutManager().layoutNow();
 
-            return getLayoutManager().getOuterHeightDouble(
-                    componentConnector.getWidget().getElement());
+            Element element = componentConnector.getWidget().getElement();
+            if (spacerCellBorderHeights == null) {
+                // If theme is changed, new details generator is created from
+                // scratch, so this value doesn't need to be updated elsewhere.
+                spacerCellBorderHeights = WidgetUtil
+                        .getBorderTopAndBottomThickness(
+                                element.getParentElement());
+            }
+
+            return getLayoutManager().getOuterHeightDouble(element);
         }
 
         /**
@@ -568,6 +628,11 @@ public class GridConnector extends AbstractHasComponentsConnector
             }
 
             for (String id : removedDetails) {
+                Element element = idToDetailsMap.get(id).getWidget()
+                        .getElement();
+                elementToResizeCommand.remove(element);
+                getLayoutManager().removeElementResizeListener(element,
+                        detailsRowResizeListener);
                 idToDetailsMap.remove(id);
                 idToRowIndex.remove(id);
             }
