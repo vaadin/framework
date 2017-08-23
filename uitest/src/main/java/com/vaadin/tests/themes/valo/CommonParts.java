@@ -261,7 +261,7 @@ public class CommonParts extends VerticalLayout implements View {
                 delay.setValue("1000");
                 group.addComponent(delay);
 
-                Button clear = new Button(null, new ClickListener() {
+                Button clear = new Button("", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         delay.setValue("");
@@ -329,14 +329,13 @@ public class CommonParts extends VerticalLayout implements View {
                 pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
-                pos = new Button("", new ClickListener() {
+                pos = new Button(ValoTheme.BUTTON_SMALL, new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         notification.setPosition(Position.MIDDLE_RIGHT);
                         notification.show(Page.getCurrent());
                     }
                 });
-                pos.addStyleName(ValoTheme.BUTTON_SMALL);
                 grid.addComponent(pos);
 
                 pos = new Button("", new ClickListener() {

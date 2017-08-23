@@ -124,6 +124,20 @@ public class Button extends AbstractFocusable
     }
 
     /**
+     * Creates a new push button with a click listener.
+     *
+     * @param icon
+     *            the Button icon.
+     * @param listener
+     *            the Button click listener.
+     * @since 8.2
+     */
+    public Button(Resource icon, ClickListener listener) {
+        setIcon(icon);
+        addClickListener(listener);
+    }
+
+    /**
      * Click event. This event is thrown, when the button is clicked.
      *
      * @author Vaadin Ltd.
