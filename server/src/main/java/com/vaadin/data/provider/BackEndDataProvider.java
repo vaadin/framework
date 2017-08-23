@@ -58,7 +58,7 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      *             if builder is null
      */
     default void setSortOrders(QuerySortOrderBuilder builder) {
-        Objects.requireNonNull("Sort builder cannot be null.");
+        Objects.requireNonNull(builder, "Sort builder cannot be null.");
         setSortOrders(builder.build());
     }
 
