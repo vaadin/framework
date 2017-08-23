@@ -133,7 +133,6 @@ public class Button extends AbstractFocusable
      * @since 8.2
      */
     public Button(Resource icon, ClickListener listener) {
-        this();
         setIcon(icon);
         addClickListener(listener);
     }
