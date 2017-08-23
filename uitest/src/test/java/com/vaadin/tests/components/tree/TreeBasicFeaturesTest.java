@@ -40,6 +40,12 @@ public class TreeBasicFeaturesTest extends MultiBrowserTest {
         openTestURL();
     }
 
+    // needed to make tooltips work in IE tests
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
+
     @Test
     public void tree_expand_and_collapse() {
         TreeElement tree = $(TreeElement.class).first();
