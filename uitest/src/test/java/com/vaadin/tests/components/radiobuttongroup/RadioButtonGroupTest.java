@@ -246,4 +246,10 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         }
         assertEquals("Number of items", count, i);
     }
+
+    // needed to make tooltips work in IE tests
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
 }
