@@ -2,6 +2,8 @@ package com.vaadin.tests.application;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Date;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -13,9 +15,9 @@ public class WebBrowserTimeZoneTest extends MultiBrowserTest {
     public void testBrowserTimeZoneInfo() throws Exception {
         openTestURL();
         $(ButtonElement.class).first().click();
-        assertLabelText("Browser raw offset", "7200000");
-        assertLabelText("Browser to Europe/Helsinki offset difference", "0");
-        assertLabelText("Browser could be in Helsinki", "Yes");
+        // This test assumes the browser and tests are run in the same timezone.
+        assertLabelText("Browser raw offset",
+                Integer.toString(new Date().getTimezoneOffset()));
     }
 
     private void assertLabelText(String caption, String expected) {
