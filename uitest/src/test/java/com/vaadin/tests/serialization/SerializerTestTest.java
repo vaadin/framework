@@ -32,9 +32,9 @@ public class SerializerTestTest extends MultiBrowserTest {
         assertEquals("sendJson: {\"b\":false,\"s\":\"JSON\"}, null, \"value\"",
                 getLogRow(logRow++));
         assertEquals(
-                "sendDateArray: January 31, 2013 10:00:00 PM UTC January 31, 2012 10:00:00 PM UTC",
+                "sendDateArray: January 31, 2013 12:00:00 AM UTC January 31, 2012 12:00:00 AM UTC",
                 getLogRow(logRow++));
-        assertEquals("sendDate: May 31, 2013 8:12:13 AM UTC",
+        assertEquals("sendDate: May 1, 2013 11:12:13 AM UTC",
                 getLogRow(logRow++));
         assertEquals("sendDate: January 1, 1970 12:00:00 AM UTC",
                 getLogRow(logRow++));
@@ -83,11 +83,11 @@ public class SerializerTestTest extends MultiBrowserTest {
                 getLogRow(logRow++));
         assertEquals("sendBeanSubclass: 43", getLogRow(logRow++));
         assertEquals(
-                "state.dateArray: Thu Jan 01 02:00:00 GMT+200 1970 Thu Jan 01 02:00:00 GMT+200 1970",
+                "state.dateArray: Thu Jan 01 00:00:00 GMT+000 1970 Thu Jan 01 00:00:00 GMT+000 1970",
                 getLogRow(logRow++));
-        assertEquals("state.date2: Fri May 31 11:12:13 GMT+300 2013",
+        assertEquals("state.date2: Wed May 01 11:12:13 GMT+000 2013",
                 getLogRow(logRow++));
-        assertEquals("state.date1: Thu Jan 01 02:00:00 GMT+200 1970",
+        assertEquals("state.date1: Thu Jan 01 00:00:00 GMT+000 1970",
                 getLogRow(logRow++));
         assertEquals("state.jsonBoolean: false", getLogRow(logRow++));
         assertEquals("state.jsonString: a string", getLogRow(logRow++));

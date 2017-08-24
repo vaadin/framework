@@ -266,9 +266,10 @@ public class SerializerTest extends AbstractReindeerTestUI {
         state.list = Arrays.asList(ContentMode.HTML);
 
         rpc.sendDate(new Date(1));
-        rpc.sendDate(new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13));
-        rpc.sendDateArray(new Date[] { new Date(2013 - 1900, 1, 1),
-                new Date(2012 - 1900, 1, 1) });
+        rpc.sendDate(new Date(Date.UTC(2013 - 1900, 4, 1, 11, 12, 13)));
+        rpc.sendDateArray(
+                new Date[] { new Date(Date.UTC(2013 - 1900, 0, 31, 0, 0, 0)),
+                        new Date(Date.UTC(2012 - 1900, 0, 31, 0, 0, 0)) });
 
         state.jsonNull = Json.createNull();
         state.jsonString = Json.create("a string");
@@ -277,7 +278,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
 
         state.dateArray = new Date[] { new Date(1), new Date(2) };
         state.date1 = new Date(1);
-        state.date2 = new Date(2013 - 1900, 5 - 1, 31, 11, 12, 13);
+        state.date2 = new Date(Date.UTC(2013 - 1900, 4, 1, 11, 12, 13));
 
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override
