@@ -24,15 +24,11 @@ import com.vaadin.ui.Label;
 
 @ViewportGeneratorClass(MyViewportGenerator.class)
 public class DynamicViewport extends AbstractReindeerTestUI {
+
     public static class MyViewportGenerator implements ViewportGenerator {
         @Override
         public String getViewport(VaadinRequest request) {
-            String userAgent = request.getHeader("User-Agent");
-            System.out.println(userAgent);
-            if (userAgent == null || userAgent.contains("Chrome")) {
-                return null;
-            }
-            return userAgent;
+            return request.getHeader("User-Agent");
         }
     }
 
