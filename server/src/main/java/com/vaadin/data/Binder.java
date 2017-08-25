@@ -1621,15 +1621,8 @@ public class Binder<BEAN> implements Serializable {
                     + "bean level validators have been configured "
                     + "but no bean is currently set");
         }
-        if (validateBindings().stream().filter(BindingValidationStatus::isError)
-                .findAny().isPresent()) {
-            return false;
-        }
-        if (getBean() != null && validateBean(getBean()).stream()
-                .filter(ValidationResult::isError).findAny().isPresent()) {
-            return false;
-        }
-        return true;
+        BinderValidationStatus<BEAN> validate = validate();
+        return validate.isOk();
     }
 
     /**
