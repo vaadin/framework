@@ -503,6 +503,7 @@ public class Binder<BEAN> implements Serializable {
          * @see HasValue#setRequiredIndicatorVisible(boolean)
          * @see HasValue#isEmpty()
          * @return this binding, for chaining
+         * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> asRequired() {
             return asRequired(context -> "");
