@@ -34,9 +34,16 @@ public interface ValidationResult extends Serializable {
 
     class SimpleValidationResult implements ValidationResult {
 
+        private final Severity severity; 
         private final String error;
 
         SimpleValidationResult(String error) {
+            this.severity = Severity.ERROR;
+            this.error = error;
+        }
+        
+        SimpleValidationResult(String error, Severity severity) {
+            this.severity = severity;
             this.error = error;
         }
 
@@ -52,9 +59,50 @@ public interface ValidationResult extends Serializable {
 
         @Override
         public boolean isError() {
-            return error != null;
+            return error != null && Severity.ERROR.equals(severity);
         }
 
+        @Override
+        public boolean isInfo() {
+            return Severity.INFO.equals(severity);
+        }
+        
+        @Override
+        public boolean isWarn() {
+            return Severity.WARN.equals(severity);
+        }
+        
+        @Override
+        public Severity getSeverity() {
+            return severity;
+        }
+
+    }
+    
+    public default Severity getSeverity() {
+      return Severity.ERROR;
+    }
+    
+    /**
+     * Checks if the result denotes an info.
+     *
+     * @return <code>true</code> if the result denotes an info,
+     *         <code>false</code> otherwise
+     * @since 8.2
+     */
+    public default boolean isInfo() {
+      return false;
+    }
+
+    /**
+     * Checks if the result denotes a warning.
+     *
+     * @return <code>true</code> if the result denotes an warning,
+     *         <code>false</code> otherwise
+     * @since 8.2
+     */
+    public default boolean isWarn() {
+      return false;
     }
 
     /**
@@ -65,6 +113,7 @@ public interface ValidationResult extends Serializable {
      * @return the error message
      * @throws IllegalStateException
      *             if the result represents success
+     * @since 8.2
      */
     String getErrorMessage();
 
@@ -75,6 +124,7 @@ public interface ValidationResult extends Serializable {
      *         <code>false</code> otherwise
      */
     boolean isError();
+    
 
     /**
      * Returns a successful result.
@@ -83,6 +133,22 @@ public interface ValidationResult extends Serializable {
      */
     public static ValidationResult ok() {
         return new SimpleValidationResult(null);
+    }
+
+    /**
+     * Creates the validation result which represent an error with the given
+     * {@code errorMessage}.
+     *
+     * @param errorMessage
+     *            error message, not {@code null}
+     * @return validation result which represent an error with the given
+     *         {@code errorMessage}
+     * @throws NullPointerException
+     *             if {@code errorMessage} is null
+     */
+    public static ValidationResult result(String message, Severity severity) {
+        Objects.requireNonNull(message);
+        return new SimpleValidationResult(message, severity);
     }
 
     /**

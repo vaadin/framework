@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.server;
 
 import java.io.PrintWriter;
@@ -24,8 +23,7 @@ import java.util.List;
 /**
  * Base class for component error messages.
  *
- * This class is used on the server side to construct the error messages to send
- * to the client.
+ * This class is used on the server side to construct the error messages to send to the client.
  *
  * @since 7.0
  */
@@ -40,7 +38,6 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
          * Content mode, where the error contains preformatted text.
          */
         PREFORMATTED,
-
         /**
          * Content mode, where the error contains HTML.
          *
@@ -61,11 +58,16 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
     /**
      * Error level.
      */
-    private ErrorLevel level = ErrorLevel.ERROR;
+    private ErrorMessage.ErrorLevel level = ErrorMessage.ErrorLevel.ERROR;
 
     private final List<ErrorMessage> causes = new ArrayList<>();
 
     protected AbstractErrorMessage(String message) {
+        this(message, ErrorMessage.ErrorLevel.ERROR);
+    }
+
+    protected AbstractErrorMessage(String message, ErrorMessage.ErrorLevel level) {
+        this.level = level;
         this.message = message;
     }
 
@@ -79,11 +81,11 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
 
     /* Documented in interface */
     @Override
-    public ErrorLevel getErrorLevel() {
+    public ErrorMessage.ErrorLevel getErrorLevel() {
         return level;
     }
 
-    public void setErrorLevel(ErrorLevel level) {
+    public void setErrorLevel(ErrorMessage.ErrorLevel level) {
         this.level = level;
     }
 
@@ -107,16 +109,16 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
     public String getFormattedHtmlMessage() {
         String result = null;
         switch (getMode()) {
-        case TEXT:
-            result = VaadinServlet.safeEscapeForHtml(getMessage());
-            break;
-        case PREFORMATTED:
-            result = "<pre>" + VaadinServlet.safeEscapeForHtml(getMessage())
-                    + "</pre>";
-            break;
-        case HTML:
-            result = getMessage();
-            break;
+            case TEXT:
+                result = VaadinServlet.safeEscapeForHtml(getMessage());
+                break;
+            case PREFORMATTED:
+                result = "<pre>" + VaadinServlet.safeEscapeForHtml(getMessage())
+                        + "</pre>";
+                break;
+            case HTML:
+                result = getMessage();
+                break;
         }
         // if no message, combine the messages of all children
         if (null == result && null != getCauses() && getCauses().size() > 0) {

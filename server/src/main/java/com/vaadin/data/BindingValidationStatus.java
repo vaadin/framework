@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.server.ErrorMessage;
 
 /**
  * Represents the status of field validation. Status can be {@code Status.OK},
@@ -56,9 +57,13 @@ public class BindingValidationStatus<TARGET> implements Serializable {
      */
     public enum Status {
         /** Validation passed. */
-        OK,
+        OK(null),
+        /** Validation passed, with additional information.*/
+        INFO(ErrorMessage.ErrorLevel.INFORMATION),
+        /** Validation passed, with additonal warning.*/
+        WARN(ErrorMessage.ErrorLevel.WARNING),
         /** Validation failed. */
-        ERROR,
+        ERROR(ErrorMessage.ErrorLevel.ERROR),
         /**
          * Unresolved status, e.g field has not yet been validated because value
          * was cleared.
@@ -66,7 +71,17 @@ public class BindingValidationStatus<TARGET> implements Serializable {
          * In practice this status means that the value might be invalid, but
          * validation errors should be hidden.
          */
-        UNRESOLVED;
+        UNRESOLVED(null);
+        
+        private final ErrorMessage.ErrorLevel errorLevel;
+
+        private Status(ErrorMessage.ErrorLevel errorLevel) {
+            this.errorLevel = errorLevel;
+        }
+        
+        public ErrorMessage.ErrorLevel getErrorLevel() {
+            return errorLevel;
+        }
     }
 
     private final Status status;
@@ -100,7 +115,7 @@ public class BindingValidationStatus<TARGET> implements Serializable {
      */
     public BindingValidationStatus(Binding<?, TARGET> source,
             ValidationResult result) {
-        this(source, result.isError() ? Status.ERROR : Status.OK, result);
+        this(source, result.getSeverity().getStatus(), result);
     }
 
     /**
@@ -141,7 +156,29 @@ public class BindingValidationStatus<TARGET> implements Serializable {
     public Status getStatus() {
         return status;
     }
-
+    
+    /**
+     * Gets whether the validation produced a informatin or not.
+     *
+     * @return {@code true} if validation produced a information, {@code false} if validation
+     *         passed
+     * @since 8.2
+     */
+    public boolean isInfo() {
+        return status == Status.INFO;
+    }
+    
+    /**
+     * Gets whether the validation produced a warning or not.
+     *
+     * @return {@code true} if validation produced a warning, {@code false} if validation
+     *         passed
+     * @since 8.2
+     */
+    public boolean isWarn() {
+        return status == Status.WARN;
+    }
+    
     /**
      * Gets whether the validation failed or not.
      *
@@ -150,6 +187,10 @@ public class BindingValidationStatus<TARGET> implements Serializable {
      */
     public boolean isError() {
         return status == Status.ERROR;
+    }
+    
+    public boolean hasMessage() {
+        return status != Status.OK;
     }
 
     /**
