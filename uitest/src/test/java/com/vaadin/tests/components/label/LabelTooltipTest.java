@@ -59,9 +59,7 @@ public class LabelTooltipTest extends MultiBrowserTest {
         /*
          * Some cases tooltip doesn't disappear without some extra mouse events
          */
-        new Actions(getDriver()).moveByOffset(100, -40).perform();
-        new Actions(getDriver()).moveToElement($(LabelElement.class).get(1))
-                .click().perform();
+        new Actions(getDriver()).moveByOffset(100, 100).click().perform();
 
         $(LabelElement.class).get(4).showTooltip();
         assertEquals(
