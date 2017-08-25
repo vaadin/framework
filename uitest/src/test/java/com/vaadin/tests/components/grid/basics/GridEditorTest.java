@@ -44,7 +44,6 @@ public abstract class GridEditorTest extends GridBasicsTest {
     @Override
     @Before
     public void setUp() {
-        setDebug(true);
         openTestURL();
         selectMenuPath(TOGGLE_EDIT_ENABLED);
     }
