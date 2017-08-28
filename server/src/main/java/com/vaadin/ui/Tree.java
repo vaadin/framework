@@ -16,12 +16,20 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasHierarchicalDataProvider;
@@ -30,6 +38,7 @@ import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -51,6 +60,11 @@ import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.NoSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
@@ -702,6 +716,20 @@ public class Tree<T> extends Composite
         }
     }
 
+    private SelectionMode getSelectionMode() {
+        SelectionModel<T> selectionModel = getSelectionModel();
+        SelectionMode mode = null;
+        if (selectionModel.getClass().equals(SingleSelectionModelImpl.class)) {
+            mode = SelectionMode.SINGLE;
+        } else if (selectionModel.getClass()
+                .equals(TreeMultiSelectionModel.class)) {
+            mode = SelectionMode.MULTI;
+        } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+            mode = SelectionMode.NONE;
+        }
+        return mode;
+    }
+
     @Override
     public void setCaption(String caption) {
         treeGrid.setCaption(caption);
@@ -884,6 +912,146 @@ public class Tree<T> extends Composite
             ContextClickEvent.ContextClickListener listener) {
         super.removeContextClickListener(listener);
         setupContextClickListener();
+    }
+
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+
+        SelectionMode mode = getSelectionMode();
+        if (mode != null) {
+            DesignAttributeHandler.writeAttribute("selection-mode",
+                    design.attributes(), mode, SelectionMode.SINGLE,
+                    SelectionMode.class, designContext);
+        }
+
+        if (designContext.shouldWriteData(this)) {
+            writeItems(design, designContext);
+        }
+    }
+
+    private void writeItems(Element design, DesignContext designContext) {
+        getDataProvider().fetch(new HierarchicalQuery<>(null, null))
+                .forEach(item -> writeItem(design, designContext, item, null));
+    }
+
+    private void writeItem(Element design, DesignContext designContext, T item,
+            T parent) {
+
+        Element itemElement = design.appendElement("node");
+        itemElement.attr("item", serializeDeclarativeRepresentation(item));
+
+        if (parent != null) {
+            itemElement.attr("parent",
+                    serializeDeclarativeRepresentation(parent));
+        }
+
+        if (getSelectionModel().isSelected(item)) {
+            itemElement.attr("selected", "");
+        }
+
+        Resource icon = getItemIconGenerator().apply(item);
+        DesignAttributeHandler.writeAttribute("icon", itemElement.attributes(),
+                icon, null, Resource.class, designContext);
+
+        String text = getItemCaptionGenerator().apply(item);
+        itemElement.text(Optional.ofNullable(text).map(Object::toString)
+                .map(DesignFormatter::encodeForTextNode).orElse(""));
+
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeItem(design, designContext, childItem, item));
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("selection-mode")) {
+            setSelectionMode(DesignAttributeHandler.readAttribute(
+                    "selection-mode", attrs, SelectionMode.class));
+        }
+        readItems(design.children());
+    }
+
+    private void readItems(Elements bodyItems) {
+        if (bodyItems.isEmpty()) {
+            return;
+        }
+
+        DeclarativeValueProvider<T> valueProvider = new DeclarativeValueProvider<>();
+        setItemCaptionGenerator(item -> valueProvider.apply(item));
+
+        DeclarativeIconGenerator<T> iconGenerator = new DeclarativeIconGenerator<>(
+                item -> null);
+        setItemIconGenerator(iconGenerator);
+
+        getSelectionModel().deselectAll();
+        List<T> selectedItems = new ArrayList<>();
+        TreeData<T> data = new TreeData<T>();
+
+        for (Element row : bodyItems) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            T parent = null;
+            if (row.hasAttr("parent")) {
+                parent = deserializeDeclarativeRepresentation(
+                        row.attr("parent"));
+            }
+            data.addItem(parent, item);
+            if (row.hasAttr("selected")) {
+                selectedItems.add(item);
+            }
+
+            valueProvider.addValue(item, row.html());
+            iconGenerator.setIcon(item, DesignAttributeHandler
+                    .readAttribute("icon", row.attributes(), Resource.class));
+        }
+
+        setDataProvider(new TreeDataProvider<>(data));
+        selectedItems.forEach(getSelectionModel()::select);
+    }
+
+    /**
+     * Deserializes a string to a data item. Used when reading from the
+     * declarative format of this Tree.
+     * <p>
+     * Default implementation is able to handle only {@link String} as an item
+     * type. There will be a {@link ClassCastException} if {@code T } is not a
+     * {@link String}.
+     *
+     * @since
+     *
+     * @see #serializeDeclarativeRepresentation(Object)
+     *
+     * @param item
+     *            string to deserialize
+     * @throws ClassCastException
+     *             if type {@code T} is not a {@link String}
+     * @return deserialized item
+     */
+    @SuppressWarnings("unchecked")
+    protected T deserializeDeclarativeRepresentation(String item) {
+        if (item == null) {
+            return (T) new String(UUID.randomUUID().toString());
+        }
+        return (T) new String(item);
+    }
+
+    /**
+     * Serializes an {@code item} to a string. Used when saving this Tree to its
+     * declarative format.
+     * <p>
+     * Default implementation delegates a call to {@code item.toString()}.
+     *
+     * @since
+     *
+     * @see #deserializeDeclarativeRepresentation(String)
+     *
+     * @param item
+     *            a data item
+     * @return string representation of the {@code item}.
+     */
+    protected String serializeDeclarativeRepresentation(T item) {
+        return item.toString();
     }
 
     private void setupContextClickListener() {
