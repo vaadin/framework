@@ -181,11 +181,6 @@ public class PushRequestHandler implements SessionExpiredHandler {
         atmosphere.addInitParameter(
                 ApplicationConfig.DROP_ACCESS_CONTROL_ALLOW_ORIGIN_HEADER,
                 "false");
-        // Disable heartbeat (it does not emit correct events client side)
-        // https://github.com/Atmosphere/atmosphere-javascript/issues/141
-        atmosphere.addInitParameter(
-                ApplicationConfig.DISABLE_ATMOSPHEREINTERCEPTORS,
-                HeartbeatInterceptor.class.getName());
 
         final String bufferSize = String
                 .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
