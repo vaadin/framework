@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
+import com.vaadin.shared.util.SharedUtil;
+
 /**
  * Signals that the property value from a state class should be forwarded to the
  * Widget of the corresponding connector instance.
@@ -87,8 +89,7 @@ public @interface DelegateToWidget {
                 String annotationValue) {
             String name = annotationValue;
             if (name.isEmpty()) {
-                name = "set" + Character.toUpperCase(propertyName.charAt(0))
-                        + propertyName.substring(1);
+                name = "set" + SharedUtil.capitalize(propertyName);
             }
             return name;
         }
