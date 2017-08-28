@@ -199,7 +199,7 @@ public class SharedUtil implements Serializable {
         }
 
         if (string.length() <= 1) {
-            return string.toUpperCase();
+            return string.toUpperCase(Locale.ENGLISH);
         }
 
         return string.substring(0, 1).toUpperCase(Locale.ENGLISH)

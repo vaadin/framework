@@ -113,6 +113,7 @@ public class SharedUtilTest {
         try {
             Locale.setDefault(new Locale("tr", "TR"));
             Assert.assertEquals("Integer", SharedUtil.capitalize("integer"));
+            Assert.assertEquals("I", SharedUtil.capitalize("i"));
         } finally {
             Locale.setDefault(defaultLocale);
         }
