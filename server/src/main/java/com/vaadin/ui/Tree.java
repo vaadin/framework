@@ -64,7 +64,6 @@ import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
-import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
@@ -958,8 +957,8 @@ public class Tree<T> extends Composite
                 icon, null, Resource.class, designContext);
 
         String text = getItemCaptionGenerator().apply(item);
-        itemElement.text(Optional.ofNullable(text).map(Object::toString)
-                .map(DesignFormatter::encodeForTextNode).orElse(""));
+        itemElement.html(
+                Optional.ofNullable(text).map(Object::toString).orElse(""));
 
         getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
                 childItem -> writeItem(design, designContext, childItem, item));
