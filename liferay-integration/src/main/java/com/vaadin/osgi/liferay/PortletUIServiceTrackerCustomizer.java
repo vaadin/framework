@@ -19,6 +19,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.portlet.Portlet;
 
@@ -27,6 +28,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceObjects;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import com.vaadin.osgi.resources.VaadinResourceService;
@@ -60,9 +62,12 @@ class PortletUIServiceTrackerCustomizer
 
     private Map<ServiceReference<UI>, ServiceRegistration<Portlet>> portletRegistrations = new HashMap<ServiceReference<UI>, ServiceRegistration<Portlet>>();
     private VaadinResourceService service;
+    private Optional<LogService> logService;
 
-    PortletUIServiceTrackerCustomizer(VaadinResourceService service) {
+    PortletUIServiceTrackerCustomizer(VaadinResourceService service,
+            LogService logService) {
         this.service = service;
+        this.logService = Optional.ofNullable(logService);
     }
 
     @Override
@@ -102,7 +107,8 @@ class PortletUIServiceTrackerCustomizer
         ServiceObjects<UI> serviceObjects = bundleContext
                 .getServiceObjects(reference);
 
-        OsgiUIProvider uiProvider = new OsgiUIProvider(serviceObjects);
+        OsgiUIProvider uiProvider = new OsgiUIProvider(serviceObjects,
+                logService);
 
         Dictionary<String, Object> properties = null;
         if (configuration != null) {
