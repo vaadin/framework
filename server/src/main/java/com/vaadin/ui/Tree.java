@@ -1024,7 +1024,7 @@ public class Tree<T> extends Composite
      * type. There will be a {@link ClassCastException} if {@code T } is not a
      * {@link String}.
      *
-     * @since
+     * @since 8.1.3
      *
      * @see #serializeDeclarativeRepresentation(Object)
      *
@@ -1048,7 +1048,7 @@ public class Tree<T> extends Composite
      * <p>
      * Default implementation delegates a call to {@code item.toString()}.
      *
-     * @since
+     * @since 8.1.3
      *
      * @see #deserializeDeclarativeRepresentation(String)
      *
