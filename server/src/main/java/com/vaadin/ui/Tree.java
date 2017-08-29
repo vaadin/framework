@@ -841,8 +841,20 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Gets the currently set content mode of the item captions of this Tree.
+     *
+     * @since 8.1.3
+     * @see ContentMode
+     * @return the content mode of the item captions of this Tree
+     */
+    public ContentMode getContentMode() {
+        return renderer.getState(false).mode;
+    }
+
+    /**
      * Sets the content mode of the item caption.
      *
+     * @see ContentMode
      * @param contentMode
      *            the content mode
      */
@@ -924,8 +936,8 @@ public class Tree<T> extends Composite
                     SelectionMode.SINGLE, SelectionMode.class, designContext);
         }
         DesignAttributeHandler.writeAttribute("content-mode", attrs,
-                renderer.getState(false).mode, ContentMode.TEXT,
-                ContentMode.class, designContext);
+                getContentMode(), ContentMode.TEXT, ContentMode.class,
+                designContext);
 
         if (designContext.shouldWriteData(this)) {
             writeItems(design, designContext);
