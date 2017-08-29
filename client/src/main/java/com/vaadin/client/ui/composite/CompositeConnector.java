@@ -116,4 +116,13 @@ public class CompositeConnector extends AbstractHasComponentsConnector
             ((DirectionalManagedLayout) childConnector).layoutVertically();
         }
     }
+
+    @Override
+    public boolean delegateCaptionHandling() {
+        if (!hasChildConnector()) {
+            return true;
+        } else {
+            return getChildConnector().delegateCaptionHandling();
+        }
+    }
 }
