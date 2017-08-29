@@ -131,6 +131,8 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
             event.preventDefault();
             event.stopPropagation();
         }
+
+        removeDragOverStyle((NativeEvent) event);
     }
 
     @Override
