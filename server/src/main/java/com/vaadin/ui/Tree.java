@@ -917,13 +917,16 @@ public class Tree<T> extends Composite
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
+        Attributes attrs = design.attributes();
 
         SelectionMode mode = getSelectionMode();
         if (mode != null) {
-            DesignAttributeHandler.writeAttribute("selection-mode",
-                    design.attributes(), mode, SelectionMode.SINGLE,
-                    SelectionMode.class, designContext);
+            DesignAttributeHandler.writeAttribute("selection-mode", attrs, mode,
+                    SelectionMode.SINGLE, SelectionMode.class, designContext);
         }
+        DesignAttributeHandler.writeAttribute("content-mode", attrs,
+                renderer.getState(false).mode, ContentMode.TEXT,
+                ContentMode.class, designContext);
 
         if (designContext.shouldWriteData(this)) {
             writeItems(design, designContext);
@@ -969,6 +972,10 @@ public class Tree<T> extends Composite
         if (attrs.hasKey("selection-mode")) {
             setSelectionMode(DesignAttributeHandler.readAttribute(
                     "selection-mode", attrs, SelectionMode.class));
+        }
+        if (attrs.hasKey("content-mode")) {
+            setContentMode(DesignAttributeHandler.readAttribute("content-mode",
+                    attrs, ContentMode.class));
         }
         readItems(design.children());
     }
