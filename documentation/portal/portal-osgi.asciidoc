@@ -8,7 +8,7 @@ layout: page
 = OSGi Portlets on Liferay 7
 
 Lifeary 7 supports modular portlet development using OSGi, and enables e.g.
-using multiple different Vaadin versions in different portlets on a page. 
+using multiple different Vaadin versions in different portlets on a page.
 
 For general OSGi considerations with Vaadin Framework such as packaging and
 bundle manifests, and how to publish static resources such as themes and
@@ -31,7 +31,7 @@ and configure it to use the correct static resources.
 ----
 @Theme(MyTheme.THEME_NAME)
 @VaadinLiferayPortletConfiguration(name = "Vaadin.Tutorial.1", displayName = "Vaadin Tutorial App")
-@Component(service = UI.class)
+@Component(service = UI.class, scope = ServiceScope.PROTOTYPE)
 public class MyUI extends UI {
   ...
 }
@@ -43,6 +43,15 @@ property files that plain JSR-362 portlets require.
 Alternatively, the property [literal]#com.vaadin.osgi.liferay.portlet-ui=true#
 can be used when publishing a UI as an OSGi service to publish the UI as a portlet.
 
+The scope of the service should be set to [literal]#ServiceScope.PROTOTYPE#, as new instances
+of the UI will be needed. When this scope set, declarative services annotations can
+be used to get references to other services within a UI instance.
+
+This is not an absolute requirement if you are not using other declarative services
+annotations in your UI besides the [interfacename]#@Component#. If the scope is not
+set to prototype a warning will be logged and the constructor of the UI will be used
+when new instances are needed.
+
 [source, java]
 ----
 @Theme(MyTheme.THEME_NAME)
@@ -51,7 +60,8 @@ can be used when publishing a UI as an OSGi service to publish the UI as a portl
         "javax.portlet.name=my.vaadin.app.app.1.0.0",
         "javax.portlet.display-name=Tutorial Portlet",
         "javax.portlet.security-role-ref=power-user,user",
-        "com.vaadin.osgi.liferay.portlet-ui=true"})
+        "com.vaadin.osgi.liferay.portlet-ui=true"},
+        scope = ServiceScope.PROTOTYPE)
 public class MyUI extends UI {
   ...
 }
