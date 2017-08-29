@@ -488,12 +488,12 @@ public class Binder<BEAN> implements Serializable {
          * Sets the field to be required. This means two things:
          * <ol>
          * <li>the required indicator is visible</li>
-         * <li>the field value is validated for not being empty*</li>
+         * <li>the field value is validated for not being empty</li>
          * </ol>
          * For localizing the error message, use
          * {@link #asRequired(ErrorMessageProvider)}.
          * <p>
-         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
+         * Value not being the equal to what {@link HasValue#getEmptyValue()}
          * returns.
          *
          * @see #asRequired(ErrorMessageProvider)
@@ -512,9 +512,9 @@ public class Binder<BEAN> implements Serializable {
          * Sets the field to be required. This means two things:
          * <ol>
          * <li>the required indicator is visible</li>
-         * <li>the field value is validated for not being empty*</li>
+         * <li>the field value is validated for not being empty</li>
          * </ol>
-         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
+         * Value not being the equal to what {@link HasValue#getEmptyValue()}
          * returns.
          *
          * @see HasValue#setRequiredIndicatorVisible(boolean)
@@ -1609,6 +1609,9 @@ public class Binder<BEAN> implements Serializable {
      * level validators if a bean is currently set with
      * {@link #setBean(Object)}, and returns whether any of the validators
      * failed.
+     * <p>
+     * <b>Note:</b> Calling this method will not trigger status change events,
+     * unlike {@link #validate()}.
      *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
