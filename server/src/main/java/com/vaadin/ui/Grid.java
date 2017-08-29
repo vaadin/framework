@@ -4284,8 +4284,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param providers
      *            list of {@link DeclarativeValueProvider}s to store the data of
      *            each column to
-     *
-     * @since 8.1
      */
     protected void readData(Element body,
             List<DeclarativeValueProvider<T>> providers) {
