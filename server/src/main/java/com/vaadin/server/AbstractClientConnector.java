@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
@@ -95,7 +95,8 @@ public abstract class AbstractClientConnector
 
     private ErrorHandler errorHandler = null;
 
-    private static final ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = Collections
+            .synchronizedMap(new WeakHashMap<>());
 
     @Override
     public Registration addAttachListener(AttachListener listener) {
@@ -310,11 +311,8 @@ public abstract class AbstractClientConnector
         // exceptions flying around
         if (stateType == null) {
             // Cache because we don't need to do this once per instance
-            stateType = stateTypeCache.get(this.getClass());
-            if (stateType == null) {
-                stateType = findStateType();
-                stateTypeCache.put(this.getClass(), stateType);
-            }
+            stateType = stateTypeCache.computeIfAbsent(this.getClass(),
+                    key -> findStateType());
         }
 
         return stateType;
