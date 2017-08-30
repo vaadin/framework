@@ -14,3 +14,4 @@ are great, too.
 - link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
 - link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]
 - link:UsingVaadinInIBMDomino.asciidoc[Using Vaadin in IBM Domino]
+- link:VaadinTutorialForSwingDevelopers.asciidoc[Vaadin Tutorial For Swing Developers]
