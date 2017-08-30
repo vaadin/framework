@@ -95,6 +95,11 @@ public abstract class AbstractClientConnector
 
     private ErrorHandler errorHandler = null;
 
+    /**
+     * Static cache mapping AbstractClientConnector classes to their respective
+     * ShareState classes. Using WeakHashMap since entries are recalculated on
+     * demand.
+     */
     private static final Map<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = Collections
             .synchronizedMap(new WeakHashMap<>());
 
