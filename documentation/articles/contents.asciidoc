@@ -11,3 +11,6 @@ are great, too.
 [discrete]
 == Articles
 - link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing Portlets for the Websphere Portal Server]
+- link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
+- link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]
+- link:UsingVaadinInIBMDomino.asciidoc[Using Vaadin in IBM Domino]
