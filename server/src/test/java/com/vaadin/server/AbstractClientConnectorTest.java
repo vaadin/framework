@@ -97,8 +97,8 @@ public class AbstractClientConnectorTest {
         Assert.assertNotNull("Class should not yet be garbage collected",
                 classRef.get());
 
-        System.gc();
         for (int i = 0; i < 100; ++i) {
+            System.gc();
             if (stateTypeCache.size() < size) {
                 break;
             }
