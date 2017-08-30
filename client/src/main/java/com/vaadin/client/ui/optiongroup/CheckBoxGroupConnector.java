@@ -89,6 +89,7 @@ public class CheckBoxGroupConnector
             items.add(item);
         }
         getWidget().buildOptions(items);
+        getLayoutManager().setNeedsMeasure(this);
     }
 
     @Override
