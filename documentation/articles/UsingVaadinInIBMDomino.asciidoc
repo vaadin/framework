@@ -14,25 +14,25 @@ SDK for Luna and above from OpenNTF]
 2.  In Eclipse, from the Help menu select *Install New Software….*
 3.  Select *Add…*, then choose *Archive…* and navigate to the zip file
 downloaded. +
-image:https://lh3.googleusercontent.com/PznhvZ1_SL6oJAm_J7BDsd0uBRHK7HDgCm6XJThdSRrPxDymwjYWOxbDpJ5Kt_5VIOIR-SP4Zl9KDAwCG0wzWni1iTwK8FUcmT8P_mYo4GxdtGjPZS4D8Y9pQus3dHM-kNeaRmfChg[C:\Users\withersp\AppData\Local\Temp\SNAGHTML128d0a1f.PNG,width=406,height=327]
+image:https://lh3.googleusercontent.com/PznhvZ1_SL6oJAm_J7BDsd0uBRHK7HDgCm6XJThdSRrPxDymwjYWOxbDpJ5Kt_5VIOIR-SP4Zl9KDAwCG0wzWni1iTwK8FUcmT8P_mYo4GxdtGjPZS4D8Y9pQus3dHM-kNeaRmfChg[Add XPages repository]
 4.  You will need to deselect *Group items by category*. Two features
 will show. The first includes sources, so select the second and click
 *Next*. +
-image:https://lh6.googleusercontent.com/PcTpwSQ-XpG-6c51FQ0W2upuK7XTNmawdi8vVgMb31pCBUg8Lt1oInKXT7r7o21Qjj_KJtie3yLxtPvGtCnltuNwGtj42ChuMEJBkqys8nt3KCmilFydpm6iFrme6Ro-FL4uZtUjkA[C:\Users\withersp\AppData\Local\Temp\SNAGHTML12931a35.PNG,width=406,height=326]
+image:https://lh6.googleusercontent.com/PcTpwSQ-XpG-6c51FQ0W2upuK7XTNmawdi8vVgMb31pCBUg8Lt1oInKXT7r7o21Qjj_KJtie3yLxtPvGtCnltuNwGtj42ChuMEJBkqys8nt3KCmilFydpm6iFrme6Ro-FL4uZtUjkA[Select features]
 5.  Accept the terms and finish the dialog. You will be prompted to
 restart Eclipse to complete the install.
 6.  Select *Window* > *Preferences* (on Mac the location is *Eclipse* >
 *Preferences*). In the XPages SDK category tick *Automatically create
 JRE* and point to your local Notes and Domino installs. Then click
 *Apply*. +
-image:https://lh4.googleusercontent.com/22p8lT8-LrVTSKMDM0rpK2rFJT2EVfAuT62DyTYu6-x_eeddy6pEm1Io1haYlbGMwIE6PY8YRAUIEw0HQkXcHs6sNdnxkguXO4vv5VRKnoWUulDC6t46oDYI8Y9EjraTEV-dDHT6Wg[C:\Users\withersp\AppData\Local\Temp\SNAGHTML129ca841.PNG,width=403,height=352]
+image:https://lh4.googleusercontent.com/22p8lT8-LrVTSKMDM0rpK2rFJT2EVfAuT62DyTYu6-x_eeddy6pEm1Io1haYlbGMwIE6PY8YRAUIEw0HQkXcHs6sNdnxkguXO4vv5VRKnoWUulDC6t46oDYI8Y9EjraTEV-dDHT6Wg[Select XPages SDK]
 7.  In the *Java* > *Installed JREs* category you should now have two
 additional options, “XPages Domino JRE” and “XPages Notes JRE”. Under
 *Plug-in Development* > *Target Platform* click *Add…*. Select the
 *Domino Install Target* template and complete. +
-image:https://lh5.googleusercontent.com/q0i66CSxHHvtQHXX4d-sq6AzElKUH_Lj-D9bg2awQL0Gn3WkcW_eTC7p_WBL94GUpB7ohEGw_i33Mk9K-q8wJ-2F5cguXimdrcCJxkELNLYC1FBzmDsx6FJo3-7wotvPdPGYVq_EeA[C:\Users\withersp\AppData\Local\Temp\SNAGHTML129ee688.PNG,width=410,height=387]
+image:https://lh5.googleusercontent.com/q0i66CSxHHvtQHXX4d-sq6AzElKUH_Lj-D9bg2awQL0Gn3WkcW_eTC7p_WBL94GUpB7ohEGw_i33Mk9K-q8wJ-2F5cguXimdrcCJxkELNLYC1FBzmDsx6FJo3-7wotvPdPGYVq_EeA[Configure target definition]
 8.  Apply this as the target platform. +
-image:https://lh6.googleusercontent.com/bguj0lMgODnG96vnU-RyBXCpz-FsodyAuvR6E-X3AsOoi4jC5iEilOtfssxk_Mwl3Ks1RPIbm6Pu6VzjmhOAnaL5c219wStTvw8cGKlG3pKSCVuSCcqHmHHpAxDHqK9c8TYT18siGA[C:\Users\withersp\AppData\Local\Temp\SNAGHTML129fe7e0.PNG,width=419,height=386]
+image:https://lh6.googleusercontent.com/bguj0lMgODnG96vnU-RyBXCpz-FsodyAuvR6E-X3AsOoi4jC5iEilOtfssxk_Mwl3Ks1RPIbm6Pu6VzjmhOAnaL5c219wStTvw8cGKlG3pKSCVuSCcqHmHHpAxDHqK9c8TYT18siGA[Apply target definition]
 
 If you do not have a Domino server installed, there is an alternative
 approach. However, to test your OSGi plugin, you will need to create a
@@ -54,19 +54,19 @@ Platform*.
 3.  Edit the existing target platform configuration and in the dialog,
 click *Add…*, then *Directory*, then Next. Browse to and select the
 folder where you extracted the Update Site.> +
-image:https://lh5.googleusercontent.com/H2SiM2GdW9GYFzX_Az1Y7S_KAPnxYaGxwludqlqQoT3P1oVRDNxlC53uTt6SIrtQkPn42hr7yYqaJPK3hY9yF7BVeH8dPdwknzwLdeTIGgOXToWkKhy4smxg0hucyt3aWbmtjFpsgg[C:\Users\withersp\AppData\Local\Temp\SNAGHTML17a427b7.PNG,width=411,height=388]
+image:https://lh5.googleusercontent.com/H2SiM2GdW9GYFzX_Az1Y7S_KAPnxYaGxwludqlqQoT3P1oVRDNxlC53uTt6SIrtQkPn42hr7yYqaJPK3hY9yF7BVeH8dPdwknzwLdeTIGgOXToWkKhy4smxg0hucyt3aWbmtjFpsgg[Add content]
 4.  The current release of Domino, 9.0.1, only supports Java 1.6. The
 next release, probably called Domino 9.0.2 and expected to ship first
 half 2016, is expected to include Java 1.8. But in the meantime, it’s
 best to set the JRE accordingly. In the preferences, go to *Java* >
 *Installed JREs* category.
 5.  *Add…*, *Standard VM*, then *Next* +
-image:https://lh6.googleusercontent.com/CGTOZTDGlIzgLNWn-1gTnrmhl7knp3SM2up9CX1cknk4Fyu5NfzQXjBDu2_yBz6gfq2HBppWH4gessWitIqUMOW793v_E7VekqUPJSAw0lVXj0inSusqi7gzjw6NjRsIDwJqvirjDA[C:\Users\withersp\AppData\Local\Temp\SNAGHTML17a8fd0f.PNG,width=313,height=270]
+image:https://lh6.googleusercontent.com/CGTOZTDGlIzgLNWn-1gTnrmhl7knp3SM2up9CX1cknk4Fyu5NfzQXjBDu2_yBz6gfq2HBppWH4gessWitIqUMOW793v_E7VekqUPJSAw0lVXj0inSusqi7gzjw6NjRsIDwJqvirjDA[Add JRE]
 6.  Click *Directory* and browse to your IBM Notes install’s “jvm”
 library. Give it an appropriate name and click *Finish*. Alternatively,
 if you don’t have IBM Notes installed on the development environment,
 download Java SE 6 SDK from Oracle. +
-image:https://lh5.googleusercontent.com/ipTTRFnUl_Ew0UE0X7XOaqqGcjEwUMAosAY6LDJ0_XZg8d7TyjsnRmDXDjGY3yrCOZ_54q9a23eqKZU0G__HwLKlglRxw5XeW2eDHvKPsgBpRu7YKcP46nKL_2KcCN4ljt1F3NAlFw[C:\Users\withersp\AppData\Local\Temp\SNAGHTML17aa6997.PNG,width=313,height=310]
+image:https://lh5.googleusercontent.com/ipTTRFnUl_Ew0UE0X7XOaqqGcjEwUMAosAY6LDJ0_XZg8d7TyjsnRmDXDjGY3yrCOZ_54q9a23eqKZU0G__HwLKlglRxw5XeW2eDHvKPsgBpRu7YKcP46nKL_2KcCN4ljt1F3NAlFw[Configure JRE]
 
 [[setting-up-vaadin]]
 Setting up Vaadin
@@ -77,7 +77,7 @@ up your environment.
 
 1.  *Select *Help* > *Eclipse Marketplace…*.*
 2.  Search for "Vaadin" amd install the**Vaadin Plugin for Eclipse** +
-image:https://lh4.googleusercontent.com/SpgGN3m6aFksfRJG47RVBg4qi5D7r9dhfaIUwHkm3A8TLfkF6M2farq2ZZf-zvjZakrNl1wALHHqGtiP6GNoVyIFHJs9Dpr9Tt3yqtWS6TwFMN1qsJ47o3T4UqU-G1SW0KCIbQGBnA[C:\Users\withersp\AppData\Local\Temp\SNAGHTML17b04777.PNG,width=340,height=443]
+image:https://lh4.googleusercontent.com/SpgGN3m6aFksfRJG47RVBg4qi5D7r9dhfaIUwHkm3A8TLfkF6M2farq2ZZf-zvjZakrNl1wALHHqGtiP6GNoVyIFHJs9Dpr9Tt3yqtWS6TwFMN1qsJ47o3T4UqU-G1SW0KCIbQGBnA[Select Vaadin plugin]
 3.  The options to install will include the *Vaadin Designer*, so leave
 all selected, confirm and accept the license. You will be prompted to
 restart Eclipse to complete the install.
