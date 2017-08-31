@@ -70,6 +70,9 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     public void buildOptions(UIDL uidl) {
+        int scrollTop = select.getElement().getScrollTop();
+        int rowCount = getRows();
+
         select.setMultipleSelect(isMultiselect());
 
         Set<String> previousKeys = new HashSet<String>();
@@ -110,6 +113,10 @@ public class VListSelect extends VOptionGroupBase {
 
         if (getRows() > 0) {
             select.setVisibleItemCount(getRows());
+        }
+
+        if (rowCount == getRows()) {
+            select.getElement().setScrollTop(scrollTop);
         }
     }
 
