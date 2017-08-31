@@ -1,10 +1,11 @@
 package com.vaadin.tests.components.radiobuttongroup;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.GridLayoutElement;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class RadioButtonGroupInGridLayoutTest extends MultiBrowserTest {
 
@@ -12,12 +13,14 @@ public class RadioButtonGroupInGridLayoutTest extends MultiBrowserTest {
     public void slotSizeRemainsUnchangedAfterSelectingItem() {
         openTestURL();
         GridLayoutElement gridLayout = $(GridLayoutElement.class).first();
-        String before = gridLayout.getCssValue("width");
+        int before = gridLayout.getSize().getWidth();
 
-        RadioButtonGroupElement radioButtonGroup = $(RadioButtonGroupElement.class).first();
+        RadioButtonGroupElement radioButtonGroup = $(
+                RadioButtonGroupElement.class).first();
         radioButtonGroup.setValue("A");
-        String after = gridLayout.getCssValue("width");
+        int after = gridLayout.getSize().getWidth();
 
-        Assert.assertEquals(before, after);
+        Assert.assertEquals("GridLayout size changed when selecting a value",
+                before, after);
     }
 }
