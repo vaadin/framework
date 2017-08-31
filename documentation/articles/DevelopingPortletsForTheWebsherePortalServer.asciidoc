@@ -42,7 +42,7 @@ interesting part is the configuration of the portlet.xml file.
 Portlet.xml
 ^^^^^^^^^^^
 
-[source]
+[source,xml]
 ....
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" id="com.gisag.vaadin.ClickMeUI">     
