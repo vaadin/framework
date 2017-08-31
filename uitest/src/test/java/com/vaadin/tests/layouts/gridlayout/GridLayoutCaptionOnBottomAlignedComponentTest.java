@@ -22,10 +22,10 @@ public class GridLayoutCaptionOnBottomAlignedComponentTest extends MultiBrowserT
         assertEquals("Caption and component have the same horizontal alignment",
             caption.getLocation().x, component.getLocation().x);
 
-        assertEquals("Caption is placed directly above the component",
-            caption.getLocation().y, component.getLocation().y - caption.getSize().height - 1);
-        // The -1 in the assertion is most likely needed because of rounding when the elements are measured in
-        // the browser.
+        // We have to do the assertion in this way because different browsers on different operating systems
+        // measure the height of the caption in different ways.
+        int diff = Math.abs(caption.getLocation().y - component.getLocation().y + caption.getSize().height);
+        assertLessThanOrEqual("Caption is placed directly above the component", diff, 1);
     }
 
     @Test
