@@ -345,8 +345,8 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
-
-        grid.setHeaderVisible(state.visible);
+        Scheduler.get()
+                .scheduleFinally(() -> grid.setHeaderVisible(state.visible));
     }
 
     @OnStateChange({ "bodyRowHeight", "headerRowHeight", "footerRowHeight" })
@@ -462,7 +462,8 @@ public class GridConnector extends AbstractListingConnector
             updateStaticRow(rowState, row);
         }
 
-        grid.setFooterVisible(state.visible);
+        Scheduler.get()
+                .scheduleFinally(() -> grid.setFooterVisible(state.visible));
     }
 
     @OnStateChange({ "sortColumns", "sortDirs" })
