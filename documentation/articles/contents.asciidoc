@@ -10,7 +10,7 @@ are great, too.
 
 [discrete]
 == Articles
-- link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing portlets for the Websphere Portal Server]
+- link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing portlets for the WebSphere Portal Server]
 - link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
 - link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]
 - link:UsingVaadinInIBMDomino.asciidoc[Using Vaadin in IBM Domino]
