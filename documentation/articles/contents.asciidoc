@@ -17,3 +17,4 @@ are great, too.
 - link:VaadinTutorialForSwingDevelopers.asciidoc[Vaadin tutorial for Swing developers]
 - link:SettingAndReadingSessionAttributes.asciidoc[Setting and reading session attributes]
 - link:EnablingServerPush.asciidoc[Enabling server push]
+- link:CleaningUpResourcesInAUI.asciidoc[Cleaning up resources in a UI]
