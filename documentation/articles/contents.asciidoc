@@ -27,3 +27,6 @@ are great, too.
 - link:FindingTheCurrentUIAndPageAndVaadinSession.asciidoc[Finding the current UI and page and Vaadin Session]
 - link:CreatingAnApplicationTHatPreservesStateOnRefresh.asciidoc[Creating an application that preserves state on refresh]
 - link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending events from the client to the server using RPC]
+- link:HandlingLogout.asciidoc[Handling logout]
+- link:ScalableWebApplications.asciidoc[Scalable web applications]
+- link:RememberToTheSetTheLocale.asciidoc[Remember to the set the locale]
