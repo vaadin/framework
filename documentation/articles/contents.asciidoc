@@ -19,3 +19,5 @@ are great, too.
 - link:EnablingServerPush.asciidoc[Enabling server push]
 - link:CleaningUpResourcesInAUI.asciidoc[Cleaning up resources in a UI]
 - link:SendingEmailFromJavaApplications.asciidoc[Sending email from Java applications]
+- link:OptimizingSluggishUI.asciidoc[Optimizing sluggish UI]
+- link:UsingParametersWithViews.asciidoc[Using parameters with views]
