@@ -18,3 +18,4 @@ are great, too.
 - link:SettingAndReadingSessionAttributes.asciidoc[Setting and reading session attributes]
 - link:EnablingServerPush.asciidoc[Enabling server push]
 - link:CleaningUpResourcesInAUI.asciidoc[Cleaning up resources in a UI]
+- link:SendingEmailFromJavaApplications.asciidoc[Sending email from Java applications]
