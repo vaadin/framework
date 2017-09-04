@@ -315,7 +315,7 @@ public class FileUploadHandler implements RequestHandler {
             readByte = stream.read();
         }
         byte[] bytes = bout.toByteArray();
-        return new String(bytes, 0, bytes.length - 1, UTF8);
+        return new String(bytes, UTF8);
     }
 
     /**
