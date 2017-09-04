@@ -1098,7 +1098,7 @@ public class Binder<BEAN> implements Serializable {
     /**
      * Class containing the constraints for filtering nested properties.
      *
-     * @since 8.1.x
+     * @since 8.x.y
      *
      */
     protected static class PropertyFilterDefinition {
@@ -1160,6 +1160,7 @@ public class Binder<BEAN> implements Serializable {
      *            the bean type to use, not <code>null</code>
      * @param scanNestedDefinitions
      *            if true, scan for nested property definitions as well
+     * @since 8.x.y
      */
     public Binder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
         this(BeanPropertySet.get(beanType, scanNestedDefinitions,
