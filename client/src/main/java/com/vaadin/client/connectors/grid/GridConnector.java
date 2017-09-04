@@ -345,6 +345,7 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
         grid.setHeaderVisible(state.visible);
     }
 
