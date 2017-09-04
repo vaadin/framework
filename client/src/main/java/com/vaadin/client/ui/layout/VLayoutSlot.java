@@ -168,6 +168,7 @@ public abstract class VLayoutSlot {
 
         int captionHeight;
         VCaption caption = getCaption();
+        Style captionStyle = caption == null ? null : caption.getElement().getStyle();
         if (caption == null || caption.shouldBePlacedAfterComponent()) {
             style.clearPaddingTop();
             captionHeight = 0;
@@ -215,10 +216,15 @@ public abstract class VLayoutSlot {
             padding += captionHeight;
 
             widget.getElement().getStyle().setTop(padding, Unit.PX);
+            if (captionStyle != null) {
+                captionStyle.setTop(padding - captionHeight, Unit.PX);
+            }
         } else {
             // Reset top when changing back to align top
             widget.getElement().getStyle().clearTop();
-
+            if (captionStyle != null) {
+                captionStyle.setTop(0, Unit.PX);
+            }
         }
     }
 
