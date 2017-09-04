@@ -66,6 +66,7 @@ public class TooltipInfo {
      * @param errorMessage
      *            error description
      * @param identifier
+     *            the tooltip's identifier
      *
      * @deprecated use {@link #TooltipInfo(String, ContentMode, String, Object)}
      *             instead
@@ -77,13 +78,15 @@ public class TooltipInfo {
 
     /**
      * Constructs a new instance using the {@code tooltip} for the title,
-     * {@code errorMessage} as a description and {@code identifier} as its id.
+     * {@code errorMessage} as a description, {@code identifier} as its id and
+     * {@code errorLevel} as the error level.
      *
      * @param tooltip
      *            tooltip title
      * @param errorMessage
      *            error description
      * @param identifier
+     *            the tooltip's identifier
      * @param errorLevel
      *            error level
      *
@@ -96,20 +99,64 @@ public class TooltipInfo {
         this(tooltip, ContentMode.HTML, errorMessage, identifier, errorLevel);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param mode
+     *         content mode
+     */
     public TooltipInfo(String tooltip, ContentMode mode) {
         setTitle(tooltip);
         setContentMode(mode);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param mode
+     *         content mode
+     * @param errorMessage
+     *         error message
+     */
     public TooltipInfo(String tooltip, ContentMode mode, String errorMessage) {
         this(tooltip, mode, errorMessage, null);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param mode
+     *         content mode
+     * @param errorMessage
+     *         error message
+     * @param identifier
+     *         the tooltip's identifier
+     */
     public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
             Object identifier) {
         this(tooltip, mode, errorMessage, identifier, null);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param mode
+     *         content mode
+     * @param errorMessage
+     *         error message
+     * @param identifier
+     *         the tooltip's identifier
+     * @param errorLevel
+     *         error level
+     */
     public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
             Object identifier, ErrorLevel errorLevel) {
         setIdentifier(identifier);
