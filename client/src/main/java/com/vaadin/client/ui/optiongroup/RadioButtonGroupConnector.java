@@ -118,6 +118,7 @@ public class RadioButtonGroupConnector
             options.add(dataSource.getRow(i));
         }
         select.buildOptions(options);
+        getLayoutManager().setNeedsMeasure(this);
         updateSelectedItem();
     }
 }
