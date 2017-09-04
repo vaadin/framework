@@ -95,6 +95,8 @@ import com.vaadin.util.ReflectTools;
  */
 public class Binder<BEAN> implements Serializable {
 
+    protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
+
     /**
      * Represents the binding between a field and a data property.
      *
@@ -405,9 +407,11 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null : fieldValue,
+                            ? null
+                            : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation : modelValue);
+                            ? nullRepresentation
+                            : modelValue);
         }
 
         /**
@@ -898,8 +902,10 @@ public class Binder<BEAN> implements Serializable {
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            return converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext());
+            TARGET target = getter.apply(bean);
+            ValueContext valueContext = createValueContext();
+            return converterValidatorChain.convertToPresentation(target,
+                    valueContext);
         }
 
         /**
@@ -1090,14 +1096,74 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
+     * Class containing the constraints for filtering nested properties.
+     *
+     * @since 8.1.x
+     *
+     */
+    protected static class PropertyFilterDefinition {
+        private int maxNestingDepth;
+        private List<String> ignorePackageNamesStartingWith;
+
+        public PropertyFilterDefinition(int maxNestingDepth,
+                List<String> ignorePackageNamesStartingWith) {
+            this.maxNestingDepth = maxNestingDepth;
+            this.ignorePackageNamesStartingWith = ignorePackageNamesStartingWith;
+        }
+
+        /**
+         * Returns the maximum amount of nesting levels for sub-properties.
+         *
+         * @return maximum nesting depth
+         */
+        public int getMaxNestingDepth() {
+            return maxNestingDepth;
+        }
+
+        /**
+         * Returns a list of package name prefixes to ignore.
+         *
+         * @return list of strings that
+         */
+        public List<String> getIgnorePackageNamesStartingWith() {
+            return ignorePackageNamesStartingWith;
+        }
+
+        /**
+         * Get the default nested property filtering conditions.
+         *
+         * @return default property filter
+         */
+        public static PropertyFilterDefinition getDefaultFilter() {
+            return new PropertyFilterDefinition(MAX_PROPERTY_NESTING_DEPTH,
+                    Arrays.asList("java"));
+        }
+    }
+
+    /**
      * Creates a new binder that uses reflection based on the provided bean type
-     * to resolve bean properties.
+     * to resolve bean properties. Allows scanning for nested properties as
+     * well.
      *
      * @param beanType
      *            the bean type to use, not <code>null</code>
      */
     public Binder(Class<BEAN> beanType) {
         this(BeanPropertySet.get(beanType));
+    }
+
+    /**
+     * Creates a new binder that uses reflection based on the provided bean type
+     * to resolve bean properties.
+     *
+     * @param beanType
+     *            the bean type to use, not <code>null</code>
+     * @param scanNestedDefinitions
+     *            if true, scan for nested property definitions as well
+     */
+    public Binder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
+        this(BeanPropertySet.get(beanType, scanNestedDefinitions,
+                PropertyFilterDefinition.getDefaultFilter()));
     }
 
     /**
@@ -2057,7 +2123,8 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue() : modelValue,
+                                ? field.getEmptyValue()
+                                : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);
@@ -2351,7 +2418,6 @@ public class Binder<BEAN> implements Serializable {
     private Optional<PropertyDefinition<BEAN, ?>> getPropertyDescriptor(
             Field field) {
         PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
-
         String propertyId;
         if (propertyIdAnnotation != null) {
             // @PropertyId(propertyId) always overrides property id
@@ -2359,9 +2425,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             propertyId = field.getName();
         }
-
         String minifiedFieldName = minifyFieldName(propertyId);
-
         return propertySet.getProperties().map(PropertyDefinition::getName)
                 .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
                 .findFirst().flatMap(propertySet::getProperty);

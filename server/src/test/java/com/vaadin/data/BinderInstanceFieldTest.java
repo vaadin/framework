@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractTextField;
@@ -43,6 +44,19 @@ public class BinderInstanceFieldTest {
 
         @PropertyId("birthDate")
         private DateField birthDateField;
+    }
+
+    public static class BindNestedFieldsUsingAnnotation extends FormLayout {
+        @PropertyId("address.streetAddress")
+        private TextField streetAddressField;
+    }
+
+    public static class BindDeepNestedFieldsUsingAnnotation extends FormLayout {
+        @PropertyId("first.address.streetAddress")
+        private TextField firstStreetField;
+
+        @PropertyId("second.address.streetAddress")
+        private TextField secondStreetField;
     }
 
     public static class BindOnlyOneField extends FormLayout {
@@ -314,6 +328,77 @@ public class BinderInstanceFieldTest {
         Assert.assertEquals(form.nameField.getValue(), person.getFirstName());
         Assert.assertEquals(form.birthDateField.getValue(),
                 person.getBirthDate());
+    }
+
+    @Test
+    public void bindInstanceFields_bindNestedFieldUsingAnnotation() {
+        BindNestedFieldsUsingAnnotation form = new BindNestedFieldsUsingAnnotation();
+        Binder<Person> binder = new Binder<>(Person.class, true);
+        binder.bindInstanceFields(form);
+
+        Person person = new Person();
+        Address address = new Address();
+        address.setStreetAddress("Foo st.");
+        person.setAddress(address);
+
+        binder.setBean(person);
+
+        Assert.assertEquals(person.getAddress().getStreetAddress(),
+                form.streetAddressField.getValue());
+
+        form.streetAddressField.setValue("Bar ave.");
+        Assert.assertEquals(form.streetAddressField.getValue(),
+                person.getAddress().getStreetAddress());
+    }
+
+    @Test
+    public void bindInstanceFields_bindDeepNestedFieldsUsingAnnotation() {
+        final class Couple {
+            Person first;
+            Person second;
+
+            public Person getFirst() {
+                return first;
+            }
+
+            public Person getSecond() {
+                return second;
+            }
+
+            public void setFirst(Person first) {
+                this.first = first;
+            }
+
+            public void setSecond(Person second) {
+                this.second = second;
+            }
+        }
+        BindDeepNestedFieldsUsingAnnotation form = new BindDeepNestedFieldsUsingAnnotation();
+        Binder<Couple> binder = new Binder<>(Couple.class, true);
+        binder.bindInstanceFields(form);
+        Person first = new Person();
+        Person second = new Person();
+        Address firstAddress = new Address();
+        firstAddress.setStreetAddress("Foo st.");
+        first.setAddress(firstAddress);
+        Address secondAddress = new Address();
+        second.setAddress(secondAddress);
+        secondAddress.setStreetAddress("Bar ave.");
+        Couple couple = new Couple();
+        couple.setFirst(first);
+        couple.setSecond(second);
+
+        binder.setBean(couple);
+
+        Assert.assertEquals(couple.first.getAddress().getStreetAddress(),
+                form.firstStreetField.getValue());
+        Assert.assertEquals(couple.second.getAddress().getStreetAddress(),
+                form.secondStreetField.getValue());
+
+        form.firstStreetField.setValue(second.getAddress().getStreetAddress());
+        Assert.assertEquals(form.firstStreetField.getValue(),
+                first.getAddress().getStreetAddress());
+
     }
 
     @Test

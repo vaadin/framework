@@ -23,7 +23,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -163,9 +162,7 @@ public class BeanPropertySetTest {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.firstName")
                 .orElseThrow(RuntimeException::new);
-
         ValueProvider<FatherAndSon, ?> getter = definition.getGetter();
-
         getter.apply(new FatherAndSon("Jon", "Doe", null, null));
     }
 
