@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.nativebutton;
 
 import com.google.gwt.user.client.DOM;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -60,12 +61,12 @@ public class NativeButtonConnector extends AbstractComponentConnector {
         if (null != getState().errorMessage) {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement
-                        .setClassName(ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                getWidget().errorIndicatorElement.setClassName(
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
             }
 
             ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     getState().errorLevel);
 
             getWidget().getElement().insertBefore(

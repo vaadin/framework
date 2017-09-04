@@ -617,11 +617,12 @@ public class Slot extends SimplePanel {
         if (error != null && showError) {
             if (errorIcon == null) {
                 errorIcon = DOM.createSpan();
-                errorIcon.setClassName(ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                errorIcon.setClassName(
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
             }
 
             ErrorUtil.setErrorLevelStyle(errorIcon,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
 
             caption.appendChild(errorIcon);
         } else if (errorIcon != null) {
