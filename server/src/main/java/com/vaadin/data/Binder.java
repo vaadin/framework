@@ -2389,15 +2389,19 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Finds and removes a Binding for the given field.
+     * Finds and removes all Bindings for the given field.
      * 
      * @param field
      *            the field to remove from bindings
+     * 
+     * @since 8.2
      */
     public void removeBinding(HasValue<?> field) {
-        Objects.requireNonNull(field, "Field can't be null");
-        bindings.stream().filter(binding -> field.equals(binding.getField()))
-                .findFirst().ifPresent(this::removeBinding);
+        Objects.requireNonNull(field, "Field can not be null");
+        Set<BindingImpl<BEAN, ?, ?>> toRemove = bindings.stream()
+                .filter(binding -> field.equals(binding.getField()))
+                .collect(Collectors.toSet());
+        toRemove.forEach(this::removeBinding);
     }
 
     /**
@@ -2405,25 +2409,27 @@ public class Binder<BEAN> implements Serializable {
      * 
      * @param binding
      *            the binding to remove
+     * 
+     * @since 8.2
      */
     public void removeBinding(Binding<BEAN, ?> binding) {
-        Objects.requireNonNull(binding, "Binding can't be null");
+        Objects.requireNonNull(binding, "Binding can not be null");
         if (bindings.remove(binding)) {
-            boundProperties.entrySet().stream()
-                    .filter(entry -> entry.getValue().equals(binding))
-                    .findFirst()
-                    .ifPresent(entry -> boundProperties.remove(entry.getKey()));
+            boundProperties.entrySet()
+                    .removeIf(entry -> entry.getValue().equals(binding));
         }
     }
 
     /**
-     * Finds and removes a Binding for the given property name.
+     * Finds and removes the Binding for the given property name.
      * 
      * @param propertyName
      *            the propertyName to remove from bindings
+     * 
+     * @since 8.2
      */
     public void removeBinding(String propertyName) {
-        Objects.requireNonNull(propertyName, "Property name can't be null");
+        Objects.requireNonNull(propertyName, "Property name can not be null");
         Optional.ofNullable(boundProperties.get(propertyName))
                 .ifPresent(this::removeBinding);
     }
