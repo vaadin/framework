@@ -2108,7 +2108,7 @@ public class Binder<BEAN> implements Serializable {
      *
      * MyForm myForm = new MyForm();
      * ...
-     * binder.bindMemberFields(myForm);
+     * binder.bindInstanceFields(myForm);
      * </pre>
      *
      * This binds the firstName TextField to a "firstName" property in the item,
