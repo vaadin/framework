@@ -1611,7 +1611,10 @@ public class Binder<BEAN> implements Serializable {
      * failed.
      * <p>
      * <b>Note:</b> Calling this method will not trigger status change events,
-     * unlike {@link #validate()}.
+     * unlike {@link #validate()} and will not modify the UI. To also update
+     * error indicators on fields, use {@code validate().isOk()}.
+     *
+     * @see #validate()
      *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
