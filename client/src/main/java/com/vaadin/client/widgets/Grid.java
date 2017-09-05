@@ -700,8 +700,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *            true to show this section, false to hide
          */
         public void setVisible(boolean visible) {
-            this.visible = visible;
-            requestSectionRefresh();
+            if (this.visible != visible) {
+                this.visible = visible;
+                requestSectionRefresh();
+            }
         }
 
         /**
