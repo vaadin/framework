@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
@@ -681,5 +682,75 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         BindingBuilder<Person, String> forField = binder.forField(nameField);
         forField.withConverter(new StringToDoubleConverter("Failed"));
         forField.bind(Person::getFirstName, Person::setFirstName);
+    }
+
+    @Test
+    public void remove_field_binding() {
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .bind(Person::getAge, Person::setAge);
+
+        // Test that the binding does work
+        Assert.assertTrue("Field not initially empty", ageField.isEmpty());
+        binder.setBean(item);
+        Assert.assertEquals("Binding did not work",
+                String.valueOf(item.getAge()), ageField.getValue());
+        binder.setBean(null);
+        Assert.assertTrue("Field not cleared", ageField.isEmpty());
+
+        // Remove the binding
+        binder.removeBinding(ageField);
+
+        // Test that it does not work anymore
+        binder.setBean(item);
+        Assert.assertNotEquals("Binding was not removed",
+                String.valueOf(item.getAge()), ageField.getValue());
+    }
+
+    @Test
+    public void remove_propertyname_binding() {
+        // Use a bean aware binder
+        Binder<Person> binder = new Binder<>(Person.class);
+
+        binder.bind(nameField, "firstName");
+
+        // Test that the binding does work
+        Assert.assertTrue("Field not initially empty", nameField.isEmpty());
+        binder.setBean(item);
+        Assert.assertEquals("Binding did not work", item.getFirstName(),
+                nameField.getValue());
+        binder.setBean(null);
+        Assert.assertTrue("Field not cleared", nameField.isEmpty());
+
+        // Remove the binding
+        binder.removeBinding("firstName");
+
+        // Test that it does not work anymore
+        binder.setBean(item);
+        Assert.assertNotEquals("Binding was not removed", item.getFirstName(),
+                nameField.getValue());
+    }
+
+    @Test
+    public void remove_binding() {
+        Binding<Person, Integer> binding = binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .bind(Person::getAge, Person::setAge);
+
+        // Test that the binding does work
+        Assert.assertTrue("Field not initially empty", ageField.isEmpty());
+        binder.setBean(item);
+        Assert.assertEquals("Binding did not work",
+                String.valueOf(item.getAge()), ageField.getValue());
+        binder.setBean(null);
+        Assert.assertTrue("Field not cleared", ageField.isEmpty());
+
+        // Remove the binding
+        binder.removeBinding(binding);
+
+        // Test that it does not work anymore
+        binder.setBean(item);
+        Assert.assertNotEquals("Binding was not removed",
+                String.valueOf(item.getAge()), ageField.getValue());
     }
 }

@@ -2387,4 +2387,50 @@ public class Binder<BEAN> implements Serializable {
     public Stream<HasValue<?>> getFields() {
         return bindings.stream().map(Binding::getField);
     }
+
+    /**
+     * Finds and removes all Bindings for the given field.
+     * 
+     * @param field
+     *            the field to remove from bindings
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(HasValue<?> field) {
+        Objects.requireNonNull(field, "Field can not be null");
+        Set<BindingImpl<BEAN, ?, ?>> toRemove = bindings.stream()
+                .filter(binding -> field.equals(binding.getField()))
+                .collect(Collectors.toSet());
+        toRemove.forEach(this::removeBinding);
+    }
+
+    /**
+     * Removes the given Binding from this Binder.
+     * 
+     * @param binding
+     *            the binding to remove
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(Binding<BEAN, ?> binding) {
+        Objects.requireNonNull(binding, "Binding can not be null");
+        if (bindings.remove(binding)) {
+            boundProperties.entrySet()
+                    .removeIf(entry -> entry.getValue().equals(binding));
+        }
+    }
+
+    /**
+     * Finds and removes the Binding for the given property name.
+     * 
+     * @param propertyName
+     *            the propertyName to remove from bindings
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(String propertyName) {
+        Objects.requireNonNull(propertyName, "Property name can not be null");
+        Optional.ofNullable(boundProperties.get(propertyName))
+                .ifPresent(this::removeBinding);
+    }
 }
