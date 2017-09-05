@@ -1101,7 +1101,8 @@ public class Binder<BEAN> implements Serializable {
      * @since 8.x.y
      *
      */
-    protected static class PropertyFilterDefinition {
+    protected static class PropertyFilterDefinition implements Serializable {
+        private static final long serialVersionUID = 7035499395627976263L;
         private int maxNestingDepth;
         private List<String> ignorePackageNamesStartingWith;
 

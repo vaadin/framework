@@ -282,7 +282,8 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     /**
      * Key for identifying cached BeanPropertySet instances
      */
-    private static class InstanceKey {
+    private static class InstanceKey implements Serializable {
+        private static final long serialVersionUID = -1363522555010923369L;
         private Class<?> type;
         private boolean checkNestedDefinitions;
         private int depth;
