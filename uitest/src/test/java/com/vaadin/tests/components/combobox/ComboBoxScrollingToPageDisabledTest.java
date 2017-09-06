@@ -17,6 +17,7 @@ package com.vaadin.tests.components.combobox;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.newelements.ComboBoxElement;
@@ -49,5 +50,23 @@ public class ComboBoxScrollingToPageDisabledTest extends MultiBrowserTest {
         $(LabelElement.class).first().click();
 
         org.junit.Assert.assertEquals("Item 99", combo.getText());
+    }
+
+    @Test
+    public void checkUpdateFromServerDisplayedCorrectly() {
+        ButtonElement selFirstButton = $(ButtonElement.class)
+                .caption("Select first").first();
+        ButtonElement sel50Button = $(ButtonElement.class)
+                .caption("Select index 50").first();
+        ComboBoxElement comboBox = $(ComboBoxElement.class).first();
+
+        selFirstButton.click();
+        org.junit.Assert.assertEquals("Item 0", comboBox.getText());
+        sel50Button.click();
+        org.junit.Assert.assertEquals("Item 50", comboBox.getText());
+        selFirstButton.click();
+        org.junit.Assert.assertEquals("Item 0", comboBox.getText());
+        sel50Button.click();
+        org.junit.Assert.assertEquals("Item 50", comboBox.getText());
     }
 }
