@@ -1028,7 +1028,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                         }
                     }
                     try {
-                        ui.getConnectorTracker().cleanConnectorMap();
+                        ui.getConnectorTracker().cleanConnectorMap(false);
                     } catch (AssertionError | Exception e) {
                         getLogger().log(Level.SEVERE,
                                 "Exception while cleaning connector map for ui "

@@ -91,6 +91,11 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
+        public void cleanConnectorMap(boolean force) {
+            tracker.cleanConnectorMap(force);
+        }
+
+        @Override
         public void cleanConnectorMap() {
             tracker.cleanConnectorMap();
         }
