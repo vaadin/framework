@@ -71,7 +71,7 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Connectors that have been unregistered and should be cleaned up the next
-     * time {@link #cleanConnectorMap()} is invoked unless they have been
+     * time {@link #cleanConnectorMap(boolean)} is invoked unless they have been
      * registered again.
      */
     private final Set<ClientConnector> unregisteredConnectors = new HashSet<>();
@@ -264,12 +264,27 @@ public class ConnectorTracker implements Serializable {
 
     /**
      * Cleans the connector map from all connectors that are no longer attached
-     * to the application. This should only be called by the framework.
+     * to the application if there are dirty connectors or the force flag is
+     * true. This should only be called by the framework.
+     *
+     * @param force
+     *            true to force cleaning
      */
-    public void cleanConnectorMap() {
-        if (!unregisteredConnectors.isEmpty()) {
-            removeUnregisteredConnectors();
+    public void cleanConnectorMap(boolean force) {
+        if (force || !dirtyConnectors.isEmpty()) {
+            cleanConnectorMap();
         }
+    }
+
+    /**
+     * Cleans the connector map from all connectors that are no longer attached
+     * to the application. This should only be called by the framework.
+     *
+     * @deprecated use {@link #cleanConnectorMap(boolean)} instead
+     */
+    @Deprecated
+    public void cleanConnectorMap() {
+        removeUnregisteredConnectors();
 
         cleanStreamVariables();
 
