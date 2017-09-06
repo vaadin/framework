@@ -218,11 +218,33 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         private final PropertyDefinition<T, ?> parent;
 
+        private boolean useLongFormName = false;
+
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
                 PropertyDescriptor descriptor) {
             super(propertySet, parent.getType(), descriptor);
             this.parent = parent;
+        }
+
+        /**
+         * Create nested property definition. Allows use of a long form name.
+         *
+         * @param propertySet
+         *            property set this property belongs is.
+         * @param parent
+         *            parent property for this nested property
+         * @param descriptor
+         *            property descriptor
+         * @param useLongFormName
+         *            use format grandparent.parent.property for name if true
+         * @since 8.y.x
+         */
+        public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
+                PropertyDefinition<T, ?> parent, PropertyDescriptor descriptor,
+                boolean useLongFormName) {
+            this(propertySet, parent, descriptor);
+            this.useLongFormName = useLongFormName;
         }
 
         @Override
@@ -275,8 +297,12 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         @Override
         public String getName() {
-            return parent.getName() + "." + super.getName();
+            if (useLongFormName) {
+                return parent.getName() + "." + super.getName();
+            }
+            return super.getName();
         }
+
     }
 
     /**
@@ -414,7 +440,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                     PropertyDescriptor subDescriptor = BeanUtil
                             .getPropertyDescriptor(beanType, name);
                     moreProps.put(name, new NestedBeanPropertyDefinition<>(this,
-                            parentProperty, subDescriptor));
+                            parentProperty, subDescriptor, true));
 
                 }
             } catch (IntrospectionException e) {
