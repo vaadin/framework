@@ -30,3 +30,4 @@ are great, too.
 - link:HandlingLogout.asciidoc[Handling logout]
 - link:ScalableWebApplications.asciidoc[Scalable web applications]
 - link:RememberToTheSetTheLocale.asciidoc[Remember to the set the locale]
+- link:MVCBasicsInITMillToolkit.asciidoc[MVC Basics in IT Mill Toolkit]
