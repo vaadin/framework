@@ -14,8 +14,8 @@ metadataChecks = {
 	'https://vaadin.com/download/VERSIONS_7': '^7\..*',
 	'https://vaadin.com/download/release/7.7/LATEST': '^7\..*',
 	'https://vaadin.com/download/LATEST': '^6\..*',
-	'https://vaadin.com/download/LATEST8': '^{ver}'
-	# 'https://vaadin.com/download/PRERELEASES': '^{ver}'
+	'https://vaadin.com/download/LATEST8': '^8\.1\..*',
+	'https://vaadin.com/download/PRERELEASES': '^{ver}'
 }
 
 parser = argparse.ArgumentParser(description="Post-publish report generator")
@@ -79,12 +79,14 @@ else:
 
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Create milestone for next version in GitHub</a></td></tr>"
 
-content += """
-<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
-""".format(version=args.version)
+#content += """
+#<tr><td></td><td><a href="http://test.vaadin.com/{version}/run/LabelModes?restartApplication">Verify uploaded to test.vaadin.com</a></td></tr>
+#""".format(version=args.version)
 
 if not prerelease:
 	content += '<tr><td></td><td><a href="http://vaadin.com/api">Verify API version list updated</a></td></tr>'
+
+content += "<tr><td></td><td>Run the generated tag_repositories.sh script</td></tr>"
 
 # close GitHub milestone
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone</a></td></tr>"
