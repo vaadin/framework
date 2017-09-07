@@ -235,8 +235,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      *
      * @param descriptionGenerator
      *            the item description generator to set, not {@code null}
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public void setItemDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
@@ -251,8 +251,8 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
      * Gets the item description generator.
      *
      * @return the item description generator
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
         return descriptionGenerator;
