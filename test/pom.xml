@@ -91,26 +91,68 @@
         </dependency>
     </dependencies>
 
-    <modules>
-        <module>widget-set-testutil</module>
-        <module>default-widget-set</module>
-        <module>vaadin7-widget-set</module>
-        <module>own-widget-set</module>
-        <module>addon-using-own-widget-set</module>
-        <module>addon-using-no-defined-widget-set</module>
-        <module>addon-using-init-param-widget-set</module>
-        <module>space in directory</module>
-        <module>vaadinservletconfiguration-widget-set</module>
-        <module>spring-boot</module>
-        <module>servlet-containers/generic</module>
-        <module>cdi</module>
-        <module>servlet-containers/jsp-integration</module>
-        <module>servlet-containers/karaf</module>
-        <module>bean-api-validation</module>
-        <module>bean-impl-validation</module>
-        <module>dependency-rewrite-addon</module>
-        <module>dependency-rewrite</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>widget-set-testutil</module>
+                <module>default-widget-set</module>
+                <module>vaadin7-widget-set</module>
+                <module>own-widget-set</module>
+                <module>addon-using-own-widget-set</module>
+                <module>addon-using-no-defined-widget-set</module>
+                <module>addon-using-init-param-widget-set</module>
+                <module>space in directory</module>
+                <module>vaadinservletconfiguration-widget-set</module>
+                <module>spring-boot</module>
+                <module>servlet-containers/generic</module>
+                <module>cdi</module>
+                <module>servlet-containers/jsp-integration</module>
+                <module>servlet-containers/karaf</module>
+                <module>bean-api-validation</module>
+                <module>bean-impl-validation</module>
+                <module>dependency-rewrite-addon</module>
+                <module>dependency-rewrite</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>integration</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>widget-set-testutil</module>
+                <module>default-widget-set</module>
+                <module>vaadin7-widget-set</module>
+                <module>own-widget-set</module>
+                <module>addon-using-own-widget-set</module>
+                <module>addon-using-no-defined-widget-set</module>
+                <module>addon-using-init-param-widget-set</module>
+                <module>space in directory</module>
+                <module>vaadinservletconfiguration-widget-set</module>
+                <module>spring-boot</module>
+                <module>cdi</module>
+                <module>bean-api-validation</module>
+                <module>bean-impl-validation</module>
+                <module>dependency-rewrite-addon</module>
+                <module>dependency-rewrite</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>servers</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>servlet-containers/generic</module>
+                <module>servlet-containers/jsp-integration</module>
+                <module>servlet-containers/karaf</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <build>
         <pluginManagement>
