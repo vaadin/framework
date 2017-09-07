@@ -45,6 +45,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -200,32 +201,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws ServletException {
         CurrentInstance.clearAll();
         super.init(servletConfig);
-        Properties initParameters = new Properties();
-
-        readUiFromEnclosingClass(initParameters);
-
-        readConfigurationAnnotation(initParameters);
-
-        // Read default parameters from server.xml
-        final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name, context.getInitParameter(name));
-        }
-
-        // Override with application config from web.xml
-        for (final Enumeration<String> e = servletConfig
-                .getInitParameterNames(); e.hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name,
-                    servletConfig.getInitParameter(name));
-        }
-
-        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(
-                initParameters);
         try {
-            servletService = createServletService(deploymentConfiguration);
+            servletService = createServletService();
         } catch (ServiceException e) {
             throw new ServletException("Could not initialize VaadinServlet", e);
         }
@@ -321,11 +298,94 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Intended to be used by dependency Injection
+     * frameworks.
+     *
+     * @return the created deployment configuration
+     *
+     * @throws ServletException
+     *            if reading construction of the {@link Properties}
+     *
+     * @since
+     */
+    protected DeploymentConfiguration createDeploymentConfiguration() throws ServletException {
+        Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
+
+        readConfigurationAnnotation(initParameters);
+
+        // Read default parameters from server.xml
+        final ServletContext context = getServletConfig().getServletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name, context.getInitParameter(name));
+        }
+
+        // Override with application config from web.xml
+        for (final Enumeration<String> e = getServletConfig()
+                .getInitParameterNames(); e.hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name,
+                    getServletConfig().getInitParameter(name));
+        }
+
+        return createDeploymentConfiguration(initParameters);
+    }
+
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Override this if you want to override certain
+     * properties.
+     *
+     * @param initParameters
+     *            the context-param and init-param values as properties
+     * @return the created deployment configuration
+     *
+     * @since 7.0.0
+     */
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
+    /**
+     * Creates a vaadin servlet service. This method functions as a layer of
+     * indirection between {@link #init(ServletConfig)} and
+     * {@link #createServletService(DeploymentConfiguration)} so dependency
+     * injection frameworks can call {@link #createDeploymentConfiguration()}
+     * when creating a vaadin servlet service lazily.
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServletException
+     *            if creating a deployment configuration fails
+     * @throws ServiceException
+     *            if creating the vaadin servlet service fails
+     *
+     * @since
+     */
+    protected VaadinServletService createServletService()
+            throws ServletException, ServiceException {
+        return createServletService(createDeploymentConfiguration());
+    }
+
+    /**
+     * Creates a vaadin servlet service.
+     *
+     * @param deploymentConfiguration
+     *            the deployment configuration to be used
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServiceException
+     *            if creating the vaadin servlet service fails
+     *
+     * @since 7.0.0
+     */
     protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
@@ -471,7 +531,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Create a Vaadin request for a http servlet request. This method can be
+     * Creates a Vaadin request for a http servlet request. This method can be
      * overridden if the Vaadin request should have special properties.
      *
      * @param request

@@ -33,6 +33,10 @@ import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
+
+    /**
+     * Should never be used directly, always use {@link #getServlet()}
+     */
     private final VaadinServlet servlet;
 
     public VaadinServletService(VaadinServlet servlet,
@@ -40,6 +44,17 @@ public class VaadinServletService extends VaadinService {
             throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
+    }
+
+    /**
+     * Creates a servlet service. This method is for use by dependency
+     * injection frameworks etc. {@link #getServlet()} should be overridden (or otherwise intercepted)
+     * so it does not return <code>null</code>.
+     *
+     * @since
+     */
+    protected VaadinServletService() {
+        this.servlet = null;
     }
 
     @Override
@@ -65,6 +80,8 @@ public class VaadinServletService extends VaadinService {
 
     /**
      * Retrieves a reference to the servlet associated with this service.
+     * Should be overridden (or otherwise intercepted) if the no-arg
+     * constructor is used to prevent NPEs.
      *
      * @return A reference to the VaadinServlet this service is using
      */
@@ -167,7 +184,7 @@ public class VaadinServletService extends VaadinService {
     @Override
     public File getBaseDirectory() {
         final String realPath = VaadinServlet
-                .getResourcePath(servlet.getServletContext(), "/");
+                .getResourcePath(getServlet().getServletContext(), "/");
         if (realPath == null) {
             return null;
         }
@@ -226,12 +243,12 @@ public class VaadinServletService extends VaadinService {
             String resource) throws IOException {
         String filename = "/" + VaadinServlet.THEME_DIR_PATH + '/' + themeName
                 + "/" + resource;
-        URL resourceUrl = servlet.findResourceURL(filename);
+        URL resourceUrl = getServlet().findResourceURL(filename);
 
         if (resourceUrl != null) {
             // security check: do not permit navigation out of the VAADIN
             // directory
-            if (!servlet.isAllowedVAADINResourceUrl(null, resourceUrl)) {
+            if (!getServlet().isAllowedVAADINResourceUrl(null, resourceUrl)) {
                 throw new IOException(String.format(
                         "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
                         filename));
