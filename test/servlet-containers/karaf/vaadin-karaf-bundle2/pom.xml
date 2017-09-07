@@ -44,7 +44,8 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-osgi-integration</artifactId>
-            <version>8.1.0.beta1</version>
+            <!-- TODO: Add this to BOM and remove version here -->
+            <version>${vaadin.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
