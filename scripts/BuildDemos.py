@@ -23,9 +23,6 @@ demos = {
 #	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }
 
-# ArchetypeGroupId
-archetypeGroup = "com.vaadin"
-
 # List of built archetypes
 archetypes = [
 	"vaadin-archetype-widget",
@@ -33,9 +30,6 @@ archetypes = [
 	"vaadin-archetype-application-example",
 	"vaadin-archetype-application-multimodule"
 ]
-
-# Maven GroupID
-group = "testpkg"
 
 status_dump = {"messages": []}
 
