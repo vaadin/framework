@@ -91,6 +91,9 @@ content += "<tr><td></td><td>Run the generated tag_repositories.sh script</td></
 # close GitHub milestone
 content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/milestones\">Close GitHub Milestone and create one for next version</a></td></tr>"
 
+# release notes
+content += "<tr><td></td><td><a href=\"https://github.com/vaadin/framework/releases/new\">Prepare release notes in GH</a></td></tr>"
+
 content += """
 <tr><td></td><td><a href="http://{teamcityUrl}/viewLog.html?buildId={buildId}&buildTypeId={buildTypeId}&tab=dependencies"><h2>Start Post-Publish Release from dependencies tab</a></td></tr>
 </table>

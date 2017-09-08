@@ -62,7 +62,7 @@ content += createTableRow("", "Inform marketing and PO about the release")
 content += createTableRow("", "<a href=\"http://{}/admin/editProject.html?projectId={}&tab=projectParams\">Update vaadin.version.latest and vaadin.version.next parameters in TeamCity</a>".format(args.teamcityUrl, args.projectId))
 
 # Link to GH release notes
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases/new\">Write release notes in GH</a>")
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases\">Finish and publish release notes in GH</a>")
 
 content += "</table></body></html>"
 
