@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>karaf-runner</artifactId>
     <groupId>com.vaadin</groupId>
-    <version>8.1-SNAPSHOT</version>
+    <version>8.2-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
     <build>
         <plugins>
