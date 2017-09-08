@@ -53,9 +53,6 @@ if prerelease:
 content += createTableRow("", "Optionally check that <a href=\"http://vaadin.com/download/maven-archetypes.xml\">old Eclipse metadata</a> still refers to Vaadin 7")
 content += createTableRow("", "Note that archetype metadata checks do not verify that the relevant sections are not commented out when changing from pre-release to stable and back!")
 
-# GitHub milestones
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Create new milestone in GitHub</a>")
-
 content += createTableRow("", "Build and deploy new sampler if necessary")
 
 # Inform marketing and PO
