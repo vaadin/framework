@@ -53,9 +53,6 @@ if prerelease:
 content += createTableRow("", "Optionally check that <a href=\"http://vaadin.com/download/maven-archetypes.xml\">old Eclipse metadata</a> still refers to Vaadin 7")
 content += createTableRow("", "Note that archetype metadata checks do not verify that the relevant sections are not commented out when changing from pre-release to stable and back!")
 
-# GitHub milestones
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/milestones\">Create new milestone in GitHub</a>")
-
 content += createTableRow("", "Build and deploy new sampler if necessary")
 
 # Inform marketing and PO
@@ -65,7 +62,7 @@ content += createTableRow("", "Inform marketing and PO about the release")
 content += createTableRow("", "<a href=\"http://{}/admin/editProject.html?projectId={}&tab=projectParams\">Update vaadin.version.latest and vaadin.version.next parameters in TeamCity</a>".format(args.teamcityUrl, args.projectId))
 
 # Link to GH release notes
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases/new\">Write release notes in GH</a>")
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases\">Finish and publish release notes in GH</a>")
 
 content += "</table></body></html>"
 
