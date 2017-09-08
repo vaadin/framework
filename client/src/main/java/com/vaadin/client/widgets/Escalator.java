@@ -3898,8 +3898,12 @@ public class Escalator extends Widget
                 if (tr == focusedRow) {
                     insertFirst = true;
                 } else if (insertFirst) {
+                    // remove row explicitly to work around an IE11 bug (#9850)
+                    root.removeChild(tr);
                     root.insertFirst(tr);
                 } else {
+                    // remove row explicitly to work around an IE11 bug (#9850)
+                    root.removeChild(tr);
                     root.insertAfter(tr, focusedRow);
                 }
             }
