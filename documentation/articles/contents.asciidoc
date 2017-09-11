@@ -37,3 +37,4 @@ are great, too.
 - link:GeneratingDynamicResourcesBasedOnURIOrParameters.asciidoc[Generating dynamic resources based on URI or parameters]
 - link:OptimizingTheWidgetSet.asciidoc[Optimizing the widget set]
 - link:UsingServerInitiatedEvents.asciidoc[Using server-initiated events]
+- link:ChooseInputFieldComponentsWisely.asciidoc[Choose input field components wisely]
