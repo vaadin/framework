@@ -1,6 +1,6 @@
 [[configuring-push-for-your-environment]]
-Configuring Push For Your Enviroment
-------------------------------------
+Configuring push for your environment
+-------------------------------------
 
 Server push and especially websockets are emerging technologies and not
 all servers and browsers handle them correctly (or even close to
@@ -37,7 +37,7 @@ Tomcat 6 + Streaming
 For Tomcat 6, falling back to streaming always results in an error message such as
 [source]
 ....
-Failed using comet support: org.atmosphere.container.TomcatCometSupport, error: Tomcat failed to detect this is a Comet application because context.xml is missing or the Http11NioProtocol Connector is not enabled.If that's not the case, you can also remove META-INF/context.xml and WEB-INF/lib/atmosphere-compat-tomcat.jar Is the Nio or Apr Connector enabled?WARNING: Using org.atmosphere.container.BlockingIOCometSupport`
+Failed using comet support: org.atmosphere.container.TomcatCometSupport, error: Tomcat failed to detect this is a Comet application because context.xml is missing or the Http11NioProtocol Connector is not enabled.If that's not the case, you can also remove META-INF/context.xml and WEB-INF/lib/atmosphere-compat-tomcat.jar Is the Nio or Apr Connector enabled?WARNING: Using org.atmosphere.container.BlockingIOCometSupport
 ....
 
 Atmosphere is expecting the Servlet to implement Tomcat's proprietary interface https://tomcat.apache.org/tomcat-6.0-doc/api/org/apache/catalina/CometProcessor.html[CometProcessor]. (See https://github.com/Atmosphere/atmosphere/blob/atmosphere-project-1.0.14/modules/cpr/src/main/java/org/atmosphere/cpr/AtmosphereServlet.java[AtmosphereServlet])
@@ -116,10 +116,10 @@ Glassfish 3 + Websockets
 As a rule of thumb, don't do this.
 
 The Grizzly version shipped with Glassfish 3.1.2.2 contains a
-https://java.net/jira/browse/GRIZZLY-1289[fatal bug] which prevents
+https://github.com/javaee/grizzly/issues/1289[fatal bug] which prevents
 Vaadin from working. Replace *glassfish/modules/grizzly-websockets.jar*
 with
-https://java.net/jira/secure/attachment/50681/grizzly-websockets-1.9.50-fix.jar
+http://central.maven.org/maven2/com/sun/grizzly/grizzly-websockets/1.9.56/grizzly-websockets-1.9.56.jar
 to get websockets working (with Vaadin 7.3). *This version is actually
 also broken in many ways, so you may or may not get it to work. If you
 want websockets, you should upgrade to Glassfish 4.*
