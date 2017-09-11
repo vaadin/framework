@@ -39,3 +39,4 @@ are great, too.
 - link:UsingServerInitiatedEvents.asciidoc[Using server-initiated events]
 - link:ChooseInputFieldComponentsWisely.asciidoc[Choose input field components wisely]
 - link:CreatingASimpleComponent.asciidoc[Creating a simple component]
+- link:IntegratingAnExistingGWTWidget.asciidoc[Integrating an existing GWT widget]
