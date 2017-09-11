@@ -58,27 +58,26 @@ We want to listen for changes in the menu which indicates that the user has chos
 [source,java]
 ....
 public class ExampleApplication extends Application implements TransactionListener {
-
   public UiHandler ui;
 
   @Override
   public void init() {
-  	// sets the current application to ThreadLocal.
-  	setProject(this);
+    // sets the current application to ThreadLocal.
+    setProject(this);
 
-  	// Creates the Main Window and then hands over all UI work to the
-  	// UiHandler
-  	setMainWindow(new Window("MVC Example Application"));
+    // Creates the Main Window and then hands over all UI work to the
+    // UiHandler
+    setMainWindow(new Window("MVC Example Application"));
 
-  	setTheme("MVCExampleDefault");
+    setTheme("MVCExampleDefault");
 
-  	ui = new UiHandler(getMainWindow());
+    ui = new UiHandler(getMainWindow());
 
-  	// Adds a TransactionListener for this class.
-  	getContext().addTransactionListener(this);
+    // Adds a TransactionListener for this class.
+    getContext().addTransactionListener(this);
 
-  	// Register user change listener for UiHandler.
-  	addListener(ui);
+    // Register user change listener for UiHandler.
+    addListener(ui);
   }
 }
 ....
