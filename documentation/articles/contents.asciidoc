@@ -36,3 +36,4 @@ are great, too.
 - link:AccessingWebPageAndBrowserInformation.asciidoc[Accessing web page and browser information]
 - link:GeneratingDynamicResourcesBasedOnURIOrParameters.asciidoc[Generating dynamic resources based on URI or parameters]
 - link:OptimizingTheWidgetSet.asciidoc[Optimizing the widget set]
+- link:UsingServerInitiatedEvents.asciidoc[Using server-initiated events]

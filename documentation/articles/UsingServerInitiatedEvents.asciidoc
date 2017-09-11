@@ -1,0 +1,130 @@
+[[using-server-initiated-events]]
+Using server-initiated events
+-----------------------------
+
+The traditional way of communicating with the server is always client
+initiated. Whenever the user interacts with the application so a server
+visit is needed, the browser connects to the server, sends a request and
+waits for the response. The response is handled when received by the
+browser and the UI is updated accordingly. For basic applications this
+is all that is needed but there are also many cases when you want the
+server to be able to initiate events: updating the progress of a long
+running application, notifying you of changes in the back end, providing
+interaction between users and so on.
+
+Starting from Vaadin 7.1 you have a couple of ways you can implement
+server initiated events without requiring any external add-ons: polling
+and push. Polling is based on the client actively polling the server,
+asking “are there any news for me?” whereas push is based on keeping a
+connection constantly open to the server, allowing the server to,
+whenever it likes, send something to the client. Which you want to use
+is dependent on your use case. If you have events which occur seldom but
+you want to deliver them immediately to the user, then push might serve
+you better. If you want to avoid constant server connections and only
+need to check now and then if something has happened, polling may work
+out well for you. For any use case you should consider the two options
+and which one will better suit your needs.
+
+An important part to consider when using server initiated events is
+locking. Vaadin is built around the fact that only one thread can access
+any VaadinSession instance at any time. This is to prevent
+inconsistencies from occuring and needs to be taken into account when
+using background threads to update a UI (which lives inside a
+VaadinSession). To do proper locking when you are updating the UI you
+use the UI.access method:
+
+[source,java]
+....
+theUI.access(new Runnable() {
+  @Override
+  public void run() {
+    theUI.setContent(new Label("This is the real content"));
+  }
+});
+....
+
+The access method ensure your update is safe to do (you have exclusive
+access to the `VaadinSession`), it ensures that threadlocals work also
+inside the `run()`` method (e.g. `UI.getCurrent()``) and finally it deals with
+some typical deadlock situations. To be able to do all this it does not
+guarantee that the `Runnable` is executed immediately - on the contrary
+it will be run as soon as it is safe to run it without causing deadlocks
+by locking multiple `VaadinSessions` at once.
+
+A typical use case is the one-shot background operation which does some
+heavy lifting, updates the `UI` based on the result (which is then
+fetched by the browser by polling or pushed to the browser) and then
+goes away. This can be implemented as a `Runnable`, e.g.
+
+[source,java]
+....
+class AntCounter implements Runnable {
+  @Override
+  public void run() {
+    // Do some heavy work
+    final int result = calculateNumberOfAntsInTheWorld();
+
+    // Wrap UI updates in access to properly deal with locking
+    theUI.access(new Runnable() {
+      @Override
+      public void run() {
+        theUI.setContent(new Label("The result is " + result));
+      }
+    });
+  }
+}
+....
+
+The Runnable is typically run in a background thread using e.g. an
+`ExecutorService`.
+
+The other typical case is a long running background task which checks
+for some event and, in case that events happens, alerts the user. The
+event can originate from another user, from a change in the database or
+from somewhere else. Similarly to before, this can be implemented as a
+`Runnable`:
+
+[source,java]
+....
+class AntTracker implements Runnable {
+  @Override
+  public void run() {
+    // Do some initial work
+    int antPopulation = calculateNumberOfAntsInTheWorld();
+
+    while (true) {
+      // Loop forever and ever
+      final int antPopulationNow = calculateNumberOfAntsInTheWorld();
+      if (antPopulationNow != antPopulation) {
+        antPopulation = antPopulationNow;
+        // Wrap UI updates in access to properly deal with locking
+        theUI.access(new Runnable() {
+          @Override
+          public void run() {
+            new Notification("Ant population is now "
+              + antPopulationNow, Type.TRAY_NOTIFICATION)
+              .show(theUI.getPage());
+          }
+        });
+      }
+      // Wait for a while before calculating again
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        return;
+      }
+    }
+  }
+
+  private int calculateNumberOfAntsInTheWorld() {
+    return (int) (new Date().getTime()/1500);
+  }
+}
+....
+
+The same thing can of course be implemented without the `while(true)`` loop
+by using for instance a `ScheduledExecutorService` instead to make the
+executor service handle the iteration and interval (e.g. `Executors.newScheduledThreadPool(1).scheduleAtFixedRate(...)`).
+
+For more information on how to enable push or polling in your
+application, see link:EnablingServerPush.asciidoc[Enabling server push] or link:UsingPolling.asciidoc[Using polling].
