@@ -174,7 +174,7 @@ public class MyVaadinUI extends UI
 }
 ....
 
-image:http://i.imgur.com/w9CViCR.png[http://i.imgur.com/w9CViCR.png,title="http://i.imgur.com/w9CViCR.png"]
+image:http://i.imgur.com/w9CViCR.png[Calendar]
 
 '''''
 
