@@ -40,3 +40,4 @@ are great, too.
 - link:ChooseInputFieldComponentsWisely.asciidoc[Choose input field components wisely]
 - link:CreatingASimpleComponent.asciidoc[Creating a simple component]
 - link:IntegratingAnExistingGWTWidget.asciidoc[Integrating an existing GWT widget]
+- link:IntegrationExperiences.asciidoc[Integration experiences]
