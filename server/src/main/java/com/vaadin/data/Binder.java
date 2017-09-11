@@ -126,6 +126,19 @@ public class Binder<BEAN> implements Serializable {
          */
         public BindingValidationStatus<TARGET> validate();
 
+        /**
+         * Gets the validation status handler for this Binding.
+         * 
+         * @return the validation status handler for this binding
+         */
+        public BindingValidationStatusHandler getValidationStatusHandler();
+
+        /**
+         * Notifies the validation status handler about the current validation
+         * status. This method is usually called through
+         * {@link BinderValidationStatus#notifyBindingValidationStatusHandlers()}.
+         */
+        public void notifyValidationStatusHandler();
     }
 
     /**
@@ -963,8 +976,19 @@ public class Binder<BEAN> implements Serializable {
             return binder;
         }
 
+        @Override
+        public void notifyValidationStatusHandler() {
+            getValidationStatusHandler()
+                    .statusChange(toValidationStatus(doConversion()));
+        }
+
         private void notifyStatusHandler(BindingValidationStatus<?> status) {
             statusHandler.statusChange(status);
+        }
+
+        @Override
+        public BindingValidationStatusHandler getValidationStatusHandler() {
+            return statusHandler;
         }
     }
 
