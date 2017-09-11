@@ -1,3 +1,7 @@
+[[using-uri-fragments]]
+Using URI fragments
+-------------------
+
 [[reading-fragment-when-initializing-ui]]
 Reading Fragment when Initializing UI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,16 +21,16 @@ A simple init that depends on the URI fragment is thus:
 [source,java]
 ....
 public class MyUI extends UI {
-    @Override
-    protected void init(VaadinRequest request) {
-        layout = new VerticalLayout();
-        layout.setMargin(true);
-        setContent(layout);
+  @Override
+  protected void init(VaadinRequest request) {
+    layout = new VerticalLayout();
+    layout.setMargin(true);
+    setContent(layout);
 
-        Label label = new Label("Hello, your fragment is "
-                + getPage().getUriFragment());
-        layout.addComponent(label);
-    }
+    Label label = new Label("Hello, your fragment is "
+            + getPage().getUriFragment());
+    layout.addComponent(label);
+  }
 }
 ....
 
@@ -35,8 +39,8 @@ Reading Fragment Changes
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The URI fragment can be changed also when the application is running,
-either manuallyin the location bar in browser or from user code. These
-changes can be caught with a**FragmentChangedListener**. Notice,
+either manually in the location bar in browser or from user code. These
+changes can be caught with a **FragmentChangedListener**. Notice,
 however, that there is no event fired for the initial URL fragment. The
 easiest way to handle both cases in the same way is to call the same
 method from the FragmentChangedListener and the init method:
@@ -44,27 +48,26 @@ method from the FragmentChangedListener and the init method:
 [source,java]
 ....
 public class MyUI extends UI {
-    // ...
+  // ...
 
-        // React to fragment changes
-        getPage().addUriFragmentChangedListener(new UriFragmentChangedListener() {
-            @Override
-            public void uriFragmentChanged(UriFragmentChangedEvent source) {
-                handleFragment(source.getUriFragment());
-            }
-        });
+  // React to fragment changes
+  getPage().addUriFragmentChangedListener(new UriFragmentChangedListener() {
+    @Override
+    public void uriFragmentChanged(UriFragmentChangedEvent source) {
+      handleFragment(source.getUriFragment());
+    }
+  });
 
-        // Handle the fragment received in the initial request
+  // Handle the fragment received in the initial request
+  handleFragment(getPage().getUriFragment());
+
+  addComponent(new Button("Show and set fragment", new Button.ClickListener() {
+    @Override
+      public void buttonClick(ClickEvent event) {
         handleFragment(getPage().getUriFragment());
-
-        addComponent(new Button("Show and set fragment",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        handleFragment(getPage().getUriFragment());
-                        getPage().setUriFragment("customFragment");
-                    }
-                }));
+        getPage().setUriFragment("customFragment");
+      }
+  }));
 ....
 
 [[reading-and-writing-the-fragment]]
