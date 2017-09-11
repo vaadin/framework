@@ -25,7 +25,7 @@ are great, too.
 - link:SettingAndReadingCookies.asciidoc[Setting and reading cookies]
 - link:UsingPolling.asciidoc[Using polling]
 - link:FindingTheCurrentUIAndPageAndVaadinSession.asciidoc[Finding the current UI and page and Vaadin Session]
-- link:CreatingAnApplicationTHatPreservesStateOnRefresh.asciidoc[Creating an application that preserves state on refresh]
+- link:CreatingAnApplicationThatPreservesStateOnRefresh.asciidoc[Creating an application that preserves state on refresh]
 - link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending events from the client to the server using RPC]
 - link:HandlingLogout.asciidoc[Handling logout]
 - link:ScalableWebApplications.asciidoc[Scalable web applications]
