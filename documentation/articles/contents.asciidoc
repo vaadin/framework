@@ -33,3 +33,4 @@ are great, too.
 - link:MVCBasicsInITMillToolkit.asciidoc[MVC Basics in IT Mill Toolkit]
 - link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing the startup page in an application]
 - link:UsingURIFragments.asciidoc[Using URI fragments]
+- link:AccessingWebPageAndBrowserInformation.asciidoc[Accessing web page and browser information]
