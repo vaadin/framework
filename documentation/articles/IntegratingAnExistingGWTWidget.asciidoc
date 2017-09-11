@@ -176,4 +176,4 @@ the series contained in the shared state (for simplicity, we clear the
 That's it! The full source is available as an attachment to this
 article.
 
-link:img/vaadinflot.zip[Attachment vaadingflot.zip]
+link:img/vaadingflot.zip[Attachment vaadingflot.zip]
