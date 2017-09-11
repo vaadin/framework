@@ -162,7 +162,7 @@ public class AbstractClientConnectorTest {
             if (!name.startsWith("com.vaadin.")) {
                 return super.loadClass(name);
             }
-            String path = name.replaceAll("\\.", File.separator)
+            String path = name.replace('.', '/')
                     .concat(".class");
             URL resource = Thread.currentThread().getContextClassLoader()
                     .getResource(path);
