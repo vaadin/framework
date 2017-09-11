@@ -20,7 +20,7 @@ made a small study to estimate it. You can see the results in Figure 1
 below. The estimates are derived from monthly visitors and the average
 visit time data found from Alexa.com. 
 
-image:img/1newa.png[image]
+image:img/webusers.png[image]
 
 _Figure 1: Popular web applications with estimated number of concurrent
 users._
@@ -48,7 +48,7 @@ application is publicly available as a Maven archetype
 (`vaadin-archetype-application-example`). We will first test how many
 concurrent users the application can serve on a single server.
 
-image:img/figure2s.png[image]
+image:img/mockapp-ui.png[image]
 
 _Figure 2: Book store inventory application_
 
@@ -115,6 +115,7 @@ A snippet from the end of our test scenario is shown in Figure 4. This
 test scenario is configured to be run with 100 concurrent users, all
 started within 60 seconds (see the last line of code).
 
+[source,scala]
 ....
 .pause(9)
 .exec(http(>"request_45")
@@ -143,6 +144,7 @@ also flush session cookies to ensure that a new session is created for
 each repeat. See the second line of code in Figure 5, for an example of
 how this could be done.
 
+[source,scala]
 ....
 val scn = scenario("RecordedSimulation")
     .repeat(100,"n"){exec(flushSessionCookies).exec(http("request_0")
@@ -223,7 +225,7 @@ concurrent connections (4096).
 image:img/figure6a.png[image]
 
 _Figure 6: Configuring Tomcat’s default connector to accept a lot of
-concurrent users. _
+concurrent users._
 
 The next pain point that appeared with more than 500 users was that we
 were out of memory. The default heap size of 2GB eventually ran out with
@@ -410,7 +412,7 @@ database operations in the Database chapter below.
 image:img/figure7s.png[image]
 
 _Figure 8: Profiling CPU usage of our inventory application with Java
-VisualVM _
+VisualVM_
 
 [[use-native-application-server-libraries]]
 Use native application server libraries
@@ -544,23 +546,23 @@ e.g: `<socket-binding name="http" port="${jboss.http.port:8081}"/>`
 4.  Code your own load balancer (reverse proxy) with Java and Undertow
 libraries (see Figure 9) and start it as a Java application.
 
+[source,java]
 ....
 public static void main(final String[] args) {
-    try {
-        LoadBalancingProxyClient loadBalancer = new LoadBalancingProxyClient()
-                .addHost(new URI("http://192.168.2.86:8081"),"node1")
-                .addHost(new URI("http://192.168.2.216:8082"),"node2")
-                .setConnectionsPerThread(1000);
-        Undertow reverseProxy = Undertow.builder()
-                .addHttpListener(8080, "localhost")
-                .setIoThreads(8)
-                .setHandler(new ProxyHandler(loadBalancer, 30000,
-                    ResponseCodeHandler.HANDLE_404))
-                .build();
-        reverseProxy.start();
-    } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-    }
+  try {
+    LoadBalancingProxyClient loadBalancer = new LoadBalancingProxyClient()
+      .addHost(new URI("http://192.168.2.86:8081"),"node1")
+      .addHost(new URI("http://192.168.2.216:8082"),"node2")
+      .setConnectionsPerThread(1000);
+    Undertow reverseProxy = Undertow.builder()
+      .addHttpListener(8080, "localhost")
+      .setIoThreads(8)
+      .setHandler(new ProxyHandler(loadBalancer, 30000, ResponseCodeHandler.HANDLE_404))
+      .build();
+      reverseProxy.start();
+  } catch (URISyntaxException e) {
+    throw new RuntimeException(e);
+  }
 }
 ....
 
