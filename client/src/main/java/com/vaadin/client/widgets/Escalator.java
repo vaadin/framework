@@ -3899,11 +3899,12 @@ public class Escalator extends Widget
                     insertFirst = true;
                 } else if (insertFirst) {
                     // remove row explicitly to work around an IE11 bug (#9850)
-                    root.removeChild(tr);
+                    if (BrowserInfo.get().isIE11() && tr
+                            .equals(root.getFirstChildElement())) {
+                        root.removeChild(tr);
+                    }
                     root.insertFirst(tr);
                 } else {
-                    // remove row explicitly to work around an IE11 bug (#9850)
-                    root.removeChild(tr);
                     root.insertAfter(tr, focusedRow);
                 }
             }
