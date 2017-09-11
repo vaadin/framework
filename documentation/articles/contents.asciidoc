@@ -34,3 +34,4 @@ are great, too.
 - link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing the startup page in an application]
 - link:UsingURIFragments.asciidoc[Using URI fragments]
 - link:AccessingWebPageAndBrowserInformation.asciidoc[Accessing web page and browser information]
+- link:ConfiguringPushForYourEnvironment.asciidoc[Configuring push for your environment]
