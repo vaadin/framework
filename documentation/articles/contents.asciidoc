@@ -45,3 +45,4 @@ are great, too.
 - link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on grails - Database access]
 - link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on grails - Multiple UIs]
 - link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
+- link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[Integrating a JavaScript library as an extension]
