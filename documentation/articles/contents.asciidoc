@@ -58,4 +58,5 @@ are great, too.
 - link:CreatingSecureVaadinApplicationsUsingJEE6.asciidoc[Creating secure Vaadin applications using JEE6]
 - link:UsingVaadinCDIWithJAASAuthentication.asciidoc[Using Vaadin CDI with JAAS authentication]
 - link:LoadTestingWithGatling.asciidoc[Load testing with Gatling]
+- link:VaadinScalabilityTestingWithAmazonWebServices.asciidoc[Vaadin scalability testing with Amazon Web Services]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
