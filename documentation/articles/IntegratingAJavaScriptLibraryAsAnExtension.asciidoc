@@ -16,8 +16,7 @@ https://developers.google.com/analytics/devguides/collection/gajs/[Google
 Analytics]. Because the Analytics API just uses the same `_gaq.push`
 function with different arguments, the JavaScript connector logic can be
 equally simple. Aside from asynchronously loading ga.js, the client-side
-code just adds a callback (see link:SimplifiedRPCusingJavaScript.asciidoc[Simplified RPC using JavaScript] for
-more information) that the server-side code can use to push new
+code just adds a callback that the server-side code can use to push new
 commands.
 
 [source,javascript]
