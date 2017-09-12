@@ -44,3 +44,4 @@ are great, too.
 - link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin on grails - Create project in IntelliJ IDEA]
 - link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on grails - Database access]
 - link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on grails - Multiple UIs]
+- link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
