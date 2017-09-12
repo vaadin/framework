@@ -48,7 +48,7 @@ state of a normal GWT component.
 [source,java]
 ....
 public class FlotState extends JavaScriptComponentState {
-    public List<List<List<Double>>> series = new ArrayList<List<List<Double>>>();
+  public List<List<List<Double>>> series = new ArrayList<List<List<Double>>>();
 }
 ....
 
@@ -82,7 +82,7 @@ conversion between server-side Java values and client-side JavaScript
 values. `double[][][]` in Java would give the same JavaScript structure,
 but it was not used here as it gives less flexibility in the Java code.
 
-[source,java]
+[source,javascript]
 ....
 window.com_example_Flot = function() {
   var element = $(this.getElement());
