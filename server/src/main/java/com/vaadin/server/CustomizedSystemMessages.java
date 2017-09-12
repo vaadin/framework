@@ -31,7 +31,7 @@ import java.io.Serializable;
  * </p>
  * <p>
  * The default behavior is to show a notification, and restart the application
- * the the user clicks the message. <br/>
+ * if the user clicks the message. <br/>
  * Instead of restarting the application, you can set a specific URL that the
  * user is taken to.<br/>
  * Setting both caption and message to null will restart the application (or go
@@ -42,10 +42,13 @@ import java.io.Serializable;
  * The situations are:
  * <li>Session expired: the user session has expired, usually due to inactivity.
  * </li>
+ * <li>Authentication error: the client received a 401 (Unauthorized) response
+ * from the server.</li>
  * <li>Communication error: the client failed to contact the server, or the
- * server returned and invalid response.</li>
+ * server returned an invalid response.</li>
  * <li>Internal error: unhandled critical server error (e.g out of memory,
  * database crash)
+ * <li>Cookies disabled: the browser does not support cookies</li>
  * </p>
  */
 
