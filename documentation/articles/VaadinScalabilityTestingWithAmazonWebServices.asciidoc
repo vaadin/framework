@@ -119,7 +119,7 @@ haven't already) from:
 * Add the *Private DNS* of all the instances you have setup to the list
 of Memcached servers in the `WebContent/WEB-INF/servers.xml` file with
 the default Memcached port 11211. For
-example: `<!-- Memcached servers --><value>ip-11-111-11-111.ec2.internal:11211</value><value>ip-22-222-22-222.ec2.internal:11211</value>...`
+example: `<!-- Memcached servers --&gt;<value>ip-11-111-11-111.ec2.internal:11211</value><value>ip-22-222-22-222.ec2.internal:11211</value>...`
 
 * Create a file called `build.properties` to the root directory of the
 project (right next to the `QuickTickets/build.xml`). Set the
