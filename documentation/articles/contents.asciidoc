@@ -52,4 +52,5 @@ are great, too.
 - link:IBGettingStartedWithVaadinSpringWithoutSpringBoot.asciidoc[I b - Getting started with Vaadin Spring withoout Spring Boot]
 - link:Vaadin7SpringSecurityBaseAuthentification.asciidoc[Vaadin 7 + Spring Security (base authentication)]
 - link:UsingBeanValidationToValidateInput.asciidoc[Using Bean Validation to validate input]
+- link:VaadinSpringTips.asciidoc[Vaadin Spring tips]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
