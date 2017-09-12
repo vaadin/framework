@@ -51,4 +51,5 @@ are great, too.
 - link:UsingRPCFromJavaScript.asciidoc[Using RPC from JavaScript]
 - link:IBGettingStartedWithVaadinSpringWithoutSpringBoot.asciidoc[I b - Getting started with Vaadin Spring withoout Spring Boot]
 - link:Vaadin7SpringSecurityBaseAuthentification.asciidoc[Vaadin 7 + Spring Security (base authentication)]
+- link:UsingBeanValidationToValidateInput.asciidoc[Using Bean Validation to validate input]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
