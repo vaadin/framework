@@ -49,4 +49,5 @@ are great, too.
 - link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[Using a JavaScript library or a style sheet in an add-on]
 - link:ExposingServerSideAPIToJavaScript.asciidoc[Exposing server-side API to JavaScript]
 - link:UsingRPCFromJavaScript.asciidoc[Using RPC from JavaScript]
+- link:IBGettingStartedWithVaadinSpringWithoutSpringBoot.asciidoc[I b - Getting started with Vaadin Spring withoout Spring Boot]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
