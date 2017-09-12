@@ -10,12 +10,9 @@ application to a server. 
 
 *Note that this tutorial is for using Vaadin Spring without Spring Boot.
 Using Spring Boot is the recommended approach for getting started
-quickly when creating a new project -
+quickly when creating a new project. For more information about setting
+up a project both with and without Spring Boot -
 see https://vaadin.github.io/spring-tutorial/[the Vaadin Spring Boot tutorial].*
-
-*For more information on using Vaadin Spring without Spring Boot, see
-https://vaadin.com/wiki/-/wiki/Spring+Vaadin/IV+-+Configuring+and+Using+Vaadin+Spring+without+Spring+Boot[this
-tutorial].*
 
 [[creating-a-vaadin-project]]
 Creating a Vaadin project
@@ -209,7 +206,7 @@ src/main/webapp/WEB-INF/applicationContext.xml :
 A full description of alternative approaches to configuring Spring is
 outside the context of this tutorial and you should consult Spring
 documentation for them, but a brief introduction to them is given in
-https://vaadin.com/wiki/-/wiki/Spring+Vaadin/IV+-+Configuring+and+Using+Vaadin+Spring+without+Spring+Boot[this
+https://vaadin.github.io/spring-tutorial/[this
 tutorial].
 
 [[deployment]]
