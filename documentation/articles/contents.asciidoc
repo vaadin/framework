@@ -56,4 +56,5 @@ are great, too.
 - link:VaadinCDI.asciidoc[Vaadin CDI]
 - link:IIInjectionAndScopes.asciidoc[II - Injection and scopes]
 - link:CreatingSecureVaadinApplicationsUsingJEE6.asciidoc[Creating secure Vaadin applications using JEE6]
+- link:UsingVaadinCDIWithJAASAuthentication.asciidoc[Using Vaadin CDI with JAAS authentication]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
