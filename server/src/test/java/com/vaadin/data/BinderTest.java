@@ -807,6 +807,49 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertFalse(binder.validate().isOk());
     }
 
+    @Test
+    public void beanvalidation_field_and_bean_validation_failed() {
+        TextField lastNameField = new TextField();
+        setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
+
+        item.setLastName("Invalid");
+        binder.setBean(item);
+
+        nameField.setValue("Invalid");
+
+        BinderValidationStatus<Person> status = binder.validate();
+        boolean hasBeanValidationErrors = !status.getBeanValidationErrors()
+                .isEmpty();
+        boolean hasFieldValidationErrors = !status.getFieldValidationErrors()
+                .isEmpty();
+
+        Assert.assertTrue(
+                "Validation status should contain bean validation errors",
+                hasBeanValidationErrors);
+        Assert.assertFalse(
+                "Validation status should not contain field validation errors",
+                hasFieldValidationErrors);
+
+        lastNameField.setValue("foo");
+
+        status = binder.validate();
+        hasBeanValidationErrors = !status.getBeanValidationErrors().isEmpty();
+        hasFieldValidationErrors = !status.getFieldValidationErrors().isEmpty();
+
+        Assert.assertTrue(
+                "Validation status should contain bean and field validation errors",
+                hasBeanValidationErrors && hasFieldValidationErrors);
+
+        lastNameField.setValue("Valid");
+
+        status = binder.validate();
+        hasBeanValidationErrors = !status.getBeanValidationErrors().isEmpty();
+        hasFieldValidationErrors = !status.getFieldValidationErrors().isEmpty();
+
+        Assert.assertFalse("Validation status should contain any errors",
+                hasBeanValidationErrors || hasFieldValidationErrors);
+    }
+
     @Test(expected = IllegalStateException.class)
     public void beanvalidation_isValid_throws_with_readBean() {
         TextField lastNameField = new TextField();
@@ -830,7 +873,10 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     protected void setBeanValidationFirstNameNotEqualsLastName(
             TextField firstNameField, TextField lastNameField) {
         binder.bind(firstNameField, Person::getFirstName, Person::setFirstName);
-        binder.bind(lastNameField, Person::getLastName, Person::setLastName);
+        binder.forField(lastNameField)
+                .withValidator(t -> !"foo".equals(t),
+                        "Last name can't be 'foo'")
+                .bind(Person::getLastName, Person::setLastName);
 
         binder.withValidator(p -> !p.getFirstName().equals(p.getLastName()),
                 "First name and last name can't be the same");
