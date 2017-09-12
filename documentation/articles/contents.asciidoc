@@ -42,3 +42,4 @@ are great, too.
 - link:IntegratingAnExistingGWTWidget.asciidoc[Integrating an existing GWT widget]
 - link:IntegrationExperiences.asciidoc[Integration experiences]
 - link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin on grails - Create project in IntelliJ IDEA]
+- link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on grails - Database access]
