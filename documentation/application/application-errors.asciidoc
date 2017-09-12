@@ -70,8 +70,6 @@ the server.
 internalError:: A serious internal problem, possibly indicating a bug in Vaadin Client-Side
 Engine or in some custom client-side code.
 
-outOfSync:: The client-side state is invalid with respect to server-side state.
-
 cookiesDisabled:: Informs the user that cookies are disabled in the browser and the application
 does not work without them.
 
