@@ -20,10 +20,7 @@ http://jakarta.apache.org/jmeter/[Apache JMeter], MySQL and Linux shell
 usage. You will also need to know how to checkout the
 http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/[QuickTickets
 project] from SVN and run http://ant.apache.org/[Ant] targets to
-generate test database and to package the application as a WAR file. If
-you are not familiar with JMeter, you might want to first see
-link:JMeter%20Testing[JMeter Testing] wiki article for a quick tutorial
-on how to use JMeter with Vaadin applications.
+generate test database and to package the application as a WAR file.
 
 Please notice, that using the AWS services discussed here will incur
 some expenses.
@@ -43,7 +40,7 @@ select the Amazon RDS tab.
 ** Allocated Storage: 5 GB
 ** DB Instance Idenfitier: `quicktickets`
 ** Master User Name: `quicktickets`
-** Master User Password: `<<your-password>>`
+** Master User Password: `<your-password>`
 * Additional configuration:
 ** Database Name: `quicktickets`
 * Management options:
@@ -57,7 +54,7 @@ the DB Security Groups.
 access to you DB instances].
 
 * Once you have connected to the DB, run the following
-command:`alter database quicktickets charset=utf8;`
+command: `alter database quicktickets charset=utf8;`
 
 * Note that the following steps might be a bit faster to do in an EC2
 instance in the same zone as the RDS database. But you can of course do
@@ -70,7 +67,7 @@ repository].
 * Create the database schema by running the
 http://dev.vaadin.com/svn/incubator/QuickTickets/trunk/application/QuickTickets/db/createSchema.sql[QuickTickets/db/createSchema.sql]
 file to the quicktickets
-database.`mysql -uquicktickets -p<<your-password>> -h<<db-instance-endpoint>>.rds.amazonaws.com < QuickTickets/db/createSchema.sql`
+database.`mysql -uquicktickets -p<your-password> -h<db-instance-endpoint>.rds.amazonaws.com < QuickTickets/db/createSchema.sql`
 
 * Create a huge test data by running Ant target
 `create-huge-database-script` of the
@@ -83,7 +80,7 @@ printed to the console by the Ant target.
 
 * Run the resulting `quickticketsdata.sql` file to the quicktickets
 database (this will take quite a while, well over an
-hour).`mysql -uquicktickets -p<<your-password>> -h<<db-instance-endpoint>>.rds.amazonaws.com < /tmp/quickticketsdata.sql`
+hour). `mysql -uquicktickets -p<your-password> -h<db-instance-endpoint>.rds.amazonaws.com < /tmp/quickticketsdata.sql`
 
 [[setting-up-ec2-instances-for-quicktickets]]
 2. Setting up EC2 instance(s) for QuickTickets
@@ -122,21 +119,24 @@ haven't already) from:
 * Add the *Private DNS* of all the instances you have setup to the list
 of Memcached servers in the `WebContent/WEB-INF/servers.xml` file with
 the default Memcached port 11211. For
-example:`<!-- Memcached servers --><value>ip-11-111-11-111.ec2.internal:11211</value><value>ip-22-222-22-222.ec2.internal:11211</value>...`
+example: `<!-- Memcached servers --><value>ip-11-111-11-111.ec2.internal:11211</value><value>ip-22-222-22-222.ec2.internal:11211</value>...`
 
 * Create a file called `build.properties` to the root directory of the
 project (right next to the `QuickTickets/build.xml`). Set the
 `productionMode` property to `true` and add your Amazon RDS database
-configuration details to the file. For example:\{\{\{
+configuration details to the file. For example:
 
-1.  Debug or production mode?productionMode=true
+....
 
-1.  Database configurationdatabase.url=jdbc:mysql://[Error: Wrong macro
-arguments: "-instance-endpoint" for macro 'db' (maybe wrong macro tag
-syntax?)]
-.rds.amazonaws.com:3306/quicktickets?characterEncoding=utf8&useCompression=truedatabase.username=quickticketsdatabase.password=[Error:
-Wrong macro arguments: "-password-here" for macro 'your' (maybe wrong
-macro tag syntax?)] database.driverClassName=com.mysql.jdbc.Driver}}}//
+# Debug or production mode?
+productionMode=true
+
+# Database configuration
+database.url=jdbc:mysql:<db-instance-endpoint>.rds.amazonaws.com:3306/quicktickets?characterEncoding=utf8&useCompression=true
+database.username=quicktickets
+database.password=<your-password-here>
+database.driverClassName=com.mysql.jdbc.Driver
+....
 
 * Run the `package-war` target of the `build.xml` to compile and package
 the WAR file (resulting in the `build/ROOT.war` file).`ant package-war`
@@ -146,7 +146,7 @@ the `ROOT.war` into `/opt/apache-tomcat/webapps` directory.
 
 * Now you should be able to access the application through your web
 browser by opening the following
-URL:`[[http://<<instance-public-dns>>.amazonaws.com:8080/app|http://<<instance-public-dns>>.amazonaws.com:8080/app]]`
+URL: `http://<instance-public-dns>.amazonaws.com:8080/app`
 
 * If you did setup more than one instance, you could create an Amazon
 ELB load balancer and attach all instances to that load balancer.
@@ -156,7 +156,7 @@ dropping connections.
 ** More information:
 https://forums.aws.amazon.com/thread.jspa?messageID=130622&tstart=0
 ** More information:
-http://wiki.apache.org/jakarta-jmeter/JMeterAndAmazon
+https://wiki.apache.org/jmeter/JMeterAndAmazon
 
 * If you still want to try using ELB, you should add
 `-Dsun.net.inetaddr.ttl=0` to the JMeter JVM args and use the following
@@ -194,7 +194,7 @@ settings to suit your test:
 
 * When logged in as root to the JMeter server you can start the test
 from command line with the following
-command:`~/jakarta-jmeter-2.4/bin/jmeter.sh -n -t ~/jmeter-test-script.jmx   `
+command: `~/jakarta-jmeter-2.4/bin/jmeter.sh -n -t ~/jmeter-test-script.jmx`
 
 * After the run is complete you'll have `jmeter-results.jtl` file (or
 the filename you used for the report) which you can open in JMeter for
@@ -205,5 +205,5 @@ analyzing the results.
 ^^^^^^^^^^
 
 Jump directly to the results:
-http://vaadin.com/blog/-/blogs/vaadin-scalability-study-quicktickets[blog
+https://vaadin.com/blog/vaadin-scalability-study-quicktickets[blog
 post about the experiment and the results].
