@@ -51,7 +51,7 @@ The often-overlooked *NativeSelect* component is also convenient for
 small sets of options (up to 10 or so), and works great both for named
 items and small sets of numbers.
 
-image:img/nativeslect.png[NativeSelect]
+image:img/nativeselect.png[NativeSelect]
 
 [[combobox]]
 ComboBox
