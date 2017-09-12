@@ -151,7 +151,7 @@ communication between the client and the server. Quite straight forward.
 See the code in the incubator (link below). -*Henri Muurimaa*
 ===============================
 
-https://new.vaadin.com/directory/component/googlemaps-add-on[GoogleMaps
+https://vaadin.com/directory/component/googlemaps-add-on[GoogleMaps
 add-on]
 
 [[javascript-libraries-and-vaadin]]
@@ -275,9 +275,6 @@ lines of code for the basic functionality. It's really the distribution
 (making installers and such), and the actual application that's the hard
 part. -*Marc Englund*
 ===============================
-
-http://www.itmill.com/articles/Packaging_web_applications_for_desktop_use.htm[Packaging
-web applications for desktop use]
 
 [[opensource-stack-for-customer-projects]]
 Opensource stack for customer projects
