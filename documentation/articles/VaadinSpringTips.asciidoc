@@ -12,9 +12,9 @@ configuration file. It is a handy way to configure the VaadinServlet
 that is automatically introduced by Vaadin Spring. Here are couple of
 example which can be configured:
 
-* vaadin.servlet.productionMode=true
-* vaadin.servlet.heartbeatInterval=60
-* vaadin.servlet.closeIdleSessions=true
+* `vaadin.servlet.productionMode=true`
+* `vaadin.servlet.heartbeatInterval=60`
+* `vaadin.servlet.closeIdleSessions=true`
 
 For full list of available properties, see
 https://github.com/vaadin/spring/blob/master/vaadin-spring-boot/src/main/java/com/vaadin/spring/boot/internal/VaadinServletConfigurationProperties.java[VaadinServletConfigurationProperties].
