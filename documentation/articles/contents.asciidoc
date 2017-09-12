@@ -47,4 +47,5 @@ are great, too.
 - link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
 - link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[Integrating a JavaScript library as an extension]
 - link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[Using a JavaScript library or a style sheet in an add-on]
+- link:ExposingServerSideAPIToJavaScript.asciidoc[Exposing server-side API to JavaScript]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
