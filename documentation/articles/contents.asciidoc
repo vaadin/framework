@@ -46,4 +46,5 @@ are great, too.
 - link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on grails - Multiple UIs]
 - link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
 - link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[Integrating a JavaScript library as an extension]
+- link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[Using a JavaScript library or a style sheet in an add-on]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
