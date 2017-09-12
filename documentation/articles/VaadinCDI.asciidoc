@@ -60,3 +60,9 @@ Vaadin servlets are present.
 ** *Initialize objects in a method annotated with @PostConstruct.* CDI
 features such as @Inject are not yet functional when the constructor is
 run.
+
+[[related-pages]]
+Related pages
+~~~~~~~~~~~~~
+
+link:IIInjectionAndScopes.asciidoc[II - Injection and scopes]
