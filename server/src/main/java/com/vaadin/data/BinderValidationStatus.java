@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.BindingValidationStatus.Status;
 import com.vaadin.server.SerializablePredicate;
 
 /**
@@ -192,13 +191,12 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     }
 
     /**
-     * Notifies resolved validation statuses to handlers in bindings.
+     * Notifies all validation status handlers in bindings.
      * 
      * @see #notifyBindingValidationStatusHandlers(SerializablePredicate)
      */
     public void notifyBindingValidationStatusHandlers() {
-        notifyBindingValidationStatusHandlers(
-                t -> t.getStatus() != Status.UNRESOLVED);
+        notifyBindingValidationStatusHandlers(t -> true);
     }
 
     /**
@@ -215,6 +213,6 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     public void notifyBindingValidationStatusHandlers(
             SerializablePredicate<BindingValidationStatus<?>> filter) {
         bindingStatuses.stream().filter(filter)
-                .forEach(s -> s.getBinding().notifyValidationStatusHandler());
+                .forEach(s -> s.getBinding().notifyStatusHandler(s));
     }
 }

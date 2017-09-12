@@ -784,8 +784,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .bind(Person::getAge, Person::setAge);
 
         binder.setValidationStatusHandler(status -> {
-            status.notifyBindingValidationStatusHandlers(
-                    t -> !t.getField().equals(ageField));
+            status.notifyBindingValidationStatusHandlers();
         });
 
         String initialName = item.getFirstName();
@@ -813,7 +812,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         // Assert that the handler was called.
         Assert.assertEquals(
-                "Unexpected callCount to binding validation status handler", 2,
+                "Unexpected callCount to binding validation status handler", 4,
                 bindingHandler.callCount);
     }
 }
