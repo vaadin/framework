@@ -54,4 +54,5 @@ are great, too.
 - link:UsingBeanValidationToValidateInput.asciidoc[Using Bean Validation to validate input]
 - link:VaadinSpringTips.asciidoc[Vaadin Spring tips]
 - link:VaadinCDI.asciidoc[Vaadin CDI]
+- link:IIInjectionAndScopes.asciidoc[II - Injection and scopes]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
