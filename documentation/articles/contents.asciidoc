@@ -78,5 +78,6 @@ are great, too.
 - link:CreatingAnEclipseProject.asciidoc[Creating an Eclipse project]
 - link:CreatingASimpleComponentContainer.asciidoc[Creating a simple component container]
 - link:UsingRPCToSendEventsToTheClient.asciidoc[Using RPC to send events to the client]
+- link:CreatingAComponentExtension.asciidoc[Creating a component extension]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
