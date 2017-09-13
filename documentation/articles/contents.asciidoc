@@ -87,3 +87,4 @@ are great, too.
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
 - link:OpeningAUIInAPopupWindow.asciidoc[Opening a UI in a popup window]
 - link:ViewChangeConfirmations.asciidoc[View change confirmations]
+- link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[Creating a bookmarkable application with back button support]
