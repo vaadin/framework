@@ -62,4 +62,5 @@ are great, too.
 - link:UsingFontIcons.asciidoc[Using font icons in Vaadin 7.2]
 - link:DynamicallyInjectingCSS.asciidoc[Dynamically injecting CSS]
 - link:ValoExamples.asciidoc[Valo examples]
+- link:ReadOnlyVsDisabledFields.asciidoc[Read-only vs Disabled fields]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
