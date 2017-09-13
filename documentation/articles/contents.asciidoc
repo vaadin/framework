@@ -70,5 +70,6 @@ are great, too.
 - link:MarkRequiredFieldsAsSuch.asciidoc[Mark required fields as such]
 - link:PackagingSCSSOrCSSinAnAddon.asciidoc[Packaging SCSS or CSS in an add-on]
 - link:RightAlignComparableNumericalFields.asciidoc[Right-align comparable numerical fields]
+- link:CustomizingComponentThemeWithSass.asciidoc[Customizing component theme with Sass]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
