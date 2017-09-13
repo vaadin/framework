@@ -83,4 +83,5 @@ are great, too.
 - link:UsingDeclarativeServices.asciidoc[Using declarative services]
 - link:DynamicallyUpdatingStateBeforeSendingChangesToClient.asciidoc[Dynamically updating state before sending changes to client]
 - link:GettingStartedOnNetBeans.asciidoc[Getting started on NetBeans]
+- link:ComponentAddonProjectSetupHOWTO.asciidoc[Component add-on project setup how-to]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
