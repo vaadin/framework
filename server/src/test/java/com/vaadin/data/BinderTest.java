@@ -830,7 +830,10 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
     protected void setBeanValidationFirstNameNotEqualsLastName(
             TextField firstNameField, TextField lastNameField) {
         binder.bind(firstNameField, Person::getFirstName, Person::setFirstName);
-        binder.bind(lastNameField, Person::getLastName, Person::setLastName);
+        binder.forField(lastNameField)
+                .withValidator(t -> !"foo".equals(t),
+                        "Last name cannot be 'foo'")
+                .bind(Person::getLastName, Person::setLastName);
 
         binder.withValidator(p -> !p.getFirstName().equals(p.getLastName()),
                 "First name and last name can't be the same");

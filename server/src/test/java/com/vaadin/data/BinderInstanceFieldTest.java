@@ -342,11 +342,13 @@ public class BinderInstanceFieldTest {
         // the instance is not overridden
         Assert.assertEquals(name, form.firstName);
 
-        form.firstName.setValue("aa");
+        // Test automatic binding
         form.birthDate.setValue(person.getBirthDate().plusDays(345));
-
-        Assert.assertEquals(personName, person.getFirstName());
         Assert.assertEquals(form.birthDate.getValue(), person.getBirthDate());
+
+        // Test custom binding
+        form.firstName.setValue("aa");
+        Assert.assertEquals(personName, person.getFirstName());
 
         Assert.assertFalse(binder.validate().isOk());
     }
@@ -385,13 +387,15 @@ public class BinderInstanceFieldTest {
         Assert.assertEquals(name, form.firstName);
         Assert.assertEquals(ageField, form.noFieldInPerson);
 
-        form.firstName.setValue("aa");
+        // Test correct age
         age += 56;
         form.noFieldInPerson.setValue(String.valueOf(age));
-
-        Assert.assertEquals(personName, person.getFirstName());
         Assert.assertEquals(form.noFieldInPerson.getValue(),
                 String.valueOf(person.getAge()));
+
+        // Test incorrect name
+        form.firstName.setValue("aa");
+        Assert.assertEquals(personName, person.getFirstName());
 
         Assert.assertFalse(binder.validate().isOk());
     }
