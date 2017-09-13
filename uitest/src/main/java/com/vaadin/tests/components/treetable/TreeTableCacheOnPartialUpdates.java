@@ -123,9 +123,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
-    private static String[] columnHeaders = new String[] { "Col1", "Col2",
+    private static String[] columnHeaders = { "Col1", "Col2",
             "Col3", "Col4" };
-    private static Object[] visibleColumns = new Object[] { "col1", "col2",
+    private static Object[] visibleColumns = { "col1", "col2",
             "col3", "col4" };
 
     @Override

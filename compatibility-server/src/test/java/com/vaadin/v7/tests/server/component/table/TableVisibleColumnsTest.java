@@ -41,8 +41,7 @@ public class TableVisibleColumnsTest {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(3, 10);
 
         try {
-            t.setVisibleColumns(
-                    new Object[] { "a", "Property 2", "Property 3" });
+            t.setVisibleColumns("a", "Property 2", "Property 3");
             junit.framework.Assert.fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException e) {
             // OK, expected
@@ -54,8 +53,8 @@ public class TableVisibleColumnsTest {
     public void duplicateVisibleColumnIds() {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(3, 10);
         try {
-            t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
-                    "Property 2", "Property 1" });
+            t.setVisibleColumns("Property 0", "Property 1",
+                    "Property 2", "Property 1");
         } catch (IllegalArgumentException e) {
             // OK, expected
         }
@@ -65,7 +64,7 @@ public class TableVisibleColumnsTest {
     @Test
     public void noVisibleColumns() {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(3, 10);
-        t.setVisibleColumns(new Object[] {});
+        t.setVisibleColumns();
         assertArrayEquals(new Object[] {}, t.getVisibleColumns());
 
     }

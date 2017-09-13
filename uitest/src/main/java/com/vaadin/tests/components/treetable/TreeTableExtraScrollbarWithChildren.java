@@ -51,9 +51,9 @@ public class TreeTableExtraScrollbarWithChildren extends TestBase {
             table.addItem(child);
             table.setParent(child, parent);
         }
-        table.setVisibleColumns(new Object[] { "wordingTextId", "parameterId",
-                "parameterTypeId" });
-        table.setColumnHeaders(new String[] { "", "", "" });
+        table.setVisibleColumns("wordingTextId", "parameterId",
+                "parameterTypeId");
+        table.setColumnHeaders("", "", "");
         table.setHierarchyColumn("parameterId");
 
         layout.addComponent(table);
