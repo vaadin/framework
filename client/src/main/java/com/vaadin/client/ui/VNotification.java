@@ -426,11 +426,7 @@ public class VNotification extends VOverlay {
                 hide();
                 return false;
             }
-            if (temporaryStyle == STYLE_SYSTEM) {
-                return true;
-            } else {
-                return false;
-            }
+            return temporaryStyle == STYLE_SYSTEM;
         }
         // default
         switch (type) {
