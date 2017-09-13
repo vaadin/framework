@@ -73,5 +73,6 @@ are great, too.
 - link:CustomizingComponentThemeWithSass.asciidoc[Customizing component theme with Sass]
 - link:WidgetStylingUsingOnlyCSS.asciidoc[Widget styling using only CSS]
 - link:VisuallyDistinguishPrimaryActions.asciidoc[Visually distinguish primary actions]
+- link:LabelButtonsExpressively.asciidoc[Label buttons expressively]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
