@@ -1,0 +1,182 @@
+[[valo-theme-getting-started]]
+Valo theme - Getting started
+----------------------------
+
+To create your own variation of the Valo theme, start by creating a new
+custom theme for your project. See
+the link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass] 
+tutorial to get that done.
+
+Change your theme import and include from Reindeer to Valo:
+
+[source,scss]
+....
+@import "../valo/valo";
+
+.my-theme {
+  @include valo;
+}
+....
+
+To modify the theme outlook, define any of the global Sass variables
+before the import statement:
+
+[source,scss]
+....
+$v-background-color: #777;
+
+@import "../valo/valo";
+...
+....
+
+See below for possible variables that you can adjust. There are also
+component specific variables, but those are not yet documented anywhere
+(at the time of writing). See the corresponding component Sass source
+files in the Vaadin Git repo, they are documented at the top of the
+files.
+
+[[main-global-variables-in-valo]]
+Main global variables in Valo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* *$v-background-color*
+** The main color of the theme, which is used for computing all other
+colors in the theme (you can override those computed defaults). Can be
+any CSS color value.
+* *$v-app-background-color*
+** The background color of the application (think of the BODY element).
+Used for calculating some other component background colors. Can be any
+CSS color value.
+* *$v-app-loading-text*
+** A static text which is shown under the initial loading spinner when
+the application assets are loaded by the browser. The default is an
+empty string. Provide any other value using quotes, e.g. +
+`$v-app-loading-text: "Loading Resources...";` +
+* *$v-line-height*
+** The base line-height for all text in the theme. Should be specified
+as a unitless number, e.g. +
+`$v-line-height: 1.6;` +
+* *$v-font-size*
+** The base font size for all text in the theme. Should be specified as
+a pixel integer value, e.g. +
+`$v-font-size: 18px;`
+* *$v-font-weight*
+** The base font weight for all text in the theme. Should be specified
+as numeric value, e.g. +
+`$v-font-weight: 400;`
+* *$v-font-color*
+** The base font color for all text in the theme. Can be any CSS color
+value. Computed by default.
+* *$v-font-family*
+** The base font family for all text in the theme. The theme comes
+bundled with a few web fonts that you can easily use: Open Sans
+(default), Roboto, Lato, Lora and Source Sans Pro. Just specifying any
+of them in the $v-font-family will load the necessary font files also,
+e.g. +
+`$v-font-family: "Source Sans Pro", sans-serif;` +
+* *$v-unit-size*****
+** The base sizing unit for various measures in the theme. The unit-size
+is for instance directly mapped to the height of the buttons, as well as
+to the layout margins. Must be specified as integer pixel value, e.g. +
+`$v-unit-size: 40px;`
+* *$v-layout-margin-top,  +
+$v-layout-margin-right,  +
+$v-layout-margin-bottom,  +
+$v-layout-margin-left*
+** The margin size for all built-in layouts. Can be any CSS width
+value. +
+* *$v-layout-spacing-vertical,  +
+$v-layout-spacing-horizontal*
+** The spacing size for all built-in layouts. Can be any CSS width
+value.
+* *$v-border*
+** The base border definition for all components (though not all
+components have a border). Must be a valid CSS border shorthand, e.g. +
+`$v-border: 2px solid #ddd;`
+** The color can be defined as a special keyword for Valo (v-tint,
+v-shade or v-tone). See the section about color keywords for details.
+* *$v-border-radius*
+** The base border radius for all components. Must be specified as a
+pixel integer value, e.g. +
+`$v-border-radius: 8px;`
+* *$v-gradient*
+** The gradient style for all components. This is not a CSS gradient,
+but a Valo specific syntax for specifying the gradient type and the
+gradient opacity, e.g. +
+`$v-gradient: v-linear 20%;`
+** Only two gradient types are supported (at the time of writing):
+`v-linear` and `v-linear-reverse`
+** The opacity must be specified as a percentage value from 0% to 100%.
+* *$v-bevel*
+** The bevel style for all components. The bevel defines how the
+components "lift-up" from the background of the application, as a sort
+of a 3D effect. The syntax is the same as for CSS box-shadow, but only
+inset shadows should be used. You can define as many bevels
+(box-shadows) as you wish. E.g. `$v-bevel: inset 0 2px 2px 0 #fff, inset
+0 -2px 2px 0 #ddd;`
+** You can also use the color keywords (v-tint, v-shade, v-tone: see
+below) in place of the colors to make the bevel adapt to any color to
+which it is applied to (e.g. different colored buttons).
+* *$v-bevel-depth*
+** The "depth" of the bevel effect, i.e. how evident the bevel effect
+is, how much contrast it applies. Must be specified as a percentage
+value from 0% to 100%. Only affects the color keywords.
+* *$v-shadow*
+** The main shadow style for all components. Very few components specify
+have a shadow by default, and overlay elements define their own specific
+shadow style. The syntax is the same as for $v-bevel, but without the
+inset.
+** You can use the v-tint or v-shade keywords for the color of the
+shadows. v-tint is substituted with white and v-shade with black.
+* *$v-shadow-opacity*
+** The opacity of the shadow colors. Only affects the color keywords.
+* *$v-focus-color*
+** The color of the focus outline/border for focusable elements in the
+application. Computed by default. Can be any CSS color value.
+* *$v-focus-style*
+** The style of the focus outline for focusable elements in the
+application. The syntax is the same as for CSS box-shadow, e.g. +
+`$v-focus-style: 0 0 0 2px orange;`
+** You can also specify it to just a color value, in which case only the
+border color of the components is affected, and no other outline is
+drawn. E.g. `$v-focus-style: orange;`
+* *$v-selection-color*
+** The color for any selection highlights in the application (such as
+selected items in a Table or ComboBox). Defaults to $v-focus-color. Can
+be any CSS color value.
+* *$v-error-indicator-color*
+** The color for error indicators, and any error related styles in the
+application (such as the error style Notification). Can be any CSS color
+value.
+
+[[color-keywords]]
+Color Keywords
+~~~~~~~~~~~~~~
+
+Valo offers three custom color keywords which you can use with
+$v-border, $v-bevel and $v-shadow in place of a regular CSS color value:
+*v-tint*, *v-shade* and *v-tone*. The keywords work in the following
+way:
+
+* v-tint will be lighter version of the color it is applied on
+* v-shade will be a darker version of the color it is applied on
+* v-tone depends on the luminance value of the color on which it is
+applied on:
+** If the color is dark, then the resulting color will be a lighter
+version of that same color
+** If the color is light, then the resulting color will be darker
+version of that same color
+
+The keywords can optionally be weighted with additional numeric values,
+if you wish to fine tune the end result. Examples:
+
+* `$v-border: 1px solid v-shade;`
+* `$v-border: 2px solid (v-tint 2);`
+* `$v-border: 1px solid (v-tone 0.5);`
+
+[[additional-style-names]]
+Additional Style Names
+~~~~~~~~~~~~~~~~~~~~~~
+
+Use the `ValoTheme` Java class for additional style names for many
+components.
