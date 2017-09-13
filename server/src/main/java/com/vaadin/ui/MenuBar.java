@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.vaadin.shared.ui.ContentMode;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -143,6 +144,13 @@ public class MenuBar extends AbstractComponent
                 target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }
+
+            ContentMode contentMode = item.getContentMode();
+            if (description != null && description.length() > 0) {
+                target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE,
+                        contentMode.name());
+            }
+
             if (item.isCheckable()) {
                 // if the "checked" attribute is present (either true or false),
                 // the item is checkable
@@ -460,6 +468,7 @@ public class MenuBar extends AbstractComponent
         private boolean isSeparator = false;
         private String styleName;
         private String description;
+        private ContentMode contentMode;
         private boolean checkable = false;
         private boolean checked = false;
 
@@ -785,6 +794,8 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
+         * Analogous method to {@link AbstractComponent#setDescription(String)}
+         *
          * Sets the items's description. See {@link #getDescription()} for more
          * information on what the description is.
          *
@@ -792,7 +803,31 @@ public class MenuBar extends AbstractComponent
          *            the new description string for the component.
          */
         public void setDescription(String description) {
+            setDescription(description, ContentMode.PREFORMATTED);
+        }
+
+        /**
+         *
+         * Analogous method to {@link AbstractComponent#setDescription(String, ContentMode)}
+         *
+         * Sets the component's description using given content {@code mode}. See
+         * {@link #getDescription()} for more information on what the description
+         * is.
+         * <p>
+         * If the content {@code mode} is {@literal ContentMode.HTML} the
+         * description is displayed as HTML in tooltips or directly in certain
+         * components so care should be taken to avoid creating the possibility for
+         * HTML injection and possibly XSS vulnerabilities.
+         *
+         * @param description
+         *            the new description string for the component.
+         * @param mode
+         *            the content mode for the description
+         * @since 8.0
+         */
+        public void setDescription(String description, ContentMode mode) {
             this.description = description;
+            this.contentMode = mode;
             markAsDirty();
         }
 
@@ -854,6 +889,10 @@ public class MenuBar extends AbstractComponent
          */
         public String getDescription() {
             return description;
+        }
+
+        private ContentMode getContentMode() {
+            return contentMode;
         }
 
         /**
@@ -984,6 +1023,9 @@ public class MenuBar extends AbstractComponent
                 def.isChecked(), boolean.class, context);
         DesignAttributeHandler.writeAttribute("description", attr,
                 item.getDescription(), def.getDescription(), String.class,
+                context);
+        DesignAttributeHandler.writeAttribute("contentmode", attr,
+                item.getContentMode(), def.getContentMode(), ContentMode.class,
                 context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
                 item.getStyleName(), def.getStyleName(), String.class, context);
