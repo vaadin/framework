@@ -89,3 +89,4 @@ are great, too.
 - link:ViewChangeConfirmations.asciidoc[View change confirmations]
 - link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[Creating a bookmarkable application with back button support]
 - link:BroadcastingMessagesToOtherUsers.asciidoc[Broadcasting messages to other users]
+- link:ConfigureInputFieldsToGuideDataEntry.asciidoc[Configure input fields to guide data entry]
