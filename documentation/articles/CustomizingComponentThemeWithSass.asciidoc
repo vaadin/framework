@@ -22,7 +22,7 @@ public class SassyUI extends UI {
     Layout layout = new VerticalLayout();
     layout.addComponent(b);
     setContent(layout);
- }
+  }
 }
 ....
 
@@ -35,8 +35,8 @@ tutorial):
 ....
 @import "../reindeer/reindeer.scss";
 @mixin sassy {
-   @include reindeer;
-   // your styles go here
+  @include reindeer;
+  // your styles go here
 }
 ....
 
@@ -46,7 +46,7 @@ color of the caption like this:
 [source,scss]
 ....
 .v-button-caption {
-    color:  red;
+  color:  red;
 }
 ....
 
@@ -65,7 +65,7 @@ css:
 [source,scss]
 ....
 .important .v-button-caption {
-    color: red;
+  color: red;
 }
 ....
 
@@ -90,7 +90,7 @@ easily style this without interference from theme styles:
 [source,scss]
 ....
 .my-button {
-    color: red;
+  color: red;
 }
 ....
 
@@ -102,7 +102,7 @@ styles:
 ....
 @include base-button($primaryStyleName: my-button);
 .my-button {
-    color: red;
+  color: red;
 }
 ....
 
@@ -117,7 +117,7 @@ Now we have a good starting-point. Note that this might not be such a
 big deal for small things, like buttons, but imagine something like
 Table witout _any_ styles. Yikes.
 
-_*NOTE* in beta10, the $primaryStyleName functionality is still only
+*_NOTE_* _in beta10, the $primaryStyleName functionality is still only
 available for Base and Reindeer. This will change in the near future._
 
 Here are the full sources (using distinct colors for each button for
@@ -151,7 +151,7 @@ public class SassyUI extends UI {
     layout.addComponent(b);
 
     setContent(layout);
- }
+  }
 }
 ....
 
@@ -170,19 +170,19 @@ public class SassyUI extends UI {
 @import "../reindeer/reindeer.scss";
 
 @mixin sassy {
-   @include reindeer;
+  @include reindeer;
 
-   .v-button-caption {
-      color: red;
-   }
-
-  .important .v-button-caption {
-      color:  green;
+  .v-button-caption {
+    color: red;
   }
 
-   @include base-button($name: my-button);
-   .my-button {
-      color: blue;
-   }
+  .important .v-button-caption {
+    color:  green;
+  }
+
+  @include base-button($name: my-button);
+  .my-button {
+    color: blue;
+  }
 }
 ....
