@@ -68,5 +68,6 @@ are great, too.
 - link:EnableAndDisableButtonsToIndicateState.asciidoc[Enable and disable buttons to indicate state]
 - link:ChangingThemeOnTheFly.asciidoc[Changing theme on the fly]
 - link:MarkRequiredFieldsAsSuch.asciidoc[Mark required fields as such]
+- link:PackagingSCSSOrCSSinAnAddon.asciidoc[Packaging SCSS or CSS in an add-on]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
