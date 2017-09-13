@@ -67,5 +67,6 @@ are great, too.
 - link:UseTooltipsToClarifyFunctions.asciidoc[Use tooltips to clarify functions]
 - link:EnableAndDisableButtonsToIndicateState.asciidoc[Enable and disable buttons to indicate state]
 - link:ChangingThemeOnTheFly.asciidoc[Changing theme on the fly]
+- link:MarkRequiredFieldsAsSuch.asciidoc[Mark required fields as such]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
