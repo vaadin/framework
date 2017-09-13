@@ -86,3 +86,4 @@ are great, too.
 - link:ComponentAddonProjectSetupHOWTO.asciidoc[Component add-on project setup how-to]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
 - link:OpeningAUIInAPopupWindow.asciidoc[Opening a UI in a popup window]
+- link:ViewChangeConfirmations.asciidoc[View change confirmations]
