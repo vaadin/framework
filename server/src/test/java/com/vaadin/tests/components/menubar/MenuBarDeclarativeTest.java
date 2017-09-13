@@ -18,6 +18,7 @@ package com.vaadin.tests.components.menubar;
 import java.io.IOException;
 import java.util.List;
 
+import com.vaadin.shared.ui.ContentMode;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     public void testReadWrite() throws IOException {
         String design = "<vaadin-menu-bar auto-open tabindex=5>"
                 + "<menu checkable>Save</menu>"
-                + "<menu contentmode='preformatted' description='Open a file'>Open</menu>"
+                + "<menu description='Open a file'>Open</menu>"
                 + "<menu disabled>Close</menu>"
                 + "<menu icon='http://foo.bar/ico.png'>Help</menu>"
                 + "<menu visible='false'>About</menu>"
@@ -67,6 +68,27 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     }
 
     @Test
+    public void testDescriptionContentMode() {
+        String design = "<vaadin-menu-bar plain-text>"
+                + "<menu description=\"This description is implicitly preformatted\">One</menu>"
+                + "<menu description=\"This description\nis explicitly\n\npreformatted\">preformatted</menu>"
+                + "<menu contentmode=\"HTML\" description=\"<b>I</b> contain <br/> <e>html</e>\">HTML</menu>"
+                + "<menu contentmode=\"TEXT\" description=\"Just plain text\">plain text</menu>"
+                + "</vaadin-menu-bar>";
+        MenuBar menuBar = new MenuBar();
+        menuBar.addItem("One", null).setDescription("This description is implicitly preformatted");
+        menuBar.addItem("preformatted", null)
+                .setDescription("This description\nis explicitly\n\npreformatted", ContentMode.PREFORMATTED);
+        menuBar.addItem("HTML", null)
+                .setDescription("<b>I</b> contain <br/> <e>html</e>", ContentMode.HTML);
+        menuBar.addItem("plain text", null)
+                .setDescription("Just plain text", ContentMode.TEXT);
+
+        testWrite(design, menuBar);
+        testRead(design, menuBar);
+    }
+
+    @Test
     // #16328
     public void testTicketSpec1() throws IOException {
         String design = "<vaadin-menu-bar auto-open plain-text tabindex=5> "
@@ -74,7 +96,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
                 + "<menu separator />" + "<menu disabled>Exit</menu>"
                 + "<menu visible='false'>Not for everybody</menu>" + "</menu>"
-                + "<menu contentmode='preformatted' description=\"This contains many items in sub menus\">Other"
+                + "<menu description=\"This contains many items in sub menus\">Other"
                 + "<menu style-name=\"fancy\">Sub"
                 + "<menu checkable checked>Option 1 - no <b>html</b></menu>"
                 + "<menu checkable>Option 2</menu>"
