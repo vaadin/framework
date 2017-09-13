@@ -85,3 +85,4 @@ are great, too.
 - link:GettingStartedOnNetBeans.asciidoc[Getting started on NetBeans]
 - link:ComponentAddonProjectSetupHOWTO.asciidoc[Component add-on project setup how-to]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
+- link:OpeningAUIInAPopupWindow.asciidoc[Opening a UI in a popup window]
