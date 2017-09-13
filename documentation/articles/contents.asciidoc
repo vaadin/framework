@@ -60,4 +60,5 @@ are great, too.
 - link:LoadTestingWithGatling.asciidoc[Load testing with Gatling]
 - link:VaadinScalabilityTestingWithAmazonWebServices.asciidoc[Vaadin scalability testing with Amazon Web Services]
 - link:UsingFontIcons.asciidoc[Using font icons in Vaadin 7.2]
+- link:DynamicallyInjectingCSS.asciidoc[Dynamically injecting CSS]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
