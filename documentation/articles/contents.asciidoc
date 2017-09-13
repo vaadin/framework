@@ -71,5 +71,6 @@ are great, too.
 - link:PackagingSCSSOrCSSinAnAddon.asciidoc[Packaging SCSS or CSS in an add-on]
 - link:RightAlignComparableNumericalFields.asciidoc[Right-align comparable numerical fields]
 - link:CustomizingComponentThemeWithSass.asciidoc[Customizing component theme with Sass]
+- link:WidgetStylingUsingOnlyCSS.asciidoc[Widget styling using only CSS]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
