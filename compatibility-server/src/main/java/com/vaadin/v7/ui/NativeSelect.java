@@ -119,7 +119,7 @@ public class NativeSelect extends AbstractSelect
     @Override
     public void setMultiSelect(boolean multiSelect)
             throws UnsupportedOperationException {
-        if (multiSelect == true) {
+        if (multiSelect) {
             throw new UnsupportedOperationException(
                     "Multiselect not supported");
         }
@@ -128,7 +128,7 @@ public class NativeSelect extends AbstractSelect
     @Override
     public void setNewItemsAllowed(boolean allowNewOptions)
             throws UnsupportedOperationException {
-        if (allowNewOptions == true) {
+        if (allowNewOptions) {
             throw new UnsupportedOperationException(
                     "newItemsAllowed not supported");
         }
