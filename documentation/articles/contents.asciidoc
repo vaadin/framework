@@ -65,5 +65,6 @@ are great, too.
 - link:ReadOnlyVsDisabledFields.asciidoc[Read-only vs Disabled fields]
 - link:ValoThemeGettingStarted.asciidoc[Valo theme - Getting started]
 - link:UseTooltipsToClarifyFunctions.asciidoc[Use tooltips to clarify functions]
+- link:EnableAndDisableButtonsToIndicateState.asciidoc[Enable and disable buttons to indicate state]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
