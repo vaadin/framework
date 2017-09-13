@@ -76,5 +76,6 @@ are great, too.
 - link:LabelButtonsExpressively.asciidoc[Label buttons expressively]
 - link:CreatingAServlet3.0Application.asciidoc[Creating a servlet 3.0 application]
 - link:CreatingAnEclipseProject.asciidoc[Creating an Eclipse project]
+- link:CreatingASimpleComponentContainer.asciidoc[Creating a simple component container]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
