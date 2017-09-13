@@ -74,5 +74,6 @@ are great, too.
 - link:WidgetStylingUsingOnlyCSS.asciidoc[Widget styling using only CSS]
 - link:VisuallyDistinguishPrimaryActions.asciidoc[Visually distinguish primary actions]
 - link:LabelButtonsExpressively.asciidoc[Label buttons expressively]
+- link:CreatingAServlet3.0Application.asciidoc[Creating a servlet 3.0 application]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
