@@ -127,7 +127,7 @@
 											exec-maven-plugin
 										</artifactId>
 										<versionRange>
-											[1.4.0,)
+											[1.6.0,)
 										</versionRange>
 										<goals>
 											<goal>exec</goal>
