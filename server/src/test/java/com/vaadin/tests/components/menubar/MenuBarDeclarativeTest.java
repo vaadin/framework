@@ -40,7 +40,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     public void testReadWrite() throws IOException {
         String design = "<vaadin-menu-bar auto-open tabindex=5>"
                 + "<menu checkable>Save</menu>"
-                + "<menu description='Open a file'>Open</menu>"
+                + "<menu contentmode='preformatted' description='Open a file'>Open</menu>"
                 + "<menu disabled>Close</menu>"
                 + "<menu icon='http://foo.bar/ico.png'>Help</menu>"
                 + "<menu visible='false'>About</menu>"
@@ -74,7 +74,7 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 + "<menu icon=\"theme://../runo/icons/16/folder.png\">Open</menu>"
                 + "<menu separator />" + "<menu disabled>Exit</menu>"
                 + "<menu visible='false'>Not for everybody</menu>" + "</menu>"
-                + "<menu description=\"This contains many items in sub menus\">Other"
+                + "<menu contentmode='preformatted' description=\"This contains many items in sub menus\">Other"
                 + "<menu style-name=\"fancy\">Sub"
                 + "<menu checkable checked>Option 1 - no <b>html</b></menu>"
                 + "<menu checkable>Option 2</menu>"
