@@ -769,11 +769,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
-            if (overflow.equals("auto") || overflow.equals("scroll")) {
-                return true;
-            } else {
-                return false;
-            }
+            return overflow.equals("auto") || overflow.equals("scroll");
         } else {
             return false;
         }
