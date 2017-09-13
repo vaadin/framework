@@ -90,3 +90,5 @@ are great, too.
 - link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[Creating a bookmarkable application with back button support]
 - link:BroadcastingMessagesToOtherUsers.asciidoc[Broadcasting messages to other users]
 - link:ConfigureInputFieldsToGuideDataEntry.asciidoc[Configure input fields to guide data entry]
+- link:CreatingMultiTabApplications.asciidoc[Creating multi-tab applications]
+- link:AddingASplashScreen.asciidoc[Adding a splash screen]
