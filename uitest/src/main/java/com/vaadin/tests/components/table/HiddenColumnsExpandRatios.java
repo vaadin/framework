@@ -46,7 +46,7 @@ public class HiddenColumnsExpandRatios extends TestBase {
             public void buttonClick(ClickEvent event) {
                 table.setWidth("100px");
                 table.setWidth("800px");
-                table.setVisibleColumns(new Object[] { "foo", "bar", "baz" });
+                table.setVisibleColumns("foo", "bar", "baz");
             }
         }));
     }

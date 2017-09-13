@@ -63,7 +63,7 @@ public class SetPageFirstItemLoadsNeededRowsOnly
         }
 
         final Table table = new Table("Beans", beans);
-        table.setVisibleColumns(new Object[] { "i" });
+        table.setVisibleColumns("i");
         layout.addComponent(table);
 
         table.setCurrentPageFirstItemIndex(table.size() - 1);

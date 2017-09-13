@@ -38,7 +38,7 @@ public class TableCacheMinimizingOnFetchRows extends AbstractTestUIWithLog {
 
         table.setContainerDataSource(beans);
         table.setPageLength(20);
-        table.setVisibleColumns(new Object[] { "name", "value" });
+        table.setVisibleColumns("name", "value");
         table.setWidth("800px");
 
         Button button = new Button("scroll down");

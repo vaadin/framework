@@ -41,7 +41,7 @@ public class TableVisibleColumnsUpdate extends AbstractReindeerTestUI {
 
         addComponent(table);
 
-        table.setVisibleColumns(cols1);
+        table.setVisibleColumns((Object[]) cols1);
         // table.setColumnHeaders(headers1);
 
         Button updateButton = new Button("Change columns", new ClickListener() {

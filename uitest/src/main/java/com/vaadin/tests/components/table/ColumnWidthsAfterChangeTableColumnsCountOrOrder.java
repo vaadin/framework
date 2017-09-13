@@ -40,8 +40,7 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(
-                                new Object[] { "name", "descr", "id" });
+                        table.setVisibleColumns("name", "descr", "id");
                         table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                     }
                 });
