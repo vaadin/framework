@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -141,6 +142,15 @@ public class ServletUIInitHandlerTest {
                             @Override
                             public void write(int b) throws IOException {
                             }
+
+                            @Override
+                            public boolean isReady() {
+                                return false;
+                            }
+
+                            @Override
+                            public void setWriteListener(WriteListener writeListener) {
+                            }
                         };
                     }
                 });
@@ -175,6 +185,15 @@ public class ServletUIInitHandlerTest {
                         return new ServletOutputStream() {
                             @Override
                             public void write(int b) throws IOException {
+                            }
+
+                            @Override
+                            public boolean isReady() {
+                                return false;
+                            }
+
+                            @Override
+                            public void setWriteListener(WriteListener writeListener) {
                             }
                         };
                     }

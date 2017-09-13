@@ -71,9 +71,9 @@
             <exclude type="pom" />
         </dependency>
 
-        <!-- Servlet 3.0 API -->
+        <!-- Servlet 3.1.0 API -->
         <dependency org="javax.servlet" name="javax.servlet-api"
-            rev="3.0.1" conf="build-provided -> default" />
+            rev="3.1.0" conf="build-provided -> default" />
 
         <dependency org="org.eclipse.jetty" name="jetty-server"
             rev="&jetty.version;" conf="build-provided, jetty-run->default">
