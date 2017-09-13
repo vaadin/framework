@@ -471,12 +471,8 @@ public class ComponentSizeValidator implements Serializable {
                         }
                     }
                 }
-                if (!rowHasHeight) {
-                    return false;
-                } else {
-                    // Other components define row height
-                    return true;
-                }
+                // Other components define row height
+                return rowHasHeight;
             } else if (isForm(parent)) {
                 /*
                  * If some other part of the form is not relative it determines
@@ -571,12 +567,8 @@ public class ComponentSizeValidator implements Serializable {
                     horizontal = false;
                 }
 
-                if (!horizontal && hasNonRelativeWidthComponent(ol)) {
-                    // valid situation, other components defined width
-                    return true;
-                } else {
-                    return false;
-                }
+                // valid situation, other components defined width
+                return !horizontal && hasNonRelativeWidthComponent(ol);
             } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
@@ -591,12 +583,8 @@ public class ComponentSizeValidator implements Serializable {
                         }
                     }
                 }
-                if (!columnHasWidth) {
-                    return false;
-                } else {
-                    // Other components define column width
-                    return true;
-                }
+                // Other components define column width
+                return columnHasWidth;
             } else if (parent instanceof AbstractSplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
@@ -608,18 +596,11 @@ public class ComponentSizeValidator implements Serializable {
                 return false;
             } else if (parent instanceof Window) {
                 // Sub window can define width based on caption
-                if (parent.getCaption() != null
-                        && !parent.getCaption().isEmpty()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (parent instanceof Panel) {
-                // TODO Panel should be able to define width based on caption
-                return false;
-            } else {
-                return true;
+                return parent.getCaption() != null
+                        && !parent.getCaption().isEmpty();
             }
+            // TODO Panel should be able to define width based on caption
+            return !(parent instanceof Panel);
         } else if (hasRelativeWidth(parent)) {
             // Relative width
             if (parent.getParent() == null) {

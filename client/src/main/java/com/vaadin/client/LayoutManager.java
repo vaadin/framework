@@ -144,21 +144,15 @@ public class LayoutManager {
             return true;
         } else if (elementResizeListeners.containsKey(e)) {
             return true;
-        } else if (getMeasuredSize(e, nullSize).hasDependents()) {
-            return true;
-        } else {
-            return false;
         }
+        return getMeasuredSize(e, nullSize).hasDependents();
     }
 
     private boolean needsMeasureForManagedLayout(ComponentConnector connector) {
         if (connector instanceof ManagedLayout) {
             return true;
-        } else if (connector.getParent() instanceof ManagedLayout) {
-            return true;
-        } else {
-            return false;
         }
+        return connector.getParent() instanceof ManagedLayout;
     }
 
     /**
