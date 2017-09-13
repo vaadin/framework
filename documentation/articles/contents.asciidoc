@@ -80,4 +80,5 @@ are great, too.
 - link:UsingRPCToSendEventsToTheClient.asciidoc[Using RPC to send events to the client]
 - link:CreatingAComponentExtension.asciidoc[Creating a component extension]
 - link:CreatingAUIExtension.asciidoc[Creating a UI extension]
+- link:UsingDeclarativeServices.asciidoc[Using declarative services]
 - link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
