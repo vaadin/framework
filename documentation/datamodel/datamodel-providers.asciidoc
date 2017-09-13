@@ -378,7 +378,7 @@ ConfigurableFilterDataProvider<Person, Void, String> wrapper =
   personProvider.withConfigurableFilter();
 
 Grid<Person> grid = new Grid<>();
-grid.setDataProvider(johnPersons);
+grid.setDataProvider(personProvider);
 grid.addColumn(Person::getName).setCaption("Name");
 
 searchField.addValueChangeListener(event -> {
