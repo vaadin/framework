@@ -7,7 +7,6 @@
         <artifactId>vaadin-root</artifactId>
         <version>8.2-SNAPSHOT</version>
     </parent>
-    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-client</artifactId>
     <name>vaadin-client</name>
     <packaging>jar</packaging>

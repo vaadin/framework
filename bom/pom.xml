@@ -7,7 +7,6 @@
         <version>1.1.0</version>
         <relativePath />
     </parent>
-    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-bom</artifactId>
     <packaging>pom</packaging>
     <version>8.2-SNAPSHOT</version>

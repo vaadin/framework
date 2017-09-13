@@ -7,7 +7,6 @@
 		<artifactId>vaadin-root</artifactId>
 		<version>8.2-SNAPSHOT</version>
 	</parent>
-	<groupId>com.vaadin</groupId>
 	<artifactId>vaadin-client-compiled</artifactId>
 	<name>vaadin-client-compiled</name>
 	<packaging>jar</packaging>
@@ -96,7 +95,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
 				<configuration>
 					<archive>
 						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
