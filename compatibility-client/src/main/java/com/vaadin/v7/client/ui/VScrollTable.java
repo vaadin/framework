@@ -5388,8 +5388,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Calculates the maximum indent of the hierarcyColumn, if applicable.
          */
         protected void calculateMaxIndent() {
