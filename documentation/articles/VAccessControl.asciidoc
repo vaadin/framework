@@ -1,0 +1,396 @@
+[[v-access-control]]
+V - Access control
+------------------
+
+In this tutorial we will look into access control.
+
+[[basic-access-control]]
+Basic access control
+~~~~~~~~~~~~~~~~~~~~
+
+The application we've been building will inevitably need some
+administrative tools. Creation and deletion of users, for example, is
+generally something that we'd like to do during runtime. Let's create a
+simple View for creating a new user:
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import javax.inject.Inject;
+
+import com.vaadin.cdi.CDIView;
+import com.vaadin.data.Validator;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+
+@CDIView
+public class CreateUserView extends CustomComponent implements View {
+
+  @Inject
+  UserDAO userDAO;
+
+  private static final AtomicLong ID_FACTORY = new AtomicLong(3);
+
+  @Override
+  public void enter(ViewChangeEvent event) {
+    final VerticalLayout layout = new VerticalLayout();
+    layout.setMargin(true);
+    layout.setSpacing(true);
+    layout.addComponent(new Label("Create new user"));
+
+    final BeanFieldGroup<User> fieldGroup = new BeanFieldGroup<User>(
+        User.class);
+    layout.addComponent(fieldGroup.buildAndBind("firstName"));
+    layout.addComponent(fieldGroup.buildAndBind("lastName"));
+    layout.addComponent(fieldGroup.buildAndBind("username"));
+    layout.addComponent(fieldGroup.buildAndBind("password"));
+    layout.addComponent(fieldGroup.buildAndBind("email"));
+
+    fieldGroup.getField("username").addValidator(new Validator() {
+      @Override
+      public void validate(Object value) throws InvalidValueException {
+        String username = (String) value;
+        if (username.isEmpty()) {
+          throw new InvalidValueException("Username cannot be empty");
+        }
+
+        if (userDAO.getUserBy(username) != null) {
+          throw new InvalidValueException("Username is taken");
+        }
+      }
+    });
+
+    fieldGroup.setItemDataSource(new User(ID_FACTORY.incrementAndGet(), "",
+        "", "", "", "", false));
+
+    final Label messageLabel = new Label();
+    layout.addComponent(messageLabel);
+
+    fieldGroup.addCommitHandler(new CommitHandler() {
+      @Override
+      public void preCommit(CommitEvent commitEvent) throws CommitException {
+      }
+
+      @Override
+      public void postCommit(CommitEvent commitEvent) throws CommitException {
+        userDAO.saveUser(fieldGroup.getItemDataSource().getBean());
+        fieldGroup.setItemDataSource(new User(ID_FACTORY
+            .incrementAndGet(), "", "", "", "", "", false));
+      }
+    });
+    Button commitButton = new Button("Create");
+    commitButton.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        try {
+          fieldGroup.commit();
+          messageLabel.setValue("User created");
+        } catch (CommitException e) {
+          messageLabel.setValue(e.getMessage());
+        }
+      }
+    });
+
+    layout.addComponent(commitButton);
+    setCompositionRoot(layout);
+  }
+}
+....
+
+`CDIViewProvider` checks the Views for a specific annotation,
+`javax.annotation.security.RolesAllowed`. You can get access to it by
+adding the following dependency to your pom.xml:
+
+[source,xml]
+....
+<dependency>
+  <groupId>javax.annotation</groupId>
+  <artifactId>javax.annotation-api</artifactId>
+  <version>1.2-b01</version>
+</dependency>
+....
+
+[source,java]
+....
+@CDIView
+@RolesAllowed({ "admin" })
+public class CreateUserView extends CustomComponent implements View {
+....
+
+To add access control to our application we'll need to have a concrete
+implementation of the AccessControl abstract class. Vaadin CDI comes
+bundled with a simple JAAS implementation, but configuring a JAAS
+security domain is outside the scope of this tutorial. Instead we'll opt
+for a simpler implementation.
+
+We'll go ahead and alter our UserInfo class to include hold roles.
+
+[source,java]
+....
+private List<String> roles = new LinkedList<String>();
+public void setUser(User user) {
+  this.user = user;
+  roles.clear();
+  if (user != null) {
+    roles.add("user");
+    if (user.isAdmin()) {
+      roles.add("admin");
+    }
+  }
+}
+
+public List<String> getRoles() {
+  return roles;
+}
+....
+
+Let's extend `AccessControl` and use our freshly modified `UserInfo` in it.
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import javax.enterprise.inject.Alternative;
+import javax.inject.Inject;
+
+import com.vaadin.cdi.access.AccessControl;
+
+@Alternative
+public class CustomAccessControl extends AccessControl {
+
+  @Inject
+  private UserInfo userInfo;
+
+  @Override
+  public boolean isUserSignedIn() {
+    return userInfo.getUser() != null;
+  }
+
+  @Override
+  public boolean isUserInRole(String role) {
+    if (isUserSignedIn()) {
+      for (String userRole : userInfo.getRoles()) {
+        if (role.equals(userRole)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public String getPrincipalName() {
+    if (isUserSignedIn()) {
+      return userInfo.getUser().getUsername();
+    }
+    return null;
+  }
+}
+....
+
+Note the `@Alternative` annotation. The JAAS implementation is set as the
+default, and we can't have multiple default implementations. We'll have
+to add our custom implementation to the beans.xml:
+
+[source,xml]
+....
+<beans>
+  <alternatives>
+    <class>com.vaadin.cdi.tutorial.UserGreetingImpl</class>
+    <class>com.vaadin.cdi.tutorial.CustomAccessControl</class>
+  </alternatives>
+  <decorators>
+    <class>com.vaadin.cdi.tutorial.NavigationLogDecorator</class>
+  </decorators>
+</beans>
+....
+
+Now let's add a button to navigate to this view.
+
+ChatView:
+
+[source,java]
+....
+private Layout buildUserSelectionLayout() {
+  VerticalLayout layout = new VerticalLayout();
+  layout.setWidth("100%");
+  layout.setMargin(true);
+  layout.setSpacing(true);
+  layout.addComponent(new Label("Select user to talk to:"));
+  for (User user : userDAO.getUsers()) {
+    if (user.equals(userInfo.getUser())) {
+      continue;
+    }
+    layout.addComponent(generateUserSelectionButton(user));
+  }
+  layout.addComponent(new Label("Admin:"));
+  Button createUserButton = new Button("Create user");
+  createUserButton.addClickListener(new ClickListener() {
+    @Override
+    public void buttonClick(ClickEvent event) {
+      navigationEvent.fire(new NavigationEvent("create-user"));
+    }
+  });
+  layout.addComponent(createUserButton);
+  return layout;
+}
+....
+
+Everything seems to work fine, the admin is able to use this new feature
+to create a new user and the view is inaccessible to non-admins. An
+attempt to access the view without the proper authorization will
+currently cause an `IllegalArgumentException`. A better approach would be
+to create an error view and display that instead.
+
+[source,java]
+....
+package com.vaadin.cdi.tutorial;
+
+import javax.inject.Inject;
+
+import com.vaadin.cdi.access.AccessControl;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
+
+public class ErrorView extends CustomComponent implements View {
+
+  @Inject
+  private AccessControl accessControl;
+
+  @Inject
+  private javax.enterprise.event.Event<NavigationEvent> navigationEvent;
+
+  @Override
+  public void enter(ViewChangeEvent event) {
+    VerticalLayout layout = new VerticalLayout();
+    layout.setSizeFull();
+    layout.setMargin(true);
+    layout.setSpacing(true);
+
+    layout.addComponent(new Label(
+        "Unfortunately, the page you've requested does not exists."));
+    if (accessControl.isUserSignedIn()) {
+      layout.addComponent(createChatButton());
+    } else {
+      layout.addComponent(createLoginButton());
+    }
+    setCompositionRoot(layout);
+  }
+
+  private Button createLoginButton() {
+    Button button = new Button("To login page");
+    button.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        navigationEvent.fire(new NavigationEvent("login"));
+      }
+    });
+    return button;
+  }
+
+  private Button createChatButton() {
+    Button button = new Button("Back to the main page");
+    button.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        navigationEvent.fire(new NavigationEvent("chat"));
+      }
+    });
+    return button;
+  }
+}
+....
+
+To use this we'll modify our `NavigationService` to add the error view to
+the `Navigator`.
+
+NavigationServiceImpl:
+
+[source,java]
+....
+@Inject
+private ErrorView errorView;
+
+@PostConstruct
+public void initialize() {
+  if (ui.getNavigator() == null) {
+    Navigator navigator = new Navigator(ui, ui);
+    navigator.addProvider(viewProvider);
+    navigator.setErrorView(errorView);
+  }
+}
+....
+
+We don't really want the admin-only buttons to be visible to non-admin
+users. To programmatically hide them we can inject `AccessControl` to our
+view.
+
+ChatView:
+
+[source,java]
+....
+@Inject
+private AccessControl accessControl;
+
+private Layout buildUserSelectionLayout() {
+  VerticalLayout layout = new VerticalLayout();
+  layout.setWidth("100%");
+  layout.setMargin(true);
+  layout.setSpacing(true);
+  layout.addComponent(new Label("Select user to talk to:"));
+  for (User user : userDAO.getUsers()) {
+    if (user.equals(userInfo.getUser())) {
+      continue;
+    }
+    layout.addComponent(generateUserSelectionButton(user));
+  }
+  if(accessControl.isUserInRole("admin")) {
+    layout.addComponent(new Label("Admin:"));
+    Button createUserButton = new Button("Create user");
+    createUserButton.addClickListener(new ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        navigationEvent.fire(new NavigationEvent("create-user"));
+      }
+    });
+    layout.addComponent(createUserButton);
+  }
+  return layout;
+}
+....
+
+[[some-further-topics]]
+Some further topics
+~~~~~~~~~~~~~~~~~~~
+
+In the previous section we pruned the layout programmatically to prevent
+non-admins from even seeing the admin buttons. That was one way to do
+it. Another would be to create a custom component representing the
+layout, then create a producer for that component which would determine
+at runtime which version to create.
+
+Sometimes there's a need for a more complex custom access control
+implementations. You may need to use something more than Java Strings to
+indicate user roles, you may want to alter access rights during runtime.
+For those purposes we could extend the `CDIViewProvider` (with either the
+`@Specializes` annotation or `@Alternative` with a beans.xml entry) and
+override `isUserHavingAccessToView(Bean<?> viewBean)`.
