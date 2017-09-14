@@ -829,7 +829,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
-            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder")
+            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
