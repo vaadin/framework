@@ -15,26 +15,6 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
@@ -42,17 +22,22 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.SerializableFunction;
-import com.vaadin.server.SerializablePredicate;
-import com.vaadin.server.Setter;
-import com.vaadin.server.UserError;
+import com.vaadin.server.*;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Connects one or more {@code Field} components to properties of a backing data
@@ -125,6 +110,11 @@ public class Binder<BEAN> implements Serializable {
          * @return the validation result.
          */
         public BindingValidationStatus<TARGET> validate();
+
+        /**
+         * Unbinds the binding - removes the value {@code ValueChangeListener}
+         */
+        public void unbind();
 
     }
 
@@ -830,6 +820,13 @@ public class Binder<BEAN> implements Serializable {
                             Arrays.asList(status), Collections.emptyList()));
             getBinder().fireStatusChangeEvent(status.isError());
             return status;
+        }
+
+        @Override
+        public void unbind() {
+            if (onValueChange != null) {
+                onValueChange.remove();
+            }
         }
 
         /**
@@ -2417,6 +2414,7 @@ public class Binder<BEAN> implements Serializable {
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
                     .removeIf(entry -> entry.getValue().equals(binding));
+            binding.unbind();
         }
     }
 
