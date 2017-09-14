@@ -9,3 +9,4 @@
 - link:ChangingTheDefaultConvertersForAnApplication.asciidoc[Changing the default converters for an application]
 - link:CreatingAnApplicationWithDifferentFeaturesForDifferentClients.asciidoc[Creating an application with different features for different clients]
 - link:VAccessControl.asciidoc[V - Access control]
+- link:FindingTheCurrentRootAndApplication.asciidoc[Finding the current root and application]
