@@ -1,0 +1,413 @@
+[[using-jdbc-with-lazy-query-container-and-filteringtable]]
+Using JDBC with Lazy Query Container and FilteringTable
+-------------------------------------------------------
+
+Introduction
+
+Populating display tables from a database is a deceptively complicated
+operation, especially when mixing multiple techniques together. This
+page provides an example of one way to efficiently load data from a SQL
+database table into a filterable UI, using the _Lazy Query Container_ and
+_FilteringTable_ add-ons.
+
+Note: Do not use the SQLContainer package. This is buggy and will have
+your database and garbage collector crunching in loops.
+
+`Query` and `QueryFactory` implementation
+
+The place to start is the Lazy Query Container's (LQC) Query interface.
+This is where the interface with your database happens. This example
+access a database table with computer statistics. It's read-only. How to
+log and access your JDBC connection differs in each environment; they
+are treated generically here. Only select imports are included.
+
+[source,java]
+....
+import org.vaadin.addons.lazyquerycontainer.Query;
+import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
+import org.vaadin.addons.lazyquerycontainer.QueryFactory;
+
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.data.util.PropertysetItem;
+import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
+
+/**
+ * Query for using the database's device-status table as a data source
+ * for a Vaadin container (table).
+ */
+public class DeviceStatusQuery implements Query {
+  private static  final Logger log = LoggerFactory.getLogger(DeviceStatusQuery.class);
+
+  /**
+   * The table column names. Use these instead of typo-prone magic strings.
+   */
+  public static enum Column {
+    hostname, loc_id, update_when, net_ip, lan_ip, lan_mac, hardware,
+    opsys, image, sw_ver, cpu_load, proc_count, mem_usage, disk_usage;
+
+    public boolean is(Object other) {
+      if (other instanceof String)
+        return this.toString().equals(other);
+      else
+        return (this == other);
+    }
+  };
+
+  public static class Factory implements QueryFactory {
+    private int locId;
+
+    /**
+     * Constructor
+     * @param locId - location ID
+     */
+    public Factory(int locId) {
+      this.locId = locId;
+    }
+
+    @Override
+    public Query constructQuery(QueryDefinition def) {
+      return new DeviceStatusQuery(def, locId);
+    }
+  }//class Factory
+
+  /////// INSTANCE ///////
+
+  private String countQuery;
+  private String fetchQuery;
+  /** Borrow from SQLContainer to build filter queries */
+  private StatementHelper stmtHelper = new StatementHelper();
+
+  /**
+   * Constructor
+   * @param locId - location ID
+   * @param userId - ID of user viewing the data
+   */
+  private DeviceStatusQuery(QueryDefinition def, int locId) {
+    Build filters block List<Filter> filters = def.getFilters();
+    String filterStr = null;
+    if (filters != null && !filters.isEmpty())
+      filterStr = QueryBuilder.getJoinedFilterString(filters, "AND", stmtHelper);
+
+    // Count query
+    StringBuilder query = new StringBuilder( "SELECT COUNT(*) FROM device_status");
+    query.append(" WHERE loc_id=").append(locId);
+
+    if (filterStr != null)
+      query.append(" AND ").append(filterStr);
+
+    this.countQuery = query.toString();
+
+    // Fetch query
+    query = new StringBuilder(
+      "SELECT hostname, loc_id, update_when, net_ip, lan_ip, " +
+      "lan_mac, hardware, opsys, image, sw_ver, cpu_load, " +
+      "proc_count, mem_usage, disk_usage FROM device_status");
+    query.append(" WHERE loc_id=").append(locId);
+
+    if (filterStr != null)
+      query.append(" AND ").append(filterStr);
+
+    // Build Order by
+    Object[] sortIds = def.getSortPropertyIds();
+    if (sortIds != null && sortIds.length > 0) {
+      query.append(" ORDER BY ");
+      boolean[] sortAsc = def.getSortPropertyAscendingStates();
+      assert sortIds.length == sortAsc.length;
+
+      for (int si = 0; si < sortIds.length; ++si) {
+        if (si > 0) query.append(',');
+
+        query.append(sortIds[si]);
+        if (sortAsc[si]) query.append(" ASC");
+        else query.append(" DESC");
+      }
+    }
+    else query.append(" ORDER BY hostname");
+
+    this.fetchQuery = query.toString();
+
+    log.trace("DeviceStatusQuery count: {}", this.countQuery);
+    log.trace("DeviceStatusQuery fetch: {}", this.fetchQuery);
+  }//constructor
+
+  @Override
+  public int size() {
+    int result = 0;
+    try (Connection conn = Database.getConnection()) {
+      PreparedStatement stmt = conn.prepareStatement(this.countQuery);
+      stmtHelper.setParameterValuesToStatement(stmt);
+      ResultSet rs = stmt.executeQuery();
+      if (rs.next()) result = rs.getInt(1);
+
+      stmt.close();
+    }
+    catch (SQLException ex) {
+      log.error("DB access failure", ex);
+    }
+
+    log.trace("DeviceStatusQuery size=\{}", result);
+    return result;
+  }
+
+  @Override
+  public List<Item> loadItems(int startIndex, int count) {
+    List<Item> items = new ArrayList<Item>();
+    try (Connection conn = Database.getConnection()) {
+      String q = this.fetchQuery + " LIMIT " + count + " OFFSET " + startIndex;
+      PreparedStatement stmt = conn.prepareStatement(q);
+      stmtHelper.setParameterValuesToStatement(stmt);
+
+      ResultSet rs = stmt.executeQuery();
+      while (rs.next()) {
+        PropertysetItem item = new PropertysetItem();
+        // Include the data type parameter on ObjectProperty any time the value could be null
+        item.addItemProperty(Column.hostname,
+          new ObjectProperty<String>(rs.getString(1), String.class));
+        item.addItemProperty(Column.loc_id,
+          new ObjectProperty<Integer>(rs.getInt(2), Integer.class));
+        item.addItemProperty(Column.update_when,
+          new ObjectProperty<Timestamp>(rs.getTimestamp(3), Timestamp.class));
+        item.addItemProperty(Column.net_ip,
+          new ObjectProperty<String>(rs.getString(4)));
+        item.addItemProperty(Column.lan_ip,
+          new ObjectProperty<String>(rs.getString(5)));
+        item.addItemProperty(Column.lan_mac,
+          new ObjectProperty<String>(rs.getString(6)));
+        item.addItemProperty(Column.hardware,
+          new ObjectProperty<String>(rs.getString(7)));
+        item.addItemProperty(Column.opsys,
+          new ObjectProperty<String>(rs.getString(8)));
+        item.addItemProperty(Column.image,
+          new ObjectProperty<String>(rs.getString(9)));
+        item.addItemProperty(Column.sw_ver,
+          new ObjectProperty<String>(rs.getString(10)));
+        item.addItemProperty(Column.cpu_load,
+          new ObjectProperty<String>(rs.getString(11)));
+        item.addItemProperty(Column.proc_count,
+          new ObjectProperty<Integer>(rs.getInt(12)));
+        item.addItemProperty(Column.mem_usage,
+          new ObjectProperty<Integer>(rs.getInt(13)));
+        item.addItemProperty(Column.disk_usage,
+          new ObjectProperty<Integer>(rs.getInt(14)));
+
+        items.add(item);
+      }
+      rs.close();
+      stmt.close();
+    }
+    catch (SQLException ex) {
+      log.error("DB access failure", ex);
+    }
+
+    log.trace("DeviceStatusQuery load {} items from {}={} found", count,
+        startIndex, items.size());
+    return items;
+  } //loadItems()
+
+/**
+ * Only gets here if loadItems() fails, so return an empty state.
+ * Throwing from here causes an infinite loop.
+ */
+ @Override
+ public Item constructItem() {
+  PropertysetItem item = new PropertysetItem();
+  item.addItemProperty(Column.hostname, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.loc_id, new ObjectProperty<Integer>(-1));
+  item.addItemProperty(Column.update_when,
+    new ObjectProperty<Timestamp>(new Timestamp(System.currentTimeMillis())));
+  item.addItemProperty(Column.net_ip, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.lan_ip, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.lan_mac, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.hardware, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.opsys, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.image, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.sw_ver, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.cpu_load, new ObjectProperty<String>(""));
+  item.addItemProperty(Column.proc_count, new ObjectProperty<Integer>(0));
+  item.addItemProperty(Column.mem_usage, new ObjectProperty<Integer>(0));
+  item.addItemProperty(Column.disk_usage, new ObjectProperty<Integer>(0));
+
+  log.warn("Shouldn't be calling DeviceStatusQuery.constructItem()");
+    return item;
+  }
+
+  @Override
+  public boolean deleteAllItems() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void saveItems(List<Item> arg0, List<Item> arg1, List<Item> arg2) {
+    throw new UnsupportedOperationException();
+  }
+}
+....
+
+Using the Query with FilteringTable
+
+Now that we have our Query, we need to create a table to hold it. Here's
+one of many ways to do it with FilteringTable.
+
+[source,java]
+....
+
+import org.tepi.filtertable.FilterDecorator;
+import org.tepi.filtertable.numberfilter.NumberFilterPopupConfig;
+import org.vaadin.addons.lazyquerycontainer.LazyQueryContainer;
+
+import com.vaadin.data.Property;
+import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
+
+/**
+ * Filterable table of device statuses.
+ */
+public class DeviceStatusTable extends FilterTable {
+  private final
+  String[] columnHeaders = {"Device", "Site", "Last Report", "Report IP",
+      "LAN IP", "MAC Adrs", "Hardware", "O/S", "Image", "Software", "CPU"
+      "Load", "Processes", "Memory Use", "Disk Use"};
+
+  /**
+   * Configuration this table for displaying of DeviceStatusQuery data.
+   */
+  public void configure(LazyQueryContainer dataSource) {
+    super.setFilterGenerator(new LQCFilterGenerator(dataSource));
+    super.setFilterBarVisible(true);
+    super.setSelectable(true);
+    super.setImmediate(true);
+    super.setColumnReorderingAllowed(true);
+    super.setColumnCollapsingAllowed(true);
+    super.setSortEnabled(true);
+
+    dataSource.addContainerProperty(Column.hostname, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.loc_id, Integer.class, null, true, false);
+    dataSource.addContainerProperty(Column.update_when, Timestamp.class, null, true, true);
+    dataSource.addContainerProperty(Column.net_ip, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.lan_ip, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.lan_mac, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.hardware, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.opsys, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.image, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.sw_ver, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.cpu_load, String.class, null, true, true);
+    dataSource.addContainerProperty(Column.proc_count, Integer.class, null, true, true);
+    dataSource.addContainerProperty(Column.mem_usage, Integer.class, null, true, true);
+    dataSource.addContainerProperty(Column.disk_usage, Integer.class, null, true, true);
+
+    super.setContainerDataSource(dataSource);
+    super.setColumnHeaders(columnHeaders);
+    super.setColumnCollapsed(Column.lan_mac, true);
+    super.setColumnCollapsed(Column.opsys, true);
+    super.setColumnCollapsed(Column.image, true);
+    super.setFilterFieldVisible(Column.loc_id, false);
+  }
+
+  @Override
+  protected String formatPropertyValue(Object rowId, Object colId, Property<?> property) {
+    if (Column.loc_id.is(colId)) {
+      // Example of how to translate a column value
+      return Hierarchy.getLocation(((Integer) property.getValue())).getShortName();
+    } else if (Column.update_when.is(colId)) {
+      // Example of how to format a value.
+      return ((java.sql.Timestamp) property.getValue()).toString().substring(0, 19);
+    }
+
+    return super.formatPropertyValue(rowId, colId, property);
+  }
+
+  /**
+   * Filter generator that triggers a refresh of a LazyQueryContainer
+   * whenever the filters change.
+   */
+  public class LQCFilterGenerator implements FilterGenerator {
+    private final LazyQueryContainer lqc;
+
+    public LQCFilterGenerator(LazyQueryContainer lqc) {
+      this.lqc = lqc;
+    }
+
+    @Override
+    public Filter generateFilter(Object propertyId, Object value) {
+      return null;
+    }
+
+    @Override
+    public Filter generateFilter(Object propertyId, Field<?> originatingField) {
+      return null;
+    }
+
+    @Override
+    public AbstractField<?> getCustomFilterComponent(Object propertyId) {
+      return null;
+    }
+
+    @Override
+    public void filterRemoved(Object propertyId) {
+      this.lqc.refresh();
+    }
+
+    @Override
+    public void filterAdded(Object propertyId, Class<? extends Filter> filterType, Object value) {
+      this.lqc.refresh();
+    }
+
+    @Override
+    public Filter filterGeneratorFailed(Exception reason, Object propertyId, Object value) {
+      return null;
+    }
+  }
+}
+....
+Put them together on the UI
+
+Now we have our Container that reads from the database, and a Table for
+displaying them, lets put the final pieces together somewhere in some UI
+code:
+
+[source,java]
+....
+final DeviceStatusTable table = new DeviceStatusTable();
+table.setSizeFull();
+
+DeviceStatusQuery.Factory factory = new DeviceStatusQuery.Factory(locationID);
+final LazyQueryContainer statusDataContainer = new LazyQueryContainer(factory,
+  /*index*/ null, /*batchSize*/ 50, false);
+statusDataContainer.getQueryView().setMaxCacheSize(300);
+table.configure(statusDataContainer);
+
+layout.addComponent(table);
+layout.setHeight(100f, Unit.PERCENTAGE); // no scrollbar
+
+// Respond to row click
+table.addValueChangeListener(new Property.ValueChangeListener() {
+  @Override
+  public void valueChange(ValueChangeEvent event) {
+    Object index = event.getProperty().getValue();
+    if (index != nulll) {
+      int locId = (Integer) statusDataContainer.getItem(index)
+          .getItemProperty(DeviceStatusQuery.Column.loc_id).getValue();
+      doSomething(locId);
+      table.setValue(null); //visually deselect
+    }
+  }
+});
+....
+
+And finally, since we're using `SQLContainer`{empty}'s `QueryBuilder`, depending on
+your database you may need to include something like this once during
+your application startup:
+
+[source,java]
+....
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
+import com.vaadin.data.util.sqlcontainer.query.generator.filter.StringDecorator;
+
+// Configure Vaadin SQLContainer to work with MySQL
+QueryBuilder.setStringDecorator(new StringDecorator("`","`"));
+....

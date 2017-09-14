@@ -3,3 +3,4 @@
 [discrete]
 == Articles
 - link:LazyQueryContainer.asciidoc[Lazy query container]
+- link:UsingJDBCwithLazyQueryContainerAndFilteringTable.asciidoc[Using JDBC with Lazy Query Container and FilteringTable]
