@@ -15,6 +15,26 @@
  */
 package com.vaadin.data;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
 import com.vaadin.data.HasValue.ValueChangeEvent;
@@ -22,22 +42,17 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.*;
+import com.vaadin.server.ErrorMessage;
+import com.vaadin.server.SerializableFunction;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.server.Setter;
+import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
-
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Connects one or more {@code Field} components to properties of a backing data
@@ -531,7 +546,7 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingBuilderImpl<BEAN, FIELDVALUE, TARGET>
             implements BindingBuilder<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
         private final HasValue<FIELDVALUE> field;
         private BindingValidationStatusHandler statusHandler;
@@ -756,9 +771,9 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements Binding<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
-        private final HasValue<FIELDVALUE> field;
+        private HasValue<FIELDVALUE> field;
         private final BindingValidationStatusHandler statusHandler;
 
         private final SerializableFunction<BEAN, TARGET> getter;
@@ -814,6 +829,9 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
+            if (binder == null) {
+                throw new IllegalStateException("This Binding is no longer bound to a Binder");
+            }
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
@@ -826,7 +844,11 @@ public class Binder<BEAN> implements Serializable {
         public void unbind() {
             if (onValueChange != null) {
                 onValueChange.remove();
+                onValueChange = null;
             }
+            binder.removeBinding(this);
+            binder = null;
+            field = null;
         }
 
         /**
@@ -2398,7 +2420,7 @@ public class Binder<BEAN> implements Serializable {
         Set<BindingImpl<BEAN, ?, ?>> toRemove = bindings.stream()
                 .filter(binding -> field.equals(binding.getField()))
                 .collect(Collectors.toSet());
-        toRemove.forEach(this::removeBinding);
+        toRemove.forEach(Binding::unbind);
     }
 
     /**
@@ -2409,12 +2431,11 @@ public class Binder<BEAN> implements Serializable {
      * 
      * @since 8.2
      */
-    public void removeBinding(Binding<BEAN, ?> binding) {
+    protected void removeBinding(Binding<BEAN, ?> binding) {
         Objects.requireNonNull(binding, "Binding can not be null");
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
                     .removeIf(entry -> entry.getValue().equals(binding));
-            binding.unbind();
         }
     }
 
@@ -2429,6 +2450,6 @@ public class Binder<BEAN> implements Serializable {
     public void removeBinding(String propertyName) {
         Objects.requireNonNull(propertyName, "Property name can not be null");
         Optional.ofNullable(boundProperties.get(propertyName))
-                .ifPresent(this::removeBinding);
+                .ifPresent(Binding::unbind);
     }
 }
