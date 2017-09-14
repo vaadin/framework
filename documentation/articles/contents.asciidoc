@@ -5,3 +5,4 @@
 - link:LazyQueryContainer.asciidoc[Lazy query container]
 - link:UsingJDBCwithLazyQueryContainerAndFilteringTable.asciidoc[Using JDBC with Lazy Query Container and FilteringTable]
 - link:OfflineModeForTouchKit4MobileApps.asciidoc[Offline mode for TouchKit 4 mobile apps]
+- link:CreatingYourOwnConverterForString.asciidoc[Creating your own converter for String]
