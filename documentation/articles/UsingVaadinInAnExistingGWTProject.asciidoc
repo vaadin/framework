@@ -1,0 +1,129 @@
+[[using-vaadin-in-an-existing-gwt-project]]
+Using Vaadin in an existing GWT project
+---------------------------------------
+
+[[using-vaadin-jar-with-google-eclipse-plugin-in-a-gwt-project]]
+Using Vaadin JAR with Google Eclipse plugin in a GWT project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+With GWT development and run-time classes now included in Vaadin, it is
+easy to move from Google's build of GWT to Vaadin.
+
+By switching to the GWT integrated in Vaadin 7, you immediately get
+easier integration of SuperDevMode in your application. Many future GWT
+bugfixes will be available in Vaadin before they get integrated to the
+official version and more and more Vaadin widgets ready to use in your
+application. You risk nothing and can easily switch back to stand-alone
+GWT if you don't use features from `com.vaadin` packages.
+
+You also have the option to easily move to a hybrid application
+development model integrating business logic on the server with custom
+components and other parts of your UI implemented using GWT. You can
+easily combine the productivity and security benefits of a server side
+framework with the flexibility of client side development where needed.
+
+[[using-google-eclipse-plugin]]
+Using Google Eclipse Plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Google Plugin for Eclipse assumes the use of GWT SDK. Nevertheless, the
+plugin can easily be used to develop client side applications with
+Vaadin, by following the steps described below.
+
+For lighter deployment, a minimal run-time version of Vaadin JAR will be
+available in the future.
+
+1.  You need to have the IvyDE plugin for Eclipse installed
+2.  Disable some error messages by setting *Preferences... → Google →
+Errors/Warnings → Missing SDK → Ignore*. Note that you may still get an
+error message about missing `gwt-servlet.jar` when modifying project
+build path.
+3.  If you don't already have a client side application project, you can
+create one with "New Web Application Project...", selecting any recent
+version of the GWT SDK. If you don't have any version of GWT installed,
+download one
+https://code.google.com/p/google-web-toolkit/downloads/list[here] - the
+next steps will switch to using Vaadin JAR.
+4.  Open project properties, select *Java Build Path → Libraries* and
+remove the GWT SDK from the project class path
+5.  In the project properties, make sure the project JRE version in
+*Project Facets* is 1.6 or later
+6.  Copy the `ivy.xml` and `ivy-settings.xml` from an existing Vaadin
+project created with the Vaadin Plugin for Eclipse
+7.  Set the Vaadin version in `ivy.xml` to your preferred version
+8.  Add the following dependency in the `ivy.xml`:
+`<dependency org="javax.servlet" name="jsp-api" rev="2.0" />`
+9.  Right-click the `ivy.xml` and select *Add Ivy library...* and click
+*Finish*
+10. Right-click project, select *Ivy → Resolve*
+
+That's it - you are now ready to debug the application using GWT
+development mode server:
+
+* *Debug as... → Web Application*
+
+To avoid the need to install and update browser plug-ins, use SuperDevMode.
+
+[[using-maven]]
+Using Maven
+~~~~~~~~~~~
+
+Also the Maven plug-in for GWT makes some assumptions but it is easy to
+switch to the combined Vaadin JAR.
+
+As the Vaadin JAR now includes GWT, Maven projects should not depend
+directly on GWT JARs (gwt-user, gwt-dev, gwt-servlet).
+
+To convert an existing Maven project, perform the following
+modifications in your pom.xml
+
+* update compiler source and target Java version to 1.6
+* remove dependencies to GWT (`com.google.gwt:gwt-user`,
+`com.google.gwt:gwt-servlet`, `com.google.gwt:gwt-dev`)
+* add dependencies to
+Vaadin
+
+[source,xml]
+....
+<!-- this replaces gwt-user.jar -->
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-client</artifactId>
+  <version>7.0.0.beta9</version>
+  <scope>provided</scope>
+</dependency>
+<!-- this replaces gwt-dev.jar -->
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-client-compiler</artifactId>
+  <version>7.0.0.beta9</version>
+  <scope>provided</scope>
+</dependency>
+<!-- optional - this replaces gwt-servlet.jar etc. and is deployed on the server -->
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-server</artifactId>
+  <version>7.0.0.beta9</version>
+</dependency>
+....
+* if not included e.g. via Jetty/Tomcat/other, add a "provided"
+dependency to the servlet
+API
+
+[source,xml]
+....
+<dependency>
+  <groupId>javax.servlet</groupId>
+  <artifactId>servlet-api</artifactId>
+  <version>2.5</version>
+  <scope>provided</scope>
+</dependency>
+....
+* replace the `gwt-maven-plugin` with `com.vaadin:vaadin-maven-plugin`,
+comment out `<dependencies>` in its configuration (if exists) and use
+plug-in version that matches the Vaadin version
+* use goal `vaadin:compile` instead of `gwt:compile` etc.
+
+The vaadin-client, vaadin-client-compiler and their dependencies only
+need to be deployed on the server for debugging with
+SuperDevMode.
