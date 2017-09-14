@@ -1,20 +1,19 @@
 package com.vaadin.data.provider.hierarchical;
 
-import com.vaadin.data.TreeData;
-import com.vaadin.data.provider.HierarchyMapper;
-import com.vaadin.data.provider.TreeDataProvider;
-import com.vaadin.server.SerializablePredicate;
-import com.vaadin.shared.Range;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static com.vaadin.data.provider.hierarchical.HierarchyMapperWithDataTest.generateTestData;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.HierarchyMapper;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Range;
 
 public class HierarchyMapperWithNumerousDataTest {
 
@@ -30,7 +29,7 @@ public class HierarchyMapperWithNumerousDataTest {
 
     @BeforeClass
     public static void setupData() {
-        testData = generateTestData(ROOT_COUNT, PARENT_COUNT, 0);
+        testData = HierarchyMapperWithDataTest.generateTestData(ROOT_COUNT, PARENT_COUNT, 0);
         roots = testData.stream().filter(item -> item.getParent() == null)
                 .collect(Collectors.toList());
         data.addItems(roots,

@@ -1,21 +1,22 @@
 package com.vaadin.data.provider.hierarchical;
 
-import com.vaadin.data.TreeData;
-import com.vaadin.data.provider.HierarchyMapper;
-import com.vaadin.data.provider.TreeDataProvider;
-import com.vaadin.server.SerializablePredicate;
-import com.vaadin.shared.Range;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.HierarchyMapper;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Range;
 
 public class HierarchyMapperWithDataTest {
 
