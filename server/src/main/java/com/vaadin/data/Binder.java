@@ -1459,7 +1459,9 @@ public class Binder<BEAN> implements Serializable {
         List<ValidationResult> binderResults = Collections.emptyList();
 
         // First run fields level validation
-        List<BindingValidationStatus<?>> bindingStatuses = validateBindings();
+        List<BindingValidationStatus<?>> bindingStatuses = bindings.stream()
+                .map(b -> ((BindingImpl<BEAN, ?, ?>) b).doValidation())
+                .collect(Collectors.toList());
 
         // If no validation errors then update bean
         if (bindingStatuses.stream()
@@ -1629,6 +1631,16 @@ public class Binder<BEAN> implements Serializable {
         return validate(true);
     }
 
+    /**
+     * Validates the values of all bound fields and returns the validation
+     * status. This method can skip firing the event, based on the given
+     * {@code boolean}.
+     * 
+     * @param fireEvent
+     *            {@code true} to fire validation status events; {@code false}
+     *            to not
+     * @return validation status for the binder
+     */
     protected BinderValidationStatus<BEAN> validate(boolean fireEvent) {
         if (getBean() == null && !validators.isEmpty()) {
             throw new IllegalStateException("Cannot validate binder: "
