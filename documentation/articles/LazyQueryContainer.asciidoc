@@ -1,0 +1,462 @@
+[[lazy-query-container]]
+Lazy query container
+--------------------
+
+[[when-to-use-lazy-query-container]]
+When to Use Lazy Query Container?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Typical usage scenario is browsing a large persistent data set in Vaadin
+Table. LQC minimizes the complexity of the required custom
+implementation while retaining all table features like sorting and lazy
+loading. LQC delegates sorting of the data set to the backend data store
+instead of sorting in memory. Sorting in memory would require entire
+data set to be loaded to application server.
+
+[[what-is-lazy-loading]]
+What is Lazy Loading?
+~~~~~~~~~~~~~~~~~~~~~
+
+In this context lazy loading refers to loading items to table on demand
+in batches instead of loading the entire data set to memory at once.
+This is useful in most business applications as row counts often range
+from thousands to millions. Loading more than few hundred rows to memory
+often causes considerable delay in page response.
+
+[[getting-started]]
+Getting Started
+~~~~~~~~~~~~~~~
+
+To use LQC you need to get the add-on from add-ons page and drop it to
+your projects WEB-INF/lib directory. After this you can use existing
+query factory (`JpaQueryFactory`), extend `AbstractBeanQuery` or proceed to
+implement custom `Query` and `QueryFactory`. Finally you need to instantiate
+`LazyQueryContainer` and give your query factory as constructor parameter.
+
+[[how-to-use-lazy-query-container-with-table]]
+How to Use Lazy Query Container with Table?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LQC is implementation of Vaadin Container interface. Please refer to
+Book of Vaadin for usage details of Table and Container implementations
+generally.
+
+[[how-to-use-entitycontainer]]
+How to Use EntityContainer
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`EntityContainer` is specialized version `LazyQueryContainer` allowing easy
+use of JPA as persistence layer and supports defining where criteria and
+corresponding parameter map in addition to normal `LazyQueryContainer`
+features:
+
+[source,java]
+....
+entityContainer = new EntityContainer<Task>(entityManager, true, Task.class, 100,
+    new Object[] { "name" }, new boolean[] { true });
+entityContainer.addContainerProperty("name", String.class, "", true, true);
+entityContainer.addContainerProperty("reporter", String.class, "", true, true);
+entityContainer.addContainerProperty("assignee", String.class, "", true, true);
+whereParameters = new HashMap<String, Object>();
+whereParameters.put("name", nameFilter);
+entityContainer.filter("e.name=:name", whereParameters);
+
+table.setContainerDataSource(entityContainer);
+....
+
+[[how-to-use-beanqueryfactory]]
+How to Use BeanQueryFactory
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`BeanQueryFactory` and `AbstractBeanQuery` are used to implement queries
+saving and loading JavaBeans.
+
+The `BeanQueryFactory` is used as follows with the Vaadin table. Usage of
+`queryConfiguration` is optional and enables passing objects to the
+constructed queries:
+
+[source,java]
+....
+Table table = new Table();
+BeanQueryFactory<TaskBeanQuery> queryFactory = new
+    BeanQueryFactory<TaskBeanQuery>(TaskBeanQuery.class);
+
+Map<String,Object> queryConfiguration = new HashMap<String,Object>();
+queryConfiguration.put("taskService",new TaskService());
+queryFactory.setQueryConfiguration(queryConfiguration);
+
+LazyQueryContainer container = new LazyQueryContainer(queryFactory,50);
+table.setContainerDataSource(container);
+....
+
+Here is a simple example of `AbstractBeanQuery` implementation:
+
+[source,java]
+....
+public class TaskBeanQuery extends AbstractBeanQuery<Task> {
+
+  public TaskBeanQuery(QueryDefinition definition,
+        Map<String, Object> queryConfiguration, Object[] sortPropertyIds,
+        boolean[] sortStates) {
+    super(definition, queryConfiguration, sortPropertyIds, sortStates);
+  }
+
+  @Override
+  protected Task constructBean() {
+    return new Task();
+  }
+
+  @Override
+  public int size() {
+    TaskService taskService =
+        (TaskService)queryConfiguration.get("taskService");
+    return taskService.countTasks();
+  }
+
+  @Override
+  protected List<Task> loadBeans(int startIndex, int count) {
+    TaskService taskService =
+        (TaskService)queryConfiguration.get("taskService");
+    return taskService.loadTasks(startIndex, count, sortPropertyIds, sortStates);
+  }
+
+  @Override
+  protected void saveBeans(List<Task> addedTasks, List<Task> modifiedTasks,
+    List<Task> removedTasks) {
+    TaskService taskService =
+        (TaskService)queryConfiguration.get("taskService");
+    taskService.saveTasks(addedTasks, modifiedTasks, removedTasks);
+  }
+}
+....
+
+[[how-to-implement-custom-query-and-queryfactory]]
+How to Implement Custom Query and QueryFactory?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+`QueryFactory` instantiates new query whenever sort state changes or
+refresh is requested. Query can construct for example named JPA query in
+constructor. Data loading starts by invocation of `Query.size()` method
+and after this data is loaded in batches by invocations of
+`Query.loadItems()`.
+
+Please remember that the idea is to load data in batches. You do not
+need to load the entire data set to memory. If you do that you are
+better of with some other container implementation like
+`BeanItemContainer`. To be able to load database in batches you need your
+storage to provide you with the result set size and ability to load rows
+in batches as illustrated by the following pseudo code:
+
+[source,java]
+....
+int countObjects(SearchCriteria searchCriteria);
+List<Object> getObjects(SearchCriteria searchCriteria, int startIndex, int batchSize);
+....
+
+Here is simple read only JPA example to illustrate the idea. You can
+find further examples from add-on page.
+
+[source,java]
+....
+package com.logica.portlet.example;
+
+import javax.persistence.EntityManager;
+
+import org.vaadin.addons.lazyquerycontainer.Query;
+import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
+import org.vaadin.addons.lazyquerycontainer.QueryFactory;
+
+public class MovieQueryFactory implements QueryFactory {
+
+  private EntityManager entityManager;
+  private QueryDefinition definition;
+
+  public MovieQueryFactory(EntityManager entityManager) {
+    super();
+    this.entityManager = entityManager;
+  }
+
+  @Override
+  public void setQueryDefinition(QueryDefinition definition) {
+    this.definition = definition;
+  }
+
+  @Override
+  public Query constructQuery(Object[] sortPropertyIds, boolean[] sortStates) {
+    return new MovieQuery(entityManager,definition,sortPropertyIds,sortStates);
+  }
+}
+....
+
+[source,java]
+....
+package com.logica.portlet.example;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.vaadin.addons.lazyquerycontainer.Query;
+import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
+
+import com.logica.example.jpa.Movie;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
+
+public class MovieQuery implements Query {
+
+  private EntityManager entityManager;
+  private QueryDefinition definition;
+  private String criteria = "";
+
+  public MovieQuery(EntityManager entityManager,
+                    QueryDefinition definition,
+                    Object[] sortPropertyIds,
+                    boolean[] sortStates) {
+    super();
+    this.entityManager = entityManager;
+    this.definition = definition;
+
+    for(int i=0;i<sortPropertyIds.length;i++) {
+      if(i==0) {
+        criteria = " ORDER BY";
+      } else {
+        criteria+ = ",";
+      }
+      criteria += " m." + sortPropertyIds[i];
+      if(sortStates[i]) {
+        criteria += " ASC";
+      }
+      else {
+        criteria += " DESC";
+      }
+    }
+  }
+
+  @Override
+  public Item constructItem() {
+    return new BeanItem<Movie>(new Movie());
+  }
+
+  @Override
+  public int size() {
+    javax.persistence.Query query = entityManager.
+        createQuery("SELECT count(m) from Movie as m");
+    return (int)((Long) query.getSingleResult()).longValue();
+  }
+
+  @Override
+  public List<Item> loadItems(int startIndex, int count) {
+    javax.persistence.Query query = entityManager.
+        createQuery("SELECT m from Movie as m" + criteria);
+    query.setFirstResult(startIndex);
+    query.setMaxResults(count);
+
+    List<Movie> movies=query.getResultList();
+    List<Item> items=new ArrayList<Item>();
+    for(Movie movie : movies) {
+      items.add(new BeanItem<Movie>(movie));
+    }
+
+    return items;
+  }
+
+  @Override
+  public void saveItems(List<Item> addedItems, List<Item> modifiedItems,
+        List<Item> removedItems) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean deleteAllItems() {
+    throw new UnsupportedOperationException();
+  }
+}
+....
+
+[[how-to-implement-editable-table]]
+How to Implement Editable Table?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First you need to implement the `Query.saveItems()` method. After this you
+need to set some of the properties editable in your items and set table
+in editable mode as well. After user has made changes you need to call
+`container.commit()` or `container.discard()` to commit or rollback
+respectively. Please find complete examples of table handing and
+editable JPA query from add-on page.
+
+[[how-to-use-debug-properties]]
+How to Use Debug Properties?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+LQC provides set of debug properties which give information about
+response times, number of queries constructed and data batches loaded.
+To use these properties the items used need to contain these properties
+with correct ids and types. If you use dynamic items you can defined
+them in the query definition and add them on demand in the query
+implementation.
+
+[source,java]
+....
+container.addContainerProperty(LazyQueryView.DEBUG_PROPERTY_ID_QUERY_INDEX, Integer.class, 0, true, false);
+container.addContainerProperty(LazyQueryView.DEBUG_PROPERTY_ID_BATCH_INDEX, Integer.class, 0, true, false);
+container.addContainerProperty(LazyQueryView.DEBUG_PROPERTY_ID_BATCH_QUERY_TIME, Integer.class, 0, true, false);
+....
+
+[[how-to-use-row-status-indicator-column-in-table]]
+How to Use Row Status Indicator Column in Table?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When creating editable tables LCQ provides
+`QueryItemStatusColumnGenerator` which can be used to generate the status
+column cells to the table. In addition you need to have the status
+property in your items. If your items respect the query definition you
+can implement this as follows:
+
+[source,java]
+....
+container.addContainerProperty(LazyQueryView.PROPERTY_ID_ITEM_STATUS,
+            QueryItemStatus.class, QueryItemStatus.None, true, false);
+....
+
+[[how-to-use-status-column-and-debug-columns-with-beans]]
+How to Use Status Column and Debug Columns with Beans
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is example query implementation which shows how JPA and beans can
+be used together with status and debug properties:
+
+[source,java]
+....
+package org.vaadin.addons.lazyquerycontainer.example;
+
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import org.vaadin.addons.lazyquerycontainer.CompositeItem;
+import org.vaadin.addons.lazyquerycontainer.Query;
+import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.data.util.ObjectProperty;
+
+public class TaskQuery implements Query {
+
+  private EntityManager entityManager;
+  private QueryDefinition definition;
+  private String criteria=" ORDER BY t.name ASC";
+
+  public TaskQuery(EntityManager entityManager, QueryDefinition definition,
+      Object[] sortPropertyIds, boolean[] sortStates) {
+    super();
+    this.entityManager = entityManager;
+    this.definition = definition;
+
+    for(int i=0; i<sortPropertyIds.length; i++) {
+      if(i==0) {
+        criteria = " ORDER BY";
+      } else {
+        criteria+ = ",";
+      }
+      criteria += " t." + sortPropertyIds[i];
+      if(sortStates[i]) {
+        criteria += " ASC";
+      }
+      else {
+        criteria += " DESC";
+      }
+    }
+  }
+
+  @Override
+  public Item constructItem() {
+    Task task=new Task();
+    try {
+      BeanInfo info = Introspector.getBeanInfo( Task.class );
+      for ( PropertyDescriptor pd : info.getPropertyDescriptors() ) {
+        for(Object propertyId : definition.getPropertyIds()) {
+          if(pd.getName().equals(propertyId)) {
+            pd.getWriteMethod().invoke(task,
+                definition.getPropertyDefaultValue(propertyId));
+          }
+        }
+      }
+    } catch(Exception e) {
+      throw new RuntimeException("Error in bean property population");
+    }
+    return toItem(task);
+  }
+
+  @Override
+  public int size() {
+    javax.persistence.Query query = entityManager.createQuery(
+        "SELECT count(t) from Task as t");
+    return (int)((Long) query.getSingleResult()).longValue();
+  }
+
+  @Override
+  public List<Item> loadItems(int startIndex, int count) {
+    javax.persistence.Query query = entityManager.createQuery(
+            "SELECT t from Task as t" + criteria);
+    query.setFirstResult(startIndex);
+    query.setMaxResults(count);
+
+    List<Task> tasks=query.getResultList();
+    List<Item> items=new ArrayList<Item>();
+    for(Task task : tasks) {
+      items.add(toItem(task));
+    }
+    return items;
+  }
+
+  @Override
+  public void saveItems(List<Item> addedItems, List<Item> modifiedItems,
+        List<Item> removedItems) {
+    entityManager.getTransaction().begin();
+    for(Item item : addedItems) {
+      entityManager.persist(fromItem(item));
+    }
+    for(Item item : modifiedItems) {
+      entityManager.persist(fromItem(item));
+    }
+    for(Item item : removedItems) {
+      entityManager.remove(fromItem(item));
+    }
+    entityManager.getTransaction().commit();
+  }
+
+  @Override
+  public boolean deleteAllItems() {
+    throw new UnsupportedOperationException();
+  }
+
+  private Item toItem(Task task) {
+    BeanItem<Task> beanItem= new BeanItem<Task>(task);
+
+    CompositeItem compositeItem=new CompositeItem();
+
+    compositeItem.addItem("task", beanItem);
+
+    for(Object propertyId : definition.getPropertyIds()) {
+      if(compositeItem.getItemProperty(propertyId)==null) {
+        compositeItem.addItemProperty(propertyId, new ObjectProperty(
+            definition.getPropertyDefaultValue(propertyId),
+            definition.getPropertyType(propertyId),
+            definition.isPropertyReadOnly(propertyId)));
+      }
+    }
+    return compositeItem;
+  }
+
+  private Task fromItem(Item item) {
+    return (Task)((BeanItem)(((CompositeItem)item).getItem("task"))).getBean();
+  }
+}
+....

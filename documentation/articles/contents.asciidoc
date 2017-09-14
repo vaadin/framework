@@ -1,0 +1,5 @@
+= Community articles for Vaadin 7
+
+[discrete]
+== Articles
+- link:LazyQueryContainer.asciidoc[Lazy query container]
