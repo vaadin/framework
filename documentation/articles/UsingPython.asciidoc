@@ -1,0 +1,437 @@
+[[developing-vaadin-apps-with-python]]
+Developing Vaadin apps with Python
+----------------------------------
+
+[[to-accomplish-exactly-what]]
+To accomplish exactly what?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This article describes how to start developing Vaadin apps with Python
+programming language. Goal is that programmer could use Python instead
+of Java with smallest amount of boilerplate code necessary to get the
+environment working.
+
+Luckily Python can make use of Java classes and vice versa. For detailed
+tutorial how to accomplish this in general please see
+http://www.jython.org/jythonbook/en/1.0/JythonAndJavaIntegration.html
+and http://wiki.python.org/jython/UserGuide.
+
+[[requirements]]
+Requirements
+^^^^^^^^^^^^
+
+For setup used in this article you will need to install PyDev plugin to
+your Eclipse and Jython. See http://pydev.org/ and
+http://www.jython.org/ for more details.
+
+[[lets-get-started]]
+Let's get started
+^^^^^^^^^^^^^^^^^
+
+To get started create a new Vaadin project or open existing as you would
+normally do. As you have PyDev installed as Eclipse plugin you can start
+developing after few steps.
+
+* Add Python nature to your project by right clicking the project and
+selecting PyDev -> Set as PyDev Project. After this the project
+properties has PyDev specific sections.
+
+* Go to PyDev - Interpreter/Grammar and select Jython as your Python
+interpreter.
+
+* Add a source folder where your Python source code will reside. Go to
+section PyDev - PYTHONPATH and add source folder. Also add
+vaadin-x.x.x.jar to PYTHONPATH in external libraries tab.
+
+* Add jython.jar to your project's classpath and into deployment
+artifact.
+
+* Map your python source folder into WEB-INF/classes in deployment
+artifact. Go to Deployment Assembly -> Add -> Folder.
+
+image:img/deployartifact.png[Deploy artifact]
+
+[[modify-web.xml-and-applicationservlet]]
+Modify web.xml and ApplicationServlet
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+First of all to build a basic Vaadin app you need to define your app in
+web.xml. You have something like this in your web.xml:
+
+[source,xml]
+....
+<servlet>
+  <servlet-name>Vaadin Application</servlet-name>
+  <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+  <init-param>
+    <description>Vaadin application class to start</description>
+    <param-name>application</param-name>
+    <param-value>com.vaadin.example.ExampleApplication</param-value>
+  </init-param>
+</servlet>
+....
+
+This will have to be modified a bit. Servlet init parameter application
+is a Java class name which will be instantiated for each user session.
+Default implementation of
+`com.vaadin.terminal.gwt.server.ApplicationServlet` can only instantiate
+Java classes so therefore you must override that class so that it is
+able to instantiate Python objects. Of course if you want the main
+Application object to be a Java class there is no need to modify the
+web.xml.
+
+Here's the modified section of web.xml. Implementation of PythonServlet
+is explained later. Init parameter application is now actually Python
+class.
+
+[source,xml]
+....
+<servlet>
+  <servlet-name>Python Application</servlet-name>
+  <servlet-class>com.vaadin.example.pythonapp.PythonServlet</servlet-class>
+  <init-param>
+    <description>Vaadin application class to start</description>
+    <param-name>application</param-name>
+    <param-value>python.vaadin.pythonapp.PyApplication</param-value>
+  </init-param>
+</servlet>
+....
+
+And here's the PythonServlet. This is altered version of original Vaadin
+ApplicationServlet.
+
+[source,java]
+....
+package com.vaadin.example.pythonapp;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
+
+import com.vaadin.Application;
+import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
+
+public class PythonServlet extends AbstractApplicationServlet {
+  // Private fields
+  private Class<? extends Application> applicationClass;
+
+  /**
+   * Called by the servlet container to indicate to a servlet that the servlet
+   * is being placed into service.
+   *
+   * @param servletConfig
+   *            the object containing the servlet's configuration and
+   *            initialization parameters
+   * @throws javax.servlet.ServletException
+   *             if an exception has occurred that interferes with the
+   *             servlet's normal operation.
+   */
+  @Override
+  public void init(javax.servlet.ServletConfig servletConfig)
+        throws javax.servlet.ServletException {
+    super.init(servletConfig);
+
+    final String applicationModuleName = servletConfig
+        .getInitParameter("application");
+    if (applicationModuleName == null) {
+      throw new ServletException(
+          "Application not specified in servlet parameters");
+    }
+
+    String[] appModuleSplitted = applicationModuleName.split("\\.");
+    if(appModuleSplitted.length < 1) {
+      throw new ServletException("Cannot parse class name");
+    }
+
+    final String applicationClassName = appModuleSplitted[appModuleSplitted.length-1];
+
+    try {
+      PythonInterpreter interpreter = new PythonInterpreter();
+      interpreter.exec("from "+applicationModuleName+" import "+applicationClassName);
+      PyObject pyObj = interpreter.get(applicationClassName).__call__();
+      Application pyApp = (Application)pyObj.__tojava__(Application.class);
+      applicationClass = pyApp.getClass();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ServletException("Failed to load application class: "
+          + applicationModuleName, e);
+    }
+  }
+
+  @Override
+  protected Application getNewApplication(HttpServletRequest request)
+      throws ServletException {
+
+    // Creates a new application instance
+    try {
+      final Application application = getApplicationClass().newInstance();
+
+      return application;
+    } catch (final IllegalAccessException e) {
+      throw new ServletException("getNewApplication failed", e);
+    } catch (final InstantiationException e) {
+      throw new ServletException("getNewApplication failed", e);
+    } catch (ClassNotFoundException e) {
+      throw new ServletException("getNewApplication failed", e);
+    }
+  }
+
+  @Override
+  protected Class<? extends Application> getApplicationClass()
+      throws ClassNotFoundException {
+    return applicationClass;
+  }
+}
+....
+
+The most important part is the following. It uses Jython's
+PythonInterpreter to instantiate and convert Python classes into Java
+classes. Then Class object is stored for later use of creating new
+instances of it on demand.
+
+[source,java]
+....
+PythonInterpreter interpreter = new PythonInterpreter();
+interpreter.exec("from "+applicationModuleName+" import "+applicationClassName);
+PyObject pyObj = interpreter.get(applicationClassName).__call__();
+Application pyApp = (Application)pyObj.__tojava__(Application.class);
+....
+
+Now the Python application for Vaadin is good to go. No more effort is
+needed to get it running. So next we see how the application itself can
+be written in Python.
+
+[[python-style-application-object]]
+Python style Application object
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Creating an Application is pretty straightforward. You would write class
+that is identical to the Java counterpart except it's syntax is Python.
+Basic hello world application would look like this
+
+[source,python]
+....
+from com.vaadin import Application
+from com.vaadin.ui import Label
+from com.vaadin.ui import Window
+
+class PyApplication(Application):
+  def __init__(self):
+    pass
+
+  def init(self):
+    mainWindow = Window("Vaadin with Python")
+    label = Label("Vaadin with Python")
+    mainWindow.addComponent(label)
+    self.setMainWindow(mainWindow)
+....
+
+[[event-listeners]]
+Event listeners
+^^^^^^^^^^^^^^^
+
+Python does not have anonymous classes like Java and Vaadin's event
+listeners rely heavily on implementing listener interfaces which are
+very often done as anonymous classes. So therefore the closest
+equivalent of
+
+[source,java]
+....
+Button button = new Button("java button");
+button.addListener(new Button.ClickListener() {
+   public void buttonClick(ClickEvent event) {
+      //Do something for the click
+   }
+});
+....
+
+is
+
+[source,python]
+....
+button = Button("python button")
+class listener(Button.ClickListener):
+   def buttonClick(self, event):
+      #do something for the click
+button.addListener(listener())
+....
+
+Jython supports for some extend AWT/Swing-style event listeners but
+however that mechanism is not compatible with Vaadin. Same problem
+applies to just about anything else event listening interface in Java
+libraries like Runnable or Callable. To reduce the resulted verbosity
+some decorator code can be introduced like here
+https://gist.github.com/sunng87/947926.
+
+[[creating-custom-components]]
+Creating custom components
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Creating custom Vaadin components is pretty much as straightforward as
+the creation of Vaadin main application. Override the CustomComponent
+class in similar manner as would be done with Java.
+
+[source,python]
+....
+from com.vaadin.ui import CustomComponent
+from com.vaadin.ui import VerticalLayout
+from com.vaadin.ui import Label
+from com.vaadin.ui import Button
+from com.vaadin.terminal import ThemeResource
+
+class PyComponent(CustomComponent, Button.ClickListener):
+  def __init__(self):
+    mainLayout = VerticalLayout()
+    button = Button("click me to toggle the icon")
+    self.label = Label()
+    button.addListener(self)
+    mainLayout.addComponent(self.label)
+    mainLayout.addComponent(button)
+    self.super__setCompositionRoot(mainLayout)
+
+  def buttonClick(self, event):
+    if self.label.getIcon() == None:
+      self.label.setIcon(ThemeResource("../runo/icons/16/lock.png"));
+    else:
+      self.label.setIcon(None)
+....
+
+[[containers-and-pythonbeans]]
+Containers and PythonBeans
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Although not Python style of doing things there are some occasions that
+require use of beans.
+
+Let's say that you would like to have a table which has it's content
+retrieved from a set of beans. Content would be one row with two columns
+where cells would contain strings "first" and "second" respectively. You
+would write this code to create and fill the table.
+
+[source,python]
+....
+table = Table()
+container = BeanItemContainer(Bean().getClass())
+bean = Bean()
+bean.setFirst("first")
+bean.setSecond("second")
+container.addItem(bean)
+table.setContainerDataSource(container)
+....
+
+and the Bean object would look like this
+
+[source,python]
+....
+class Bean(JavaBean):
+  def __init__(self):
+    self.__first = None
+    self.__second = None
+
+  def getFirst(self):
+    return self.__first
+
+  def getSecond(self):
+    return self.__second
+
+  def setFirst(self, val):
+    self.__first = val
+
+  def setSecond(self, val):
+    self.__second = val
+....
+
+and JavaBean
+
+[source,java]
+....
+public interface JavaBean {
+  String getFirst();
+  void setFirst(String first);
+  String getSecond();
+  void setSecond(String second);
+}
+....
+
+Note that in this example there is Java interface mixed into Python
+code. That is because Jython in it's current (2.5.2) version does not
+fully implement reflection API for python objects. Result without would
+be a table that has no columns.
+
+Implementing a Java interface adds necessary piece of information of
+accessor methods so that bean item container can handle it.
+
+[[filtering-container]]
+Filtering container
+^^^^^^^^^^^^^^^^^^^
+
+Let's add filtering to previous example. Implement custom filter that
+allows only bean that 'first' property is set to 'first'
+
+[source,python]
+....
+container.addContainerFilter(PyFilter())
+
+class PyFilter(Container.Filter):
+  def appliesToProperty(self, propertyId):
+    return True
+
+  def passesFilter(self, itemId, item):
+    prop = item.getItemProperty("first")
+    if prop.getValue() == "first":
+      return True
+    else:
+      return False
+....
+
+Again pretty straightforward.
+
+[[debugging]]
+Debugging
+^^^^^^^^^
+
+Debugging works as you would debug any Jython app remotely in a servlet
+engine. See PyDev's manual for remote debugging at
+http://pydev.org/manual_adv_remote_debugger.html.
+
+Setting breakpoints directly via Eclipse IDE however does not work.
+Application is started as a Java application and the debugger therefore
+does not understand Python code.
+
+[[final-thoughts]]
+Final thoughts
+^^^^^^^^^^^^^^
+
+By using Jython it allows easy access from Python code to Java code
+which makes it really straightforward to develop Vaadin apps with
+Python.
+
+Some corners are bit rough as they require mixing Java code or are not
+possible to implement with Python as easily or efficiently than with
+Java.
+
+[[how-this-differs-from-muntjac]]
+How this differs from Muntjac?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+https://pypi.python.org/pypi/Muntjac[Muntjac project]
+is a python translation of Vaadin and it's goal is pretty much same as
+this article's: To enable development of Vaadin apps with Python.
+
+Muntjac's approach was to take Vaadin's Java source code and translate
+it to Python while keeping the API intact or at least similar as
+possible. While in this article the Vaadin itself is left as is.
+
+Simple Python applications like shown above can be executed with Vaadin
+or Muntjac. Application code should be compatible with both with small
+package/namespace differences.
+
+Muntjac requires no Jython but it also lacks the possibility to use Java
+classes directly.
+
+The problems we encountered above with requiring the use of mixed Java
+code are currently present in Muntjac (v1.0.4) as well. For example the
+BeanItemContainer is missing from the Muntjac at the moment.
