@@ -829,9 +829,7 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
-            if (binder == null) {
-                throw new IllegalStateException("This Binding is no longer bound to a Binder");
-            }
+            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder")
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
@@ -840,6 +838,11 @@ public class Binder<BEAN> implements Serializable {
             return status;
         }
 
+        /**
+         * Removes binding from binder and unregisters the @code{ValueChangeListener}
+         *
+         * @since 8.2
+         */
         @Override
         public void unbind() {
             if (onValueChange != null) {
