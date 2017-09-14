@@ -553,7 +553,7 @@ public class Binder<BEAN> implements Serializable {
          * Contains all converters and validators chained together in the
          * correct order.
          */
-        private Converter<FIELDVALUE, TARGET> converterValidatorChain;
+        private Converter<FIELDVALUE, ?> converterValidatorChain;
 
         /**
          * Creates a new binding builder associated with the given field.
@@ -649,7 +649,7 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
 
-            converterValidatorChain = converterValidatorChain
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) converterValidatorChain)
                     .chain(new ValidatorAsConverter<>(validator));
             return this;
         }
@@ -711,15 +711,14 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
-            // Mark this step to be bound to prevent modifying multiple times.
-            bound = true;
-
             if (resetNullRepresentation) {
                 getBinder().initialConverters.get(field).setIdentity();
             }
 
-            return getBinder().createBinding(field,
-                    converterValidatorChain.chain(converter), statusHandler);
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) converterValidatorChain)
+                    .chain(converter);
+
+            return (BindingBuilder<BEAN, NEWTARGET>) this;
         }
 
         /**
@@ -789,7 +788,7 @@ public class Binder<BEAN> implements Serializable {
             this.binder = builder.getBinder();
             this.field = builder.field;
             this.statusHandler = builder.statusHandler;
-            converterValidatorChain = builder.converterValidatorChain;
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) builder.converterValidatorChain);
 
             onValueChange = getField()
                     .addValueChangeListener(this::handleFieldValueChange);
@@ -2417,6 +2416,7 @@ public class Binder<BEAN> implements Serializable {
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
                     .removeIf(entry -> entry.getValue().equals(binding));
+            ((BindingImpl<BEAN, ?, ?>) binding).onValueChange.remove();
         }
     }
 
