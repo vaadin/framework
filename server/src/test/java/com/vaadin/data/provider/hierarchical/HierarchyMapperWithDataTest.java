@@ -1,25 +1,21 @@
 package com.vaadin.data.provider.hierarchical;
 
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.HierarchyMapper;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.server.SerializablePredicate;
+import com.vaadin.shared.Range;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.vaadin.data.TreeData;
-import com.vaadin.data.provider.HierarchyMapper;
-import com.vaadin.data.provider.TreeDataProvider;
-import com.vaadin.server.SerializablePredicate;
-import com.vaadin.shared.Range;
-import com.vaadin.shared.data.DataCommunicatorClientRpc;
-
-import elemental.json.JsonArray;
 
 public class HierarchyMapperWithDataTest {
 
@@ -36,7 +32,7 @@ public class HierarchyMapperWithDataTest {
 
     @BeforeClass
     public static void setupData() {
-        testData = generateTestData();
+        testData = generateTestData(ROOT_COUNT, PARENT_COUNT, LEAF_COUNT);
         roots = testData.stream().filter(item -> item.getParent() == null)
                 .collect(Collectors.toList());
         data.addItems(roots,
@@ -227,15 +223,15 @@ public class HierarchyMapperWithDataTest {
         }
     }
 
-    private static List<Node> generateTestData() {
+    static List<Node> generateTestData(int rootCount, int parentCount, int leafCount) {
         List<Node> nodes = new ArrayList<>();
-        for (int i = 0; i < ROOT_COUNT; ++i) {
+        for (int i = 0; i < rootCount; ++i) {
             Node root = new Node();
             nodes.add(root);
-            for (int j = 0; j < PARENT_COUNT; ++j) {
+            for (int j = 0; j < parentCount; ++j) {
                 Node parent = new Node(root);
                 nodes.add(parent);
-                for (int k = 0; k < LEAF_COUNT; ++k) {
+                for (int k = 0; k < leafCount; ++k) {
                     nodes.add(new Node(parent));
                 }
             }
