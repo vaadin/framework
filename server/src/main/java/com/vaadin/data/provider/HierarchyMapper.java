@@ -59,7 +59,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     // childMap is only used for finding parents of items and clean up on
     // removing children of expanded nodes.
     private Map<T, Set<T>> childMap = new HashMap<>();
-    private Map<T, T> parentMap = new HashMap<>();
+    private Map<Object, T> parentIdMap = new HashMap<>();
 
     private final HierarchicalDataProvider<T, F> provider;
     private F filter;
@@ -354,7 +354,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     private T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
-        return parentMap.get(item);
+        return parentIdMap.get(getDataProvider().getId(item));
     }
 
     /**
@@ -378,9 +378,10 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             }
         }
         expandedItemIds.remove(id);
-        invalidatedChildren.stream().map(getDataProvider()::getId)
-                .forEach(this::removeChildren);
-        invalidatedChildren.forEach(parentMap::remove);
+        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
+            removeChildren(x);
+            parentIdMap.remove(x);
+        });
     }
 
     /**
@@ -474,7 +475,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                         : getDataProvider().getId(parent));
             } else {
                 childMap.put(parent, new HashSet<>(childList));
-                childList.forEach(x -> parentMap.put(x, parent));
+                childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
             }
         }
         return combineParentAndChildStreams(parent,
@@ -507,6 +508,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     @Override
     public void destroyAllData() {
         childMap.clear();
-        parentMap.clear();
+        parentIdMap.clear();
     }
 }
