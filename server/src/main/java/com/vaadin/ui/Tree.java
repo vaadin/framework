@@ -39,6 +39,7 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
+import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -55,6 +56,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -1142,4 +1144,59 @@ public class Tree<T> extends Composite
             return (Tree<T>) super.getComponent();
         }
     }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @throws IllegalArgumentException
+     *             if the provided id is not recognized by the data source.
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        Objects.requireNonNull(destination,
+                "ScrollDestination can not be null");
+
+        if (row > getDataProvider().size(new Query())) {
+            throw new IllegalArgumentException("Row outside dataProvider size");
+        }
+
+        treeGrid.scrollTo(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     */
+    public void scrollToStart() {
+        treeGrid.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     */
+    public void scrollToEnd() {
+        treeGrid.scrollToEnd();
+    }
+
 }
