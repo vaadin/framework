@@ -130,18 +130,10 @@ public class Binder<BEAN> implements Serializable {
          * Gets the validation status handler for this Binding.
          * 
          * @return the validation status handler for this binding
+         * 
+         * @since 8.2
          */
         public BindingValidationStatusHandler getValidationStatusHandler();
-
-        /**
-         * Notifies the validation status handler about the current validation
-         * status. This method is usually called through
-         * {@link BinderValidationStatus#notifyBindingValidationStatusHandlers()}.
-         * 
-         * @param status
-         *            the binding validation status
-         */
-        public void notifyStatusHandler(BindingValidationStatus<?> status);
     }
 
     /**
@@ -977,11 +969,6 @@ public class Binder<BEAN> implements Serializable {
          */
         protected Binder<BEAN> getBinder() {
             return binder;
-        }
-
-        @Override
-        public void notifyStatusHandler(BindingValidationStatus<?> status) {
-            getValidationStatusHandler().statusChange(status);
         }
 
         @Override
@@ -1943,9 +1930,7 @@ public class Binder<BEAN> implements Serializable {
     protected void handleBinderValidationStatus(
             BinderValidationStatus<BEAN> binderStatus) {
         // let field events go to binding status handlers
-        binderStatus.getFieldValidationStatuses()
-                .forEach(status -> ((BindingImpl<?, ?, ?>) status.getBinding())
-                        .notifyStatusHandler(status));
+        binderStatus.notifyBindingValidationStatusHandlers();
 
         // show first possible error or OK status in the label if set
         if (getStatusLabel().isPresent()) {

@@ -194,6 +194,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * Notifies all validation status handlers in bindings.
      * 
      * @see #notifyBindingValidationStatusHandlers(SerializablePredicate)
+     * 
+     * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers() {
         notifyBindingValidationStatusHandlers(t -> true);
@@ -209,10 +211,12 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * 
      * @param filter
      *            the filter to select bindings to run status handling for
+     * 
+     * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers(
             SerializablePredicate<BindingValidationStatus<?>> filter) {
-        bindingStatuses.stream().filter(filter)
-                .forEach(s -> s.getBinding().notifyStatusHandler(s));
+        bindingStatuses.stream().filter(filter).forEach(s -> s.getBinding()
+                .getValidationStatusHandler().statusChange(s));
     }
 }
