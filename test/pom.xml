@@ -16,7 +16,6 @@
         <vaadin.version>8.2-SNAPSHOT</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <contextmenu.version>2.0-SNAPSHOT</contextmenu.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Don't care about coding style for tests -->
