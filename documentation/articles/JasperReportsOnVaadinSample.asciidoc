@@ -1,0 +1,185 @@
+[[jasper-reports-on-vaadin-sample]]
+Jasper reports on Vaadin sample
+------------------------------
+
+[[introduction]]
+Introduction
+~~~~~~~~~~~~
+
+I meet JasperReports some years ago and I liked this report library;
+this year I did need to implement a report on a personal project using
+Vaadin, but surprisingly I was not able to found a sample of this, so I
+did this little sample and article.
+
+First, you will need a JDK Maven and Mysql in order to try the sample,
+and you can download the code here:
+http://sourceforge.net/projects/jrtutorial/files/VaadinJRSample/
+
+There is a README.txt file you can follow in order to run the sample,
+basically you need to:
+
+1.  Create database running resources/database.sql on Mysql or MariaDB
+2.  Compile the entire project: run "mvn install”.
+3.  Deploy the application in Jetty: run "mvn jetty:run"
+4.  Go to http://localhost:8080/  in your browser
+
+[[implementation]]
+Implementation
+~~~~~~~~~~~~~~
+
+Let’s see the sample code step by step. +
+The data is only a _person_ table with some data. +
+The main class _MyUI.java_ has two UI components (the report generating
+button and a list component used to show current data in database.):
+
+[source,java]
+....
+final Button reportGeneratorButton = new Button("Generate report");
+…
+layout.addComponent(reportGeneratorButton);
+layout.addComponent(new PersonList());
+....
+
+The list is implemented on _PersonList.java_, I am using a
+_FilteringTable_ (https://vaadin.com/directory/component/filteringtable),
+that loads the data using a Vaadin _SQLContainer_:
+
+[source,java]
+....
+SQLContainer container=null;
+…
+TableQuery tq = new TableQuery("person", new ConnectionUtil().getJDBCConnectionPool());
+container = new SQLContainer(tq);
+filterTable = buildPagedTable(container);
+....
+
+And the _SQLContainer_ is provided with a _JDBCConnectionPool_ created
+from a properties file (_resources/database.properties_):
+
+[source,java]
+....
+Properties prop=PropertiesUtil.getProperties();
+…
+public JDBCConnectionPool getJDBCConnectionPool(){
+JDBCConnectionPool pool = null;
+try {
+  pool = new SimpleJDBCConnectionPool(
+      prop.getProperty("database.driver"),
+      prop.getProperty("database.url"),
+      prop.getProperty("database.userName"),
+      prop.getProperty("database.password"));
+} catch (SQLException e) {
+  e.printStackTrace();
+}
+return pool;
+....
+
+The report generation is implemented on _ReportGenerator_ class, this
+class loads the report template:
+
+[source,java]
+....
+File templateFile=new File(templatePath);       
+JasperDesign jasperDesign = JRXmlLoader.load(templateFile);
+....
+
+Compile report template:
+
+[source,java]
+....
+jasperReport = JasperCompileManager.compileReport(jasperDesign);
+....
+
+Fill report with data:
+
+[source,java]
+....
+HashMap fillParameters=new HashMap();       
+JasperPrint jasperPrint = JasperFillManager.fillReport(   
+    jasperReport,                   
+    fillParameters,                   
+    conn);
+....
+
+Export the _jasperPrint_ object to Pdf format:
+
+[source,java]
+....
+JRPdfExporter exporter = new JRPdfExporter();
+exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+exporter.exportReport();
+....
+
+And finally execute all the logic to generate the report and sent it to
+an _OutputStream_:
+
+[source,java]
+....
+JasperDesign jasperDesign=loadTemplate(templatePath);
+setTempDirectory(templatePath);       
+JasperReport jasperReport=compileReport(jasperDesign);       
+JasperPrint jasperPrint=fillReport(jasperReport, conn);       
+exportReportToPdf(jasperPrint, outputStream);
+....
+
+But all the logic at _ReportGenerator.java_ is called from the
+_ReportUtil_ class, this class is the responsible to connect Vaadin
+layer with _ReportGenerator_ layer. There are two methods: the first one
+is _prepareForPdfReport_, this method creates a database connection,
+generates the report as a StreamResource (calling the another method)
+and finally extends the source button with a _FileDownloader_ component
+in order to upload the generated report stream, so all the uploading
+magic is done by _FileDownloader_ extension
+(https://vaadin.com/api/com/vaadin/server/FileDownloader.html):
+
+[source,java]
+....
+Connection conn=new ConnectionUtil().getSQLConnection();
+reportOutputFilename+=("_"+getDateAsString()+".pdf");       
+StreamResource myResource =createPdfResource(conn,reportTemplate,reportOutputFilename);       
+FileDownloader fileDownloader = new FileDownloader(myResource);       
+fileDownloader.extend(buttonToExtend);
+....
+
+The second method _createPdfResource_, uses _ReportGenerator_ class in
+order to return the generated report as a _StreamResource_:
+
+[source,java]
+....
+return new StreamResource(new StreamResource.StreamSource() {
+  @Override
+  public InputStream getStream () {
+    ByteArrayOutputStream pdfBuffer = new ByteArrayOutputStream();
+    ReportGenerator reportGenerator=new ReportGenerator();
+    try {
+      reportGenerator.executeReport(baseReportsPath+templatePath, conn, pdfBuffer);
+    } catch (JRException e) {
+      e.printStackTrace();
+    }
+    return new ByteArrayInputStream(
+        pdfBuffer.toByteArray());
+  }
+}, reportFileName);
+....
+
+So, in order to call the report generator process when only need to call
+ReportUtil like we did in ‘MyUI.java’:
+
+[source,java]
+....
+final Button reportGeneratorButton = new Button("Generate report");
+new ReportsUtil().prepareForPdfReport("/reports/PersonListReport.jrxml",               
+                                      "PersonList",               
+                                      reportGeneratorButton);
+....
+
+Finally, the jasper report design can be found in the
+_WEB-INF/personListReport.jrxml_ file
+
+This is a picture of the sample running and the generated report:
+
+image:img/VaadinJasperReportsSample_small.jpg[Running sample]
+
+And that’s all, I expect to help someone with this sample, thanks for
+reading.

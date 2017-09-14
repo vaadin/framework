@@ -11,3 +11,4 @@
 - link:VAccessControl.asciidoc[V - Access control]
 - link:FindingTheCurrentRootAndApplication.asciidoc[Finding the current root and application]
 - link:CreatingABasicApplication.asciidoc[Creating a basic application]
+- link:JasperReportsOnVaadinSample.asciidoc[Jasper reports on Vaadin sample]
