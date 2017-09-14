@@ -1,0 +1,584 @@
+[[building-vaadin-applications-on-top-of-activiti]]
+Building Vaadin applications on top of Activiti
+-----------------------------------------------
+
+by Petter Holmström
+
+[[introduction]]
+Introduction
+~~~~~~~~~~~~
+
+In this article, we are going to look at how the
+http://www.activiti.org[Activiti] BPM engine can be used together with
+Vaadin. We are going to do this in the form of a case study of a demo
+application that is available on
+https://github.com/peholmst/VaadinActivitiDemo[GitHub]. The code is
+licensed under Apache License 2.0 and can freely be used as a foundation
+for your own applications.
+
+[[the-example-process]]
+The Example Process
+^^^^^^^^^^^^^^^^^^^
+
+The following process is used in the demo application:
+
+image:img/process.png[Example process]
+
+Compared to the capabilities of Activiti and BPMN 2.0, the above process
+is almost ridiculously simple. However, it allows us to test the
+following things:
+
+* *Process start forms*, i.e. forms that need to be filled in before a
+process instance is created.
+* *User task forms*, i.e. forms that need to be filled in before a task
+can be marked as completed.
+* Parallell tasks
+* Different candidate groups (i.e. groups whose users are potential
+assignees of a certain task)
+
+Here is a short walk-through of the process:
+
+1.  Before a new process instance is created, the reporter has to fill
+in a _Submit bug report form_.
+2.  Once the instance has been created, two tasks are created:
+* *Update bug report*: a manager assigns priority and target version to
+the report. Potential assignees are members of the *managers* group.
+* *Accept bug report*: a developer accepts the bug report. Potential
+assignees are members of the *developers* group.
+3.  Both of these tasks require the assignee to fill in a form before
+they can be completed: the _Update bug report form_ and _Accept bug
+report form_, respectively.
+4.  Once the tasks have been completed, a new task is created, namely
+_Resolve bug report_. Potential assignees are members of the
+*developers* group. Ideally, this task should automatically be assigned
+to whoever claimed the *Accept bug report* task, but currently this is
+not implemented.
+5.  Before the task can be completed, the assignee has to fill in the
+_Resolve bug report form_.
+6.  All tasks have been completed and the process instance ends.
+
+[[prerequisites]]
+Prerequisites
+^^^^^^^^^^^^^
+
+In order to get the most out of this article, you should already be
+familiar with both Vaadin and Activiti. If not, there is enough free
+material available on both products' web sites to get you started.
+
+The demo application is a standard Java EE 6 web application and can be
+deployed to any JEE 6 web container, such as
+http://tomcat.apache.org[Tomcat 7]. It uses an embedded in-memory
+http://www.h2database.com[H2 database] for storing data, which means
+that all your data will be lost when the server is restarted.
+
+http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/heliossr2[Eclipse
+3.6] and the http://vaadin.com/eclipse[Vaadin plugin] was used to create
+the application. Both the project files and the third-party libraries
+are included in the source code repository. At this point, I recommend
+you to download the source code before continuing.
+
+Once you have Eclipse, Tomcat and Git properly installed and configured,
+you can follow the following instructions to get the demo application up
+and running:
+
+1.  Open a command line and clone the Git repository:
+`git clone git://github.com/peholmst/VaadinActivitiDemo.git`
+2.  Start up Eclipse.
+3.  From the *File* menu, select *Import*.
+4.  Select *Existing Projects into Workspace* and click *Next*.
+5.  In the *Select root directory* field, click the *Browse* button and
+locate the cloned Git repository directory.
+6.  In the list of projects, check *VaadinActivitiDemo* and click
+*Finish*.
+7.  In the *Project Explorer*, right-click on *VaadinActivitiDemo*,
+point to *Run As* and select *Run on Server*.
+8.  Select the Tomcat 7 server and click *Finish*.
+9.  Open a web browser and point it to
+_http://localhost:8080/VaadinActivitiDemo_.
+
+[[scope]]
+Scope
+^^^^^
+
+As Activiti has a huge amount of features, we are only going to look at
+a small subset of them in order to keep the scope of this article under
+control. More specifically, we are going to look at the following two
+questions:
+
+1.  How easy (or hard) is it to create custom-built forms using Vaadin
+and plug these into Activiti?
+2.  How easy (or hard) is it to combine process data from Activiti with
+other domain data from e.g. JPA?
+
+[[application-architecture]]
+Application Architecture
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, we are going to briefly discuss the architecture of the
+demo application on a general level and show how it has been implemented
+on more technical level. A simplified version of the architecture is
+illustrated here:
+
+image:img/architecture.png[Application architecture]
+
+[[the-h2-database]]
+The H2 Database
+^^^^^^^^^^^^^^^
+
+The H2 database is used in in-memory mode and will start when the
+process engine is initialized and stop when the engine is destroyed. All
+you have to do is specify some connection parameters when you
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/activiti.cfg.xml[configure
+Activiti] and the rest will be handled automatically.
+
+[[the-activiti-engine-and-process-definitions]]
+The Activiti Engine and Process Definitions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Activiti engine is initialized and destroyed by a servlet context
+listener, like so:
+
+[source,java]
+....
+@WebListener
+public class ProcessEngineServletContextListener implements ServletContextListener {
+  @Override
+  public void contextInitialized(ServletContextEvent event) {
+    ProcessEngines.init();
+    deployProcesses();
+  }
+
+  @Override
+  public void contextDestroyed(ServletContextEvent event) {
+    ProcessEngines.destroy();
+  }
+
+  private void deployProcesses() {
+    RepositoryService repositoryService = ProcessEngines.getDefaultProcessEngine().getRepositoryService();
+    repositoryService.createDeployment()
+      .addClasspathResource("path/to/bpmn-document.bpmn20.xml")
+      .deploy();
+  }
+}
+....
+
+Once the process engine has been initialized, the context listener
+deploys the BPMN 2.0 process definitions to it. In other words, the
+Activiti process engine becomes available as soon as the web application
+starts and remains up and running until the application is stopped. All
+the Vaadin application instances use the same Activiti engine.
+
+[[the-vaadin-application]]
+The Vaadin Application
+^^^^^^^^^^^^^^^^^^^^^^
+
+The Vaadin application is designed according to the
+http://en.wikipedia.org/wiki/Model-view-presenter[Model-View-Presenter]
+(MVP) pattern and is implemented using
+https://github.com/peholmst/MVP4Vaadin[MVP4Vaadin]. This gives us the
+following benefits:
+
+* Clear separation between logic and UI (makes unit testing easier).
+* View navigation becomes easier (e.g. the breadcrumb bar shown in the
+demo screencast is a built-in part of MVP4Vaadin).
+
+The following diagram illustrates the different views and potential
+navigation paths between them:
+
+image:img/views.png[Application views and navigation]
+
+When the application is first started, the
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/login[Login
+View] is displayed in the main window. Once the user has logged on, the
+main window is replaced with the
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/main[Main
+View]:
+
+[source,java]
+....
+public class DemoApplication extends Application implements ViewListener {
+  // Field declarations omitted
+
+  @Override
+  public void init() {
+     createAndShowLoginWindow();
+  }
+
+  private void createAndShowLoginWindow() {
+    // Implementation omitted
+  }
+
+  private void createAndShowMainWindow() {
+    // Implementation omitted
+  }
+
+  @Override
+  public void handleViewEvent(ViewEvent event) {
+    if (event instanceof UserLoggedInEvent) {
+      // Some code omitted
+      createAndShowMainWindow();
+    } // Other event handlers omitted
+  }
+  // Additional methods omitted.
+}
+....
+
+The main view acts as a controller and container for a number of
+embedded views:
+
+* The
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/home[Home
+View] is the main menu. From here, you can navigate to the _Process
+Browser View_ and the _Identity Management View_.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/processes[Process
+Browser View] contains a list of all the available process definitions.
+From this view, you can start new process instances. If a process has a
+start form, you can also navigate to the _User Form View_.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/identity[Identity
+Management View] allows you to manage users and user groups.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/tasks/UnassignedTasksViewImpl.java[Unassigned
+Tasks View] contains a list of all unassigned tasks. You can navigate to
+this view from any other view. From this view, you can assign tasks to
+yourself.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/tasks/MyTasksViewImpl.java[My
+Tasks View] contains a list of all tasks currently assigned to you. You
+can navigate to this view from any other view. From this view, you can
+complete tasks. If a task has a form, you can also navigate to the _User
+Form View_.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/tree/master/src/com/github/peholmst/vaadinactivitidemo/ui/forms[User
+Form View] is responsible for displaying the _User Task Forms_, e.g.
+before a new process instance is created or before a task is completed.
+The information about which form to show (if any) is specified in the
+BPMN process definition. *Please note that when we are talking about
+forms in this article, we are referring to the Acticiti form concept. Do
+not confuse this with Vaadin forms.*
+
+These views (or technically speaking their corresponding presenters)
+communicate directly with the Activiti engine. For example, the
+following snippet is taken from the
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/processes/ProcessPresenter.java[`ProcessPresenter`]
+class:
+
+[source,java]
+....
+@Override
+public void init() {
+  getView().setProcessDefinitions(getAllProcessDefinitions());
+}
+
+public void startNewInstance(ProcessDefinition processDefinition) {
+  try {
+    if (processDefinitionHasForm(processDefinition)) {
+      openFormForProcessDefinition(processDefinition);
+    } else {
+      getRuntimeService().startProcessInstanceById(processDefinition.getId());
+      getView().showProcessStartSuccess(processDefinition);
+    }
+  } catch (RuntimeException e) {
+    getView().showProcessStartFailure(processDefinition);
+  }
+}
+
+private List<ProcessDefinition> getAllProcessDefinitions() {
+  ProcessDefinitionQuery query = getRepositoryService().createProcessDefinitionQuery();
+  return query.orderByProcessDefinitionName().asc().list();
+}
+
+private RepositoryService getRepositoryService() {
+  return ProcessEngines.getDefaultProcessEngine().getRepositoryService();
+}
+
+private RuntimeService getRuntimeService() {
+  return ProcessEngines.getDefaultProcessEngine().getRuntimeService();
+}
+....
+
+The Main View also regularly checks if there are new tasks available and
+notifies the user if that is the case. The
+http://vaadin.com/addon/refresher[Refresher] add-on is used to handle
+the polling.
+
+[[some-notes-on-mvp4vaadin]]
+Some Notes on MVP4Vaadin
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Thanks to MVP4Vaadin, navigation between views is very simple. For
+example, the following code snippet is taken from the
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/main/components/WindowHeader.java[`WindowHeader`]
+component, a part of the Main View implementation:
+
+[source,java]
+....
+@SuppressWarnings("serial")
+private Button createMyTasksButton() {
+  Button button = new Button();
+  button.addListener(new Button.ClickListener() {
+    @Override
+    public void buttonClick(ClickEvent event) {
+      mainPresenter.showMyTasks();
+    }
+  });
+  button.addStyleName(Reindeer.BUTTON_SMALL);
+  return button;
+}
+
+@SuppressWarnings("serial")
+private Button createUnassignedTasksButton() {
+  Button button = new Button();
+  button.addListener(new Button.ClickListener() {
+    @Override
+    public void buttonClick(ClickEvent event) {
+      mainPresenter.showUnassignedTasks();
+    }
+  });
+  button.addStyleName(Reindeer.BUTTON_SMALL);
+  return button;
+}
+....
+
+The corresponding snippets from the
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/main/MainPresenter.java[`MainPresenter`]
+class are as follows:
+
+[source,java]
+....
+public void showUnassignedTasks() {
+  getViewController().goToView(UnassignedTasksView.VIEW_ID);
+}
+
+public void showMyTasks() {
+  getViewController().goToView(MyTasksView.VIEW_ID);
+}
+....
+
+[[custom-forms]]
+Custom Forms
+~~~~~~~~~~~~
+
+As you may already know, it is possible to use automatic form generation
+with Activiti, but the generated forms are not Vaadin based. In this
+article, we are going to use custom-built Vaadin forms instead. Even
+though this forces us to write Java code for each form we want to use,
+it gives us some advantages:
+
+* It is possible to have more complex forms with differnt kinds of
+components.
+* It is possible to tailor the appearance and look and feel of the forms
+to the user's needs.
+* It is easy to plug in other infrastructure services such as EJBs and
+JPA entities.
+
+The following approach is used to implement custom forms in the demo
+application:
+
+image:img/customForms.png[Custom forms]
+
+Here is a short walk-through of the most important classes:
+
+* The
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/util/UserTaskForm.java[`UserTaskForm`]
+interface is implemented by all custom forms. This interface defines
+several methods, the most interesting of which are the following:
+** `populateForm(...)`: This method populates the form with initial data
+retrieved from the Activiti form service.
+** `getFormProperties()`: This method creates a map of the form data
+that will be sent to the Activiti form service when the form is
+submitted.
+* The
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/util/UserTaskFormContainer.java[`UserTaskFormContainer`]
+is a class that contains user task forms. Each form can be accessed by a
+unique form key, which in turn is used in BPMN-documents to refer to
+forms. The main Vaadin application class is responsible for creating and
+populating this container. *Please note, that this container class has
+nothing to do with Vaadin Data Containers.*
+* The
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/forms/UserFormViewImpl.java[`UserFormViewImpl`]
+class (and its corresponding presenter) is responsible for looking up
+the correct form (by its form key), populating it, displaying it to the
+user and finally submitting it.
+
+[[some-code-examples]]
+Some Code Examples
+^^^^^^^^^^^^^^^^^^
+
+We are now going to look at some snippets from the demo application
+source code.
+
+First up is a method from the
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/tasks/MyTasksPresenter.java[`MyTasksPresenter`]
+class that is invoked when the user wants to open the form for a
+specific task:
+
+[source,java]
+....
+public void openFormForTask(Task task) {
+  String formKey = getFormKey(task);
+  if (formKey != null) {
+    HashMap<String, Object> params = new HashMap<String, Object>();
+    params.put(UserFormView.KEY_FORM_KEY, formKey);
+    params.put(UserFormView.KEY_TASK_ID, task.getId());
+    getViewController().goToView(UserFormView.VIEW_ID, params);
+  }
+}
+....
+
+The method checks if the task has a form and asks the view controller (a
+part of MVP4Vaadin) to navigate to the User Form View if that is the
+case. The task ID and form key is passed to the view as a map of
+parameters.
+
+The next code example is a method of the
+https://github.com/peholmst/VaadinActivitiDemo/blob/master/src/com/github/peholmst/vaadinactivitidemo/ui/forms/UserFormPresenter.java[`UserFormPresenter`]
+class that is invoked when the view controller has navigated to the User
+Form View:
+
+[source,java]
+....
+@Override
+protected void viewShown(ViewController viewController,
+        Map<String, Object> userData, ControllableView oldView,
+        Direction direction) {
+  if (userData != null) {
+    String formKey = (String) userData.get(UserFormView.KEY_FORM_KEY);
+    if (userData.containsKey(UserFormView.KEY_TASK_ID)) {
+      String taskId = (String) userData.get(UserFormView.KEY_TASK_ID);
+      showTaskForm(formKey, taskId);
+    }
+    // The rest of the implementation is omitted
+  }
+}
+
+private void showTaskForm(String formKey, String taskId) {
+  UserTaskForm form = userTaskFormContainer.getForm(formKey);
+  TaskFormData formData = getFormService().getTaskFormData(taskId);
+  form.populateForm(formData, taskId);
+  getView().setForm(form);
+}
+....
+
+The method first extracts the task ID and form key from the parameter
+map. It then invokes a helper method that looks up the corresponding
+form data and form from the Activiti form service and the
+`UserTaskFormContainer`, respectively. Finally, the form is populated
+and shown to the user.
+
+The final example is a method (also from `UserFormPresenter`) that is
+invoked when the user submits the form:
+
+[source,java]
+....
+public void submitForm(UserTaskForm form) {
+  if (form.getFormType().equals(UserTaskForm.Type.START_FORM)) {
+    getFormService().submitStartFormData(form.getProcessDefinitionId(), form.getFormProperties());
+  } else if (form.getFormType().equals(UserTaskForm.Type.TASK_FORM)) {
+    getFormService().submitTaskFormData(form.getTaskId(), form.getFormProperties());
+  }
+  getViewController().goBack();
+}
+....
+
+As there are two different kinds of forms (process start forms and user
+task forms, respectively), the method has to start by checking which
+kind it is currently processing. Then, the information is submitted to
+the Activiti form service. Finally, the view controller is asked to
+navigate back to what ever page it was on before the User Form View
+became visible.
+
+[[complex-domain-objects]]
+Complex Domain Objects
+~~~~~~~~~~~~~~~~~~~~~~
+
+The demo application does not use any domain objects as all the
+information can be represented as Activiti process variables. However,
+in most real-world applications you probably want to use a dedicated
+domain model.
+
+We are now going to look at a potential design for combining Activiti
+with a complex domain model. *Please note that the design has not been
+tested in practice* - feel free to test it if you feel like it (and
+remember to tell me the results)!
+
+Here is a sketch of a process that involves a more complicated domain
+model than just a few strings:
+
+image:img/complexdomain.png[Complex domain]
+
+The idea is that although many different entities need to be created and
+stored throughout the process, only some small parts of the information
+is actually required to drive the process forward. For example, the
+*Send invoice* task does not necessarily need the entire invoice object;
+only the invoice number, order number and due date should be sufficient.
+Likewise, the *Receive payment* task needs only the invoice number to be
+able to check that the invoice has been paid, the timer needs the due
+date to be able to send out a new invoice, etc.
+
+[[implementation-ideas]]
+Implementation Ideas
+^^^^^^^^^^^^^^^^^^^^
+
+The actual forms that the users fill in could be implemented in Vaadin,
+as described previously in this article. When the form is submitted, the
+entities are saved to some data store (e.g. a relational database).
+After this, the necessary form properties are submitted to the Activiti
+form service, completing the task in question. In other words, Activiti
+is used to drive the process forward (i.e. define the business logic),
+whereas JPA or any other object persistence solution is used to store
+data.
+
+There are a few things to keep in mind, though:
+
+* How are transactions handled?
+* How is data validation performed?
+* How is security enforced?
+* Is versioning of the domain data required? How should it be
+implemented if so? (Activiti already maintains a history log of the
+process operations.)
+
+In smaller applications, the following design could be sufficient:
+
+image:img/complexdomain_saving.png[Complex domain saving]
+
+Here, the Presenter (in the MVP-pattern) is responsible for extracting
+the needed form properties from the domain data, saving the entity and
+submitting the form. This moves some of the logic to the UI layer, but
+for small applications this is not a big problem as the presenter is
+itself decoupled from the actual UI code.
+
+For larger applications, the following design could be a better
+approach:
+
+image:img/complexdomain_saving2.png[Complex domain saving 2]
+
+Here, both the repository and the form service engine is hidden behind a
+facade. A Data Transfer Object (DTO) is used to convey the data from the
+Presenter to the facade. This approach requires more code, but decouples
+the business layer from the UI layer even more. Security enforcement and
+transaction handling also become easier.
+
+[[summary]]
+Summary
+~~~~~~~
+
+In this article, we have looked at how the Activiti BPM engine and
+Vaadin fit together. We have covered how the engine is initialized and
+accessed by Vaadin application instances. We have also covered how
+custom-made Vaadin forms can be used instead of Activiti's own form
+generation. Finally, we have discussed a way of combining Activiti
+processes with a more complex domain model.
+
+The Activiti API is clear and does not force adopters to use a specific
+GUI technology. Therefore, it plays really well with Vaadin and should
+be concidered a serious alternative for process centric enterprise
+applications.
+
+Likewise, Vaadin should be considered a serious alternative as a front
+end technology for applications based on Activiti.
+
+If you have any comments or questions, for example if something in the
+article is unclear or confusing, feel free to either post them below or
+send them to me directly by e-mail.

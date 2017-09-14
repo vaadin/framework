@@ -12,3 +12,4 @@
 - link:FindingTheCurrentRootAndApplication.asciidoc[Finding the current root and application]
 - link:CreatingABasicApplication.asciidoc[Creating a basic application]
 - link:JasperReportsOnVaadinSample.asciidoc[Jasper reports on Vaadin sample]
+- link:BuildingVaadinApplicationsOnTopOfActiviti.asciidoc[Building Vaadin applications on top of Activiti]
