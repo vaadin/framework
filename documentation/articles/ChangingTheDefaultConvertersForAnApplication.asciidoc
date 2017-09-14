@@ -1,0 +1,76 @@
+[[changing-the-default-converters-for-an-application]]
+Changing the default converters for an application
+--------------------------------------------------
+
+Each Vaadin session instance has a `ConverterFactory` that provides
+converters to Fields and Table. The defaults might not be ideal for your
+case so it is possible for you to change the defaults by providing your
+own ConverterFactory. If you, for instance, want to format all (or most)
+doubles from your data model with 3 decimals and no thousand separator
+(but still allow the user to input with any number of decimals) you can
+do this by first creating your own Converter:
+
+[source,java]
+....
+public class MyStringToDoubleConverter extends StringToDoubleConverter {
+
+  @Override
+  protected NumberFormat getFormat(Locale locale) {
+    NumberFormat format = super.getFormat(locale);
+    format.setGroupingUsed(false);
+    format.setMaximumFractionDigits(3);
+    format.setMinimumFractionDigits(3);
+    return format;
+  }
+}
+....
+
+and then extending the default converter factory to use your converter
+for all `Double` &lt;-&gt; `String` conversions.
+
+[source,java]
+....
+public class MyConverterFactory extends DefaultConverterFactory {
+  @Override
+  protected <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> findConverter(
+      Class<PRESENTATION> presentationType, Class<MODEL> modelType) {
+    // Handle String <-> Double
+    if (presentationType == String.class && modelType == Double.class) {
+      return (Converter<PRESENTATION, MODEL>) new MyStringToDoubleConverter();
+    }
+    // Let default factory handle the rest
+    return super.findConverter(presentationType, modelType);
+  }
+}
+....
+
+You still need to tell your application to always use
+`MyConverterFactory`:
+
+[source,java]
+....
+VaadinSession.getCurrent().setConverterFactory(new MyConverterFactory());
+....
+
+Now we can test it using
+
+[source,java]
+....
+public class MyUI extends UI {
+  public void init(VaadinRequest request) {
+    TextField tf = new TextField("This is my double field");
+    tf.setImmediate(true);
+    tf.setConverter(Double.class);
+    setContent(tf);
+    tf.setConvertedValue(50.1);
+  }
+}
+....
+
+This will not enforce the contents of the field to the format specified
+by the converter. Only data from the data source is formatted to adhere
+to the format set in the converter.
+
+If you want to force the user to enter data with a given number of
+decimals you need to create your own converter instead of only
+overriding the format for `StringToDoubleConverter`.
