@@ -23,3 +23,4 @@
 - link:JMeterTesting.asciidoc[JMeter testing]
 - link:AutoGeneratingAFormBasedOnABeanVaadin6StyleForm.asciidoc[Auto-generating a form based on a bean - Vaadin 6 style Form]
 - link:CreatingAReusableVaadinThemeInEclipse.asciidoc[Creating a reusable Vaadin theme in Eclipse]
+- link:CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource.asciidoc[Creating a TextField for integer only input when not using a data source]
