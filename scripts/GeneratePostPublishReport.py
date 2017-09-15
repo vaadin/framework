@@ -18,15 +18,25 @@ def checkUrlStatus(url):
 	return r.status_code == 200
 
 def createTableRow(*columns):
-    html = "<tr>"
-    for column in columns:
-        html += "<td>" + column + "</td>"
-    return html + "</tr>"
+	html = "<tr>"
+	for column in columns:
+		html += "<td>" + column + "</td>"
+	return html + "</tr>"
 
 traffic_light = "<svg width=\"20px\" height=\"20px\" style=\"padding-right:5px\"><circle cx=\"10\" cy=\"10\" r=\"10\" fill=\"{color}\"/></svg>"
 
 def getTrafficLight(b):
 	return traffic_light.format(color="green") if b else traffic_light.format(color="red")
+
+def checkArchetypeMetaData(archetypeMetadataUrl, version):
+	archetype_metadata_request = requests.get(archetypeMetadataUrl)
+	if archetype_metadata_request.status_code != 200:
+		return createTableRow(traffic_light.format(color="black"), "Check archetype metadata: <a href='{url}'>unable to retrieve metadata from {url}</a>".format(url=archetypeMetadataUrl))
+	else:
+		if "version=\"{version}\"".format(version=version) in archetype_metadata_request.content:
+			return createTableRow(traffic_light.format(color="green"), "Check archetype metadata: <a href='{url}'>metadata is correct for {url}</a>".format(url=archetypeMetadataUrl))
+		else:
+			return createTableRow(traffic_light.format(color="red"), "Check archetype metadata: <a href='{url}'>metadata seems to be incorrect for {url}</a>".format(url=archetypeMetadataUrl))
 
 content = "<html><head></head><body><table>"
 
@@ -37,23 +47,13 @@ content += createTableRow(getTrafficLight(tagOk), "Tag ok on github.com")
 content += createTableRow("", "<a href=\"{url}\">Tag and pin build</a>".format(url=buildResultUrl))
 
 # Traffic light for archetype metadata
-# TODO check all three metadata files, based on pre-release or not
-archetypeMetadataUrl = ""
-if not prerelease:
-    archetypeMetadataUrl = "http://vaadin.com/download/eclipse-maven-archetypes.xml"
-else:
-    archetypeMetadataUrl ="http://vaadin.com/download/maven-archetypes-prerelease.xml"
+content += checkArchetypeMetaData("http://vaadin.com/download/eclipse-maven-archetypes.xml", args.version)
+if prerelease:
+	content += checkArchetypeMetaData("http://vaadin.com/download/maven-archetypes-prerelease.xml", args.version)
+content += createTableRow("", "Optionally check that <a href=\"http://vaadin.com/download/maven-archetypes.xml\">old Eclipse metadata</a> still refers to Vaadin 7")
+content += createTableRow("", "Note that archetype metadata checks do not verify that the relevant sections are not commented out when changing from pre-release to stable and back!")
 
-archetype_metadata_request = requests.get(archetypeMetadataUrl)
-if archetype_metadata_request.status_code != 200:
-    content += createTableRow(traffic_light.format(color="black"), "<a href='{url}'>Check archetype metadata: unable to retrieve metadata</a>".format(url=archetypeMetadataUrl))
-else:
-    if "version=\"{version}\"".format(version=args.version) in archetype_metadata_request.content:
-        content += createTableRow(traffic_light.format(color="green"), "<a href='{url}'>Check archetype metadata: metadata is correct</a>".format(url=archetypeMetadataUrl))
-    else:
-        content += createTableRow(traffic_light.format(color="red"), "<a href='{url}'>Check archetype metadata: metadata is incorrect</a>".format(url=archetypeMetadataUrl))
-
-# TODO GitHub milestones
+content += createTableRow("", "Build and deploy new sampler if necessary")
 
 # Inform marketing and PO
 content += createTableRow("", "Inform marketing and PO about the release")
@@ -62,9 +62,9 @@ content += createTableRow("", "Inform marketing and PO about the release")
 content += createTableRow("", "<a href=\"http://{}/admin/editProject.html?projectId={}&tab=projectParams\">Update vaadin.version.latest and vaadin.version.next parameters in TeamCity</a>".format(args.teamcityUrl, args.projectId))
 
 # Link to GH release notes
-content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases/new\">Write release notes in GH</a>")
+content += createTableRow("", "<a href=\"https://github.com/vaadin/framework/releases\">Finish and publish release notes in GH</a>")
 
 content += "</table></body></html>"
 
 with open("result/report.html", "wb") as f:
-    f.write(content)
+	f.write(content)

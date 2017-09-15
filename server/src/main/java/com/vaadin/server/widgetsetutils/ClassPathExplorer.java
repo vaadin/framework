@@ -58,13 +58,8 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private final static FileFilter DIRECTORIES_ONLY = (File f) -> {
-        if (f.exists() && f.isDirectory()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+    private final static FileFilter DIRECTORIES_ONLY = (File f) ->
+            f.exists() && f.isDirectory();
 
     /**
      * Contains information about widgetsets and themes found on the classpath

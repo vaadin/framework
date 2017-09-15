@@ -1,0 +1,34 @@
+= Community articles for Vaadin Framework
+
+Helpful articles about Vaadin Framework written by the users for the users. The
+articles are presented as written by the author. Vaadin does not edit or maintain them.
+Pull requests welcome!
+
+NOTE: All contributions are very welcome! Just write your article in link:asciidoctor.org/docs/asciidoc-writers-guide[AsciiDoc],
+put it in this directory and send us a pull request. Updates to existing articles
+are great, too.
+
+[discrete]
+== Articles
+- link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing portlets for the WebSphere Portal Server]
+- link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
+- link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]
+- link:UsingVaadinInIBMDomino.asciidoc[Using Vaadin in IBM Domino]
+- link:VaadinTutorialForSwingDevelopers.asciidoc[Vaadin tutorial for Swing developers]
+- link:SettingAndReadingSessionAttributes.asciidoc[Setting and reading session attributes]
+- link:EnablingServerPush.asciidoc[Enabling server push]
+- link:CleaningUpResourcesInAUI.asciidoc[Cleaning up resources in a UI]
+- link:SendingEmailFromJavaApplications.asciidoc[Sending email from Java applications]
+- link:OptimizingSluggishUI.asciidoc[Optimizing sluggish UI]
+- link:UsingParametersWithViews.asciidoc[Using parameters with views]
+- link:ConfiguringPushForYourEnviroment.asciidoc[Configuring push for your environment]
+- link:SettingAndReadingCookies.asciidoc[Setting and reading cookies]
+- link:UsingPolling.asciidoc[Using polling]
+- link:FindingTheCurrentUIAndPageAndVaadinSession.asciidoc[Finding the current UI and page and Vaadin Session]
+- link:CreatingAnApplicationThatPreservesStateOnRefresh.asciidoc[Creating an application that preserves state on refresh]
+- link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending events from the client to the server using RPC]
+- link:HandlingLogout.asciidoc[Handling logout]
+- link:ScalableWebApplications.asciidoc[Scalable web applications]
+- link:RememberToTheSetTheLocale.asciidoc[Remember to the set the locale]
+- link:MVCBasicsInITMillToolkit.asciidoc[MVC Basics in IT Mill Toolkit]
+- link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing the startup page in an application]

@@ -39,7 +39,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 /**
  * An implementation of the <code>{@link Container.Indexed}</code> interface
  * with all important features.
- * </p>
+ * <p>
  *
  * Features:
  * <ul>

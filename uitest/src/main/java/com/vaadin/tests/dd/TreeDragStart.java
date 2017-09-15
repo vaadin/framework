@@ -139,7 +139,7 @@ public class TreeDragStart extends TestBase {
         final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<>(
                 collection);
         table.setContainerDataSource(tableContainer);
-        table.setVisibleColumns(new String[] { "name", "weight" });
+        table.setVisibleColumns("name", "weight");
         table.removeAllItems();
 
         // Allow the table to receive drops and handle them

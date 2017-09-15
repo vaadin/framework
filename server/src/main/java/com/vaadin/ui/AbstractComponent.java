@@ -426,12 +426,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return false;
         } else if (!super.isConnectorEnabled()) {
             return false;
-        } else if (getParent() instanceof SelectiveRenderer
-                && !((SelectiveRenderer) getParent()).isRendered(this)) {
-            return false;
-        } else {
-            return true;
         }
+        return !(getParent() instanceof SelectiveRenderer)
+            || ((SelectiveRenderer) getParent()).isRendered(this);
     }
 
     /*

@@ -612,8 +612,8 @@ public class Tree<T> extends Composite
     /**
      * Sets the description generator that is used for generating tooltip
      * descriptions for items.
-     * 
-     * @since
+     *
+     * @since 8.2
      * @param descriptionGenerator
      *            the item description generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -666,7 +666,7 @@ public class Tree<T> extends Composite
     /**
      * Gets the item description generator.
      *
-     * @since
+     * @since 8.2
      * @return the item description generator
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
@@ -864,9 +864,9 @@ public class Tree<T> extends Composite
 
     /**
      * Returns the current state of automatic width recalculation.
-     * 
+     *
      * @return {@code true} if enabled; {@code false} if disabled
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isAutoRecalculateWidth() {
@@ -876,11 +876,11 @@ public class Tree<T> extends Composite
     /**
      * Sets the automatic width recalculation on or off. This feature is on by
      * default.
-     * 
+     *
      * @param autoRecalculateWidth
      *            {@code true} to enable recalculation; {@code false} to turn it
      *            off
-     * 
+     *
      * @since 8.1.1
      */
     public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
@@ -1096,7 +1096,7 @@ public class Tree<T> extends Composite
      * ContextClickEvent for the Tree Component.
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * tree.addContextClickListener(event -&gt; Notification.show(
      *         ((TreeContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));

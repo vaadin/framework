@@ -51,7 +51,7 @@ public class ExpandingContainerVisibleRowRaceCondition extends UI {
         table.setId(TABLE);
         table.setCacheRate(0);
         table.setSizeFull();
-        table.setVisibleColumns(ExpandingContainer.PROPERTY_IDS
+        table.setVisibleColumns((Object[]) ExpandingContainer.PROPERTY_IDS
                 .toArray(new String[ExpandingContainer.PROPERTY_IDS.size()]));
 
         table.setCurrentPageFirstItemIndex(120);

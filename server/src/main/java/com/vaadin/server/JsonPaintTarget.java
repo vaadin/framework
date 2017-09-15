@@ -876,7 +876,7 @@ public class JsonPaintTarget implements PaintTarget {
 
         @Override
         public String getJsonPresentation() {
-            return "\"" + name + "\":" + (value == true ? "true" : "false");
+            return "\"" + name + "\":" + (value ? "true" : "false");
         }
 
     }

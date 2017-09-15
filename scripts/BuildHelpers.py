@@ -102,55 +102,26 @@ def copyWarFiles(artifactId, resultDir = resultPath, name = None):
 		copiedWars.append(join(resultDir, deployName))
 	return copiedWars
 
-def readPomFile(pomFile):
-	# pom.xml namespace workaround
-	root = ElementTree.parse(pomFile).getroot()
-	nameSpace = root.tag[1:root.tag.index('}')]
-	ElementTree.register_namespace('', nameSpace)
+# Generates and modifies a maven pom file
+def generateArchetype(archetype, artifactId, repo, logFile, group="testpkg", archetypeGroup="com.vaadin"):
+	# Generate the required command line for archetype generation
+	args = getArgs()
+	cmd = [mavenCmd, "archetype:generate"]
+	cmd.append("-DarchetypeGroupId=%s" % (archetypeGroup))
+	cmd.append("-DarchetypeArtifactId=%s" % (archetype))
+	cmd.append("-DarchetypeVersion=%s" % (args.version))
+	if repo is not None:
+		cmd.append("-DarchetypeRepository=%s" % repo)
+	cmd.append("-DgroupId=%s" % (group))
+	cmd.append("-DartifactId=%s" % (artifactId))
+	cmd.append("-Dversion=1.0-SNAPSHOT")
+	cmd.append("-DinteractiveMode=false")
+	if hasattr(args, "maven") and args.maven is not None:
+		cmd.extend(args.maven.strip('"').split(" "))
 
-	# Read the pom.xml correctly
-	return ElementTree.parse(pomFile), nameSpace 
-
-# Recursive pom.xml update script
-def updateRepositories(path, repoUrl = None, version = None, postfix = "staging"):
-	# If versions are not supplied, parse arguments
-	if version is None:
-		version = getArgs().version
-
-	# Read pom.xml
-	pomXml = join(path, "pom.xml")
-	if isfile(pomXml):
-		# Read the pom.xml correctly
-		tree, nameSpace = readPomFile(pomXml)
-		
-		# NameSpace needed for finding the repositories node
-		repoNode = tree.getroot().find("{%s}repositories" % (nameSpace))
-	else:
-		return
-	
-	if repoNode is not None:
-		print("Add staging repositories to " + pomXml)
-		
-		# Add framework staging repository
-		addRepo(repoNode, "repository", "vaadin-%s-%s" % (version, postfix), repoUrl)
-		
-		# Find the correct pluginRepositories node
-		pluginRepo = tree.getroot().find("{%s}pluginRepositories" % (nameSpace))
-		if pluginRepo is None:
-			# Add pluginRepositories node if needed
-			pluginRepo = ElementTree.SubElement(tree.getroot(), "pluginRepositories")
-		
-		# Add plugin staging repository
-		addRepo(pluginRepo, "pluginRepository", "vaadin-%s-%s" % (version, postfix), repoUrl)
-		
-		# Overwrite the modified pom.xml
-		tree.write(pomXml, encoding='UTF-8')
-	
-	# Recursive pom.xml search.
-	for i in listdir(path):
-		file = join(path, i)
-		if isdir(file):
-			updateRepositories(join(path, i), repoUrl, version, postfix)
+	# Generate pom.xml
+	print("Generating archetype %s" % (archetype))
+	subprocess.check_call(cmd, cwd=resultPath, stdout=logFile)
 
 # Add a repository of repoType to given repoNode with id and URL
 def addRepo(repoNode, repoType, id, url):
@@ -169,13 +140,6 @@ def removeDir(subdir):
 		# Dangerous relative paths.
 		return
 	rmtree(join(resultPath, subdir))
-
-def mavenInstall(pomFile, jarFile = None, mvnCmd = mavenCmd, logFile = sys.stdout):
-	cmd = [mvnCmd, "install:install-file"]
-	cmd.append("-Dfile=%s" % (jarFile if jarFile is not None else pomFile))
-	cmd.append("-DpomFile=%s" % (pomFile))
-	print("executing: %s" % (" ".join(cmd)))
-	subprocess.check_call(cmd, stdout=logFile)	
 
 def dockerWrap(imageVersion, imageName = "demo-validation"):
 	dockerFileContent = """FROM jetty:jre8-alpine

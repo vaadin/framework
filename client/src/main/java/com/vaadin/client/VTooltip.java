@@ -617,7 +617,7 @@ public class VTooltip extends VOverlay {
             Element element = Element.as(event.getEventTarget());
 
             // We can ignore move event if it's handled by move or over already
-            if (currentElement == element && handledByFocus == true) {
+            if (currentElement == element && handledByFocus) {
                 return;
             }
 
