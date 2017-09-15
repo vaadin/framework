@@ -52,27 +52,6 @@ public class ButtonConnector extends AbstractComponentConnector
         ConnectorFocusAndBlurHandler.addHandlers(this);
     }
 
-    @OnStateChange({"errorMessage", "errorLevel"})
-    void setErrorMessageAndLevel() {
-        if (null != getState().errorMessage) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement.setClassName(
-                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-            }
-
-            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
-                    getState().errorLevel);
-
-            getWidget().wrapper.insertFirst(getWidget().errorIndicatorElement);
-
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().wrapper.removeChild(getWidget().errorIndicatorElement);
-            getWidget().errorIndicatorElement = null;
-        }
-    }
-
     @OnStateChange("resources")
     void onResourceChange() {
         if (getWidget().icon != null) {

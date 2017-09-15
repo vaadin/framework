@@ -68,32 +68,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        if (null != getState().errorMessage) {
-            getWidget().setAriaInvalid(true);
-
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
-                DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-                DOM.appendChild(getWidget().getElement(),
-                        getWidget().errorIndicatorElement);
-                DOM.sinkEvents(getWidget().errorIndicatorElement,
-                        VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
-            } else {
-                getWidget().errorIndicatorElement.getStyle().clearDisplay();
-            }
-
-            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
-                    getState().errorLevel);
-
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle()
-                    .setDisplay(Display.NONE);
-
-            getWidget().setAriaInvalid(false);
-        }
+        getWidget().setAriaInvalid(getState().errorMessage != null);
 
         getWidget().setAriaRequired(isRequiredIndicatorVisible());
         if (isReadOnly()) {

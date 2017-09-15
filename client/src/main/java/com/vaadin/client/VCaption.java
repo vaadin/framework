@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.HasErrorIndicator;
+import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
@@ -37,7 +38,7 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.ErrorLevel;
 
-public class VCaption extends HTML {
+public class VCaption extends HTML implements HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-caption";
 
@@ -261,28 +262,17 @@ public class VCaption extends HTML {
         AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
         if (showError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
+            setErrorIndicatorElementVisible(true);
 
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(InsertPosition.ERROR));
-
-                // Hide error indicator from assistive devices
-                Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
-                        true);
-            }
+            // Hide error indicator from assistive devices
+            Roles.getTextboxRole()
+                    .setAriaHiddenState(errorIndicatorElement, true);
 
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                     StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     owner.getState().errorLevel);
-
-        } else if (errorIndicatorElement != null) {
-            // Remove existing
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -416,23 +406,11 @@ public class VCaption extends HTML {
         }
 
         if (hasError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createDiv();
-                DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-
-                DOM.insertChild(getElement(), errorIndicatorElement,
-                        getInsertPosition(InsertPosition.ERROR));
-            }
-
+            setErrorIndicatorElementVisible(true);
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                     StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
-
-        } else if (errorIndicatorElement != null) {
-            // Remove existing
-            getElement().removeChild(errorIndicatorElement);
-            errorIndicatorElement = null;
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         return (wasPlacedAfterComponent != placedAfterComponent);
@@ -793,5 +771,24 @@ public class VCaption extends HTML {
 
     private static Logger getLogger() {
         return Logger.getLogger(VCaption.class.getName());
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                DOM.insertChild(getElement(), errorIndicatorElement,
+                        getInsertPosition(InsertPosition.ERROR));
+            }
+        } else if (errorIndicatorElement != null) {
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
     }
 }

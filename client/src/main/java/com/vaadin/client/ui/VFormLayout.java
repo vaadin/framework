@@ -342,7 +342,7 @@ public class VFormLayout extends SimplePanel {
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public class ErrorFlag extends HTML {
+    public class ErrorFlag extends HTML implements HasErrorIndicatorElement {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;
@@ -373,27 +373,37 @@ public class VFormLayout extends SimplePanel {
             AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
             if (showError) {
-                if (errorIndicatorElement == null) {
-                    errorIndicatorElement = DOM.createDiv();
-                    DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                    DOM.setElementProperty(errorIndicatorElement, "className",
-                            StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-                    DOM.appendChild(getElement(), errorIndicatorElement);
+                setErrorIndicatorElementVisible(true);
 
-                    // Hide the error indicator from screen reader, as this
-                    // information is set directly at the input field
-                    Roles.getFormRole()
-                            .setAriaHiddenState(errorIndicatorElement, true);
-                }
+                // Hide the error indicator from screen reader, as this
+                // information is set directly at the input field
+                Roles.getFormRole()
+                        .setAriaHiddenState(errorIndicatorElement, true);
 
                 ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
-
-            } else if (errorIndicatorElement != null) {
-                DOM.removeChild(getElement(), errorIndicatorElement);
-                errorIndicatorElement = null;
+            } else {
+                setErrorIndicatorElementVisible(false);
             }
         }
 
+        @Override
+        public Element getErrorIndicatorElement() {
+            return errorIndicatorElement;
+        }
+
+        @Override
+        public void setErrorIndicatorElementVisible(boolean visible) {
+            if (visible) {
+                if (errorIndicatorElement == null) {
+                    errorIndicatorElement = ErrorUtil
+                            .createErrorIndicatorElement();
+                    getElement().appendChild(errorIndicatorElement);
+                }
+            } else if (errorIndicatorElement != null) {
+                getElement().removeChild(errorIndicatorElement);
+                errorIndicatorElement = null;
+            }
+        }
     }
 }

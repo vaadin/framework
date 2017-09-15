@@ -1888,5 +1888,16 @@ public class WidgetUtil {
                 }
             }
         }
+
+        /**
+         * Creates an element to use by widgets as an error indicator.
+         *
+         * @return the error indicator element
+         */
+        public static Element createErrorIndicatorElement() {
+            Element indicator = DOM.createSpan();
+            indicator.setClassName(StyleConstants.STYLE_NAME_ERROR_INDICATOR);
+            return indicator;
+        }
     }
 }

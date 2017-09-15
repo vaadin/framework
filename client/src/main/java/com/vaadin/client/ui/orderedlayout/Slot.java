@@ -32,6 +32,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.FontIcon;
+import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.layout.ElementResizeListener;
@@ -41,7 +42,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 /**
  * Represents a slot which contains the actual widget in the layout.
  */
-public class Slot extends SimplePanel {
+public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
@@ -615,19 +616,11 @@ public class Slot extends SimplePanel {
 
         // Error
         if (error != null && showError) {
-            if (errorIcon == null) {
-                errorIcon = DOM.createSpan();
-                errorIcon.setClassName(
-                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-            }
-
-            ErrorUtil.setErrorLevelStyle(errorIcon,
+            setErrorIndicatorElementVisible(true);
+            ErrorUtil.setErrorLevelStyle(getErrorIndicatorElement(),
                     StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
-
-            caption.appendChild(errorIcon);
-        } else if (errorIcon != null) {
-            errorIcon.removeFromParent();
-            errorIcon = null;
+        } else {
+            setErrorIndicatorElementVisible(false);
         }
 
         if (caption != null) {
@@ -834,6 +827,24 @@ public class Slot extends SimplePanel {
             return hasRelativeHeight();
         } else {
             return hasRelativeWidth();
+        }
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIcon;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIcon == null) {
+                errorIcon = ErrorUtil.createErrorIndicatorElement();
+            }
+            caption.appendChild(errorIcon);
+        } else if (errorIcon != null) {
+            errorIcon.removeFromParent();
+            errorIcon = null;
         }
     }
 }

@@ -72,25 +72,6 @@ public class LinkConnector extends AbstractComponentConnector {
         // Set link caption
         VCaption.setCaptionText(getWidget().captionElement, getState());
 
-        // handle error
-        if (null != getState().errorMessage) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createDiv();
-                DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
-            }
-
-            ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
-                    getState().errorLevel);
-
-            DOM.insertChild(getWidget().getElement(),
-                    getWidget().errorIndicatorElement, 0);
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle()
-                    .setDisplay(Display.NONE);
-        }
-
         if (getWidget().icon != null) {
             getWidget().anchor.removeChild(getWidget().icon.getElement());
             getWidget().icon = null;

@@ -490,6 +490,21 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
+    @OnStateChange({"errorMessage", "errorLevel"})
+    private void setErrorLevel() {
+        if (getWidget() instanceof HasErrorIndicatorElement) {
+            HasErrorIndicatorElement widget = (HasErrorIndicatorElement) getWidget();
+            if (getState().errorMessage != null) {
+                widget.setErrorIndicatorElementVisible(true);
+                ErrorUtil.setErrorLevelStyle(widget.getErrorIndicatorElement(),
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                        getState().errorLevel);
+            } else {
+                widget.setErrorIndicatorElementVisible(false);
+            }
+        }
+    }
+
     @Override
     public void setWidgetEnabled(boolean widgetEnabled) {
         // add or remove v-disabled style name from the widget
