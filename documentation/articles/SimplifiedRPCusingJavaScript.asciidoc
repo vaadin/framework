@@ -1,0 +1,99 @@
+[[simplified-rpc-using-javascript]]
+Simplified RPC using JavaScript
+-------------------------------
+
+This tutorial continues where
+link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript
+component] ended. We will now add RPC functionality to the JavaScript
+Flot component. RPC can be used in the same way as with ordinary GWT
+components as described in link:UsingRPCFromJavaScript.asciidoc[Using
+RPC from JavaScript]. This tutorial describes a simplified way that is
+based on the same concepts as in
+link:ExposingServerSideAPIToJavaScript.asciidoc[Exposing server
+side API to JavaScript]. This way of doing RPC is less rigorous and is
+intended for simple cases and for developers appreciating the dynamic
+nature of JavaScript.
+
+The simplified way is based on single callback functions instead of
+interfaces containing multiple methods. We will invoke a server-side
+callback when the user clicks a data point in the graph and a
+client-side callback for highlighting a data point in the graph. Each
+callback takes a data series index and the index of a point in that
+series.
+
+In the constructor, we register the callback that will be called from
+the client-side when a data point is clicked.
+
+[source,java]
+....
+public Flot() {
+  addFunction("onPlotClick", new JavaScriptFunction() {
+    public void call(JsonArray arguments) throws JSONException {
+      int seriesIndex = arguments.getInt(0);
+      int dataIndex = arguments.getInt(1);
+      Notification.show("Clicked on [" + seriesIndex + ", "
+          + dataIndex + "]");
+    }
+  });
+}
+....
+
+Highlighting is implemented by invoking the client-side callback
+function by name and passing the appropriate arguments.
+
+[source,java]
+....
+public void highlight(int seriesIndex, int dataIndex) {
+  callFunction("highlight", seriesIndex, dataIndex);
+}
+....
+
+The simplified RPC mechanism is based on JavaScript functions attached
+directly to the connector wrapper object. Callbacks registered using the
+server-side `registerCallback` method will be made available as a
+similarly named function on the connector wrapper and functions in the
+connector wrapper object matching the name used in a server-side
+`callFunction` will be called. Because of the dynamic nature of
+JavaScript, it's the developer's responsibility to avoid naming
+conflicts.
+
+We need to make some small adjustments to the connector JavaScript to
+make it work with the way Flot processes events. Because a new Flot
+object is created each time the onStateChange function is called, we
+need to store a reference to the current object that we can use for
+applying the highlight. We also need to pass a third parameter to
+`$.plot` to make the graph area clickable. We are finally storing a
+reference to `this` in the `self` variable because `this` will point to
+a different object inside the click event handler. Aside from those
+changes, we just call the callback in a click listener and add our own
+callback function for highlighting a point.
+
+[source,javascript]
+....
+window.com_example_Flot = function() {
+  var element = $(this.getElement());
+  var self = this;
+  var flot;
+
+  this.onStateChange = function() {
+    flot = $.plot(element, this.getState().series, {grid: {clickable: true}});
+  }
+
+  element.bind('plotclick', function(event, point, item) {
+    if (item) {
+      self.onPlotClick(item.seriesIndex, item.dataIndex);
+    }
+  });
+
+  this.highlight = function(seriesIndex, dataIndex) {
+    if (flot) {
+      flot.highlight(seriesIndex, dataIndex);
+    }
+  };
+}
+....
+
+When the simplified RPC functionality designed for JavaScript
+connectors, there's no need to define RPC interfaces for communication.
+This fits the JavaScript world nicely and makes your server-side code
+more dynamic - for better or for worse.

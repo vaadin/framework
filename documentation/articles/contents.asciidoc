@@ -19,3 +19,4 @@
 - link:ScalaAndVaadinHOWTO.asciidoc[Scala and Vaadin how-to]
 - link:UsingHibernateWithVaadin.asciidoc[Using Hibernate with Vaadin]
 - link:AddingJPAToTheAddressBookDemo.asciidoc[Adding JPA to the address book demo]
+- link:SimplifiedRPCusingJavaScript.asciidoc[SimplifiedRPCUsingJavaScript]
