@@ -5583,10 +5583,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             rowReference.set(rowIndex, rowData, rowElement);
 
-            if (hasData) {
-                setStyleName(rowElement, rowSelectedStyleName,
-                        isSelected(rowData));
+            boolean isSelected = isSelected(rowData);
+            if (selectionModel instanceof SelectionModel.NoSelectionModel) {
+                rowElement.removeAttribute("aria-selected");
+            } else {
+                rowElement.setAttribute("aria-selected", ""+isSelected);
+            }
 
+            if (hasData) {
+                setStyleName(rowElement, rowSelectedStyleName, isSelected);
                 if (rowStyleGenerator != null) {
                     try {
                         String rowStylename = rowStyleGenerator
