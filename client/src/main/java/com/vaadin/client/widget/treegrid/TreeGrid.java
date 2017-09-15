@@ -42,6 +42,9 @@ public class TreeGrid extends Grid<JsonObject> {
      */
     private String depthStyleNamePrefix;
 
+    /**
+     * Creates a new instance.
+     */
     public TreeGrid() {
         super("treegrid");
     }

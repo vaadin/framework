@@ -7962,10 +7962,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             setSelectColumnRenderer(null);
         }
 
-        if (this.selectionModel instanceof SingleSelectionModel) {
-            getElement().setAttribute("aria-multiselectable", "false");
-        } else if (this.selectionModel instanceof MultiSelectionModel) {
+        if (this.selectionModel.isMultiSelectionAllowed()) {
             getElement().setAttribute("aria-multiselectable", "true");
+        } else if (this.selectionModel.isSelectionAllowed()) {
+            getElement().setAttribute("aria-multiselectable", "false");
         } else {
             getElement().removeAttribute("aria-multiselectable");
         }

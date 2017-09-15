@@ -45,6 +45,7 @@ public class SingleSelectionModelConnector
     protected class SingleSelectionModel implements SelectionModel<JsonObject> {
 
         private boolean isSelectionAllowed = true;
+        private boolean isMultiSelectionAllowed = false;
 
         private boolean deselectAllowed = true;
 
@@ -80,6 +81,11 @@ public class SingleSelectionModelConnector
         @Override
         public boolean isSelectionAllowed() {
             return isSelectionAllowed;
+        }
+
+        @Override
+        public boolean isMultiSelectionAllowed() {
+            return isMultiSelectionAllowed;
         }
 
         /**
