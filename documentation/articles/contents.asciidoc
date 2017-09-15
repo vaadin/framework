@@ -26,3 +26,4 @@
 - link:CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource.asciidoc[Creating a TextField for integer only input when not using a data source]
 - link:FormattingDataInGrid.asciidoc[Formatting data in grid]
 - link:ConfiguringGridColumnWidths.asciidoc[Configuring Grid column widths]
+- link:Vaadin7HierarchicalContainerAndTreeComponentExampleWithLiferayOrganizationService.asciidoc[Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService]
