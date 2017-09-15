@@ -21,3 +21,4 @@
 - link:AddingJPAToTheAddressBookDemo.asciidoc[Adding JPA to the address book demo]
 - link:SimplifiedRPCusingJavaScript.asciidoc[Simplified RPC using JavaScript]
 - link:JMeterTesting.asciidoc[JMeter testing]
+- link:AutoGeneratingAFormBasedOnABeanVaadin6StyleForm.asciidoc[Auto-generating a form based on a bean - Vaadin 6 style Form]
