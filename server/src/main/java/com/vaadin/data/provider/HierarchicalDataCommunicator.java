@@ -282,7 +282,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    protected int getDataProviderSize() {
+    public int getDataProviderSize() {
         return mapper.getTreeSize();
     }
 

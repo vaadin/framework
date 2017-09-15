@@ -39,7 +39,6 @@ import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.Query;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -1154,10 +1153,10 @@ public class Tree<T> extends Composite
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *             if the provided id is not recognized by the data source.
+     *            if the provided row is outside the item range
      */
     public void scrollTo(int row) throws IllegalArgumentException {
-        scrollTo(row, ScrollDestination.ANY);
+        treeGrid.scrollTo(row, ScrollDestination.ANY);
     }
 
     /**
@@ -1175,13 +1174,6 @@ public class Tree<T> extends Composite
      *             if the provided row is outside the item range
      */
     public void scrollTo(int row, ScrollDestination destination) {
-        Objects.requireNonNull(destination,
-                "ScrollDestination can not be null");
-
-        if (row > getDataProvider().size(new Query())) {
-            throw new IllegalArgumentException("Row outside dataProvider size");
-        }
-
         treeGrid.scrollTo(row, destination);
     }
 
