@@ -45,5 +45,14 @@ public enum ErrorLevel {
     /**
      * Error level for system errors and bugs.
      */
-    SYSTEM
+    SYSTEM;
+
+    /**
+     * Integer representation of error severity for comparison
+     *
+     * @return integer for error severity
+     */
+    public int intValue() {
+        return ordinal();
+    }
 }

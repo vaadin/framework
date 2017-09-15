@@ -8,6 +8,7 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -27,7 +28,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @Theme("valo")
 public class ErrorLevels extends AbstractTestUI {
 
-    private ComboBox<ErrorMessage.ErrorLevel> errorLevels;
+    private ComboBox<ErrorLevel> errorLevels;
     private Button button;
     private Button borderlessButton;
     private Link link;
@@ -54,9 +55,9 @@ public class ErrorLevels extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
 
         errorLevels = new ComboBox<>("Error level",
-                Arrays.asList(ErrorMessage.ErrorLevel.values()));
+                Arrays.asList(ErrorLevel.values()));
         errorLevels.setEmptySelectionAllowed(false);
-        errorLevels.setValue(ErrorMessage.ErrorLevel.ERROR);
+        errorLevels.setValue(ErrorLevel.ERROR);
         errorLevels.addValueChangeListener(event -> setErrorMessages());
         addComponent(errorLevels);
 

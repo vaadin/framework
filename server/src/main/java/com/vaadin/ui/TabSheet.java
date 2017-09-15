@@ -1317,8 +1317,7 @@ public class TabSheet extends AbstractComponentContainer
             if (componentError != null) {
                 tabState.componentError = componentError
                         .getFormattedHtmlMessage();
-                tabState.componentErrorLevel = componentError.getErrorLevel()
-                        .convertToShared();
+                tabState.componentErrorLevel = componentError.getErrorLevel();
             } else {
                 tabState.componentError = null;
                 tabState.componentErrorLevel = null;

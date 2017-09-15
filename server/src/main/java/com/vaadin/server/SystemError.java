@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * <code>SystemError</code> is an error message for a problem caused by error in
  * system, not the user application code. The system error can contain technical
@@ -39,7 +41,7 @@ public class SystemError extends AbstractErrorMessage {
      */
     public SystemError(String message) {
         super(message);
-        setErrorLevel(ErrorLevel.SYSTEMERROR);
+        setErrorLevel(ErrorLevel.SYSTEM);
         setMode(ContentMode.HTML);
         setMessage(getHtmlMessage());
     }

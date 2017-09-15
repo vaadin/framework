@@ -21,6 +21,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * Base class for component error messages.
  *

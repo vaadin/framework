@@ -28,13 +28,13 @@ import org.jsoup.parser.Tag;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
