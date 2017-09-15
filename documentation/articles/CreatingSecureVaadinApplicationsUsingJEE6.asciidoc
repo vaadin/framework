@@ -2,7 +2,7 @@
 Creating secure Vaadin applications using JEE6
 ----------------------------------------------
 
-by http://vaadin.com/petter[Petter Holmström]
+by Petter Holmström
 
 [[introduction]]
 Introduction
@@ -52,7 +52,7 @@ resemblance to a similar real-world system in order to keep it simple
 and easy to understand.
 
 The source code can be downloaded
-https://vaadin.com/wiki?p_auth=jN6Filxv&p_p_id=36&p_p_lifecycle=1&p_p_state=exclusive&p_p_mode=view&p_p_col_id=row-1&p_p_col_pos=1&p_p_col_count=2&_36_struts_action=%2Fwiki%2Fget_page_attachment&p_r_p_185834411_nodeId=10674&p_r_p_185834411_nodeId=10674&p_r_p_185834411_nodeId=10674&p_r_p_185834411_title=Creating+Secure+Vaadin+Applications+using+JEE6&p_r_p_185834411_title=Creating+Secure+Vaadin+Applications+using+JEE6&_36_fileName=SecureVaadinApplicationDemo.zip[here]
+https://github.com/eriklumme/doc-attachments/blob/master/attachments/SecureVaadinApplicationDemo.zip[here]
 and it has been packaged as a NetBeans project. If you do not have
 NetBeans, go to http://www.netbeans.org[the NetBeans web site] and
 download the latest version (6.8 at the time of writing). Remember to
