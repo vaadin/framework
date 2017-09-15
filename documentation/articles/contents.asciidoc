@@ -31,3 +31,4 @@
 - link:CreatingAMasterDetailsViewForEditingPersons.asciidoc[Creating a master details view for editing persons]
 - link:ShowingExtraDataForGridRows.asciidoc[Showing extra data for Grid rows]
 - link:CreatingATextFieldForIntegerOnlyInputUsingADataSource.asciidoc[Creating a TextField for integer only input using a data source]
+- link:UsingGridWithAContainer.asciidoc[Using Grid with a Container]
