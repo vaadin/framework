@@ -266,7 +266,7 @@ public class VCaption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
@@ -277,7 +277,7 @@ public class VCaption extends HTML {
             }
 
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     owner.getState().errorLevel);
 
         } else if (errorIndicatorElement != null) {
@@ -421,14 +421,14 @@ public class VCaption extends HTML {
                 errorIndicatorElement = DOM.createDiv();
                 DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
             }
 
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
 
         } else if (errorIndicatorElement != null) {
             // Remove existing

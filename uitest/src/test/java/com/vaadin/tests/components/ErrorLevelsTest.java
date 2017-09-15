@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.AccordionElement;
@@ -45,10 +45,10 @@ public class ErrorLevelsTest extends SingleBrowserTest {
         selectErrorLevel(errorLevel);
 
         List<WebElement> errorIndicators = findElements(
-                By.className(WidgetUtil.ErrorUtil.STYLE_NAME_ERROR_INDICATOR));
+                By.className(StyleConstants.STYLE_NAME_ERROR_INDICATOR));
         for (WebElement errorIndicator : errorIndicators) {
             assertHasRightClassNames(errorIndicator,
-                    WidgetUtil.ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     errorLevel);
         }
     }

@@ -34,18 +34,54 @@ public class TooltipInfo {
     public TooltipInfo() {
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     */
     public TooltipInfo(String tooltip) {
         setTitle(tooltip);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param errorMessage
+     *         error message
+     */
     public TooltipInfo(String tooltip, String errorMessage) {
         this(tooltip, errorMessage, null);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param errorMessage
+     *         error message
+     * @param identifier
+     *         the tooltip's identifier
+     */
     public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
         this(tooltip, errorMessage, identifier, null);
     }
 
+    /**
+     * Constructs a new tooltip info instance.
+     *
+     * @param tooltip
+     *         tooltip title
+     * @param errorMessage
+     *         error message
+     * @param identifier
+     *         the tooltip's identifier
+     * @param errorLevel
+     *         error level
+     */
     public TooltipInfo(String tooltip, String errorMessage, Object identifier,
             ErrorLevel errorLevel) {
         setIdentifier(identifier);

@@ -21,6 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
@@ -68,7 +69,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
                 DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
                 DOM.appendChild(getWidget().getElement(),
                         getWidget().errorIndicatorElement);
                 DOM.sinkEvents(getWidget().errorIndicatorElement,
@@ -78,7 +79,7 @@ public class CheckBoxConnector extends AbstractFieldConnector
             }
 
             ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     getState().errorLevel);
 
         } else if (getWidget().errorIndicatorElement != null) {

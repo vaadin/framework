@@ -23,27 +23,27 @@ package com.vaadin.shared.ui;
 public enum ErrorLevel {
 
     /**
-     * Error code for informational messages.
+     * Error level for informational messages.
      */
     INFO,
 
     /**
-     * Error code for warning messages.
+     * Error level for warning messages.
      */
     WARNING,
 
     /**
-     * Error code for regular messages.
+     * Error level for regular messages.
      */
     ERROR,
 
     /**
-     * Error code for critical messages.
+     * Error level for critical messages.
      */
     CRITICAL,
 
     /**
-     * Error code for system errors and bugs.
+     * Error level for system errors and bugs.
      */
     SYSTEM
 }

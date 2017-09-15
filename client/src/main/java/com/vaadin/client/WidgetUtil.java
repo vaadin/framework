@@ -1830,11 +1830,6 @@ public class WidgetUtil {
     public static class ErrorUtil {
 
         /**
-         * Style name and style name prefix for the error indicator element.
-         */
-        public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
-
-        /**
          * Sets the error level style name for the given element and removes all
          * previously applied error level style names. The style name has the
          * {@code prefix-errorLevel} format.

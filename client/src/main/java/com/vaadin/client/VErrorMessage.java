@@ -59,6 +59,14 @@ public class VErrorMessage extends FlowPanel {
         }
     }
 
+    /**
+     * Sets the correct error level style name for the error message and removes
+     * all previous style names.
+     *
+     * @param errorLevel
+     *         error level
+     * @since
+     */
     public void updateErrorLevel(ErrorLevel errorLevel) {
         ErrorUtil.setErrorLevelStyle(getStyleElement(), CLASSNAME, errorLevel);
     }

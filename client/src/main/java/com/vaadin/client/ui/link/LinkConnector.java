@@ -18,6 +18,7 @@ package com.vaadin.client.ui.link;
 
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.DOM;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -76,11 +77,11 @@ public class LinkConnector extends AbstractComponentConnector {
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createDiv();
                 DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                        "className", StyleConstants.STYLE_NAME_ERROR_INDICATOR);
             }
 
             ErrorUtil.setErrorLevelStyle(getWidget().errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR,
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                     getState().errorLevel);
 
             DOM.insertChild(getWidget().getElement(),
