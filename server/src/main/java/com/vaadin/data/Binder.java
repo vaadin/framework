@@ -127,7 +127,11 @@ public class Binder<BEAN> implements Serializable {
         public BindingValidationStatus<TARGET> validate();
 
         /**
-         * Unbinds the binding - removes the value {@code ValueChangeListener}
+         * Unbinds the binding from its respective {@code Binder}
+         * Removes any {@code ValueChangeListener} {@code Registration} from
+         * associated {@code HasValue}
+         *
+         * @since 8.2
          */
         public void unbind();
 
@@ -850,7 +854,7 @@ public class Binder<BEAN> implements Serializable {
                 onValueChange.remove();
                 onValueChange = null;
             }
-            binder.removeBinding(this);
+            binder.removeBindingInternal(this);
             binder = null;
             field = null;
         }
@@ -2435,8 +2439,12 @@ public class Binder<BEAN> implements Serializable {
      * 
      * @since 8.2
      */
-    protected void removeBinding(Binding<BEAN, ?> binding) {
+    public void removeBinding(Binding<BEAN, ?> binding) {
         Objects.requireNonNull(binding, "Binding can not be null");
+        binding.unbind();
+    }
+
+    protected void removeBindingInternal(Binding<BEAN, ?> binding) {
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
                     .removeIf(entry -> entry.getValue().equals(binding));

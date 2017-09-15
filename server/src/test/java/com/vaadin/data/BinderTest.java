@@ -1,12 +1,5 @@
 package com.vaadin.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,6 +18,8 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
+
+import static org.junit.Assert.*;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -752,5 +747,25 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(item);
         Assert.assertNotEquals("Binding was not removed",
                 String.valueOf(item.getAge()), ageField.getValue());
+    }
+
+    @Test
+    public void removed_binding_not_updates_value() {
+        Binding<Person, Integer> binding = binder.forField(ageField)
+            .withConverter(new StringToIntegerConverter("Can't convert"))
+            .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+
+        String modifiedAge = String.valueOf(item.getAge() + 10);
+        String ageBeforeUnbind = String.valueOf(item.getAge());
+
+        binder.removeBinding(binding);
+
+        ageField.setValue(modifiedAge);
+
+        Assert.assertEquals("Binding still affects bean even after unbind",
+            ageBeforeUnbind, String.valueOf(item.getAge()));
+
     }
 }
