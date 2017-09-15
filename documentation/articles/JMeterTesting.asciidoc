@@ -1,0 +1,405 @@
+[[how-to-test-vaadin-web-application-performance-with-jmeter]]
+How to test Vaadin web application performance with JMeter
+----------------------------------------------------------
+
+This article describes how to make load testing of your Vaadin web
+application with http://jakarta.apache.org/jmeter/[JMeter].
+
+[[get-the-latest-jmeter]]
+Get the latest JMeter
+~~~~~~~~~~~~~~~~~~~~~
+
+Download JMeter from http://jmeter.apache.org/download_jmeter.cgi
+
+[[configure-jmeter]]
+Configure JMeter
+~~~~~~~~~~~~~~~~
+
+Unzip the apache-jmeter-x.x.x.zip file.
+
+Edit `JMETERHOME/bin/jmeter.bat` (or `jmeter.sh`) and check that the JVM
+memory parameters are ok (e.g. `set HEAP=-Xms512m -Xmx1500m -Xss128k`).
+The maximum heap size (`-Xmx`) should be at least 1024m. I would also
+recommend that the thread stack size is set to 512k or below if a large
+number of threads is used in testing.
+
+You should read this to ensure you follow best-practices:
+
+* http://jmeter.apache.org/usermanual/best-practices.html +
+* http://www.ubik-ingenierie.com/blog/jmeter_performance_tuning_tips/
+
+[[start-jmeter]]
+Start JMeter
+~~~~~~~~~~~~
+
+E.g. double clicking jmeter.bat
+
+[[configure-your-test-plan-and-workbench]]
+Configure your Test Plan and WorkBench
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Right click the WorkBench icon and select 'Add' -> 'Non-Test Elements'
+-> 'HTTP(S) Test Script Recorder'. Edit the Recorder parameters and set
+Port: to e.g. 9999 (you could leave it to 8080 if your web application
+servers do not use the port 8080). Typically requests related to loading
+static web content like css files and images are excluded from the load
+test. You can use 'Url Patterns to Exclude' section of the recorder to
+define what content is excluded. For instance to exclude css files add
+following pattern: `.*\.css`
+
+image:img/jm1B.png[JMeter patterns to exclude]
+
+Right click the Recorder icon and select 'Add' -> 'Timer' -> 'Uniform
+random timer'. Configure timer by setting the *Constant Delays Offset
+into $\{T}*. This setting means that JMeter records also the delays
+between the http requests. You could also test without the timer but
+with the timer your test is more realistic.
+
+image:img/jm3B.png[JMeter uniform random timer]
+
+Optionally you could also add 'View Result Tree' listener under the
+Recorder. With 'View Result Tree' listener it is possible to inspect
+every recorded request and response.
+
+*Note since JMeter you can do this in one step using menu item
+"Templates..." and selecting "Recording" template.*
+
+image:img/jm2B.png[JMeter View Results Tree]
+
+Next, configure the Test Plan.
+Add a 'Thread Group' to it and then add a 'Config Element' -> 'HTTP
+Cookie Manager' to the thread group. Set Cookie policy of the cookie
+manager to be 'compatibility'. *Remember also to set the "Clear cookies
+each iteration" setting to 'checked'*. Add also a 'Config Element' ->
+'HTTP Request Defaults' into Thread group.
+
+You could also add a 'Config Element' -> 'User Defined Variables' and a
+'Logic Controller' -> 'Recording Controller' into Thread Group.
+
+Your JMeter should now looks something like the screenshot below:
+
+image:img/jm4.png[JMeter User Defined Variables]
+
+[[configure-your-vaadin-application]]
+Configure your Vaadin application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[[disable-the-xsrf-protection]]
+Disable the xsrf-protection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In Vaadin you have to disable the xsrf-protection of your application or
+otherwise the JMeter test may fail. The way how xsrf protection is
+disabled differs in Vaadin 6 and Vaadin 7.
+
+*In Vaadin 7*
+
+If you use web.xml in your Vaadin 7 project, add the following
+context-parameter in the web.xml or optionally add it as an init
+parameter just like in the Vaadin 6 project below.
+
+[source,xml]
+....
+<context-param>
+  <param-name>disable-xsrf-protection</param-name>
+  <param-value>true</param-value>
+</context-param>
+....
+
+If you use annotation based (Servlet 3.0) Vaadin servlet configuration,
+you can currently (in Vaadin 7.1.11) either fall back to Servlet 2.4
+web.xml configuration or set the parameter value for
+'disable-xsrf-protection' as a `java.lang.System property` before the
+Vaadin's `DefaultDeploymentConfiguration` is loaded. This can be done for
+example by extending `VaadinServlet` class. At the end of this Wiki
+article there is an example servlet (`JMeterServlet`) that implements this
+functionality. See the example code below for how to replace the default
+`VaadinServlet` with your custom `VaadinServlet` in the UI class.
+
+[source,java]
+....
+public class YourUI extends UI {
+
+  @WebServlet(value = "/*", asyncSupported = true)
+  @VaadinServletConfiguration(productionMode = false, ui = YourUI.class)
+  public static class Servlet extends JMeterServlet {
+  }
+
+  @Override
+  protected void init(VaadinRequest request) {
+    //...
+  }
+....
+
+*In Vaadin 6*
+
+See the example below for how to disable the protection from the web.xml
+file:
+
+[source,xml]
+....
+<servlet>
+  <servlet-name>FeatureBrowser</servlet-name>
+  <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+  <init-param>
+    <param-name>application</param-name>
+    <param-value>com.vaadin.demo.featurebrowser.FeatureBrowser</param-value>
+  </init-param>
+
+  <init-param>
+    <param-name>disable-xsrf-protection</param-name>
+    <param-value>true</param-value>
+  </init-param>
+</servlet>
+....
+
+*Important! Remember to enable the protection after the testing is
+done!*
+
+[[disabling-syncid-happens-with-similar-parameter]]
+Disabling syncId happens with similar parameter
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[source,xml]
+....
+<context-param>
+  <param-name>syncId</param-name>
+  <param-value>false</param-value>
+</context-param>
+....
+
+If you want to do the above with Java Servlet 3.0 annotations, use the
+following:
+
+[source,java]
+....
+initParams = {
+  @WebInitParam(name = "disable-xsrf-protection", value = "true"),
+  @WebInitParam(name = "syncIdCheck", value = "false")}
+....
+
+[[use-debug-ids-within-your-vaadin-application]]
+Use debug id:s within your Vaadin application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Normally a Vaadin application sets a sequential id for each user
+interface component of the application. These ids are used in the
+ajax-requests when the component state is synchronized between the
+server and the client side. The aforementioned id sequence is likely the
+same between different runs of the application, but this is not
+guaranteed. *In Vaadin 6* these ids can be manually set by calling
+http://vaadin.com/api/com/vaadin/ui/AbstractComponent.html#setDebugId%28java.lang.String%29[`setDebugId()`]
+method.
+
+*In Vaadin 7* there no more exists a `setDebugId()` method; instead there
+is
+https://vaadin.com/api/com/vaadin/ui/Component.html#setId(java.lang.String)[`setId()`]
+method. Unfortunately this method won't set component ids used in the
+ajax-request. Therefore, by default, JMeter tests of a Vaadin 7
+application are not stable to UI changes. To overcome this problem you
+can use our `JMeterServlet` (see the end of this article) instead of the
+default `VaadinServlet`. When using the `JMeterServlet` component ids are
+again used in the ajax requests. See example above for how to replace
+default `VaadinServlet` with JMeterServlet. For additional information,
+see the Vaadin ticket http://dev.vaadin.com/ticket/13396[#13396].
+
+[[use-named-windows-in-your-application]]
+Use named windows in your application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Setting the name for the Windows *in the Vaadin (< 6.4.X)* application
+is important since otherwise these names are randomly generated. Window
+name could be set using the `setName()`{empty}-method.
+
+[[configure-your-browser]]
+Configure your browser
+~~~~~~~~~~~~~~~~~~~~~~
+
+Since JMeter is used as a proxy server, you have to configure the proxy
+settings of your browser. You can find the proxy settings of Firefox
+from Tools -> Options -> Connections -> Settings: 'Manual proxy
+configuration'. Set the correct IP of your computer (or 'localhost'
+string) and the same port that you set into proxy server settings above.
+
+[[start-recording]]
+Start recording
+~~~~~~~~~~~~~~~
+
+Start your web application server. Start the proxy server from the
+JMeter. Open the URL of your web application into the browser configured
+above. You should append `?restartApplication` to the URL used when
+recording the tests to make sure that the UI gets initialized properly.
+Thus the URL becomes something like
+(http://localhost:8080/test/TestApplication/?restartApplication). If
+everything is ok your web application opens normally and you can see how
+the different HTTP requests appear into JMeter's thread group (see
+screenshot below). When you have done the recording, stop the proxy
+server.
+
+image:img/jm5.png[JMeter Thread Groups]
+
+[[performance-testing]]
+Performance testing
+~~~~~~~~~~~~~~~~~~~
+
+[[clean-up-the-recorded-request]]
+Clean up the recorded request
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before you start the test, you may have to delete the first timer object
+which is located below the first HTTP request in the thread group since
+its time delay may be unrealistically big (see the screenshot above).
+*It is also very much recommended to check the recorded data and delete
+all unessential requests.*
+
+[[detecting-out-of-sync-errors]]
+Detecting Out of Sync errors
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If your test results in the application being in an Out of Sync error
+state it is not by default detected by JMeter (because the response code
+is still HTTP/1.1 200 OK). To make an assertion for detecting this kind
+of error you should add a Response Assertion to your test plan.
+Right-click on the thread group and select Add -> Assertions -> Response
+Assertion. Configure the assertion to assert that the Text Response does
+NOT contain a pattern "Out of sync".
+
+[[optional-parameterization-of-the-request]]
+Optional parameterization of the request
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Sometimes, it is useful to parameterize the recorded requests.
+Parameterization of a request is easily done in JMeter:
+
+1. add a "User Defined Variables"-element into the first place of your Test Plan.
+2. Copy paste the whole parameter value of wanted UIDL-request into the
+newly made variable (e.g. `PARAM1`).
+3. Replace the value of the UIDL-request with the parameter reference (e.g. `${PARAM1}`).
+
+[[start-testing]]
+Start testing
+^^^^^^^^^^^^^
+
+Now, it is time to do the actual testing. Configure the thread group
+with proper 'Number of Threads' (e.g. 100) and set also the 'Ramp-Up
+Period' to some realistic value (e.g. 120). Then, add e.g. 'Listener' ->
+'Graph Results' to monitor how your application is performing. Finally,
+start the test from the Run -> Start.
+
+[[stop-on-error]]
+Stop on Error
+^^^^^^^^^^^^^
+
+When you are pushing your Vaadin application to the limits, you might
+get into a situation where some of the UIDL requests fail. Because of
+the server-driven nature of Vaadin, it's likely that subsequent requests
+will cause errors like "_Warning: Ignoring variable change for
+non-existent component_", as the state stored on the server-side is no
+longer in sync with the JMeter test script. In these cases, it's often
+best to configure your JMeter thread group to stop the thread on sampler
+error. However, if you have configured your test to loop, you might want
+to still continue (and ignore the errors), if the next iteration will
+start all over again with fresh state.
+
+[[continuous-integration]]
+Continuous Integration
+^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to integrate load testing in your CI, you can use this
+http://jmeter.lazerycode.com/[plugin].
+
+You can read this for full integration with Jenkins : 
+
+* https://blog.codecentric.de/en/2014/01/automating-jmeter-tests-maven-jenkins/
+
+[[jmeterservlet]]
+JMeterServlet
+^^^^^^^^^^^^^
+
+In Vaadin 7 we recommend using the following or similar customized
+`VaadinServlet`.
+
+[source,java]
+....
+package com.example.vaadin7jmeterservlet;
+
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.ServiceException;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.Component;
+
+/**
+ * @author Marcus Hellberg (marcus@vaadin.com)
+ *  Further modified by Johannes Tuikkala (johannes@vaadin.com)
+ */
+public class JMeterServlet extends VaadinServlet {
+  private static final long serialVersionUID = 898354532369443197L;
+
+  public JMeterServlet() {
+    System.setProperty(getPackageName() + "." + "disable-xsrf-protection",
+            "true");
+  }
+
+  @Override
+  protected VaadinServletService createServletService(
+          DeploymentConfiguration deploymentConfiguration)
+          throws ServiceException {
+    JMeterService service = new JMeterService(this, deploymentConfiguration);
+    service.init();
+
+    return service;
+  }
+
+  private String getPackageName() {
+    String pkgName;
+    final Package pkg = this.getClass().getPackage();
+    if (pkg != null) {
+      pkgName = pkg.getName();
+    } else {
+      final String className = this.getClass().getName();
+      pkgName = new String(className.toCharArray(), 0,
+            className.lastIndexOf('.'));
+    }
+    return pkgName;
+  }
+
+  public static class JMeterService extends VaadinServletService {
+    private static final long serialVersionUID = -5874716650679865909L;
+
+    public JMeterService(VaadinServlet servlet,
+        DeploymentConfiguration deploymentConfiguration)
+        throws ServiceException {
+      super(servlet, deploymentConfiguration);
+    }
+
+    @Override
+    protected VaadinSession createVaadinSession(VaadinRequest request)
+        throws ServiceException {
+      return new JMeterSession(this);
+    }
+  }
+
+  public static class JMeterSession extends VaadinSession {
+    private static final long serialVersionUID = 4596901275146146127L;
+
+    public JMeterSession(VaadinService service) {
+      super(service);
+    }
+
+    @Override
+    public String createConnectorId(ClientConnector connector) {
+      if (connector instanceof Component) {
+        Component component = (Component) connector;
+        return component.getId() == null ? super
+            .createConnectorId(connector) : component.getId();
+      }
+      return super.createConnectorId(connector);
+    }
+  }
+}
+....
