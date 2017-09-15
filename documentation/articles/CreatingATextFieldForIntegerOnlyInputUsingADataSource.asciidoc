@@ -1,0 +1,63 @@
+[[creating-a-textfield-for-integer-only-input-using-a-data-source]]
+Creating a TextField for integer only input using a data source
+---------------------------------------------------------------
+
+A `TextField` is a component that always has a value of type `String`. When
+binding a property of another type to a text field, the value is
+automatically converted if the conversion between the two types is
+supported.
+
+[source,java]
+....
+public class MyBean {
+  private int value;
+
+  public int getValue() {
+    return value;
+  }
+
+  public void setValue(int integer) {
+    value = integer;
+  }
+}
+....
+
+The property named "value" from a `BeanItem` constructed from `MyBean` will
+be of type `Integer`. Binding the property to a `TextField` will
+automatically make validation fail for texts that can not be converted
+to an `Integer`.
+
+[source,java]
+....
+final MyBean myBean = new MyBean();
+BeanItem<MyBean> beanItem = new BeanItem<MyBean>(myBean);
+
+final Property<Integer> integerProperty = (Property<Integer>) beanItem
+    .getItemProperty("value");
+final TextField textField = new TextField("Text field", integerProperty);
+
+Button submitButton = new Button("Submit value", new ClickListener() {
+  public void buttonClick(ClickEvent event) {
+    String uiValue = textField.getValue();
+    Integer propertyValue = integerProperty.getValue();
+    int dataModelValue = myBean.getValue();
+
+    Notification.show("UI value (String): " + uiValue
+        + "\nProperty value (Integer): " + propertyValue
+        + "\nData model value (int): " + dataModelValue);
+   }
+});
+
+addComponent(new Label("Text field type: " + textField.getType()));
+addComponent(new Label("Text field type: " + integerProperty.getType()));
+addComponent(textField);
+addComponent(submitButton);
+....
+
+With this example, entering a number and pressing the button causes the
+value of the `TextField` to be a `String`, the property value will be an
+`Integer` representing the same value and the value in the bean will be
+the same int. If e.g. a letter is entered to the field and the button is
+pressed, the validation will fail. This causes a notice to be displayed
+for the field. The field value is still updated, but the property value
+and the bean value are kept at their previous values.
