@@ -28,3 +28,4 @@
 - link:ConfiguringGridColumnWidths.asciidoc[Configuring Grid column widths]
 - link:Vaadin7HierarchicalContainerAndTreeComponentExampleWithLiferayOrganizationService.asciidoc[Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService]
 - link:CreatingACustomFieldForEditingTheAddressOfAPerson.asciidoc[Creating a CustomField for editing the address of a person]
+- link:CreatingAMasterDetailsViewForEditingPersons.asciidoc[Creating a master details view for editing persons]
