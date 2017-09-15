@@ -1,0 +1,163 @@
+[[showing-extra-data-for-grid-rows]]
+Showing extra data for Grid rows
+--------------------------------
+
+Some data might not be suitable to be shown as part of a regular Grid,
+e.g. because it's too large to fit into a Grid cell or because it's
+secondary information that should only be shown on demand. This kind of
+situation is covered with the row details functionality that shows a
+Vaadin Component in an area expanded below a specific row. Using this
+functionality is a two step process: first you need to implement a
+generator that lazily creates the `Component` for a row if it has been
+expanded, and then you need to hook up the events for actually expanding
+a row.
+
+This example uses the same data as in the
+link:UsingGridWithAContainer.asciidoc[Using Grid with a Container]
+example.
+
+[[detailsgenerator]]
+DetailsGenerator
+^^^^^^^^^^^^^^^^
+
+A details generator is a callback interface that Grid calls to create
+the Vaadin `Component` that is used for showing the details for a specific
+row. In this example, we create a layout that contains a label, an image
+and a button that all use data from the row.
+
+[source,java]
+....
+grid.setDetailsGenerator(new DetailsGenerator() {
+  @Override
+  public Component getDetails(RowReference rowReference) {
+    // Find the bean to generate details for
+    final GridExampleBean bean = (GridExampleBean) rowReference.getItemId();
+
+    // A basic label with bean data
+    Label label = new Label("Extra data for " + bean.getName());
+
+    // An image with extra details about the bean
+    Image image = new Image();
+    image.setWidth("300px");
+    image.setHeight("150px");
+    image.setSource(new ExternalResource("http://dummyimage.com/300x150/000/fff&text=" + bean.getCount()));
+
+    // A button just for the sake of the example
+    Button button = new Button("Click me", new Button.ClickListener() {
+      @Override
+      public void buttonClick(ClickEvent event) {
+        Notification.show("Button clicked for " + bean.getName());
+      }
+    });
+
+    // Wrap up all the parts into a vertical layout
+    VerticalLayout layout = new VerticalLayout(label, image, button);
+    layout.setSpacing(true);
+    layout.setMargin(true);
+    return layout;
+  }
+});
+....
+
+[[opening-the-details-for-a-row]]
+Opening the details for a row
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Since there are multiple different UI patterns for how details should be
+opened (e.g. clicking a button in a cell or double clicking anywhere on
+the row), Grid does not have any action enabled by default. You can
+instead implement your own listener that takes care of showing and
+hiding the details for the rows. One easy way of doing this is to add an
+item click listener that toggles the status whenever a row is double
+clicked.
+
+[source,java]
+....
+grid.addItemClickListener(new ItemClickListener() {
+  @Override
+  public void itemClick(ItemClickEvent event) {
+    if (event.isDoubleClick()) {
+      Object itemId = event.getItemId();
+      grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
+    }
+  }
+});
+....
+
+[[full-example]]
+Full example
+^^^^^^^^^^^^
+
+Putting all these pieces together, we end up with this class that uses
+the same data as in the link:UsingGridWithAContainer.asciidoc[Using
+Grid with a Container] example.
+
+[source,java]
+....
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.DetailsGenerator;
+import com.vaadin.ui.Grid.RowReference;
+import com.vaadin.ui.Image;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+public class ShowingExtraDataForRows extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    final Grid grid = new Grid();
+    grid.setContainerDataSource(GridExampleHelper.createContainer());
+
+    grid.setDetailsGenerator(new DetailsGenerator() {
+      @Override
+      public Component getDetails(RowReference rowReference) {
+        // Find the bean to generate details for
+        final GridExampleBean bean = (GridExampleBean) rowReference.getItemId();
+
+        // A basic label with bean data
+        Label label = new Label("Extra data for " + bean.getName());
+
+        // An image with extra details about the bean
+        Image image = new Image();
+        image.setWidth("300px");
+        image.setHeight("150px");
+        image.setSource(new ExternalResource("http://dummyimage.com/300x150/000/fff&text=" + bean.getCount()));
+
+        // A button just for the sake of the example
+        Button button = new Button("Click me", new Button.ClickListener() {
+          @Override
+          public void buttonClick(ClickEvent event) {
+            Notification.show("Button clicked for " + bean.getName());
+          }
+        });
+
+        // Wrap up all the parts into a vertical layout
+        VerticalLayout layout = new VerticalLayout(label, image, button);
+        layout.setSpacing(true);
+        layout.setMargin(true);
+        return layout;
+      }
+    });
+
+    grid.addItemClickListener(new ItemClickListener() {
+      @Override
+      public void itemClick(ItemClickEvent event) {
+        if (event.isDoubleClick()) {
+          Object itemId = event.getItemId();
+          grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
+        }
+      }
+    });
+
+    setContent(grid);
+  }
+}
+....
