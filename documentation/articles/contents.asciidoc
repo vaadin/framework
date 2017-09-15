@@ -25,3 +25,4 @@
 - link:CreatingAReusableVaadinThemeInEclipse.asciidoc[Creating a reusable Vaadin theme in Eclipse]
 - link:CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource.asciidoc[Creating a TextField for integer only input when not using a data source]
 - link:FormattingDataInGrid.asciidoc[Formatting data in grid]
+- link:ConfiguringGridColumnWidths.asciidoc[Configuring Grid column widths]
