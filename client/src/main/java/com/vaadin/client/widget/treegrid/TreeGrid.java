@@ -42,6 +42,10 @@ public class TreeGrid extends Grid<JsonObject> {
      */
     private String depthStyleNamePrefix;
 
+    protected TreeGrid() {
+        super("treegrid");
+    }
+
     /**
      * Body updater that adds additional style to each row containing depth
      * information inside the hierarchy.

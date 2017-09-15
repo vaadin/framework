@@ -183,6 +183,8 @@ import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModel;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -6122,8 +6124,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Creates a new instance.
      */
     public Grid() {
+        this("grid");
+    }
+
+    public Grid(String ariaRole) {
         initWidget(escalator);
         getElement().setTabIndex(0);
+        getElement().setAttribute("role", ariaRole);
         cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName(STYLE_NAME);
@@ -7950,6 +7957,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             setSelectColumnRenderer(null);
         }
 
+        if (this.selectionModel instanceof SingleSelectionModel) {
+            getElement().setAttribute("aria-multiselectable", "false");
+        } else if (this.selectionModel instanceof MultiSelectionModel) {
+            getElement().setAttribute("aria-multiselectable", "true");
+        } else {
+            getElement().removeAttribute("aria-multiselectable");
+        }
         // Refresh rendered rows to update selection, if it has changed
         requestRefreshBody();
     }
