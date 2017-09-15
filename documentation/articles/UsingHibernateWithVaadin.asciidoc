@@ -155,7 +155,7 @@ To ensure that we are using only one Hibernate session per http request
 is the easy part. We can use Hibernates `getCurrentSession()` to retrieve
 thread local session instance. As we always want to actually use the
 session I build a helper method that will also begin a database
-transaction. In our !WorkoutLog we will always be using this method to
+transaction. In our *WorkoutLog* we will always be using this method to
 get session reference.
 
 [source,java]
@@ -392,7 +392,7 @@ underlaying Property. In this case it is `EntityItemProperty` built by
 underlaying POJO is re-attached into Hibernate session.
 
 [[adding-custom-columns-to-hbncontainer]]
-Adding custom columns to !HbnContainer
+Adding custom columns to HbnContainer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This last bonus chapter is bit out of scope of the article. But as
