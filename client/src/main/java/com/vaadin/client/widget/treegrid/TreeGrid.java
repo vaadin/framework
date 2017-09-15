@@ -42,7 +42,7 @@ public class TreeGrid extends Grid<JsonObject> {
      */
     private String depthStyleNamePrefix;
 
-    protected TreeGrid() {
+    public TreeGrid() {
         super("treegrid");
     }
 
