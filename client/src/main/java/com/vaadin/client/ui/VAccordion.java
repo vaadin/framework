@@ -367,7 +367,7 @@ public class VAccordion extends VTabsheetBase {
                     tabState.componentErrorLevel,
                     connector.getResourceUrl(
                             ComponentConstants.ICON_RESOURCE + tabState.key),
-                    "");
+                    tabState.iconAltText);
         }
 
         private boolean hasAttribute(String string) {

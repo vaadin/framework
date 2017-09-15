@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -142,13 +143,13 @@ public class VPanel extends SimplePanel
             if (errorIndicatorElement == null) {
                 errorIndicatorElement = DOM.createSpan();
                 DOM.setElementProperty(errorIndicatorElement, "className",
-                        ErrorUtil.STYLE_NAME_ERROR_INDICATOR);
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR);
                 DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
                 sinkEvents(Event.MOUSEEVENTS);
             }
 
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
-                    ErrorUtil.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+                    StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
 
             DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
         } else if (errorIndicatorElement != null) {
