@@ -16,3 +16,4 @@
 - link:UsingVaadinInAnExistingGWTProject.asciidoc[Using Vaadin in an existing GWT project]
 - link:UsingPython.asciidoc[Using Python]
 - link:UsingPhoneGapBuildWithVaadinTouchKit.asciidoc[Using PhoneGap Build with Vaadin TouchKit]
+- link:ScalaAndVaadinHOWTO.asciidoc[Scala and Vaadin how-to]
