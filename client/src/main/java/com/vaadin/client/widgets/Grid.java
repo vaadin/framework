@@ -6018,9 +6018,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (sortIndex > -1 && Grid.this.getSortOrder().size() > 1) {
                 // Show sort order indicator if column is
                 // sorted and other sorted columns also exists.
-                cellElement.setAttribute("sort-order",
-                        String.valueOf(sortIndex + 1));
-                cellElement.setAttribute("aria-sort", "other");
+                cellElement.setAttribute("sort-order", String.valueOf(sortIndex + 1));
+
+                for (SortOrder sortOrder : Grid.this.getSortOrder()) {
+                    headerRow.getCell(sortOrder.getColumn()).getWidget()
+                            .getElement().setAttribute("aria-sort", "other");
+                }
             }
 
             if (!sortedBefore) {
