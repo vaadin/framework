@@ -183,8 +183,6 @@ import com.vaadin.shared.ui.grid.GridStaticCellType;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.components.grid.MultiSelectionModel;
-import com.vaadin.ui.components.grid.SingleSelectionModel;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -5584,10 +5582,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             rowReference.set(rowIndex, rowData, rowElement);
 
             boolean isSelected = isSelected(rowData);
-            if (selectionModel instanceof SelectionModel.NoSelectionModel) {
-                rowElement.removeAttribute("aria-selected");
+            if (Grid.this.selectionModel.isSelectionAllowed()) {
+                rowElement.setAttribute("aria-selected", String.valueOf(isSelected));
             } else {
-                rowElement.setAttribute("aria-selected", ""+isSelected);
+                rowElement.removeAttribute("aria-selected");
             }
 
             if (hasData) {
