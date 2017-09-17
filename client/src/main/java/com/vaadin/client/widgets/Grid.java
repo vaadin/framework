@@ -5581,7 +5581,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             rowReference.set(rowIndex, rowData, rowElement);
 
-            boolean isSelected = isSelected(rowData);
+            boolean isSelected = hasData && isSelected(rowData);
             if (Grid.this.selectionModel.isSelectionAllowed()) {
                 rowElement.setAttribute("aria-selected", String.valueOf(isSelected));
             } else {
@@ -6133,13 +6133,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public Grid(String ariaRole) {
         initWidget(escalator);
         getElement().setTabIndex(0);
-        getElement().setAttribute("role", ariaRole);
         cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName(STYLE_NAME);
 
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
+        escalator.getTable().setAttribute("role", ariaRole);
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
 
         header.setGrid(this);
@@ -7961,11 +7961,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         if (this.selectionModel.isMultiSelectionAllowed()) {
-            getElement().setAttribute("aria-multiselectable", "true");
+            escalator.getTable().setAttribute("aria-multiselectable", "true");
         } else if (this.selectionModel.isSelectionAllowed()) {
-            getElement().setAttribute("aria-multiselectable", "false");
+            escalator.getTable().setAttribute("aria-multiselectable", "false");
         } else {
-            getElement().removeAttribute("aria-multiselectable");
+            escalator.getTable().removeAttribute("aria-multiselectable");
         }
         // Refresh rendered rows to update selection, if it has changed
         requestRefreshBody();

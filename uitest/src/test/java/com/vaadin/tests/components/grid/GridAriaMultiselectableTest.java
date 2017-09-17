@@ -32,19 +32,19 @@ public class GridAriaMultiselectableTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertEquals("Grid should have the role 'grid'",
-                "grid", grid.getAttribute("role"));
-        Assert.assertEquals("Grid should not have the aria-multiselectable",
-                null, grid.getAttribute("aria-multiselectable"));
+        Assert.assertTrue("Grid should have the role 'grid'",
+                grid.getHTML().contains("role=\"grid\""));
+        Assert.assertFalse("Grid should not have aria-multiselectable",
+                grid.getHTML().contains("aria-multiselectable"));
 
         $(ButtonElement.class).caption("SingleSelect").first().click();
 
-        Assert.assertEquals("Grid should have aria-multiselectable 'false'",
-                "false", grid.getAttribute("aria-multiselectable"));
+        Assert.assertTrue("Grid should have aria-multiselectable 'false'",
+                grid.getHTML().contains("aria-multiselectable=\"false\""));
 
         $(ButtonElement.class).caption("MultiSelect").first().click();
 
-        Assert.assertEquals("Grid should have aria-multiselectable 'true'",
-                "true", grid.getAttribute("aria-multiselectable"));
+        Assert.assertTrue("Grid should have aria-multiselectable 'true'",
+                grid.getHTML().contains("aria-multiselectable=\"true\""));
     }
 }
