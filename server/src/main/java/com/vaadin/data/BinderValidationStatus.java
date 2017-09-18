@@ -137,10 +137,10 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        ArrayList<ValidationResult> errors = new ArrayList<>(
+        List<ValidationResult> errors =
                 getFieldValidationErrors().stream()
                         .map(s -> s.getResult().get())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }
@@ -148,7 +148,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     /**
      * Gets the field level validation statuses.
      * <p>
-     * The field level validtors have been added with
+     * The field level validators have been added with
      * {@link BindingBuilder#withValidator(Validator)}.
      *
      * @return the field validation statuses
@@ -169,7 +169,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     /**
      * Gets the failed field level validation statuses.
      * <p>
-     * The field level validtors have been added with
+     * The field level validators have been added with
      * {@link BindingBuilder#withValidator(Validator)}.
      *
      * @return a list of failed field level validation statuses

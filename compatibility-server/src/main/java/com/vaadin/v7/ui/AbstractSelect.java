@@ -338,8 +338,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // Creates the options container and add given options to it
         final Container c = new IndexedContainer();
         if (options != null) {
-            for (final Iterator<?> i = options.iterator(); i.hasNext();) {
-                c.addItem(i.next());
+            for (final Object item : options) {
+                c.addItem(item);
             }
         }
 
