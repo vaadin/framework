@@ -370,7 +370,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @since 8.1
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected List<T> fetchItemsWithRange(int offset, int limit) {
+    public List<T> fetchItemsWithRange(int offset, int limit) {
         return (List<T>) getDataProvider().fetch(new Query(offset, limit,
                 backEndSorting, inMemorySorting, filter))
                 .collect(Collectors.toList());
