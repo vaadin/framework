@@ -7499,10 +7499,15 @@ public class VScrollTable extends FlowPanel
             return false;
         }
 
-        //
-        // public int hashCode() {
-        // return overkey;
-        // }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((dropLocation == null) ? 0 : dropLocation.hashCode());
+            result = prime * result + overkey;
+            result = prime * result + ((colkey == null) ? 0 : colkey.hashCode());
+            return result;
+        }
     }
 
     public class VScrollTableDropHandler extends VAbstractDropHandler {

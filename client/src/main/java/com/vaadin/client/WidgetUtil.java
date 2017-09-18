@@ -1565,6 +1565,15 @@ public class WidgetUtil {
             return false;
         }
 
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (int) value;
+            result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+            return result;
+        }
+
         /**
          * Check whether the two sizes are equals.
          *
