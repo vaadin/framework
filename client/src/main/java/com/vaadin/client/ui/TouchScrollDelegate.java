@@ -711,7 +711,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     /**
-     * long calcucation are not very efficient in GWT, so this helper method
+     * Long calculation are not very efficient in GWT, so this helper method
      * returns timestamp in double.
      *
      * @return

@@ -2,6 +2,7 @@ package com.vaadin.tests.components.orderedlayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
@@ -166,8 +167,7 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         controls.addComponent(layout);
         layout.addComponent(new Label("Layout"));
 
-        ArrayList<String> sizes = new ArrayList<>();
-        sizes.addAll(Arrays.asList("100px", "30em", "100%"));
+        List<String> sizes = Arrays.asList("100px", "30em", "100%");
 
         final NativeSelect width = new NativeSelect(null, sizes);
         width.setImmediate(true);
@@ -256,8 +256,7 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         root.addComponent(component);
         component.addComponent(new Label("Component"));
 
-        sizes = new ArrayList<>();
-        sizes.addAll(Arrays.asList("50px", "200px", "10em", "50%", "100%"));
+        sizes = Arrays.asList("50px", "200px", "10em", "50%", "100%");
 
         componentWidth = new NativeSelect(null, sizes);
         componentWidth.setImmediate(true);

@@ -60,10 +60,10 @@ public class ValidationException extends Exception {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        ArrayList<ValidationResult> errors = new ArrayList<>(
+        List<ValidationResult> errors =
                 getFieldValidationErrors().stream()
                         .map(s -> s.getResult().get())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }
