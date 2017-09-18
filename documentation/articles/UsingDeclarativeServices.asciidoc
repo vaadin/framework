@@ -13,8 +13,6 @@ instance service A requires 1:1 of service C. Thus service A will not be
 activated before service C is injected properly. This short overview of
 OSGi-DS is enough to understand the example defined below.
 
-[Error: Macro 'TableOfContents' doesn't exist]
-
 [[setup-example]]
 Setup example
 ~~~~~~~~~~~~~
