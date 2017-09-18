@@ -22,6 +22,7 @@ import java.util.HashSet;
 import org.junit.Assert;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.communication.ServerRpc;
 
@@ -65,8 +66,7 @@ public class ComponentTest {
      *            the component to update
      */
     public static void updateDiffState(AbstractComponent component) {
-        component.getUI().getSession().getCommunicationManager()
-                .encodeState(component, component.getState());
+        LegacyCommunicationManager.encodeState(component, component.getState());
 
     }
 

@@ -254,8 +254,4 @@ public class EventRouter implements MethodEventSource {
         return listeners;
     }
 
-    private Logger getLogger() {
-        return Logger.getLogger(EventRouter.class.getName());
-    }
-
 }

@@ -81,9 +81,4 @@ public class RadioButtonGroupTest {
                 .key(dataObject);
     }
 
-    private static void assertSelectionOrder(Multi<String> selectionModel,
-            String... selectionOrder) {
-        Assert.assertEquals(Arrays.asList(selectionOrder),
-                new ArrayList<>(selectionModel.getSelectedItems()));
-    }
 }
