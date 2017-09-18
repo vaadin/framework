@@ -81,31 +81,6 @@ public class TestAbstractApplicationServletStaticFilesLocation {
         return location;
     }
 
-    private String testIncludedLocation(String base, String portletContextPath,
-            String servletPath, String pathInfo) throws Exception {
-
-        HttpServletRequest request = createIncludeRequest(base,
-                portletContextPath, servletPath, pathInfo);
-        // Set request into replay mode
-        replay(request);
-
-        String location = servlet.getService()
-                .getStaticFileLocation(servlet.createVaadinRequest(request));
-        return location;
-    }
-
-    private HttpServletRequest createIncludeRequest(String base,
-            String realContextPath, String realServletPath, String pathInfo)
-            throws Exception {
-        HttpServletRequest request = createRequest(base, "", "", pathInfo);
-        expect(request.getAttribute("javax.servlet.include.context_path"))
-                .andReturn(realContextPath).anyTimes();
-        expect(request.getAttribute("javax.servlet.include.servlet_path"))
-                .andReturn(realServletPath).anyTimes();
-
-        return request;
-    }
-
     private HttpServletRequest createNonIncludeRequest(String base,
             String realContextPath, String realServletPath, String pathInfo)
             throws Exception {

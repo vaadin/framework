@@ -485,10 +485,6 @@ public abstract class AbstractClientConnector
         return null;
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(AbstractClientConnector.class.getName());
-    }
-
     /**
      * @deprecated As of 7.0, use {@link #markAsDirtyRecursive()} instead
      */
