@@ -6127,19 +6127,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Creates a new instance.
      */
     public Grid() {
-        this("grid");
-    }
-
-    public Grid(String ariaRole) {
         initWidget(escalator);
         getElement().setTabIndex(0);
         cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName(STYLE_NAME);
+        setRole("grid");
 
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
-        escalator.getTable().setAttribute("role", ariaRole);
         escalator.getFooter().setEscalatorUpdater(createFooterUpdater());
 
         header.setGrid(this);
@@ -6295,6 +6291,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             requestRefreshBody();
             refreshFooter();
         }
+    }
+
+    /**
+     * Adds the given role as 'role="$param"' to the {@code <table />} element
+     * of the grid.
+     *
+     * @param role the role param
+     * @since 8.2
+     */
+    protected void setRole(String role){
+        escalator.getTable().setAttribute("role", role);
     }
 
     /**

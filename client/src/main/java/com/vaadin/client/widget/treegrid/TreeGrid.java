@@ -45,8 +45,8 @@ public class TreeGrid extends Grid<JsonObject> {
     /**
      * Creates a new instance.
      */
-    public TreeGrid() {
-        super("treegrid");
+    protected TreeGrid() {
+        setRole("treegrid");
     }
 
     /**
