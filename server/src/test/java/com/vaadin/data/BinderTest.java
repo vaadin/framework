@@ -778,7 +778,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withValidationStatusHandler(bindingHandler)
                 .bind(Person::getFirstName, Person::setFirstName);
 
-        String ageError = "CONVERTIONERROR";
+        String ageError = "CONVERSIONERROR";
         binder.forField(ageField)
                 .withConverter(new StringToIntegerConverter(ageError))
                 .bind(Person::getAge, Person::setAge);
