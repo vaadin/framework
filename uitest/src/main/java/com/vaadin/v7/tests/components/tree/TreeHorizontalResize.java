@@ -35,8 +35,8 @@ public class TreeHorizontalResize extends TestBase {
         Tree tree = new Tree();
         tree.setContainerDataSource(getHardwareContainer());
         tree.setItemCaptionPropertyId(hw_PROPERTY_NAME);
-        for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
-            tree.expandItemsRecursively(it.next());
+        for (Object id : tree.rootItemIds()) {
+            tree.expandItemsRecursively(id);
         }
         treeLayout.addComponent(tree);
     }

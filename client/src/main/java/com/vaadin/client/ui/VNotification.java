@@ -466,17 +466,14 @@ public class VNotification extends VOverlay {
     }
 
     public void removeEventListener(EventListener listener) {
-        if (listeners == null) {
-            return;
+        if (listeners != null) {
+            listeners.remove(listener);
         }
-        listeners.remove(listener);
     }
 
     private void fireEvent(HideEvent event) {
         if (listeners != null) {
-            for (Iterator<EventListener> it = listeners.iterator(); it
-                    .hasNext();) {
-                EventListener l = it.next();
+            for (EventListener l : listeners) {
                 l.notificationHidden(event);
             }
         }

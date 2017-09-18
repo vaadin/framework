@@ -303,9 +303,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
                 ((Label) c).setValue("Test label");
             }
 
-            for (Iterator<Configuration> i = configurations.iterator(); i
-                    .hasNext();) {
-                Configuration conf = i.next();
+            for (Configuration conf : configurations) {
                 conf.configure(c);
             }
             return c;

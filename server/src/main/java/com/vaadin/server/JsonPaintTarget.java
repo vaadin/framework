@@ -224,7 +224,7 @@ public class JsonPaintTarget implements PaintTarget {
      */
     static StringBuilder escapeXML(StringBuilder xml) {
         if (xml == null || xml.length() <= 0) {
-            return new StringBuilder("");
+            return new StringBuilder();
         }
 
         final StringBuilder result = new StringBuilder(xml.length() * 2);

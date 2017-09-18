@@ -57,8 +57,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
                     .getContainerDataSource();
             int idx = 0;
 
-            for (Iterator<?> i = c.getItemIds().iterator(); i.hasNext();) {
-                Object id = i.next();
+            for (Object id : c.getItemIds()) {
                 if (id == itemId) {
                     if (idx % 2 == 1) {
                         return "bold";
