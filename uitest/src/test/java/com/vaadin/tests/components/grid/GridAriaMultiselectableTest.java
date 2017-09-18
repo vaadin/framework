@@ -17,14 +17,14 @@ package com.vaadin.tests.components.grid;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Vaadin Ltd
  */
-public class GridAriaMultiselectableTest extends MultiBrowserTest {
+public class GridAriaMultiselectableTest extends SingleBrowserTest {
 
     @Test
     public void checkAriaMultiselectable() {
