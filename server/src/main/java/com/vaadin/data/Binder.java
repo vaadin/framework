@@ -2444,6 +2444,21 @@ public class Binder<BEAN> implements Serializable {
         binding.unbind();
     }
 
+    /**
+     * Removes (internally) the {@code Binding} from the bound properties map
+     * (if present) and from the list of {@code Binding}s. Note that this DOES
+     * NOT remove the {@code ValueChangeListener} that the {@code Binding} might
+     * have registered with any {@code HasValue}s or decouple the {@code Binder}
+     * from within the {@code Binding}. To do that, use
+     *
+     * {@link Binding#unbind()}
+     *
+     * This method should just be used for internal cleanup.
+     *
+     * @param binding The {@code Binding} to remove from the binding map
+     *
+     * @since 8.2
+     */
     protected void removeBindingInternal(Binding<BEAN, ?> binding) {
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
