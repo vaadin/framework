@@ -198,8 +198,9 @@ public class FileDropTargetConnector extends DropTargetExtensionConnector {
         }
 
         public final native void postFile(File file) /*-{
-            this.setRequestHeader('Content-Type', 'multipart/form-data');
-            this.send(file);
+            var formData = new FormData();
+            formData.append("File", file);
+            this.send(formData);
         }-*/;
 
     }
