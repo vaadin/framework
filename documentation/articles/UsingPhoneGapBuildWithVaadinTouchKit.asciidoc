@@ -2,6 +2,9 @@
 Using PhoneGap Build with Vaadin TouchKit
 -----------------------------------------
 
+[.underline]#*_Note:_* _Vaadin Touchkit has been discontinued. A community-supported version is
+available https://github.com/parttio/touchkit[on GitHub]._#
+
 At first, using https://build.phonegap.com/[PhoneGap Build] to point to
 your Vaadin TouchKit apps seems like a breeze. Just create a simple
 `config.xml` and an `index.html` that redirects to your web site, and you
