@@ -121,11 +121,12 @@ public interface SelectionModel<T> {
     boolean isSelectionAllowed();
 
     /**
-     * Checks if the user is allowed to has more than one selection.
+     * Checks if the user is allowed to have more than on item selected.
      * <p>
      *
      * @return <code>true</code> if the user is allowed to select multiple items,
      *         <code>false</code> otherwise
+     * @since 8.2
      */
     boolean isMultiSelectionAllowed();
 

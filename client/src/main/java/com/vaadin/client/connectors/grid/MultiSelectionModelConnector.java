@@ -66,7 +66,6 @@ public class MultiSelectionModelConnector
             SelectionModelWithSelectionColumn {
 
         private boolean isSelectionAllowed = true;
-        private boolean isMultiSelectionAllowed = true;
 
         @Override
         public Renderer<Boolean> getRenderer() {
@@ -124,7 +123,7 @@ public class MultiSelectionModelConnector
 
         @Override
         public boolean isMultiSelectionAllowed() {
-            return isMultiSelectionAllowed;
+            return true;
         }
     }
 
