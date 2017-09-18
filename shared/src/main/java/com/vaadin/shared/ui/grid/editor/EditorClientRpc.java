@@ -28,6 +28,14 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface EditorClientRpc extends ClientRpc {
 
     /**
+     * Tells the client to open the editor and bind data to it.
+     *
+     * @param rowIndex
+     *            the index of the edited row
+     */
+    void bind(int rowIndex);
+
+    /**
      * Tells the client to cancel editing and hide the editor.
      */
     void cancel();

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
@@ -56,6 +58,18 @@ public class EditorConnector extends AbstractExtensionConnector {
 
         public CustomEditorHandler() {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
+
+                @Override
+                public void bind(final int rowIndex) {
+                    // call this deferred to avoid issues with editing on init
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            getParent().getWidget().editRow(rowIndex);
+                        }
+                    });
+                }
+
                 @Override
                 public void cancel() {
                     serverInitiated = true;
