@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
@@ -16,14 +17,15 @@ public class DateFieldValidationError extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         DateField df = new DateField();
+        df.setLocale(Locale.US);
         Binder<Void> binder = new Binder<>();
         binder.forField(df)
             .withValidator(localDate -> localDate != null && localDate.isAfter(LocalDate.now()), "Invalid date")
             .bind(v -> LocalDate.now(), (v, t) -> {
-            /* NO-OP */ });
+            /* NO-OP */
+            });
         addComponent(df);
-        addComponent(new Button("Validate", e -> Notification
-                .show(binder.validate().isOk() ? "OK" : "Fail")));
+        addComponent(new Button("Validate", e -> Notification.show(binder.validate().isOk() ? "OK" : "Fail")));
     }
 
 }
