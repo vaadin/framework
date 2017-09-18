@@ -207,7 +207,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        if (!text.getText().equals("")) {
+        if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
 

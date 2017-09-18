@@ -508,7 +508,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
-            } else if (part.equals("")) {
+            } else if (part.isEmpty()) {
                 if (w == null) {
                     w = client.getUIConnector().getWidget();
                 }

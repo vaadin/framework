@@ -195,7 +195,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setStyleName(String style) {
-        if (style == null || "".equals(style)) {
+        if (style == null || style.isEmpty()) {
             getState().styles = null;
             return;
         }
@@ -222,7 +222,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     @Override
     public void addStyleName(String style) {
-        if (style == null || "".equals(style)) {
+        if (style == null || style.isEmpty()) {
             return;
         }
         if (style.contains(" ")) {

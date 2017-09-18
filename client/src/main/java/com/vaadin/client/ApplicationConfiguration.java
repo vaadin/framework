@@ -416,7 +416,7 @@ public class ApplicationConfiguration implements EntryPoint {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
         serviceUrl = jsoConfiguration
                 .getConfigString(ApplicationConstants.SERVICE_URL);
-        if (serviceUrl == null || "".equals(serviceUrl)) {
+        if (serviceUrl == null || serviceUrl.isEmpty()) {
             /*
              * Use the current url without query parameters and fragment as the
              * default value.

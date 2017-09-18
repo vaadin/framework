@@ -59,7 +59,7 @@ public class VUpload extends SimplePanel {
             super.onBrowserEvent(event);
             if (event.getTypeInt() == Event.ONCHANGE) {
                 if (isImmediateMode() && fu.getFilename() != null
-                        && !"".equals(fu.getFilename())) {
+                        && !fu.getFilename().isEmpty()) {
                     submit();
                 }
             } else if (BrowserInfo.get().isIE()

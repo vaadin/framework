@@ -36,7 +36,7 @@ public class AbstractComponentElement extends AbstractElement {
         captionId = getAttribute(GWT_ID_ATTRIBUTE);
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
-        if (captionId == null || captionId.equals("")) {
+        if (captionId == null || captionId.isEmpty()) {
             WebElement elem = findElement(
                     By.xpath(".//*[@" + GWT_ID_ATTRIBUTE + "]"));
             captionId = elem.getAttribute(GWT_ID_ATTRIBUTE);

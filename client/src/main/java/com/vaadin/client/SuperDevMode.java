@@ -184,7 +184,7 @@ public class SuperDevMode {
      *         SuperDevMode
      */
     protected static boolean recompileIfNeeded(String serverUrl) {
-        if (serverUrl == null || "".equals(serverUrl)) {
+        if (serverUrl == null || serverUrl.isEmpty()) {
             serverUrl = "http://localhost:9876/";
         } else {
             if (serverUrl.contains(":")) {

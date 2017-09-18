@@ -139,7 +139,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                     public void uriFragmentChanged(
                             UriFragmentChangedEvent source) {
                         String fragment = source.getUriFragment();
-                        if (fragment != null && !"".equals(fragment)) {
+                        if (fragment != null && !fragment.isEmpty()) {
                             // try to find a proper test class
 
                             // exact match
