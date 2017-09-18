@@ -13,8 +13,6 @@ a new project. After that we'll introduce the Scaladin add-on and see
 how it enhances Vaadin components by adding features that leverage the
 power of Scala.
 
-[Error: Macro 'TableOfContents' doesn't exist]
-
 [[creating-a-new-eclipse-vaadin-project-with-scala]]
 Creating a new Eclipse Vaadin project with Scala
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

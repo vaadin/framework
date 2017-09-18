@@ -26,8 +26,6 @@ https://github.com/vaadin/parking-demo[here]. I suggest that you read
 this article before you try to understand the Parking demo source code,
 it will help you grasp the concepts demonstrated in the demo.
 
-[Error: Macro 'TableOfContents' doesn't exist]
-
 [[demystifying-offline-mode]]
 Demystifying offline mode
 ~~~~~~~~~~~~~~~~~~~~~~~~~

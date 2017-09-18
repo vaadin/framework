@@ -10,8 +10,6 @@ can be reused in other Vaadin projects as an add-on.
 * https://www.eclipse.org/downloads/[Eclipse IDE for Java EE developers]
 * https://vaadin.com/eclipse/[Vaadin plug-in for Eclipse]
 
-[Error: Macro 'TableOfContents' doesn't exist]
-
 [[create-a-project-for-your-theme]]
 Create a project for your theme
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
