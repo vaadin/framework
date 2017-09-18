@@ -472,7 +472,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 location.length() - lastPathParameter.length());
 
         if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
-                && "".equals(request.getServletPath())
+                && request.getServletPath().isEmpty()
                 && !location.endsWith("/")) {
             /*
              * Path info is for the root but request URI doesn't end with a

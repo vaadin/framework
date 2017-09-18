@@ -197,13 +197,13 @@ public class BrowserInfo {
             }
 
             cssClass = prefix + browserIdentifier;
-            if (!"".equals(majorVersionClass)) {
+            if (!majorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + majorVersionClass;
             }
-            if (!"".equals(minorVersionClass)) {
+            if (!minorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + minorVersionClass;
             }
-            if (!"".equals(browserEngineClass)) {
+            if (!browserEngineClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + browserEngineClass;
             }
             String osClass = getOperatingSystemClass();

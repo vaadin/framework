@@ -50,7 +50,7 @@ public class VLabel extends HTML {
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (width == null || width.equals("")) {
+        if (width == null || width.isEmpty()) {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, true);
         } else {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, false);

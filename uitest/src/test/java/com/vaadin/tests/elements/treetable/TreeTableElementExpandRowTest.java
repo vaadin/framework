@@ -48,7 +48,7 @@ public class TreeTableElementExpandRowTest extends MultiBrowserTest {
         TreeTableRowElement row = tree.getRow(rowIndex);
         WebElement cell = row.getCell(0);
         String errorMessage = "";
-        if (extraInfo != null && !extraInfo.equals("")) {
+        if (extraInfo != null && !extraInfo.isEmpty()) {
             errorMessage += extraInfo;
         }
         errorMessage += "Return value of row=" + rowIndex + " cell=0 should be "

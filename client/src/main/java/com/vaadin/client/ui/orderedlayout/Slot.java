@@ -538,7 +538,7 @@ public class Slot extends SimplePanel {
                 this.captionText.addClassName("v-captiontext");
                 caption.appendChild(this.captionText);
             }
-            if (captionText.trim().equals("")) {
+            if (captionText.trim().isEmpty()) {
                 this.captionText.setInnerHTML("&nbsp;");
             } else {
                 if (captionAsHtml) {
