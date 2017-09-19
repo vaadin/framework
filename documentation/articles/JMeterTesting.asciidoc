@@ -1,3 +1,9 @@
+---
+title: JMeter Testing
+order: 20
+layout: page
+---
+
 [[how-to-test-vaadin-web-application-performance-with-jmeter]]
 How to test Vaadin web application performance with JMeter
 ----------------------------------------------------------

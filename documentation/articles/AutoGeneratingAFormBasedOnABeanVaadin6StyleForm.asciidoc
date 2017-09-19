@@ -1,3 +1,9 @@
+---
+title: Auto Generating A Form Based On A Bean Vaadin6 Style Form
+order: 21
+layout: page
+---
+
 [[auto-generating-a-form-based-on-a-bean-vaadin-6-style-form]]
 Auto-generating a form based on a bean - Vaadin 6 style Form
 ------------------------------------------------------------

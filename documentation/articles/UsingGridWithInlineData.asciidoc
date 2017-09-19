@@ -1,3 +1,9 @@
+---
+title: Using Grid With Inline Data
+order: 33
+layout: page
+---
+
 [[using-grid-with-inline-data]]
 Using Grid with inline data
 ---------------------------

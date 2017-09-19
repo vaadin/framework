@@ -1,3 +1,9 @@
+---
+title: Finding The Current Root And Application
+order: 9
+layout: page
+---
+
 [[finding-the-current-root-and-application]]
 Finding the current root and application
 ----------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Showing Data In Grid
+order: 32
+layout: page
+---
+
 [[showing-data-in-grid]]
 Showing data in Grid
 --------------------

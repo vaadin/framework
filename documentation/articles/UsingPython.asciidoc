@@ -1,3 +1,9 @@
+---
+title: Using Python
+order: 14
+layout: page
+---
+
 [[developing-vaadin-apps-with-python]]
 Developing Vaadin apps with Python
 ----------------------------------

@@ -1,3 +1,9 @@
+---
+title: Using JDBC with Lazy Query Container and FilteringTable
+order: 3
+layout: page
+---
+
 [[using-jdbc-with-lazy-query-container-and-filteringtable]]
 Using JDBC with Lazy Query Container and FilteringTable
 -------------------------------------------------------

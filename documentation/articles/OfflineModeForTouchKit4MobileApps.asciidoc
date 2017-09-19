@@ -1,3 +1,9 @@
+---
+title: Offline Mode For Touch Kit4 Mobile Apps
+order: 4
+layout: page
+---
+
 [[offline-mode-for-touchkit-4-mobile-apps]]
 Offline mode for TouchKit 4 mobile apps
 ---------------------------------------

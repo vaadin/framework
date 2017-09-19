@@ -1,3 +1,9 @@
+---
+title: Showing Extra Data For Grid Rows
+order: 29
+layout: page
+---
+
 [[showing-extra-data-for-grid-rows]]
 Showing extra data for Grid rows
 --------------------------------

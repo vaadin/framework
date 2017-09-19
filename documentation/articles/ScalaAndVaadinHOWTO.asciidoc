@@ -1,3 +1,9 @@
+---
+title: Scala And Vaadin HOWTO
+order: 16
+layout: page
+---
+
 [[scala-and-vaadin-how-to]]
 Scala and Vaadin how-to
 -----------------------

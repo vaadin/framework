@@ -1,3 +1,9 @@
+---
+title: Creating A Reusable Vaadin Theme In Eclipse
+order: 22
+layout: page
+---
+
 [[creating-a-reusable-vaadin-theme-in-eclipse]]
 Creating a reusable Vaadin theme in Eclipse
 -------------------------------------------

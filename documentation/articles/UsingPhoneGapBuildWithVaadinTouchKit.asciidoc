@@ -1,3 +1,9 @@
+---
+title: Using PhoneGap Build With Vaadin TouchKit
+order: 15
+layout: page
+---
+
 [[using-phonegap-build-with-vaadin-touchkit]]
 Using PhoneGap Build with Vaadin TouchKit
 -----------------------------------------

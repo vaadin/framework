@@ -1,3 +1,9 @@
+---
+title: Jasper Reports On Vaadin Sample
+order: 11
+layout: page
+---
+
 [[jasper-reports-on-vaadin-sample]]
 Jasper reports on Vaadin sample
 ------------------------------
