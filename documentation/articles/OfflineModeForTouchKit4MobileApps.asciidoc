@@ -1,0 +1,568 @@
+[[offline-mode-for-touchkit-4-mobile-apps]]
+Offline mode for TouchKit 4 mobile apps
+---------------------------------------
+
+[.underline]#*_Note:_* _Vaadin Touchkit has been discontinued. A community-supported version is
+available https://github.com/parttio/touchkit[on GitHub]._#
+
+[[background]]
+Background
+~~~~~~~~~~
+
+Vaadin is primarily a server-side framework. What happens with the
+application when the server is not available? Although this is possible
+on desktop computers, more often it happens when using a mobile device.
+This is why Vaadin TouchKit allows
+you to define offline behavior. In this article I will tell you all the
+details you need to know about offline mode and how to use it. It is
+written based on Vaadin 7.3 and TouchKit 4.0.0.
+
+Touchkit is a Vaadin
+addon that helps in developing mobile applications. I assume that you
+have some knowledge in Vaadin and how to develop client-side Vaadin
+(GWT) code. I will mention the http://demo.vaadin.com/parking/[Parking
+demo] here a few times and you can find its sources
+https://github.com/vaadin/parking-demo[here]. I suggest that you read
+this article before you try to understand the Parking demo source code,
+it will help you grasp the concepts demonstrated in the demo.
+
+[[demystifying-offline-mode]]
+Demystifying offline mode
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As said before, Vaadin is a server-side framework and that implies that
+when an application is running, there is a lot of communication going on
+between the server and the client. Thus server-side views are not
+accessible when there is no connection. On the other hand, offline
+enabled applications run pure client-side Vaadin (GWT) code without
+connecting the server.
+
+There are a couple of approaches you might take to specify offline
+behavior on the client-side.
+
+1.  Write a fully client-side application for the user to interact with
+when the server is offline.
+2.  Write some views as client-side widgets and, in case the connection
+is lost, disable all the components that might need a server connection.
+
+Let’s take a look at the technical details you need to know.
+
+[[client-side-offline-mode-handling---method-1-checking-the-status]]
+Client-side offline mode handling - method 1: checking the status
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The simplest way to know if the application is online or offline is to
+use this code:
+
+[source,java]
+....
+OfflineModeEntrypoint.get().getNetworkStatus().isAppOnline()
+....
+
+You might use it before sending something to the server or calling an
+RPC, for example. However, the network status might change at any time.
+Method 2 helps you react to those changes.
+
+[[client-side-offline-mode-handling---method-2-handling-events]]
+Client-side offline mode handling - method 2: handling events
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to use this method you need an `ApplicationConnection` instance.
+We are going to use its event bus to handle online/offline events.
+Usually you get an `ApplicationConnection` instance from a component
+connector. Here is an example:
+
+[source,java]
+....
+@Connect(MyComponent.class)
+public class MyConnector extends AbstractComponentConnector {
+  @Override
+  protected void init() {
+    super.init();
+
+    getConnection().addHandler(OnlineEvent.TYPE, new OnlineEvent.OnlineHandler() {
+      @Override
+      public void onOnline(final OnlineEvent event) {
+      // do some stuff
+      }
+    });
+
+    getConnection().addHandler(OfflineEvent.TYPE, new OfflineEvent.OfflineHandler() {
+      @Override
+      public void onOffline(final OfflineEvent event) {
+      // do some stuff
+      }
+    });
+  }
+}
+....
+
+Note that this connector will only be created if an instance of
+`MyComponent` is created on the server side and attached to the UI. As an
+option, it might be a `UI` or `Component` extension connector. Otherwise
+your connector will never be instantiated and you will never receive
+these events, so you can rely on them only if you want to show some
+changes in the view or disable some functionality of a view when
+offline. In order to get true offline capabilities, use method 3.
+
+[[client-side-offline-mode-handling---method-3-implementing-offlinemode-interface]]
+Client-side offline mode handling - method 3: implementing OfflineMode interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Implementing client-side OfflineMode interface allows you to specify
+true offline-mode behavior: you will receive events also in case the
+page is loaded from cache without network connection at all.
+
+Fortunately, there is a default implementation and you don’t need to
+worry about the implementation details. `DefaultOfflineMode` provides an
+OfflineMode implementation for any TouchKit application. It shows a
+loading indicator and a sad face when the network is down. In most cases
+all you want to do is replace this sad face with something more useful
+(for example Minesweeper or Sudoku), here’s a sample:
+
+[source,java]
+....
+public class MyOfflineMode extends DefaultOfflineMode {
+  @Override
+  protected void buildDefaultContent() {
+    getPanel().clear();
+    getPanel().add(createOfflineApplication()); // might be a full blown GWT UI
+  }
+}
+....
+
+Then you need to specify the implementation in your widgetset definition
+file (*.gwt.xml):
+
+[source,xml]
+....
+<replace-with class="com.mybestapp.widgetset.client.MyOfflineMode">
+  <when-type-is class="com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode" />
+</replace-with>
+....
+
+This is enough for showing an offline UI, it will be shown and hidden
+automatically, `DefaultOfflineMode` will take care of this. If you need a
+more complex functionality, like doing something when going
+offline/online, you might want to override additional methods from
+`DefaultOfflineMode` or implement OfflineMode from scratch. I briefly
+sketch what you need to know about it.
+
+The OfflineMode interface has three methods:
+
+[source,java]
+....
+void activate(ActivationReason);
+boolean deactivate();
+boolean isActive();
+....
+
+Pretty clear, but there are some pitfalls.
+
+Counterintuitively, not all `ActivationReason`{empty}(s) actually require
+activating the offline application view. On
+`ActivationReason.APP_STARTING` you can just show a loading indicator and
+on `ActivationReason.ONLINE_APP_NOT_STARTED` you might want to display a
+reload button or actually hide the offline view. Take a look at the
+`DefaultOfflineMode` implementation and the `TicketViewWidget` in the
+Parking demo.
+
+Second thing to note: `deactivate()` will never be called if i`sActive()`
+returns `false`. So you must track whether the offline mode is active or
+just take a shortcut like this:
+
+[source,java]
+....
+boolean isActive() {
+  return true;
+}
+....
+
+And the last one: regardless of what JavaDoc says, the return value of
+the `deactivate()` method is ignored. You might want to check if this
+changes in future versions.
+
+Note that this client-side
+http://demo.vaadin.com/javadoc/com.vaadin.addon/vaadin-touchkit-agpl/4.0.0/com/vaadin/addon/touchkit/gwt/client/offlinemode/OfflineMode.html[com.vaadin.addon.touchkit.gwt.client.offlinemode.OfflineMode]
+interface has nothing to do with server-side extension
+http://demo.vaadin.com/javadoc/com.vaadin.addon/vaadin-touchkit-agpl/4.0.0/com/vaadin/addon/touchkit/extensions/OfflineMode.html[com.vaadin.addon.touchkit.extensions.OfflineMode]
+class (unfortunate naming).
+
+[[setting-up-the-offline-mode]]
+Setting up the offline mode
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can turn a Vaadin application into an offline-enabled TouchKit
+application by using an extension of `TouchKitServlet` as your servlet
+class. For example, the following might be your servlet declaration in
+your UI class:
+
+[source,java]
+....
+@WebServlet(value = "/*")
+public static class Servlet extends TouchKitServlet /* instead of VaadinServlet */ {}
+....
+
+Below are some details that you might need at some point (or have read
+about in other places and are wondering what they are). You may skip to
+the “Synchronizing data between server and client” section if you just
+want a quick start.
+
+You can check network status (method 1) in any TouchKit application
+(i.e. any application using `TouchKitServlet`), nothing special is
+required.
+
+In order to use the application connection event bus (method 2), offline
+mode must be enabled or no events will be sent. As of TouchKit 4, it is
+enabled by default whenever you use TouchKit. If for some reason you
+want offline mode disabled, annotate your UI class with
+`@OfflineModeEnabled(false)`. Although this is not recommended in TouchKit
+applications, because no message will be shown if the app goes offline,
+not even the standard Vaadin message.
+
+For method 3 (implementing the OfflineMode interface), besides enabling
+offline mode, the
+http://en.wikipedia.org/wiki/Cache_manifest_in_HTML5[HTML5 cache
+manifest] should be enabled. The cache manifest tells the browser to
+cache some files, so that they can be used without a network connection.
+As with the offline mode, it is enabled by default. If you want it
+disabled, annotate your UI class with  `@CacheManifestEnabled(false)`.
+That way your application might be fully functional once starting online
+and then going offline (if it does not need any additional files when
+offline), but will not be able to start when there is no connection.
+
+[[caching-additional-files-for-example-a-custom-theme]]
+Caching additional files, for example a custom theme
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you need some additional files to be cached for offline loading (most
+likely your custom theme), you can add this property to your *.gwt.xml
+file:
+
+[source,xml]
+....
+<set-configuration-property
+    name='touchkit.manifestlinker.additionalCacheRoot'
+    value='path/relative/to/project/root:path/on/the/server' />
+....
+
+Only files having these extensions will be added to the cache manifest:
+.html, .js, .css, .png, .jpg, .gif, .ico, .woff);
+
+If this is a directory, it will be scanned recursively and all the files
+with these extensions will be added to the manifest.
+
+[[offlinemode-extension]]
+OfflineMode extension
+^^^^^^^^^^^^^^^^^^^^^
+
+In addition, you can slightly tweak the offline mode through the
+OfflineMode UI extension.
+
+You can set offline mode timeout (if there’s no response from the server
+during this time, offline mode will be activated), or manually set
+application mode to offline/online (useful for development). There’s
+also a less useful parameter: enable/disable persistent session cookie
+(enabled by default if you use `@PreserveOnRefresh`, which you should do
+for offline mode anyways). That’s all there is in this extension. Usage:
+
+[source,java]
+....
+// somewhere among UI initializaion
+OfflineMode offline = new OfflineMode();
+offline.extend(this);
+offlineModeSettings.setOfflineModeTimeout(5);
+....
+
+Note: it is not compulsory to use this extension, but it helps the
+client side of the Touchkit add-on to find the application connection.
+Without it, it tries to get an application connection for 5 seconds. If
+you suspect that your connection is too slow or the server is very slow
+to respond, you might add a new `OfflineMode().extend(this);` to your UI
+just in case. That should be very rarely needed.
+
+This extension is usually used for synchronizing data between the server
+and the client (covered in the next section), but it can be done through
+any other extension/component -- there is no special support for it in
+OfflineMode extension.
+
+[[synchronizing-data-between-server-and-client]]
+Synchronizing data between server and client
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In a sense, the client is always in “offline mode” between requests from
+the server point of view. Therefore the regular Vaadin way of
+synchronizing data between the client-side widget and the server-side
+(https://vaadin.com/book/-/page/gwt.rpc.html[Vaadin RPC mechanism] and
+https://vaadin.com/book/-/page/gwt.shared-state.html[shared state]) is
+still valid, the difference being that the offline widget is probably
+more complex and the amount of data is greater than that of an average
+component.
+
+As mentioned, the server is not necessarily aware that the client went
+offline for some time, therefore the synchronization should be initiated
+from the client side. So using method 2 or 3, the client side gets an
+event that the connection is online and it sends an RPC call to the
+server. New data might be sent with the notification or asked
+separately, e.g. using
+http://demo.vaadin.com/javadoc/com.vaadin.addon/vaadin-touchkit-agpl/4.0.0/index.html?com/vaadin/addon/touchkit/extensions/LocalStorage.html[LocalStorage]
+(TouchKit provides easy access to
+http://www.w3schools.com/html/html5_webstorage.asp[HTML5 LocalStorage]
+from the server side). The server might send new data through shared
+state.
+
+If we reuse OfflineMode (mentioned in the end of the last section), the
+code might look like this:
+
+[source,java]
+....
+public class MyOfflineModeExtension extends OfflineMode {
+  public MyOfflineModeExtension() {
+    registerRpc(serverRpc);
+  }
+
+  private final SyncDataServerRpc serverRpc = new SyncDataServerRpc() {
+    @Override
+    public void syncData(final Object newData) {
+      doSmth(newData); // update data
+      getState().someProperty = newServerData; // new data from the server to the client
+    }
+  };
+}
+
+@Connect(MyOfflineModeExtension.class)
+public class MyOfflineConnector extends OfflineModeConnector {
+  private final SyncDataServerRpc rpc = RpcProxy.create(SyncDataServerRpc.class, this);
+
+  @Override
+  protected void init() {
+    super.init();
+
+    getConnection().addHandler(OnlineEvent.TYPE, new OnlineEvent.OnlineHandler() {
+      @Override
+      public void onOnline(final OnlineEvent event) {
+        Object new Data = … // get updated data
+        rpc.syncData(newData);
+      }
+    });
+  }
+}
+....
+
+As already said, this does not necessarily have to be done through the
+OfflineMode extension, it can be done using any component connector,
+there is nothing special about OfflineMode.
+
+Another option, a less wordy and more decoupled one, could be done by
+using JavaScript function call.
+
+On the server side:
+
+[source,java]
+....
+JavaScript.getCurrent().addFunction("myapp.syncData",
+    (args) -> { /*sync data, e.g. get it from LocalStorage */});
+....
+
+On the client side:
+
+[source,java]
+....
+// in any connector
+getConnection().addHandler(OnlineEvent.TYPE, new OnlineEvent.OnlineHandler() {
+  @Override
+  public native void onOnline(final OnlineEvent event) /*-{
+    myapp.syncData();
+  }-*/;
+});
+....
+
+Or similar code in client-side OfflineMode implementation:
+
+[source,java]
+....
+MyOfflineMode extends DefaultOfflineMode {
+  @Override
+  public native boolean deactivate() /*-{
+    myapp.syncData();
+  }-*/;
+}
+....
+
+This option is less “the Vaadin way”, but in some cases might be useful.
+
+[[creating-efficient-offline-views]]
+Creating efficient offline views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two main concerns with offline-enabled applications:
+
+1.  Maximizing code sharing between online and offline mode.
+2.  Seamlessly switching between offline and online mode.
+
+To share the code for a view that is used both in online and offline,
+you will probably need to create the view as a custom widget, including
+connector and a server-side component class. If you know how to do this
+and understand why it is needed, you can skip to the “Switching between
+online and offline” subsection .
+
+As Vaadin is a server-side framework, the views and the logic are
+usually implemented using server-side Java code. During application
+lifetime, a lot of traffic is sent between the server and the client
+even in a single view. Thus server-side implemented views are not usable
+when there is no connection between server and client.
+
+For very simple views (e.g. providing a list, no data input) it might be
+appropriate to have two separate implementations, one client-side and
+one server-side, as it is quick and easy to build these and you avoid
+the development and code overhead of using client-side views online,
+keeping the server-side advantages for the online version.
+
+For more complex functionality you will need to implement a fully
+client-side view for both online and offline operation and then
+synchronize the data as described in the previous section. Using it
+during a completely offline operation is straightforward: just show the
+view on the screen by an OfflineMode interface implementation in an
+overlay. For server-side usage you will probably need to create a
+https://vaadin.com/book/-/page/gwt.html[server-side component and a
+connector].
+
+[[switching-between-online-and-offline]]
+Switching between online and offline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+What we want to achieve is that the user doesn’t feel that the
+application went offline or online if he doesn’t need to know that. We
+might show an indicator so that the user is aware, but he should be able
+to do what he did before the switch happened, if this is possible. Also,
+no data should be lost during switching.
+
+[[a-navigatormanager-issue-and-workaround]]
+A NavigatorManager issue and workaround
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Before we go to some deeper details, note that there is an annoying
+`NavigatorManager` behavior related to offline mode: when you click a
+`NagivationButton` while the connection is down (but before offline mode
+was activated) and the target view is not in the DOM yet, the server
+does not respond the system switches to offline mode and then when
+coming back from offline mode, we’re stuck in an empty view.
+
+A workaround for this is to call `NavigatorManagerConnector` to redraw on
+an online event, so this might be put in some connector (you might use
+deferred binding to put this in `NavigatorManagerConnector` itself):
+
+[source,java]
+....
+getConnection().addHandler(OnlineEvent.TYPE, new OnlineEvent.OnlineHandler() {
+  @Override
+  public void onOnline(final OnlineEvent event) {
+    final JsArrayObject<ComponentConnector> jsArray =
+        ConnectorMap.get(getConnection()).getComponentConnectorsAsJsArray();
+
+    for (int i = 0; jsArray.size() > i; i++) {
+      if (jsArray.get(i) instanceof NavigationManagerConnector) {
+        final NavigationManagerConnector connector =
+            (NavigationManagerConnector) jsArray.get(i);
+        connector.forceStateChange();
+      }
+    }
+  }
+});
+....
+
+[[user-experience-considerations-related-to-switching]]
+User experience considerations related to switching
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Here’s an example of what we want to achieve: if the user is filling a
+form, which by design can be filled offline or online, and the network
+suddenly goes down, he should be able to continue filling the form
+without much interference. That means, if we’re using method 3 by
+implementing OfflineMode and showing an overlay on the screen (which is
+done in the Parking demo), the offline overlay will be hiding the real
+online form. At that point the data from the online form is copied to
+the offline form and the user barely notices that something happened.
+That means there are two instances of the form, online one and offline
+one. Another option would be that you have only one instance of the form
+and instead of copying the data, you attach the whole form to a
+different view (thanks to Tomi Virkku for the tip).
+
+In the Parking demo, the ticket view jumps, because the scroll position
+changes and an indicator is added. If the user was in the middle of
+something, he is suddenly interrupted, although no data is lost.
+
+If we want to improve user experience, we could implement it in a better
+way. In case the network goes offline when the user is filling a form,
+we disable all the elements that might fire a request to the server and
+let the user continue filling the form. Of course, the form should be
+implemented completely client-side, and all the suspicious elements
+would be around it, probably navigation/toolbar buttons. Another option
+would be to have all the elements client-side and on click they would be
+checking if there is a connection, before sending anything to the
+server. After the user submits or cancels the form, we can show the
+“true” offline view. Alternatively, it will be the only offline view in
+the application, depending on the specific case.
+
+For example, if you are using a navigator manager, the trick would be to
+keep or find the `VNavigatorManager` and disable its widgets (left and
+right widgets, the ones that are used to navigate):
+
+[source,java]
+....
+getConnection().addHandler(OfflineEvent.TYPE, new OfflineEvent.OfflineHandler() {
+  @Override
+  public void onOffline(final OfflineEvent event) {
+    setWidgetEnabled(getWidget().getNavigationBar().getWidget(0), false);
+  }
+});
+
+void setWidgetEnabled(final Widget widget, final boolean enabled) {
+  widget.setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+
+  if (widget instanceof HasEnabled)
+    ((HasEnabled) widget).setEnabled(enabled);
+
+  // this is just because for some reason VNavigatorButton does not implement HasEnabled, although it has such methods...
+  if (widget instanceof VNavigationButton)
+    ((VNavigationButton) widget).setEnabled(enabled);
+}
+....
+
+Known issues: `HasEnabled` declaration should be fixed soon, but I should
+warn you that for some reason a disabled `NavigationButton` still responds
+to mouse click events, although correctly ignoring touch events.
+
+Same works in the other direction as well, so when an offline form is
+shown and the connection goes up, you just keep the offline form until
+the user submits/cancels, then show the online view again.
+
+This is how you can give the user experience the best experience.
+
+[[phonegap-integration]]
+PhoneGap integration
+~~~~~~~~~~~~~~~~~~~~
+
+As this is not directly related to the topic I will not explain the
+basics here, just a couple of pitfalls that someone familiar with
+PhoneGap might encounter.
+
+http://dev.vaadin.com/ticket/13250[An issue with offline mode on
+PhoneGap] was reported recently and because of that, a new solution was
+found that puts the Vaadin application into an iframe. You can get the
+files for PhoneGap from TouchKit maven archetype (_link no longer available_). However, this solution has its
+drawbacks and you might want
+to disable the iframe. If you do that, you need to copy some files (like
+widgetset) to your PhoneGap project. There is still ongoing discussion
+of how to improve this. No more details here, this was just to warn you.
+
+Another pitfall is that when you specify the URL in archetype’s
+index.html do put the final slash:
+
+[source,java]
+....
+window.vaadinAppUrl = 'http://youraddress.com/path/'; // <--- slash is compulsory!
+....
+
+Without it the application will not load from cache when there’s no
+connection.

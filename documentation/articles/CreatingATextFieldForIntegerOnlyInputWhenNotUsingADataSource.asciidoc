@@ -1,0 +1,44 @@
+[[creating-a-textfield-for-integer-only-input-when-not-using-a-data-source]]
+Creating a TextField for integer only input when not using a data source
+------------------------------------------------------------------------
+
+A `TextField` is a component that always has a value of type `String`. By
+adding a converter to a field, the field will automatically validate
+that the entered value can be converted and it will provide the
+converted value using the `getConvertedValue()` method.
+
+[source,java]
+....
+final TextField textField = new TextField("Text field");
+textField.setConverter(Integer.class);
+
+Button submitButton = new Button("Submit value", new ClickListener() {
+  public void buttonClick(ClickEvent event) {
+    String uiValue = textField.getValue();
+    try {
+      Integer convertedValue = (Integer) textField
+          .getConvertedValue();
+      Notification.show(
+          "UI value (String): " + uiValue
+          + "<br />Converted value (Integer): "
+          + convertedValue);
+    } catch (ConversionException e) {
+      Notification.show(
+          "Could not convert value: " + uiValue);
+    }
+  }
+});
+
+addComponent(new Label("Text field type: " + textField.getType()));
+addComponent(new Label("Converted text field type: "
+    + textField.getConverter().getModelType()));
+addComponent(textField);
+addComponent(submitButton);
+....
+
+With this example, entering a number and pressing the button causes the
+value of the `TextField` to be a `String` while the converted value will be
+an `Integer` representing the same value. If e.g. a letter is entered to
+the field and the button is pressed, the validation will fail. This
+causes a notice to be displayed for the field and an exception to be
+thrown from `getConvertedValue()`.

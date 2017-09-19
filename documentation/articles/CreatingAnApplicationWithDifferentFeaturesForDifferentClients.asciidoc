@@ -1,0 +1,71 @@
+[[creating-an-application-with-different-features-for-different-clients]]
+Creating an application with different features for different clients
+---------------------------------------------------------------------
+
+Providing different features for different clients can be done by
+creating a specialized UIProvider for the application.
+
+We start by creating the specialized UI's
+
+[source,java]
+....
+public class DefaultUI extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    setContent(
+        new Label("This browser does not support touch events"));
+  }
+}
+....
+
+[source,java]
+....
+public class TouchUI extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    WebBrowser webBrowser = getPage().getWebBrowser();
+    String screenSize = "" + webBrowser.getScreenWidth() + "x"
+        + webBrowser.getScreenHeight();
+    setContent(new Label("Using a touch enabled device with screen size"
+        + screenSize));
+  }
+}
+....
+
+We then define an UIProvider which knows what UI the application should
+return.
+
+[source,java]
+....
+public class DifferentFeaturesForDifferentClients extends UIProvider {
+
+  @Override
+  public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+    // could also use browser version etc.
+    if (event.getRequest().getHeader("user-agent").contains("mobile")) {
+      return TouchUI.class;
+    } else {
+      return DefaultUI.class;
+    }
+  }
+}
+....
+
+Now that we have an `UIProvider` we need to tell Vaadin to use it. This is
+most easily done by defining the `UIProvider` class in web.xml instead of
+defining a UI class.
+
+[source,xml]
+....
+<servlet>
+  <servlet-name>My Vaadin App</servlet-name>
+  <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+  <init-param>
+    <description>Vaadin UI</description>
+    <param-name>UIProvider</param-name>
+    <param-value>com.example.myexampleproject.DifferentFeaturesForDifferentClients</param-value>
+  </init-param>
+</servlet>
+....
+
+Each UI can have its own feature set, layout and theme.

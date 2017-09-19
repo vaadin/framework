@@ -1,0 +1,161 @@
+[[vaadin-7-hierarchical-container-and-treecomponent-example-with-liferay-organizationservice]]
+Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService
+------------------------------------------------------------------------------------------
+
+I recently needed a portlet to display the Organizations/Locations a
+user belongs to in a Hierarchical Tree.  I used Vaadin's tree and
+hierarchical container components along with information from Vaadin's
+book of examples to create the code below (http://demo.vaadin.com/book-examples-vaadin7/book#component.tree.itemstylegenerator).
+
+See link:img/DmoOrgTreeUI.java[DmoOrgTreeUI.java] for full source code.
+
+[source,java]
+....
+private void buildMainLayout() throws SystemException, PortalException {
+  if (viewContent.getComponentCount() > 0) {
+      viewContent.removeAllComponents();
+  }
+
+  viewContent.setMargin(true);
+  viewContent.addStyleName("view");
+
+  List orgList = new ArrayList();
+  orgList = OrganizationLocalServiceUtil.getUserOrganizations(user.getUserId());
+  final HierarchicalContainer container = createTreeContent(orgList);
+
+  tree = new Tree("My Organizations", container);
+  tree.addStyleName("checkboxed");
+  tree.setSelectable(false);
+  tree.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+  tree.setItemCaptionPropertyId("name");
+  tree.addItemClickListener(new ItemClickEvent.ItemClickListener() {
+    public void itemClick(ItemClickEvent event) {
+      if (event.getItemId().getClass() == Long.class) {
+        long itemId = (Long) event.getItemId();
+        if (checked.contains(itemId)) {
+          checkboxChildren(container, itemId, false);
+        }
+        else {
+          checkboxChildren(container, itemId, true);
+          tree.expandItemsRecursively(itemId);
+        }
+      }
+      tree.markAsDirty();
+    }
+  });
+
+  Tree.ItemStyleGenerator itemStyleGenerator = new Tree.ItemStyleGenerator() {
+    @Override
+    public String getStyle(Tree source, Object itemId) {
+      if (checked.contains(itemId))
+        return "checked";
+      else
+        return "unchecked";
+    }
+  };
+  tree.setItemStyleGenerator(itemStyleGenerator);
+
+  viewContent.addComponent(tree);
+  viewContent.setVisible(true);
+  setContent(viewContent);
+}
+
+public void checkboxChildren(HierarchicalContainer hc, long itemId, boolean bAdd) {
+  try {
+    if (bAdd) {
+      checked.add(itemId);
+    }
+    else {
+      checked.remove(itemId);
+      Object iParendId = hc.getParent(itemId);
+      while (iParendId != null) {
+        checked.remove(iParendId);
+        iParendId = hc.getParent(iParendId);
+      }
+    }
+
+    if (hc.hasChildren(itemId)) {
+      Collection children = hc.getChildren(itemId);
+      for (Object o : children) {
+        if (o.getClass() == Long.class) {
+          itemId = (Long) o;
+          checkboxChildren(hc, itemId, bAdd);
+        }
+      }
+    }
+  }
+  catch (Exception e) {
+      Notification.show("Unable to build Organization tree.  Contact Administrator.", Type.ERROR_MESSAGE);
+  }
+}
+
+public static HierarchicalContainer createTreeContent(List oTrees)
+    throws SystemException, PortalException {
+
+  HierarchicalContainer container = new HierarchicalContainer();
+  container.addContainerProperty("name", String.class, "");
+
+  new Object() {
+    @SuppressWarnings("unchecked")
+    public void put(List data, HierarchicalContainer container)
+        throws SystemException, PortalException {
+
+      for (Organization o : data) {
+        long orgId = o.getOrganizationId();
+
+        if (!container.containsId(orgId)) {
+          container.addItem(orgId);
+          container.getItem(orgId).getItemProperty("name").setValue(o.getName());
+
+          if (!o.hasSuborganizations()) {
+            container.setChildrenAllowed(orgId, false);
+          }
+          else {
+            container.setChildrenAllowed(orgId, true);
+          }
+
+          if (o.isRoot()) {
+            container.setParent(orgId, null);
+          }
+          else {
+            if (!container.containsId(o.getParentOrganizationId())) {
+              List sub = new ArrayList();
+              sub.add(o.getParentOrganization());
+              put(sub, container);
+            }
+            container.setParent(orgId, (Object) o.getParentOrganizationId());
+          }
+        }
+      }
+    }
+  }.put(oTrees, container);
+
+  return container;
+}
+....
+
+Below is the css used
+
+[source,scss]
+....
+.v-tree-node-caption-disabled {
+  color: black;
+  font-style: italic;
+  //border-style:solid;
+  //border-width:1px;
+}
+
+.v-tree-checkboxed .v-tree-node-caption-unchecked div span {
+  background: url("images/unchecked.png") no-repeat;
+  padding-left: 24px;
+  //border-style:solid;
+  //border-width:1px;
+}
+
+.v-tree-checkboxed .v-tree-node-caption-checked div span {
+  background: url("images/checked.png") no-repeat;
+  padding-left: 24px;
+  //border-style:solid;
+  //border-width:1px;
+}
+....

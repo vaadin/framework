@@ -1,0 +1,266 @@
+[[creating-a-customfield-for-editing-the-address-of-a-person]]
+Creating a CustomField for editing the address of a person
+----------------------------------------------------------
+
+A normal use case is that you want to create a form out a bean that the
+user can edit. Often these beans contain references to other beans as
+well, and you have to create a separate editor for those. This tutorial
+goes through on how to edit an `Address` bean which is inside a `Person`
+bean with the use of `CustomField` and `FieldGroup`.
+
+Here are the `Person` and `Address` beans
+
+[source,java]
+....
+public class Person {
+  private String firstName;
+  private String lastName;
+  private Address address;
+  private String phoneNumber;
+  private String email;
+  private Date dateOfBirth;
+  private String comments;
+
+  //Getters and setters
+}
+....
+
+[source,java]
+....
+public class Address {
+  private String street;
+  private String zip;
+  private String city;
+  private String country;
+
+  // Getters and setters
+}
+....
+
+[[creating-a-new-field]]
+Creating a new field
+~~~~~~~~~~~~~~~~~~~~
+
+The first step is to create a new field which represents the editor for
+the address. In this case the field itself will be a button. The button
+will open a window where you have all the address fields. The address
+will be stored back when the user closes the window.
+
+[source,java]
+....
+public class AddressPopup extends CustomField<Address> {
+  @Override
+  protected Component initContent() {
+    return null;
+  }
+
+  @Override
+  public Class<Address> getType() {
+    return Address.class;
+  }
+}
+....
+
+CustomField requires that you implement two methods, `initContent()` and
+`getType()`. `initContent()` creates the actual visual representation of
+your field. `getType()` tells the field which type of data will be handled
+by the field. In our case it is an `Address` object so we return
+`Address.class` in the method.
+
+[[creating-the-content]]
+Creating the content
+~~~~~~~~~~~~~~~~~~~~
+
+Next up we create the actual button that will be visible in the person
+editor when the CustomField is rendered. This button should open up a
+new window where the user can edit the address.
+
+[source,java]
+....
+@Override
+protected Component initContent() {
+  final Window window = new Window("Edit address");
+  final Button button = new Button("Open address editor", new ClickListener() {
+    public void buttonClick(ClickEvent event) {
+      getUI().addWindow(window);
+    }
+  });
+  return button;
+}
+....
+
+This is enough to attach the field to the person editor, but the window
+will be empty and it won't modify the data in any way.
+
+[[creating-the-editable-fields]]
+Creating the editable fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The address object contains four strings - street, zip, city and
+country. For the three latter a `TextField` is good for editing, but the
+street address can contain multiple row so a `TextArea` is better here.
+All the fields have to be put into a layout and the layout has to be set
+as the content of the window. `FormLayout` is a good choice here to nicely
+align up the captions and fields of the window.
+
+[source,java]
+....
+FormLayout layout = new FormLayout();
+TextArea street = new TextArea("Street address:");
+TextField zip = new TextField("Zip code:");
+TextField city = new TextField("City:");
+TextField country = new TextField("Country:");
+layout.addComponent(street);
+layout.addComponent(zip);
+layout.addComponent(city);
+layout.addComponent(country);
+window.setContent(layout);
+....
+
+The field is now visually ready but it doesn't contain or affect any
+data. You want to also modify the sizes as well to make it look a bit
+nicer:
+
+[source,java]
+....
+window.center();
+window.setWidth(null);
+layout.setWidth(null);
+layout.setMargin(true);
+....
+
+[[binding-the-address-to-the-field]]
+Binding the address to the field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A FieldGroup can be used to bind the data of an Address bean into the
+fields. We create a member variable for a FieldGroup and initialize it
+within the createContent() -method:
+
+[source,java]
+....
+fieldGroup = new BeanFieldGroup<Address>(Address.class);
+fieldGroup.bind(street, "street");
+fieldGroup.bind(zip, "zip");
+fieldGroup.bind(city, "city");
+fieldGroup.bind(country, "country");
+....
+
+The `FieldGroup` of the person editor will call
+`AddressPopup.setValue(person.getAddress())` when we start to edit our
+person. We need to override `setInternalValue(Address)` to get the `Address`
+object and pass it to the `FieldGroup` of the address editor.
+
+[source,java]
+....
+@Override
+protected void setInternalValue(Address address) {
+  super.setInternalValue(address);
+  fieldGroup.setItemDataSource(new BeanItem<Address>(address));
+}
+....
+
+The last thing that has to be done is save the modifications made by the
+user back into the `Address` bean. This is done with a `commit()` call to
+the `FieldGroup`, which can be made for example when the window is closed:
+
+[source,java]
+....
+window.addCloseListener(new CloseListener() {
+  public void windowClose(CloseEvent e) {
+    try {
+      fieldGroup.commit();
+    } catch (CommitException ex) {
+      ex.printStackTrace();
+    }
+  }
+});
+....
+
+Now you need to attach the `AddressPopup` custom field into the person
+editor through it's `FieldGroup` and you have a working editor.
+
+[[complete-code]]
+Complete code
+~~~~~~~~~~~~~
+
+[source,java]
+....
+package com.example.addressforms.fields;
+
+import com.example.addressforms.data.Address;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomField;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseEvent;
+import com.vaadin.ui.Window.CloseListener;
+
+public class AddressPopup extends CustomField<Address> {
+  private FieldGroup fieldGroup;
+
+  @Override
+  protected Component initContent() {
+    FormLayout layout = new FormLayout();
+    final Window window = new Window("Edit address", layout);
+    TextArea street = new TextArea("Street address:");
+    TextField zip = new TextField("Zip code:");
+    TextField city = new TextField("City:");
+    TextField country = new TextField("Country:");
+    layout.addComponent(street);
+    layout.addComponent(zip);
+    layout.addComponent(city);
+    layout.addComponent(country);
+
+    fieldGroup = new BeanFieldGroup<Address>(Address.class);
+    fieldGroup.bind(street, "street");
+    fieldGroup.bind(zip, "zip");
+    fieldGroup.bind(city, "city");
+    fieldGroup.bind(country, "country");
+    Button button = new Button("Open address editor", new ClickListener() {
+      public void buttonClick(ClickEvent event) {
+        getUI().addWindow(window);
+      }
+    });
+    window.addCloseListener(new CloseListener() {
+      public void windowClose(CloseEvent e) {
+        try {
+          fieldGroup.commit();
+        } catch (CommitException ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+
+    window.center();
+    window.setWidth(null);
+    layout.setWidth(null);
+    layout.setMargin(true);
+    return button;
+  }
+
+  @Override
+  public Class<Address> getType() {
+    return Address.class;
+  }
+
+  @Override
+  protected void setInternalValue(Address address) {
+    super.setInternalValue(address);
+    fieldGroup.setItemDataSource(new BeanItem<Address>(address));
+  }
+}
+....
+
+image:img/person%20editor.png[Address editor]
+
+image:img/address%20editor.png[Address editor window]

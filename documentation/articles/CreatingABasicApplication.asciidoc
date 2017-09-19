@@ -1,0 +1,74 @@
+[[creating-a-basic-application]]
+Creating a basic application
+----------------------------
+
+To create a Vaadin application you need two files. A class that extends
+UI which is your main view and entry point to the application as well as
+a web.xml referring to the UI.
+
+With Eclipse and the Vaadin plugin you will get all of this
+automatically by opening the New wizard (File -> New -> Other) and
+choosing Vaadin -> Vaadin Project. From there you can give the new
+project a name and the wizard takes care of the rest.
+
+In other environments you can create the standard java web application
+project. Create one file which extends UI into the source folder. Let's
+call it MyApplicationUI:
+
+[source,java]
+....
+package com.example.myexampleproject;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Label;
+
+public class MyApplicationUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout view = new VerticalLayout();
+    view.addComponent(new Label("Hello Vaadin!"));
+    setContent(view);
+  }
+}
+....
+
+This application creates a new main layout to the UI and adds the text
+"Hello Vaadin!" into it.
+
+Your web deployment descriptor, web.xml, has to point at your UI as
+well. This is done with an defining a Vaadin servlet and giving the UI
+as a parameter to it:
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <display-name>MyApplication</display-name>
+  <context-param>
+    <description>Vaadin production mode</description>
+    <param-name>productionMode</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>My Vaadin App</servlet-name>
+    <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+    <init-param>
+      <description>Vaadin UI</description>
+      <param-name>UI</param-name>
+      <param-value>com.example.myexampleproject.MyApplicationUI</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>My Vaadin App</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+</web-app>
+....
+
+Now you're able to package your application into a war and deploy it on
+a servlet container.

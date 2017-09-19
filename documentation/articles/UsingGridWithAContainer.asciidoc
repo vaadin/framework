@@ -1,0 +1,107 @@
+[[using-grid-with-a-container]]
+Using Grid with a Container
+---------------------------
+
+Grid lazy-loads data from a `Container` instance. There are different
+container implementations that e.g. fetch data from a database or use a
+list of Java objects. Assuming you already have code that initializes a
+`Container`, this is all that is needed for showing a Grid with the data
+from your container.
+
+[source,java]
+....
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
+
+public class UsingGridWithAContainer extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    Grid grid = new Grid();
+    grid.setContainerDataSource(GridExampleHelper.createContainer());
+
+    setContent(grid);
+  }
+}
+....
+
+The container in this example contains three properties; name, count and
+amount. You can configure the columns in Grid using the property ids to
+do things like setting the column caption, removing a column or changing
+the order of the visible columns.
+
+[source,java]
+....
+protected void init(VaadinRequest request) {
+  Grid grid = new Grid();
+  grid.setContainerDataSource(GridExampleHelper.createContainer());
+
+  grid.getColumn("name").setHeaderCaption("Bean name");
+  grid.removeColumn("count");
+  grid.setColumnOrder("name", "amount");
+
+  setContent(grid);
+}
+....
+
+This is really all that is needed to get started with Grid.
+
+For reference, this is how the example container is implemented.
+
+[source,java]
+....
+public class GridExampleBean {
+  private String name;
+  private int count;
+  private double amount;
+
+  public GridExampleBean() {
+  }
+
+  public GridExampleBean(String name, int count, double amount) {
+    this.name = name;
+    this.count = count;
+    this.amount = amount;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public int getCount() {
+    return count;
+  }
+
+  public double getAmount() {
+    return amount;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setCount(int count) {
+    this.count = count;
+  }
+
+  public void setAmount(double amount) {
+    this.amount = amount;
+  }
+}
+....
+
+[source,java]
+....
+import com.vaadin.data.util.BeanItemContainer;
+
+public class GridExampleHelper {
+  public static BeanItemContainer<GridExampleBean> createContainer() {
+    BeanItemContainer<GridExampleBean> container = new BeanItemContainer<GridExampleBean>(
+        GridExampleBean.class);
+    for (int i = 0; i < 1000; i++) {
+      container.addItem(new GridExampleBean("Bean " + i, i * i, i / 10d));
+    }
+    return container;
+  }
+}
+....

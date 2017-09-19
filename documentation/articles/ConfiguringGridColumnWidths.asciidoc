@@ -1,0 +1,72 @@
+[[configuring-grid-column-widths]]
+Configuring Grid column widths
+------------------------------
+
+To try out how the widths of Grid columns work in different situations,
+we'll use the same base implementation as in the
+link:UsingGridWithAContainer.asciidoc[Using Grid with a Container]
+example.
+
+Grid does by default check the widths of all cells on the first pageful
+of data and allocate column widths based on that. If there's room to
+spare, each column gets and equal share of the extra pixels.
+
+There is usually one or maybe two columns that would most benefit from
+some additional breathing room, but Grid can't know which columns that
+is unless you tell it. You can do so using the `setExpandRatio(int)`
+method for a column.
+
+[source,java]
+....
+grid.getColumn("name").setExpandRatio(1);
+....
+
+When setting one column to expand, all the extra space gets allocated to
+that column. This might instead cause the other columns to be too
+tightly spaced. One easy way of avoiding this is to use `setWidth(double)`
+to set a pixel size for columns that are not expanded.
+
+[source,java]
+....
+grid.getColumn("name").setExpandRatio(1);
+grid.getColumn("amount").setWidth(100);
+grid.getColumn("count").setWidth(100);
+....
+
+Reducing the width of Grid does now cause the `Name` column to shrink
+while the two other columns keep their defined original sizes. We might,
+however, want to prevent the `Name` column from becoming too narrow by
+giving it a minimum width. Without any defined minimum width, the widths
+of the cell contents of the first pageful of data will define the
+minimum width. If there's not enough room for all columns, Grid will
+automatically enable horizontal scrolling so that all columns can still
+be accessed.
+
+[source,java]
+....
+grid.setWidth("400px");
+grid.getColumn("name").setMinimumWidth(250);
+grid.getColumn("amount").setWidth(100);
+grid.getColumn("count").setWidth(100);
+....
+
+With horizontal scrolling, it might be desirable to still keep columns
+identifying each row visible all the time so that it's easier for the
+user to interpret the data. This can be done by freezing a number of
+columns, counted from the left, using the `setFrozenColumnCount(int)`
+method. By default, only the column showing selection state in
+multiselect mode is frozen. This column can also be unfrozen by setting
+the count to -1.
+
+[source,java]
+....
+grid.setWidth("400px");
+grid.setFrozenColumnCount(1);
+grid.getColumn("name").setMinimumWidth(250);
+grid.getColumn("amount").setWidth(100);
+grid.getColumn("count").setWidth(100);
+....
+
+If the width of Grid is again increased so that all columns can fit
+without scrolling, the frozen columns will behave just as any other
+column.

@@ -1,0 +1,91 @@
+[[using-grid-with-inline-data]]
+Using Grid with inline data
+---------------------------
+
+Instead of using a Vaadin Container as explained in
+link:UsingGridWithAContainer.asciidoc[Using Grid with a Container],
+you can also directly add simple inline data to Grid without directly
+using a Container.
+
+After creating a Grid instance, the first thing you need to do is to
+define the columns that should be shown. You an also define the types of
+the data in each column - Grid will expect String data in each column
+unless you do this.
+
+[source,java]
+....
+grid.addColumn("Name").setSortable(true);
+grid.addColumn("Score", Integer.class);
+....
+
+The columns will be shown in the order they are added. The `addColumn`
+method does also return the created `Column` instance, so you can go ahead
+and configure the column right away if you want to.
+
+When you have added all columns, you can add data using the
+`addRow(Object...)` method.
+
+[source,java]
+....
+grid.addRow("Alice", 15);
+grid.addRow("Bob", -7);
+grid.addRow("Carol", 8);
+grid.addRow("Dan", 0);
+grid.addRow("Eve", 20);
+....
+
+The order of the arguments to `addRow` should match the order in which the
+columns are shown. It is recommended to only use `addRow` when
+initializing Grid, since later on e.g. `setColumnOrder(Object...)` might
+have been used to change the order, causing unintended behavior.
+
+Grid will still manage a `Container` instance for you behind the scenes,
+so you can still use Grid API that is based on `Property` or `Item` from the
+`Container` API. One particularly useful feature is that each added row
+will get an `Integer` item id, counting up starting from 1. This means
+that you can e.g. select the second row in this way:
+
+[source,java]
+....
+grid.select(2);
+....
+
+[[full-example]]
+Full example
+^^^^^^^^^^^^
+
+Putting all these pieces together, we end up with this class.
+
+[source,java]
+....
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
+
+@Theme("valo")
+public class ShowingInlineDataInGrid extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    final Grid grid = new Grid();
+
+    grid.addColumn("Name").setSortable(true);
+    grid.addColumn("Score", Integer.class);
+
+    grid.addRow("Alice", 15);
+    grid.addRow("Bob", -7);
+    grid.addRow("Carol", 8);
+    grid.addRow("Dan", 0);
+    grid.addRow("Eve", 20);
+
+    grid.select(2);
+
+    grid.setHeightByRows(grid.getContainerDataSource().size());
+    grid.setHeightMode(HeightMode.ROW);
+
+    setContent(grid);
+  }
+}
+....

@@ -1,0 +1,433 @@
+[[using-hibernate-with-vaadin]]
+Using Hibernate with Vaadin
+---------------------------
+
+Using Hibernate in Toolkit application, Basic
+http://en.wikipedia.org/wiki/Create,_read,_update_and_delete[CRUD]
+actions for persistent POJO
+
+image:img/screenshot.png[Example CRUD application]
+
+Check out related source code with subversion (svn co
+http://dev.vaadin.com/svn/incubator/hbncontainer/) or view it with trac
+http://dev.vaadin.com/browser/incubator/hbncontainer/. Download the
+latest version as a Vaadin add-on from the Vaadin Directory (https://vaadin.com/directory/component/hbncontainer)
+
+_The project in incubator currently has a prototype of using
+associations. The article is outdated on that part_.
+
+Hibernate is the de facto standard when it comes to Java and Object
+Relational Mapping. Since version 3 onwards one can actually drop the de
+facto part as Hibernate 3 implements Java Persistency API with some
+optional packages. Hibernate is backed by a strong support from both
+commercial players and open source community. It is an important part of
+popular JBoss Application Server.
+
+As an open source project with an industry proven maturity, Hibernate
+makes a perfect combo with IT Mill Toolkit. Hibernate is in a key role
+in many projects built or supported by IT Mill. The way Hibernate is
+used varies a lot due different kinds of architectures and requirements.
+Largest questions are usually how to work with Hibernate session,
+transactions and how to tie entity beans into toolkit components.
+
+In this article and example application I'll show you how to implement
+session-per-request pattern for Hibernate session handling and present
+some patterns to do
+http://en.wikipedia.org/wiki/Create,_read,_update_and_delete[CRUD]
+actions of a simple entity bean. As I'm a sport fanatic, instead of
+storing cats and other mammals to DB we'll build a simple *WorkoutLog*
+application to store the details of our jogging sessions. Download the
+source package to see full source code.
+
+Note that this is not trying to be a yet another Hibernate tutorial.
+Although we'll stay in rather basic tricks, I expect the reader to have
+some experience on ORM and IT Mill Toolkit. The purpose of this tutorial
+is to show an example how to do simple Hibernate session handling in
+Toolkit application and explain some patterns how to entity objects can
+be tied into GUI.
+
+[[preparing-the-project]]
+Preparing the project
+~~~~~~~~~~~~~~~~~~~~~
+
+If you want want to learn by doing, it is time to put your hands on
+dirt. Create a new web application project in your favorite IDE, throw
+in latest `toolkit.jar` and all needed Hibernate related libraries.
+Prepare your database and configure Hibernate. Combo I chose when
+writing this article was Eclipse, WTP and MySQL 5, but any option should
+be fine.
+
+If you want to get started really easily, check out the Eclipse project
+from svn repository. This is done simply with subclipse plugin or via
+command line svn co http://dev.vaadin.com/svn/incubator/hbncontainer/.
+The project containtains embedded database( http://hsqldb.org/[HSQLDB]
+), all needed required libraries and the source code for the example
+project itself. That is an easy way to start experimenting with Toolkit
+and Hibernate. You will also need a servlet container, Tomcat is a good
+option.
+
+As I hate all xml configuration I created DB mappings with annotations.
+Below is the one and only entity class we'll be using in this example.
+Create it in and possibly test your Hibernate configuration with a
+simple test application.
+
+[source,java]
+....
+@Entity
+public class Workout {
+  @Id
+  @GeneratedValue(strategy=GenerationType.AUTO)
+  private Long id;
+  private Date date = new Date();
+  private String title = " -- new workout -- ";
+  private float kilometers;
+
+  public Workout() {}
+
+  public Long getId() {
+    return id;
+  }
+
+  private void setId(Long id) {
+    this.id = id;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public float getKilometers() {
+    return kilometers;
+  }
+
+  public void setKilometers(float kilometers) {
+    this.kilometers = kilometers;
+  }
+}
+....
+
+Also create a new Tookit application, configure it in web.xml.
+
+[[using-session-per-request-pattern]]
+Using session-per-request pattern
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Proper session handling in Hibernate backed applications is often the
+most difficult problem. Use cases vary from by architecture and load.
+Hibernate is known to be quite strict on session and transaction
+handling, so to save yourself from a headache, I'd suggest you to make
+it right. There is a lot's of good documentation about different session
+handling patterns in hibernate.org.
+
+Using session-per-request pattern is often a safe bet for Toolkit
+application. It is maybe the most common pattern among all Servlet based
+applications. When doing data manipulation we'll use the same session
+during the whole request and in the end of the request make sure that
+session and transaction is properly finalized. When implemented
+properly, session-per-request pattern guarantees that number of
+Hibernate sessions is in control, sessions are properly closed and
+sessions are flushed regularly. A good combo of characteristics for a
+multi-user web application.
+
+By Toolkits nature, session-per-request pattern is actually kind of
+wrong. Toolkit is a general purpose GUI framework and programmer does
+not need to think about requests and responses at all. Actually Toolkit
+applications and components don't know nothing about requests. It its
+the web terminal that does all the web magic. Another option is to use
+session-per-application or even session-per-transaction like one would
+do with SWING or other destop application. Always evaluate your
+requirements, use cases and available computing resources to have the
+optimal session handling pattern.
+
+To ensure that we are using only one Hibernate session per http request
+is the easy part. We can use Hibernates `getCurrentSession()` to retrieve
+thread local session instance. As we always want to actually use the
+session I build a helper method that will also begin a database
+transaction. In our *WorkoutLog* we will always be using this method to
+get session reference.
+
+[source,java]
+....
+/**
+ * Used to get current Hibernate session. Also ensures an open Hibernate
+ * transaction.
+ */
+public Session getSession() {
+  Session currentSession = HibernateUtil.getSessionFactory()
+      .getCurrentSession();
+  if(!currentSession.getTransaction().isActive()) {
+    currentSession.beginTransaction();
+  }
+  return currentSession;
+}
+....
+
+Closing is bit more tricky. One way around would be to use a servlet
+filter. You can find examples of this from hibernate.org. But we'll keep
+toolkits terminal independence in mind and don't pollute our program
+with servlet specific code. To properly implement session-per-request
+pattern we'll need to familiarize ourselves to a feature in Toolkits
+terminal. Ideally toolkit programmer don't need to care about terminal
+at all, but now we need to hook some logic into the end of (http)
+request that don't exist for the application. For the pattern it is
+essential that session finalization is done always and and after all
+hibernate related stuff is done. With event based programming model
+there is no way we can detect the last database action in the actual
+program code.
+
+The feature we need is `TransactionListeners`. `TransactionListeners` are
+attached to `ApplicationContext` which corresponds to http session in our
+current web terminal. `TransactionListeners` are notified right before
+and right after the clients state is synchronized with server. The
+transaction end is what we need here. I'll attach the transaction
+listener in the applications `init()` like this:
+
+[source,java]
+....
+getContext().addTransactionListener(new TransactionListener() {
+  public void transactionEnd(Application application,
+      Object transactionData) {
+    // Transaction listener gets fired for all contexts
+    //  (HttpSessions) toolkit applications, checking to be this one.
+    if (application == WorkoutLog.this) {
+      closeSession();
+    }
+  }
+
+  public void transactionStart(Application application, Object transactionData) {
+  }
+});
+....
+
+In `closeSession()` the usual Hibernate sessions finalization is done.
+
+[source,java]
+....
+private void closeSession() {
+  Session sess = HibernateUtil.getSessionFactory().getCurrentSession();
+  if(sess.getTransaction().isActive()) {
+    sess.getTransaction().commit();
+  }
+  sess.flush();
+  sess.close();
+}
+....
+
+The sequence diagram below shows how Session handling works with this
+pattern during one (http) request. It is an imaginary server visit that
+fires to event listeners. The first one does some listing and the latter
+re-attaches detached pojo. Note that the second database/Hibernate
+action uses the same Session object as the first one. Note that function
+names are not real ones, but trying to describe the process better.
+
+image:img/sd_s_per_r.gif[Session handling sequence diagram]
+
+Due Toolkit applications do have state, pattern can be defined more
+strictly as a session-per-request-with-detached-objects pattern. As the
+session closes quite often, our entity objects are most likely detached
+by the time we are updating them. So when we have our changes to entity
+object done, it is time to re-attach it to current session to persist
+changes into database. An example of that is below:
+
+[source,java]
+....
+run.setDate((Date) date.getValue());
+run.setKilometers(Float.parseFloat(kilomiters.getValue().toString()));
+run.setTitle((String) title.getValue());
+getSession().merge(run);
+....
+
+[[attaching-pojos-ui]]
+Attaching POJO's UI
+~~~~~~~~~~~~~~~~~~~
+
+In this chapter I'll discuss briefly some options to implement basic
+CRUD (Create, Read, Update, Delete) actions for our DB backed Workout
+objects.
+
+[[listing-objects]]
+Listing Objects
+^^^^^^^^^^^^^^^
+
+If you are learning by doing, I'd suggest that you manually insert some
+rows to your db at this point. Listing an empty database will be quite
+boring.
+
+The most natural way to list our simple Workout object is to put them
+into Table component. To do this there is an easy way and an the right
+way. We'll start with the easy one, but I suggest to use the latter in
+real applications. The code below (the "easy" way) is not in the
+*WorkoutLog* app at all, but you can try it if you want.
+
+[source,java]
+....
+// prepare tables container
+table.addContainerProperty("date", Date.class, null);
+table.addContainerProperty("kilometers", Float.class, null);
+table.addContainerProperty("title", String.class, null);
+
+// list all Workouts
+List workouts = getSession().createCriteria(Workout.class).list();
+for (Iterator iterator = workouts.iterator(); iterator.hasNext();) {
+  Workout wo = (Workout) iterator.next();
+  // add item to table and set properties from POJO
+  Item woItem = table.addItem(wo.getId());
+  woItem.getItemProperty("date").setValue(wo.getDate());
+  woItem.getItemProperty("kilometers").setValue(wo.getKilometers());
+  woItem.getItemProperty("title").setValue(wo.getTitle());
+}
+....
+
+In the above example we are using Table's default container,
+`IndexedContainer`. It is a good general purpose container, but using it
+always is not a good option. You have to load the data into it by
+yourself and configure properties etc. It also stores everything in
+memory. In our example it may start to be a problem if you
+do three workouts everyday, live 100 years old and memory chips don't
+get cheaper in the future. But in real application we might really have
+millions of records in DB. I really wouldn't suggest to load that table
+into memory anymore.
+
+As you may guess the way is to build our own container for Workouts.
+Building good containers is one of the most difficult tasks in Toolkit
+programming. There are number of different sub interfaces one might want
+to implement and a whole bunch of methods code. Luckily one can't safely
+throw `UnsupportedOperationExeception` for many of those. It is a boring
+tasks, but it often pays it back later. When you have your container
+ready, it hides lots of DB access from program logic and can be used for
+many components (Selects, Trees, Tables etc). With your own customized
+container you can also tune it to work as you want (memory-consumption
+versus speed etc).
+
+As building a full-featured is not in the scope of this article, it is
+time to throw in a nice helper class called `HbnContainer`. It takes a
+Hibernate entity class and a strategy to get Hibernate session in its
+constructor. It is indexed, ordered, sortable, had a limited supports
+adding/removing items and even ought to be fairly well scalable (by
+number of rows in DB). It is not part of Toolkit as we don't consider it
+ready for framework yet, but we hope to have something similar in the
+core Toolkit in later releases. But feel free to use it in you own
+projects.
+
+With `HbnContainer` loading table with Workouts simplifies quite a bit.
+We need to implement `HbnContainer`.`SessionManager` interface, but it is
+rather easy task as we already have getSession named function in our
+*WorkoutLog*. Create and add table to your application, load its content
+with following code snippet and you should have a Workout listing on
+your screen.
+
+[source,java]
+....
+table.setContainerDataSource(new HbnContainer(Workout.class, this));
+....
+
+[[creating-workouts]]
+Creating workouts
+^^^^^^^^^^^^^^^^^
+
+Now that we have listing we might want to add some rows via our web
+interface. To create a new Workout instance and store it in to DB we
+have to do the usual Hibernate stuff: instantiate POJO and attach it to
+session. But as I hinted earlier, having a good container will help us
+to do it even simpler. `HbnContainer` supports adding items with the most
+simplest method `addItem()`.
+
+If you look into the implementation, it does all the usual Hibernates
+stuff and returns items generated identifier. In addition this it also
+notifies appropriate listeners that the content of table has changed. So
+by using containers `addItem()` method instead of doing DB persist
+ourselves we don't need to worry about UI updates. Table listens to its
+container changes and changes gets sent to web browsers.
+
+[[updates-and-deletes]]
+Updates and deletes
+^^^^^^^^^^^^^^^^^^^
+
+Building an editor for our Workout object is a straight forwarded coding
+task. You may organize your code just like you want. `WorkoutEditor`
+class is a simple example implementation that shows and editor in
+floating window. It has fields for workouts properties and it can be
+loaded with Workout instance or with an identifier. In `WorkoutLog` I
+attached a `ValueChangeListener` into table to open editor when user
+clicks a row in table. Save and delete buttons in `WorkoutEditor`
+delegates work back to methods in main application. Delete uses
+containers method and behind the scenes a normal Hibernate object
+deletion. When saving we just reattach detached object using `merge()`.
+
+To avoid "monkey-coding" I'll show one can to use toolkits advanced
+features to automatically create editable fields for items. The
+`WorkoutEditor` class could have created its fields automatically by
+using appropriate Item and a Form component. Also Table supports
+automatic field generation, so why not edit workouts directly in our
+main object listing?
+
+All we need to do is to use `setEditable()` method. In `WorkoutLog` there
+is a button that toggles this feature. Clicking it make table editable,
+clicking it again shows data only. Can't imagine any simpler way to do
+the 'U' part of CRUD.
+
+Both Form and Table components use `FieldFactory` interface to
+automatically create fields for Items properties. There is a simple
+default factory that you almost certainly want to modify for your needs.
+As an example I extended it to set proper resolution for date field and
+also did some other fine tuning.
+
+If you investigate the code a bit you might wonder how the database is
+updated now as we don't seem to call `merge()` or any other method to
+re-attached POJO. When field is updated it knows only about its
+underlaying Property. In this case it is `EntityItemProperty` built by
+`HbnContainer`. Field calls its `setValue()` method and that is where the
+underlaying POJO is re-attached into Hibernate session.
+
+[[adding-custom-columns-to-hbncontainer]]
+Adding custom columns to HbnContainer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This last bonus chapter is bit out of scope of the article. But as
+updating is so easy in Table we could ditch our `WorkoutEditor`. But then
+arises a question how to implement deletion. An option is to use Tables
+selection feature and "Delete selected" button. Another one is to use
+context menu option. This is also done in `WorkoutLog`. Both are good
+options, but someday someone will be asking how to add delete button on
+each row. So lets discuss that right away.
+
+Ideologically this is adding a new property to our items. We definitely
+don't want to pollute our entity object by adding `public Button
+getDelete()` to our Workout object. The right place to implement this is
+in custom Container and Item. I implemented an example of this by
+extending `HbnContainer` to `WorkoutListingWithSteroids`. It adds a column
+"actions" (or container property if we are talking "Toolkit") which is a
+layout containing two buttons.
+
+Another possibly little bit easier method is to use recently introduced
+feature in Table component called `ColumnGenerator`. *WorkoutLog* (in svn)
+has an example of this method too.
+
+Check out the example code if you want this kind of behavior.
+
+[[summary]]
+Summary
+~~~~~~~
+
+Popular open source ORM tool Hibernate is a perfect companion for IT
+Mill Toolkit. Finding the right way to handle session in your
+application is a often the most critical task. Session-per-request
+pattern is a safe choice for Toolkit application, but not the only
+option. DB backed entity objects are used in a usual manner. To use more
+advanced features of toolkit, you'll want to use a custom built
+container-item-property set. ORM is never easy, but it is not a rocket
+science if you use tested industry proven patterns. And if your
+application is going to be a big or old, I can guarantee that you will
+have a nice ROI for hours you spend on it (ORM).

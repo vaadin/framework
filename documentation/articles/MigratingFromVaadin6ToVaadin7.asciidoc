@@ -1,0 +1,648 @@
+[[migrating-from-vaadin-6-to-vaadin-7]]
+Migrating from Vaadin 6 to Vaadin 7
+-----------------------------------
+
+For migration to Vaadin 7.1,  see
+link:MigratingFromVaadin7.0ToVaadin7.1.asciidoc[Migrating
+from Vaadin 7.0 to Vaadin 7.1]
+
+[[getting-started]]
+Getting Started
+~~~~~~~~~~~~~~~
+
+Most Vaadin 7 APIs are compatible with Vaadin 6, but there are some
+changes that affect every application.
+
+Moving to Vaadin 7 brings a number of features designed to make the
+lives of developers easier. It is a major version where we could improve
+(and break) some parts of the API that have been stagnant and in need of
+improvement for years.
+
+Fear not, though, as the vast majority of the API is unchanged or
+practically so - many parts even for the last 10 years apart for some
+package name changes. While every application requires some migration
+steps, the minimal steps needed for many applications are simple enough,
+although a few more changes can be useful to benefit from some of the
+new features such as improvements to data binding.
+
+The first step is to *update Vaadin libraries*. While Vaadin 6 had a
+single JAR and separate GWT JARs, Vaadin 7 is packaged as multiple JARs
+that also include GWT. The easiest way to get all you need is to use Ivy
+(see below in the section on updating an existing Eclipse project) or
+Maven (see below on updating a Maven project). If you are using the latest version of
+the Vaadin Eclipse plug-in, upgrading the facet version creates an Ivy
+configuration.
+
+The first code change that applies to every Vaadin 6 application
+concerns the *com.vaadin.Application* class - it *exists no more*. The
+main entry point to your application is now a *com.vaadin.ui.UI*, which
+replaces Application and its main window. When switching to UI, you also
+get multi-window support out of the box, so bye bye to any old hacks to
+make it work. On the flip side, a new UI is created on page reload. If
+you prefer to keep the UI state over page reloads in the same way Vaadin
+6 does, just add *@PreserveOnRefresh* annotation on your UI class.
+
+For minimal migration, though, it is possible to replace Application
+with *LegacyApplication* and its main Window with *LegacyWindow* and
+postpone a little dealing with UIs, but when migrating to UIs, you get
+more out of the box. The class *Window* is now only used for
+"sub-windows" (windows floating inside the page) , not "browser level"
+windows or tabs (the whole web page).
+
+An example should clarify things better than lengthy explanations,
+so:Vaadin 6:
+
+[source,java]
+....
+package com.example.myexampleproject;
+
+import com.vaadin.Application;
+import com.vaadin.ui.*;
+
+public class V6tm1Application extends Application {
+  @Override
+  public void init() {
+    Window mainWindow = new Window("V6tm1 Application");
+    Label label = new Label("Hello Vaadin!");
+    mainWindow.addComponent(label);
+    setMainWindow(mainWindow);
+    setTheme(“mytheme”);
+  }
+}
+....
+
+Vaadin 7:
+
+[source,java]
+....
+package com.example.myexampleproject;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.*;
+
+@Theme("mytheme")
+public class MyApplicationUI extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout view = new VerticalLayout();
+    view.addComponent(new Label("Hello Vaadin!"));
+    setContent(view);
+  }
+}
+....
+
+In addition, replace `com.vaadin.terminal.gwt.server.ApplicationServlet`
+with com.vaadin.server.*VaadinServlet* in web.xml and its parameter
+"application" with "*UI*" pointing to your UI class, and the application
+is ready to go. Likewise, *ApplicationPortlet* has become *VaadinPortlet*.
+
+Some package names have also been changed, but a simple import
+reorganization in your IDE should take care of this.
+
+If you have a custom theme, import e.g.
+"../reindeer/*legacy-styles.css*" instead of "../reindeer/styles.css".
+The theme is now selected with an *@Theme* annotation on your UI class
+rather than a call to *setTheme()*, the usage should be clear from the
+example above.
+
+Most remaining issues should show up as compilation errors and in most
+cases should be easy to fix in your IDE.
+
+Now you should be ready to compile your widgetset (if any) and take the
+application for a first test drive. If you have customized themes, they
+will probably also need other updates - see the section on themes below.
+
+Note that support for some older browser versions - including IE6 and
+IE7 - has been dropped in Vaadin 7. If you absolutely need them, Vaadin
+6 will continue to support them until its planned end of life (June
+2014, five years from release of 6.0).
+
+If you have problems with specific topics, see the related sections of
+the migration guide.
+
+In case you need more help with the migration, the Vaadin team also
+provides https://vaadin.com/services#professionalservices[professional
+services].
+
+[[converting-an-eclipse-project]]
+Converting an Eclipse project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have an existing Vaadin 6 Eclipse project, the easiest way to get
+up and running with Vaadin 7 is to switch to *Ivy for dependency
+management*. In the project properties, select Project Facets and change
+the Vaadin plug-in version to 7.0. If necessary, upgrade also the Java
+and Dynamic Web Module facets. _Make sure you use the latest version of
+the *Eclipse plug-in* from the update site
+https://vaadin.com/framework/get-started#eclipse for this, and note that currently
+installing it also requires that the IvyDE update site is configured. We
+will attempt to eliminate this additional complication soon._
+
+Ivy dependency management can also be configured by hand by adding the
+files ivy.xml and ivysettings.xml to the root of the project and using
+them from Eclipse (with the IvyDE plug-in), Ant or other build system.
+For examples of the two files, see e.g.
+http://dev.vaadin.com/svn/integration/eclipse/plugins/com.vaadin.integration.eclipse/template/ivy/[here]
+and update VAADIN_VERSION in the file ivy.xml.
+
+Note that Vaadin 7 requires *Java version 6* or higher and *servlet
+version 2.4* or higher (or portlet 2.0 or higher). If your project is
+set up for older versions, update the corresponding facets.
+
+[[converting-a-maven-project]]
+Converting a Maven project
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Converting a *Maven* project is usually quite straightforward: replace
+the Vaadin dependency with dependencies to the needed Vaadin artifacts,
+remove any dependencies on GWT JARs, replace the GWT plug-in with the
+Vaadin plug-in and recompile everything. The easiest way to get the
+required sections and dependencies is to create a new project from the
+vaadin-application-archetype and copy the relevant sections from it to
+your project.
+
+Note that Vaadin 7 requires Java version 6 or higher and servlet version
+2.4 or higher (or portlet 2.0 or higher). If your project is set up for
+older versions, update the corresponding dependencies and compiler
+version.
+
+[[content-for-windows-panels-and-more]]
+Content for Windows, Panels and More
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In Vaadin 6, Window, Panel and some other components had a *default
+layout* and addComponent() etc. As this often caused confusion and
+caused layout problems when unaware of the implicit layout or forgetting
+to set its layout parameters, Vaadin 7 now requires *explicitly setting
+the content*. See See e.g.
+link:CreatingABasicApplication.asciidoc[Creating
+a basic application]
+
+If you want to minimize the impact of this on the look and theme of an
+old application, you can reproduce the *old structure* simply by setting
+a `VerticalLayout` (with margins enabled) as the content and add your
+components to it rather than the Panel/UI/Window.
+
+Note that the class *Window* is now only used for sub-windows, not
+browser level windows.
+
+Information related to browser windows in now in *Page*, including
+browser window size, URI fragment and page title. Setting the browser
+location (redirecting to a URL) can also be performed via Page.
+
+The API for *Notifications* has also changed, static methods
+`Notification.show()` are now used instead of `Window.showNotification()`.
+
+The current *UI*, *Page*, *VaadinService*, *VaadinRequest* and *VaadinResponse*
+instances are easily accessible using *UI.getCurrent()*,
+*Page.getCurrent()* etc. The session can be obtained using
+*UI.getSession()* and the request and response are available from
+*VaadinService.getCurrent()*. Thus, no more need for an explicit
+*ThreadLocal* to keep track of them.
+
+VaadinSession also provides the new entry point for *locking* access to
+Vaadin components from *background threads*, replacing the old approach
+of synchronizing to the Application instance - see the javadoc for
+*VaadinSession.lock()* for more details.
+
+To customize the creation of UIs - for instance to create different UIs
+for mobile and desktop devices -
+*link:CreatingAnApplicationWithDifferentFeaturesForDifferentClients.asciidoc[a
+custom UIProvider]* can be used.
+
+[[forms-and-data-binding]]
+Forms and Data Binding
+~~~~~~~~~~~~~~~~~~~~~~
+
+What enterprise applications are all about is data, and the data entry
+side in Vaadin 6 has been lacking in customizability. While it has been
+possible to create arbitrary forms for data input, many situations have
+required either bypassing the Form mechanism or using complicated tricks
+to customize their layouts etc.
+
+Although *Form* is still there in Vaadin 7 and a lot of old code for
+data binding works mostly as is, version 7 brings something better:
+
+* *FieldGroup* supporting *automated data binding*, whether for a hand-designed
+form or
+link:AutoGeneratingAFormBasedOnABeanVaadin6StyleForm.asciidoc[creating
+the fields automatically]
+
+* *link:CreatingATextFieldForIntegerOnlyInputUsingADataSource.asciidoc[typed
+fields and properties]*
+
+* *link:CreatingYourOwnConverterForString.asciidoc[converters]*,
+both
+link:ChangingTheDefaultConvertersForAnApplication.asciidoc[automatic
+via ConverterFactory] and
+link:CreatingATextFieldForIntegerOnlyInputWhenNotUsingADataSource.asciidoc[explicitly set]
+
+* improved *validation* (performed on data model values after
+conversion) - see e.g.
+link:UsingBeanValidationToValidateInput.asciidoc[bean validation example]
+
+* and more
+
+If you want to keep using the old mechanisms, just note that e.g.
+*TextField* now has the type String, and automatic conversions are applied
+as well as *validation* performed on values converted to the *data model
+type*. You can migrate data entry views form by form.
+
+The ancient *QueryContainer* has been removed, so it is time to switch
+to *SQLContainer* or some other container implementation.
+
+If you are using a custom implementation of *Container.Indexed*, there
+is one more method to implement - see the javadoc of *getItemIds(int,
+int)* for details and a utility making implementing it easy.
+
+*Property.toString()* should not be used to try to get the value of the
+property, use *Property.getValue()* instead.
+
+[[add-ons]]
+Add-ons
+~~~~~~~
+
+If your project relies on add-ons from Vaadin Directory, note that not
+all of them have been updated for Vaadin 7, and a few might only be
+compatible with older Vaadin 7 beta versions. *Check the add-ons* you
+use before committing to migration.
+
+You may need to click "*Available for 7*" on the add-on page to get the
+correct add-on version.
+
+You can see a list of add-ons with a version available for Vaadin 7 using https://vaadin.com/directory/search[the search],
+although some of them might only be compatible with older alpha and beta
+versions of Vaadin 7 at the moment.
+
+Note also that a handful of add-ons you might have used are now obsolete
+as e.g. *CustomField* is integrated in Vaadin 7.
+
+[[widgetset]]
+Widgetset
+~~~~~~~~~
+
+As long as you use the *correct version of* the Eclipse or Maven
+*plug-in* to compile your widgetset and remove any old GWT libraries
+from your classpath, not much changes for widgetsets.
+
+The current default widgetset is *com.vaadin.DefaultWidgetSet* and
+should be inherited by custom widgetsets, although
+*com.vaadin.terminal.gwt.DefaultWidgetset* still exists for backwards
+compatibility. *DefaultWidgetSet* is also used on portals, replacing
+*PortalDefaultWidgetSet*.
+
+If you are compiling your widgetset e.g. with Ant, there are some
+changes to the class to execute and its parameters. The class and
+parameters to use are now "com.google.gwt.dev.Compiler -workDir (working
+directory) -war (output directory) (widgetset module name)" with
+optional additional optional parameters before the module name.
+
+If you have optimized your widgetset to limit what components to load
+initially, see
+link:OptimizingTheWidgetSet.asciidoc[this
+tutorial] and the
+https://vaadin.com/directory/component/widget-set-optimizer[WidgetSet
+Optimizer add-on].
+
+[[themes]]
+Themes
+~~~~~~
+
+The *HTML5 DOCTYPE* is used by Vaadin 7, which can affect the behavior
+of some CSS rules.Vaadin 7 brings a new option to create your themes,
+with SCSS syntax of *SASS* supporting *variables, nested blocks and
+mix-ins* for easier reuse of definitions etc.
+
+To get your old application running without bigger changes, just import
+e.g. "../reindeer/*legacy-styles.css*" instead of
+"../reindeer/styles.css" and take the application for a spin. There will
+most likely be some changes to be done in your theme, but the main parts
+should be there.
+
+The themes also support *mixing components from multiple themes* and
+using multiple applications with *different themes on the same page*,
+which can be especially useful for portlets. However, these depend on
+fully migrating your themes to the SCSS format with a theme name
+selector.
+
+To take advantage of the new features, see
+link:CreatingAThemeUsingSass.asciidoc[Creating
+a theme using sass] and
+link:CustomizingComponentThemeWithSass.asciidoc[Customizing
+component theme with Sass].
+
+Note that the SCSS theme needs to be *compiled* to CSS before use - in
+development mode, this takes place automatically on the fly whenever the
+theme is loaded, but when moving to production mode, you need to run the
+theme compiler on it to produce a pre-compiled static theme.
+
+link:WidgetStylingUsingOnlyCSS.asciidoc[CSS
+can be used to style components] somewhat more freely than in Vaadin 6.
+
+The DOM structure of several layouts has changed, which might require
+changes to themes for layouts. See also the section on layouts below.
+
+[[navigation]]
+Navigation
+~~~~~~~~~~
+
+In addition to low-level support for handling URI fragments Vaadin 7
+also provides a higher level *navigation* framework, allowing you to
+focus on the content of your views rather than the mechanics of how to
+navigate to them.
+
+The best way to get acquainted with the new navigation features is to
+check the tutorials on
+link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[creating
+a bookmarkable application],
+link:UsingParametersWithViews.asciidoc[using
+parameters with views],
+link:AccessControlForViews.asciidoc[access
+control for views] and
+link:ViewChangeConfirmations.asciidoc[view
+change confirmations].
+
+When logging out a user, you can use *Page.setLocation()* to redirect
+the user to a suitable page.
+
+[[extending-the-servlet]]
+Extending the Servlet
+~~~~~~~~~~~~~~~~~~~~~
+
+As ApplicationServlet moved to history and is replaced by
+*VaadinServlet*, many customizations you have made to it need a rewrite.
+
+The most common customizations:
+
+* link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing
+the bootstrap page]: JavaScript, headers, ...
+* Add-ons using customized servlets for other purposes (e.g. customizing
+communication between client and server) probably need more extensive
+rework
+
+Note also that *TransactionListener*, *ServletRequestListener* and
+*PortletRequestListener* have been removed.
+
+Many things that used to be taken care of by *ApplicationServlet* are now
+distributed among *VaadinServletService*, *VaadinSession*, *VaadinService*
+etc. You can get a *VaadinSession* with *Component.getSession()* and
+*VaadinService* e.g. with *VaadinSession.getService()*.
+
+System messages that used to be configured by "overriding" a static
+method *Application.getSystemMessages()* are now set in *VaadinService*
+using a *SystemMessagesProvider*.
+
+[[client-side-widgets]]
+Client side widgets
+~~~~~~~~~~~~~~~~~~~
+
+For add-on authors and creators of custom widgets, the biggest changes
+in Vaadin 7 have perhaps taken place on the client side and in
+client-server communication.
+
+The first big change is a separation of the client side UI *widgets* and
+the code handling communication with the server (*Connector*). The
+familiar VLabel is still the client side widget corresponding to the
+server side component Label, but the communication part has been split
+off into LabelConnector. The annotations linking the client side and the
+server side have also changed, now the LabelConnector has an *@Connect*
+annotation linking it to the server side component Label.
+https://vaadin.com/book/vaadin7/-/page/architecture.client-side.html[the
+book] provides some background and the tutorial on
+link:CreatingASimpleComponent.asciidoc[creating
+a simple component] shows an example.
+
+The connector communicates with the server primarily via shared
+state from the server to the client and **RPC
+calls **link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[from
+client to server] and
+link:UsingRPCToSendEventsToTheClient.asciidoc[from
+server to client], with a larger set of supported data types. For
+component containers,
+link:CreatingASimpleComponentContainer.asciidoc[the
+hierarchy of the contained components is sent separately].
+
+The old mechanism with UIDL, *paintContent()* and *changeVariables()* is
+still there for a while to ease migration, but it is recommended to
+update your components to the new mechanisms, which also tend to result
+in much cleaner code. Using the old mechanisms requires implementing
+*LegacyComponent*.
+
+There are also new features such as support for *Extensions* (components
+which
+link:CreatingAUIExtension.asciidoc[extend
+the UI] or
+link:CreatingAComponentExtension.asciidoc[other
+components] without having a widget in a layout) and
+link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[support
+for JavaScript], also for
+link:IntegratingAJavaScriptComponent.asciidoc[implementing
+components] and
+link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[extensions],
+which might simplify the implementation of some components. Shared state
+and RPC can also be used from JavaScript, and there are other techniques
+for client-server communication.
+
+*Package names* for the client side have changed but a simple import
+reorganization by the IDE should be able to take care of that, the new
+packages are under *com.vaadin.client.ui*.
+
+If you have implemented a *component that contains other components*
+(HasComponents, ComponentContainer) or have client side widgets which do
+size calculations etc, see the layouts chapter - these should now be
+much simpler to implement than previously, although much of custom
+layout widgets will probably need to be rewritten.
+
+A final note about client side development:
+*https://vaadin.com/blog/vaadin-and-superdevmode[SuperDevMode]*
+has been integrated to Vaadin 7, eliminating the need for browser
+plug-ins in many cases when debugging client side code.
+
+[[migration-steps-quick-and-dirty]]
+Migration steps (quick and dirty)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Create a connector class for the add-on
+* Extend *LegacyConnector*, override the *getWidget()* method, change its
+signature to return *VMyWidget* and implement it as return *(VMyWidget)
+super.getWidget();*
+* Replace the *@ClientWidget(VMyWidget.class)* annotation (on the
+server-side component) with *@Connect(MyServerSideComponent.class)* on the
+connector class
+* Remove the call to *super.updateFromUIDL(...)* in
+*VMyWidget.updateFromUIDL(...)* if no such method exists in the
+superclass.
+* If the widget has implemented *setHeight* and *setWidth*, make the
+connector implement *SimpleManagedLayout* and move the layout logic to the
+*layout()* method.
+* The actual sizes of the widget is available through
+*getLayoutManager().getOuterHeight(getWidget().getElement())* and similar
+for the width.
+* If the widget implements *ContainerResizedListener*, make the connector
+implement *SimpleManagedLayout* and call *getWidget().iLayout()* from the
+*layout()* method.
+* Be prepared for problems if you are doing layouting in *updateFromUIDL*
+as the actual size of a relatively sized widget will most likely change
+during the layout phase, i.e. after *updateFromUIDL*
+
+The connector class should look like
+
+[source,java]
+....
+@Connect(MyComponent.class)
+public class MyConnector extends LegacyConnector {
+  @Override
+  public VMyWidget getWidget() {
+    return (VMyWidget) super.getWidget();
+  }
+}
+....
+
+* Implement the interface *LegacyComponent* in the server side class
+* If your widget has not delegated caption handling to the framework
+(i.e. used *ApplicationConnection.updateComponent(..., ..., false)* you
+should override *delegateCaptionHandling()* in your connector and return
+false. Please note, however, that this is not recommended for most
+widgets.
+
+[[basic-widget-add-on-using-vaadin-7-apis]]
+Basic widget add-on using Vaadin 7 APIs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Note: migration to new communication mechanisms etc. should be performed
+step by step.These instructions continue from where the quick and dirty
+migration ended.
+
+* Intermediate step: move *updateFromUIDL(...)* implementation from the
+widget to the connector
+* Change the visibility of any methods and fields it accesses in the
+widget to "package"
+* Intermediate step: design an API for the widget that does not access
+Vaadin communication mechanisms directly
+* Use listeners for events from the widget to the server
+* Use setters and action methods for server to client modifications
+* Convert state variables and their transmission in
+*paintContent()*/*updateFromUIDL()* to use shared state
+* Convert one-time actions (events etc.) to use RPC
+* Remove "implements LegacyComponent" from the server-side class and the
+methods *paintContent()* and *changeVariables()*
+* Remove "implements Paintable" or "extends LegacyConnector" and
+*updateFromUIDL()* from the client-side connector class (extend
+*AbstractComponentConnector* instead of *LegacyConnector*)
+
+[[layouts-and-component-containers]]
+Layouts and Component Containers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+While the server side API of various layouts has not changed much, the
+implementations on the client side have. With the currently supported
+browsers, much more can now be calculated by the browser, so Vaadin
+layouts often do not need to measure and calculate sizes.
+
+Most of the differences are only relevant to those who develop client
+side component containers, but a few can also affect other developers.
+
+Among the changes affecting others than layout developers, *CssLayout*
+now consists of a single DIV instead of three nested elements, and
+link:WidgetStylingUsingOnlyCSS.asciidoc[CSS
+can be used to do more customization] than in previous Vaadin versions.
+Also other layouts have changed in terms of their *DOM structure* on the
+client, which might require changes to themes. The interface
+*MarginHandler* is now only implemented by layouts that actually support
+it, not in *AbstractLayout*, and *margins* should be set in CSS for
+*CssLayout*.
+
+When implementing components that are not full-blown layouts (with
+*addComponent()*, *removeComponent()* etc.) but should contain other
+components, the simpler interface *HasComponents* should be used instead
+of *ComponentContainer*.
+
+For those implementing new component containers or layouts, see the
+related tutorials
+link:CreatingASimpleComponentContainer.asciidoc[Creating
+a simple component container] and
+link:WidgetStylingUsingOnlyCSS.asciidoc[Widget
+styling using only CSS].
+
+[[migration-steps-for-componentcontainers]]
+Migration steps for ComponentContainers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+These continue from where the add-on migration steps above left off
+
+* Component containers (e.g. layouts) require more changes as the
+underlying layout mechanisms and updates have changed
+* Client-side child connectors are now created by the framework
+* Hierarchy change events. Guaranteed to run before child calls
+*updateCaption*. Create any child slots here and attach the widget.
+* Don't paint children
+* Don't call *child.updateFromUidl*
+* Update caption management (called before *updateFromUidl*, from state
+change event listener)
+
+[[miscellaneous-changes]]
+Miscellaneous Changes
+~~~~~~~~~~~~~~~~~~~~~
+
+Many overloaded *addListener()* methods have been deprecated. Use
+*addClickListener()*, *addValueChangeListener()* etc. instead of them,
+reducing ambiguity and the need for explicit casts.
+
+Many *constants* have been replaced with enums, although in most cases
+the old names refer to enum values to ease migration.
+
+If using *background threads, locking* has changed: there is no longer
+an *Application* class to synchronize to, but *getSession().lock()* etc.
+should be used - see the javadoc for details on its correct use, using a
+correct try-finally is crucial for building reliable multi-threaded
+Vaadin applications.
+
+*ApplicationResource* has been replaced with *ConnectorResource*, taking
+different parameters.
+
+*URIHandler* has been replaced with *RequestHandler*. See also the related
+class *DownloadStream*.
+
+*JavaScript* can now be executed using *JavaScript.execute()*.
+
+Various methods that were *deprecated* until 6.8 etc. have been removed,
+and some classes and methods have been deprecated. In most of those
+cases, the deprecation comment or javadoc indicates what to use as a
+replacement.
+
+AbstractComponent.*isEnabled()* and *isVisible()* do not take the state
+of the parent component into account, but only inquire the state set for
+the component itself. A component inside a disabled component still is
+disabled, and one inside an invisible component is not rendered on the
+browser.
+
+No information is sent to the browser about components marked as
+*invisible* - they simply do not exist from the point of view of the
+client.
+
+[[components]]
+Components
+~~~~~~~~~~
+
+*Button* is no longer a Field and does not have a constructor that takes
+a method name to call, use anonymous inner class instead. Because of
+this, *CheckBox* is no longer a Button and uses a *ValueChangeListener*
+instead of a *ClickListener*.
+
+*DateField* no longer supports milliseconds and its default resolution
+is day.
+
+*Label* now supports converters.
+
+*RichTextArea* custom formatting methods removed, use a
+*PropertyFormatter* or a *Converter* instead of overriding formatting
+methods.
+
+[[need-help]]
+Need help?
+----------
+
+If you need any advice, training or hands on help in migrating your app
+to Vaadin 7, please be in touch with sales@vaadin.com. Vaadin team would
+be happy to be at your service.

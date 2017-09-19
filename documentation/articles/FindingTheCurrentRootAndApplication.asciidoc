@@ -1,0 +1,44 @@
+[[finding-the-current-root-and-application]]
+Finding the current root and application
+----------------------------------------
+
+There are many cases where you need a reference to the active
+`Application` or `Root`, for instance for showing notifications in a click
+listener. It is possible to get a reference to the component from the
+event and then a reference from the component to the `Root` but Vaadin
+also offers an easier way through two static methods:
+
+[source,java]
+....
+Root.getCurrent()
+Application.getCurrent()
+....
+
+For example when you want to show the name of the current Root class:
+
+[source,java]
+....
+Button helloButton = new Button("Say Hello");
+helloButton.addListener(new ClickListener() {
+  public void buttonClick(ClickEvent event) {
+    Notification.show("This Root is " + Root.getCurrent().getClass().getSimpleName());
+  }
+});
+....
+
+Similarly for `Application`, for instance to find out if the application
+is running in production mode:
+
+[source,java]
+....
+public void buttonClick(ClickEvent event) {
+  String msg = "Running in ";
+  msg += Application.getCurrent().isProductionMode() ?
+    "production" : "debug";
+  msg += " mode";
+  Notification.show(msg);
+}
+....
+
+*Note* that these are based on `ThreadLocal` so they won't work in a
+background thread (or otherwise outside the standard request scope).

@@ -1,0 +1,177 @@
+[[formatting-data-in-grid]]
+Formatting data in grid
+-----------------------
+
+Without any special configuration, Grid tries to find a `Converter` for
+converting the property value into a String that can be shown in the
+browser. The `ConverterFactory` configured for the session is used for
+this purpose. If no compatible converter is found, Grid will instead
+fall back to using `toString()` on the property value.
+
+[[cellstylegenerator]]
+CellStyleGenerator
+^^^^^^^^^^^^^^^^^^
+
+Grid does also provide a couple of mechanisms for fine-tuning how the
+data is displayed. The simplest way of controlling the data output is to
+use a `CellStyleGenerator` to add custom stylenames to individual cells,
+thus affecting which CSS rules from the theme are applied to each cell.
+
+[source,java]
+....
+grid.setCellStyleGenerator(new CellStyleGenerator() {
+  @Override
+  public String getStyle(CellReference cellReference) {
+    if ("amount".equals(cellReference.getPropertyId())) {
+      Double value = (Double) cellReference.getValue();
+      if (value.doubleValue() == Math.round(value.doubleValue())) {
+        return "integer";
+      }
+    }
+    return null;
+  }
+});
+
+getPage().getStyles().add(".integer { color: blue; }");
+....
+
+We have not yet defined any `Converter` or `Renderer` in this example. This
+means that Grid will use a `StringToDoubleConverter` to convert the Double
+values from the data source into Strings that are sent to the browser
+and displayed in each cell.
+
+To keep this example as simple as possible, we are dynamically injecting
+new CSS styles into the page. In a real application, it's recommended to
+instead add the styles to the theme since that helps with separation of
+concerns.
+
+[[renderer]]
+Renderer
+^^^^^^^^
+
+The next thing you can do to control how the data is displayed is to use
+a `Renderer`. The `Renderer` will receive the value from the data source
+property, possibly after it has been converted to the `Renderer`{empty}'s input
+type using a `Converter`. The `Renderer` is will then make sure the value
+gets show in an appropriate way in the browser. A simple renderer might
+just show the data as text, but there are also more complex `Renderer`{empty}s
+that e.g. show a numerical value as a progress bar.
+
+Will will use a `NumberRenderer` using a currency format to render the
+cell values for the `Amount` column. To do this, we simply create and
+configure it and then set it as the `Renderer` for the designated column.
+No `Converter` will be used in this case since `NumberRenderer` already
+knows ho to handle values of the type Double.
+
+[source,java]
+....
+NumberFormat poundformat = NumberFormat.getCurrencyInstance(Locale.UK);
+NumberRenderer poundRenderer = new NumberRenderer(poundformat);
+grid.getColumn("amount").setRenderer(poundRenderer);
+....
+
+[[converter]]
+Converter
+^^^^^^^^^
+
+The last way of controlling how data is displayed is to use a `Converter`.
+The framework will in most cases find and use a suitable `Converter`, but
+you can also supply your own if the default conversion is not what you
+need. The following example uses a custom `Converter` for the `Count` column
+to change the value into HTML strings with different HTML for even and
+odd counts. Grid will by default protect you from cross-site scripting
+vulnerabilities by not interpreting HTML in cell values. This can be
+overridden by setting the column to use a `HtmlRenderer` instead of the
+default `TextRenderer`. Both those renderers expect String values. Since
+we will not be editing any values, the Converter doesn't need to support
+changing the HTML strings back into integers.
+
+[source,java]
+....
+grid.getColumn("count").setConverter(new StringToIntegerConverter() {
+  @Override
+  public String convertToPresentation(Integer value, Class<? extends String> targetType, Locale locale)
+      throws Converter.ConversionException {
+    String stringRepresentation = super.convertToPresentation(value, targetType, locale);
+    if (value.intValue() % 2 == 0) {
+      return "<strong>" + stringRepresentation + "</strong>";
+    } else {
+      return "<em>" + stringRepresentation + "</em>";
+    }
+  }
+});
+
+grid.getColumn("count").setRenderer(new HtmlRenderer());
+....
+
+[[full-example]]
+Full example
+^^^^^^^^^^^^
+
+Putting all these pieces together, we end up with this class that uses
+the same data as in the link:UsingGridWithAContainer.asciidoc[Using
+Grid with a Container] example.
+
+[source,java]
+....
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import com.vaadin.annotations.Theme;
+import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.CellReference;
+import com.vaadin.ui.Grid.CellStyleGenerator;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.renderers.HtmlRenderer;
+import com.vaadin.ui.renderers.NumberRenderer;
+
+@Theme("valo")
+public class FormattingDataInGrid extends UI {
+
+  @Override
+  protected void init(VaadinRequest request) {
+    Grid grid = new Grid(GridExampleHelper.createContainer());
+
+    setContent(grid);
+
+    grid.setCellStyleGenerator(new CellStyleGenerator() {
+      @Override
+      public String getStyle(CellReference cellReference) {
+        if ("amount".equals(cellReference.getPropertyId())) {
+          Double value = (Double) cellReference.getValue();
+          if (value.doubleValue() == Math.round(value.doubleValue())) {
+            return "integer";
+          }
+        }
+        return null;
+      }
+    });
+
+    getPage().getStyles().add(".integer { color: blue; }");
+
+    NumberFormat poundformat = NumberFormat.getCurrencyInstance(Locale.UK);
+    NumberRenderer poundRenderer = new NumberRenderer(poundformat);
+    grid.getColumn("amount").setRenderer(poundRenderer);
+
+    grid.getColumn("count").setConverter(new StringToIntegerConverter() {
+      @Override
+      public String convertToPresentation(Integer value,
+            Class<? extends String> targetType, Locale locale)
+            throws Converter.ConversionException {
+        String stringRepresentation = super.convertToPresentation(
+            value, targetType, locale);
+        if (value.intValue() % 2 == 0) {
+          return "<strong>" + stringRepresentation + "</strong>";
+        } else {
+          return "<em>" + stringRepresentation + "</em>";
+        }
+      }
+    });
+
+    grid.getColumn("count").setRenderer(new HtmlRenderer());
+  }
+}
+....

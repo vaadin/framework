@@ -1,0 +1,272 @@
+[[using-phonegap-build-with-vaadin-touchkit]]
+Using PhoneGap Build with Vaadin TouchKit
+-----------------------------------------
+
+[.underline]#*_Note:_* _Vaadin Touchkit has been discontinued. A community-supported version is
+available https://github.com/parttio/touchkit[on GitHub]._#
+
+At first, using https://build.phonegap.com/[PhoneGap Build] to point to
+your Vaadin TouchKit apps seems like a breeze. Just create a simple
+`config.xml` and an `index.html` that redirects to your web site, and you
+have an app! Unfortunately, simply doing this is not robust. Mobile
+devices lose connectivity, and when they do your app not only stops
+working, it may appear to freeze up and have to be killed and restarted
+to get working again.
+
+With the release of TouchKit v3.0.2 though, there is a solution! This
+article summarizes this solution, which was worked out over months of
+trial and error on http://dev.vaadin.com/ticket/13250[Vaadin ticket
+13250].
+
+'''''
+
+First, server side you need TouchKit v3.0.2. (The needed enhancements
+and fixes should roll into _v4.0_ at some point, but as of _beta1_ it isn't
+there.) You also need to ensure that your VAADIN directory resources are
+being served up by a servlet extending `TouchKitServlet`. If you have a
+main application extending `VaadinServlet`, this needs to be changed to
+`TouchKitServlet`.
+
+'''''
+
+When your PhoneGap app runs, it loads your provided `index.html` file into
+an embedded WebKit browser. Only this file has access to the PhoneGap
+Javascript library, so it handles things like offline-mode detection,
+and passes this via messages to the iframe containing your
+server-provided application.
+
+[source,html]
+....
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="user-scalable=no,initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>My Application Name</title>
+    <style type="text/css">
+      html, body {height:100%;margin:0;}
+      .spinner {-webkit-animation: spin 6s infinite linear;}
+      @-webkit-keyframes spin {
+        0%  {-webkit-transform: rotate(0deg);}
+        100% {-webkit-transform: rotate(360deg);}
+      }
+    </style>
+  </head>
+  <body style='margin: 0px'>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script>
+      function failedIframe() {
+        document.getElementById('offline').style.display = 'none';
+        document.getElementById('spinner').className = '';
+        document.getElementById('retry').style.display = 'block';
+      }
+      function retryIframe() {
+        document.getElementById('offline').style.display = 'block';
+        document.getElementById('spinner').className = 'spinner';
+        document.getElementById('retry').style.display = 'none';
+        setTimeout(failedIframe, 20000);
+        document.getElementById('app').src = document.getElementById('app').src;
+      }
+      // Use cordova network plugin to inform the iframe about the connection
+      document.addEventListener('deviceready', function() {
+        if (!navigator.network || !navigator.network.connection || !Connection) {
+           console.log(">>> ERROR, it seems cordova network connection plugin has not been loaded.");
+           return;
+        }
+
+        var iframe = document.getElementById('app');
+        var loading = document.getElementById('loading');
+        var offline = document.getElementById('offline');
+
+        function sendMessage(msg) {
+          iframe.contentWindow.postMessage("cordova-" + msg, "*");
+        }
+
+        function check() {
+          var sts = navigator.network.connection.type == Connection.NONE ? 'offline' : 'online';
+          sendMessage(sts);
+        }
+        function showIframe(ev) {
+          if (loading.parentNode) {
+            loading.parentNode.removeChild(loading);
+            document.getElementById('app').style.width = iframe.style.height = "100%";
+            sendMessage('resume');
+          }
+          navigator.splashscreen.hide();
+        }
+        function showOffline() {
+          document.getElementById('offline').style.display = 'block';
+          navigator.splashscreen.hide();
+
+          // if after a while we have not received any notification we show the retry link
+          setTimeout(failedIframe, 20000);
+        }
+
+        // Listen for offline/online events
+        document.addEventListener('offline', check, false);
+        document.addEventListener('online', check, false);
+        document.addEventListener('resume', function(){sendMessage('resume')}, false);
+        document.addEventListener('pause', function(){sendMessage('pause')}, false);
+        // check the connection periodically
+        setInterval(check, 30000);
+
+        // when vaadin app is loaded, it sends to the parent window a ready message
+        window.addEventListener('message', showIframe, false);
+
+        // If the app takes more than 3 secs to start, proly .manifest stuff is being loaded.
+        setTimeout(showOffline, 3000);
+
+        // Ignore back button in android
+        // document.addEventListener('backbutton', function() {}, false);
+      }, false);
+    </script>
+    <!-- A div to show in the meanwhile the app is loaded -->
+    <div id='loading' style='font-size: 120%; font-weight: bold; font-family: helvetica; width: 100%; height: 100%; position: absolute; text-align: center;'>
+      <div id='spinner' class='spinner'><img src="spinner.png"></div>
+      <div id='offline' style='display: block;  padding: 15px;'>Downloading application files,<br/>Please be patient...</div>
+      <div id="retry" style="display: none;">
+        <p>Failed to contact the server.</p>
+        <p>
+          Please ensure you have a stable Internet connection, and then
+          <a href="javascript:void(0)" onclick="retryIframe();">touch here</a> to retry.
+        </p>
+      </div>
+    </div>
+    <!-- Load the app in an iframe so as we can pass messages, instead of using redirect -->
+    <iframe id='app' style='width: 0px; height: 0px; position: absolute; border: none' src='http://www.example.com/touch/'></iframe>
+  </body>
+</html>
+....
+
+Change the `<title>` and URL in the iframe at the end to match your app.
+This also expects a file named `spinner.png` along side `index.html`, which
+will be displayed and spin while loading application files from the
+server.
+
+This Javascript handles detecting when the app goes offline and back
+online (and passes that to TouchKit), provides user feedback during a
+long initial load, and provides a friendly retry mechanism if the app is
+initially run without network access. It also hides the initial
+splashscreen.
+
+'''''
+
+PhoneGap Build requires a config.xml file to tell it how to behave.
+Below is a working example that works to create Android 4.0+ and iOS 6 &
+7 apps.
+
+[source,xml]
+....
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE widget>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0"
+        id="com.example.myapp" version="{VERSION}" versionCode="{RELEASE}">
+  <name>My App Name</name>
+  <description xml:lang="en"><![CDATA[
+Describe your app. This only shows on PhoneGap - each app store has you enter descriptions on their systems.
+]]>
+  </description>
+  <author href="http://www.example.com">
+      Example Corp, LLC
+  </author>
+  <license>
+      Copyright 2014, Example Corp, LLC
+  </license>
+
+  <gap:platform name="android"/>
+  <gap:platform name="ios"/>
+
+  <gap:plugin name="com.phonegap.plugin.statusbar" />
+  <gap:plugin name="org.apache.cordova.network-information" />
+  <gap:plugin name="org.apache.cordova.splashscreen" />
+  <feature name="org.apache.cordova.network-information" />
+
+  <icon src="res/ios/icon-57.png"       gap:platform="ios" width="57"  height="57"  />
+  <icon src="res/ios/icon-57_at_2x.png" gap:platform="ios" width="114" height="114" />
+  <icon src="res/ios/icon-72.png"       gap:platform="ios" width="72"  height="72"  />
+  <icon src="res/ios/icon-72_at_2x.png" gap:platform="ios" width="144" height="144" />
+  <icon src="res/ios/icon-76.png"       gap:platform="ios" width="76"  height="76"  />
+  <icon src="res/ios/icon-76_at_2x.png" gap:platform="ios" width="152" height="152" />
+  <icon src="res/ios/icon-120.png"      gap:platform="ios" width="120" height="120" />
+
+  <icon src="res/android/icon-36-ldpi.png"  gap:platform="android" width="36" height="36" gap:density="ldpi"/>
+  <icon src="res/android/icon-48-mdpi.png"  gap:platform="android" width="48" height="48" gap:density="mdpi"/>
+  <icon src="res/android/icon-72-hdpi.png"  gap:platform="android" width="72" height="72" gap:density="hdpi"/>
+  <icon src="res/android/icon-96-xhdpi.png" gap:platform="android" width="96" height="96" gap:density="xhdpi"/>
+  <icon src="res/android/icon-96-xxhdpi.png" gap:platform="android" width="96" height="96" gap:density="xxhdpi"/>
+
+  <gap:splash src="res/ios/Default.png"              gap:platform="ios" width="320"  height="480" />
+  <gap:splash src="res/ios/Default@2x.png"           gap:platform="ios" width="640"  height="960" />
+  <gap:splash src="res/ios/Default_iphone5.png"      gap:platform="ios" width="640"  height="1136"/>
+  <gap:splash src="res/ios/Default-Landscape.png"    gap:platform="ios" width="1024" height="768" />
+  <gap:splash src="res/ios/Default-Portrait.png"     gap:platform="ios" width="768"  height="1004"/>
+  <gap:splash src="res/ios/Default-568h.png"         gap:platform="ios" width="320"  height="568" />
+  <gap:splash src="res/ios/Default-568@2x.png"       gap:platform="ios" width="640"  height="1136"/>
+  <gap:splash src="res/ios/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1496"/>
+  <gap:splash src="res/ios/Default-Portrait@2x.png"  gap:platform="ios" width="1536" height="2008"/>
+
+  <gap:splash src="res/android/splash-ldpi.9.png"  gap:platform="android" gap:density="ldpi" />
+  <gap:splash src="res/android/splash-mdpi.9.png"  gap:platform="android" gap:density="mdpi" />
+  <gap:splash src="res/android/splash-hdpi.9.png"  gap:platform="android" gap:density="hdpi" />
+  <gap:splash src="res/android/splash-xhdpi.9.png" gap:platform="android" gap:density="xhdpi"/>
+
+  <!-- PhoneGap version to use -->
+  <preference name="phonegap-version" value="3.4.0" />
+
+  <!-- Allow landscape and portrait orientations -->
+  <preference name="Orientation" value="default" />
+
+  <!-- Don't allow overscroll effects (bounce-back on iOS, glow on Android.
+       Not useful since app doesn't scroll. -->
+  <preference name="DisallowOverscroll" value="true"/>
+
+  <!-- Don't hide the O/S's status bar -->
+  <preference name="fullscreen" value="false" />
+
+  <!-- iOS: Obey the app's viewport meta tag -->
+  <preference name="EnableViewportScale" value="true"/>
+
+  <!-- iOS: if set to true, app will terminate when home button is pressed -->
+  <preference name="exit-on-suspend" value="false" />
+
+  <!-- iOS: If icon is prerendered, iOS will not apply it's gloss to the app's icon on the user's home screen -->
+  <preference name="prerendered-icon" value="false" />
+
+  <!-- iOS: if set to false, the splash screen must be hidden using a JavaScript API -->
+  <preference name="AutoHideSplashScreen" value="false" />
+
+  <!-- iOS: MinimumOSVersion -->
+  <preference name="deployment-target" value="6.0" />
+
+  <!-- Android: Keep running in the background -->
+  <preference name="KeepRunning" value="true"/>
+
+  <!-- Android: Web resource load timeout, ms -->
+  <preference name="LoadUrlTimeoutValue" value="30000"/>
+
+  <!-- Android: The amount of time the splash screen image displays (if not hidden by app) -->
+  <preference name="SplashScreenDelay" value="3000"/>
+
+  <!-- Android: Minimum (4.0) and target (4.4) API versions -->
+  <preference name="android-minSdkVersion" value="14"/>
+  <preference name="android-targetSdkVersion" value="19"/>
+</widget>
+....
+
+The listed plugins are all required to make the splash screen and
+offline-mode work properly. The slew of icons and splash screen .png
+file are required by the app stores, so be sure to include all of them
+in the source .zip that you upload to PhoneGap Build. Placing these
+files in a subdirectory allows you to also put an empty file named
+".pgbomit" in that folder, which ensures that *extra* copies of each of
+these file are not included in the file app package produced by PhoneGap
+Build.
+
+'''''
+
+Special thanks to "manolo" from Vaadin for working with me for over a
+month to make all of this work by creating enhancements to TouchKit and
+the index.html file that the above one is based on.

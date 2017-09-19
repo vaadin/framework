@@ -1,0 +1,169 @@
+[[migrating-from-vaadin-7.0-to-vaadin-7.1]]
+Migrating from Vaadin 7.0 to Vaadin 7.1
+---------------------------------------
+
+This guide describes how to migrate from earlier versions to Vaadin 7.1.
+
+[[migrating-from-vaadin-6]]
+Migrating from Vaadin 6
+~~~~~~~~~~~~~~~~~~~~~~~
+
+When migrating from Vaadin 6, first review
+link:MigratingFromVaadin6ToVaadin7.asciidoc[Migrating
+from Vaadin 6 to Vaadin 7], then continue with the rest of this guide.
+
+[[migrating-from-vaadin-7.0]]
+Migrating from Vaadin 7.0
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As always with minor releases, we have tried hard to minimize the number
+and extent of changes that could affect existing applications you want
+to upgrade. However, there are a few points that must be considered, and
+some other changes and improvements that might be beneficial to know.
+
+[[property-legacypropertytostring]]
+Property legacyPropertyToString
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The old convention where `Property` `toString()` was used to get the value
+of the `Property` continues to cause problems. Changing this behaviour
+could potentially cause severe bugs that are hard to find, so instead we
+continue our quest to phase out this behaviour.
+
+The behaviour can now be configured via the `legacyPropertyToString`
+(either as an init-parameter or using `@VaadinServletConfiguration`). The
+settings are:
+
+* “warning” = as 7.0, `toString()` logs warning, default when using
+web.xml
+* “disabled” = `toString()` is just `toString()`, does not log, default when
+using `@VaadinServletConfiguration`
+* “enabled” = legacy `toString()` behaviour, does not log, compatible with
+Vaadin 6
+
+By default, if you are not using `@VaadinServletConfiguration` to
+configure your servlet, the functionality is the same as in 7.0, and
+compatible with 6; a warning is logged.
+
+If you are using the new `@VaadinServletConfiguration` to configure your
+servlet, it is assumed that you’re creating a new project, and using
+`getValue()` instead of `toString()`, and no warning of `toString()` usage is
+logged.
+
+This change will not break your application, but you should consider the
+options.
+
+1.  Consider switching `legacyPropertyToString` mode to
+1.  “enabled” if you are using `toString()` improperly, and do not want
+warnings
+2.  “disabled” if you are absolutely sure you are not using `toString()`
+improperly, and do not want warnings
+
+[[converter-targettype]]
+Converter targetType
+^^^^^^^^^^^^^^^^^^^^
+
+The conversion methods in `Converter` now have an additional `targetType`
+parameter, used by the caller to indicate what return type is expected.
+This enables `Converter`{empty}s to support multiple types, which can be handy in
+some cases.
+
+This change will cause compile errors if you implement or call
+`Converter.convertToModel()` and/or `Converter.convertToPresentation()`.
+
+1.  Add the `targetType` parameter if needed
+
+[[ui-access-outside-its-requestresponse]]
+UI access() outside it’s request/response
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you have background threads/processes that update the ui (e.g long
+running process updating a `ProgressBar`), or if you otherwise update a ui
+from outside its request/response (e.g updating one UI from another),
+you should use the new `UI.access()` method. This ensures proper locking
+is done, and failing to do so might result in hard to debug concurrency
+problems.
+
+To debug possible concurrency problems, it is recommended to enable
+assertions with the "-ea" parameter to the JVM.
+
+This change will not break your application, but your application might
+already be broken; you should ensure that all ui access dome outside the
+request handling thread uses this new API.
+
+[[calendar-included]]
+Calendar included
+^^^^^^^^^^^^^^^^^
+
+The `Calendar` component, which was previously an add-on, is now included
+in the core framework. However, the package is new, and there are minor
+API changes.
+
+This change will not break your application, but you might want to
+switch to the core framework version of the component.
+
+1.  Remove the Calendar add-on
+2.  Update imports to the new package
+3.  Adjust for API changes
+
+[[progressbar-is-the-new-progressindicator]]
+ProgressBar is the new ProgressIndicator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `ProgressIndicator` component had integrated support for polling - a
+feature that was a bit strange, especially now with built-in polling and
+push support. `ProgressBar` is a pure visual component that is intended to
+replace `ProgressIndicator`. If you have been relying on the polling
+capability of `ProgressIndicator`, you should look at `UI.setPollInterval()`
+or enable server push.
+
+This change does not break your application, but is deprecated, and
+should particularly not be used if push or `UI.setPollInterval()` is used.
+
+1.  Replace `ProgressIndicator` with `ProgressBar`
+2.  If you are using the polling feature use `UI.setPollInterval()` or enable push
+
+[[isattached-replaces-sessionnull]]
+isAttached() replaces session!=null
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Previously you had to do an awkward `getSession() != null` to figure out
+whether or not the component (or `ClientConnector` to be precise) actually
+was attached to the UI hierarchy (attached to a session, to be precise).
+There is now a `isAttached()` method that does that. Note that the old way
+still works, the new way is just more explicit, clean and findable.
+
+This change will not break your application, but if you want to clean up
+your code, you can look for `getSession()` null-checking and replace as
+appropriate with `isAttached()`.
+
+[[vconsole-is-now-java.util.logging]]
+VConsole is now java.util.logging
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For client-side logging and debug messages, the proprietary `VConsole` has
+been deprecated and replaced with the standard `java.util.logging`
+framework, and the messages are (by default) displayed in the completely
+renewed debug window.
+
+This change will not break your application, but the old API is
+deprecated, and the new one has additional features (e.g log levels). To
+update, look for references to `VConsole` and replace with standard
+`java.util.logging` calls, e.g
+`Logger.getLogger(getClass().getName()).log(“A message”)`.
+
+[[call-init-for-custom-vaadinservice-instances]]
+Call init() for custom VaadinService instances
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If overriding `VaadinServlet.createServletService()` or
+`VaadinPortlet.createPortletService()`, the new `init` method must be
+invoked for the newly-created `VaadinService` instance.
+
+[[new-features]]
+New features
+~~~~~~~~~~~~
+
+In addition to the changes, there are a number of new features that you
+probably want to familiarize yourself with, such as `Push` and the
+redesigned `DebugWindow`.

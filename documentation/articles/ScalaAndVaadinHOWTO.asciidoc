@@ -1,0 +1,187 @@
+[[scala-and-vaadin-how-to]]
+Scala and Vaadin how-to
+-----------------------
+
+[[introduction]]
+Introduction
+~~~~~~~~~~~~
+
+Since Vaadin is a server-side library it works very well with all JVM
+languages, including Scala. This article provides instructions on how to
+get started with Vaadin using Scala. First, we'll go through setting up
+a new project. After that we'll introduce the Scaladin add-on and see
+how it enhances Vaadin components by adding features that leverage the
+power of Scala.
+
+[[creating-a-new-eclipse-vaadin-project-with-scala]]
+Creating a new Eclipse Vaadin project with Scala
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+[[installing-the-required-software-components]]
+Installing the required software components
++++++++++++++++++++++++++++++++++++++++++++
+
+* Download and install http://eclipse.org/[Eclipse] Helios or Indigo by
+unpacking it to a location of your choice. Please note that only Eclipse
+Helios is officially supported by Scala IDE but also Indigo can be used.
+* Start Eclipse, and install the http://vaadin.com/eclipse[Vaadin
+Eclipse Plug-in] and http://www.scala-ide.org[Scala IDE Eclipse Plug-in]
+using the plug-in installation feature of Eclipse (available under
+`Help -> Install New Software...`).
+
+You also need a servlet container to run your application. In this
+example we use Tomcat, but any standard container (Jetty, JBoss,
+Glassfish, Oracle WebLogic, IBM WebSphere etc.) should be fine.
+
+* Download and install http://tomcat.apache.org/[Tomcat] by unpacking it
+to a location of your choice.
+* Add the server to Eclipse
+* Open the Servers view
+* Right click in the Servers view and choose `New -> Server`
+* Choose the type of your server, in this case `Apache -> Tomcat`
+* Choose the server runtime environment in the dialog by selecting the
+folder you unpacked Tomcat to.
+
+[[creating-a-new-project]]
+Creating a new project
+++++++++++++++++++++++
+
+* Create a new Vaadin project in Eclipse:
+* Choose `File -> New...`
+* Choose `Other...`
+* Choose `Vaadin -> Vaadin Project` from the list. You can use the
+filter to narrow down the list.
+* Choose a name for your project, eg. "ScalaTest"
+
+The New Vaadin Project Wizard allows you to configure different aspects
+your project, but the defaults are fine.
+
+At this point you have a ready-to-go Vaadin Java project. To start doing
+Scala we need to do a few more things:
+
+* Add the Scala nature to your project: right click your project root,
+and choose `Configure -> Add Scala Nature` from the menu.
+* Navigate to the `src` folder, and delete the generated Java file under
+the default package (eg. `com.example.scalatest`)
+
+Next up, some Scala!
+
+* Add a new Scala class in your project: right click the default
+package, and choose `New -> Scala Class`
+* Choose a name for the class, eg. "ScalaApp"
+* Our new class should extend the `com.vaadin.Application`, so in the
+wizard, click the `Browse...` button next to the "Superclass" field, and
+choose that from the list.
+* Click "Finish" to let Eclipse generate the class.
+
+Now we need to write some code in the method of our new Vaadin
+application.
+
+* Open the `ScalaApp.scala`
+* Add the following lines in the `init()`
+method: `setMainWindow(new Window("Scala Rocks!"))` `getMainWindow.addComponent(new Label("Hello World!"))`
+
+You can let Eclipse add the imports as you go, or just import the Vaadin
+components `(import com.vaadin.ui._)` yourself. The resulting file
+should look like this:
+
+[source,javascript]
+....
+import com.vaadin.Application
+import com.vaadin.ui._
+
+class ScalaApp extends Application {
+  def init(): Unit = {
+    setMainWindow(new Window("Scala Rocks!"))
+    getMainWindow.addComponent(new Label("Hello World!"))
+  }
+}
+....
+
+Next we make sure the servlet container knows which class it should
+load.
+
+* Open `WebContent/WEB-INF/web.xml`
+* Under the `<web-app><servlet>` branch change the `param-value` of the
+`application` init-param to contain to your application class, including
+the package name. Eg. "com.example.scalatest.ScalaApp"
+
+[[additional-configuration]]
+Additional configuration
+++++++++++++++++++++++++
+
+We're almost done. The last thing we need to do is make sure that the
+`scala-library.jar` is available at runtime. We do this by adding the
+JAR into the classpath of our servlet container.
+
+First, we need the JAR file itself. You already have this in the Scala
+IDE installation folder under Eclipse, or you can download the Scala
+distribution from http://www.scala-lang.org/downloads.
+
+We have a few options how to make sure the JAR is available at runtime.
+
+* Put the file in the `WEB-INF/lib` folder under your project.
+* Put the file directly in the lib folder of your servlet container.
+* Add the Scala library to the deployment assembly:
+`project properties -> Deployment assembly -> Add... -> Java build path entries`
+
+After you have done this we can fire up our application!
+
+[[running-the-application]]
+Running the application
++++++++++++++++++++++++
+
+Running the application is simple
+
+* Right click your project, and choose `Run As -> Run On Server`
+* Choose the previously created Tomcat instance as the target. You might
+also want to check the "Always use this server when running this
+project" checkbox.
+
+Eclipse should then start the server and open the UI in a internal
+browser window.
+
+[[creating-a-new-project-using-a-giter8-template]]
+Creating a new project using a Giter8 template
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+https://github.com/n8han/giter8[Giter8] is a command-line tool that
+generates project skeletons from templates that are published on GitHub.
+The Vaadin-Scala template creates the basic structure for a
+http://www.scala-sbt.org/[SBT]-project that has Vaadin, Scala
+and Scaladin included.
+
+First, install Giter8 following the instructions
+https://github.com/n8han/giter8#readme[on their readme]. Then just
+
+....
+g8 ripla/vaadin-scala
+....
+
+And answer the questions, or press enter for defaults. After that launch
+the server (jetty):
+
+....
+cd <project dir>
+sbt
+container:start
+....
+
+You can then browse to
+__[[http://localhost:8080__|http://localhost:8080_]] for the app. The
+created project is a standard SBT-project that uses the normal maven
+style layout, so you'll find the application source from_
+src/main/scala__.__
+
+To create Eclipse project files, type _eclipse_ in the sbt prompt. After
+this, the project can be imported as an Eclipse project.
+
+[[scaladin]]
+Scaladin
+~~~~~~~~
+
+Scaladin is a library that extends Vaadin and adds Scala-like features
+to Vaadin classes. It's just a single add-on (one JAR) and is highly
+recommended for any Scala Vaadin development. See the
+http://github.com/henrikerola/scaladin/wiki[GitHub wiki] and the
+https://vaadin.com/directory/component/scaladin[Directory page] for more information.

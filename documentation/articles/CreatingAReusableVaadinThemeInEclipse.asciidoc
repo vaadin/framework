@@ -1,0 +1,135 @@
+[[creating-a-reusable-vaadin-theme-in-eclipse]]
+Creating a reusable Vaadin theme in Eclipse
+-------------------------------------------
+
+This tutorial teaches you how to create a standalone Vaadin theme that
+can be reused in other Vaadin projects as an add-on.
+
+*Requirements:*
+
+* https://www.eclipse.org/downloads/[Eclipse IDE for Java EE developers]
+* https://vaadin.com/eclipse/[Vaadin plug-in for Eclipse]
+
+[[create-a-project-for-your-theme]]
+Create a project for your theme
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a new Java project.
+
+image:img/New%20Java%20Project.png[Create a new Java project]
+
+https://vaadin.com/download[Download a Vaadin JAR] and add it to your
+project’s build path.
+
+image:img/Vaadin%20to%20build%20path.png[Add Vaadin to build path]
+
+In the src folder, create a class for your theme:
+
+[source,java]
+....
+package com.example.mytheme;
+
+import com.vaadin.ui.themes.BaseTheme;
+
+public class MyTheme extends BaseTheme {
+  public static final String THEME_NAME = "my-theme";
+}
+....
+
+This makes your theme extend Vaadin’s
+https://vaadin.com/api/com/vaadin/ui/themes/BaseTheme.html[BaseTheme],
+which will let you fully customize your theme from scratch. On the other
+hand, if you don't have very specific theming needs and just want
+good-looking results quickly, try extending
+https://vaadin.com/api/com/vaadin/ui/themes/ChameleonTheme.html[ChameleonTheme]
+instead. In any case, both of these themes are designed for extension
+and therefore your best choices to start with.
+
+In the root of your project, create the following folder and files:
+
+* META-INF
+** MANIFEST.MF
+* VAADIN
+** themes
+*** my-theme
+**** addons.scss
+**** my-theme.scss
+**** styles.scss
+
+The MANIFEST.MF file should contain the following:
+
+....
+Manifest-Version: 1.0
+Implementation-Title: My Theme
+Implementation-Version: 1.0.0
+Vaadin-Package-Version: 1
+Class-Path:
+....
+
+Your `Implementation-Title` and `Implementation-Version` should reflect
+how you want your theme to be visible in the
+https://vaadin.com/directory[Vaadin directory].
+
+[[create-a-demo-app-for-your-theme]]
+Create a demo app for your theme
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create a new Vaadin project.
+
+image:img/New%20Vaadin%20project%20(1).png[Create a new Vaadin project]
+
+image:img/New%20Vaadin%20project%20(2).png[Create a new Vaadin project 2]
+
+Add your *theme* project to your *demo* project’s Java build path.
+
+image:img/Theme%20to%20build%20path.png[Add theme to build path]
+
+Add your *theme* project to your *demo* project’s _deployment assembly_.
+This will automatically convert your theme project to a Java EE Utility
+project.
+
+image:img/Theme%20to%20deployment%20assembly.png[Add theme to Deployment Assembly]
+
+Now that your theme project is a Java EE Utility project, it will also
+have a deployment assembly. Add your *theme project*’s VAADIN folder to
+there and make sure you specify its deploy path as `VAADIN`.
+
+image:img/VAADIN%20to%20deployment%20assembly.png[Add theme to Deployment Assembly 2]
+
+In your *demo* application class, add the following line to your
+`init()` method:
+
+[source,java]
+....
+setTheme(MyTheme.THEME_NAME);
+....
+
+To try if it works, right-click on your *demo* project and choose _Run
+As > Run on Server_.
+
+[[develop-your-theme]]
+Develop your theme
+~~~~~~~~~~~~~~~~~~
+
+Create a new style name constant in your theme class for each new CSS
+class name you add to your stylesheets. These can then be passed to the
+`Component.addStyleName(String)` method. This will make it easier for
+other developers to use your theme!
+
+Changes to your stylesheets will be visible in your demo app almost
+instantly. All you need to do is save the file, wait for the server to
+automatically pick up the changes, then refresh your browser.
+
+[[export-your-theme-as-a-vaadin-add-on]]
+Export your theme as a Vaadin add-on
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Right-click on your *theme* project, choose _Export… > Java > Jar file_
+and make sure your settings match those in the following two images.
+
+image:img/JAR%20Export%20(1).png[Export as JAR]
+
+image:img/JAR%20Export%20(2).png[Export as JAR 2]
+
+Finally, upload your theme add-on Jar to the
+https://vaadin.com/directory[Vaadin directory]!

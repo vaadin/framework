@@ -1,0 +1,382 @@
+[[creating-a-master-details-view-for-editing-persons]]
+Creating a master details view for editing persons
+--------------------------------------------------
+
+[[set-up]]
+Set-up
+~~~~~~
+
+In this tutorial we go through a standard use case where you have a bean
+and a backend ready with create, read, update and delete capabilities on
+that bean. You want to create a view where you can view all the beans
+and edit them. This example is an address book where you edit person
+information. The bean and the backend that we're going to use looks like
+this:
+
+[[person]]
+Person
+^^^^^^
+
+[source,java]
+....
+public class Person {
+  private int id = -1;
+  private String firstName = "";
+  private String lastName = "";
+  private Address address = new Address();
+  private String phoneNumber = "";
+  private String email = "";
+  private Date dateOfBirth = null;
+  private String comments = "";
+....
+
+[[ibackend]]
+IBackend
+^^^^^^^^
+
+[source,java]
+....
+public interface IBackend {
+  public List<Person> getPersons();
+  public void storePerson(Person person);
+  public void deletePerson(Person person);
+}
+....
+
+The view will contain a table, with all the persons in it, and a form
+for editing a single person. Additionally the table will have buttons
+too add or remove persons and the form will have buttons to save and
+discard changes. The UI wireframe looks like this:
+
+image:img/master%20detail%20wireframe.jpg[Master detail UI wireframe]
+
+[[building-the-basic-ui]]
+Building the basic UI
+~~~~~~~~~~~~~~~~~~~~~
+
+We start off with creating a basic UIfor our application
+
+[source,java]
+....
+public class AddressFormsUI extends UI {
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout mainLayout = new VerticalLayout();
+    mainLayout.setSpacing(true);
+    mainLayout.setMargin(true);
+    mainLayout.addComponent(new Label("Hello Vaadiners!"));
+    setContent(mainLayout);
+  }
+}
+....
+
+The first things that we want to add to it is the table and the form.
+The table should be selectable and immediate so that we're able to pass
+person objects from it to the form. I will create all the fields for our
+person editor by hand to get more flexibility in how the fields will be
+built and laid out. You could also let Vaadin `FieldGroup` take care of
+creating the standard fields with the `buildAndBind` -methods if you don't
+need to customize them.
+
+[source,java]
+....
+package com.example.addressforms;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
+
+public class AddressFormsUI extends UI {
+
+  private GridLayout form;
+  private Table table;
+
+  @Override
+  protected void init(VaadinRequest request) {
+    VerticalLayout mainLayout = new VerticalLayout();
+    mainLayout.setSpacing(true);
+    mainLayout.setMargin(true);
+
+    mainLayout.addComponent(buildTable());
+    mainLayout.addComponent(buildForm());
+
+    setContent(mainLayout);
+  }
+
+  private Component buildTable() {
+    table = new Table(null);
+    table.setWidth("500px");
+    table.setSelectable(true);
+    table.setImmediate(true);
+    return table;
+  }
+
+  private Component buildForm() {
+    form = new GridLayout(2, 3);
+
+    TextField firstName = new TextField("First name:");
+    TextField lastName = new TextField("Last name:");
+    TextField phoneNumber = new TextField("Phone Number:");
+    TextField email = new TextField("E-mail address:");
+    DateField dateOfBirth = new DateField("Date of birth:");
+    TextArea comments = new TextArea("Comments:");
+
+    form.addComponent(firstName);
+    form.addComponent(lastName);
+    form.addComponent(phoneNumber);
+    form.addComponent(email);
+    form.addComponent(dateOfBirth);
+    form.addComponent(comments);
+    return form;
+  }
+}
+....
+
+image:img/table%20and%20form.png[Address form]
+
+We also want the add, remove, save and discard buttons so let's create
+them as well. I've positioned the add and remove above the table and
+save and discard below the form.
+
+[source,java]
+....
+private GridLayout form;
+private HorizontalLayout tableControls;
+private Table table;
+private HorizontalLayout formControls;
+
+@Override
+protected void init(VaadinRequest request) {
+  VerticalLayout mainLayout = new VerticalLayout();
+  mainLayout.setSpacing(true);
+  mainLayout.setMargin(true);
+
+  mainLayout.addComponent(buildTableControls());
+  mainLayout.addComponent(buildTable());
+  mainLayout.addComponent(buildForm());
+  mainLayout.addComponent(buildFormControls());
+
+  setContent(mainLayout);
+}
+
+...
+
+private Component buildTableControls() {
+  tableControls = new HorizontalLayout();
+  Button add = new Button("Add");
+  Button delete = new Button("Delete");
+  tableControls.addComponent(add);
+  tableControls.addComponent(delete);
+  return tableControls;
+}
+
+private Component buildFormControls() {
+  formControls = new HorizontalLayout();
+  Button save = new Button("Save");
+  Button discard = new Button("Discard");
+  formControls.addComponent(save);
+  formControls.addComponent(discard);
+  return formControls;
+}
+....
+
+The buttons doesn't do anything yet but we have all the components that
+we need in the view now.
+
+image:img/buttons%20added.png[Address form with add, delete, save and discard buttons]
+
+[[connecting-the-backend-to-the-view]]
+Connecting the backend to the view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The backend reference is store as a field so that all methods have
+access to it.
+
+[source,java]
+....
+...
+private IBackend backend;
+
+@Override
+protected void init(VaadinRequest request) {
+    backend = new Backend();
+    ...
+....
+
+Then we have to build a container for the table. I will do it in a
+separate method from the table building so that it can be rebuilt for
+refreshing the table after the initial rendering. We call this method
+once in the initial rendering as well on every button click that
+modifies the list of persons. A good choice of container in this case is
+the `BeanItemContainer` where we specify to the table which columns we
+want to show, and sort the table based on the name.
+
+[source,java]
+....
+...
+private Component buildTable() {
+  table = new Table(null);
+  table.setSelectable(true);
+  table.setImmediate(true);
+  updateTableData();
+  return table;
+}
+
+...
+
+private void updateTableData() {
+  List<Person> persons = backend.getPersons();
+  BeanItemContainer<Person> container = new BeanItemContainer<Person>(
+          Person.class, persons);
+  table.setContainerDataSource(container);
+
+  table.setVisibleColumns(new String[] { "firstName", "lastName",
+          "phoneNumber", "email", "dateOfBirth" });
+  table.setColumnHeaders(new String[] { "First name", "Last name",
+          "Phone number", "E-mail address", "Date of birth" });
+  table.sort(new Object[] { "firstName", "lastName" }, new boolean[] {
+          true, true });
+}
+...
+....
+
+To get the data from the selected person's data into the fields, and the
+changes back into the bean, we will use a FieldGroup. The `FieldGroup`
+should be defined as class variable and it should bind the fields that
+is initialized in `buildForm()`.
+
+[source,java]
+....
+...
+private FieldGroup fieldGroup = new FieldGroup();
+
+...
+
+private Component buildForm() {
+  form = new GridLayout(2, 3);
+
+  TextField firstName = new TextField("First name:");
+  TextField lastName = new TextField("Last name:");
+  TextField phoneNumber = new TextField("Phone Number:");
+  TextField email = new TextField("E-mail address:");
+  DateField dateOfBirth = new DateField("Date of birth:");
+  TextArea comments = new TextArea("Comments:");
+
+  fieldGroup.bind(firstName, "firstName");
+  fieldGroup.bind(lastName, "lastName");
+  fieldGroup.bind(phoneNumber, "phoneNumber");
+  fieldGroup.bind(email, "email");
+  fieldGroup.bind(dateOfBirth, "dateOfBirth");
+  fieldGroup.bind(comments, "comments");
+
+  form.addComponent(firstName);
+  form.addComponent(lastName);
+  form.addComponent(phoneNumber);
+  form.addComponent(email);
+  form.addComponent(dateOfBirth);
+  form.addComponent(comments);
+  return form;
+}
+....
+
+Additionally the table requires a value change listener and the
+currently selected person in the table has to be passed to the
+`FieldGroup`.
+
+[source,java]
+....
+private Component buildTable() {
+  ...
+  table.addValueChangeListener(new ValueChangeListener() {
+    public void valueChange(ValueChangeEvent event) {
+      editPerson((Person) table.getValue());
+    }
+  });
+  ...
+}
+
+...
+
+private void editPerson(Person person) {
+  if (person == null) {
+    person = new Person();
+  }
+  BeanItem<Person> item = new BeanItem<Person>(person);
+  fieldGroup.setItemDataSource(item);
+}
+....
+
+[[putting-the-buttons-in-use]]
+Putting the buttons in use
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Last thing we have to do is implement all the buttons that we have in
+the application. Add should create a new Person object and give it to
+the form. Delete should tell the backend to remove the selected person
+and update the table. Save should store the changes into the bean and
+the bean into the backend and update the table. Discard should reset the
+form.
+
+[source,java]
+....
+private Component buildTableControls() {
+  tableControls = new HorizontalLayout();
+  Button add = new Button("Add", new ClickListener() {
+    public void buttonClick(ClickEvent event) {
+      editPerson(new Person());
+    }
+  });
+  Button delete = new Button("Delete", new ClickListener() {
+    public void buttonClick(ClickEvent event) {
+      backend.deletePerson((Person) table.getValue());
+      updateTableData();
+    }
+  });
+  tableControls.addComponent(add);
+  tableControls.addComponent(delete);
+  return tableControls;
+}
+
+private Component buildFormControls() {
+  formControls = new HorizontalLayout();
+  Button save = new Button("Save", new ClickListener() {
+    public void buttonClick(ClickEvent event) {
+      try {
+        fieldGroup.commit();
+        backend.storePerson(((BeanItem<Person>) fieldGroup
+              .getItemDataSource()).getBean());
+        updateTableData();
+        editPerson(null);
+      } catch (CommitException e) {
+        e.printStackTrace();
+      }
+    }
+  });
+  Button discard = new Button("Discard", new ClickListener() {
+    public void buttonClick(ClickEvent event) {
+      fieldGroup.discard();
+    }
+  });
+  formControls.addComponent(save);
+  formControls.addComponent(discard);
+  return formControls;
+}
+....
+
+image:img/database%20connected.png[Form with database connected]
+
+That's it! Now you have a full working CRUD view with total control over
+the components and layouts. A little theming and layout adjustments and
+it is ready for production.
+
+You might have noticed that the person bean contains a reference to
+another bean, a address, which is not editable here. The tutorial
+link:CreatingACustomFieldForEditingTheAddressOfAPerson.asciidoc[Creating a custom field for editing the address of a person] goes
+through on how to edit beans within beans with a `CustomField`, which can
+be used directly as a field for the `FieldGroup`.
