@@ -93,13 +93,10 @@ public class SharedUtil implements Serializable {
         } else if (!Character.isUpperCase(camelCaseString.charAt(i - 1))) {
             // Word ends if previous char wasn't upper case
             return true;
-        } else if (i + 1 < camelCaseString.length()
-                && !Character.isUpperCase(camelCaseString.charAt(i + 1))) {
-            // Word ends if next char isn't upper case
-            return true;
-        } else {
-            return false;
         }
+        // Word ends if next char isn't upper case
+        return i + 1 < camelCaseString.length()
+                && !Character.isUpperCase(camelCaseString.charAt(i + 1));
     }
 
     /**

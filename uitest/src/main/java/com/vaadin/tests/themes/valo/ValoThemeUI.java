@@ -146,15 +146,12 @@ public class ValoThemeUI extends UI {
 
             @Override
             public void afterViewChange(ViewChangeEvent event) {
-                for (Iterator<Component> it = menuItemsLayout.iterator(); it
-                        .hasNext();) {
-                    it.next().removeStyleName("selected");
+                for (Component c : menuItemsLayout) {
+                    c.removeStyleName("selected");
                 }
                 for (Entry<String, String> item : menuItems.entrySet()) {
                     if (event.getViewName().equals(item.getKey())) {
-                        for (Iterator<Component> it = menuItemsLayout
-                                .iterator(); it.hasNext();) {
-                            Component c = it.next();
+                        for (Component c : menuItemsLayout) {
                             if (c.getCaption() != null && c.getCaption()
                                     .startsWith(item.getValue())) {
                                 c.addStyleName("selected");

@@ -188,7 +188,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the specified attribute to the design if it differs from the
-     * default value got from the <code> defaultInstance <code>
+     * default value got from the <code> defaultInstance </code>
      *
      * @param component
      *            the component used to get the attribute value

@@ -769,11 +769,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
-            if (overflow.equals("auto") || overflow.equals("scroll")) {
-                return true;
-            } else {
-                return false;
-            }
+            return overflow.equals("auto") || overflow.equals("scroll");
         } else {
             return false;
         }
@@ -1336,7 +1332,7 @@ public class WidgetUtil {
      * @param e
      *            element for enabling or disabling text selection
      * @param enable
-     *            <code>true</code> if selection is enabled; </code>false</code>
+     *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
     public native static void setTextSelectionEnabled(Element e, boolean enable)

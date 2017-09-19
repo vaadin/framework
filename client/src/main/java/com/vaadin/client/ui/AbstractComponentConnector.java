@@ -773,12 +773,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         AbstractComponentState state = getState();
         if (state.description != null && !state.description.equals("")) {
             return true;
-        } else if (state.errorMessage != null
-                && !state.errorMessage.equals("")) {
-            return true;
-        } else {
-            return false;
         }
+        return state.errorMessage != null && !state.errorMessage.equals("");
     }
 
     /**

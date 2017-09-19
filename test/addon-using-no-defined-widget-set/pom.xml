@@ -18,7 +18,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-context-menu</artifactId>
-            <version>${contextmenu.version}</version>
         </dependency>
 
     </dependencies>

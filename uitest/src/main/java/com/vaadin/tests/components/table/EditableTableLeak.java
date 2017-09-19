@@ -95,7 +95,7 @@ public class EditableTableLeak extends TestBase {
         table.setHeight("170px");
         table.setSelectable(true);
         table.setContainerDataSource(TestUtils.getISO3166Container());
-        table.setColumnHeaders(new String[] { "Country", "Code" });
+        table.setColumnHeaders("Country", "Code");
         table.setColumnAlignment(TestUtils.iso3166_PROPERTY_SHORT,
                 Table.ALIGN_CENTER);
         table.setColumnExpandRatio(TestUtils.iso3166_PROPERTY_NAME, 1);

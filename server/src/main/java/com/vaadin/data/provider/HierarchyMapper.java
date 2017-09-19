@@ -96,7 +96,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * 
      */
     public Integer getParentIndex(T item) {
-        // TODO: This can be optimised.
+        // TODO: This can be optimized.
         List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
         return flatHierarchy.indexOf(getParentOfItem(item));
     }

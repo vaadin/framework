@@ -386,8 +386,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
             if (j == c.length) {
 
-                // all paramteters matched
-                if (found == true) {
+                // all parameters matched
+                if (found) {
                     throw new MethodException(this,
                             "Could not uniquely identify " + getMethodName
                                     + "-method");
@@ -397,7 +397,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 }
             }
         }
-        if (found != true) {
+        if (!found) {
             throw new MethodException(this,
                     "Could not find " + getMethodName + "-method");
         }
@@ -440,7 +440,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 if (j == c.length) {
 
                     // all parameters match
-                    if (found == true) {
+                    if (found) {
                         throw new MethodException(this,
                                 "Could not identify unique " + setMethodName
                                         + "-method");
@@ -450,7 +450,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                     }
                 }
             }
-            if (found != true) {
+            if (!found) {
                 throw new MethodException(this,
                         "Could not identify " + setMethodName + "-method");
             }

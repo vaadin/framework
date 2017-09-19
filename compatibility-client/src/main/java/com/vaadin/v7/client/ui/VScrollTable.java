@@ -4031,9 +4031,8 @@ public class VScrollTable extends FlowPanel
                 for (i = 0; i < visibleColOrder.length; i++) {
                     cols[i] = visibleColOrder[i];
                 }
-                for (final Iterator<String> it = collapsedColumns.iterator(); it
-                        .hasNext();) {
-                    cols[i++] = it.next();
+                for (final String column : collapsedColumns) {
+                    cols[i++] = column;
                 }
             }
             List<Action> actions = new ArrayList<Action>(cols.length);
@@ -4401,11 +4400,11 @@ public class VScrollTable extends FlowPanel
                         .getOffsetWidth() + getHeaderPadding();
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Iterator<Widget> it = tHead.iterator(); it
-                            .hasNext(); columnIndex++) {
-                        if (it.next() == this) {
+                    for (Widget widget : tHead) {
+                        if (widget == this) {
                             break;
                         }
+                        columnIndex++;
                     }
                 }
                 final int cw = scrollBody.getColWidth(columnIndex);
@@ -5374,8 +5373,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Returns the maximum indent of the hierarcyColumn, if applicable.
          *
          * @see VScrollTable#getHierarchyColumnIndex()
@@ -5388,8 +5387,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Calculates the maximum indent of the hierarcyColumn, if applicable.
          */
         protected void calculateMaxIndent() {
@@ -6441,14 +6440,10 @@ public class VScrollTable extends FlowPanel
                     // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
                     int i = 0;
-                    for (Iterator<Widget> iterator = scrollBody
-                            .iterator(); iterator.hasNext();) {
-                        VScrollTableRow next = (VScrollTableRow) iterator
-                                .next();
-
+                    for (Widget next : scrollBody) {
                         Element child = (Element) dragImage.getChild(i++);
 
-                        if (!rowKeyIsSelected(next.rowKey)) {
+                        if (!rowKeyIsSelected(((VScrollTableRow) next).rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }

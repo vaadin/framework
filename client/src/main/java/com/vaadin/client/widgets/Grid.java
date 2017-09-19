@@ -1753,10 +1753,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *             if the editor handler is not set
          */
         public void setEnabled(boolean enabled) {
-            if (enabled == false && state != State.INACTIVE) {
+            if (!enabled && state != State.INACTIVE) {
                 throw new IllegalStateException(
                         "Cannot disable: editor is in edit mode");
-            } else if (enabled == true && getHandler() == null) {
+            } else if (enabled && getHandler() == null) {
                 throw new IllegalStateException(
                         "Cannot enable: EditorHandler not set");
             }
@@ -5998,6 +5998,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (sortable) {
                 cellElement.addClassName("sortable");
+                cellElement.setAttribute("aria-sort", "none");
             }
 
             if (!sortable || sortingOrder == null) {
@@ -6007,16 +6008,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
                 cellElement.addClassName("sort-asc");
+                cellElement.setAttribute("aria-sort", "ascending");
             } else {
                 cellElement.addClassName("sort-desc");
+                cellElement.setAttribute("aria-sort", "descending");
             }
 
             int sortIndex = Grid.this.getSortOrder().indexOf(sortingOrder);
             if (sortIndex > -1 && Grid.this.getSortOrder().size() > 1) {
                 // Show sort order indicator if column is
                 // sorted and other sorted columns also exists.
-                cellElement.setAttribute("sort-order",
-                        String.valueOf(sortIndex + 1));
+                cellElement.setAttribute("sort-order", String.valueOf(sortIndex + 1));
+                cellElement.setAttribute("aria-sort", "other");
             }
 
             if (!sortedBefore) {
@@ -6058,6 +6061,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private void cleanup(FlyweightCell cell) {
             Element cellElement = cell.getElement();
             cellElement.removeAttribute("sort-order");
+            cellElement.removeAttribute("aria-sort");
             cellElement.removeClassName("sort-desc");
             cellElement.removeClassName("sort-asc");
             cellElement.removeClassName("sortable");

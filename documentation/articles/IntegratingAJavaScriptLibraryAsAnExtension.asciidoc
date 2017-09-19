@@ -1,0 +1,79 @@
+[[integrating-a-javascript-library-as-an-extension]]
+Integrating a JavaScript library as an extension
+------------------------------------------------
+
+JavaScript can also be used for creating Extensions e.g. for integrating
+existing JavaScript libraries. See link:CreatingAUIExtension.asciidoc[Creating a UI extension] for general information about Extensions. The main
+difference when using JavaScript is that you extend
+`AbstractJavaScriptExtension`, that your shared state class should
+extend `JavaScriptExtensionState` and then of course that your
+client-side implementation is written in JavaScript. See link:IntegratingAJavaScriptComponent.asciidoc[Integrating a
+JavaScript component] for basic information about how to use JavaScript
+for your client-side logic.
+
+This tutorial will create a simple Extension for integrating
+https://developers.google.com/analytics/devguides/collection/gajs/[Google
+Analytics]. Because the Analytics API just uses the same `_gaq.push`
+function with different arguments, the JavaScript connector logic can be
+equally simple. Aside from asynchronously loading ga.js, the client-side
+code just adds a callback that the server-side code can use to push new
+commands.
+
+[source,javascript]
+....
+window._gaq = window._gaq || [];
+
+(function() {
+  var ga = document.createElement('script');
+  ga.type = 'text/javascript';
+  ga.async = true;
+  ga.src = ('https:' == document.location.protocol ?
+    'https://ssl' : 'http://www') +
+    '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0];
+  s.parentNode.insertBefore(ga, s);
+})();
+
+window.com_example_Analytics = function() {
+  this.pushCommand = function(command) {
+    _gaq.push(command);
+  }
+}
+....
+
+The server-side Extension class provides the common Extension API for
+extending a UI instance as well as API for some Analytics features. All
+the Analytics features are based on the `pushCommand` method that
+invokes the corresponding client-side callback.
+
+The Analytics API used in this example has nothing that warrants using
+shared state, but you can of course use shared state in your own
+JavaScript Extension if you want to as long as your state class extends
+`JavaScriptExtensionState`.
+
+[source,java]
+....
+@JavaScript("analytics_connector.js")
+public class Analytics extends AbstractJavaScriptExtension {
+  public Analytics(UI ui, String account) {
+    extend(ui);
+    pushCommand("_setAccount", account);
+  }
+
+  public void trackPageview(String name) {
+    pushCommand("_trackPageview", name);
+  }
+
+  private void pushCommand(Object... commandAndArguments) {
+    // Cast to Object to use Object[] commandAndArguments as the first
+    // varargs argument instead of as the full varargs argument array.
+    callFunction("pushCommand", (Object) commandAndArguments);
+  }
+}
+....
+
+Extensions are suitable for integrating many existing JavaScript
+libraries that do not provide a component that is added to a layout. By
+using a client-side JavaScript connector for integrating the JavaScript
+library, you can eliminate GWT from the equation to give you slightly
+less code to maintain.

@@ -147,7 +147,7 @@ public class VOverlay extends Overlay {
 
     /**
      * Set the label of the container element, where tooltip, notification and
-     * dialgs are added to.
+     * dialogs are added to.
      *
      * @param applicationConnection
      *            the application connection for which to change the label

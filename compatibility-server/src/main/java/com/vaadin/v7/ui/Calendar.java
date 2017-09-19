@@ -783,7 +783,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code></br>
+     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code><br>
      * Set to null, if you want the format being defined by the locale.
      *
      * @param format

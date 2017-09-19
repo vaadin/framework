@@ -59,7 +59,6 @@ import com.vaadin.util.ReflectTools;
  * A component that represents a floating popup window that can be added to a
  * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}.
- * </p>
  * <p>
  * The contents of a window is set using {@link #setContent(Component)} or by
  * using the {@link #Window(String, Component)} constructor.
