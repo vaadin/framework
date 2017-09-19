@@ -1489,9 +1489,11 @@ public class Binder<BEAN> implements Serializable {
         // If no validation errors then update bean
         if (bindingStatuses.stream().filter(BindingValidationStatus::isError)
                 .findAny().isPresent()) {
-            fireStatusChangeEvent(true);
-            return new BinderValidationStatus<>(this, bindingStatuses,
+            BinderValidationStatus<BEAN> validationStatus = new BinderValidationStatus<>(this, bindingStatuses,
                     Collections.emptyList());
+            fireStatusChangeEvent(true);
+            getValidationStatusHandler().statusChange(validationStatus);
+            return validationStatus;
         }
 
         // Store old bean values so we can restore them if validators fail
