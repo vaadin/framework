@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class JavaScriptWidget extends Widget {
 
     /**
-     * Creats a JavaScriptWidget based on a &lt;div&gt; element
+     * Creates a JavaScriptWidget based on a &lt;div&gt; element
      */
     public JavaScriptWidget() {
         this("div");
@@ -39,7 +39,7 @@ public class JavaScriptWidget extends Widget {
         setElement(Document.get().createElement(tagName));
     }
 
-    public void showNoInitFound(ArrayList<String> attemptedNames) {
+    public void showNoInitFound(List<String> attemptedNames) {
         String message = "Could not initialize JavaScriptConnector because no JavaScript init function was found. Make sure one of these functions are defined: <ul>";
         for (String name : attemptedNames) {
             message += "<li>" + name + "</li>";

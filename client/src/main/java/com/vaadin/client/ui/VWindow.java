@@ -312,7 +312,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         fireOrderEvent(list);
     }
 
-    private static void fireOrderEvent(ArrayList<VWindow> windows) {
+    private static void fireOrderEvent(List<VWindow> windows) {
         WINDOW_ORDER_HANDLER
                 .fireEvent(new WindowOrderEvent(new ArrayList<>(windows)));
     }
