@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.JavaScriptConnectorHelper;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
@@ -30,7 +32,7 @@ public final class JavaScriptComponentConnector extends
             this) {
         @Override
         protected void showInitProblem(
-                java.util.ArrayList<String> attemptedNames) {
+                List<String> attemptedNames) {
             getWidget().showNoInitFound(attemptedNames);
         }
     };

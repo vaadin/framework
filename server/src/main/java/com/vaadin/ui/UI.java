@@ -263,7 +263,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         @Override
         public void windowOrderChanged(
-                HashMap<Integer, Connector> windowOrders) {
+                Map<Integer, Connector> windowOrders) {
             Map<Integer, Window> orders = new LinkedHashMap<>();
             for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
                 if (entry.getValue() instanceof Window) {
