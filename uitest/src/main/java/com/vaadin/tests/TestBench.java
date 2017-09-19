@@ -20,9 +20,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
@@ -69,8 +70,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
     VerticalLayout bodyLayout = new VerticalLayout();
 
-    // TODO this could probably be a simple Set
-    HashMap<Class<?>, String> itemCaptions = new HashMap<>();
+    Set<Class<?>> itemCaptions = new HashSet<>();
 
     @Override
     public void init() {
@@ -81,23 +81,21 @@ public class TestBench extends com.vaadin.server.LegacyApplication
             try {
                 final List<Class<?>> testableClasses = getTestableClassesForPackage(
                         testablePackages[p]);
-                for (final Iterator<Class<?>> it = testableClasses
-                        .iterator(); it.hasNext();) {
-                    final Class<?> t = it.next();
+                for (final Class<?> t : testableClasses) {
                     // ignore TestBench itself
                     if (t.equals(TestBench.class)) {
                         continue;
                     }
                     try {
                         testables.addItem(t);
-                        itemCaptions.put(t, t.getName());
+                        itemCaptions.add(t);
                         testables.setParent(t, testablePackages[p]);
                         testables.setChildrenAllowed(t, false);
                         continue;
                     } catch (final Exception e) {
                         try {
                             testables.addItem(t);
-                            itemCaptions.put(t, t.getName());
+                            itemCaptions.add(t);
                             testables.setParent(t, testablePackages[p]);
                             testables.setChildrenAllowed(t, false);
                             continue;
@@ -113,18 +111,15 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
         menu = new Tree("Testables", testables);
 
-        for (final Iterator<Class<?>> i = itemCaptions.keySet().iterator(); i
-                .hasNext();) {
-            final Class<?> testable = i.next();
+        for (final Class<?> testable : itemCaptions) {
             // simplify captions
             final String name = testable.getName()
                     .substring(testable.getName().lastIndexOf('.') + 1);
             menu.setItemCaption(testable, name);
         }
         // expand all root items
-        for (final Iterator<?> i = menu.rootItemIds().iterator(); i
-                .hasNext();) {
-            menu.expandItemsRecursively(i.next());
+        for (final Object id : menu.rootItemIds()) {
+            menu.expandItemsRecursively(id);
         }
 
         menu.addListener(this);
@@ -302,8 +297,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
         final ArrayList<Class<?>> classes = new ArrayList<>();
         // For every directory identified capture all the .class files
-        for (final Iterator<File> it = directories.iterator(); it.hasNext();) {
-            final File directory = it.next();
+        for (final File directory : directories) {
             if (directory.exists()) {
                 // Get the list of the files contained in the package
                 final String[] files = directory.list();

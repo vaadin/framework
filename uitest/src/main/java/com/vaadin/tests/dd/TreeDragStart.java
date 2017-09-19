@@ -57,8 +57,8 @@ public class TreeDragStart extends TestBase {
         getLayout().addComponent(tree);
 
         // Expand all items
-        for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
-            tree.expandItemsRecursively(it.next());
+        for (Object id : tree.rootItemIds()) {
+            tree.expandItemsRecursively(id);
         }
 
         // Set the tree in drag source mode
