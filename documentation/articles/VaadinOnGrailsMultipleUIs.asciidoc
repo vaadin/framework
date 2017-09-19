@@ -1,0 +1,52 @@
+[[vaadin-on-grails-multiple-uis]]
+Vaadin on grails - multiple UIs
+-------------------------------
+
+_Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
+updates about Vaadin on Grails are available on
+https://twitter.com/VaadinOnGrails[VaadinOnGrails]. This is continuation
+of link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on Grails - Database access]_
+
+In `grails-app/conf/VaadinConfig.groovy`, we can change URL mapping to
+UI. Also, we can define multiple UIs to be accessible from one Grails
+application.
+
+Create two new UIs that we will show under different URLs. `ClientUI`
+will be available on http://localhost:8080/client and `ServerUI` on
+http://localhost:8080/server
+
+[source,java]
+....
+class ClientUI extends UI {
+  protected void init(VaadinRequest request) {
+    VerticalLayout layout = new VerticalLayout()
+    layout.setMargin(true)
+    Label label = new Label("Client")
+    layout.addComponent(label)
+    setContent(layout)
+  }
+}
+
+class ServerUI extends UI {
+  protected void init(VaadinRequest request) {
+    VerticalLayout layout = new VerticalLayout()
+    layout.setMargin(true)
+    Label label = new Label("Server")
+    layout.addComponent(label) setContent(layout)
+  }
+}
+....
+
+Open `VaadinConfig.groovy` and change the mapping, so the mapping points
+to the new UIs.
+
+....
+mapping =
+[ "/client/*": "app.ClientUI",
+  "/server/*": "app.ServerUI"]
+....
+
+Now we can start up the application and access both URLs to see each is
+mapped to different UI class.
+
+image:http://vaadinongrails.com/img/mapping-uis.png[Mapping UIs]

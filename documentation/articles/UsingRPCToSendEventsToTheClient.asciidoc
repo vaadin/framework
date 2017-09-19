@@ -1,0 +1,147 @@
+[[using-rpc-to-send-events-to-the-client]]
+Using RPC to send events to the client
+--------------------------------------
+
+An RPC mechanism can be used to communicate from the server to the
+client. In effect, the server-side component can call methods that are
+executed by the client-side connector. As opposed to shared state
+(discussed in a separate article), no information is automatically
+re-transmitted when the client-side state is lost (e.g when a browser
+reload is invoked).
+
+Whether shared state or RPC is appropriate depends on the nature of the
+data being transmitted, but if the information transmitted needs to be
+retained on the client over a page refresh, you should probably use
+shared state. You'll probably find shared state more appropriate in most
+cases, and server-client RPC extremely useful in a few cases.
+
+To set up server-client RPC, we need to create an interface extending
+`ClientRpc` for the RPC methods, then register an implementation of the
+RPC interface in the client-side connector, and call the method(s) via a
+proxy on the server. This is the reverse of the server-client RPC
+described in a separate article.
+
+We'll create *MyComponentClientRpc* in the client package:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+import com.vaadin.client.communication.ClientRpc;
+
+public interface MyComponentClientRpc extends ClientRpc {
+  public void alert(String message);
+}
+....
+
+Again, note that the RPC methods can not return anything, but can take
+multiple arguments.
+
+In *MyComponentConnector* we register the RPC implementation in the
+constructor. This time we'll create the implementation inline:
+
+[source,java]
+....
+package com.example.mycomponent.client;
+
+// imports removed for clarity
+
+@Connect(MyComponent.class)
+public class MyComponentConnector extends AbstractComponentConnector {
+
+  MyComponentServerRpc rpc = RpcProxy
+      .create(MyComponentServerRpc.class, this);
+
+  public MyComponentConnector() {
+    registerRpc(MyComponentClientRpc.class, new MyComponentClientRpc() {
+      public void alert(String message) {
+        Window.alert(message);
+      }
+    });
+
+/* The rest of the code remains unchanged:
+
+    getWidget().addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+            .buildMouseEventDetails(event.getNativeEvent(),
+                getWidget().getElement());
+        rpc.clicked(mouseDetails);
+      }
+    });
+  }
+  @Override
+  protected Widget createWidget() {
+    return GWT.create(MyComponentWidget.class);
+  }
+  @Override
+  public MyComponentWidget getWidget() {
+    return (MyComponentWidget) super.getWidget();
+  }
+  @Override
+  public MyComponentState getState() {
+    return (MyComponentState) super.getState();
+  }
+  @OnStateChange("text")
+  void updateText() {
+    getWidget().setText(getState().text);
+  }
+*/
+}
+....
+
+(`MyComponentServerRpc` is introduced in
+link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending
+events from the client to the server using RPC]. `Window` here is
+`com.google.gwt.user.client.Window`, _not_ `com.vaadin.ui.Window`.)
+
+Finally, in *MyComponent* we use the RPC via a proxy:
+
+[source,java]
+....
+import com.vaadin.ui.AbstractComponent;
+
+public class MyComponent extends AbstractComponent {
+
+  private int clickCount = 0;
+
+  private MyComponentServerRpc rpc = new MyComponentServerRpc() {
+    public void clicked(MouseEventDetails mouseDetails) {
+      clickCount++;
+
+      // nag every 5:th click
+      if (clickCount % 5 == 0) {
+        getRpcProxy(MyComponentClientRpc.class).alert(
+            "Ok, that's enough!");
+      }
+
+      setText("You have clicked " + clickCount + " times");
+    }
+  };
+
+/* Unchanged code follows:
+  public MyComponent() {
+    registerRpc(rpc);
+  }
+
+  @Override
+  public MyComponentState getState() {
+    return (MyComponentState) super.getState();
+  }
+
+  public void setText(String text) {
+    getState().text = text;
+  }
+
+  public String getText() {
+    return getState().text;
+  }
+*/
+}
+....
+
+That is: every fifth time the label is clicked, we get the RPC proxy by
+calling `getRpcProxy()` and call our `alert()` method with a message to
+send to the client.
+
+Compile the widgetset, and you're all set to try out server-client RPC.
