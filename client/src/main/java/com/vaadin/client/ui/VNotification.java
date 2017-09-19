@@ -18,7 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
@@ -37,12 +37,10 @@ import com.vaadin.client.AnimationUtil;
 import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ui.NotificationRole;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
 
 public class VNotification extends VOverlay {
@@ -81,7 +79,7 @@ public class VNotification extends VOverlay {
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
 
-    private static final ArrayList<VNotification> notifications = new ArrayList<>();
+    private static final List<VNotification> notifications = new ArrayList<>();
 
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
@@ -93,7 +91,7 @@ public class VNotification extends VOverlay {
 
     private String temporaryStyle;
 
-    private ArrayList<EventListener> listeners;
+    private List<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     /**
@@ -479,21 +477,17 @@ public class VNotification extends VOverlay {
         }
     }
 
-    public static void showNotification(ApplicationConnection client,
-            final UIDL notification) {
-        boolean onlyPlainText = notification.hasAttribute(
-                UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+    /**
+     * @since
+     */
+    public static VNotification showNotification(ApplicationConnection client,
+            boolean onlyPlainText, String iconUri, String caption,
+            String description, String style, int pos, int delay) {
         String html = "";
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
-            String iconUri = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_ICON);
+        if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
-            String caption = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
+        if (caption != null) {
             if (onlyPlainText) {
                 caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
@@ -501,32 +495,22 @@ public class VNotification extends VOverlay {
             html += "<h1 class='" + getDependentStyle(client, CAPTION) + "'>"
                     + caption + "</h1>";
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
-            String message = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
+        if (description != null) {
             if (onlyPlainText) {
-                message = WidgetUtil.escapeHTML(message);
-                message = message.replaceAll("\\n", "<br />");
+                description = WidgetUtil.escapeHTML(description);
+                description = description.replaceAll("\\n", "<br />");
             }
             html += "<p class='" + getDependentStyle(client, DESCRIPTION) + "'>"
-                    + message + "</p>";
+                    + description + "</p>";
         }
 
-        final String style = notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        ? notification.getStringAttribute(
-                                UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        : null;
-
-        final int pos = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION);
         Position position = Position.values()[pos];
 
-        final int delay = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
-        createNotification(delay, client.getUIConnector().getWidget())
-                .show(html, position, style);
+        VNotification vNotification = createNotification(delay,
+                client.getUIConnector().getWidget());
+
+        vNotification.show(html, position, style);
+        return vNotification;
     }
 
     /**

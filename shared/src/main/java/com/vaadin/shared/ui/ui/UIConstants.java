@@ -33,19 +33,6 @@ public class UIConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_REPLACE_STATE = "rs";
 
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_ICON = "icon";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
-
     /**
      * Name of the parameter used to transmit UI ids back and forth
      */
