@@ -1,5 +1,5 @@
 ---
-title: Auto Generating A Form Based On A Bean Vaadin6 Style Form
+title: Auto Generating A Form Based On A Bean Vaadin 6 Style Form
 order: 21
 layout: page
 ---

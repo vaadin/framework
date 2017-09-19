@@ -1,6 +1,6 @@
 ---
 title: Migrating from Vaadin 7.0 to Vaadin 7.1
-order: 27
+order: 35
 layout: page
 ---
 
