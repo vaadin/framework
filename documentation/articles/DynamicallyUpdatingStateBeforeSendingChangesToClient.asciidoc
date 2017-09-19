@@ -1,3 +1,9 @@
+---
+title: Dynamically Updating State Before Sending Changes To Client
+order: 75
+layout: page
+---
+
 [[dynamically-updating-state-before-sending-changes-to-client]]
 Dynamically updating state before sending changes to client
 -----------------------------------------------------------

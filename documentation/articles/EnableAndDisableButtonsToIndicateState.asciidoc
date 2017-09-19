@@ -1,3 +1,9 @@
+---
+title: Enable And Disable Buttons To Indicate State
+order: 59
+layout: page
+---
+
 [[enable-and-disable-buttons-to-indicate-state]]
 Enable and disable buttons to indicate state
 --------------------------------------------

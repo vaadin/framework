@@ -1,3 +1,9 @@
+---
+title: Finding The Current UI And Page And Vaadin Session
+order: 18
+layout: page
+---
+
 [[finding-the-current-ui-and-page-and-vaadin-session]]
 Finding the current UI and page and vaadin session
 --------------------------------------------------

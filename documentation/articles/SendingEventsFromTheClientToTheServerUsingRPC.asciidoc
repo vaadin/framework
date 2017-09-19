@@ -1,3 +1,9 @@
+---
+title: Sending Events From The Client To The Server Using RPC
+order: 20
+layout: page
+---
+
 [[sending-events-from-the-client-to-the-server-using-RPC]]
 Sending events from the client to the server using RPC
 ------------------------------------------------------

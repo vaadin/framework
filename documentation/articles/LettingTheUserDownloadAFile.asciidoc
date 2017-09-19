@@ -1,3 +1,9 @@
+---
+title: Letting The User Download A File
+order: 6
+layout: page
+---
+
 [[letting-the-user-download-a-file]]
 Letting The User Download A File
 --------------------------------

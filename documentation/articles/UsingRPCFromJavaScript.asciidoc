@@ -1,3 +1,9 @@
+---
+title: Using RPC From Java Script
+order: 42
+layout: page
+---
+
 [[using-rpc-from-javascript]]
 Using RPC from JavaScript
 -------------------------

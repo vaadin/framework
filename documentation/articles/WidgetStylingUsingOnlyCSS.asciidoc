@@ -1,3 +1,9 @@
+---
+title: Widget Styling Using Only CSS
+order: 65
+layout: page
+---
+
 [[widget-styling-using-only-css]]
 Widget styling using only CSS
 -----------------------------

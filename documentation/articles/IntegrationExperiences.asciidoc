@@ -1,3 +1,9 @@
+---
+title: Integration Experiences
+order: 34
+layout: page
+---
+
 [[integrating-vaadin-applications-with-other-technologies]]
 Integrating Vaadin Applications with other technologies
 -------------------------------------------------------

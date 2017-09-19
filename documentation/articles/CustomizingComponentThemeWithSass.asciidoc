@@ -1,5 +1,11 @@
+---
+title: Customizing Component Theme With SASS
+order: 64
+layout: page
+---
+
 [[customizing-component-theme-with-sass]]
-Customizing component theme with Sass
+Customizing component theme with SASS
 -------------------------------------
 
 In addition to the general benefits Sass brings to the world of CSS in

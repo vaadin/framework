@@ -1,3 +1,9 @@
+---
+title: Vaadin On Grails Multiple UIs
+order: 37
+layout: page
+---
+
 [[vaadin-on-grails-multiple-uis]]
 Vaadin on grails - multiple UIs
 -------------------------------

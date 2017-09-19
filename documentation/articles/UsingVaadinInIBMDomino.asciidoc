@@ -1,3 +1,9 @@
+---
+title: Using Vaadin In IBM Domino
+order: 7
+layout: page
+---
+
 [[using-vaadin-in-ibm-domino]]
 Using Vaadin In IBM Domino
 --------------------------

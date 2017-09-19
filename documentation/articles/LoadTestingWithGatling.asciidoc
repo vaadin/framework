@@ -1,3 +1,9 @@
+---
+title: Load Testing With Gatling
+order: 51
+layout: page
+---
+
 [[loading-testing-with-gatling]]
 Load testing with Gatling
 -------------------------

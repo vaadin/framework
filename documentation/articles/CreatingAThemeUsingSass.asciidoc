@@ -1,5 +1,11 @@
+---
+title: Creating A Theme Using SASS
+order: 78
+layout: page
+---
+
 [[creating-a-theme-using-sass]]
-Creating a theme using Sass
+Creating a theme using SASS
 ---------------------------
 
 Vaadin 7 comes with built in support for Sass, which can be thought of

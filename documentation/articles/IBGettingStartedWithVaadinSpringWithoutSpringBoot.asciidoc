@@ -1,3 +1,9 @@
+---
+title: Getting Started With Vaadin Spring Without Spring Boot
+order: 43
+layout: page
+---
+
 [[i-b-getting-started-with-vaadin-spring-without-spring-boot]]
 I b - Getting started with Vaadin Spring without Spring Boot
 ------------------------------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Exposing Server Side API To Java Script
+order: 41
+layout: page
+---
+
 [[exposing-server-side-api-to-javascript]]
 Exposing server-side API to JavaScript
 --------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Vaadin Spring Tips
+order: 46
+layout: page
+---
+
 [[vaadin-spring-tips]]
 Vaadin Spring tips
 ------------------

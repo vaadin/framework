@@ -1,3 +1,9 @@
+---
+title: Vaadin Scalability Testing With Amazon Web Services
+order: 52
+layout: page
+---
+
 [[vaadin-scalability-testing-with-amazon-web-services]]
 Vaadin scalability testing with Amazon Web Services
 ---------------------------------------------------

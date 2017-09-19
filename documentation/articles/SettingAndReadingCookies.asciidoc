@@ -1,3 +1,9 @@
+---
+title: Setting And Reading Cookies
+order: 16
+layout: page
+---
+
 [[setting-and-reading-ookies]]
 Setting And Reading Cookies
 ---------------------------

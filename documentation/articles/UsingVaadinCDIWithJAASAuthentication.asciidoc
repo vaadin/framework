@@ -1,3 +1,9 @@
+---
+title: Using Vaadin CDI With JAAS Authentication
+order: 50
+layout: page
+---
+
 [[using-vaadin-cdi-with-jaas-authentication]]
 Using Vaadin CDI with JAAS authentication
 -----------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Using Declarative Services
+order: 74
+layout: page
+---
+
 [[using-declarative-services]]
 Using declarative services
 --------------------------

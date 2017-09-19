@@ -1,3 +1,9 @@
+---
+title: Creating Multi Tab Applications
+order: 84
+layout: page
+---
+
 [[creating-multi-tab-applications]]
 Creating multi-tab applications
 -------------------------------

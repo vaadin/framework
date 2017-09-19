@@ -1,3 +1,9 @@
+---
+title: Configure Input Fields To Guide Data Entry
+order: 83
+layout: page
+---
+
 [[configure-input-fields-to-guide-data-entry]]
 Configure input fields to guide data entry
 ------------------------------------------

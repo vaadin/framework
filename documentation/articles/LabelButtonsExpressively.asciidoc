@@ -1,3 +1,9 @@
+---
+title: Label Buttons Expressively
+order: 67
+layout: page
+---
+
 [[label-buttons-expressively]]
 Label buttons expressively
 --------------------------

@@ -1,3 +1,9 @@
+---
+title: Right Align Comparable Numerical Fields
+order: 63
+layout: page
+---
+
 [[right-align-comparable-numeric-fields]]
 Right-align comparable numeric fields
 -------------------------------------

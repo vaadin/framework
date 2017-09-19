@@ -1,3 +1,9 @@
+---
+title: Component Addon Project Setup HOWTO
+order: 77
+layout: page
+---
+
 [[component-add-on-project-setup-howto]]
 Component add-on project setup how-to
 ------------------------------------

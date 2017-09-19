@@ -1,3 +1,9 @@
+---
+title: Generating Dynamic Resources Based On URI Or Parameters
+order: 28
+layout: page
+---
+
 [[generating-dynamic-resources-based-on-uri-or-parameters]]
 Generating dynamic resources based on URI or parameters
 -------------------------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Choose Input Field Components Wisely
+order: 31
+layout: page
+---
+
 [[choosing-input-field-components-wisely]]
 Choosing input field components wisely
 --------------------------------------

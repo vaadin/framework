@@ -1,3 +1,9 @@
+---
+title: Creating A UI Extension
+order: 73
+layout: page
+---
+
 [[creating-a-ui-extension]]
 Creating a UI extension
 -----------------------

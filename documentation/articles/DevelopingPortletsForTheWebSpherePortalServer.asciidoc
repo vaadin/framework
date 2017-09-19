@@ -1,3 +1,9 @@
+---
+title: Developing Portlets For The Web Sphere Portal Server
+order: 4
+layout: page
+---
+
 [[developing-portlets-for-the-websphere-portal-server]]
 Developing portlets for the Websphere Portal Server
 ---------------------------------------------------

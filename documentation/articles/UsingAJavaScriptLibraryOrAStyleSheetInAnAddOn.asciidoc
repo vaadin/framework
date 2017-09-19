@@ -1,3 +1,9 @@
+---
+title: Using A Java Script Library Or A Style Sheet In An Add On
+order: 40
+layout: page
+---
+
 [[using-a-javascript-library-or-a-style-sheet-in-an-addon]]
 Using a JavaScript library or a style sheet in an add-on
 --------------------------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Vaadin 7 Spring Security Base Authentification
+order: 44
+layout: page
+---
+
 [[vaadin-7-spring-security-base-authentication]]
 Vaadin 7 + Spring Security (base authentication)
 ------------------------------------------------

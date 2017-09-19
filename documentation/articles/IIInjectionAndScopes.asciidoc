@@ -1,3 +1,9 @@
+---
+title: Injection And Scopes
+order: 48
+layout: page
+---
+
 [[ii-injection-and-scopes]]
 II - Injection and scopes
 -------------------------

@@ -1,3 +1,9 @@
+---
+title: View Change Confirmations
+order: 80
+layout: page
+---
+
 [[view-change-confirmations]]
 View change confirmations
 -------------------------

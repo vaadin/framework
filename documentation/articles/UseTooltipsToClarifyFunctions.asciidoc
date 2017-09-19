@@ -1,3 +1,9 @@
+---
+title: Use Tooltips To Clarify Functions
+order: 58
+layout: page
+---
+
 [[use-tooltips-to-clarify-functions]]
 Use tooltips to clarify functions
 ---------------------------------
