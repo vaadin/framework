@@ -339,9 +339,7 @@ public class VCustomLayout extends ComplexPanel {
 
     /** Get the location of an widget */
     public String getLocation(Widget w) {
-        for (final Iterator<String> i = locationToWidget.keySet().iterator(); i
-                .hasNext();) {
-            final String location = i.next();
+        for (final String location : locationToWidget.keySet()) {
             if (locationToWidget.get(location) == w) {
                 return location;
             }
