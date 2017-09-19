@@ -771,7 +771,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         // Remove any possible URL parameters
         String pathWithoutQueryParameters = pathWithQueryParameters
                 .replaceAll("\\?.*", "");
-        if ("".equals(pathWithoutQueryParameters)) {
+        if (pathWithoutQueryParameters.isEmpty()) {
             return "ROOT";
         }
 

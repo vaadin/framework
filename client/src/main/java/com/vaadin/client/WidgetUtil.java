@@ -280,7 +280,7 @@ public class WidgetUtil {
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
-        if (height.equals("")) {
+        if (height.isEmpty()) {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
@@ -307,7 +307,7 @@ public class WidgetUtil {
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
@@ -1477,7 +1477,7 @@ public class WidgetUtil {
             }
 
             s = s.trim();
-            if ("".equals(s)) {
+            if (s.isEmpty()) {
                 return null;
             }
 

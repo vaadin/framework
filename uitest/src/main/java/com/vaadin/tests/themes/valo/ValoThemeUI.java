@@ -133,7 +133,7 @@ public class ValoThemeUI extends UI {
         navigator.addView("dragging", Dragging.class);
 
         String f = Page.getCurrent().getUriFragment();
-        if (f == null || f.equals("")) {
+        if (f == null || f.isEmpty()) {
             navigator.navigateTo("common");
         }
 

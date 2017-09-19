@@ -85,7 +85,7 @@ public class SizeWithUnit implements Serializable {
             return null;
         }
         s = s.trim();
-        if ("".equals(s)) {
+        if (s.isEmpty()) {
             return null;
         }
         float size = 0;
