@@ -1459,11 +1459,10 @@ public class Binder<BEAN> implements Serializable {
         List<ValidationResult> binderResults = Collections.emptyList();
 
         // First run fields level validation
-        List<BindingValidationStatus<?>> bindingStatuses = bindings.stream()
-                .map(b -> ((BindingImpl<BEAN, ?, ?>) b).doValidation())
-                .collect(Collectors.toList());
+        List<BindingValidationStatus<?>> bindingStatuses = validateBindings();
 
         // If no validation errors then update bean
+        // TODO: Enable partial write when some fields don't pass
         if (bindingStatuses.stream()
                 .noneMatch(BindingValidationStatus::isError)) {
             // Store old bean values so we can restore them if validators fail
