@@ -366,9 +366,9 @@ public class Window extends Panel
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
                     .getDeclaredMethod("windowClose", CloseEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window close method not found");
         }
     }
@@ -662,9 +662,9 @@ public class Window extends Panel
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
                     .getDeclaredMethod("windowResized", ResizeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window resized method not found");
         }
     }

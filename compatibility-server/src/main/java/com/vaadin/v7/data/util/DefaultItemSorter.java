@@ -50,7 +50,7 @@ import com.vaadin.v7.data.Property;
 @Deprecated
 public class DefaultItemSorter implements ItemSorter {
 
-    private java.lang.Object[] sortPropertyIds;
+    private Object[] sortPropertyIds;
     private boolean[] sortDirections;
     private Container container;
     private Comparator<Object> propertyValueComparator;

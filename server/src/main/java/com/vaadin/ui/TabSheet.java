@@ -785,9 +785,9 @@ public class TabSheet extends AbstractComponentContainer
             SELECTED_TAB_CHANGE_METHOD = SelectedTabChangeListener.class
                     .getDeclaredMethod("selectedTabChange",
                             SelectedTabChangeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in TabSheet");
         }
     }

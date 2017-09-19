@@ -3,6 +3,8 @@ package com.vaadin.util;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Field;
+
 import org.junit.Test;
 
 public class ReflectToolsGetFieldValueByTypeTest {
@@ -23,7 +25,7 @@ public class ReflectToolsGetFieldValueByTypeTest {
 
         MySubClass myInstance = new MySubClass();
 
-        java.lang.reflect.Field memberField;
+        Field memberField;
         Object fieldValue = false;
         try {
             memberField = myInstance.getClass().getField("field");
@@ -50,7 +52,7 @@ public class ReflectToolsGetFieldValueByTypeTest {
 
         MySubClass myInstance = new MySubClass();
 
-        java.lang.reflect.Field memberField;
+        Field memberField;
         try {
             memberField = myInstance.getClass().getField("field");
             // Should throw an IllegalArgument exception as the mySubClass class

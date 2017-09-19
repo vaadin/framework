@@ -50,9 +50,9 @@ public class PopupView extends AbstractComponent implements HasComponents {
             POPUP_VISIBILITY_METHOD = PopupVisibilityListener.class
                     .getDeclaredMethod("popupVisibilityChange",
                             PopupVisibilityEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in PopupView");
         }
     }
@@ -84,7 +84,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      * @param large
      *            the full, Component-type representation
      */
-    public PopupView(final java.lang.String small, final Component large) {
+    public PopupView(final String small, final Component large) {
         this(createContent(small, large));
     }
 
@@ -165,7 +165,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
             if (visible) {
                 visibleComponent = content.getPopupComponent();
                 if (visibleComponent == null) {
-                    throw new java.lang.IllegalStateException(
+                    throw new IllegalStateException(
                             "PopupView.Content did not return Component to set visible");
                 }
                 if (visibleComponent.getParent() != null) {

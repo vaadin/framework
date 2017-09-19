@@ -16,6 +16,8 @@
 package com.vaadin.v7.data.util;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +69,7 @@ public class MethodPropertyDescriptor<BT>
     }
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, propertyType);
@@ -96,7 +98,7 @@ public class MethodPropertyDescriptor<BT>
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {

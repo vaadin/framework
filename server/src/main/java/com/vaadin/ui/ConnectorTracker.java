@@ -16,6 +16,8 @@
 package com.vaadin.ui;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -727,7 +729,7 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
         // Convert JsonObjects in diff state to String representation as
@@ -741,7 +743,7 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 

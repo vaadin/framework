@@ -237,9 +237,9 @@ public class Upload extends AbstractComponent
                     .getDeclaredMethod("uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
                     .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }

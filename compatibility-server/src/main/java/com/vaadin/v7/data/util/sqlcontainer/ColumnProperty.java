@@ -172,8 +172,8 @@ final public class ColumnProperty implements Property {
                  * property. Possible type to convert from is java.util.Date.
                  */
                 long millis = 0;
-                if (newValue instanceof java.util.Date) {
-                    millis = ((java.util.Date) newValue).getTime();
+                if (newValue instanceof Date) {
+                    millis = ((Date) newValue).getTime();
                     /*
                      * Create the new object based on the millisecond value,
                      * according to the type of this property.
