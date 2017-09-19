@@ -749,6 +749,68 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 String.valueOf(item.getAge()), ageField.getValue());
     }
 
+    static class MyBindingHandler implements BindingValidationStatusHandler {
+
+        boolean expectingError = false;
+        int callCount = 0;
+
+        @Override
+        public void statusChange(BindingValidationStatus<?> statusChange) {
+            ++callCount;
+            if (expectingError) {
+                Assert.assertTrue("Expecting error", statusChange.isError());
+            } else {
+                Assert.assertFalse("Unexpected error", statusChange.isError());
+            }
+        }
+    }
+
+    @Test
+    public void execute_binding_status_handler_from_binder_status_handler() {
+        MyBindingHandler bindingHandler = new MyBindingHandler();
+        binder.forField(nameField)
+                .withValidator(t -> !t.isEmpty(), "No empty values.")
+                .withValidationStatusHandler(bindingHandler)
+                .bind(Person::getFirstName, Person::setFirstName);
+
+        String ageError = "CONVERSIONERROR";
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter(ageError))
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setValidationStatusHandler(status -> {
+            status.notifyBindingValidationStatusHandlers();
+        });
+
+        String initialName = item.getFirstName();
+        int initialAge = item.getAge();
+
+        binder.setBean(item);
+
+        // Test specific error handling.
+        bindingHandler.expectingError = true;
+        nameField.setValue("");
+
+        // Test default error handling.
+        ageField.setValue("foo");
+        Assert.assertTrue("Component error does not contain error message",
+                ageField.getComponentError().getFormattedHtmlMessage()
+                        .contains(ageError));
+
+        // Restore values and test no errors.
+        ageField.setValue(String.valueOf(initialAge));
+        Assert.assertNull("There should be no component error",
+                ageField.getComponentError());
+
+        bindingHandler.expectingError = false;
+        nameField.setValue(initialName);
+
+        // Assert that the handler was called.
+        Assert.assertEquals(
+                "Unexpected callCount to binding validation status handler", 4,
+                bindingHandler.callCount);
+    }
+      
     @Test
     public void removed_binding_not_updates_value() {
         Binding<Person, Integer> binding = binder.forField(ageField)
@@ -766,6 +828,5 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         Assert.assertEquals("Binding still affects bean even after unbind",
             ageBeforeUnbind, String.valueOf(item.getAge()));
-
     }
 }

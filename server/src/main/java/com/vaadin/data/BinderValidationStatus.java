@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.Binder.BindingBuilder;
+import com.vaadin.server.SerializablePredicate;
 
 /**
  * Binder validation status change. Represents the outcome of binder level
@@ -33,8 +34,8 @@ import com.vaadin.data.Binder.BindingBuilder;
  * Note: if there are any field level validation errors, the bean level
  * validation is not run.
  * <p>
- * Use {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)} to handle
- * form level validation status changes.
+ * Use {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)}
+ * to handle form level validation status changes.
  *
  * @author Vaadin Ltd
  *
@@ -187,5 +188,35 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     public List<ValidationResult> getBeanValidationErrors() {
         return binderStatuses.stream().filter(ValidationResult::isError)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Notifies all validation status handlers in bindings.
+     * 
+     * @see #notifyBindingValidationStatusHandlers(SerializablePredicate)
+     * 
+     * @since 8.2
+     */
+    public void notifyBindingValidationStatusHandlers() {
+        notifyBindingValidationStatusHandlers(t -> true);
+    }
+
+    /**
+     * Notifies validation status handlers for bindings that pass given filter.
+     * The filter should return {@code true} for each
+     * {@link BindingValidationStatus} that should be delegated to the status
+     * handler in the binding.
+     * 
+     * @see #notifyBindingValidationStatusHandlers()
+     * 
+     * @param filter
+     *            the filter to select bindings to run status handling for
+     * 
+     * @since 8.2
+     */
+    public void notifyBindingValidationStatusHandlers(
+            SerializablePredicate<BindingValidationStatus<?>> filter) {
+        bindingStatuses.stream().filter(filter).forEach(s -> s.getBinding()
+                .getValidationStatusHandler().statusChange(s));
     }
 }
