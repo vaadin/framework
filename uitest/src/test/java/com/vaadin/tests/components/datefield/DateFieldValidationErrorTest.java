@@ -49,4 +49,9 @@ public class DateFieldValidationErrorTest extends MultiBrowserTest {
         waitUntil(driver -> "Invalid date".equals(getTooltipErrorElement().getText()));
     }
 
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
+
 }
