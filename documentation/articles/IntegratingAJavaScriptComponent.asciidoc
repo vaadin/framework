@@ -1,5 +1,5 @@
 ---
-title: Integrating A Java Script Component
+title: Integrating A JavaScript Component
 order: 38
 layout: page
 ---

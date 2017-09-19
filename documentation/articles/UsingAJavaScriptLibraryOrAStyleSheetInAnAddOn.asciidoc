@@ -1,5 +1,5 @@
 ---
-title: Using A Java Script Library Or A Style Sheet In An Add On
+title: Using A JavaScript Library Or A Style Sheet In An Add On
 order: 40
 layout: page
 ---

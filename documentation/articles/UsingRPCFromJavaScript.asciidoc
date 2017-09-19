@@ -1,5 +1,5 @@
 ---
-title: Using RPC From Java Script
+title: Using RPC From JavaScript
 order: 42
 layout: page
 ---

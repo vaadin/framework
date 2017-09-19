@@ -1,12 +1,12 @@
 ---
-title: Vaadin On Grails Create Project In IntelliJ IDEA
+title: Vaadin On Grails with IntelliJ IDEA
 order: 35
 layout: page
 ---
 
-[[vaadin-on-grails-create-project-in-intellij-idea]]
-Vaadin on grails - Create project in IntelliJ IDEA
---------------------------------------------------
+[[vaadin-on-grails-with-intellij-idea]]
+Vaadin on Grails with IntelliJ IDEA
+-----------------------------------
 
 _Versions used in this tutorial: Grails 2.3.x, Vaadin 7.1.x. News and
 updates about Vaadin on Grails are available on

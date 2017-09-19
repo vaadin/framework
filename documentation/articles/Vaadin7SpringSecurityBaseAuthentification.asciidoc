@@ -1,5 +1,5 @@
 ---
-title: Vaadin 7 Spring Security Base Authentification
+title: Vaadin 7 Spring Security
 order: 44
 layout: page
 ---

@@ -1,5 +1,5 @@
 ---
-title: Exposing Server Side API To Java Script
+title: Exposing Server Side API To JavaScript
 order: 41
 layout: page
 ---

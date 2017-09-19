@@ -1,5 +1,5 @@
 ---
-title: Developing Portlets For The Web Sphere Portal Server
+title: Developing Portlets For The WebSphere Portal Server
 order: 4
 layout: page
 ---

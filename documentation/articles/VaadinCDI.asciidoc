@@ -1,5 +1,5 @@
 ---
-title: Vaadin C D I
+title: Vaadin CDI
 order: 47
 layout: page
 ---
