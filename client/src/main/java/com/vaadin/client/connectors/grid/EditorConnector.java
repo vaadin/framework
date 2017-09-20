@@ -60,11 +60,12 @@ public class EditorConnector extends AbstractExtensionConnector {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
 
                 @Override
-                public void bind(final int rowIndex) {
+                public void bind(final int rowIndex, boolean fromServer) {
                     // call this deferred to avoid issues with editing on init
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
+                            serverInitiated = fromServer;
                             getParent().getWidget().editRow(rowIndex);
                         }
                     });
@@ -106,8 +107,20 @@ public class EditorConnector extends AbstractExtensionConnector {
 
         @Override
         public void bind(EditorRequest<JsonObject> request) {
-            startRequest(request);
-            rpc.bind(getRowKey(request.getRow()));
+            if (!handleServerInitiated(request)) {
+                startRequest(request);
+                rpc.bind(getRowKey(request.getRow()));
+            } else {
+                if (getParent().rowHasDetails(request.getRowIndex())) {
+                    rpc.bind(getRowKey(request.getRow()));
+                } else {
+                    getParent().addDetailsRefreshCallback(() -> {
+                        if (getParent().rowHasDetails(request.getRowIndex())) {
+                            rpc.bind(getRowKey(request.getRow()));
+                        }
+                    });
+                }
+            }
         }
 
         @Override
