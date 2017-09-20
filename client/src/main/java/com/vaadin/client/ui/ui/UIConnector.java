@@ -75,7 +75,6 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -376,12 +375,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
