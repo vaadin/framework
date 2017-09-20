@@ -101,6 +101,8 @@ public class Upload extends AbstractComponent
 
     private String buttonCaption = "Upload";
 
+    private String buttonStyleName;
+
     /**
      * ProgressListeners to which information about progress is sent during
      * upload
@@ -185,6 +187,9 @@ public class Upload extends AbstractComponent
 
         if (buttonCaption != null) {
             target.addAttribute("buttoncaption", buttonCaption);
+            if (buttonStyleName != null) {
+                target.addAttribute("buttonstylename", buttonStyleName);
+            }
         }
 
         target.addAttribute("nextid", nextid);
@@ -984,6 +989,14 @@ public class Upload extends AbstractComponent
     }
 
     /**
+     * @return Stylename to be rendered into button that fires uploading
+     * @since 8.2
+     */
+    public String getButtonStyleName() {
+        return buttonStyleName;
+    }
+
+    /**
      * In addition to the actual file chooser, upload components have button
      * that starts actual upload progress. This method is used to set text in
      * that button.
@@ -1007,6 +1020,20 @@ public class Upload extends AbstractComponent
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
+        markAsDirty();
+    }
+
+    /**
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set a stylename
+     * to that button.
+     *
+     * @param buttonStyleName styleName for upload components button.
+     * @see #setButtonCaption(String) about when the button is shown / hidden.
+     * @since 8.2
+     */
+    public void setButtonStyleName(String buttonStyleName) {
+        this.buttonStyleName = buttonStyleName;
         markAsDirty();
     }
 
