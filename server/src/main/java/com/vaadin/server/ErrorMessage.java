@@ -91,13 +91,13 @@ public interface ErrorMessage extends Serializable {
                 return com.vaadin.shared.ui.ErrorLevel.INFO;
             case WARNING:
                 return com.vaadin.shared.ui.ErrorLevel.WARNING;
-            case ERROR:
-            default:
-                return com.vaadin.shared.ui.ErrorLevel.ERROR;
             case CRITICAL:
                 return com.vaadin.shared.ui.ErrorLevel.CRITICAL;
             case SYSTEMERROR:
                 return com.vaadin.shared.ui.ErrorLevel.SYSTEM;
+            case ERROR:
+            default:
+                return com.vaadin.shared.ui.ErrorLevel.ERROR;
             }
         }
     }

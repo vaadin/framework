@@ -18,6 +18,10 @@ package com.vaadin.client;
 import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
+/**
+ * An object that contains information about a tooltip, such as the tooltip's
+ * title, error message, error level and an ID.
+ */
 public class TooltipInfo {
 
     private String title;
@@ -31,6 +35,9 @@ public class TooltipInfo {
     // events.
     private Object identifier;
 
+    /**
+     * Constructs a new tooltip info instance.
+     */
     public TooltipInfo() {
     }
 
@@ -90,34 +97,78 @@ public class TooltipInfo {
         setErrorLevel(errorLevel);
     }
 
+    /**
+     * Sets the tooltip's identifier.
+     *
+     * @param identifier
+     *         the identifier to set
+     */
     public void setIdentifier(Object identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * Gets the tooltip's identifier.
+     *
+     * @return the identifier
+     */
     public Object getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Gets the tooltip title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the tooltip title.
+     *
+     * @param title
+     *         the title to set
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Gets the error message.
+     *
+     * @return the error message
+     */
     public String getErrorMessage() {
         return errorMessageHtml;
     }
 
+    /**
+     * Sets the error message.
+     *
+     * @param errorMessage
+     *         the error message to set
+     */
     public void setErrorMessage(String errorMessage) {
         errorMessageHtml = errorMessage;
     }
 
+    /**
+     * Gets the error level.
+     *
+     * @return the error level
+     */
     public ErrorLevel getErrorLevel() {
         return errorLevel;
     }
 
+    /**
+     * Sets the error level.
+     *
+     * @param errorLevel
+     *         the error level to set
+     */
     public void setErrorLevel(ErrorLevel errorLevel) {
         this.errorLevel = errorLevel;
     }
@@ -133,9 +184,19 @@ public class TooltipInfo {
                 || (errorMessageHtml != null && !errorMessageHtml.isEmpty());
     }
 
+    /**
+     * Indicates whether another tooltip info instance is equal to this one. Two
+     * instances are equal if their title, error message, error level and
+     * identifier are equal.
+     *
+     * @param other
+     *         the reference tooltip info instance with which to compare
+     * @return {@code true} if the instances are equal, {@code false} otherwise
+     */
     public boolean equals(TooltipInfo other) {
         return (other != null && SharedUtil.equals(other.title, title)
                 && SharedUtil.equals(other.errorMessageHtml, errorMessageHtml)
+                && SharedUtil.equals(other.errorLevel, errorLevel)
                 && other.identifier == identifier);
     }
 }
