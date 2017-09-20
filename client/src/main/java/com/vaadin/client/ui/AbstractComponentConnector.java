@@ -492,6 +492,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @OnStateChange({"errorMessage", "errorLevel"})
     private void setErrorLevel() {
+        // Add or remove the widget's error level style name
+        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
+                getWidget().getStylePrimaryName() + StyleConstants.ERROR_EXT,
+                getState().errorLevel);
+
+        // Add or remove error indicator element
         if (getWidget() instanceof HasErrorIndicatorElement) {
             HasErrorIndicatorElement widget = (HasErrorIndicatorElement) getWidget();
             if (getState().errorMessage != null) {
@@ -655,10 +661,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // add / remove error style name
         setWidgetStyleNameWithPrefix(primaryStyleName, StyleConstants.ERROR_EXT,
                 null != state.errorMessage);
-
-        // add or remove error level style name
-        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
-                primaryStyleName + StyleConstants.ERROR_EXT, state.errorLevel);
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
