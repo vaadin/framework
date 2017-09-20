@@ -1,3 +1,9 @@
+---
+title: Using Grid With A Container
+order: 31
+layout: page
+---
+
 [[using-grid-with-a-container]]
 Using Grid with a Container
 ---------------------------

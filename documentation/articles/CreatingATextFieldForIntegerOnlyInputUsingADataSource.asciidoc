@@ -1,3 +1,9 @@
+---
+title: Creating A Text Field For Integer Only Input Using A Data Source
+order: 30
+layout: page
+---
+
 [[creating-a-textfield-for-integer-only-input-using-a-data-source]]
 Creating a TextField for integer only input using a data source
 ---------------------------------------------------------------

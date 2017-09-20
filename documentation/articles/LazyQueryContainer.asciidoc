@@ -1,3 +1,9 @@
+---
+title: Lazy Query Container
+order: 2
+layout: page
+---
+
 [[lazy-query-container]]
 Lazy query container
 --------------------

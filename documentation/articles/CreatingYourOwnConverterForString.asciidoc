@@ -1,3 +1,9 @@
+---
+title: Creating Your Own Converter For String
+order: 5
+layout: page
+---
+
 [[creating-your-own-converter-for-string-mytype-conversion]]
 Creating your own converter for String - MyType conversion
 ----------------------------------------------------------

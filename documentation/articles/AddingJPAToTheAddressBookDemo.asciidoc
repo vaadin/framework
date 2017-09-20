@@ -1,3 +1,9 @@
+---
+title: Adding JPA To The Address Book Demo
+order: 18
+layout: page
+---
+
 [[adding-jpa-to-the-address-book-demo]]
 Adding JPA to the address book demo
 -----------------------------------

@@ -1,3 +1,9 @@
+---
+title: Contents
+order: 1
+layout: page
+---
+
 = Community articles for Vaadin 7
 
 [discrete]

@@ -1,3 +1,9 @@
+---
+title: Creating An Application With Different Features For Different Clients
+order: 7
+layout: page
+---
+
 [[creating-an-application-with-different-features-for-different-clients]]
 Creating an application with different features for different clients
 ---------------------------------------------------------------------

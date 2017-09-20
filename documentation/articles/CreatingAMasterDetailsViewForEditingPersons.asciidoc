@@ -1,3 +1,9 @@
+---
+title: Creating A Master Details View For Editing Persons
+order: 28
+layout: page
+---
+
 [[creating-a-master-details-view-for-editing-persons]]
 Creating a master details view for editing persons
 --------------------------------------------------

@@ -1,3 +1,9 @@
+---
+title: Vaadin 7 Hierarchical Container And Tree Component Example With Liferay Organization Service
+order: 26
+layout: page
+---
+
 [[vaadin-7-hierarchical-container-and-treecomponent-example-with-liferay-organizationservice]]
 Vaadin 7 hierarchical container and TreeComponent example with Liferay OrganizationService
 ------------------------------------------------------------------------------------------

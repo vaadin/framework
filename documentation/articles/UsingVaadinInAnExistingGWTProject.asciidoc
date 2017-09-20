@@ -1,3 +1,9 @@
+---
+title: Using Vaadin In An Existing GWT Project
+order: 13
+layout: page
+---
+
 [[using-vaadin-in-an-existing-gwt-project]]
 Using Vaadin in an existing GWT project
 ---------------------------------------

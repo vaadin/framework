@@ -1,3 +1,9 @@
+---
+title: Simplified RPC using JavaScript
+order: 19
+layout: page
+---
+
 [[simplified-rpc-using-javascript]]
 Simplified RPC using JavaScript
 -------------------------------

@@ -1,3 +1,9 @@
+---
+title: Creating A Basic Application
+order: 10
+layout: page
+---
+
 [[creating-a-basic-application]]
 Creating a basic application
 ----------------------------

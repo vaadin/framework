@@ -1,3 +1,9 @@
+---
+title: Building Vaadin Applications On Top Of Activiti
+order: 12
+layout: page
+---
+
 [[building-vaadin-applications-on-top-of-activiti]]
 Building Vaadin applications on top of Activiti
 -----------------------------------------------

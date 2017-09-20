@@ -1,3 +1,9 @@
+---
+title: Configuring Grid Column Widths
+order: 25
+layout: page
+---
+
 [[configuring-grid-column-widths]]
 Configuring Grid column widths
 ------------------------------

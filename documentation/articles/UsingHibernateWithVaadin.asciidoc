@@ -1,3 +1,9 @@
+---
+title: Using Hibernate With Vaadin
+order: 17
+layout: page
+---
+
 [[using-hibernate-with-vaadin]]
 Using Hibernate with Vaadin
 ---------------------------

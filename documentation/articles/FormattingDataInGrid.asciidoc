@@ -1,3 +1,9 @@
+---
+title: Formatting Data In Grid
+order: 24
+layout: page
+---
+
 [[formatting-data-in-grid]]
 Formatting data in grid
 -----------------------
