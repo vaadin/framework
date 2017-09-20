@@ -770,7 +770,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         nameField.setValue("Invalid");
 
-        Assert.assertTrue("First name change not handled", binder.isValid());
+        Assert.assertFalse("First name change not handled",
+                binder.hasChanges());
         Assert.assertTrue(
                 "Changing first name to something else than last name should be ok",
                 binder.validate().isOk());
@@ -787,8 +788,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         nameField.setValue("Valid");
 
-        Assert.assertTrue("With new first name both changes should be saved",
-                binder.isValid());
+        Assert.assertFalse("With new first name both changes should be saved",
+                binder.hasChanges());
         Assert.assertTrue("Everything should be ok for 'Valid Invalid'",
                 binder.validate().isOk());
         Assert.assertNotEquals("First name and last name should never match.",
