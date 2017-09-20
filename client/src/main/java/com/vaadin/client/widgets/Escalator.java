@@ -1216,6 +1216,7 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            updateAriaRowcountBasedOnRows(rows);
 
             if (!isAttached()) {
                 return;
@@ -1340,6 +1341,7 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
+            updateAriaRowcountBasedOnRows(rows);
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -1494,6 +1496,16 @@ public class Escalator extends Widget
                 parent.insertFirst(elem);
             }
             return elem;
+        }
+
+        private void updateAriaRowcountBasedOnRows(Integer rows){
+            if (rows == null) {
+                getTable().setAttribute("aria-rowcount", "-1");
+
+                return;
+            }
+
+            getTable().setAttribute("aria-rowcount", String.valueOf(rows));
         }
 
         abstract protected void recalculateSectionHeight();
