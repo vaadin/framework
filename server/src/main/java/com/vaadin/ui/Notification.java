@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEvent;
-import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
@@ -397,15 +396,18 @@ public class Notification extends AbstractExtension implements Serializable {
         extend(page.getUI());
     }
 
-    @Override
-    protected void extend(AbstractClientConnector target) {
+    protected void extend(UI ui) {
         NotificationState state = getState();
         state.caption = getCaption();
         state.description = getDescription();
         state.htmlContentAllowed = isHtmlContentAllowed();
-        if (getIcon() != null) {
+        Resource icon = getIcon();
+        if (icon != null) {
+            ui.getSession().getGlobalResourceHandler(true)
+                .register(icon, ui);
+
             ResourceReference reference = ResourceReference.create(
-                    getIcon(), target, "");
+                    icon, ui, "");
             state.iconUri = reference.getURL();
         }
         if (getPosition() != null) {
@@ -413,7 +415,7 @@ public class Notification extends AbstractExtension implements Serializable {
         }
         state.styleName = getStyleName();
         state.delay = getDelayMsec();
-        super.extend(target);
+        super.extend(ui);
     }
 
     @Override
