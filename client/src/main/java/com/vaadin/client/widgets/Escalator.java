@@ -6816,6 +6816,16 @@ public class Escalator extends Widget
         return tableWrapper;
     }
 
+    /**
+     * Returns the {@code <table />} element of the grid.
+     *
+     * @return the table element
+     * @since 8.2
+     */
+    public Element getTable() {
+        return getTableWrapper().getFirstChildElement();
+    }
+
     private Element getSubPartElementTableStructure(SubPartArguments args) {
 
         String type = args.getType();
