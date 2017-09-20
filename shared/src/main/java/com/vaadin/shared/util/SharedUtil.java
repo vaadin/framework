@@ -148,16 +148,6 @@ public class SharedUtil implements Serializable {
         return join(parts, " ");
     }
 
-    private static boolean isAllUpperCase(String string) {
-        for (int i = 0; i < string.length(); i++) {
-            char c = string.charAt(i);
-            if (!Character.isUpperCase(c) && !Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Joins the words in the input array together into a single string by
      * inserting the separator string between each word.

@@ -197,18 +197,6 @@ public class Profiler {
             return Collections.unmodifiableCollection(children.values());
         }
 
-        private void buildRecursiveString(StringBuilder builder,
-                String prefix) {
-            if (getName() != null) {
-                String msg = getStringRepresentation(prefix);
-                builder.append(msg + '\n');
-            }
-            String childPrefix = prefix + "*";
-            for (Node node : children.values()) {
-                node.buildRecursiveString(builder, childPrefix);
-            }
-        }
-
         @Override
         public String toString() {
             return getStringRepresentation("");

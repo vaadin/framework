@@ -55,17 +55,6 @@ public class MenuTooltip extends AbstractReindeerTestUI {
         return menu;
     }
 
-    private Command buildCommand() {
-        Command command = new Command() {
-
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-
-            }
-        };
-        return command;
-    }
-
     /*
      * (non-Javadoc)
      *

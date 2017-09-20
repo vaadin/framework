@@ -63,14 +63,6 @@ public class ComponentElementGetValue extends AbstractTestUI {
     public static final String DATEFIELD_VALUE_CHANGE = "dateFieldValueChange";
     public static final String MULTI_SELECT_VALUE_CHANGE = "multiSelectValueChange";
 
-    private List<String> createTestItems() {
-        List<String> options = new ArrayList<String>();
-        options.add("item 1");
-        options.add(TEST_STRING_VALUE);
-        options.add("item 3");
-        return options;
-    }
-
     private void addSingleSelectComponents() {
         List<String> options = new ArrayList<String>();
         options.add("item 1");

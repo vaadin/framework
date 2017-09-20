@@ -3623,13 +3623,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::removeColumn);
     }
 
-    private String getIdentifier(Column<T, ?> column) {
-        return columnKeys.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(column))
-                .map(entry -> entry.getKey()).findFirst()
-                .orElse(getGeneratedIdentifier());
-    }
-
     private String getGeneratedIdentifier() {
         String columnId = "" + counter;
         counter++;

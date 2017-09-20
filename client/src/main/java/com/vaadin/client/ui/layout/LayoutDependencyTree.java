@@ -311,28 +311,6 @@ public class LayoutDependencyTree {
 
         }
 
-        /**
-         * Go up the hierarchy to find a component whose size might have changed
-         * in the other direction because changes to this component causes
-         * scrollbars to appear or disappear.
-         *
-         * @return
-         */
-        private LayoutDependency findPotentiallyChangedScrollbar() {
-            ComponentConnector currentConnector = connector;
-            while (true) {
-                ServerConnector parent = currentConnector.getParent();
-                if (!(parent instanceof ComponentConnector)) {
-                    return null;
-                }
-                if (parent instanceof MayScrollChildren) {
-                    return getDependency(currentConnector.getConnectorId(),
-                            getOppositeDirection());
-                }
-                currentConnector = (ComponentConnector) parent;
-            }
-        }
-
         private int getOppositeDirection() {
             return direction == HORIZONTAL ? VERTICAL : HORIZONTAL;
         }

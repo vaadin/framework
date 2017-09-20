@@ -1455,7 +1455,4 @@ public abstract class AbstractComponent extends AbstractClientConnector
                         + AbstractFieldState.class.getSimpleName());
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractComponent.class.getName());
-    }
 }
