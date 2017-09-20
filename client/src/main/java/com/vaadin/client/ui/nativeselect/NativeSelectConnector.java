@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.nativeselect;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractSingleSelectConnector;
 import com.vaadin.client.data.DataSource;
@@ -52,8 +53,6 @@ public class NativeSelectConnector
     @Override
     protected void init() {
         super.init();
-        getWidget().getListBox()
-                .setStyleName(NativeSelectState.STYLE_NAME + "-select");
         selectionChangeRegistration = getWidget().getListBox()
                 .addChangeHandler(e -> selectionRpc
                         .select(getWidget().getListBox().getSelectedValue()));
@@ -91,6 +90,21 @@ public class NativeSelectConnector
         getWidget().setTabIndex(getState().tabIndex);
     }
 
+    @OnStateChange({ "emptySelectionCaption", "emptySelectionAllowed" })
+    private void onEmptySelectionCaptionChange() {
+        ListBox listBox = getWidget().getListBox();
+        boolean hasEmptyItem = listBox.getItemCount() > 0
+                && listBox.getValue(0).isEmpty();
+        if (hasEmptyItem && getState().emptySelectionAllowed) {
+            listBox.setItemText(0, getState().emptySelectionCaption);
+        } else if (hasEmptyItem && !getState().emptySelectionAllowed) {
+            listBox.removeItem(0);
+        } else if (!hasEmptyItem && getState().emptySelectionAllowed) {
+            listBox.insertItem(getState().emptySelectionCaption, 0);
+            listBox.setValue(0, "");
+        }
+    }
+
     @Override
     public NativeSelectState getState() {
         return (NativeSelectState) super.getState();
@@ -112,9 +126,11 @@ public class NativeSelectConnector
         final VNativeSelect select = getWidget();
         final int itemCount = select.getListBox().getItemCount();
 
-        for (int i = range.getStart(); i < range.getEnd(); i++) {
+        int increment = getState().emptySelectionAllowed ? 1 : 0;
+        for (int i = range.getStart() + increment; i < range.getEnd()
+                + increment; i++) {
 
-            final JsonObject row = getDataSource().getRow(i);
+            final JsonObject row = getDataSource().getRow(i - increment);
 
             if (i < itemCount) {
                 // Reuse and update an existing item
@@ -127,8 +143,8 @@ public class NativeSelectConnector
             }
         }
 
-        for (int i = select.getListBox().getItemCount() - 1; i >= range
-                .getEnd(); i--) {
+        for (int i = select.getListBox().getItemCount() - 1; i >= range.getEnd()
+                + increment; i--) {
             // Remove extra items if the new dataset is smaller than the old
             select.getListBox().removeItem(i);
         }

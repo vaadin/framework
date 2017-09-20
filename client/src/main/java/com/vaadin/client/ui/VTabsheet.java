@@ -339,6 +339,7 @@ public class VTabsheet extends VTabsheetBase
             if (tabState.description != null
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
+                        tabState.descriptionContentMode,
                         tabState.componentError, this));
             } else {
                 setTooltipInfo(null);
@@ -1340,7 +1341,7 @@ public class VTabsheet extends VTabsheetBase
             scroller.getStyle().setDisplay(Display.NONE);
         }
 
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             /*
              * another hack for webkits. tabscroller sometimes drops without
              * "shaking it" reproducable in

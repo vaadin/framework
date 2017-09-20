@@ -29,9 +29,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
@@ -40,10 +39,12 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
+import com.vaadin.ui.Dependency;
 import com.vaadin.ui.UI;
 
 import elemental.json.Json;
 import elemental.json.JsonArray;
+import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
 
 /**
@@ -63,8 +64,6 @@ public class UidlWriter implements Serializable {
      *            The {@link UI} whose changes to write
      * @param writer
      *            The writer to use
-     * @param analyzeLayouts
-     *            Whether detected layout problems should be logged.
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.
@@ -91,10 +90,9 @@ public class UidlWriter implements Serializable {
 
         while (true) {
             ArrayList<ClientConnector> connectorsToProcess = new ArrayList<>();
-            for (ClientConnector c : uiConnectorTracker.getDirtyConnectors()) {
-                if (!processedConnectors.contains(c)
-                        && LegacyCommunicationManager
-                                .isConnectorVisibleToClient(c)) {
+            for (ClientConnector c : uiConnectorTracker
+                    .getDirtyVisibleConnectors()) {
+                if (!processedConnectors.contains(c)) {
                     connectorsToProcess.add(c);
                 }
             }
@@ -103,9 +101,25 @@ public class UidlWriter implements Serializable {
                 break;
             }
 
+            // process parents before children
+            Collections.sort(connectorsToProcess,
+                    Comparator.comparingInt(conn -> {
+                        int depth = 0;
+                        ClientConnector connector = conn;
+                        // this is a very fast operation, even for 100+ levels
+                        while (connector.getParent() != null) {
+                            ++depth;
+                            connector = connector.getParent();
+                        }
+                        return depth;
+                    }));
+
             for (ClientConnector connector : connectorsToProcess) {
-                boolean initialized = uiConnectorTracker
-                        .isClientSideInitialized(connector);
+                // call isDirty() to find out if ConnectorTracker knows the
+                // connector
+                boolean initialized = uiConnectorTracker.isDirty(connector)
+                        && uiConnectorTracker
+                                .isClientSideInitialized(connector);
                 processedConnectors.add(connector);
 
                 try {
@@ -284,39 +298,15 @@ public class UidlWriter implements Serializable {
                 }
             });
 
-            List<String> scriptDependencies = new ArrayList<>();
-            List<String> styleDependencies = new ArrayList<>();
+            List<Dependency> dependencies = new ArrayList<>();
+            dependencies.addAll(ui.getPage().getPendingDependencies());
+            dependencies.addAll(Dependency.findDependencies(newConnectorTypes,
+                    manager, new FilterContext(session)));
 
-            for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
-                JavaScript jsAnnotation = class1
-                        .getAnnotation(JavaScript.class);
-                if (jsAnnotation != null) {
-                    for (String uri : jsAnnotation.value()) {
-                        scriptDependencies
-                                .add(manager.registerDependency(uri, class1));
-                    }
-                }
-
-                StyleSheet styleAnnotation = class1
-                        .getAnnotation(StyleSheet.class);
-                if (styleAnnotation != null) {
-                    for (String uri : styleAnnotation.value()) {
-                        styleDependencies
-                                .add(manager.registerDependency(uri, class1));
-                    }
-                }
-            }
-
-            // Include script dependencies in output if there are any
-            if (!scriptDependencies.isEmpty()) {
-                writer.write(", \"scriptDependencies\": "
-                        + JsonUtil.stringify(toJsonArray(scriptDependencies)));
-            }
-
-            // Include style dependencies in output if there are any
-            if (!styleDependencies.isEmpty()) {
-                writer.write(", \"styleDependencies\": "
-                        + JsonUtil.stringify(toJsonArray(styleDependencies)));
+            // Include dependencies in output if there are any
+            if (!dependencies.isEmpty()) {
+                writer.write(", \"dependencies\": "
+                        + JsonUtil.stringify(toJsonArray(dependencies)));
             }
 
             session.getDragAndDropService().printJSONResponse(writer);
@@ -331,14 +321,18 @@ public class UidlWriter implements Serializable {
             writePerformanceData(ui, writer);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
-            uiConnectorTracker.cleanConnectorMap();
+            uiConnectorTracker.cleanConnectorMap(true);
         }
     }
 
-    private JsonArray toJsonArray(List<String> list) {
+    private JsonArray toJsonArray(List<Dependency> list) {
         JsonArray result = Json.createArray();
         for (int i = 0; i < list.size(); i++) {
-            result.set(i, list.get(i));
+            JsonObject dep = Json.createObject();
+            Dependency dependency = list.get(i);
+            dep.put("type", dependency.getType().name());
+            dep.put("url", dependency.getUrl());
+            result.set(i, dep);
         }
 
         return result;

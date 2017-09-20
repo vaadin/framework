@@ -21,7 +21,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
+import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
+ */
 @Deprecated
 public class Reindeer extends BaseTheme {
 

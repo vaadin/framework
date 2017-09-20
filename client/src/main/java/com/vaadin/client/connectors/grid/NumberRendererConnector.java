@@ -26,7 +26,7 @@ import com.vaadin.shared.ui.grid.renderers.NumberRendererState;
  * string, and displayed as-is on the client side. This is to be able to support
  * the server's locale.
  *
- * @since 7.4
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderers.NumberRenderer.class)

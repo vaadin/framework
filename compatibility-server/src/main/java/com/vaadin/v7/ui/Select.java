@@ -23,8 +23,7 @@ import com.vaadin.v7.data.Container;
 /**
  * <p>
  * A class representing a selection of items the user has selected in a UI. The
- * set of choices is presented as a set of {@link com.vaadin.v7.data.Item}s in a
- * {@link com.vaadin.v7.data.Container}.
+ * set of choices is presented as a set of {@link Item}s in a {@link Container}.
  * </p>
  *
  * <p>

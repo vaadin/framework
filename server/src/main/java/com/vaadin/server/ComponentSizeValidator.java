@@ -92,9 +92,7 @@ public class ComponentSizeValidator implements Serializable {
             }
         } else if (isForm(component)) {
             HasComponents form = (HasComponents) component;
-            for (Iterator<Component> iterator = form.iterator(); iterator
-                    .hasNext();) {
-                Component child = iterator.next();
+            for (Component child : form) {
                 errors = validateComponentRelativeSizes(child, errors, parent);
             }
         }
@@ -129,7 +127,7 @@ public class ComponentSizeValidator implements Serializable {
         StringBuffer err = new StringBuffer();
         err.append("Vaadin DEBUG\n");
 
-        StringBuilder indent = new StringBuilder("");
+        StringBuilder indent = new StringBuilder();
         ComponentInfo ci;
         if (attributes != null) {
             while (attributes.size() > LAYERS_SHOWN) {
@@ -305,7 +303,6 @@ public class ComponentSizeValidator implements Serializable {
             this.component = component;
             this.info = info;
         }
-
     }
 
     private static Deque<ComponentInfo> getHeightAttributes(
@@ -435,7 +432,7 @@ public class ComponentSizeValidator implements Serializable {
     public static boolean parentCanDefineHeight(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
-            // main window, valid situation
+            // main window
             return true;
         }
         if (parent.getHeight() < 0) {
@@ -446,37 +443,28 @@ public class ComponentSizeValidator implements Serializable {
             }
 
             if (parent instanceof AbstractOrderedLayout) {
-                boolean horizontal = true;
                 if (parent instanceof VerticalLayout) {
-                    horizontal = false;
-                }
-                if (horizontal && hasNonRelativeHeightComponent(
-                        (AbstractOrderedLayout) parent)) {
-                    return true;
-                } else {
                     return false;
                 }
+                return hasNonRelativeHeightComponent(
+                        (AbstractOrderedLayout) parent);
 
             } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
-                boolean rowHasHeight = false;
-                for (int row = componentArea.getRow1(); !rowHasHeight
-                        && row <= componentArea.getRow2(); row++) {
-                    for (int column = 0; !rowHasHeight
-                            && column < gl.getColumns(); column++) {
+                for (int row = componentArea.getRow1();
+                        row <= componentArea.getRow2(); row++) {
+                    for (int column = 0;
+                            column < gl.getColumns(); column++) {
                         Component c = gl.getComponent(column, row);
                         if (c != null) {
-                            rowHasHeight = !hasRelativeHeight(c);
+                            if (!hasRelativeHeight(c)) {
+                                return true;
+                            }
                         }
                     }
                 }
-                if (!rowHasHeight) {
-                    return false;
-                } else {
-                    // Other components define row height
-                    return true;
-                }
+                return false;
             } else if (isForm(parent)) {
                 /*
                  * If some other part of the form is not relative it determines
@@ -503,9 +491,8 @@ public class ComponentSizeValidator implements Serializable {
             // Relative height
             if (parent.getParent() != null) {
                 return parentCanDefineHeight(parent);
-            } else {
-                return true;
             }
+            return true;
         } else {
             // Absolute height
             return true;
@@ -516,7 +503,7 @@ public class ComponentSizeValidator implements Serializable {
      * Comparability form component which is defined in the different jar.
      *
      * TODO : Normally this logic shouldn't be here. But it means that the whole
-     * this class has wrong design and impementation and should be refactored.
+     * this class has wrong design and implementation and should be refactored.
      */
     private static boolean formHasNonRelativeWidthComponent(Component form) {
         HasComponents parent = (HasComponents) form;
@@ -553,7 +540,7 @@ public class ComponentSizeValidator implements Serializable {
     public static boolean parentCanDefineWidth(Component component) {
         Component parent = component.getParent();
         if (parent == null) {
-            // main window, valid situation
+            // main window
             return true;
         }
         if (parent instanceof Window) {
@@ -566,37 +553,25 @@ public class ComponentSizeValidator implements Serializable {
 
             if (parent instanceof AbstractOrderedLayout) {
                 AbstractOrderedLayout ol = (AbstractOrderedLayout) parent;
-                boolean horizontal = true;
-                if (ol instanceof VerticalLayout) {
-                    horizontal = false;
-                }
 
-                if (!horizontal && hasNonRelativeWidthComponent(ol)) {
-                    // valid situation, other components defined width
-                    return true;
-                } else {
-                    return false;
-                }
+                // VerticalLayout and a child defines height
+                return ol instanceof VerticalLayout
+                        && hasNonRelativeWidthComponent(ol);
             } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
-                boolean columnHasWidth = false;
-                for (int col = componentArea.getColumn1(); !columnHasWidth
-                        && col <= componentArea.getColumn2(); col++) {
-                    for (int row = 0; !columnHasWidth
-                            && row < gl.getRows(); row++) {
+                for (int col = componentArea.getColumn1();
+                        col <= componentArea.getColumn2(); col++) {
+                    for (int row = 0; row < gl.getRows(); row++) {
                         Component c = gl.getComponent(col, row);
                         if (c != null) {
-                            columnHasWidth = !hasRelativeWidth(c);
+                            if (!hasRelativeWidth(c)) {
+                                return true;
+                            }
                         }
                     }
                 }
-                if (!columnHasWidth) {
-                    return false;
-                } else {
-                    // Other components define column width
-                    return true;
-                }
+                return false;
             } else if (parent instanceof AbstractSplitPanel
                     || parent instanceof TabSheet
                     || parent instanceof CustomComponent) {
@@ -608,18 +583,11 @@ public class ComponentSizeValidator implements Serializable {
                 return false;
             } else if (parent instanceof Window) {
                 // Sub window can define width based on caption
-                if (parent.getCaption() != null
-                        && !parent.getCaption().isEmpty()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (parent instanceof Panel) {
-                // TODO Panel should be able to define width based on caption
-                return false;
-            } else {
-                return true;
+                return parent.getCaption() != null
+                        && !parent.getCaption().isEmpty();
             }
+            // TODO Panel should be able to define width based on caption
+            return !(parent instanceof Panel);
         } else if (hasRelativeWidth(parent)) {
             // Relative width
             if (parent.getParent() == null) {

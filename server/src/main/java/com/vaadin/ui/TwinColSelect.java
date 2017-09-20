@@ -59,6 +59,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T>
      *            the caption to set, can be {@code null}
      * @param dataProvider
      *            the data provider, not {@code null}
+     * @since 8.0
      */
     public TwinColSelect(String caption, DataProvider<T, ?> dataProvider) {
         this(caption);
@@ -74,7 +75,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T>
      *            the options, cannot be {@code null}
      */
     public TwinColSelect(String caption, Collection<T> options) {
-        this(caption, DataProvider.create(options));
+        this(caption, DataProvider.ofCollection(options));
     }
 
     /**
@@ -92,7 +93,7 @@ public class TwinColSelect<T> extends AbstractMultiSelect<T>
      * the selects.
      * <p>
      * If a height if set (using {@link #setHeight(String)} or
-     * {@link #setHeight(float, int)}) it overrides the number of rows. Leave
+     * {@link #setHeight(float, Unit)}) it overrides the number of rows. Leave
      * the height undefined to use this method.
      *
      * @param rows

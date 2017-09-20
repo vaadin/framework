@@ -35,7 +35,7 @@ public class DateFieldConverterTest {
 
     @Before
     public void setUp() {
-        date = new ObjectProperty<>(0L);
+        date = new ObjectProperty<Long>(0L);
         datefield = new DateField();
         datefield.setBuffered(false);
         datefield.setConverter(new Converter<Date, Long>() {

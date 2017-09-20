@@ -63,12 +63,65 @@ public class TextArea extends AbstractTextField {
      * @param caption
      *            the caption for the field
      * @param value
-     *            the value for the field
+     *            the value for the field, not {@code null}
      */
     public TextArea(String caption, String value) {
         this(caption);
         setValue(value);
+    }
 
+    /**
+     * Constructs a new {@code TextArea} with a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code TextArea} is changed
+     * either by the user or programmatically.
+     *
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     * @since 8.0
+     */
+    public TextArea(ValueChangeListener<String> valueChangeListener) {
+        addValueChangeListener(valueChangeListener);
+    }
+
+    /**
+     * Constructs a new {@code TextArea} with the given caption and a value
+     * change listener.
+     * <p>
+     * The listener is called when the value of this {@code TextArea} is changed
+     * either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     * @since 8.0
+     */
+    public TextArea(String caption,
+            ValueChangeListener<String> valueChangeListener) {
+        this(valueChangeListener);
+        setCaption(caption);
+    }
+
+    /**
+     * Constructs a new {@code TextArea} with the given caption, initial text
+     * contents and a value change listener.
+     * <p>
+     * The listener is called when the value of this {@code TextArea} is changed
+     * either by the user or programmatically.
+     *
+     * @param caption
+     *            the caption for the field
+     * @param value
+     *            the value for the field, not {@code null}
+     * @param valueChangeListener
+     *            the value change listener, not {@code null}
+     * @since 8.0
+     */
+    public TextArea(String caption, String value,
+            ValueChangeListener<String> valueChangeListener) {
+        this(caption, value);
+        addValueChangeListener(valueChangeListener);
     }
 
     @Override

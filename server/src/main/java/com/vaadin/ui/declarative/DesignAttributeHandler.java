@@ -176,8 +176,9 @@ public class DesignAttributeHandler implements Serializable {
                 .getPropertyDescriptors()) {
             Method getter = descriptor.getReadMethod();
             Method setter = descriptor.getWriteMethod();
-            if (getter != null && setter != null && getFormatter()
-                    .canConvert(descriptor.getPropertyType())) {
+            Class<?> propertyType = descriptor.getPropertyType();
+            if (getter != null && setter != null && propertyType != null
+                    && getFormatter().canConvert(propertyType)) {
                 String attribute = toAttributeName(descriptor.getName());
                 entry.addAttribute(attribute, getter, setter);
             }
@@ -187,7 +188,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the specified attribute to the design if it differs from the
-     * default value got from the <code> defaultInstance <code>
+     * default value got from the <code> defaultInstance </code>
      *
      * @param component
      *            the component used to get the attribute value
@@ -197,6 +198,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the attribute list where the attribute will be written
      * @param defaultInstance
      *            the default instance for comparing default values
+     * @since 8.0
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void writeAttribute(Object component, String attribute,
@@ -236,6 +238,7 @@ public class DesignAttributeHandler implements Serializable {
      *            the default attribute value
      * @param inputType
      *            the type of the input value
+     * @since 8.0
      */
     public static <T> void writeAttribute(String attribute,
             Attributes attributes, T value, T defaultValue, Class<T> inputType,
@@ -316,7 +319,7 @@ public class DesignAttributeHandler implements Serializable {
      * return value would be <code>primary-style-name</code>
      *
      * @param propertyName
-     *            the property name returned by {@link IntroSpector}
+     *            the property name returned by {@link Introspector}
      * @return the design attribute name corresponding the given method name
      */
     private static String toAttributeName(String propertyName) {

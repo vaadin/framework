@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container.Filter;
 
 /**
@@ -28,6 +30,10 @@ import com.vaadin.v7.data.Container.Filter;
  * implementing {@link Filter} for in-memory filters.
  *
  * @since 6.6
+ *
+ * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+ * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+ * filters are specific to the implementation.
  */
 @Deprecated
 public abstract class AbstractJunctionFilter implements Filter {

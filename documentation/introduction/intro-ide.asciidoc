@@ -1,0 +1,35 @@
+---
+title: Support for IDEs
+order: 3
+layout: page
+---
+
+[[intro.ide]]
+= Support for IDEs
+
+While Vaadin is not bound to any specific IDE, and you can in fact easily use it
+without any IDE altogether, we provide special support for the Eclipse IDE, IntelliJ IDEA, and the NetBeans IDE, which have become the most used environment for Java development.
+
+An official Vaadin plug-in is available for the Eclipse and NetBeans IDEs.
+It helps in:
+
+* creating new Vaadin projects,
+
+* creating custom themes,
+
+* creating custom client-side widgets,
+
+* downloading add-ons from the Vaadin directory, and
+
+* easily upgrading to a newer version of the Vaadin library.
+
+Availability of the features depends on the IDE.
+The ultimate edition of IntelliJ IDEA comes with built-in support for Vaadin.
+
+*_Vaadin Designer_* is a commercial plug-in available for the Eclipse IDE and IntelliJ IDEA.
+It enables visual editing of declarative designs that you can use in your applications.
+See <<dummy/../../../designer/designer-overview#designer.overview, "Vaadin Designer">> for more information.
+
+Using the Vaadin plug-in is the recommended way of installing Vaadin for development.
+Installing the IDEs and the plug-ins is covered in <<dummy/../../../framework/installing/installing-overview#installing, "Installing Development Tools">>.
+The creation of a new Vaadin project with each IDE is covered in <<dummy/../../../framework/getting-started/getting-started-first-project#getting-started.overview, "Creating a Vaadin Project">>.

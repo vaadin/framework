@@ -2,13 +2,13 @@ package com.vaadin.data.provider;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.SerializableComparator;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.shared.data.sort.SortDirection;
 
 public class ListDataProviderTest
@@ -16,66 +16,7 @@ public class ListDataProviderTest
 
     @Override
     protected ListDataProvider<StrBean> createDataProvider() {
-        return DataProvider.create(data);
-    }
-
-    @Test
-    public void filteringListDataProvider_appliedFilters() {
-        Assert.assertEquals("Filtering result differ",
-                data.stream().filter(fooFilter).count(),
-                dataProvider.withFilter(fooFilter).size(new Query<>()));
-
-        Assert.assertEquals("Chained filtering result differ",
-                data.stream().filter(fooFilter.and(gt5Filter)).count(),
-                dataProvider.withFilter(fooFilter)
-                        .size(new Query<>(gt5Filter)));
-    }
-
-    @Test
-    public void filteringListDataProvider_chainedFilters() {
-        Assert.assertEquals("Chained filtering result differ",
-                data.stream().filter(fooFilter.and(gt5Filter)).count(),
-                dataProvider.withFilter(fooFilter).withFilter(gt5Filter)
-                        .size(new Query<>()));
-    }
-
-    @Test
-    public void filteringListDataProvider_chainedFiltersWithOrInsteadOfAnd() {
-        ListDataProvider<StrBean> orFilteredDataProvider = new ListDataProvider<StrBean>(
-                data) {
-
-            @Override
-            public SerializablePredicate<StrBean> combineFilters(
-                    SerializablePredicate<StrBean> filter1,
-                    SerializablePredicate<StrBean> filter2) {
-                return t -> filter1.test(t) || filter2.test(t);
-            }
-        };
-
-        Assert.assertEquals("Chained filtering result differ",
-                data.stream().filter(fooFilter.or(gt5Filter)).count(),
-                orFilteredDataProvider.withFilter(fooFilter)
-                        .withFilter(gt5Filter).size(new Query<>()));
-    }
-
-    @Test
-    public void filteringListDataProvider_appliedFilterAndConverter() {
-        Assert.assertEquals("Filtering result differ with 'Foo'",
-                data.stream().filter(gt5Filter.and(fooFilter)).count(),
-                dataProvider.withFilter(gt5Filter).convertFilter(
-                        text -> strBean -> strBean.getValue().equals(text))
-                        .size(new Query<>("Foo")));
-
-        Assert.assertEquals("Filtering result differ with 'Xyz'", data.stream()
-                .filter(gt5Filter.and(s -> s.getValue().equals("Xyz"))).count(),
-                dataProvider.withFilter(gt5Filter).convertFilter(
-                        text -> strBean -> strBean.getValue().equals(text))
-                        .size(new Query<>("Xyz")));
-
-        Assert.assertEquals("No results should've been found", 0,
-                dataProvider.withFilter(gt5Filter).convertFilter(
-                        text -> strBean -> strBean.getValue().equals(text))
-                        .size(new Query<>("Zyx")));
+        return DataProvider.ofCollection(data);
     }
 
     @Test
@@ -232,8 +173,52 @@ public class ListDataProviderTest
         Assert.assertEquals(0, size);
     }
 
+    @Test
+    public void filteringBy_itemPredicate() {
+        DataProvider<StrBean, String> filteringBy = dataProvider.filteringBy(
+                (item, filterValue) -> item.getValue().equals(filterValue));
+
+        assertSizeWithFilter(36, filteringBy, "Foo");
+    }
+
+    @Test
+    public void filteringBy_equals() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByEquals(StrBean::getValue);
+
+        assertSizeWithFilter(36, filteringBy, "Foo");
+    }
+
+    @Test
+    public void filteringBy_propertyValuePredicate() {
+        DataProvider<StrBean, Integer> filteringBy = dataProvider.filteringBy(
+                StrBean::getId,
+                (propertyValue, filterValue) -> propertyValue >= filterValue);
+
+        assertSizeWithFilter(90, filteringBy, 10);
+    }
+
+    @Test
+    public void filteringBy_caseInsensitiveSubstring() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringBySubstring(StrBean::getValue, Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "oo");
+        assertSizeWithFilter(36, filteringBy, "Oo");
+    }
+
+    @Test
+    public void filterBy_caseInsensitivePrefix() {
+        DataProvider<StrBean, String> filteringBy = dataProvider
+                .filteringByPrefix(StrBean::getValue, Locale.ENGLISH);
+
+        assertSizeWithFilter(36, filteringBy, "Fo");
+        assertSizeWithFilter(36, filteringBy, "fo");
+        assertSizeWithFilter(0, filteringBy, "oo");
+    }
+
     @Override
-    protected void setSortOrder(List<SortOrder<String>> sortOrder,
+    protected void setSortOrder(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp) {
         SerializableComparator<StrBean> serializableComp = comp::compare;
         getDataProvider().setSortComparator(serializableComp);

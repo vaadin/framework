@@ -31,13 +31,16 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 
 /**
  * DragEvent used by Vaadin client side engine. Supports components, items,
  * properties and custom payload (HTML5 style).
  *
- *
+ * @deprecated Since 8.1, no direct replacement, see
+ *             {@link DropTargetExtensionConnector}
  */
+@Deprecated
 public class VDragEvent {
 
     private static final int DEFAULT_OFFSET = 10;

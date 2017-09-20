@@ -44,6 +44,10 @@ import com.vaadin.v7.data.Property;
  *            field value type
  *
  * @since 7.0
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by a {@link com.vaadin.ui.CustomField} based
+ *             on new data binding API
  */
 @Deprecated
 public abstract class CustomField<T> extends AbstractField<T>

@@ -47,8 +47,8 @@ import com.vaadin.ui.declarative.DesignContext;
  *
  * <p>
  * The {@link #getParent()} method allows retrieving the parent component of a
- * component. While there is a {@link #setParent(HasComponents)}, you
- * rarely need it as you normally add components with the
+ * component. While there is a {@link #setParent(HasComponents)}, you rarely
+ * need it as you normally add components with the
  * {@link ComponentContainer#addComponent(Component) addComponent()} method of
  * the layout or other {@code ComponentContainer}, which automatically sets the
  * parent.
@@ -173,6 +173,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void addStyleName(String style);
 
     /**
+     * Adds one or more style names to this component by using one or multiple
+     * parameters.
+     *
+     * @param styles
+     *            the style name or style names to be added to the component
+     * @see #addStyleName(String)
+     * @see #setStyleName(String)
+     * @see #removeStyleName(String)
+     * @since 8.1
+     */
+    public default void addStyleNames(String... styles) {
+        for (String style : styles) {
+            addStyleName(style);
+        }
+    }
+
+    /**
      * Removes one or more style names from component. Multiple styles can be
      * specified as a space-separated list of style names.
      *
@@ -190,6 +207,23 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see #addStyleName(String)
      */
     public void removeStyleName(String style);
+
+    /**
+     * Removes one or more style names from component. Multiple styles can be
+     * specified by using multiple parameters.
+     *
+     * @param styles
+     *            the style name or style names to be removed
+     * @see #removeStyleName(String)
+     * @see #setStyleName(String)
+     * @see #addStyleName(String)
+     * @since 8.1
+     */
+    public default void removeStyleNames(String... styles) {
+        for (String style : styles) {
+            removeStyleName(style);
+        }
+    }
 
     /**
      * Gets the primary style name of the component. See
@@ -513,10 +547,9 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getUI()}, and {@link #getSession()}
-     * methods. A component does not yet know these objects in the constructor,
-     * so in such case, the methods will return {@code null}. For example, the
-     * following is invalid:
+     * {@link #getParent()} and {@link #getUI()} methods. A component does not
+     * yet know these objects in the constructor, so in such case, the methods
+     * will return {@code null}. For example, the following is invalid:
      * </p>
      *
      * <pre>
@@ -537,7 +570,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * component from a container triggers calling the {@link #detach()} method.
      * If the parent of an added component is already connected to the
      * application, the {@code attach()} is called immediately from
-     * {@link #setParent(Component)}.
+     * {@link #setParent(HasComponents)}.
      * </p>
      *
      * <pre>
@@ -617,17 +650,17 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td width=120><b>Example</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;b></td>
+     * <td>&lt;b&gt;</td>
      * <td>bold</td>
      * <td><b>bold text</b></td>
      * </tr>
      * <tr>
-     * <td>&lt;i></td>
+     * <td>&lt;i&gt;</td>
      * <td>italic</td>
      * <td><i>italic text</i></td>
      * </tr>
      * <tr>
-     * <td>&lt;u></td>
+     * <td>&lt;u&gt;</td>
      * <td>underlined</td>
      * <td><u>underlined text</u></td>
      * </tr>
@@ -637,10 +670,10 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <td>N/A</td>
      * </tr>
      * <tr>
-     * <td>&lt;ul><br>
-     * &lt;li>item1<br>
-     * &lt;li>item1<br>
-     * &lt;/ul></td>
+     * <td>&lt;ul&gt;<br>
+     * &lt;li&gt;item1<br>
+     * &lt;li&gt;item1<br>
+     * &lt;/ul&gt;</td>
      * <td>item list</td>
      * <td>
      * <ul>
@@ -901,6 +934,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return a registration object for removing this listener
      * @see Component.Event
      * @see Registration
+     * @since 8.0
      */
     public Registration addListener(Component.Listener listener);
 

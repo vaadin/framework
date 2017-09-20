@@ -16,18 +16,57 @@
 package com.vaadin.data.provider;
 
 import java.util.EventObject;
+import java.util.Objects;
 
 /**
  * An event fired when the data of a {@code DataProvider} changes.
- *
  *
  * @see DataProviderListener
  *
  * @author Vaadin Ltd
  * @since 8.0
  *
+ *
+ * @param <T>
+ *            the data type
  */
-public class DataChangeEvent extends EventObject {
+public class DataChangeEvent<T> extends EventObject {
+
+    /**
+     * An event fired when a single item of a {@code DataProvider} has been
+     * updated.
+     *
+     * @param <T>
+     *            the data type
+     */
+    public static class DataRefreshEvent<T> extends DataChangeEvent<T> {
+
+        private final T item;
+
+        /**
+         * Creates a new data refresh event originating from the given data
+         * provider.
+         *
+         * @param source
+         *            the data provider, not null
+         * @param item
+         *            the updated item, not null
+         */
+        public DataRefreshEvent(DataProvider<T, ?> source, T item) {
+            super(source);
+            Objects.requireNonNull(item, "Refreshed item can't be null");
+            this.item = item;
+        }
+
+        /**
+         * Gets the refreshed item.
+         *
+         * @return the refreshed item
+         */
+        public T getItem() {
+            return item;
+        }
+    }
 
     /**
      * Creates a new {@code DataChangeEvent} event originating from the given
@@ -36,13 +75,12 @@ public class DataChangeEvent extends EventObject {
      * @param source
      *            the data provider, not null
      */
-    public DataChangeEvent(DataProvider<?, ?> source) {
+    public DataChangeEvent(DataProvider<T, ?> source) {
         super(source);
     }
 
     @Override
-    public DataProvider<?, ?> getSource() {
-        return (DataProvider<?, ?>) super.getSource();
+    public DataProvider<T, ?> getSource() {
+        return (DataProvider<T, ?>) super.getSource();
     }
-
 }

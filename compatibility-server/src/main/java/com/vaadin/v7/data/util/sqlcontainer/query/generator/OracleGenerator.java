@@ -21,6 +21,9 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.query.OrderBy;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @SuppressWarnings("serial")
 @Deprecated
 public class OracleGenerator extends DefaultSQLGenerator {

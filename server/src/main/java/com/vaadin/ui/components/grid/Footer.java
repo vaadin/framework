@@ -15,9 +15,13 @@
  */
 package com.vaadin.ui.components.grid;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * Represents the footer section of a Grid.
@@ -112,9 +116,29 @@ public abstract class Footer extends StaticSection<Footer.Row> {
          */
         @Override
         public FooterCell join(FooterCell... cellsToMerge) {
-            Set<FooterCell> footerCells = new HashSet<>(
-                    Arrays.asList(cellsToMerge));
-            return join(footerCells);
+            return join(Stream.of(cellsToMerge));
+        }
+
+        private FooterCell join(Stream<FooterCell> cellStream) {
+            return join(cellStream.collect(Collectors.toSet()));
+        }
+
+        @Override
+        public FooterCell join(Column<?, ?>... columnsToMerge) {
+            return join(Stream.of(columnsToMerge).map(this::getCell));
+        }
+
+        @Override
+        public FooterCell join(String... columnIdsToMerge) {
+            Grid<?> grid = getGrid();
+            return join(Stream.of(columnIdsToMerge).map(columnId -> {
+                Column<?, ?> column = grid.getColumn(columnId);
+                if (column == null) {
+                    throw new IllegalStateException(
+                            "There is no column with the id " + columnId);
+                }
+                return getCell(column);
+            }));
         }
 
     }

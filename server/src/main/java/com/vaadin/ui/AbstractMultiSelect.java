@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.provider.DataGenerator;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.server.Resource;
@@ -59,7 +61,7 @@ import elemental.json.JsonObject;
 public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         implements MultiSelect<T> {
 
-    private Set<T> selection = new LinkedHashSet<>();
+    private List<T> selection = new ArrayList<>();
 
     private class MultiSelectServerRpcImpl implements MultiSelectServerRpc {
         @Override
@@ -87,7 +89,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
     }
 
-    private class MultiSelectDataGenerator implements DataGenerator<T> {
+    private final class MultiSelectDataGenerator implements DataGenerator<T> {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             String caption = getItemCaptionGenerator().apply(data);
@@ -121,6 +123,11 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         @Override
         public void destroyAllData() {
             AbstractMultiSelect.this.deselectAll();
+        }
+
+        @Override
+        public void refreshData(T item) {
+            refreshSelectedItem(item);
         }
     }
 
@@ -209,11 +216,6 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         updateSelection(copy, new LinkedHashSet<>(getSelectedItems()));
     }
 
-    @Override
-    public Set<T> getEmptyValue() {
-        return Collections.emptySet();
-    }
-
     /**
      * Adds a value change listener. The listener is called when the selection
      * set of this multi select is changed either by the user or
@@ -228,9 +230,9 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<Set<T>> listener) {
-        return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.getOldValue(),
-                        event.isUserOriginated())));
+        return addSelectionListener(
+                event -> listener.valueChange(new ValueChangeEvent<>(this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     /**
@@ -346,12 +348,15 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
             return;
         }
 
-        updateSelection(Set::clear, false);
+        updateSelection(Collection::clear, false);
     }
 
     @Override
     public boolean isSelected(T item) {
-        return selection.contains(item);
+        DataProvider<T, ?> dataProvider = internalGetDataProvider();
+        Object id = dataProvider.getId(item);
+        return selection.stream().map(dataProvider::getId).anyMatch(id::equals);
+
     }
 
     /**
@@ -469,7 +474,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
         return item;
     }
 
-    private void updateSelection(SerializableConsumer<Set<T>> handler,
+    private void updateSelection(SerializableConsumer<Collection<T>> handler,
             boolean userOriginated) {
         LinkedHashSet<T> oldSelection = new LinkedHashSet<>(selection);
         handler.accept(selection);
@@ -478,5 +483,16 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
                 oldSelection, userOriginated));
 
         getDataCommunicator().reset();
+    }
+
+    private final void refreshSelectedItem(T item) {
+        DataProvider<T, ?> dataProvider = internalGetDataProvider();
+        Object id = dataProvider.getId(item);
+        for (int i = 0; i < selection.size(); ++i) {
+            if (id.equals(dataProvider.getId(selection.get(i)))) {
+                selection.set(i, item);
+                return;
+            }
+        }
     }
 }

@@ -36,6 +36,8 @@ import com.vaadin.v7.data.Container.Ordered;
  * collapsed subtrees don't exist.
  * <p>
  *
+ * @deprecated Use {@code TreeGrid.addExpandListener()} and
+ *             {@code TreeGrid.addCollapseListener()}.
  */
 @Deprecated
 public interface Collapsible extends Hierarchical, Ordered {

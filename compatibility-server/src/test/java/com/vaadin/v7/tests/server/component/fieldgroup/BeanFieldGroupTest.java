@@ -131,7 +131,7 @@ public class BeanFieldGroupTest {
         BeanFieldGroup<MyBean> bfg = new BeanFieldGroup<MyBean>(MyBean.class);
         bfg.setItemDataSource(bean);
 
-        com.vaadin.v7.ui.Field<?> helloField = bfg.buildAndBind("Hello string",
+        Field<?> helloField = bfg.buildAndBind("Hello string",
                 "nestedBean.hello");
         assertEquals(bean.nestedBean.hello, helloField.getValue().toString());
     }

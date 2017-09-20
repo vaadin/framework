@@ -38,7 +38,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
     private Date end;
     private Date start;
     private String styleName;
-    private transient List<EventChangeListener> listeners = new ArrayList<>();
+    private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
 
     private boolean isAllDay;
 

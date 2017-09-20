@@ -280,7 +280,7 @@ public class WidgetUtil {
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
-        if (height.equals("")) {
+        if (height.isEmpty()) {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
@@ -307,7 +307,7 @@ public class WidgetUtil {
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
@@ -496,7 +496,7 @@ public class WidgetUtil {
                     // updated when collapsing/expanding columns
                     // Also appeared in Safari 5.1 with webkit 534 (#7667)
                     if ((BrowserInfo.get().isChrome() || (BrowserInfo.get()
-                            .isSafari()
+                            .isSafariOrIOS()
                             && BrowserInfo.get().getWebkitVersion() >= 534))
                             && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
                         int scrollvalue = scrollleft;
@@ -769,11 +769,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
-            if (overflow.equals("auto") || overflow.equals("scroll")) {
-                return true;
-            } else {
-                return false;
-            }
+            return overflow.equals("auto") || overflow.equals("scroll");
         } else {
             return false;
         }
@@ -794,7 +790,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-
+    
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -809,7 +805,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-
+    
      }-*/;
 
     /**
@@ -823,9 +819,52 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-
+    
         }
     }-*/;
+
+    /**
+     * Helper method to find first instance of any Widget found by traversing
+     * DOM upwards from given element.
+     * <p>
+     * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * {@code C}, this method will not find {@code W} but returns {@code C}.
+     * This may also be the case with other Composite-like classes that hijack
+     * the event handling of their child widget(s).
+     *
+     * @param element
+     *            the element where to start seeking of Widget
+     * @since 8.1
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T findWidget(Element element) {
+        return findWidget(element, null);
+    }
+
+    /**
+     * Helper method to find first instance of given Widget type found by
+     * traversing DOM upwards from given element.
+     * <p>
+     * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * {@code C}, this method will not find {@code W}. It returns either
+     * {@code C} or null, depending on whether the class parameter matches. This
+     * may also be the case with other Composite-like classes that hijack the
+     * event handling of their child widget(s).
+     * <p>
+     * Only accepts the exact class {@code class1} if not null.
+     *
+     * @param element
+     *            the element where to start seeking of Widget
+     * @param class1
+     *            the Widget type to seek for, null for any
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T findWidget(Element element,
+            Class<? extends Widget> class1) {
+        return findWidget(element, class1, true);
+    }
 
     /**
      * Helper method to find first instance of given Widget type found by
@@ -842,10 +881,14 @@ public class WidgetUtil {
      *            the element where to start seeking of Widget
      * @param class1
      *            the Widget type to seek for
+     * @param exactMatch
+     *            true to only accept class1, false to also accept its
+     *            superclasses
+     * @since 8.1
      */
     @SuppressWarnings("unchecked")
     public static <T> T findWidget(Element element,
-            Class<? extends Widget> class1) {
+            Class<? extends Widget> class1, boolean exactMatch) {
         if (element != null) {
             /* First seek for the first EventListener (~Widget) from dom */
             EventListener eventListener = null;
@@ -861,9 +904,19 @@ public class WidgetUtil {
                  * hierarchy
                  */
                 Widget w = (Widget) eventListener;
+                if (class1 == null && w != null) {
+                    return (T) w;
+                }
                 while (w != null) {
-                    if (class1 == null || w.getClass() == class1) {
-                        return (T) w;
+                    Class<?> widgetClass = w.getClass();
+                    while (widgetClass != null) {
+                        if (widgetClass == class1) {
+                            return (T) w;
+                        }
+                        // terminate after first check if looking for exact
+                        // match
+                        widgetClass = exactMatch ? null
+                                : widgetClass.getSuperclass();
                     }
                     w = w.getParent();
                 }
@@ -1086,7 +1139,7 @@ public class WidgetUtil {
          * Fixes infocusable form fields in Safari of iOS 5.x and some Android
          * browsers.
          */
-        Widget targetWidget = findWidget(target, null);
+        Widget targetWidget = findWidget(target);
         if (targetWidget instanceof com.google.gwt.user.client.ui.Focusable) {
             final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) targetWidget;
             toBeFocusedWidget.setFocus(true);
@@ -1119,7 +1172,7 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-
+    
        return null;
      }-*/;
 
@@ -1190,11 +1243,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-
+    
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-
+    
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1203,12 +1256,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-
+    
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-
+    
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1279,7 +1332,7 @@ public class WidgetUtil {
      * @param e
      *            element for enabling or disabling text selection
      * @param enable
-     *            <code>true</code> if selection is enabled; </code>false</code>
+     *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
     public native static void setTextSelectionEnabled(Element e, boolean enable)
@@ -1424,7 +1477,7 @@ public class WidgetUtil {
             }
 
             s = s.trim();
-            if ("".equals(s)) {
+            if (s.isEmpty()) {
                 return null;
             }
 
@@ -1510,6 +1563,15 @@ public class WidgetUtil {
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (int) value;
+            result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+            return result;
         }
 
         /**
@@ -1648,7 +1710,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-
+    
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1773,5 +1835,35 @@ public class WidgetUtil {
 
         // 12 + int(30.6) / 60 = 12 + 30/60 = 12.5
         return integerPart + ((int) nrFractions) / divisor;
+    }
+
+    /**
+     * Returns the X coordinate of an event relative to an element.
+     *
+     * @param element
+     *            base element of the relative coordinates
+     * @param event
+     *            with touch or mouse coordinates
+     * @return relative X coordinate
+     * @since 8.1
+     */
+    public static int getRelativeX(Element element, NativeEvent event) {
+        int relativeLeft = element.getAbsoluteLeft() - Window.getScrollLeft();
+        return WidgetUtil.getTouchOrMouseClientX(event) - relativeLeft;
+    }
+
+    /**
+     * Returns the Y coordinate of an event relative to an element.
+     *
+     * @param element
+     *            base element of the relative coordinates
+     * @param event
+     *            with touch or mouse coordinates
+     * @return relative Y coordinate
+     * @since 8.1
+     */
+    public static int getRelativeY(Element element, NativeEvent event) {
+        int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
+        return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
     }
 }

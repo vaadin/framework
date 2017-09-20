@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.nativeselect;
 
+import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 
 /**
@@ -30,6 +31,27 @@ public class NativeSelectState extends AbstractSingleSelectState {
      * The default primary style name for {@code NativeSelect}.
      */
     public static final String STYLE_NAME = "v-select";
+
+    /**
+     * True to allow selecting nothing (a special empty selection item is shown
+     * at the beginning of the list), false not to allow empty selection by the
+     * user.
+     */
+    public boolean emptySelectionAllowed = true;
+
+    /**
+     * Caption for item which represents empty selection.
+     */
+    public String emptySelectionCaption = "";
+
+    /**
+     * The number of items that are visible. If only one item is visible, then
+     * the box will be displayed as a drop-down list.
+     *
+     * @since 8.1
+     */
+    @DelegateToWidget
+    public int visibleItemCount = 1;
 
     {
         primaryStyleName = STYLE_NAME;

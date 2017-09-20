@@ -17,11 +17,17 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.ui.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
  * Vaadin Widgets that want to receive something via drag and drop implement
  * this interface.
+ *
+ * @deprecated Replaced in 8.1 with {@link DropListener} and
+ *             {@link DropTargetExtension}
  */
+@Deprecated
 public interface VDropHandler {
 
     /**

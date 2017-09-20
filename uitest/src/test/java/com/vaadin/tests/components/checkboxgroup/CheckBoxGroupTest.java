@@ -32,7 +32,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.CheckBoxGroupElement;
 import com.vaadin.tests.components.checkbox.CheckBoxGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -168,9 +169,10 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
                 "Use Item Icon Generator");
         assertItemSuffices(20);
         List<WebElement> icons = getSelect()
-                .findElements(By.cssSelector(".v-icon.FontAwesome"));
+                .findElements(By.cssSelector(".v-select-optiongroup .v-icon"));
+        Assert.assertTrue(icons.size() > 0);
         for (int i = 0; i < icons.size(); i++) {
-            Assert.assertEquals(FontAwesome.values()[i + 1].getCodepoint(),
+            Assert.assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }
@@ -192,6 +194,28 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Selection", "Toggle Item 5");
         Assert.assertEquals("6. Selected: [Item 1]", getLogRow(0));
         assertSelected("Item 1");
+    }
+
+    @Test
+    public void testItemDescriptionGenerators() {
+        TestBenchElement label;
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Default Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        Assert.assertEquals("Tooltip should contain the same text as caption",
+                label.getText(), getTooltipElement().getText());
+
+        selectMenuPath("Component", "Item Description Generator",
+                "Item Description Generator", "Custom Description Generator");
+
+        label = (TestBenchElement) findElements(By.tagName("label")).get(5);
+        label.showTooltip();
+        Assert.assertEquals("Tooltip should contain caption + ' Description'",
+                label.getText() + " Description",
+                getTooltipElement().getText());
     }
 
     private void assertSelected(String... expectedSelection) {
@@ -268,4 +292,9 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         }
     }
 
+    // needed to make tooltips work in IE tests
+    @Override
+    protected boolean requireWindowFocusForIE() {
+        return true;
+    }
 }

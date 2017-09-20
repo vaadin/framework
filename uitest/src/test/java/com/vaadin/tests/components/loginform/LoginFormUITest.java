@@ -5,8 +5,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.LoginFormElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.LoginFormElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class LoginFormUITest extends SingleBrowserTest {

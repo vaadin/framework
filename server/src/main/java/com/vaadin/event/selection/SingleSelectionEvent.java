@@ -100,7 +100,7 @@ public class SingleSelectionEvent<T> extends ValueChangeEvent<T>
     }
 
     @Override
-    public Optional<T> getFirstSelected() {
+    public Optional<T> getFirstSelectedItem() {
         return getSelectedItem();
     }
 

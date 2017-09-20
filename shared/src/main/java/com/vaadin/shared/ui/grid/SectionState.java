@@ -28,7 +28,7 @@ import com.vaadin.shared.Connector;
  * Shared state for Grid headers and footers.
  *
  * @author Vaadin Ltd
- * @since 7.4
+ * @since 8.0
  */
 public class SectionState implements Serializable {
 
@@ -46,6 +46,11 @@ public class SectionState implements Serializable {
          * rows.
          */
         public boolean defaultHeader = false;
+
+        /**
+         * The style name for the row. Null if none.
+         */
+        public String styleName = null;
     }
 
     /** The state of a header or footer cell. */
@@ -74,4 +79,11 @@ public class SectionState implements Serializable {
 
     /** The rows in this section. */
     public List<RowState> rows = new ArrayList<>();
+
+    /**
+     * Visibility of this section.
+     *
+     * @since 8.1.1
+     */
+    public boolean visible = true;
 }

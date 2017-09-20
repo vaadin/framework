@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.SingleSelectionEvent;
@@ -47,8 +48,8 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -199,38 +200,40 @@ public class GridBasics extends AbstractTestUIWithLog {
         TextField coordinates = new TextField();
         TextField rowNumber = new TextField();
 
-        binder.bind(html, DataObject::getHtmlString, DataObject::setHtmlString);
-        binder.forField(smallRandom)
+        Binding<DataObject, Integer> smallRandomBinding = binder
+                .forField(smallRandom)
                 .withConverter(new StringToIntegerConverter(
                         "Could not convert value to Integer"))
                 .withValidator(i -> i >= 0 && i < 5,
                         "Small random needs to be in range [0..5)")
                 .bind(DataObject::getSmallRandom, DataObject::setSmallRandom);
-        binder.bind(coordinates, DataObject::getCoordinates,
-                DataObject::setCoordinates);
-        binder.forField(rowNumber)
+        Binding<DataObject, Integer> rowNumberBinding = binder
+                .forField(rowNumber)
                 .withConverter(new StringToIntegerConverter(
                         "Could not convert value to Integer"))
                 .bind(DataObject::getRowNumber, DataObject::setRowNumber);
 
         grid.addColumn(DataObject::getCoordinates)
-                .setCaption(COLUMN_CAPTIONS[0]).setEditorComponent(coordinates);
+                .setCaption(COLUMN_CAPTIONS[0])
+                .setEditorComponent(coordinates, DataObject::setCoordinates);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 1)")
                 .setCaption(COLUMN_CAPTIONS[1]);
         grid.addColumn(dataObj -> "(" + dataObj.getRowNumber() + ", 2)")
                 .setCaption(COLUMN_CAPTIONS[2]);
 
         grid.addColumn(DataObject::getRowNumber, new NumberRenderer())
-                .setCaption(COLUMN_CAPTIONS[3]).setEditorComponent(rowNumber);
+                .setCaption(COLUMN_CAPTIONS[3])
+                .setEditorBinding(rowNumberBinding);
         grid.addColumn(DataObject::getDate, new DateRenderer())
                 .setCaption(COLUMN_CAPTIONS[4]);
         grid.addColumn(DataObject::getHtmlString, new HtmlRenderer())
-                .setCaption(COLUMN_CAPTIONS[5]).setEditorComponent(html);
+                .setCaption(COLUMN_CAPTIONS[5])
+                .setEditorComponent(html, DataObject::setHtmlString);
         grid.addColumn(DataObject::getBigRandom, new NumberRenderer())
                 .setCaption(COLUMN_CAPTIONS[6]);
         grid.addColumn(data -> data.getSmallRandom() / 5d,
                 new ProgressBarRenderer()).setCaption(COLUMN_CAPTIONS[7])
-                .setEditorComponent(smallRandom);
+                .setEditorBinding(smallRandomBinding);
 
         selectionListenerRegistration = ((SingleSelectionModelImpl<DataObject>) grid
                 .getSelectionModel())
@@ -379,6 +382,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         MenuItem heightMenu = sizeMenu.addItem("Height", null);
         Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
                 i -> addGridMethodMenu(heightMenu, i, i, grid::setHeight));
+
+        MenuItem rowHeightMenu = sizeMenu.addItem("Row Height", null);
+        Stream.of(-1, 20, 40, 100).forEach(i -> addGridMethodMenu(rowHeightMenu,
+                String.valueOf(i), (double) i, grid::setRowHeight));
     }
 
     private void createStateMenu(MenuItem stateMenu) {
@@ -532,6 +539,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         rowMenu.addItem("Deselect all", menuItem -> {
             grid.getSelectionModel().deselectAll();
         });
+
+        MenuItem rowHeight = rowMenu.addItem("Body Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setBodyRowHeight(i)));
     }
 
     private void createSelectionMenu(MenuItem stateItem) {
@@ -596,6 +607,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createHeaderMenu(MenuItem headerMenu) {
+        headerMenu.addItem("Toggle header visibility",
+                menuitem -> grid.setHeaderVisible(!grid.isHeaderVisible()));
+
         headerMenu.addItem("Append header row", menuItem -> {
             HeaderRow row = grid.appendHeaderRow();
 
@@ -630,6 +644,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
             mergeHeaderСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = headerMenu.addItem("Header Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setHeaderRowHeight(i)));
     }
 
     private void mergeHeaderСells(int rowIndex, String jointCellText,
@@ -655,6 +673,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createFooterMenu(MenuItem footerMenu) {
+        footerMenu.addItem("Toggle footer visibility",
+                menuitem -> grid.setFooterVisible(!grid.isFooterVisible()));
+
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
             grid.getColumns().forEach(
@@ -690,6 +711,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
             mergeFooterСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = footerMenu.addItem("Footer Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setFooterRowHeight(i)));
     }
 
     /* DetailsGenerator related things */

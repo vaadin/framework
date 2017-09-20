@@ -13,13 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see {@link DropTargetExtension}
+ *             and extending classes
+ */
+@Deprecated
 final public class VOverTreeNode extends VAcceptCriterion {
 
     @Override

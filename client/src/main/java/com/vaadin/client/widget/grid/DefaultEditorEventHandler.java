@@ -230,6 +230,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
 
             // Save and close.
             event.getGrid().getEditor().save();
+            FocusUtil.setFocus(event.getGrid(), true);
             return true;
         }
 

@@ -16,7 +16,9 @@
 
 package com.vaadin.annotations;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -49,17 +51,23 @@ import com.vaadin.server.ClientConnector;
  * http://host.com/file1.js as is and file2.js from /com/example/file2.js on the
  * server's classpath using the ClassLoader that was used to load
  * com.example.MyConnector.
+ * <p>
+ * For adding multiple JavaScript files for a single component, you can use this
+ * annotation multiple times.
  *
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Documented
+@Repeatable(InternalContainerAnnotationForJS.class)
 public @interface JavaScript {
     /**
      * JavaScript files to load before initializing the client-side connector.
      *
-     * @return an array of JavaScript file urls
+     * @return an array of JavaScript file URLs
      */
     public String[] value();
+
 }

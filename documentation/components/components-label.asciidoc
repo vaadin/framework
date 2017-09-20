@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.label]]
-= [classname]#Label#
+= Label
 
 ifdef::web[]
 [.sampler]
@@ -94,7 +94,7 @@ will be quoted appropriately to allow rendering the contents of a label in HTML
 in a web browser. The content mode can be set in the constructor or with
 [methodname]#setContentMode()#, and can have the values defined in the
 [classname]#ContentMode# enumeration type in
-[package]#com.vaadin.shared.ui.label# package:
+[package]#com.vaadin.shared.ui# package:
 
 TEXT:: The default content mode where the label contains only plain text. All
 characters are allowed, including the special [literal]#++<++#,

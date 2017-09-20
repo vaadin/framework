@@ -16,6 +16,7 @@
 package com.vaadin.tests;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,8 +32,12 @@ public class CompileTransitionPropertyTest {
 
     @Test
     public void testCompilation() throws Exception {
+        String file = getClass().getResource("styles.scss").getFile();
+        if (file.contains("%20")) {
+            fail("path contains spaces, please move the project");
+        }
         ScssStylesheet ss = ScssStylesheet
-                .get(getClass().getResource("styles.scss").getFile());
+                .get(file);
         ss.compile();
         // extract the style rules for .my-label
         String compiled = ss.printState();

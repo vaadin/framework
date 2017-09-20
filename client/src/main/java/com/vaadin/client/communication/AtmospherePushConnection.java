@@ -207,10 +207,10 @@ public class AtmospherePushConnection implements PushConnection {
         String extraParams = UIConstants.UI_ID_PARAMETER + "="
                 + connection.getConfiguration().getUIId();
 
-        String csrfToken = connection.getMessageHandler().getCsrfToken();
-        if (!csrfToken.equals(ApplicationConstants.CSRF_TOKEN_DEFAULT_VALUE)) {
-            extraParams += "&" + ApplicationConstants.CSRF_TOKEN_PARAMETER + "="
-                    + csrfToken;
+        String pushId = connection.getMessageHandler().getPushId();
+        if (pushId != null) {
+            extraParams += "&" + ApplicationConstants.PUSH_ID_PARAMETER + "="
+                    + pushId;
         }
 
         // uri is needed to identify the right connection when closing

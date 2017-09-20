@@ -1,11 +1,11 @@
 ---
 title: PopupView
-order: 29
+order: 31
 layout: page
 ---
 
 [[components.popupview]]
-= [classname]#PopupView#
+= PopupView
 
 ifdef::web[]
 [.sampler]

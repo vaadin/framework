@@ -75,7 +75,7 @@ public class SQLGeneratorsTest {
     @Test
     public void generateSelectQuery_filtersAndOrderingSet_shouldSucceed() {
         SQLGenerator sg = new DefaultSQLGenerator();
-        List<com.vaadin.v7.data.Container.Filter> f = new ArrayList<Filter>();
+        List<Filter> f = new ArrayList<Filter>();
         f.add(new Like("name", "%lle"));
         List<OrderBy> ob = Arrays.asList(new OrderBy("name", true));
         StatementHelper sh = sg.generateSelectQuery("TABLE", f, ob, 0, 0, null);

@@ -25,7 +25,7 @@ public class PushStateAndReplaceStateTest extends MultiBrowserTest {
         driver.navigate().back();
 
         driver.findElement(By.className("v-Notification")).getText()
-        .contains("Popstate event");
+                .contains("Popstate event");
 
         assertUri(getTestUrl());
 

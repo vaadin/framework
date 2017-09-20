@@ -56,5 +56,26 @@ public interface DataCommunicatorClientRpc extends ClientRpc {
      */
     void updateData(JsonArray data);
 
-    // TODO: Notify add / remove
+    /**
+     * Informs that new data has been inserted from the server.
+     *
+     * @param firstRowIndex
+     *            the destination index of the new row data
+     * @param count
+     *            the number of rows inserted
+     * @since 8.1
+     */
+    void insertRows(int firstRowIndex, int count);
+
+    /**
+     * Informs that the server has removed data.
+     *
+     * @param firstRowIndex
+     *            the index of the first removed row
+     * @param count
+     *            the number of removed rows, starting from
+     *            <code>firstRowIndex</code>
+     * @since 8.1
+     */
+    void removeRows(int firstRowIndex, int count);
 }

@@ -41,7 +41,7 @@ public class GridEditingWithNoScrollBars extends AbstractTestUI {
         stCombo.setEmptySelectionAllowed(false);
         stCombo.setSizeFull();
 
-        column.setEditorComponent(stCombo);
+        column.setEditorComponent(stCombo, Person::setLastName);
 
         grid.setSelectionMode(SelectionMode.SINGLE);
         grid.getEditor().setEnabled(true);

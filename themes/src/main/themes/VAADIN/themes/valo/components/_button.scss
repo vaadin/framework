@@ -364,7 +364,7 @@
     }
   }
 
-  &:active {
+  &:active:not(.v-disabled) {
     @include opacity(.7);
 
     &:after {

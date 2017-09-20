@@ -129,9 +129,17 @@ body &.v-app .v-app-loading {
 	cursor: default;
 	background: #fff;
 	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .5);
+	
+	pre.v-tooltip-pre {
+		font: inherit;
+		white-space: pre-wrap;
+	}
 }
 .v-tooltip-text {
 	overflow: auto;
+        pre {
+          margin: 0px;
+        }
 }
 .v-tooltip .v-errormessage {
 	overflow: auto;

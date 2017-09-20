@@ -25,6 +25,8 @@ import java.util.TimeZone;
  * @since 7.1.0
  * @author Vaadin Ltd.
  *
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated

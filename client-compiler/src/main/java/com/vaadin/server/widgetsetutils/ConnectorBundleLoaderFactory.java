@@ -79,6 +79,7 @@ import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.tools.CvalAddonsChecker;
 import com.vaadin.tools.CvalChecker;
 import com.vaadin.tools.CvalChecker.InvalidCvalException;
+import com.vaadin.tools.ReportUsage;
 
 public class ConnectorBundleLoaderFactory extends Generator {
     /**
@@ -218,6 +219,10 @@ public class ConnectorBundleLoaderFactory extends Generator {
             return Collections.unmodifiableList(methodNames);
         }
 
+    }
+
+    static {
+        ReportUsage.checkForUpdatesInBackgroundThread();
     }
 
     private CvalAddonsChecker cvalChecker = new CvalAddonsChecker();
@@ -1151,6 +1156,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
             bundle.processType(subLogger, type);
 
             bundles.add(bundle);
+        }
+
+        Collection<JClassType> none = connectorsByLoadStyle.get(LoadStyle.NONE);
+        for (JClassType type : none) {
+            logger.log(Type.TRACE,
+                    "Ignoring " + type.getName() + " with LoadStyle.NONE");
         }
 
         return bundles;

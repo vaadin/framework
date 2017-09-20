@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.grid.renderers.ProgressBarRendererState;
 /**
  * A connector for {@link ProgressBarRenderer}.
  *
- * @since 7.4
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Connect(com.vaadin.ui.renderers.ProgressBarRenderer.class)

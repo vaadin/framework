@@ -17,29 +17,44 @@ package com.vaadin.ui.renderers;
 
 import com.vaadin.shared.ui.grid.renderers.TextRendererState;
 
+import elemental.json.Json;
+import elemental.json.JsonValue;
+
 /**
- * A renderer for presenting simple plain-text string values.
+ * A renderer for presenting a plain text representation of any value.
+ * {@link Object#toString()} is used for determining the text to show.
  *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class TextRenderer extends AbstractRenderer<Object, String> {
+public class TextRenderer extends AbstractRenderer<Object, Object> {
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer that uses <code>""</code> to represent null
+     * values.
      */
     public TextRenderer() {
         this("");
     }
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer with the given string to represent null
+     * values.
      *
      * @param nullRepresentation
      *            the textual representation of {@code null} value
      */
     public TextRenderer(String nullRepresentation) {
-        super(String.class, nullRepresentation);
+        super(Object.class, nullRepresentation);
+    }
+
+    @Override
+    public JsonValue encode(Object value) {
+        if (value == null) {
+            return super.encode(null);
+        } else {
+            return Json.create(value.toString());
+        }
     }
 
     @Override

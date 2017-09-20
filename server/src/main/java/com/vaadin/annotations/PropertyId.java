@@ -34,9 +34,9 @@ import com.vaadin.data.HasValue;
  * fields, with the name (ID) of the desired property as the parameter.
  * <p>
  * In following usage example, the text field would be bound to property "foo"
- * in the Entity class. <code>
+ * in the Entity class.
  * <pre>
- *    class Editor extends FormLayout {
+    class Editor extends FormLayout {
         &#64;PropertyId("foo")
         TextField myField = new TextField();
     }
@@ -51,9 +51,8 @@ import com.vaadin.data.HasValue;
         binder.bindInstanceFields(editor);
     }
    </pre>
- * </code>
  *
- * @since 7.0
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Target({ ElementType.FIELD })

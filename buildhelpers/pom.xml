@@ -5,8 +5,9 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
     </parent>
+    <!-- Needed by a plugin in release build -->
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-buildhelpers</artifactId>
     <name>vaadin-buildhelpers</name>
@@ -36,6 +37,14 @@
     </dependencies>
 
     <build>
+        <resources>
+            <!-- Include eclipse formatting settings in the jar to make them available 
+                as a dependency for all submodules -->
+            <resource>
+                <directory>${project.basedir}/../eclipse</directory>
+                <targetPath>eclipse</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

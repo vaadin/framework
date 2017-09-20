@@ -60,7 +60,7 @@ public class CheckBox extends AbstractField<Boolean>
 
         if (!newValue.equals(oldValue)) {
             // The event is only sent if the switch state is changed
-            setValue(newValue);
+            setValue(newValue, true);
         }
     };
 
@@ -116,6 +116,25 @@ public class CheckBox extends AbstractField<Boolean>
     public void setValue(Boolean value) {
         Objects.requireNonNull(value, "CheckBox value must not be null");
         super.setValue(value);
+    }
+
+    /**
+     * Sets the value of this CheckBox. If the new value is not equal to
+     * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
+     * {@code NullPointerException} if the value is null.
+     *
+     * @param value
+     *            the new value, not {@code null}
+     * @param userOriginated
+     *            {@code true} if this event originates from the client,
+     *            {@code false} otherwise.
+     * @throws NullPointerException
+     *             if {@code value} is {@code null}
+     */
+    @Override
+    protected boolean setValue(Boolean value, boolean userOriginated) {
+        Objects.requireNonNull(value, "CheckBox value must not be null");
+        return super.setValue(value, userOriginated);
     }
 
     @Override

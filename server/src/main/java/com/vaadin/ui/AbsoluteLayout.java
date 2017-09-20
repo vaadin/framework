@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -85,7 +86,9 @@ public class AbsoluteLayout extends AbstractLayout
      */
     @Override
     public Iterator<Component> iterator() {
-        return componentToCoordinates.keySet().iterator();
+        return Collections
+                .unmodifiableCollection(componentToCoordinates.keySet())
+                .iterator();
     }
 
     /**

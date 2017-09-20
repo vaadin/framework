@@ -29,6 +29,8 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 import com.vaadin.v7.data.Container;
@@ -38,13 +40,18 @@ import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
 
 /**
  * Configures select to be used as an option group.
+ *
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, use {@link RadioButtonGroup} for single select or
+ *             {@link CheckBoxGroup} for multiselect instead
  */
-@SuppressWarnings("serial")
 @Deprecated
 public class OptionGroup extends AbstractSelect
         implements FieldEvents.BlurNotifier, FieldEvents.FocusNotifier {
 
-    private Set<Object> disabledItemIds = new HashSet<>();
+    private Set<Object> disabledItemIds = new HashSet<Object>();
+    private boolean htmlContentAllowed = false;
 
     public OptionGroup() {
         super();
@@ -60,6 +67,16 @@ public class OptionGroup extends AbstractSelect
 
     public OptionGroup(String caption) {
         super(caption);
+    }
+
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "optiongroup");
+        if (isHtmlContentAllowed()) {
+            target.addAttribute(OptionGroupConstants.HTML_CONTENT_ALLOWED,
+                    true);
+        }
+        super.paintContent(target);
     }
 
     @Override
@@ -196,7 +213,8 @@ public class OptionGroup extends AbstractSelect
      *            text
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        getState().htmlContentAllowed = htmlContentAllowed;
+        this.htmlContentAllowed = htmlContentAllowed;
+        markAsDirty();
     }
 
     /**
@@ -207,7 +225,7 @@ public class OptionGroup extends AbstractSelect
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
-        return getState(false).htmlContentAllowed;
+        return htmlContentAllowed;
     }
 
     @Override

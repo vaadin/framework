@@ -16,18 +16,24 @@
 package com.vaadin.data.provider;
 
 import java.util.Collections;
+import java.util.concurrent.Future;
 
+import elemental.json.Json;
+import elemental.json.JsonArray;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.MockVaadinSession;
-import com.vaadin.server.SerializablePredicate;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
+
+import elemental.json.JsonObject;
+
+import static org.junit.Assert.assertFalse;
 
 /**
  * @author Vaadin Ltd
@@ -35,11 +41,13 @@ import com.vaadin.ui.UI;
  */
 public class DataCommunicatorTest {
 
-    private static class TestUI extends UI {
+    private static final Object TEST_OBJECT = new Object();
+
+    public static class TestUI extends UI {
 
         private final VaadinSession session;
 
-        TestUI(VaadinSession session) {
+        public TestUI(VaadinSession session) {
             this.session = session;
         }
 
@@ -51,6 +59,12 @@ public class DataCommunicatorTest {
         public VaadinSession getSession() {
             return session;
         }
+
+        @Override
+        public Future<Void> access(Runnable runnable) {
+            runnable.run();
+            return null;
+        }
     }
 
     private static class TestDataProvider extends ListDataProvider<Object>
@@ -59,12 +73,12 @@ public class DataCommunicatorTest {
         private Registration registration;
 
         public TestDataProvider() {
-            super(Collections.singleton(new Object()));
+            super(Collections.singleton(TEST_OBJECT));
         }
 
         @Override
         public Registration addDataProviderListener(
-                DataProviderListener listener) {
+                DataProviderListener<Object> listener) {
             registration = super.addDataProviderListener(listener);
             return this;
         }
@@ -81,10 +95,24 @@ public class DataCommunicatorTest {
 
     }
 
-    private static class TestDataCommunicator
-            extends DataCommunicator<Object, SerializablePredicate<Object>> {
+    private static class TestDataCommunicator extends DataCommunicator<Object> {
         protected void extend(UI ui) {
             super.extend(ui);
+        }
+    }
+
+    private static class TestDataGenerator implements DataGenerator<Object> {
+        Object refreshed = null;
+        Object generated = null;
+
+        @Override
+        public void generateData(Object item, JsonObject jsonObject) {
+            generated = item;
+        }
+
+        @Override
+        public void refreshData(Object item) {
+            refreshed = item;
         }
     }
 
@@ -100,9 +128,9 @@ public class DataCommunicatorTest {
         TestDataCommunicator communicator = new TestDataCommunicator();
 
         TestDataProvider dataProvider = new TestDataProvider();
-        communicator.setDataProvider(dataProvider);
+        communicator.setDataProvider(dataProvider, null);
 
-        Assert.assertFalse(dataProvider.isListenerAdded());
+        assertFalse(dataProvider.isListenerAdded());
 
         communicator.extend(ui);
 
@@ -118,7 +146,7 @@ public class DataCommunicatorTest {
         TestDataCommunicator communicator = new TestDataCommunicator();
 
         TestDataProvider dataProvider = new TestDataProvider();
-        communicator.setDataProvider(dataProvider);
+        communicator.setDataProvider(dataProvider, null);
 
         communicator.extend(ui);
 
@@ -126,7 +154,70 @@ public class DataCommunicatorTest {
 
         communicator.detach();
 
-        Assert.assertFalse(dataProvider.isListenerAdded());
+        assertFalse(dataProvider.isListenerAdded());
     }
 
+    @Test
+    public void refresh_dataProviderListenerCallsRefreshInDataGeneartors() {
+        session.lock();
+
+        UI ui = new TestUI(session);
+
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        communicator.extend(ui);
+
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider, null);
+
+        TestDataGenerator generator = new TestDataGenerator();
+        communicator.addDataGenerator(generator);
+
+        // Generate initial data.
+        communicator.beforeClientResponse(true);
+        Assert.assertEquals("DataGenerator generate was not called",
+                TEST_OBJECT, generator.generated);
+        generator.generated = null;
+
+        // Make sure data does not get re-generated
+        communicator.beforeClientResponse(false);
+        Assert.assertEquals("DataGenerator generate was called again", null,
+                generator.generated);
+
+        // Refresh a data object to trigger an update.
+        dataProvider.refreshItem(TEST_OBJECT);
+
+        Assert.assertEquals("DataGenerator refresh was not called", TEST_OBJECT,
+                generator.refreshed);
+
+        // Test refreshed data generation
+        communicator.beforeClientResponse(false);
+        Assert.assertEquals("DataGenerator generate was not called",
+                TEST_OBJECT, generator.generated);
+    }
+
+    @Test
+    public void testDestroyData() {
+        session.lock();
+        UI ui = new TestUI(session);
+        TestDataCommunicator communicator = new TestDataCommunicator();
+        TestDataProvider dataProvider = new TestDataProvider();
+        communicator.setDataProvider(dataProvider, null);
+        communicator.extend(ui);
+        // Put a test object into a cache
+        communicator.pushData(1, Collections.singletonList(TEST_OBJECT));
+        // Put the test object into an update queue
+        communicator.refresh(TEST_OBJECT);
+        // Drop the test object from the cache
+        String key = communicator.getKeyMapper().key(TEST_OBJECT);
+        JsonArray keys = Json.createArray();
+        keys.set(0, key);
+        communicator.onDropRows(keys);
+        // Replace everything
+        communicator.setDataProvider(new ListDataProvider<>(Collections.singleton(new Object())));
+        // The communicator does not have to throw exceptions during
+        // request finalization
+        communicator.beforeClientResponse(false);
+        assertFalse("Stalled object in KeyMapper",
+                communicator.getKeyMapper().has(TEST_OBJECT));
+    }
 }

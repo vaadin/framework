@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ServerRpc;
 
 /**
@@ -88,8 +87,6 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
     /**
      * Create a RPC manager for an RPC target.
      *
-     * @param target
-     *            RPC call target (normally a {@link Connector})
      * @param implementation
      *            RPC interface implementation for the target
      * @param rpcInterface
@@ -166,6 +163,30 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     private static Logger getLogger() {
         return Logger.getLogger(ServerRpcManager.class.getName());
+    }
+
+    /**
+     * Returns an RPC proxy for a given client to server RPC interface for the
+     * given component or extension.
+     *
+     * @param connector
+     *            the connector for which to the RPC proxy
+     * @param rpcInterface
+     *            the RPC interface type
+     *
+     * @return a server RPC handler which can be used to invoke RPC methods
+     * @since 8.0
+     */
+    public static <T extends ServerRpc> T getRpcProxy(ClientConnector connector,
+            final Class<T> rpcInterface) {
+
+        @SuppressWarnings("unchecked")
+        ServerRpcManager<T> rpcManager = (ServerRpcManager<T>) connector
+                .getRpcManager(rpcInterface.getName());
+        if (rpcManager == null) {
+            return null;
+        }
+        return rpcManager.getImplementation();
     }
 
 }

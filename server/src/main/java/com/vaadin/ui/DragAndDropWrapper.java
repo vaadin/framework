@@ -43,11 +43,25 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtension} and
+ *             {@link DropTargetExtension}.
+ */
 @SuppressWarnings("serial")
+@Deprecated
 public class DragAndDropWrapper extends CustomComponent
         implements DropTarget, DragSource, LegacyComponent {
 
+    /**
+     * @deprecated Since 8.1, will be replaced by FileDropTargetExtension and
+     *             FileDropEvent,
+     *             https://github.com/vaadin/framework/issues/8891
+     */
+    @Deprecated
     public class WrapperTransferable extends TransferableImpl {
 
         private Html5File[] files;
@@ -445,10 +459,6 @@ public class DragAndDropWrapper extends CustomComponent
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
             }
 
             @Override

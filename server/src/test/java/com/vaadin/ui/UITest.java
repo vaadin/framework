@@ -1,5 +1,6 @@
 package com.vaadin.ui;
 
+import java.lang.ref.WeakReference;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
@@ -10,6 +11,7 @@ import javax.servlet.ServletConfig;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.vaadin.server.DefaultDeploymentConfiguration;
 import com.vaadin.server.MockServletConfig;
@@ -20,6 +22,7 @@ import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.util.CurrentInstanceTest;
 
 public class UITest {
 
@@ -152,4 +155,57 @@ public class UITest {
         Assert.assertNull(ui.getPushConnection());
 
     }
+
+    @Test
+    public void connectorTrackerMemoryLeak() throws Exception {
+        final UI ui = new UI() {
+
+            @Override
+            protected void init(VaadinRequest request) {
+            }
+
+        };
+        ServletConfig servletConfig = new MockServletConfig();
+        VaadinServlet servlet = new VaadinServlet();
+        servlet.init(servletConfig);
+
+        DefaultDeploymentConfiguration deploymentConfiguration = new DefaultDeploymentConfiguration(
+                UI.class, new Properties());
+
+        VaadinServletService service = new VaadinServletService(servlet,
+                deploymentConfiguration);
+        MockVaadinSession session = new MockVaadinSession(service);
+        session.lock();
+        ui.setSession(session);
+        ui.doInit(Mockito.mock(VaadinRequest.class), 1, "foo");
+        session.addUI(ui);
+        ui.setContent(createContent());
+        WeakReference<Component> contentSentToClient = new WeakReference<>(
+                ui.getContent());
+        ui.getConnectorTracker()
+                .markClientSideInitialized(contentSentToClient.get());
+        session.unlock();
+
+        session.lock();
+        ui.setContent(createContent());
+        WeakReference<Component> contentOnlyOnServer = new WeakReference<>(
+                ui.getContent());
+        ui.setContent(createContent());
+
+        CurrentInstanceTest.waitUntilGarbageCollected(contentOnlyOnServer);
+        // Should not clean references for connectors available in the browser
+        // until the session is unlocked and we know if it has been moved
+        Assert.assertNotNull(contentSentToClient.get());
+        session.unlock();
+        CurrentInstanceTest.waitUntilGarbageCollected(contentSentToClient);
+    }
+
+    private Component createContent() {
+        VerticalLayout vl = new VerticalLayout();
+        vl.addComponent(new Button("foo"));
+        vl.addComponent(new Button("bar"));
+        vl.addComponent(new Button("baz"));
+        return vl;
+    }
+
 }

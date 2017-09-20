@@ -21,8 +21,8 @@ public class GridUI extends AbstractTestUI {
         final Grid<Item> grid = new Grid<Item>();
         grid.setItems(getMockData(rowCount));
         Grid.Column<Item, String> column = grid.addColumn(Item::getFoo)
-            .setCaption("foo");
-        HeaderRow row =grid.addHeaderRowAt(1);
+                .setCaption("foo");
+        HeaderRow row = grid.addHeaderRowAt(1);
         row.getCell(column).setText("extra row");
         grid.addColumn(Item::getBar).setCaption("bar");
 

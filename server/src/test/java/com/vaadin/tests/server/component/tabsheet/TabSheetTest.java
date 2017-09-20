@@ -6,11 +6,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
+import com.vaadin.shared.ui.tabsheet.TabsheetState;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentTest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
@@ -283,5 +289,51 @@ public class TabSheetTest {
         // then
         listener.assertActualComponentIs(lbl3);
         assertEquals(lbl3, tabSheet.getSelectedTab());
+    }
+
+    public static class TestTabsheet extends TabSheet {
+        public TestTabsheet(Component... components) {
+            super(components);
+        }
+
+        public String getKey(Component c) {
+            return keyMapper.key(c);
+        }
+
+        @Override
+        public TabsheetState getState() {
+            return super.getState();
+        }
+    }
+
+    @Test
+    public void userOriginatedForSelectionEvent() {
+        AtomicBoolean userOriginated = new AtomicBoolean(false);
+        AtomicReference<Component> selected = new AtomicReference<>();
+
+        Button b1 = new Button("b1");
+        Button b2 = new Button("b2");
+        Button b3 = new Button("b3");
+        Button b4 = new Button("b4");
+        TestTabsheet tabsheet = new TestTabsheet(b1, b2, b3, b4);
+        tabsheet.addSelectedTabChangeListener(e -> {
+            userOriginated.set(e.isUserOriginated());
+            selected.set(e.getTabSheet().getSelectedTab());
+        });
+
+        tabsheet.setSelectedTab(b2);
+        Assert.assertFalse(userOriginated.get());
+        Assert.assertEquals(b2, selected.get());
+
+        TabsheetServerRpc rpc = ComponentTest.getRpcProxy(tabsheet,
+                TabsheetServerRpc.class);
+        rpc.setSelected(tabsheet.getKey(b1));
+        Assert.assertTrue(userOriginated.get());
+        Assert.assertEquals(b1, selected.get());
+
+        tabsheet.setSelectedTab(tabsheet.getTab(b4));
+        Assert.assertFalse(userOriginated.get());
+        Assert.assertEquals(b4, selected.get());
+
     }
 }

@@ -386,6 +386,8 @@ public class TableConnector extends AbstractFieldConnector
     public void updateEnabledState(boolean enabledState) {
         super.updateEnabledState(enabledState);
         getWidget().enabled = isEnabled();
+
+        // IE8 is no longer supported
     }
 
     @Override
@@ -416,6 +418,7 @@ public class TableConnector extends AbstractFieldConnector
             Scheduler.get().scheduleFinally(new ScheduledCommand() {
                 @Override
                 public void execute() {
+                    // IE8 is no longer supported
                     getLayoutManager().setNeedsMeasure(TableConnector.this);
                     ServerConnector parent = getParent();
                     if (parent instanceof ComponentConnector) {

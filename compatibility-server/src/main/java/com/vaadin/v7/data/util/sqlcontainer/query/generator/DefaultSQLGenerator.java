@@ -32,6 +32,8 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.StringDecorat
  * Generates generic SQL that is supported by HSQLDB, MySQL and PostgreSQL.
  *
  * @author Jonatan Kronqvist / Vaadin Ltd
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -328,7 +330,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateColumnToValueMap(RowItem item) {
-        Map<String, Object> columnToValueMap = new HashMap<>();
+        Map<String, Object> columnToValueMap = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */
@@ -345,7 +347,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     protected Map<String, Object> generateRowIdentifiers(RowItem item) {
-        Map<String, Object> rowIdentifiers = new HashMap<>();
+        Map<String, Object> rowIdentifiers = new HashMap<String, Object>();
         for (Object id : item.getItemPropertyIds()) {
             ColumnProperty cp = (ColumnProperty) item.getItemProperty(id);
             /* Prevent "rownum" usage as a column name if MSSQL or ORACLE */

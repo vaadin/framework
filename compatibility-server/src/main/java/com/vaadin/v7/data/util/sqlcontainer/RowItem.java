@@ -27,6 +27,8 @@ import com.vaadin.v7.data.Property;
  *
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual row in a database table.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public final class RowItem implements Item {
@@ -75,7 +77,7 @@ public final class RowItem implements Item {
 
     @Override
     public Collection<?> getItemPropertyIds() {
-        Collection<String> ids = new ArrayList<>(properties.size());
+        Collection<String> ids = new ArrayList<String>(properties.size());
         for (ColumnProperty cp : properties) {
             ids.add(cp.getPropertyId());
         }

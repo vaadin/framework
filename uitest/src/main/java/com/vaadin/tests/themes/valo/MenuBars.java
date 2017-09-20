@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -192,12 +192,12 @@ public class MenuBars extends VerticalLayout implements View {
         fav.setCheckable(true);
         fav.setCheckable(true);
 
-        menubar.addItem("Attach", click).setIcon(FontAwesome.PAPERCLIP);
-        menubar.addItem("Undo", click).setIcon(FontAwesome.UNDO);
+        menubar.addItem("Attach", click).setIcon(VaadinIcons.PAPERCLIP);
+        menubar.addItem("Undo", click).setIcon(VaadinIcons.ROTATE_LEFT);
         MenuItem redo = menubar.addItem("Redo", click);
-        redo.setIcon(FontAwesome.REPEAT);
+        redo.setIcon(VaadinIcons.ROTATE_RIGHT);
         redo.setEnabled(false);
-        menubar.addItem("Upload", click).setIcon(FontAwesome.UPLOAD);
+        menubar.addItem("Upload", click).setIcon(VaadinIcons.UPLOAD);
 
         return menubar;
     }
@@ -207,31 +207,31 @@ public class MenuBars extends VerticalLayout implements View {
         menubar.setWidth("100%");
 
         MenuItem fav = menubar.addItem("", null);
-        fav.setIcon(FontAwesome.ALIGN_LEFT);
+        fav.setIcon(VaadinIcons.ALIGN_LEFT);
         fav.setStyleName("icon-only");
         fav.setCheckable(true);
         // fav.setChecked(true);
 
         fav = menubar.addItem("", null);
-        fav.setIcon(FontAwesome.ALIGN_CENTER);
+        fav.setIcon(VaadinIcons.ALIGN_CENTER);
         fav.setStyleName("icon-only");
         fav.setCheckable(true);
 
         fav = menubar.addItem("", null);
-        fav.setIcon(FontAwesome.ALIGN_RIGHT);
+        fav.setIcon(VaadinIcons.ALIGN_RIGHT);
         fav.setStyleName("icon-only");
         fav.setCheckable(true);
 
         MenuItem clip = menubar.addItem("", null);
-        clip.setIcon(FontAwesome.PAPERCLIP);
+        clip.setIcon(VaadinIcons.PAPERCLIP);
         clip.setStyleName("icon-only");
 
         MenuItem undo = menubar.addItem("", null);
-        undo.setIcon(FontAwesome.UNDO);
+        undo.setIcon(VaadinIcons.ROTATE_LEFT);
         undo.setStyleName("icon-only");
 
         MenuItem redo = menubar.addItem("", null);
-        redo.setIcon(FontAwesome.REPEAT);
+        redo.setIcon(VaadinIcons.ROTATE_RIGHT);
         redo.setEnabled(false);
         redo.setStyleName("icon-only");
 

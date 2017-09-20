@@ -33,6 +33,9 @@
 				<exclude>${project.groupId}:vaadin-compatibility-themes</exclude>
 				<exclude>${project.groupId}:vaadin-compatibility-client</exclude>
 				<exclude>${project.groupId}:vaadin-compatibility-client-compiled</exclude>
+				<exclude>${project.groupId}:vaadin-compatibility-server-gae</exclude>
+				<exclude>${project.groupId}:vaadin-osgi-integration</exclude>
+				<exclude>${project.groupId}:vaadin-liferay-integration</exclude>
 			</excludes>
 		</dependencySet>
 	</dependencySets>

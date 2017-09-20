@@ -39,8 +39,10 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
+import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.selection.MultiSelectServerRpc;
 
@@ -69,7 +71,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
         selectToTest.deselectAll();
         // Intentional deviation from upcoming selection order
         selectToTest.setItems("3", "2", "1", "5", "8", "7", "4", "6");
-        rpc = ComponentTest.getRpcProxy(selectToTest,
+        rpc = ServerRpcManager.getRpcProxy(selectToTest,
                 MultiSelectServerRpc.class);
 
         values = new ArrayList<>();
@@ -267,6 +269,11 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
                 throw new UnsupportedOperationException(
                         "Not implemented for this test");
             }
+
+            @Override
+            public DataProvider<String, ?> getDataProvider() {
+                return null;
+            }
         };
 
         Assert.assertSame(set, select.getValue());
@@ -335,6 +342,11 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
             public void setItems(Collection<String> items) {
                 throw new UnsupportedOperationException(
                         "Not implemented for this test");
+            }
+
+            @Override
+            public DataProvider<String, ?> getDataProvider() {
+                return null;
             }
         };
 

@@ -33,6 +33,9 @@ import com.vaadin.v7.shared.ui.textarea.RichTextAreaState;
  * Note, that using {@link TextField#setMaxLength(int)} method in
  * {@link RichTextArea} may produce unexpected results as formatting is counted
  * into length of field.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.RichTextArea} based on
+ *             the new data binding API
  */
 @Deprecated
 public class RichTextArea extends AbstractField<String>

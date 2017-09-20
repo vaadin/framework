@@ -66,6 +66,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
         if (uidl.hasAttribute("partialUpdate")) {
             handleUpdate(uidl);
 
+            // IE8 is no longer supported with Vaadin 8
+
             getWidget().rendering = false;
             return;
         }
@@ -174,6 +176,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
                     .getNodeByKey(getWidget().selectedIds.iterator().next()));
             getWidget().focusedNode.setFocused(false);
         }
+
+        // IE8 is no longer supported with Vaadin 8
 
         getWidget().rendering = false;
 

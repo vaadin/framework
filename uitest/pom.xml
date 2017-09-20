@@ -5,13 +5,14 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-uitest</artifactId>
     <name>vaadin-uitest</name>
     <packaging>war</packaging>
     <properties>
         <skip.uitest.deployment>true</skip.uitest.deployment>
+        <skip.uitest.failsafe>true</skip.uitest.failsafe>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
     </properties>
@@ -25,6 +26,11 @@
             <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
+
+    <prerequisites>
+        <!-- phantomjs-maven-plugin required maven 3.1 or newer -->
+        <maven>3.1</maven>
+    </prerequisites>
 
     <dependencies>
 
@@ -66,19 +72,16 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-proxy</artifactId>
-            <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -179,13 +182,6 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-uitest-common</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
         </dependency>
@@ -222,6 +218,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
 
     <build>
@@ -260,6 +264,24 @@
             </plugin>
 
             <plugin>
+                <groupId>com.github.klieber</groupId>
+                <artifactId>phantomjs-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${skip.uitest.failsafe}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>install</goal>
+                        </goals>
+                        <configuration>
+                            <version>${phantomjs.version}</version>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
@@ -267,6 +289,10 @@
                     <httpConnector>
                         <port>8888</port>
                     </httpConnector>
+                    <scanIntervalSeconds>-1</scanIntervalSeconds>
+                    <stopPort>8889</stopPort>
+                    <stopWait>5</stopWait>
+                    <stopKey>foo</stopKey>
                 </configuration>
             </plugin>
 
@@ -283,10 +309,36 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <skip>true</skip>
+                    <skip>${skip.uitest.failsafe}</skip>
+                    <systemPropertyVariables>
+                        <!-- Static path for screenshots pointing to submodule -->
+                        <com.vaadin.testbench.screenshot.directory>${project.parent.basedir}/tests/screenshots</com.vaadin.testbench.screenshot.directory>
+
+                        <!-- Optional properties for the test build -->
+                        <vaadin.testbench.developer.license>${vaadin.testbench.developer.license}</vaadin.testbench.developer.license>
+                        <com.vaadin.testbench.max.retries>${com.vaadin.testbench.max.retries}</com.vaadin.testbench.max.retries>
+                        <browsers.include>${browsers.include}</browsers.include>
+                        <browsers.exclude>${browsers.exclude}</browsers.exclude>
+                        <categories.include>${categories.include}</categories.include>
+                        <categories.exclude>${categories.exclude}</categories.exclude>
+                        <useLocalWebDriver>${useLocalWebDriver}</useLocalWebDriver>
+                        <!-- PhantomJS binary downloaded by phantomjs-maven-plugin -->
+<!--                        <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path> -->
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/AllTB3Tests.java</include>
+                    </includes>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -294,6 +346,51 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug-development-server</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-ea</argument>
+                                <argument>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</argument>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>com.vaadin.launcher.DevelopmentServerLauncher</argument>
+                            </arguments>
+                            <classpathScope>test</classpathScope>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <pluginManagement>
@@ -327,20 +424,43 @@
             </properties>
         </profile>
         <profile>
-            <id>default</id>
+            <id>test</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <skip.uitest.failsafe>false</skip.uitest.failsafe>
+            </properties>
             <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <excludedGroups>com.vaadin.testcategory.MeasurementTest</excludedGroups>
-                        </configuration>
-                    </plugin>
-                </plugins>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.eclipse.jetty</groupId>
+                            <artifactId>jetty-maven-plugin</artifactId>
+
+                            <executions>
+                                <!-- start and stop jetty (running our app) 
+                                    when running integration tests -->
+                                <execution>
+                                    <id>start-jetty</id>
+                                    <phase>pre-integration-test</phase>
+                                    <goals>
+                                        <goal>start</goal>
+                                    </goals>
+                                </execution>
+                                <execution>
+                                    <id>stop-jetty</id>
+                                    <phase>post-integration-test</phase>
+                                    <goals>
+                                        <goal>stop</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
+
         </profile>
         <profile>
             <id>measurements</id>
@@ -354,69 +474,14 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                         <configuration>
                             <groups>com.vaadin.testcategory.MeasurementTest</groups>
-                            <systemPropertyVariables>
-                                <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
-                            </systemPropertyVariables>
                         </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <configuration>
-                            <httpConnector>
-                                <port>8888</port>
-                            </httpConnector>
-                            <scanIntervalSeconds>-1</scanIntervalSeconds>
-                            <stopPort>8081</stopPort>
-                            <stopWait>5</stopWait>
-                            <stopKey>foo</stopKey>
-                        </configuration>
-                        <executions>
-                            <!-- start and stop jetty (running our app) when 
-                                running integration tests -->
-                            <execution>
-                                <id>start-jetty</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>stop-jetty</id>
-                                <phase>post-integration-test</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.klieber</groupId>
-                        <artifactId>phantomjs-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>install</goal>
-                                </goals>
-                                <configuration>
-                                    <version>${phantomjs.version}</version>
-                                </configuration>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
+
     </profiles>
 
 </project>

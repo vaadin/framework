@@ -715,7 +715,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        definedHeight = (height != null && !"".equals(height));
+        definedHeight = height != null && !height.isEmpty();
     }
 
     /**

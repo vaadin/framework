@@ -20,7 +20,7 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * Handler for {@link WindowOrderEvent}s.
  *
- * @since 8.0.0
+ * @since 8.0
  *
  * @author Vaadin Ltd
  */

@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,6 +50,11 @@ import com.vaadin.ui.declarative.DesignContext;
  * create visual design for a web site as a custom layout: the visual design
  * would define locations for "menu", "body", and "title", for example. The
  * layout would then be implemented as an HTML template for each theme.
+ * </p>
+ *
+ * <p>
+ * A location is identified with the attribute "data-location" or "location"
+ * which has the location name as its value.
  * </p>
  *
  * <p>
@@ -200,7 +206,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      */
     @Override
     public Iterator<Component> iterator() {
-        return slots.values().iterator();
+        return Collections.unmodifiableCollection(slots.values()).iterator();
     }
 
     /**

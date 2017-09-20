@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.TabIndexState;
  * State for components that can show the required indicator.
  *
  * @author Vaadin Ltd
- * @since 8.0.0
+ * @since 8.0
  *
  */
 public class AbstractFieldState extends TabIndexState {

@@ -19,12 +19,17 @@ package com.vaadin.v7.data.util;
 import static com.vaadin.util.ReflectTools.convertPrimitiveType;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.util.SerializerHelper;
@@ -58,6 +63,8 @@ import com.vaadin.v7.util.SerializerHelper;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -95,7 +102,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
@@ -121,7 +128,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
@@ -198,7 +205,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         getMethod = null;
         try {
             getMethod = initGetterMethod(beanPropertyName, beanClass);
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             throw new MethodException(this,
                     "Bean property " + beanPropertyName + " can not be found");
         }
@@ -211,7 +218,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             setMethod = beanClass.getMethod("set" + beanPropertyName,
                     new Class[] { returnType });
-        } catch (final java.lang.NoSuchMethodException skipped) {
+        } catch (final NoSuchMethodException skipped) {
         }
 
         // Gets the return type from get method
@@ -381,8 +388,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
             if (j == c.length) {
 
-                // all paramteters matched
-                if (found == true) {
+                // all parameters matched
+                if (found) {
                     throw new MethodException(this,
                             "Could not uniquely identify " + getMethodName
                                     + "-method");
@@ -392,7 +399,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 }
             }
         }
-        if (found != true) {
+        if (!found) {
             throw new MethodException(this,
                     "Could not find " + getMethodName + "-method");
         }
@@ -435,7 +442,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 if (j == c.length) {
 
                     // all parameters match
-                    if (found == true) {
+                    if (found) {
                         throw new MethodException(this,
                                 "Could not identify unique " + setMethodName
                                         + "-method");
@@ -445,7 +452,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                     }
                 }
             }
-            if (found != true) {
+            if (!found) {
                 throw new MethodException(this,
                         "Could not identify " + setMethodName + "-method");
             }
@@ -540,11 +547,11 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             getMethod = beanClass.getMethod("get" + propertyName,
                     new Class[] {});
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             try {
                 getMethod = beanClass.getMethod("is" + propertyName,
                         new Class[] {});
-            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
+            } catch (final NoSuchMethodException ignoredAsWell) {
                 getMethod = beanClass.getMethod("are" + propertyName,
                         new Class[] {});
             }
@@ -767,6 +774,39 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     @Override
     public void fireValueChange() {
         super.fireValueChange();
+    }
+
+    /**
+     * The instance used by this property
+     *
+     * @return the instance used for fetching the property value
+     * @since 7.7.7
+     */
+    public Object getInstance() {
+        return instance;
+    }
+
+    /**
+     * Sets the instance used by this property.
+     * <p>
+     * The new instance must be of the same type as the old instance
+     * <p>
+     * To be consistent with {@link #setValue(Object)}, this method will fire a
+     * value change event even if the value stays the same
+     *
+     * @param instance
+     *            the instance to use
+     * @since 7.7.7
+     */
+    public void setInstance(Object instance) {
+        if (this.instance.getClass() != instance.getClass()) {
+            throw new IllegalArgumentException("The new instance is of type "
+                    + instance.getClass().getName()
+                    + " which does not match the old instance type "
+                    + this.instance.getClass().getName());
+        }
+        this.instance = instance;
+        fireValueChange();
     }
 
     private static final Logger getLogger() {

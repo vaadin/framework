@@ -50,8 +50,15 @@ public class BinderInstanceFieldTest {
         private TextField noFieldInPerson;
     }
 
-    public static class BindNoHasValueField extends FormLayout {
+    public static class BindWithNoFieldInPerson extends FormLayout {
+        private TextField firstName;
+        private DateField birthDate;
+        private TextField noFieldInPerson;
+    }
+
+    public static class BindFieldHasWrongType extends FormLayout {
         private String firstName;
+        private DateField birthDate;
     }
 
     public static class BindGenericField extends FormLayout {
@@ -64,6 +71,11 @@ public class BinderInstanceFieldTest {
 
     public static class BindWrongTypeParameterField extends FormLayout {
         private IntegerTextField firstName;
+    }
+
+    public static class BindOneFieldRequiresConverter extends FormLayout {
+        private TextField firstName;
+        private TextField age;
     }
 
     public static class BindGeneric<T> extends FormLayout {
@@ -174,7 +186,7 @@ public class BinderInstanceFieldTest {
 
     @Test
     public void bindInstanceFields_bindNotHasValueField_fieldIsNull() {
-        BindNoHasValueField form = new BindNoHasValueField();
+        BindFieldHasWrongType form = new BindFieldHasWrongType();
         Binder<Person> binder = new Binder<>(Person.class);
         binder.bindInstanceFields(form);
 
@@ -266,13 +278,11 @@ public class BinderInstanceFieldTest {
 
     @Test
     public void bindInstanceFields_bindNotHasValueField_fieldIsNotReplaced() {
-        BindNoHasValueField form = new BindNoHasValueField();
+        BindFieldHasWrongType form = new BindFieldHasWrongType();
         Binder<Person> binder = new Binder<>(Person.class);
 
         String name = "foo";
         form.firstName = name;
-
-        binder.bindInstanceFields(form);
 
         Person person = new Person();
         person.setFirstName("foo");
@@ -343,7 +353,7 @@ public class BinderInstanceFieldTest {
 
     @Test
     public void bindInstanceFields_fieldsAreConfigured_customBindingIsNotReplaced() {
-        BindOnlyOneField form = new BindOnlyOneField();
+        BindWithNoFieldInPerson form = new BindWithNoFieldInPerson();
         Binder<Person> binder = new Binder<>(Person.class);
 
         TextField name = new TextField();
@@ -384,5 +394,51 @@ public class BinderInstanceFieldTest {
                 String.valueOf(person.getAge()));
 
         Assert.assertFalse(binder.validate().isOk());
+    }
+
+    @Test
+    public void bindInstanceFields_preconfiguredFieldNotBoundToPropertyPreserved() {
+        BindOneFieldRequiresConverter form = new BindOneFieldRequiresConverter();
+        form.age = new TextField();
+        form.firstName = new TextField();
+        Binder<Person> binder = new Binder<>(Person.class);
+        binder.forField(form.age)
+                .withConverter(str -> Integer.parseInt(str) / 2,
+                        integer -> Integer.toString(integer * 2))
+                .bind(Person::getAge, Person::setAge);
+        binder.bindInstanceFields(form);
+        Person person = new Person();
+        person.setFirstName("first");
+        person.setAge(45);
+        binder.setBean(person);
+        Assert.assertEquals("90", form.age.getValue());
+    }
+
+    @Test
+    public void bindInstanceFields_explicitelyBoundFieldAndNotBoundField() {
+        BindOnlyOneField form = new BindOnlyOneField();
+        Binder<Person> binder = new Binder<>(Person.class);
+
+        binder.forField(new TextField()).bind("firstName");
+
+        binder.bindInstanceFields(form);
+    }
+
+    @Test
+    public void bindInstanceFields_tentativelyBoundFieldAndNotBoundField() {
+        BindOnlyOneField form = new BindOnlyOneField();
+        Binder<Person> binder = new Binder<>(Person.class);
+
+        TextField field = new TextField();
+        form.firstName = field;
+
+        // This is an incomplete binding which is supposed to be configured
+        // manually
+        binder.forMemberField(field);
+
+        // bindInstanceFields will not complain even though it can't bind
+        // anything as there is a binding in progress (an exception will be
+        // thrown later if the binding is not completed)
+        binder.bindInstanceFields(form);
     }
 }

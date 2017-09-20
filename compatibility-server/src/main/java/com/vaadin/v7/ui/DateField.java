@@ -35,9 +35,11 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateTimeField;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.v7.data.Buffered;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.Validator.InvalidValueException;
@@ -54,17 +56,20 @@ import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
  * compatible with <code>java.util.Date</code>.
  * </p>
  * <p>
- * Since <code>DateField</code> extends <code>LegacyAbstractField</code> it
- * implements the {@link com.vaadin.v7.data.Buffered}interface.
+ * Since <code>DateField</code> extends <code>AbstractField</code> it implements
+ * the {@link Buffered}interface.
  * </p>
  * <p>
  * A <code>DateField</code> is in write-through mode by default, so
- * {@link com.vaadin.v7.ui.AbstractField#setWriteThrough(boolean)}must be called
- * to enable buffering.
+ * {@link AbstractField#setWriteThrough(boolean)}must be called to enable
+ * buffering.
  * </p>
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ *
+ * @deprecated As of 8.0, use {@link com.vaadin.ui.DateField} or
+ *             {@link DateTimeField} instead.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -155,7 +160,7 @@ public class DateField extends AbstractField<Date> implements
 
     private TimeZone timeZone = null;
 
-    private static Map<Resolution, String> variableNameForResolution = new HashMap<>();
+    private static Map<Resolution, String> variableNameForResolution = new HashMap<Resolution, String>();
 
     private String dateOutOfRangeMessage = "Date is out of allowed range";
 
@@ -230,8 +235,8 @@ public class DateField extends AbstractField<Date> implements
      * Constructs a new <code>DateField</code> with the given caption and
      * initial text contents. The editor constructed this way will not be bound
      * to a Property unless
-     * {@link com.vaadin.v7.data.Property.Viewer#setPropertyDataSource(Property)}
-     * is called to bind it.
+     * {@link Property.Viewer#setPropertyDataSource(Property)} is called to bind
+     * it.
      *
      * @param caption
      *            the caption <code>String</code> for the editor.
@@ -497,7 +502,7 @@ public class DateField extends AbstractField<Date> implements
 
             // Gets the new date in parts
             boolean hasChanges = false;
-            Map<Resolution, Integer> calendarFieldChanges = new HashMap<>();
+            Map<Resolution, Integer> calendarFieldChanges = new HashMap<Resolution, Integer>();
 
             for (Resolution r : Resolution
                     .getResolutionsHigherOrEqualTo(resolution)) {
@@ -696,11 +701,6 @@ public class DateField extends AbstractField<Date> implements
         return Date.class;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.ui.AbstractField#setValue(java.lang.Object, boolean)
-     */
     @Override
     protected void setValue(Date newValue, boolean repaintIsNotNeeded)
             throws Property.ReadOnlyException {
@@ -717,6 +717,21 @@ public class DateField extends AbstractField<Date> implements
              * and flags about invalid input.
              */
             setInternalValue(null);
+
+            /*
+             * Due to DateField's special implementation of isValid(),
+             * datefields validity may change although the logical value does
+             * not change. This is an issue for Form which expects that validity
+             * of Fields cannot change unless actual value changes.
+             *
+             * So we check if this field is inside a form and the form has
+             * registered this as a field. In this case we repaint the form.
+             * Without this hacky solution the form might not be able to clean
+             * validation errors etc. We could avoid this by firing an extra
+             * value change event, but feels like at least as bad solution as
+             * this.
+             */
+            notifyFormOfValidityChange();
             markAsDirty();
             return;
         }
@@ -853,7 +868,7 @@ public class DateField extends AbstractField<Date> implements
      * @param dateFormat
      *            the dateFormat to set
      *
-     * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
+     * @see AbstractComponent#setLocale(Locale))
      */
     public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
@@ -948,7 +963,7 @@ public class DateField extends AbstractField<Date> implements
      * invalid if it contains text typed in by the user that couldn't be parsed
      * into a Date value.
      *
-     * @see com.vaadin.v7.ui.AbstractField#validate()
+     * @see AbstractField#validate()
      */
     @Override
     public void validate() throws InvalidValueException {

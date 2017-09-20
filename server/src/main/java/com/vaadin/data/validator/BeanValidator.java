@@ -91,7 +91,7 @@ public class BeanValidator implements Validator<Object> {
         if (!BeanUtil.checkBeanValidationAvailable()) {
             throw new IllegalStateException("Cannot create a "
                     + BeanValidator.class.getSimpleName()
-                    + ": a JSR-303 Bean Validation implementation not found on theclasspath");
+                    + ": a JSR-303 Bean Validation implementation not found on the classpath");
         }
         Objects.requireNonNull(beanType, "bean class cannot be null");
         Objects.requireNonNull(propertyName, "property name cannot be null");
@@ -150,7 +150,7 @@ public class BeanValidator implements Validator<Object> {
      *
      * @return the validator to use
      */
-    protected javax.validation.Validator getJavaxBeanValidator() {
+    public javax.validation.Validator getJavaxBeanValidator() {
         return getJavaxBeanValidatorFactory().getValidator();
     }
 

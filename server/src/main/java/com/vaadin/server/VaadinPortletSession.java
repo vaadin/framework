@@ -123,6 +123,7 @@ public class VaadinPortletSession extends VaadinSession {
      *
      * @param listener
      *            to add
+     * @since 8.0
      */
     public Registration addPortletListener(PortletListener listener) {
         portletListeners.add(listener);

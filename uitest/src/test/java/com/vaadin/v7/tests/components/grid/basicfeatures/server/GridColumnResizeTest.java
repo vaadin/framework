@@ -153,13 +153,13 @@ public class GridColumnResizeTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "Columns",
                 "Toggle all column hidden state");
         // Hides although already hidden
-        selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        toggleColumnHidden(0);
         // Shows
-        selectMenuPath("Component", "Columns", "Column 0", "Hidden");
+        toggleColumnHidden(0);
         // Hides although already hidden
-        selectMenuPath("Component", "Columns", "Column 2", "Hidden");
+        toggleColumnHidden(2);
         // Shows
-        selectMenuPath("Component", "Columns", "Column 2", "Hidden");
+        toggleColumnHidden(2);
         GridCellElement cell = getGridElement().getCell(0, 1);
         dragResizeColumn(1, 0, -cell.getSize().getWidth());
         assertGreaterOrEqual("Cell got too small.", cell.getSize().getWidth(),

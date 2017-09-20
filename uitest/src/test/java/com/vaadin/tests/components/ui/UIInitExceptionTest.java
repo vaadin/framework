@@ -3,9 +3,9 @@ package com.vaadin.tests.components.ui;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
-public class UIInitExceptionTest extends MultiBrowserTest {
+public class UIInitExceptionTest extends SingleBrowserTest {
     @Test
     public void testExceptionOnUIInit() throws Exception {
         openTestURL();

@@ -19,6 +19,7 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -50,7 +51,6 @@ public class JavaScriptConnectorHelper {
     private final Map<Element, Map<JavaScriptObject, ElementResizeListener>> resizeListeners = new HashMap<>();
 
     private JavaScriptObject connectorWrapper;
-    private int tag;
 
     private String initFunctionName;
     private String tagName;
@@ -171,7 +171,7 @@ public class JavaScriptConnectorHelper {
         return false;
     }
 
-    protected void showInitProblem(ArrayList<String> attemptedNames) {
+    protected void showInitProblem(List<String> attemptedNames) {
         // Default does nothing
     }
 
@@ -396,12 +396,6 @@ public class JavaScriptConnectorHelper {
             JavaScriptObject input)
     /*-{
         // Copy all fields to existing state object
-        for(var key in state) {
-            if (state.hasOwnProperty(key)) {
-                delete state[key];
-            }
-        }
-    
         for(var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
@@ -411,10 +405,6 @@ public class JavaScriptConnectorHelper {
 
     public Object[] decodeRpcParameters(JsonArray parametersJson) {
         return new Object[] { Util.json2jso(parametersJson) };
-    }
-
-    public void setTag(int tag) {
-        this.tag = tag;
     }
 
     public void invokeJsRpc(MethodInvocation invocation,
@@ -502,7 +492,7 @@ public class JavaScriptConnectorHelper {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> initFunctionNames = new ArrayList<String>();
-        Integer tag = Integer.valueOf(this.tag);
+        Integer tag = Integer.valueOf(connector.getTag());
         while (tag != null) {
             String initFunctionName = conf.getServerSideClassNameForTag(tag);
             initFunctionName = initFunctionName.replaceAll("\\.", "_");

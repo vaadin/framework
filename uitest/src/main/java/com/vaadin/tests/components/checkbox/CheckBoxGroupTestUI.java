@@ -15,10 +15,13 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.server.FontAwesome;
+import java.util.LinkedHashMap;
+
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractMultiSelectTestUI;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.IconGenerator;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for CheckBoxGroup component
@@ -49,6 +52,7 @@ public class CheckBoxGroupTestUI
     protected void createActions() {
         super.createActions();
         createItemIconGenerator();
+        createItemDescriptionGeneratorMenu();
     }
 
     private void createItemIconGenerator() {
@@ -56,11 +60,26 @@ public class CheckBoxGroupTestUI
                 this::useItemIconProvider);
     }
 
+    private void createItemDescriptionGeneratorMenu() {
+        LinkedHashMap<String, DescriptionGenerator<Object>> options = new LinkedHashMap<>();
+        options.put("Null Description Generator", item -> null);
+        options.put("Default Description Generator", item -> item.toString());
+        options.put("Custom Description Generator",
+                item -> item.toString() + " Description");
+
+        createSelectAction("Item Description Generator",
+                "Item Description Generator", options, "None",
+                (checkBoxGroup, generator, data) -> {
+                    checkBoxGroup.setItemDescriptionGenerator(generator);
+                    checkBoxGroup.getDataProvider().refreshAll();
+                }, true);
+    }
+
     private void useItemIconProvider(CheckBoxGroup<Object> group,
             boolean activate, Object data) {
         if (activate) {
             group.setItemIconGenerator(
-                    item -> FontAwesome.values()[getIndex(item) + 1]);
+                    item -> VaadinIcons.values()[getIndex(item) + 1]);
         } else {
             group.setItemIconGenerator(DEFAULT_ICON_GENERATOR);
         }

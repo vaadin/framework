@@ -23,14 +23,15 @@ import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.v7.ui.Calendar;
 
 /**
- * Drop details for {@link com.vaadin.v7.ui.addon.calendar.ui.Calendar
- * Calendar}. When something is dropped on the Calendar, this class contains the
- * specific details of the drop point. Specifically, this class gives access to
- * the date where the drop happened. If the Calendar was in weekly mode, the
- * date also includes the start time of the slot.
+ * Drop details for {@link Calendar}. When something is dropped on the Calendar,
+ * this class contains the specific details of the drop point. Specifically,
+ * this class gives access to the date where the drop happened. If the Calendar
+ * was in weekly mode, the date also includes the start time of the slot.
  *
  * @since 7.1
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -72,8 +73,7 @@ public class CalendarTargetDetails extends TargetDetailsImpl {
     }
 
     /**
-     * @return the {@link com.vaadin.v7.ui.addon.calendar.ui.Calendar Calendar}
-     *         instance which was the target of the drop
+     * @return the {@link Calendar} instance which was the target of the drop
      */
     public Calendar getTargetCalendar() {
         return (Calendar) getTarget();

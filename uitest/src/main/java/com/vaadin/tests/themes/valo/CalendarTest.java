@@ -10,7 +10,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -580,6 +579,7 @@ public class CalendarTest extends GridLayout implements View {
         int rollAmount = calendar.get(GregorianCalendar.DAY_OF_MONTH) - 1;
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -rollAmount);
         currentMonthsFirstDate = calendar.getTime();
+        calendar.setTime(today);
 
         updateCaptionLabel();
 
@@ -1194,23 +1194,4 @@ public class CalendarTest extends GridLayout implements View {
         return calendarClone.getTime();
     }
 
-    private static Date getStartOfDay(java.util.Calendar calendar, Date date) {
-        java.util.Calendar calendarClone = (java.util.Calendar) calendar
-                .clone();
-
-        calendarClone.setTime(date);
-        calendarClone.set(java.util.Calendar.MILLISECOND, 0);
-        calendarClone.set(java.util.Calendar.SECOND, 0);
-        calendarClone.set(java.util.Calendar.MINUTE, 0);
-        calendarClone.set(java.util.Calendar.HOUR, 0);
-        calendarClone.set(java.util.Calendar.HOUR_OF_DAY, 0);
-
-        return calendarClone.getTime();
-    }
-
-    @Override
-    public void enter(ViewChangeEvent event) {
-        // TODO Auto-generated method stub
-
-    }
 }

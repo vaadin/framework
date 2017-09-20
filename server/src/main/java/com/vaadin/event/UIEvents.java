@@ -104,6 +104,7 @@ public interface UIEvents {
          * @param listener
          *            the {@link PollListener} to add, not null
          * @return a registration object for removing the listener
+         * @since 8.0
          */
         public Registration addPollListener(PollListener listener);
 

@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 
 /**
  * A client side implementation for InlineDateField.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -96,6 +96,11 @@ public class VDateFieldCalendar
     @Override
     protected Date getDate(Map<DateResolution, Integer> dateVaules) {
         return VPopupCalendar.makeDate(dateVaules);
+    }
+
+    @Override
+    protected boolean supportsTime() {
+        return false;
     }
 
 }

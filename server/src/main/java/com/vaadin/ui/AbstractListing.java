@@ -29,6 +29,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
+import com.vaadin.server.SerializableConsumer;
 import com.vaadin.shared.extension.abstractlisting.AbstractListingExtensionState;
 import com.vaadin.shared.ui.abstractlisting.AbstractListingState;
 import com.vaadin.ui.Component.Focusable;
@@ -132,7 +133,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
         }
     }
 
-    private final DataCommunicator<T, ?> dataCommunicator;
+    private final DataCommunicator<T> dataCommunicator;
 
     /**
      * Creates a new {@code AbstractListing} with a default data communicator.
@@ -154,7 +155,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
-    protected AbstractListing(DataCommunicator<T, ?> dataCommunicator) {
+    protected AbstractListing(DataCommunicator<T> dataCommunicator) {
         Objects.requireNonNull(dataCommunicator,
                 "dataCommunicator cannot be null");
 
@@ -162,10 +163,14 @@ public abstract class AbstractListing<T> extends AbstractComponent
         addExtension(dataCommunicator);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
-        // cast needed by compiler
-        getDataCommunicator().setDataProvider((DataProvider) dataProvider);
+        internalSetDataProvider(dataProvider, null);
+    }
+
+    protected <F> SerializableConsumer<F> internalSetDataProvider(
+            DataProvider<T, F> dataProvider, F initialFilter) {
+        return getDataCommunicator().setDataProvider(dataProvider,
+                initialFilter);
     }
 
     protected DataProvider<T, ?> internalGetDataProvider() {
@@ -200,8 +205,9 @@ public abstract class AbstractListing<T> extends AbstractComponent
 
     /**
      * Sets the item icon generator that is used to produce custom icons for
-     * showing items in the popup. The generator can return null for items with
-     * no icon.
+     * shown items. The generator can return null for items with no icon.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      *
@@ -220,6 +226,8 @@ public abstract class AbstractListing<T> extends AbstractComponent
     /**
      * Gets the currently used item icon generator. The default item icon
      * provider returns null for all items, resulting in no icons being used.
+     * <p>
+     * Implementations that support item icons make this method public.
      *
      * @see IconGenerator
      * @see #setItemIconGenerator(IconGenerator)
@@ -257,7 +265,7 @@ public abstract class AbstractListing<T> extends AbstractComponent
      *
      * @return the data communicator, not null
      */
-    public DataCommunicator<T, ?> getDataCommunicator() {
+    public DataCommunicator<T> getDataCommunicator() {
         return dataCommunicator;
     }
 

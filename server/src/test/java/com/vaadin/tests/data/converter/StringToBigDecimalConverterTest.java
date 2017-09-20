@@ -50,4 +50,15 @@ public class StringToBigDecimalConverterTest
                 new ValueContext(Locale.GERMAN));
         Assert.assertEquals(expected, converted);
     }
+
+    @Test
+    public void customEmptyValue() {
+        StringToBigDecimalConverter converter = new StringToBigDecimalConverter(
+                BigDecimal.ZERO, getErrorMessage());
+
+        assertValue(BigDecimal.ZERO,
+                converter.convertToModel("", new ValueContext()));
+        Assert.assertEquals("0", converter
+                .convertToPresentation(BigDecimal.ZERO, new ValueContext()));
+    }
 }

@@ -56,7 +56,7 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
     private boolean disabled = false;
     private int height;
     private final Element[] slotElements;
-    private final List<DateCellSlot> slots = new ArrayList<>();
+    private final List<DateCellSlot> slots = new ArrayList<DateCellSlot>();
     private int[] slotElementHeights;
     private int startingSlotHeight;
     private Date today;
@@ -104,7 +104,7 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
 
         addStyleName("v-calendar-day-times");
 
-        handlers = new LinkedList<>();
+        handlers = new LinkedList<HandlerRegistration>();
 
         // 2 slots / hour
         firstHour = weekgrid.getFirstHour();
@@ -278,11 +278,11 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
     }
 
     public void recalculateEventWidths() {
-        List<DateCellGroup> groups = new ArrayList<>();
+        List<DateCellGroup> groups = new ArrayList<DateCellGroup>();
 
         int count = getWidgetCount();
 
-        List<Integer> handled = new ArrayList<>();
+        List<Integer> handled = new ArrayList<Integer>();
 
         // Iterate through all events and group them. Events that overlaps
         // with each other, are added to the same group.
@@ -345,8 +345,8 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
         for (DateCellGroup g : groups) {
             int col = 0;
             int colCount = 0;
-            List<Integer> order = new ArrayList<>();
-            Map<Integer, Integer> columns = new HashMap<>();
+            List<Integer> order = new ArrayList<Integer>();
+            Map<Integer, Integer> columns = new HashMap<Integer, Integer>();
             for (Integer eventIndex : g.getItems()) {
                 DateCellDayEvent d = (DateCellDayEvent) getWidget(eventIndex);
                 d.setMoveWidth(width);
@@ -534,7 +534,7 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
     public void addEvent(DateCellDayEvent dayEvent) {
         Element main = getElement();
         int index = 0;
-        List<CalendarEvent> events = new ArrayList<>();
+        List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 
         // events are the only widgets in this panel
         // slots are just elements

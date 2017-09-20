@@ -62,7 +62,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
         @Override
         public String toString() {
-            return "TestBean [col1=" + col1 + ", col2=" + col2 + "]";
+            return "HierarchicalTestBean [col1=" + col1 + ", col2=" + col2 + "]";
         }
 
     }
@@ -123,9 +123,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
-    private static String[] columnHeaders = new String[] { "Col1", "Col2",
+    private static String[] columnHeaders = { "Col1", "Col2",
             "Col3", "Col4" };
-    private static Object[] visibleColumns = new Object[] { "col1", "col2",
+    private static Object[] visibleColumns = { "col1", "col2",
             "col3", "col4" };
 
     @Override

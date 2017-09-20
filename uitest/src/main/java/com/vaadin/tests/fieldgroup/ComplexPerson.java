@@ -107,7 +107,7 @@ public class ComplexPerson {
             list.add(cp);
         }
 
-        return DataProvider.create(list);
+        return DataProvider.ofCollection(list);
     }
 
     public static ComplexPerson create(Random r) {

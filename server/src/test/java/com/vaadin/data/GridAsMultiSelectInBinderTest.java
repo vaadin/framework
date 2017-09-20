@@ -233,10 +233,10 @@ public class GridAsMultiSelectInBinderTest
         assertEquals(Arrays.asList(), selected);
         selected.clear();
 
+        // client side deselect
         model.updateSelection(Collections.emptySet(),
-                new LinkedHashSet<>(Arrays.asList(Sex.UNKNOWN)), true); // client
-                                                                        // side
-                                                                        // deselect
+                new LinkedHashSet<>(Arrays.asList(Sex.UNKNOWN)), true);
+
         assertEquals(Arrays.asList(Sex.MALE), selected);
         selected.clear();
 

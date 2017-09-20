@@ -75,28 +75,30 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
 
         // Select an element from the first (to test) combobox.
 
-        comboBox.findElement(By.className("v-filterselect-button")).click();
+        clickElement(
+                comboBox.findElement(By.className("v-filterselect-button")));
         waitForPopup(comboBox);
         WebElement comboBoxPopup = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
                         + indexToTest + "]/VComboBox[0]#popup");
-        comboBoxPopup.findElements(By.tagName("td")).get(2).click();
+        clickElement(comboBoxPopup.findElements(By.tagName("td")).get(2));
 
         // Select an element from the second (to focus) combobox to remove
         // focus from the first combobox
 
-        comboBoxFocus.findElement(By.className("v-filterselect-button"))
-                .click();
+        clickElement(comboBoxFocus
+                .findElement(By.className("v-filterselect-button")));
         waitForPopup(comboBoxFocus);
         comboBoxPopup = vaadinElement(
                 "/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot["
                         + indexToFocus + "]/VComboBox[0]#popup");
-        comboBoxPopup.findElements(By.tagName("td")).get(2).click();
+        clickElement(comboBoxPopup.findElements(By.tagName("td")).get(2));
 
         // click the button of the first combobox. This would reveal the
         // unwanted behaviour.
 
-        comboBox.findElement(By.className("v-filterselect-button")).click();
+        clickElement(
+                comboBox.findElement(By.className("v-filterselect-button")));
 
         // sadly, screenshot comparison is the only reasonable way to test a
         // rendering issue.

@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Default shared state implementation for AbstractComponent.
@@ -33,6 +34,8 @@ public class AbstractComponentState extends SharedState {
     public String width = "";
     @NoLayout
     public String description = "";
+    @NoLayout
+    public ContentMode descriptionContentMode = ContentMode.PREFORMATTED;
     // Note: for the caption, there is a difference between null and an empty
     // string!
     public String caption = null;

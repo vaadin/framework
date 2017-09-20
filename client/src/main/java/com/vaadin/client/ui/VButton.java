@@ -67,6 +67,13 @@ public class VButton extends FocusWidget implements ClickHandler {
 
     private int tabIndex = 0;
 
+    /**
+     * Switch for disabling mouse capturing.
+     *
+     * @see #isCapturing
+     */
+    private boolean capturingEnabled = true;
+
     /*
      * BELOW PRIVATE MEMBERS COPY-PASTED FROM GWT CustomButton
      */
@@ -165,21 +172,18 @@ public class VButton extends FocusWidget implements ClickHandler {
             // fix for #14632 - on mobile safari 8, if we press the button long
             // enough, we might get two click events, so we are suppressing
             // second if it is too soon
-            boolean isPhantomClickPossible = BrowserInfo.get().isSafari()
-                    && BrowserInfo.get().isTouchDevice()
-                    && BrowserInfo.get().getBrowserMajorVersion() == 8;
+            BrowserInfo browserInfo = BrowserInfo.get();
+            boolean isPhantomClickPossible = browserInfo.isSafariOrIOS()
+                    && browserInfo.isTouchDevice()
+                    && browserInfo.getBrowserMajorVersion() == 8;
             long clickTime = isPhantomClickPossible ? System.currentTimeMillis()
                     : 0;
             // If clicks are currently disallowed or phantom, keep it from
             // bubbling or being passed to the superclass.
+            // the maximum interval observed for phantom click is 69, with
+            // majority under 50, so we select 100 to be safe
             if (disallowNextClick || isPhantomClickPossible
-                    && (clickTime - lastClickTime < 100)) { // the maximum
-                                                            // interval observed
-                                                            // for phantom click
-                                                            // is 69, with
-                                                            // majority under
-                                                            // 50, so we select
-                                                            // 100 to be safe
+                    && (clickTime - lastClickTime < 100)) {
                 event.stopPropagation();
                 disallowNextClick = false;
                 return;
@@ -221,7 +225,7 @@ public class VButton extends FocusWidget implements ClickHandler {
             break;
         case Event.ONMOUSEMOVE:
             clickPending = false;
-            if (isCapturing) {
+            if (isCapturing && !isDraggable()) {
                 // Prevent dragging (on other browsers);
                 DOM.eventPreventDefault(event);
             }
@@ -325,7 +329,7 @@ public class VButton extends FocusWidget implements ClickHandler {
      */
     @Override
     public void onClick(ClickEvent event) {
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             VButton.this.setFocus(true);
         }
 
@@ -414,6 +418,16 @@ public class VButton extends FocusWidget implements ClickHandler {
             isCapturing = false;
             isFocusing = false;
         }
+    }
+
+    /**
+     * Returns if this button has been made <code>draggable</code> or not.
+     *
+     * @return {@literal true} if draggable is enabled, {@literal false}
+     *         otherwise
+     */
+    private boolean isDraggable() {
+        return getElement().getPropertyBoolean("draggable");
     }
 
     private static native int getHorizontalBorderAndPaddingWidth(Element elem)

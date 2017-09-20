@@ -312,7 +312,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         fireOrderEvent(list);
     }
 
-    private static void fireOrderEvent(ArrayList<VWindow> windows) {
+    private static void fireOrderEvent(List<VWindow> windows) {
         WINDOW_ORDER_HANDLER
                 .fireEvent(new WindowOrderEvent(new ArrayList<>(windows)));
     }
@@ -356,7 +356,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Returns window position in list of opened and shown windows.
      *
-     * @since 8.0.0
+     * @since 8.0
      */
     public final int getWindowOrder() {
         return windowOrder.indexOf(this);
@@ -691,6 +691,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public void hide() {
         if (vaadinModality) {
             hideModalityCurtain();
+            hideDraggingCurtain();
+            hideResizingCurtain();
         }
         super.hide();
 
@@ -1312,7 +1314,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
-                Widget w = WidgetUtil.findWidget(target, null);
+                Widget w = WidgetUtil.findWidget(target);
                 while (w != null) {
                     if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks
@@ -1510,7 +1512,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Adds a Handler for window order change event.
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return registration object to deregister the handler
      */

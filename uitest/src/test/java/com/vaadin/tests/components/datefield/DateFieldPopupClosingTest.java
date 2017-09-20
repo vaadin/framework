@@ -10,8 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.vaadin.testbench.customelements.AbstractDateFieldElement;
-import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.elements.AbstractDateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldPopupClosingTest extends MultiBrowserTest {
@@ -70,7 +69,8 @@ public class DateFieldPopupClosingTest extends MultiBrowserTest {
     }
 
     private WebElement getToggleButton() {
-        DateFieldElement dateField = $(AbstractDateFieldElement.class).first();
+        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
+                .first();
 
         return dateField.findElement(By.tagName("button"));
     }

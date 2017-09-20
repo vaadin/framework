@@ -23,16 +23,17 @@ import com.vaadin.client.ui.VColorPicker;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.v7.shared.ui.colorpicker.ColorPickerServerRpc;
+import com.vaadin.v7.ui.ColorPicker;
 
 /**
  * A class that defines default implementation for a color picker connector.
- * Connects the server side {@link com.vaadin.ui.ColorPicker} with the client
- * side counterpart {@link VColorPicker}
+ * Connects the server side {@link ColorPicker} with the client side counterpart
+ * {@link VColorPicker}
  *
  * @since 7.0.0
  */
 @Deprecated
-@Connect(value = com.vaadin.v7.ui.ColorPicker.class, loadStyle = LoadStyle.LAZY)
+@Connect(value = ColorPicker.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerConnector extends AbstractColorPickerConnector {
 
     private ColorPickerServerRpc rpc = RpcProxy

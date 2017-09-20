@@ -16,6 +16,7 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
 import java.io.Serializable;
+import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ class CacheFlushNotifier implements Serializable {
      * SQLContainer instance reference list and dead reference queue. Used for
      * the cache flush notification feature.
      */
-    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<>();
-    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<>();
+    private static List<WeakReference<SQLContainer>> allInstances = new ArrayList<WeakReference<SQLContainer>>();
+    private static ReferenceQueue<SQLContainer> deadInstances = new ReferenceQueue<SQLContainer>();
 
     /**
      * Adds the given SQLContainer to the cache flush notification receiver list
@@ -47,7 +48,7 @@ class CacheFlushNotifier implements Serializable {
     public static void addInstance(SQLContainer c) {
         removeDeadReferences();
         if (c != null) {
-            allInstances.add(new WeakReference<>(c, deadInstances));
+            allInstances.add(new WeakReference<SQLContainer>(c, deadInstances));
         }
     }
 
@@ -55,7 +56,7 @@ class CacheFlushNotifier implements Serializable {
      * Removes dead references from instance list
      */
     private static void removeDeadReferences() {
-        java.lang.ref.Reference<? extends SQLContainer> dead = deadInstances
+        Reference<? extends SQLContainer> dead = deadInstances
                 .poll();
         while (dead != null) {
             allInstances.remove(dead);

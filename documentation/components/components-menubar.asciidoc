@@ -1,11 +1,11 @@
 ---
 title: MenuBar
-order: 25
+order: 27
 layout: page
 ---
 
 [[components.menubar]]
-= [classname]#MenuBar#
+= MenuBar
 
 ifdef::web[]
 [.sampler]

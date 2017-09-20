@@ -45,4 +45,11 @@ public class ServletBootstrapHandler extends BootstrapHandler {
         }
         return themeName;
     }
+
+    @Override
+    protected String getContextRootPath(BootstrapContext context) {
+        return VaadinServletService
+                .getContextRootRelativePath(context.getRequest()) + "/";
+    }
+
 }

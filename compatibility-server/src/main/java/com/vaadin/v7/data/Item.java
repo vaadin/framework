@@ -16,6 +16,9 @@
 
 package com.vaadin.v7.data;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
+
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -28,6 +31,7 @@ import java.util.Collection;
  *
  * @author Vaadin Ltd
  * @since 3.0
+ * @deprecated As of 8.0, no direct replacement available, see {@link Binder}, {@link DataProvider}
  */
 @Deprecated
 public interface Item extends Serializable {

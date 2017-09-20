@@ -533,6 +533,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public void setShowISOWeekNumbers(boolean showISOWeekNumbers) {
         this.showISOWeekNumbers = showISOWeekNumbers;
+        if (initialRenderDone && getResolution()
+                .getCalendarField() >= Resolution.DAY.getCalendarField()) {
+            clearCalendarBody(false);
+            buildCalendarBody();
+        }
     }
 
     /**
@@ -1672,7 +1677,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         private ListBox createListBox() {
             ListBox lb = new ListBox();
-            lb.setStyleName("v-select");
+            lb.setStyleName(VNativeSelect.CLASSNAME);
             lb.addChangeHandler(this);
             lb.addBlurHandler(VCalendarPanel.this);
             lb.addFocusHandler(VCalendarPanel.this);

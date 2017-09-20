@@ -98,6 +98,14 @@ public class Jsr303Test {
             // BeanToValidate : @Size(min = 3, max = 16) for the firstName
             nameField.setValue("a");
             assertEquals(nameField.getValue(), item.getFirstname());
+
+            try {
+                BeanValidationBinder<BeanToValidate> beanValidationBinder = new BeanValidationBinder<>(
+                        BeanToValidate.class);
+                Assert.fail();
+            } catch (IllegalStateException ignore) {
+                // an exception has to be thrown
+            }
         }
 
     }

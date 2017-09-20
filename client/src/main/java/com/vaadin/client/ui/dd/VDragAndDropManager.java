@@ -39,6 +39,8 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
@@ -54,7 +56,12 @@ import com.vaadin.shared.ui.dd.DragEventType;
  * {@link #get()} to get instance.
  *
  * TODO cancel drag and drop if more than one touches !?
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector} and
+ *             {@link DragSourceExtensionConnector}
  */
+@Deprecated
 public class VDragAndDropManager {
 
     public static final String ACTIVE_DRAG_SOURCE_STYLENAME = "v-active-drag-source";
@@ -412,7 +419,7 @@ public class VDragAndDropManager {
      */
     protected VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = WidgetUtil.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element);
             if (w == null) {
                 return null;
             }

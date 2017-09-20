@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 
 /**
  * A representation of a spacer element in a
- * {@link com.vaadin.v7.client.widget.escalator.RowContainer.BodyRowContainer}.
+ * {@link RowContainer.BodyRowContainer}.
  *
  * @since 7.5.0
  * @author Vaadin Ltd

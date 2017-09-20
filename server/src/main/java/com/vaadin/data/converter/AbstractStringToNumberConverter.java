@@ -36,24 +36,32 @@ import com.vaadin.data.ValueContext;
  * @author Vaadin Ltd
  * @since 8.0
  */
-public abstract class AbstractStringToNumberConverter<T>
+public abstract class AbstractStringToNumberConverter<T extends Number>
         implements Converter<String, T> {
 
     private final String errorMessage;
+    private T emptyValue;
 
     /**
-     * Creates a new converter instance with the given error message.
+     * Creates a new converter instance with the given empty string value and
+     * error message.
      *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
      * @param errorMessage
      *            the error message to use if conversion fails
      */
-    protected AbstractStringToNumberConverter(String errorMessage) {
+    protected AbstractStringToNumberConverter(T emptyValue,
+            String errorMessage) {
+        this.emptyValue = emptyValue;
         this.errorMessage = errorMessage;
     }
 
     /**
-     * Returns the format used by {@link #convertToPresentation(Object, ValueContext)}
-     * and {@link #convertToModel(Object, ValueContext)}.
+     * Returns the format used by
+     * {@link #convertToPresentation(Object, ValueContext)} and
+     * {@link #convertToModel(Object, ValueContext)}.
      *
      * @param locale
      *            The locale to use
@@ -94,8 +102,8 @@ public abstract class AbstractStringToNumberConverter<T>
         }
 
         if (parsedValue == null) {
-            // Convert "" to null
-            return Result.ok(null);
+            // Convert "" to the empty value
+            return Result.ok(emptyValue);
         }
 
         return Result.ok(parsedValue);

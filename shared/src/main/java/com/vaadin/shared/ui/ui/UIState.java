@@ -86,6 +86,13 @@ public class UIState extends AbstractSingleComponentContainerState {
         tabIndex = 1;
     }
 
+    /**
+     * Enable Mobile HTML5 DnD support.
+     *
+     * @since 8.1
+     */
+    public boolean enableMobileHTML5DnD = false;
+
     public static class LoadingIndicatorConfigurationState
             implements Serializable {
         public int firstDelay = 300;

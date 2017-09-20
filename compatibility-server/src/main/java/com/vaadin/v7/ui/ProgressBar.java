@@ -33,6 +33,9 @@ import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
  *
  * @since 7.1
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ProgressBar} based on
+ *             the new data binding API
  */
 @Deprecated
 public class ProgressBar extends AbstractField<Float>
@@ -141,9 +144,9 @@ public class ProgressBar extends AbstractField<Float>
     }
 
     /*
-     * Overridden to keep the shared state in sync with the LegacyAbstractField
-     * internal value. Should be removed once LegacyAbstractField is refactored
-     * to use shared state.
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
      *
      * See tickets #10921 and #11064.
      */

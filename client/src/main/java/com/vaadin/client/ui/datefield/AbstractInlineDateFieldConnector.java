@@ -27,13 +27,14 @@ import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 
 /**
  * Base class for inline data field connector.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
  *            the resolution type which the field is based on (day, month, ...)
  * @param <PANEL>
  *            Subclass of VAbstractCalendarPanel specific for the implementation
+ * @since 8.0
  */
 public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends AbstractDateFieldConnector<R> {
@@ -122,7 +123,7 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
     /**
      * Returns {@code true} is the current resolution of the widget is month or
      * less specific (e.g. month, year, quarter, etc).
-     * 
+     *
      * @return {@code true} if the current resolution is above month
      */
     protected abstract boolean isResolutionMonthOrHigher();

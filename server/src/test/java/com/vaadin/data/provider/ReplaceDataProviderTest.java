@@ -11,8 +11,6 @@ import java.util.stream.IntStream;
 
 import org.junit.Test;
 
-import com.vaadin.server.SerializablePredicate;
-
 public class ReplaceDataProviderTest {
 
     public static class BeanWithEquals extends Bean {
@@ -73,15 +71,15 @@ public class ReplaceDataProviderTest {
 
     private <SOME_BEAN> void doTest(IntFunction<SOME_BEAN> beanConstructor) {
 
-        DataCommunicator<SOME_BEAN, SerializablePredicate<SOME_BEAN>> dataCommunicator = new DataCommunicator<>();
+        DataCommunicator<SOME_BEAN> dataCommunicator = new DataCommunicator<>();
 
         List<SOME_BEAN> beans1 = createCollection(beanConstructor);
 
         ListDataProvider<SOME_BEAN> dataProvider = new ListDataProvider<>(
                 beans1);
 
-        dataCommunicator.setDataProvider(dataProvider);
-        dataCommunicator.pushData(1, beans1.stream());
+        dataCommunicator.setDataProvider(dataProvider, null);
+        dataCommunicator.pushData(1, beans1);
 
         SOME_BEAN bean1_17 = beans1.get(17);
         String key1_17 = dataCommunicator.getKeyMapper().key(bean1_17);
@@ -91,8 +89,8 @@ public class ReplaceDataProviderTest {
         List<SOME_BEAN> beans2 = createCollection(beanConstructor);
 
         dataProvider = new ListDataProvider<>(beans2);
-        dataCommunicator.setDataProvider(dataProvider);
-        dataCommunicator.pushData(1, beans2.stream());
+        dataCommunicator.setDataProvider(dataProvider, null);
+        dataCommunicator.pushData(1, beans2);
 
         SOME_BEAN bean2_17 = beans2.get(17);
         String key2_17 = dataCommunicator.getKeyMapper().key(bean2_17);

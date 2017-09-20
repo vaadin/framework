@@ -19,6 +19,9 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.filter.IsNull;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class IsNullTranslator implements FilterTranslator {
 

@@ -9,550 +9,166 @@ layout: page
 
 ((("Drag and Drop", id="term.advanced.dragndrop", range="startofrange")))
 
-
 Dragging an object from one location to another by grabbing it with mouse,
 holding the mouse button pressed, and then releasing the button to "drop" it to
 the other location is a common way to move, copy, or associate objects. For
 example, most operating systems allow dragging and dropping files between
-folders or dragging a document on a program to open it. In Vaadin, it is
-possible to drag and drop components and parts of certain components.
+folders or dragging a document on a program to open it. Framework version 8.1 adds support for https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API[HTML5 drag and drop] features. This makes it possible to set components as drag sources that user can drag and drop, or to set them as drop targets to drop things on.
 
-Dragged objects, or __transferables__, are essentially data objects. You can
-drag and drop rows in [classname]#Table# and nodes in [classname]#Tree#
-components, either within or between the components. You can also drag entire
-components by wrapping them inside [classname]#DragAndDropWrapper#.
 
-Dragging starts from a __drag source__, which defines the transferable.
-Transferables implement the [classname]#Transferable# interfaces. For trees and
-tables, which are bound to [classname]#Container# data sources, a node or row
-transferable is a reference to an [classname]#Item# in the Vaadin Data Model.
-Dragged components are referenced with a [classname]#WrapperTransferable#.
-Starting dragging does not require any client-server communication, you only
-need to enable dragging. All drag and drop logic occurs in two operations:
-determining ( __accepting__) where dropping is allowed and actually dropping.
-Drops can be done on a __drop target__, which implements the
-[classname]#DropTarget# interface. Three components implement the interface:
-[classname]#Tree#, [classname]#Table#, and [classname]#DragAndDropWrapper#.
-These accept and drop operations need to be provided in a __drop handler__.
-Essentially all you need to do to enable drag and drop is to enable dragging in
-the drag source and implement the [methodname]#getAcceptCriterion()# and
-[methodname]#drop()# methods in the [classname]#DropHandler# interface.
+== Drag Source
 
-The client-server architecture of Vaadin causes special requirements for the
-drag and drop functionality. The logic for determining where a dragged object
-can be dropped, that is, __accepting__ a drop, should normally be done on the
-client-side, in the browser. Server communications are too slow to have much of
-such logic on the server-side. The drag and drop feature therefore offers a
-number of ways to avoid the server communications to ensure a good user
-experience.
+Any component can be made a drag source that has textual data that is transferred when it is dragged and dropped.
+
+To make a component a drag source, you apply the [classname]#DragSourceExtension# to it. Then you can define the text to transfer, and the allowed drag effect.
+
+[source, java]
+----
+Label draggableLabel = new Label("You can grab and drag me");
+DragSourceExtension<Label> dragSource = new DragSourceExtension<>(draggableLabel);
+
+// set the allowed effect
+dragSource.setEffectAllowed(EffectAllowed.MOVE);
+// set the text to transfer
+dragSource.setDataTransferText("hello receiver");
+// set other data to transfer (in this case HTML)
+dragSource.setDataTransferData("text/html", "<label>hello receiver</label>");
+----
+
+The __effect allowed__ specifies the allowed effects that must match the __drop effect__ of the drop target. If these don't match, the drop event is never fired on the target. If multiple effects are allowed, the user can use the modifier keys to switch between the desired effects. The default effect and the modifier keys are system and browser dependent.
+
+The __data transfer text__ is textual data, that the drop target will receive in the __drop event__.
+
+The __data transfer data__ is any data of the given type, that the drop target will also receive in the __drop event__. The order, in which the data is set for the drag source, is preserved, which helps the drop target finding the most preferred and supported data.
+
+[NOTE]
+====
+Note that `"text"` is the only cross browser supported data type. If your application supports IE11, pleas only use the `setDataTransferText()` method.
+====
+
+The [classname]#DragStartEvent# is fired when the drag has started, and the [classname]#DragEndEvent# event when the drag has ended, either in a drop or a cancel.
+
+[source, java]
+----
+dragSource.addDragStartListener(event ->
+    Notification.show("Drag event started");
+);
+dragSource.addDragEndListener(event -> {
+    if (event.isCanceled()) {
+        Notification.show("Drag event was canceled");
+    } else {
+        Notification.show("Drag event finished");
+    }
+});
+----
+
+You can check whether the drag was canceled using the `isCanceled()` method.
+
+It is possible to transfer any Object as server side data to the drop target if both the drag source and drop target are placed in the same UI. This data is available in the drop event via the `DropEvent.getDragData()` method.
+
+[source, java]
+----
+dragSource.addDragStartListener(event ->
+    dragSource.setDragData(myObject);
+);
+dragSource.addDragEndListener(event ->
+    dragSource.setDragData(null);
+};
+----
+
+=== CSS Style Rules
+
+The drag source element, additional to it's primary style name, have a style name with the `-dragsource` suffix. For example, a Label component would have the style name `v-label-dragsource` when the drag source extension is applied to it.
+Additionally, the elements also have the `v-draggable` style name that is independent of the component's primary style.
+
+While being dragged, the element also gets the style name with suffix `-dragged`.
+An example for this is `v-label-dragged` in case of a Label component.
+This style name is added during the drag start and removed during the drag end event.
+
+The browsers allow the user to select and drag and drop text, which could cause issues with components that have text. The Framework tries to prevent this by automatically adding the following style to all `v-draggable` elements. It is included by the sass mixin `valo-drag-element`.
+
+[source, css]
+----
+.v-draggable {
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+----
+
 
 [[advanced.dragndrop.drophandler]]
-== Handling Drops
+== Drop Target
 
-Most of the user-defined drag and drop logic occurs in a __drop handler__, which
-is provided by implementing the [methodname]#drop()# method in the
-[classname]#DropHandler# interface. A closely related definition is the drop
-accept criterion, which is defined in the [methodname]#getAcceptCriterion()#
-method in the same interface. It is described in
-<<advanced.dragndrop.acceptcriteria>> later.
+The drag operations end when the mouse button is released on a valid drop target. It is then up to the target to react to the drop event and the data associated with the drag, set by the drag source.
 
-The [methodname]#drop()# method gets a [classname]#DragAndDropEvent# as its
-parameters. The event object provides references to two important object:
-[classname]#Transferable# and [classname]#TargetDetails#.
-
-A [classname]#Transferable# contains a reference to the object (component or
-data item) that is being dragged. A tree or table item is represented as a
-[classname]#TreeTransferable# or [classname]#TableTransferable# object, which
-carries the item identifier of the dragged tree or table item. These special
-transferables, which are bound to some data in a container, are
-[classname]#DataBoundTransferable#. Dragged components are represented as
-[classname]#WrapperTransferable# objects, as the components are wrapped in a
-[classname]#DragAndDropWrapper#.
-
-The [classname]#TargetDetails# object provides information about the exact
-location where the transferable object is being dropped. The exact class of the
-details object depends on the drop target and you need to cast it to the proper
-subclass to get more detailed information. If the target is selection component,
-essentially a tree or a table, the [classname]#AbstractSelectTargetDetails#
-object tells the item on which the drop is being made. For trees, the
-[classname]#TreeTargetDetails# gives some more details. For wrapped components,
-the information is provided in a [classname]#WrapperDropDetails# object. In
-addition to the target item or component, the details objects provide a __drop
-location__. For selection components, the location can be obtained with the
-[methodname]#getDropLocation()# and for wrapped components with
-[methodname]#verticalDropLocation()# and [methodname]#horizontalDropLocation()#.
-The locations are specified as either [classname]#VerticalDropLocation# or
-[classname]#HorizontalDropLocation# objects. The drop location objects specify
-whether the transferable is being dropped above, below, or directly on (at the
-middle of) a component or item.
-
-Dropping on a [classname]#Tree#, [classname]#Table#, and a wrapped component is
-explained further in the following sections.
-
-
-[[advanced.dragndrop.treedrop]]
-== Dropping Items On a [classname]#Tree#
-
-You can drag items from, to, or within a [classname]#Tree#. Making tree a drag
-source requires simply setting the drag mode with [methodname]#setDragMode()#.
-[classname]#Tree# currently supports only one drag mode,
-[literal]#++TreeDragMode.NODE++#, which allows dragging single tree nodes. While
-dragging, the dragged node is referenced with a [classname]#TreeTransferable#
-object, which is a [classname]#DataBoundTransferable#. The tree node is
-identified by the item ID of the container item.
-
-When a transferable is dropped on a tree, the drop location is stored in a
-[classname]#TreeTargetDetails# object, which identifies the target location by
-item ID of the tree node on which the drop is made. You can get the item ID with
-[methodname]#getItemIdOver()# method in
-[classname]#AbstractSelectTargetDetails#, which the
-[classname]#TreeTargetDetails# inherits. A drop can occur directly on or above
-or below a node; the exact location is a [classname]#VerticalDropLocation#,
-which you can get with the [methodname]#getDropLocation()# method.
-
-In the example below, we have a [classname]#Tree# and we allow reordering the
-tree items by drag and drop.
-
+To make a component be a drop target, you apply the [classname]#DropTargetExtension# to it. The extension allows you to control when the drop is acceptable and then react to the drop event.
 
 [source, java]
 ----
-final Tree tree = new Tree("Inventory");
-tree.setContainerDataSource(TreeExample.createTreeContent());
-layout.addComponent(tree);
-        
-// Expand all items
-for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();)
-    tree.expandItemsRecursively(it.next());
-        
-// Set the tree in drag source mode
-tree.setDragMode(TreeDragMode.NODE);
-        
-// Allow the tree to receive drag drops and handle them
-tree.setDropHandler(new DropHandler() {
-    public AcceptCriterion getAcceptCriterion() {
-        return AcceptAll.get();
-    }
+VerticalLayout dropTargetLayout = new VerticalLayout();
+dropTargetLayout.setCaption("Drop things inside me");
+dropTargetLayout.addStyleName(ValoTheme.LAYOUT_CARD);
 
-    public void drop(DragAndDropEvent event) {
-        // Wrapper for the object that is dragged
-        Transferable t = event.getTransferable();
-        
-        // Make sure the drag source is the same tree
-        if (t.getSourceComponent() != tree)
-            return;
-        
-        TreeTargetDetails target = (TreeTargetDetails)
-            event.getTargetDetails();
+// make the layout accept drops
+DropTargetExtension<VerticalLayout> dropTarget = new DropTargetExtension<>(dropTargetLayout);
 
-        // Get ids of the dragged item and the target item
-        Object sourceItemId = t.getData("itemId");
-        Object targetItemId = target.getItemIdOver();
+// the drop effect must match the allowed effect in the drag source for a successful drop
+dropTarget.setDropEffect(DropEffect.MOVE);
 
-        // On which side of the target the item was dropped 
-        VerticalDropLocation location = target.getDropLocation();
-        
-        HierarchicalContainer container = (HierarchicalContainer)
-        tree.getContainerDataSource();
+// catch the drops
+dropTarget.addDropListener(event -> {
+    // if the drag source is in the same UI as the target
+    Optional<AbstractComponent> dragSource = event.getDragSourceComponent();
+    if (dragSource.isPresent() && dragSource.get() instanceof Label) {
+        // move the label to the layout
+        dropTargetLayout.addComponent(dragSource.get());
 
-        // Drop right on an item -> make it a child
-        if (location == VerticalDropLocation.MIDDLE)
-            tree.setParent(sourceItemId, targetItemId);
-
-        // Drop at the top of a subtree -> make it previous
-        else if (location == VerticalDropLocation.TOP) {
-            Object parentId = container.getParent(targetItemId);
-            container.setParent(sourceItemId, parentId);
-            container.moveAfterSibling(sourceItemId, targetItemId);
-            container.moveAfterSibling(targetItemId, sourceItemId);
+        // get possible transfer data
+        String message = event.getDataTransferData("text/html");
+        if (message != null) {
+            Notification.show("DropEvent with data transfer html: " + message);
+        } else {
+            // get transfer text
+            message = event.getDataTransferText();
+            Notification.show("DropEvent with data transfer text: " + message);
         }
-        
-        // Drop below another item -> make it next 
-        else if (location == VerticalDropLocation.BOTTOM) {
-            Object parentId = container.getParent(targetItemId);
-            container.setParent(sourceItemId, parentId);
-            container.moveAfterSibling(sourceItemId, targetItemId);
-        }
+
+        // handle possible server side drag data, if the drag source was in the same UI
+        event.getDragData().ifPresent(data -> handleMyDragData((MyObject) data));
     }
 });
 ----
 
-[[advanced.dragndrop.treedrop.criteria]]
-=== Accept Criteria for Trees
+When data is dragged over a drop target, the __v-drag-over__ class name is applied to the root element of the drop target component automatically.
 
-[classname]#Tree# defines some specialized accept criteria for trees.
+=== Controlling When The Drop is Acceptable
 
-[classname]#TargetInSubtree#(client-side):: Accepts if the target item is in the specified sub-tree. The sub-tree is specified by the item ID of the root of the sub-tree in the constructor. The second constructor includes a depth parameter, which specifies how deep from the given root node are drops accepted. Value [literal]#++-1++# means infinite, that is, the entire sub-tree, and is therefore the same as the simpler constructor.
-[classname]#TargetItemAllowsChildren#(client-side):: Accepts a drop if the tree has [methodname]#setChildrenAllowed()# enabled for the target item. The criterion does not require parameters, so the class is a singleton and can be acquired with [methodname]#Tree.TargetItemAllowsChildren.get()#. For example, the following composite criterion accepts drops only on nodes that allow children, but between all nodes: 
-+
-[source, java]
-----
-return new Or (Tree.TargetItemAllowsChildren.get(), new Not(VerticalLocationIs.MIDDLE));
-----
+The __drop effect__ allows you to specify the desired drop effect, and for a succesful drop it must match the allowed effect that has been set for the drag source. Note that you can allow multiple effects, and that you should not rely on the default effect since it may vary between browsers.
 
-[classname]#TreeDropCriterion#(server-side):: Accepts drops on only some items, which as specified by a set of item IDs. You must extend the abstract class and implement the [methodname]#getAllowedItemIds()# to return the set. While the criterion is server-side, it is lazy-loading, so that the list of accepted target nodes is loaded only once from the server for each drag operation. See <<advanced.dragndrop.acceptcriteria>> for an example.
+The __drop criteria__ allows you to determine whether the current drag data can be dropped on the drop target. It is executed on `dragenter`, `dragover` and `drop` events. The script gets the current event as a parameter named `event`. Returning `false` will prevent the drop and no drop event is fired on the server side.
 
+////
+TODO Add an example of drop criteria
+////
 
-In addition, the accept criteria defined in [classname]#AbstractSelect# are
-available for a [classname]#Tree#, as listed in
-<<advanced.dragndrop.acceptcriteria>>.
+=== CSS Style Rules
 
+Each drop target element have an applied style name, the primary style name with `-droptarget` suffix, e.g. `v-label-droptarget`, to indicate that it is a potential target for data to be dropped onto it.
 
+When dragging data over a drop target and the drag over criteria passes, a style name is applied to indicate that the element accepts the drop. This style name is the primary style name with `-drag-center` suffix, e.g. `v-label-drag-center`.
 
-[[advanced.dragndrop.tabledrop]]
-== Dropping Items On a [classname]#Table#
 
-You can drag items from, to, or within a [classname]#Table#. Making table a drag
-source requires simply setting the drag mode with [methodname]#setDragMode()#.
-[classname]#Table# supports dragging both single rows, with
-[literal]#++TableDragMode.ROW++#, and multiple rows, with
-[literal]#++TableDragMode.MULTIROW++#. While dragging, the dragged node or nodes
-are referenced with a [classname]#TreeTransferable# object, which is a
-[classname]#DataBoundTransferable#. Tree nodes are identified by the item IDs of
-the container items.
-
-When a transferable is dropped on a table, the drop location is stored in a
-[classname]#AbstractSelectTargetDetails# object, which identifies the target row
-by its item ID. You can get the item ID with [methodname]#getItemIdOver()#
-method. A drop can occur directly on or above or below a row; the exact location
-is a [classname]#VerticalDropLocation#, which you can get with the
-[methodname]#getDropLocation()# method from the details object.
-
-[[advanced.dragndrop.tabledrop.criteria]]
-=== Accept Criteria for Tables
-
-[classname]#Table# defines one specialized accept criterion for tables.
-
-[classname]#TableDropCriterion#(server-side):: Accepts drops only on (or above or below) items that are specified by a set of item IDs. You must extend the abstract class and implement the [methodname]#getAllowedItemIds()# to return the set. While the criterion is server-side, it is lazy-loading, so that the list of accepted target items is loaded only once from the server for each drag operation.
-
-
-
-
-[[advanced.dragndrop.acceptcriteria]]
-== Accepting Drops
-
-((("Drag and Drop", "Accept Criteria", id="term.advanced.dragndrop.acceptcriteria", range="startofrange")))
-
-
-You can not drop the objects you are dragging around just anywhere. Before a
-drop is possible, the specific drop location on which the mouse hovers must be
-__accepted__. Hovering a dragged object over an accepted location displays an
-__accept indicator__, which allows the user to position the drop properly. As
-such checks have to be done all the time when the mouse pointer moves around the
-drop targets, it is not feasible to send the accept requests to the server-side,
-so drops on a target are normally accepted by a client-side __accept
-criterion__.
-
-A drop handler must define the criterion on the objects which it accepts to be
-dropped on the target. The criterion needs to be provided in the
-[classname]#getAcceptCriterion()# method of the [classname]#DropHandler#
-interface. A criterion is represented in an [classname]#AcceptCriterion# object,
-which can be a composite of multiple criteria that are evaluated using logical
-operations. There are two basic types of criteria: __client-side__ and
-__server-side criteria__. The various built-in criteria allow accepting drops
-based on the identity of the source and target components, and on the __data
-flavor__ of the dragged objects.
-
-To allow dropping any transferable objects, you can return a universal accept
-criterion, which you can get with [methodname]#AcceptAll.get()#.
-
-
-[source, java]
-----
-tree.setDropHandler(new DropHandler() {
-    public AcceptCriterion getAcceptCriterion() {
-        return AcceptAll.get();
-    }
-    ...
-----
-
-[[advanced.dragndrop.acceptcriteria.client-side]]
-=== Client-Side Criteria
-
-The __client-side criteria__, which inherit the
-[classname]#ClientSideCriterion#, are verified on the client-side, so server
-requests are not needed for verifying whether each component on which the mouse
-pointer hovers would accept a certain object.
-
-The following client-side criteria are define in
-[package]#com.vaadin.event.dd.acceptcriterion#:
-
-[classname]#AcceptAll#:: Accepts all transferables and targets.
-[classname]#And#:: Performs the logical AND operation on two or more client-side criteria; accepts the transferable if all the given sub-criteria accept it.
-[classname]#ContainsDataFlavour#:: The transferable must contain the defined data flavour.
-[classname]#Not#:: Performs the logical NOT operation on a client-side criterion; accepts the transferable if and only if the sub-criterion does not accept it.
-[classname]#Or#:: Performs the logical OR operation on two or more client-side criteria; accepts the transferable if any of the given sub-criteria accepts it.
-[classname]#SourceIs#:: Accepts all transferables from any of the given source components
-[classname]#SourceIsTarget#:: Accepts the transferable only if the source component is the same as the target. This criterion is useful for ensuring that items are dragged only within a tree or a table, and not from outside it.
-[classname]#TargetDetailIs#:: Accepts any transferable if the target detail, such as the item of a tree node or table row, is of the given data flavor and has the given value.
-
-
-In addition, target components such as [classname]#Tree# and [classname]#Table#
-define some component-specific client-side accept criteria. See
-<<advanced.dragndrop.treedrop>> for more details.
-
-[classname]#AbstractSelect# defines the following criteria for all selection
-components, including [classname]#Tree# and [classname]#Table#.
-
-[classname]#AcceptItem#:: Accepts only specific items from a specific selection component. The selection component, which must inherit [classname]#AbstractSelect#, is given as the first parameter for the constructor. It is followed by a list of allowed item identifiers in the drag source.
-[classname]#AcceptItem.ALL#:: Accepts all transferables as long as they are items.
-[classname]#TargetItemIs#:: Accepts all drops on the specified target items. The constructor requires the target component ( [classname]#AbstractSelect#) followed by a list of allowed item identifiers.
-[classname]#VerticalLocationIs.MIDDLE#, [classname]#TOP#, and [classname]#BOTTOM#:: The three static criteria accepts drops on, above, or below an item. For example, you could accept drops only in between items with the following: 
-[source, java]
-----
-public AcceptCriterion getAcceptCriterion() {
-    return new Not(VerticalLocationIs.MIDDLE);
-}
-----
-
-
-
-
-
-[[advanced.dragndrop.acceptcriteria.server-side]]
-=== Server-Side Criteria
-
-The __server-side criteria__ are verified on the server-side with the
-[methodname]#accept()# method of the [classname]#ServerSideCriterion# class.
-This allows fully programmable logic for accepting drops, but the negative side
-is that it causes a very large amount of server requests. A request is made for
-every target position on which the pointer hovers. This problem is eased in many
-cases by the component-specific lazy loading criteria
-[classname]#TableDropCriterion# and [classname]#TreeDropCriterion#. They do the
-server visit once for each drag and drop operation and return all accepted rows
-or nodes for current [classname]#Transferable# at once.
-
-The [methodname]#accept()# method gets the drag event as a parameter so it can
-perform its logic much like in [methodname]#drop()#.
-
-
-[source, java]
-----
-public AcceptCriterion getAcceptCriterion() {
-    // Server-side accept criterion that allows drops on any other
-    // location except on nodes that may not have children
-    ServerSideCriterion criterion = new ServerSideCriterion() {
-        public boolean accept(DragAndDropEvent dragEvent) {
-            TreeTargetDetails target = (TreeTargetDetails)
-                dragEvent.getTargetDetails();
-
-            // The tree item on which the load hovers
-            Object targetItemId = target.getItemIdOver();
-
-            // On which side of the target the item is hovered
-            VerticalDropLocation location = target.getDropLocation();
-            if (location == VerticalDropLocation.MIDDLE)
-                if (! tree.areChildrenAllowed(targetItemId))
-                    return false; // Not accepted
-
-            return true; // Accept everything else
-        }
-    };
-    return criterion;
-}
-----
-
-The server-side criteria base class [classname]#ServerSideCriterion# provides a
-generic [methodname]#accept()# method. The more specific
-[classname]#TableDropCriterion# and [classname]#TreeDropCriterion# are
-conveniency extensions that allow definiting allowed drop targets as a set of
-items. They also provide some optimization by lazy loading, which reduces server
-communications significantly.
-
-
-[source, java]
-----
-public AcceptCriterion getAcceptCriterion() {
-    // Server-side accept criterion that allows drops on any
-    // other tree node except on node that may not have children
-    TreeDropCriterion criterion = new TreeDropCriterion() {
-        @Override
-        protected Set<Object> getAllowedItemIds(
-                DragAndDropEvent dragEvent, Tree tree) {
-            HashSet<Object> allowed = new HashSet<Object>();
-            for (Iterator<Object> i =
-                   tree.getItemIds().iterator(); i.hasNext();) {
-                Object itemId = i.next();
-                if (tree.hasChildren(itemId))
-                    allowed.add(itemId);
-            }
-            return allowed;
-        }
-    };
-    return criterion;
-}
-----
-
-
-[[advanced.dragndrop.acceptcriteria.indicators]]
-=== Accept Indicators
-
-When a dragged object hovers on a drop target, an __accept indicator__ is
-displayed to show whether or not the location is accepted. For
-[parameter]#MIDDLE# location, the indicator is a box around the target (tree
-node, table row, or component). For vertical drop locations, the accepted
-locations are shown as horizontal lines, and for horizontal drop locations as
-vertical lines.
-
-For [classname]#DragAndDropWrapper# drop targets, you can disable the accept
-indicators or __drag hints__ with the [parameter]#no-vertical-drag-hints#,
-[parameter]#no-horizontal-drag-hints#, and [parameter]#no-box-drag-hints#
-styles. You need to add the styles to the __layout that contains__ the wrapper,
-not to the wrapper itself.
-
-
-[source, java]
-----
-// Have a wrapper
-DragAndDropWrapper wrapper = new DragAndDropWrapper(c);
-layout.addComponent(wrapper);
-
-// Disable the hints
-layout.addStyleName("no-vertical-drag-hints");
-layout.addStyleName("no-horizontal-drag-hints");
-layout.addStyleName("no-box-drag-hints");
-----
-
-
-(((range="endofrange", startref="term.advanced.dragndrop.acceptcriteria")))
-
-[[advanced.dragndrop.dragging]]
-== Dragging Components
-
-Dragging a component requires wrapping the source component within a
-[classname]#DragAndDropWrapper#. You can then allow dragging by putting the
-wrapper (and the component) in drag mode with [methodname]#setDragStartMode()#.
-The method supports two drag modes: [parameter]#DragStartMode.WRAPPER# and
-[parameter]#DragStartMode.COMPONENT#, which defines whether the entire wrapper
-is shown as the drag image while dragging or just the wrapped component.
-
-
-[source, java]
-----
-// Have a component to drag
-final Button button = new Button("An Absolute Button");
-
-// Put the component in a D&D wrapper and allow dragging it
-final DragAndDropWrapper buttonWrap = new DragAndDropWrapper(button);
-buttonWrap.setDragStartMode(DragStartMode.COMPONENT);
-
-// Set the wrapper to wrap tightly around the component
-buttonWrap.setSizeUndefined();
-        
-// Add the wrapper, not the component, to the layout
-layout.addComponent(buttonWrap, "left: 50px; top: 50px;");
-----
-
-The default height of [classname]#DragAndDropWrapper# is undefined, but the
-default width is 100%. If you want to ensure that the wrapper fits tightly
-around the wrapped component, you should call [methodname]#setSizeUndefined()#
-for the wrapper. Doing so, you should make sure that the wrapped component does
-not have a relative size, which would cause a paradox.
-
-Dragged components are referenced in the [classname]#WrapperTransferable#. You
-can get the reference to the dragged component with
-[methodname]#getDraggedComponent()#. The method will return [literal]#++null++#
-if the transferable is not a component. Also HTML 5 drags (see later) are held
-in wrapper transferables.
-
-
-[[advanced.dragndrop.drop-on-component]]
-== Dropping on a Component
-
-Drops on a component are enabled by wrapping the component in a
-[classname]#DragAndDropWrapper#. The wrapper is an ordinary component; the
-constructor takes the wrapped component as a parameter. You just need to define
-the [classname]#DropHandler# for the wrapper with
-[methodname]#setDropHandler()#.
-
-In the following example, we allow moving components in an absolute layout.
-Details on the drop handler are given later.
-
-
-[source, java]
-----
-// A layout that allows moving its contained components
-// by dragging and dropping them
-final AbsoluteLayout absLayout = new AbsoluteLayout();
-absLayout.setWidth("100%");
-absLayout.setHeight("400px");
-
-... put some (wrapped) components in the layout ...
-
-// Wrap the layout to allow handling drops
-DragAndDropWrapper layoutWrapper =
-        new DragAndDropWrapper(absLayout);
-
-// Handle moving components within the AbsoluteLayout
-layoutWrapper.setDropHandler(new DropHandler() {
-    public AcceptCriterion getAcceptCriterion() {
-        return AcceptAll.get();
-    }
-    
-    public void drop(DragAndDropEvent event) {
-        ...        
-    }
-});
-----
-
-[[advanced.dragndrop.drop-on-component.details]]
-=== Target Details for Wrapped Components
-
-The drop handler receives the drop target details in a
-[classname]#WrapperTargetDetails# object, which implements the
-[classname]#TargetDetails# interface.
-
-
-[source, java]
-----
-public void drop(DragAndDropEvent event) {
-    WrapperTransferable t =
-        (WrapperTransferable) event.getTransferable();
-    WrapperTargetDetails details =
-        (WrapperTargetDetails) event.getTargetDetails();
-----
-
-The wrapper target details include a [classname]#MouseEventDetails# object,
-which you can get with [methodname]#getMouseEvent()#. You can use it to get the
-mouse coordinates for the position where the mouse button was released and the
-drag ended. Similarly, you can find out the drag start position from the
-transferable object (if it is a [classname]#WrapperTransferable#) with
-[methodname]#getMouseDownEvent()#.
-
-
-[source, java]
-----
-// Calculate the drag coordinate difference
-int xChange = details.getMouseEvent().getClientX()
-              - t.getMouseDownEvent().getClientX();
-int yChange = details.getMouseEvent().getClientY()
-              - t.getMouseDownEvent().getClientY();
-
-// Move the component in the absolute layout
-ComponentPosition pos =
-    absLayout.getPosition(t.getSourceComponent());
-pos.setLeftValue(pos.getLeftValue() + xChange);
-pos.setTopValue(pos.getTopValue() + yChange);
-----
-
-You can get the absolute x and y coordinates of the target wrapper with
-[methodname]#getAbsoluteLeft()# and [methodname]#getAbsoluteTop()#, which allows
-you to translate the absolute mouse coordinates to coordinates relative to the
-wrapper. Notice that the coordinates are really the position of the wrapper, not
-the wrapped component; the wrapper reserves some space for the accept
-indicators.
-
-The [methodname]#verticalDropLocation()# and
-[methodname]#horizontalDropLocation()# return the more detailed drop location in
-the target.
-
-
-
+////
+TODO add back when supported with new API ?
 [[advanced.dragndrop.external]]
 == Dragging Files from Outside the Browser
 
-The [classname]#DragAndDropWrapper# allows dragging files from outside the
-browser and dropping them on a component wrapped in the wrapper. Dropped files
-are automatically uploaded to the application and can be acquired from the
+The [classname]#DropTargetExtension# allows dragging files from outside the
+browser and dropping them on a target component.
+
+Dropped files are automatically uploaded to the application and can be acquired from the
 wrapper with [methodname]#getFiles()#. The files are represented as
 [classname]#Html5File# objects as defined in the inner class. You can define an
 upload [classname]#Receiver# to receive the content of a file to an
@@ -561,7 +177,255 @@ upload [classname]#Receiver# to receive the content of a file to an
 Dragging and dropping files to browser is supported in HTML 5 and requires a
 compatible browser, such as Mozilla Firefox 3.6 or newer.
 
+////
+
+[[advanced.dragndrop.mobile]]
+== Mobile Drag And Drop Support
+
+The HTML 5 Drag and Drop API is not yet supported by mobile browsers. To enable HTML5 DnD support on mobile devices, we have included
+an link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[external Polyfill]. Please note that this Polyfill is under the BSD 2 License.
+
+By default, the mobile DnD support is disabled, but you can enable it any time for a [classname]#UI#. Starting from the request where the support was enabled, all the added [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses will also work on mobile devices for that UI. The Polyfill is only loaded when the user is using a touch device. 
+
+Drag and Drop is mutually exclusive with context click on mobile devices.
+
+[source, java]
+----
+public class MyUI extends UI {
+    protected void init(VaadinRequest request) {
+        setMobileHtml5DndEnabled(true);
+    }
+}
+----
+
+[NOTE]
+====
+When disabling the support, you need to also remove all the [classname]#DragSourceExtension#, [classname]#DropTargetExtension# and their subclasses that were added when the mobile DnD support was enabled.
+====
+
+=== CSS Style Rules
+
+The Polyfill allows you to apply custom styling to enhance the user experience on touch devices. It is important to remember that these customizations are only used when the polyfill is loaded, and not possible for desktop DnD operations.
+
+The drag image can be customized using the `dnd-poly-drag-image` class name. You must NOT wrap the class rule with e.g. `.valo`, since that is not applied to the drag image element. The following styling can be used to make the drag image opaque and "snap back" when the user did not drop to a valid dropzone:
+
+[source, css]
+====
+.dnd-poly-drag-image {
+    opacity: .5 !important;
+}
+
+.dnd-poly-drag-image.dnd-poly-snapback {
+    transition-property: transform, -webkit-transform !important;
+    transition-duration: 200ms !important;
+    transition-timing-function: ease-out !important;
+}
+====
+
+More details can be found from the link:https://github.com/timruffles/ios-html5-drag-drop-shim/tree/rewrite:[Polyfill] website.
+
+
+[[advanced.dragndrop.grid]]
+== Drag and Drop Rows in Grid
+
+It is possible to drag and drop the rows of a Grid component. This allows reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping data onto rows.
+
+=== Grid as a Drag Source
+
+A Grid component's rows can be made draggable by applying [classname]#GridDragSource# extension to the component. The extended Grid's rows become draggable, meaning that each row can be grabbed and moved by the mouse individually.
+When the Grid's selection mode is `SelectionMode.MULTI` and multiple rows are selected, it is possible to drag all the visible selected rows by grabbing one of them. However, when the grabbed row is not selected, only that one row will be dragged.
+
+[NOTE]
+====
+It is important to note that when dragging multiple rows, only the visible selected rows will be set as dragged data.
+====
+
+By default, the drag data of type `"text"` will contain the content of each column separated by a tabulator character (`"\t"`).
+When multiple rows are dragged, the generated data is combined into one String separated by new line characters (`"\n"`).
+You can override the default behaviour and provide a custom drag data for each item by setting a custom _drag data generator_ for the `"text"` type.
+The generator is executed for each item and returns a `String` containing the data to be transferred for that item.
+
+The following example shows how you can define the allowed drag effect and customize the drag data by setting a drag data generator.
+
+[source,java]
+----
+Grid<Person> grid = new Grid<>();
+// ...
+GridDragSource<Person> dragSource = new GridDragSource<>(grid);
+
+// set allowed effects
+dragSource.setEffectAllowed(EffectAllowed.MOVE);
+
+// add a drag data generator
+dragSource.setDragDataGenerator("text", person -> {
+    return person.getFirstName() + " " + person.getLastName() +
+           "\t" +  // tabulator character
+           person.getAddress().getCity();
+});
+----
+
+It is possible to set multiple generators with the `setDragDataGenerator(type, generator)` method.
+The generated data will be set as data transfer data with the given type and can then be accessed during drop from the drop event's `getDataTransferData(type)` method.
+
+The [classname]#GridDragStartEvent# is fired when dragging a row has started, and the [classname]#GridDragEndEvent# when the drag has ended, either in a drop or a cancel.
+
+[source,java]
+----
+dragSource.addGridDragStartListener(event ->
+    // Keep reference to the dragged items
+    draggedItems = event.getDraggedItems()
+);
+
+// Add drag end listener
+dragSource.addGridDragEndListener(event -> {
+    // If drop was successful, remove dragged items from source Grid
+    if (event.getDropEffect() == DropEffect.MOVE) {
+        ((ListDataProvider<Person>) grid.getDataProvider()).getItems()
+                .removeAll(draggedItems);
+        grid.getDataProvider().refreshAll();
+
+        // Remove reference to dragged items
+        draggedItems = null;
+    }
+});
+----
+
+The dragged rows can be accessed from both events using the `getDraggedItems()` method.
+
+==== CSS Style Rules
+
+A drag source Grid's rows have the `v-grid-row-dragsource` and the `v-draggable` style names applied to indicate that the rows are draggable.
+
+Additionally, the style name `v-grid-row-dragged` is applied to all the dragged rows during the drag start event and removed during the drag end event.
+
+=== Grid as a Drop Target
+
+To make a Grid component's rows accept a drop event, apply the [classname]#GridDropTarget# extension to the component. When creating the extension, you need to specify where the transferred data can be dropped on.
+
+[source,java]
+----
+Grid<Person> grid = new Grid<>();
+// ...
+GridDropTarget<Person> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN);
+dropTarget.setDropEffect(DropEffect.MOVE);
+----
+
+The _drop mode_ specifies the behaviour of the row when an element is dragged over or dropped onto it. Use `DropMode.ON_TOP` when you want to drop elements on top of a row and `DropMode.BETWEEN` when you want to drop elements between rows. `DropMode_ON_TOP_OR_BETWEEN` allows to drop on between or top rows.
+
+The [classname]#GridDropEvent# is fired when data is dropped onto one of the Grid's rows. The following example shows how you can insert items into the Grid at the drop position. If the drag source is another Grid, you can access the generated drag data with the event's [methodname]#getDataTransferText()# method.
+If the drag source Grid uses a custom generator for a different type than `"text"`, you can access it's generated data using the [methodname]#getDataTransferData(type)# method. You can also check all the received data transfer data by fetching the type-to-data map with the [methodname]#getDataTransferData()# method.
+
+[source,java]
+----
+dropTarget.addGridDropListener(event -> {
+    // Accepting dragged items from another Grid in the same UI
+    event.getDragSourceExtension().ifPresent(source -> {
+        if (source instanceof GridDragSource) {
+            // Get the target Grid's items
+            ListDataProvider<Person> dataProvider = (ListDataProvider<Person>)
+                    event.getComponent().getDataProvider();
+            List<Person> items = (List<Person>) dataProvider.getItems();
+
+            // Calculate the target row's index
+            int index = items.size();
+            if (event.getDropTargetRow().isPresent()) {
+                index = items.indexOf(event.getDropTargetRow().get()) + (
+                    event.getDropLocation() == DropLocation.BELOW ? 1 : 0);
+            }
+
+            // Add dragged items to the target Grid
+            items.addAll(index, draggedItems);
+            dataProvider.refreshAll();
+
+            // Show the dropped data
+            Notification.show("Dropped row data: " + event.getDataTransferText());
+        }
+    });
+});
+----
+
+The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on and depends on the used [classname]#DropMode#. When the drop happened on top of a row, the possible options for the location are `ON_TOP`, `ABOVE` and `BELOW`.
+
+If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened `BELOW` the last visible row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+
+When dropping on top of the grid's header or footer, the drop location will be `EMPTY` if there are no rows in the grid or if [classname]#DropMode.ON_TOP# was used. If there are rows in the grid, dropping on top of the header will set the drop location to `ABOVE` and the dropped row will be the first currently visible row in grid. Similarly, if dropping on top of the footer, the drop location will be `BELOW` and the dropped row will be the last visible row in the grid.
+
+==== CSS Style Rules
+
+A drop target Grid's body has the style name `v-grid-body-droptarget` to indicate that it is a potential target for data to be dropped.
+
+When dragging data over a drop target Grid's row, depending on the drop mode and the mouse position relative to the row, a style name is applied to the row or to the grid body to indicate the drop location.
+When dragging on top of a row, `v-grid-row-drag-center` indicates ON_TOP, `v-grid-row-drag-top` indicates ABOVE and `v-grid-row-drag-bottom` indicates BELOW locations. When dragging on top of an empty grid, or when the drop location is ON_TOP and dragged below the last row in grid (and there is empty space visible), the `v-grid-body-body-drag-top` style is applied to the `v-grid-tablewrapper` element which surrounds the grid header, body and footer.
 
 (((range="endofrange", startref="term.advanced.dragndrop")))
 
+=== Drag and Drop Rows in TreeGrid
 
+To make the rows of a TreeGrid component draggable or to make them a drop target, apply [classname]#TreeGridDragSource# or [classname]#TreeGridDropTarget# extensions to the component, respectively.
+In addition to the drag and drop features for Grid above, [classname]#TreeGridDropEvent# provides information about the status of the node (expanded or collapsed) and its depth in the hierarchy.
+
+== Drag and Drop Files
+
+Files can be uploaded to the server by dropping them onto a file drop target. To make a component a file drop target, apply the [classname]#FileDropTarget# extension to it by creating a new instance and passing the component as first constructor parameter to it.
+
+You can handle the dropped files with the `FileDropHandler` that you add as the second constructor parameter. The [classname]#FileDropEvent#, received by the handler, contains information about the dropped files such as file name, file size and mime type.
+In the handler you can decide if you would like to upload each of the dropped files.
+
+To start uploading a file, set a `StreamVariable` to it. The stream variable provides an output stream where the file will be written and has callback methods for all the stages of the upload process.
+
+[source,java]
+----
+Label dropArea = new Label("Drop files here");
+FileDropTarget<Label> dropTarget = new FileDropTarget<>(dropArea, event -> {
+
+    List<Html5File> files = event.getFiles();
+    files.forEach(file -> {
+        // Max 1 MB files are uploaded
+        if (file.getFileSize() <= 1024 * 1024) {
+            file.setStreamVariable(new StreamVariable() {
+
+                // Output stream to write the file to
+                @Override
+                public OutputStream getOutputStream() {
+                    return new FileOutputStream("/path/to/files/"
+                        + file.getFileName());
+                }
+
+                // Returns whether onProgress() is called during upload
+                @Override
+                public boolean listenProgress() {
+                    return true;
+                }
+
+                // Called periodically during upload
+                @Override
+                public void onProgress(StreamingProgressEvent event) {
+                    Notification.show("Progress, bytesReceived="
+                        + event.getBytesReceived());
+                }
+
+                // Called when upload started
+                @Override
+                public void streamingStarted(StreamingStartEvent event) {
+                    Notification.show("Stream started, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload finished
+                @Override
+                public void streamingFinished(StreamingEndEvent event) {
+                    Notification.show("Stream finished, fileName="
+                        + event.getFileName());
+                }
+
+                // Called when upload failed
+                @Override
+                public void streamingFailed(StreamingErrorEvent event) {
+                    Notification.show("Stream failed, fileName="
+                        + event.getFileName());
+                }
+            });
+        }
+    }
+});
+----

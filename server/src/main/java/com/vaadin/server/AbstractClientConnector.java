@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
@@ -45,6 +45,7 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
@@ -66,7 +67,7 @@ public abstract class AbstractClientConnector
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
-     * sends ourgoing RPC calls for that interface.
+     * sends outgoing RPC calls for that interface.
      */
     private final Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<>();
 
@@ -81,20 +82,26 @@ public abstract class AbstractClientConnector
     /**
      * Pending RPC method invocations to be sent.
      */
-    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
+    private List<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
 
     private String connectorId;
 
-    private final ArrayList<Extension> extensions = new ArrayList<>();
+    private final List<Extension> extensions = new ArrayList<>();
 
     /**
      * The EventRouter used for the event model.
      */
-    private EventRouter eventRouter = null;
+    private EventRouter eventRouter;
 
-    private ErrorHandler errorHandler = null;
+    private ErrorHandler errorHandler;
 
-    private static final ConcurrentHashMap<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = new ConcurrentHashMap<>();
+    /**
+     * Static cache mapping AbstractClientConnector classes to their respective
+     * ShareState classes. Using WeakHashMap since entries are recalculated on
+     * demand.
+     */
+    private static final Map<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = Collections
+            .synchronizedMap(new WeakHashMap<>());
 
     @Override
     public Registration addAttachListener(AttachListener listener) {
@@ -295,7 +302,7 @@ public abstract class AbstractClientConnector
      */
     protected SharedState createState() {
         try {
-            return getStateType().newInstance();
+            return ReflectTools.createInstance(getStateType());
         } catch (Exception e) {
             throw new RuntimeException("Error creating state of type "
                     + getStateType().getName() + " for " + getClass().getName(),
@@ -309,11 +316,8 @@ public abstract class AbstractClientConnector
         // exceptions flying around
         if (stateType == null) {
             // Cache because we don't need to do this once per instance
-            stateType = stateTypeCache.get(this.getClass());
-            if (stateType == null) {
-                stateType = findStateType();
-                stateTypeCache.put(this.getClass(), stateType);
-            }
+            stateType = stateTypeCache.computeIfAbsent(this.getClass(),
+                    key -> findStateType());
         }
 
         return stateType;
@@ -479,10 +483,6 @@ public abstract class AbstractClientConnector
             connector = connector.getParent();
         }
         return null;
-    }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(AbstractClientConnector.class.getName());
     }
 
     /**
@@ -751,7 +751,7 @@ public abstract class AbstractClientConnector
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
-     * @since 6.2
+     * @since 8.0
      */
     protected Registration addListener(String eventIdentifier,
             Class<?> eventType, Object target, Method method) {
@@ -891,6 +891,7 @@ public abstract class AbstractClientConnector
      * @deprecated As of 7.0. This method should be avoided. Use
      *             {@link #addListener(Class, Object, Method)} or
      *             {@link #addListener(String, Class, Object, Method)} instead.
+     * @since 8.0
      */
     @Override
     @Deprecated

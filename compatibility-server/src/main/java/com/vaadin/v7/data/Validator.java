@@ -18,6 +18,7 @@ package com.vaadin.v7.data;
 
 import java.io.Serializable;
 
+import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
@@ -30,9 +31,8 @@ import com.vaadin.server.VaadinServlet;
  * Interface that implements a method for validating if an {@link Object} is
  * valid or not.
  * <p>
- * Implementors of this class can be added to any
- * {@link com.vaadin.v7.data.Validatable Validatable} implementor to verify its
- * value.
+ * Implementors of this class can be added to any {@link Validatable}
+ * implementor to verify its value.
  * </p>
  * <p>
  * {@link #validate(Object)} can be used to check if a value is valid. An
@@ -52,6 +52,8 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The validation is performed
+ * outside components, see {@link Binder}.{@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
@@ -168,6 +170,7 @@ public interface Validator extends Serializable {
             return causes;
         }
 
+        // Intentional change in compatibility package
         @Override
         public ErrorMessage getErrorMessage() {
             UserError error = new UserError(getHtmlMessage(), ContentMode.HTML,

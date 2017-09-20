@@ -45,6 +45,10 @@ import com.vaadin.v7.shared.ui.combobox.FilteringMode;
  * on newItemsAllowed and change filtering mode (and also turn it off), but you
  * can not turn on multi-select mode.
  *
+ * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ComboBox} based on the
+ *             new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -668,7 +672,7 @@ public class ComboBox extends AbstractSelect
     protected List<?> getFilteredOptions() {
         if (!isFilteringNeeded()) {
             prevfilterstring = null;
-            filteredOptions = new LinkedList<>(getItemIds());
+            filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
         }
 
@@ -685,7 +689,7 @@ public class ComboBox extends AbstractSelect
         }
         prevfilterstring = filterstring;
 
-        filteredOptions = new LinkedList<>();
+        filteredOptions = new LinkedList<Object>();
         for (final Iterator<?> it = items.iterator(); it.hasNext();) {
             final Object itemId = it.next();
             String caption = getItemCaption(itemId);

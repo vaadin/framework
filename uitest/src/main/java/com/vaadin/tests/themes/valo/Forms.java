@@ -21,6 +21,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Alignment;
@@ -73,7 +74,7 @@ public class Forms extends VerticalLayout implements View {
         name.setWidth("50%");
         form.addComponent(name);
 
-        AbstractDateField birthday = new TestDateField("Birthday");
+        AbstractDateField<LocalDate, DateResolution> birthday = new TestDateField("Birthday");
         birthday.setValue(LocalDate.of(1980, 1, 31));
         form.addComponent(birthday);
 

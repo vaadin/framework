@@ -35,4 +35,14 @@ public class StringToDoubleConverterTest extends AbstractConverterTest {
         Assert.assertEquals("Failed", result.getMessage().get());
     }
 
+    @Test
+    public void customEmptyValue() {
+        StringToDoubleConverter converter = new StringToDoubleConverter(0.0,
+                getErrorMessage());
+
+        assertValue(0.0, converter.convertToModel("", new ValueContext()));
+        Assert.assertEquals("0",
+                converter.convertToPresentation(0.0, new ValueContext()));
+    }
+
 }

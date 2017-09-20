@@ -1,11 +1,11 @@
 ---
 title: ProgressBar
-order: 27
+order: 29
 layout: page
 ---
 
 [[components.progressbar]]
-= [classname]#ProgressBar#
+= ProgressBar
 
 ifdef::web[]
 [.sampler]
@@ -29,8 +29,7 @@ server push to update the browser. You can enable polling with
 <<dummy/../../../framework/advanced/advanced-push#advanced.push,"Server Push">>
 for instructions about using server push. Whichever method you use to update the
 UI, it is important to lock the user session by modifying the progress bar value
-inside [methodname]#access()# call, as illustrated in the following example and
-described in
+inside [methodname]#access()# call, as described in
 <<dummy/../../../framework/advanced/advanced-push#advanced.push.running,"Accessing UI from Another Thread">>.
 
 [source, java]

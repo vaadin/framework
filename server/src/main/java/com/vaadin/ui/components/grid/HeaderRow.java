@@ -16,9 +16,12 @@
 package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
  * A header row in a Grid.
@@ -30,6 +33,8 @@ public interface HeaderRow extends Serializable {
 
     /**
      * Returns the cell on this row corresponding to the given column id.
+     *
+     * @see Column#setId(String)
      *
      * @param columnId
      *            the id of the column whose header cell to get, not null
@@ -80,4 +85,62 @@ public interface HeaderRow extends Serializable {
      */
     HeaderCell join(HeaderCell... cellsToMerge);
 
+    /**
+     * Merges cells corresponding to the given columns in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnsToMerge
+     *            the columns of the cells that should be merged. The cells
+     *            should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     */
+    HeaderCell join(Grid.Column<?, ?>... columnsToMerge);
+
+    /**
+     * Merges cells corresponding to the given column ids in the row. Original
+     * cells are hidden, and new merged cell is shown instead. The cell has a
+     * width of all merged cells together, inherits styles of the first merged
+     * cell but has empty caption.
+     *
+     * @param columnIdsToMerge
+     *            the ids of the columns of the cells that should be merged. The
+     *            cells should not be merged to any other cell set.
+     * @return the remaining visible cell after the merge
+     *
+     * @see #join(Set)
+     * @see com.vaadin.ui.AbstractComponent#setCaption(String) setCaption
+     * @see Column#setId(String)
+     */
+    HeaderCell join(String... columnIdsToMerge);
+
+    /**
+     * Returns the custom style name for this row.
+     *
+     * @return the style name or null if no style name has been set
+     */
+    public String getStyleName();
+
+    /**
+     * Sets a custom style name for this row.
+     *
+     * @param styleName
+     *            the style name to set or null to not use any style name
+     */
+    public void setStyleName(String styleName);
+
+    /**
+     * Gets a collection of all components inside this row.
+     * <p>
+     * The order of the components in the returned collection is not specified.
+     *
+     * @return a collection of components in the row
+     *
+     * @since 8.0.3
+     */
+    public Collection<? extends Component> getComponents();
 }

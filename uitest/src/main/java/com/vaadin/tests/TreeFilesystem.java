@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.io.File;
 
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;

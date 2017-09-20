@@ -8,7 +8,7 @@ $v-textfield-background-color: if(is-dark-color($v-app-background-color), darken
  * The background color for read-only text fields.
  * @group textfield
  */
-$v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%));
+$v-textfield-background-color--readonly: darkest-color($v-app-background-color, darken($v-textfield-background-color, 2%)) !default;
 
 /**
  * The bevel style for text fields. See the documentation for $v-bevel.
@@ -100,12 +100,12 @@ $v-textfield-disabled-opacity: $v-disabled-opacity !default;
       font-size: $v-font-size--huge;
     }
 
-    @include valo-textfield-inline-icon($stylenames: inline-icon);
-    @include valo-textfield-inline-icon($stylenames: inline-icon tiny, $unit-size: $v-unit-size--tiny, $font-size: $v-font-size--tiny);
-    @include valo-textfield-inline-icon($stylenames: inline-icon compact, $unit-size: $v-unit-size--small);
-    @include valo-textfield-inline-icon($stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
-    @include valo-textfield-inline-icon($stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
-    @include valo-textfield-inline-icon($stylenames: inline-icon huge, $unit-size: $v-unit-size--huge, $font-size: $v-font-size--huge);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon tiny, $unit-size: $v-unit-size--tiny, $font-size: $v-font-size--tiny);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon compact, $unit-size: $v-unit-size--small);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon small, $unit-size: $v-unit-size--small, $font-size: $v-font-size--small);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon large, $unit-size: $v-unit-size--large, $font-size: $v-font-size--large);
+    @include valo-textfield-inline-icon($primary-stylename: $primary-stylename, $stylenames: inline-icon huge, $unit-size: $v-unit-size--huge, $font-size: $v-font-size--huge);
 
     .#{$primary-stylename}-align-right {
       text-align: right;

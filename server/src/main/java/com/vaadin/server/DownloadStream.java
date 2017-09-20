@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+
+import com.vaadin.util.EncodeUtil;
 
 /**
  * Downloadable stream.
@@ -329,13 +329,10 @@ public class DownloadStream implements Serializable {
      * @return A value for inclusion in a Content-Disposition header
      */
     public static String getContentDispositionFilename(String filename) {
-        try {
-            String encodedFilename = URLEncoder.encode(filename, "UTF-8");
-            return String.format("filename=\"%s\"; filename*=utf-8''%s",
-                    encodedFilename, encodedFilename);
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
+        String encodedFilename = EncodeUtil.rfc5987Encode(filename);
+
+        return String.format("filename=\"%s\"; filename*=utf-8''%s",
+                encodedFilename, encodedFilename);
     }
 
     /**

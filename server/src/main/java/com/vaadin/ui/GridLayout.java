@@ -627,7 +627,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OverlapsException extends java.lang.RuntimeException {
+    public class OverlapsException extends RuntimeException {
 
         private final Area existingArea;
 
@@ -683,7 +683,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OutOfBoundsException extends java.lang.RuntimeException {
+    public class OutOfBoundsException extends RuntimeException {
 
         private final Area areaOutOfBounds;
 
@@ -1264,11 +1264,24 @@ public class GridLayout extends AbstractLayout
         super.readDesign(design, designContext);
 
         setMargin(readMargin(design, getMargin(), designContext));
+        if (design.childNodeSize() > 0) {
+            // Touch content only if there is some content specified. This is
+            // needed to be able to use extended GridLayouts which add
+            // components in the constructor (e.g. Designs based on GridLayout).
+            readChildComponents(design.children(), designContext);
+        }
 
+        // Set cursor position explicitly
+        setCursorY(getRows());
+        setCursorX(0);
+    }
+
+    private void readChildComponents(Elements childElements,
+            DesignContext designContext) {
         List<Element> rowElements = new ArrayList<>();
         List<Map<Integer, Component>> rows = new ArrayList<>();
         // Prepare a 2D map for reading column contents
-        for (Element e : design.children()) {
+        for (Element e : childElements) {
             if (e.tagName().equalsIgnoreCase("row")) {
                 rowElements.add(e);
                 rows.add(new HashMap<>());
@@ -1277,14 +1290,14 @@ public class GridLayout extends AbstractLayout
         }
         setRows(Math.max(rows.size(), 1));
         Map<Component, Alignment> alignments = new HashMap<>();
-        List<Integer> columnExpandRatios = new ArrayList<>();
+        List<Float> columnExpandRatios = new ArrayList<>();
         for (int row = 0; row < rowElements.size(); ++row) {
             Element rowElement = rowElements.get(row);
 
             // Row Expand
             if (rowElement.hasAttr("expand")) {
-                int expand = DesignAttributeHandler.readAttribute("expand",
-                        rowElement.attributes(), int.class);
+                float expand = DesignAttributeHandler.readAttribute("expand",
+                        rowElement.attributes(), float.class);
                 setRowExpandRatio(row, expand);
             }
 
@@ -1334,11 +1347,11 @@ public class GridLayout extends AbstractLayout
                 if (row == 0) {
                     if (col.hasAttr("expand")) {
                         for (String expand : col.attr("expand").split(",")) {
-                            columnExpandRatios.add(Integer.parseInt(expand));
+                            columnExpandRatios.add(Float.parseFloat(expand));
                         }
                     } else {
                         for (int c = 0; c < colspan; ++c) {
-                            columnExpandRatios.add(0);
+                            columnExpandRatios.add(0f);
                         }
                     }
                 }
@@ -1394,9 +1407,6 @@ public class GridLayout extends AbstractLayout
                 setComponentAlignment(child, alignments.get(child));
             }
         }
-        // Set cursor position explicitly
-        setCursorY(getRows());
-        setCursorX(0);
     }
 
     @Override
@@ -1442,7 +1452,7 @@ public class GridLayout extends AbstractLayout
 
             // Row Expand
             DesignAttributeHandler.writeAttribute("expand", row.attributes(),
-                    (int) getRowExpandRatio(i), 0, int.class, designContext);
+                    getRowExpandRatio(i), 0.0f, float.class, designContext);
 
             int colspan = 1;
             Element col;
@@ -1483,7 +1493,7 @@ public class GridLayout extends AbstractLayout
                         // A column with expand and no content in the end of
                         // first row needs to be present.
                         for (int c = j; c < componentMap[i].length; ++c) {
-                            if ((int) getColumnExpandRatio(c) > 0) {
+                            if (getColumnExpandRatio(c) > 0) {
                                 hasExpands = true;
                             }
                         }
@@ -1525,7 +1535,7 @@ public class GridLayout extends AbstractLayout
                     String expands = "";
                     boolean expandRatios = false;
                     for (int c = 0; c < colspan; ++c) {
-                        int colExpand = (int) getColumnExpandRatio(j + c);
+                        float colExpand = getColumnExpandRatio(j + c);
                         if (colExpand > 0) {
                             expandRatios = true;
                         }

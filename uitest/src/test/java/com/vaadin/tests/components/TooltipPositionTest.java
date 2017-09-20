@@ -67,7 +67,7 @@ public class TooltipPositionTest extends MultiBrowserTest {
             if (i < TooltipPosition.NUMBER_OF_BUTTONS - 1) {
                 // Remove the tooltip by moving the mouse.
                 actions = new Actions(driver);
-                actions.moveByOffset(300, 0);
+                actions.moveByOffset(500, -50);
                 actions.build().perform();
                 waitUntil(tooltipNotToBeShown(By.cssSelector(".v-tooltip"),
                         driver.manage().window()));

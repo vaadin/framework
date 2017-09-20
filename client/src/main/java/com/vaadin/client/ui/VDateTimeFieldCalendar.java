@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
  * A client side implementation for inline date/time field.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *
@@ -108,6 +108,11 @@ public class VDateTimeFieldCalendar extends
     @Override
     protected DateTimeResolution[] doGetResolutions() {
         return DateTimeResolution.values();
+    }
+
+    @Override
+    protected boolean supportsTime() {
+        return true;
     }
 
 }

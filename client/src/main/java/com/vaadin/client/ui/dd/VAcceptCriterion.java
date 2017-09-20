@@ -16,7 +16,16 @@
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
+ *
+ */
+@Deprecated
 public abstract class VAcceptCriterion {
 
     /**

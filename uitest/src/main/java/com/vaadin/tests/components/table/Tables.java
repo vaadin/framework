@@ -8,8 +8,8 @@ import java.util.List;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.MultiSelectMode;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -855,7 +855,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
                     @Override
-                    public void execute(Table t, SelectMode value,
+                    public void execute(T t, SelectMode value,
                             Object data) {
                         switch (value) {
                         case NONE:

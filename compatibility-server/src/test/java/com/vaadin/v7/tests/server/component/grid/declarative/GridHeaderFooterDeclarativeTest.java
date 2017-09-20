@@ -20,7 +20,7 @@ import org.jsoup.parser.Tag;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.ui.Grid;

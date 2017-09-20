@@ -45,6 +45,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,6 +56,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
@@ -199,32 +201,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws ServletException {
         CurrentInstance.clearAll();
         super.init(servletConfig);
-        Properties initParameters = new Properties();
-
-        readUiFromEnclosingClass(initParameters);
-
-        readConfigurationAnnotation(initParameters);
-
-        // Read default parameters from server.xml
-        final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name, context.getInitParameter(name));
-        }
-
-        // Override with application config from web.xml
-        for (final Enumeration<String> e = servletConfig
-                .getInitParameterNames(); e.hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name,
-                    servletConfig.getInitParameter(name));
-        }
-
-        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(
-                initParameters);
         try {
-            servletService = createServletService(deploymentConfiguration);
+            servletService = createServletService();
         } catch (ServiceException e) {
             throw new ServletException("Could not initialize VaadinServlet", e);
         }
@@ -320,11 +298,95 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Intended to be used by dependency injection
+     * frameworks.
+     *
+     * @return the created deployment configuration
+     *
+     * @throws ServletException
+     *            if construction of the {@link Properties} for
+     *            {@link #createDeploymentConfiguration(Properties)} fails
+     *
+     * @since
+     */
+    protected DeploymentConfiguration createDeploymentConfiguration() throws ServletException {
+        Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
+
+        readConfigurationAnnotation(initParameters);
+
+        // Read default parameters from server.xml
+        final ServletContext context = getServletConfig().getServletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name, context.getInitParameter(name));
+        }
+
+        // Override with application config from web.xml
+        for (final Enumeration<String> e = getServletConfig()
+                .getInitParameterNames(); e.hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name,
+                    getServletConfig().getInitParameter(name));
+        }
+
+        return createDeploymentConfiguration(initParameters);
+    }
+
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Override this if you want to override certain
+     * properties.
+     *
+     * @param initParameters
+     *            the context-param and init-param values as properties
+     * @return the created deployment configuration
+     *
+     * @since 7.0.0
+     */
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
+    /**
+     * Creates a vaadin servlet service. This method functions as a layer of
+     * indirection between {@link #init(ServletConfig)} and
+     * {@link #createServletService(DeploymentConfiguration)} so dependency
+     * injection frameworks can call {@link #createDeploymentConfiguration()}
+     * when creating a vaadin servlet service lazily.
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServletException
+     *            if creating a deployment configuration fails
+     * @throws ServiceException
+     *            if creating the vaadin servlet service fails
+     *
+     * @since
+     */
+    protected VaadinServletService createServletService()
+            throws ServletException, ServiceException {
+        return createServletService(createDeploymentConfiguration());
+    }
+
+    /**
+     * Creates a vaadin servlet service.
+     *
+     * @param deploymentConfiguration
+     *            the deployment configuration to be used
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServiceException
+     *            if creating the vaadin servlet service fails
+     *
+     * @since 7.0.0
+     */
     protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
@@ -410,7 +472,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 location.length() - lastPathParameter.length());
 
         if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
-                && "".equals(request.getServletPath())
+                && request.getServletPath().isEmpty()
                 && !location.endsWith("/")) {
             /*
              * Path info is for the root but request URI doesn't end with a
@@ -470,7 +532,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Create a Vaadin request for a http servlet request. This method can be
+     * Creates a Vaadin request for a http servlet request. This method can be
      * overridden if the Vaadin request should have special properties.
      *
      * @param request
@@ -495,9 +557,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * Check that cookie support is enabled in the browser. Only checks UIDL
      * requests.
      *
-     * @param requestType
-     *            Type of the request as returned by
-     *            {@link #getRequestType(HttpServletRequest)}
      * @param request
      *            The request from the browser
      * @param response
@@ -588,7 +647,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 output += "</a>";
             }
             getService().writeStringResponse(response,
-                    "text/html; charset=UTF-8", output);
+                    ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8, output);
         }
     }
 
@@ -978,7 +1037,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      *             if there was a problem while locating the file
      */
-    protected URL findResourceURL(String filename) throws IOException {
+    public URL findResourceURL(String filename) throws IOException {
         URL resourceUrl = getServletContext().getResource(filename);
         if (resourceUrl == null) {
             // try if requested file is found from class loader
@@ -1140,6 +1199,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
             URL resourceUrl) {
+        String resourcePath = resourceUrl.getPath();
         if ("jar".equals(resourceUrl.getProtocol())) {
             // This branch is used for accessing resources directly from the
             // Vaadin JAR in development environments and in similar cases.
@@ -1149,8 +1209,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // However, performing a check in case some servers or class loaders
             // try to normalize the path by collapsing ".." before the class
             // loader sees it.
-
-            if (!resourceUrl.getPath().contains("!/VAADIN/")) {
+            if (!resourcePath.contains("!/VAADIN/")
+                    && !resourcePath.contains("!/META-INF/resources/VAADIN/")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
                         resourceUrl);
@@ -1166,8 +1226,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // Check that the URL is in a VAADIN directory and does not contain
             // "/../"
-            if (!resourceUrl.getPath().contains("/VAADIN/")
-                    || resourceUrl.getPath().contains("/../")) {
+            if (!resourcePath.contains("/VAADIN/")
+                    || resourcePath.contains("/../")) {
                 getLogger().log(Level.INFO,
                         "Blocked attempt to access file: {0}", resourceUrl);
                 return false;
@@ -1270,6 +1330,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return getStaticFilePath(request) != null;
     }
 
+    /**
+     * Returns the relative path at which static files are served for a request
+     * (if any).
+     *
+     * @param request
+     *            HTTP request
+     * @return relative servlet path or null if the request path does not
+     *         contain "/VAADIN/" or the request has no path info
+     * @since 8.0
+     */
     protected String getStaticFilePath(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) {

@@ -45,6 +45,9 @@ public abstract class VaadinUriResolver implements Serializable {
      * RequestHandler} instances.</li>
      * <li><code>vaadin://</code> - resolves to the location of static resouces
      * in the VAADIN directory</li>
+     * <li><code>frontend://</code> - resolves to the location of frontend
+     * (Bower and similar) resources, which might vary depending on the used
+     * browser</li>
      * </ul>
      * Any other URI protocols, such as <code>http://</code> or
      * <code>https://</code> are passed through this method unmodified.
@@ -58,6 +61,13 @@ public abstract class VaadinUriResolver implements Serializable {
         if (vaadinUri == null) {
             return null;
         }
+        if (vaadinUri
+                .startsWith(ApplicationConstants.FRONTEND_PROTOCOL_PREFIX)) {
+            final String frontendUrl = getFrontendUrl();
+            vaadinUri = frontendUrl + vaadinUri.substring(
+                    ApplicationConstants.FRONTEND_PROTOCOL_PREFIX.length());
+        }
+
         if (vaadinUri.startsWith(ApplicationConstants.THEME_PROTOCOL_PREFIX)) {
             final String themeUri = getThemeUri();
             vaadinUri = themeUri + vaadinUri.substring(7);
@@ -110,6 +120,13 @@ public abstract class VaadinUriResolver implements Serializable {
                     ApplicationConstants.VAADIN_PROTOCOL_PREFIX.length());
             vaadinUri = vaadinDirUri + relativeUrl;
         }
+        if (vaadinUri
+                .startsWith(ApplicationConstants.CONTEXT_PROTOCOL_PREFIX)) {
+            final String contextRoot = getContextRootUrl();
+            String relativeUrl = vaadinUri.substring(
+                    ApplicationConstants.CONTEXT_PROTOCOL_PREFIX.length());
+            vaadinUri = contextRoot + relativeUrl;
+        }
 
         return vaadinUri;
     }
@@ -141,6 +158,15 @@ public abstract class VaadinUriResolver implements Serializable {
     protected abstract String getServiceUrl();
 
     /**
+     * Gets the URL pointing to the context root.
+     *
+     * @return the context root URL
+     *
+     * @since 8.0.3
+     */
+    protected abstract String getContextRootUrl();
+
+    /**
      * Gets the URI of the directory of the current theme.
      *
      * @return the URI of the current theme directory
@@ -156,4 +182,14 @@ public abstract class VaadinUriResolver implements Serializable {
      */
     protected abstract String encodeQueryStringParameterValue(
             String parameterValue);
+
+    /**
+     * Returns the URL pointing to the folder containing frontend files, either
+     * for ES5 (if browser does not support ES6) or ES6 (most browsers).
+     *
+     * @return the absolute or relative URL to the frontend files, ending with a
+     *         slash '/'
+     * @since 8.1
+     */
+    protected abstract String getFrontendUrl();
 }

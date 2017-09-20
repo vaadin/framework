@@ -26,8 +26,8 @@ import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletService;
 import com.vaadin.server.VaadinPortletSession;
 import com.vaadin.server.VaadinPortletSession.PortletListener;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
@@ -147,9 +147,9 @@ public class JSR286Portlet extends UI {
                 .getAttribute(PortletRequest.USER_INFO);
         if (uinfo != null) {
             String s = "";
-            for (Iterator<?> it = uinfo.keySet().iterator(); it.hasNext();) {
-                Object key = it.next();
-                Object val = uinfo.get(key);
+            for (Map.Entry<?, ?> entry : uinfo.entrySet()) {
+                Object key = entry.getKey();
+                Object val = entry.getValue();
                 s += key + ": " + val + "\n";
             }
             if (request.isUserInRole("administrator")) {

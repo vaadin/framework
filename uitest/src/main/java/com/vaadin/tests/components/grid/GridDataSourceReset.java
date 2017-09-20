@@ -37,7 +37,8 @@ public class GridDataSourceReset extends AbstractTestUI {
         persons = createPersons(10, new Random(1));
 
         grid = new Grid<>();
-        ListDataProvider<ComplexPerson> provider = DataProvider.create(persons);
+        ListDataProvider<ComplexPerson> provider = DataProvider
+                .ofCollection(persons);
         grid.setDataProvider(provider);
         grid.getSelectionModel().select(persons.get(0));
         addComponent(new Button("Remove first", event -> {

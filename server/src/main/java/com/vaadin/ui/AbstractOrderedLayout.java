@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -184,7 +185,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
      */
     @Override
     public Iterator<Component> iterator() {
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /**

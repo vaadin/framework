@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.2-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -24,10 +24,10 @@
 
         <!-- Used version numbers for dependencies -->
         <liferay.portal-service.version>6.2.5</liferay.portal-service.version>
-        <jetty.version>9.3.9.v20160517</jetty.version>
+        <liferay.portal-kernel.version>2.0.0</liferay.portal-kernel.version>
 
-        <vaadin.gwt.version>2.8.0</vaadin.gwt.version>
-        <vaadin.plugin.version>8.0-SNAPSHOT</vaadin.plugin.version>
+        <vaadin.gwt.version>2.8.1</vaadin.gwt.version>
+        <vaadin.plugin.version>8.2-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
         <javax.validation.version>1.0.0.GA</javax.validation.version>
@@ -35,17 +35,23 @@
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.5.vaadin1</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.11.vaadin2</atmosphere.runtime.version>
 
         <!-- OSGi -->
-        <osgi.javax.servlet.version>3.0.0</osgi.javax.servlet.version>
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
         <osgi.bundle.version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</osgi.bundle.version>
+        <osgi.version>6.0.0</osgi.version>
+        <osgi.annotation.version>6.0.1</osgi.annotation.version>
+
+        <bnd.version>3.3.0</bnd.version>
 
         <!-- Dependency unpack directory -->
         <dependency.unpack.directory>${project.build.directory}/dependency-unpack</dependency.unpack.directory>
-        
-        <jetty.version>9.3.7.v20160115</jetty.version>
+
+        <!-- Cannot use 9.3 or 9.4 because they sometimes reset the connection
+            too early in case of errors -->
+        <!-- See e.g. https://issues.apache.org/jira/browse/SOLR-8453 -->
+        <jetty.version>9.2.9.v20150224</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
 
         <!-- Sonar properties -->
@@ -53,6 +59,9 @@
         <sonar.analysis.mode>preview</sonar.analysis.mode>
         <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+
+        <vaadin.icons.version>3.0.1</vaadin.icons.version>
+        <vaadin.testbench.version>5.0.0</vaadin.testbench.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->
@@ -124,13 +133,13 @@
                 <artifactId>vaadin-sass-compiler</artifactId>
                 <version>${vaadin.sass.version}</version>
                 <exclusions>
-                <!-- No need to have the minifier included for development 
-                    mode on-the-fly compilation -->
-                <exclusion>
-                    <groupId>com.yahoo.platform.yui</groupId>
-                    <artifactId>yuicompressor</artifactId>
-                </exclusion>
-            </exclusions>
+                    <!-- No need to have the minifier included for development 
+                        mode on-the-fly compilation -->
+                    <exclusion>
+                        <groupId>com.yahoo.platform.yui</groupId>
+                        <artifactId>yuicompressor</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.carrotsearch</groupId>
@@ -168,10 +177,10 @@
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
                 <exclusions>
-                   <exclusion>
-                       <artifactId>hamcrest-core</artifactId>
-                       <groupId>org.hamcrest</groupId>
-                   </exclusion>
+                    <exclusion>
+                        <artifactId>hamcrest-core</artifactId>
+                        <groupId>org.hamcrest</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -214,10 +223,10 @@
                 <artifactId>mockito-core</artifactId>
                 <version>1.9.5</version>
                 <exclusions>
-                   <exclusion>
-                      <artifactId>hamcrest-core</artifactId>
-                      <groupId>org.hamcrest</groupId>
-                  </exclusion>
+                    <exclusion>
+                        <artifactId>hamcrest-core</artifactId>
+                        <groupId>org.hamcrest</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -233,7 +242,7 @@
             <dependency>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-testbench</artifactId>
-                <version>5.0.0.alpha2</version>
+                <version>${vaadin.testbench.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
@@ -279,6 +288,31 @@
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>
                 <version>0.9.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-icons</artifactId>
+                <version>${vaadin.icons.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.core</artifactId>
+                <version>${osgi.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.annotation</artifactId>
+                <version>${osgi.annotation.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>osgi.cmpn</artifactId>
+                <version>${osgi.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -366,14 +400,21 @@
                     <version>1.8</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
+                    <version>${bnd.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>bnd-process</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <outputDirectory>${dependency.unpack.directory}</outputDirectory>
                         <overWriteReleases>false</overWriteReleases>
@@ -383,7 +424,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -397,7 +438,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>com.vaadin</groupId>
@@ -481,10 +522,32 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>com.marvinformatics.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>1.8.1</version>
+                <configuration>
+                    <configFile>classpath:/eclipse/VaadinJavaConventions.xml</configFile>
+                    <!-- Provide a dummy JS config file to avoid errors -->
+                    <configJsFile>classpath:/eclipse/VaadinJavaConventions.xml</configJsFile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>vaadin-buildhelpers</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -544,14 +607,10 @@
 
     <profiles>
         <profile>
-            <!--  Profile is triggered unless apiDiff property is defined:
-                  always except "apicmp" profile which is disjoint with this profile
-            !-->
+            <!-- Default build profile that runs all modules. -->
             <id>default</id>
             <activation>
-                <property>
-                    <name>!apiDiff</name>
-                </property>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
                 <module>buildhelpers</module>
@@ -562,34 +621,67 @@
                 <module>client-compiler</module>
                 <module>client-compiled</module>
                 <module>themes</module>
-                <module>uitest-common</module>
                 <module>uitest</module>
                 <module>liferay</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
                 <module>all</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>compatibility-client-compiled</module>
                 <module>compatibility-shared</module>
                 <module>compatibility-themes</module>
                 <module>testbench-api</module>
-                <!-- Nexus staging bug needs the last module to be deployed. -->
                 <module>bom</module>
             </modules>
         </profile>
         <profile>
+            <!-- Profile for running integration tests. Vaadin version to 
+                be tested can be defined with property vaadin.version -->
             <id>slowtest</id>
             <modules>
                 <module>test</module>
             </modules>
         </profile>
         <profile>
+            <!-- This profile builds the assembled parts of the Framework 
+                for website release. Should be run after running the release profile -->
+            <id>release-assemblies</id>
+            <modules>
+                <module>liferay</module>
+                <module>all</module>
+            </modules>
+        </profile>
+        <profile>
+            <!-- Release build only builds artifacts that are deployed or 
+                needed by them -->
             <id>release</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
             </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
+                <!-- Nexus staging bug needs the last module to be deployed. -->
+                <module>testbench-api</module>
+                <!-- BOM is built and released separately -->
+            </modules>
+
             <build>
                 <plugins>
                     <plugin>
@@ -625,39 +717,168 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Pre-release build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>prerelease</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
+                <!-- Nexus staging bug needs the last module to be deployed. -->
+                <module>testbench-api</module>
+                <!-- BOM is built and released separately -->
+            </modules>
+
+            <build>
+                <plugins>
                     <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
-                        <extensions>true</extensions>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
         <profile>
-            <!--  Profile is triggered if apiDiff property is defined:
-                  this profile is disjoint with default profile.
-                  It allows to prevent running build for all available modules 
-                  but restricts a number of modules to specified here only
-                  (which allows to avoid long time compilation for projects 
-                  that are not needed since japicmp works with compiled classes).
-            !-->
+            <!-- Snapshot build only builds artifacts that are deployed or 
+                needed by them -->
+            <id>snapshot</id>
+            <properties>
+                <vaadin.plugin.version>${project.version}</vaadin.plugin.version>
+            </properties>
+            <modules>
+                <module>buildhelpers</module>
+                <module>shared</module>
+                <module>push</module>
+                <module>server</module>
+                <module>client</module>
+                <module>client-compiler</module>
+                <module>client-compiled</module>
+                <module>themes</module>
+                <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
+                <module>compatibility-client</module>
+                <module>compatibility-client-compiled</module>
+                <module>compatibility-shared</module>
+                <module>compatibility-themes</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
+                <module>testbench-api</module>
+                <module>bom</module>
+            </modules>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <!-- Only include java files -->
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <executions>
+                            <execution>
+                                <id>generate-javadoc</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <failOnError>false</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- This profile is disjoint with default profile. It allows 
+                to prevent running build for all available modules but restricts a number 
+                of modules to specified here only (which allows to avoid long time compilation 
+                for projects that are not needed since japicmp works with compiled classes). 
+                ! -->
             <id>apicmp</id>
-            <activation>
-                <property>
-                    <name>apiDiff</name>
-                </property>
-            </activation>
             <modules>
                 <module>server</module>
                 <module>push</module>
                 <module>client</module>
                 <module>compatibility-server</module>
+                <module>compatibility-server-gae</module>
                 <module>compatibility-client</module>
                 <module>client-compiler</module>
                 <module>shared</module>
                 <module>compatibility-shared</module>
+                <module>liferay-integration</module>
+                <module>osgi-integration</module>
             </modules>
+            <repositories>
+                <repository>
+                    <id>vaadin-prereleases</id>
+                    <url>http://maven.vaadin.com/vaadin-prereleases</url>
+                </repository>
+            </repositories>
             <build>
                 <plugins>
                     <plugin>
@@ -699,10 +920,9 @@
             </build>
         </profile>
         <profile>
+            <!-- Testing profile for measurement tests. Use along with default 
+                profile -->
             <id>measurements</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
             <properties>
                 <skipTests>true</skipTests>
             </properties>

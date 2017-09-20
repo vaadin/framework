@@ -13,22 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
- * TODO implementation could now be simplified/optimized
  *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
+@Deprecated
 @AcceptCriterion(Not.class)
-final public class VNot extends VAcceptCriterion {
+public final class VNot extends VAcceptCriterion {
     private boolean b1;
     private VAcceptCriterion crit1;
 

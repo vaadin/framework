@@ -15,16 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.renderers.NumberRenderer;
 
 /**
  * Tests the layouting of Grid's details row when it contains a HorizontalLayout
@@ -33,37 +28,18 @@ import com.vaadin.ui.renderers.NumberRenderer;
  * @author Vaadin Ltd
  */
 @SuppressWarnings("serial")
-public class GridDetailsLayoutExpand extends AbstractTestUI {
+public class GridDetailsLayoutExpand extends SimpleGridUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Grid<Person> grid = new Grid<>();
+        Grid<Person> grid = createGrid();
         grid.setSizeFull();
 
-        grid.addColumn(Person::getFirstName);
-        grid.addColumn(Person::getAge, new NumberRenderer());
-
-        List<Person> persons = new ArrayList<>();
-        Person person = new Person();
-        person.setFirstName("Nicolaus Copernicus");
-        person.setAge(1543);
-        persons.add(person);
-
-        person = new Person();
-        person.setFirstName("Galileo Galilei");
-        person.setAge(1564);
-        persons.add(person);
-
-        person = new Person();
-        person.setFirstName("Johannes Kepler");
-        person.setAge(1571);
-        persons.add(person);
-
-        grid.setItems(persons);
         addComponent(grid);
 
         grid.setDetailsGenerator(item -> {
             final HorizontalLayout detailsLayout = new HorizontalLayout();
+            detailsLayout.setSpacing(false);
             detailsLayout.setSizeFull();
             detailsLayout.setHeightUndefined();
 
@@ -75,6 +51,7 @@ public class GridDetailsLayoutExpand extends AbstractTestUI {
             // layout2 second element of the detailsLayout, taking the rest
             // of the available space
             final HorizontalLayout layout2 = new HorizontalLayout();
+            layout2.setSpacing(false);
             layout2.setSizeFull();
             layout2.setHeightUndefined();
             detailsLayout.addComponent(layout2);

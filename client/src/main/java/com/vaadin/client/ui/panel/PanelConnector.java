@@ -96,7 +96,7 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
                     .setClassName(VPanel.CLASSNAME + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = false;
-            if (getState().caption != null && !"".equals(getState().caption)) {
+            if (getState().caption != null && !getState().caption.isEmpty()) {
                 getWidget().setCaption(getState().caption);
                 hasCaption = true;
             } else {
@@ -226,7 +226,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
     public void postLayout() {
         VPanel panel = getWidget();
         if (uidlScrollTop != null) {
+            // IE / Safari fix for when scroll top is set to greater than panel
+            // height
+            int maxScroll = panel.getWidget().getOffsetHeight();
+            if (uidlScrollTop > maxScroll) {
+                uidlScrollTop = maxScroll;
+            }
             panel.contentNode.setScrollTop(uidlScrollTop.intValue());
+
             // Read actual value back to ensure update logic is correct
             // TODO Does this trigger reflows?
             panel.scrollTop = panel.contentNode.getScrollTop();

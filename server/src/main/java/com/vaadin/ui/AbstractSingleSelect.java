@@ -74,7 +74,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
      * @param dataCommunicator
      *            the data communicator to use, not null
      */
-    protected AbstractSingleSelect(DataCommunicator<T, ?> dataCommunicator) {
+    protected AbstractSingleSelect(DataCommunicator<T> dataCommunicator) {
         super(dataCommunicator);
         init();
     }
@@ -152,9 +152,9 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> listener.valueChange(
-                new ValueChangeEvent<>(this, event.getOldValue(),
-                        event.isUserOriginated())));
+        return addSelectionListener(
+                event -> listener.valueChange(new ValueChangeEvent<>(this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override
@@ -230,10 +230,8 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         T oldSelection = getSelectedItem().orElse(getEmptyValue());
         doSetSelectedKey(key);
 
-        // Update diffstate so that a change will be sent to the client if the
-        // selection is changed to its original value
-        updateDiffstate("selectedItemKey",
-                key == null ? Json.createNull() : Json.create(key));
+        // Set diffstate to something that will always send selection to client
+        updateDiffstate("selectedItemKey", Json.createObject());
 
         fireEvent(new SingleSelectionEvent<>(AbstractSingleSelect.this,
                 oldSelection, true));

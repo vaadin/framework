@@ -113,7 +113,7 @@ binder.bind(nameField, Person::getName, Person::setName);
 // After this, whenever the user changes the value
 // of nameField, p.setName is automatically called.
 Person p = new Person();
-binder.bind(p);
+binder.setBean(p);
 ----
 
 For more information on data binding, see <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms,"Binding Data to Forms">>
@@ -156,23 +156,25 @@ whether or not the given input was valid.
 ----
 class MyValidator implements Validator<String> {
     @Override
-    public Result<String> apply(String value, ValueContext context) {
-        if(input.length() == 6) {
-            return Result.ok(input);
+    public ValidationResult apply(String value, ValueContext context) {
+        if(value.length() == 6) {
+            return ValidationResult.ok();
         } else {
-            return Result.error(
+            return ValidationResult.error(
                 "Must be exactly six characters long");
         }
     }
 }
 ----
 
-Because [methodname]#Result.ok# takes the valid value as an argument, a validator
-can also do some sanitization on valid inputs, such as removing leading and
-trailing whitespace from a string. Since [interfacename]#Validator# is a functional
+Since [interfacename]#Validator# is a functional
 interface, you can often simply write a lambda expression instead of a full class
 declaration. There is also an [methodname]#withValidator# overload that creates a
-validator from a boolean function and an error message.
+validator from a boolean function and an error message. If the application requires
+more sophisticated validation diagnostics (e.g. locale-specific), there is a
+method [methodname]#withValidator#, which uses a boolean function and an [classname]#ErrorMessageProvider#.
+The [classname]#ErrorMessageProvider# can compose diagnostic messages based on the locale of the validation
+and the source component value, which are provided with the [classname]#ValueContext#.
 
 [source, java]
 ----

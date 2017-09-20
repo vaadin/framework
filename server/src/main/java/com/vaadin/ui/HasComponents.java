@@ -35,6 +35,9 @@ public interface HasComponents extends Component, Iterable<Component> {
      * Gets an iterator to the collection of contained components. Using this
      * iterator it is possible to step through all components contained in this
      * container.
+     * <p>
+     * The iterator is typically unmodifiable, and calls to
+     * {@link Iterator#remove()} throw an exception.
      *
      * @return the component iterator.
      */
@@ -56,6 +59,7 @@ public interface HasComponents extends Component, Iterable<Component> {
          * @param listener
          *            the listener to add, not null
          * @return a registration object for removing the listener
+         * @since 8.0
          */
         public Registration addComponentAttachListener(
                 ComponentAttachListener listener);
@@ -70,6 +74,7 @@ public interface HasComponents extends Component, Iterable<Component> {
          *             the registration object returned from
          *             {@link #addComponentAttachListener(ComponentAttachListener)}
          *             .
+         * @since 8.0
          */
         @Deprecated
         public void removeComponentAttachListener(

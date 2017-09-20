@@ -25,7 +25,7 @@ import com.vaadin.ui.ProgressBar;
 /**
  * Connector for {@link VProgressBar}.
  *
- * @since 7.1
+ * @since 8.0
  * @author Vaadin Ltd
  */
 @Connect(ProgressBar.class)

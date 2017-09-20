@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
@@ -45,15 +45,14 @@ public class EditableTableLeak extends TestBase {
         }
 
         public static long getSize(Object object) {
-            ByteCountNullOutputStream os = new ByteCountNullOutputStream();
-            ObjectOutputStream oos;
-            try {
-                oos = new ObjectOutputStream(os);
+            try (ByteCountNullOutputStream os = new ByteCountNullOutputStream()) {
+                ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(object);
+                return os.getBytes();
             } catch (IOException e) {
                 e.printStackTrace();
+                return 0;
             }
-            return os.getBytes();
         }
     }
 
@@ -96,7 +95,7 @@ public class EditableTableLeak extends TestBase {
         table.setHeight("170px");
         table.setSelectable(true);
         table.setContainerDataSource(TestUtils.getISO3166Container());
-        table.setColumnHeaders(new String[] { "Country", "Code" });
+        table.setColumnHeaders("Country", "Code");
         table.setColumnAlignment(TestUtils.iso3166_PROPERTY_SHORT,
                 Table.ALIGN_CENTER);
         table.setColumnExpandRatio(TestUtils.iso3166_PROPERTY_NAME, 1);

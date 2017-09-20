@@ -16,6 +16,8 @@
 
 package com.vaadin.v7.data.util.converter;
 
+import com.vaadin.data.Binder;
+
 import java.io.Serializable;
 
 /**
@@ -25,6 +27,7 @@ import java.io.Serializable;
  * @author Vaadin Ltd.
  * @since 7.0
  *
+ * @deprecated As of 8.0, no replacement available - provide explicit converters for {@link Binder}.
  */
 @Deprecated
 public interface ConverterFactory extends Serializable {

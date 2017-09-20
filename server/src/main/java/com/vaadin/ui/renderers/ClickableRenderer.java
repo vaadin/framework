@@ -86,6 +86,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
          * Returns the item of the row where the click event originated.
          *
          * @return the item of the clicked row
+         * @since 8.0
          */
         public T getItem() {
             return item;
@@ -145,6 +146,7 @@ public abstract class ClickableRenderer<T, V> extends AbstractRenderer<T, V> {
      *
      * @param listener
      *            the click listener to be added, not null
+     * @since 8.0
      */
     public Registration addClickListener(RendererClickListener<T> listener) {
         return addListener(RendererClickEvent.class, listener,

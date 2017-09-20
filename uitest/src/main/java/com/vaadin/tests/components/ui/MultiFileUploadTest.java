@@ -39,7 +39,7 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
         @Override
         public void filenameChanged(ChangeEvent event) {
-            if (event.getFilename().equals("")) {
+            if (event.getFilename().isEmpty()) {
                 removeUpload(event.getSource());
             } else {
                 addUpload();

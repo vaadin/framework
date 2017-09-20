@@ -17,6 +17,8 @@ package com.vaadin.shared.ui.textfield;
 
 /**
  * State class for TextField.
+ * 
+ * @since 8.0
  */
 public class TextFieldState extends AbstractTextFieldState {
     {

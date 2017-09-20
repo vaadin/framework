@@ -69,6 +69,8 @@ import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -165,6 +167,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 Window.Location.reload();
 
             }
+
+            @Override
+            public void initializeMobileHtml5DndPolyfill() {
+                initializeMobileDndPolyfill();
+            }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
             @Override
@@ -215,8 +222,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
-                getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
-                        event.getWidth(), Window.getClientWidth(),
+                getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
+                        event.getHeight(), Window.getClientWidth(),
                         Window.getClientHeight());
                 getConnection().getServerRpcQueue().flush();
             }
@@ -1162,18 +1169,22 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return activeTheme;
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(UIConnector.class.getName());
+    /**
+     * Returns whether HTML5 DnD extensions {@link DragSourceExtensionConnector}
+     * and {@link DropTargetExtensionConnector} and alike should be enabled for
+     * mobile devices.
+     * <p>
+     * By default, it is disabled.
+     *
+     * @return {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     */
+    public boolean isMobileHTML5DndEnabled() {
+        return getState().enableMobileHTML5DnD;
     }
 
-    /**
-     * Send an acknowledgement RPC to the server. This allows the server to know
-     * which messages the client has received, even when the client is not
-     * sending any other traffic.
-     */
-    public void sendAck() {
-        getRpcProxy(UIServerRpc.class).acknowledge();
-
+    private static Logger getLogger() {
+        return Logger.getLogger(UIConnector.class.getName());
     }
 
     private void setWindowOrderAndPosition() {
@@ -1220,5 +1231,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             Collections.sort(result, this);
             return result;
         }
-    };
+    }
+
+    private static native void initializeMobileDndPolyfill()
+    /*-{
+         var conf = new Object();
+         // this is needed or the drag image will offset to weird place in for grid rows
+         conf['dragImageCenterOnTouch'] = true;
+         $wnd.DragDropPolyfill.Initialize(conf);
+    }-*/;
 }

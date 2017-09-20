@@ -30,8 +30,8 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.colorpicker.Color;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractColorPicker;
 import com.vaadin.ui.Alignment;
@@ -93,7 +93,7 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
     public class MyImageSource implements StreamResource.StreamSource {
 
         /** The imagebuffer. */
-        private java.io.ByteArrayOutputStream imagebuffer = null;
+        private ByteArrayOutputStream imagebuffer;
 
         /** The bg color. */
         private final java.awt.Color bgColor;

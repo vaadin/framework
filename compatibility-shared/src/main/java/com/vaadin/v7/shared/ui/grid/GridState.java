@@ -143,7 +143,7 @@ public class GridState extends TabIndexState {
 
     /**
      * Column resize mode in grid.
-     * 
+     *
      * @since 7.7.5
      */
     public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
@@ -151,12 +151,12 @@ public class GridState extends TabIndexState {
     /**
      * Columns in grid.
      */
-    public List<GridColumnState> columns = new ArrayList<>();
+    public List<GridColumnState> columns = new ArrayList<GridColumnState>();
 
     /**
      * Column order in grid.
      */
-    public List<String> columnOrder = new ArrayList<>();
+    public List<String> columnOrder = new ArrayList<String>();
 
     public GridStaticSectionState header = new GridStaticSectionState();
 

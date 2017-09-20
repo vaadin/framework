@@ -60,11 +60,12 @@ import com.vaadin.shared.util.SharedUtil;
 /**
  * Abstract calendar panel to show and select a date using a resolution. The
  * class is parameterized by the date resolution enumeration type.
- * 
+ *
  * @author Vaadin Ltd
  *
  * @param <R>
  *            the resolution type which this field is based on (day, month, ...)
+ * @since 8.0
  */
 @SuppressWarnings("deprecation")
 public abstract class VAbstractCalendarPanel<R extends Enum<R>>
@@ -265,7 +266,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Returns {@code true} if current resolution assumes handling focus event
      * for day UI component.
-     * 
+     *
      * @return {@code true} if day focus events should be handled, {@code false}
      *         otherwise
      */
@@ -273,7 +274,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns {@code true} if the provided {@code resolution} represents a day.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return {@code true} if the {@code resolution} represents a day
@@ -283,7 +284,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Returns {@code true} if the provided {@code resolution} represents a
      * month.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return {@code true} if the {@code resolution} represents a month
@@ -293,7 +294,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Returns {@code true} if the provided {@code resolution} represents an
      * year.
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return {@code true} if the {@code resolution} represents a year
@@ -305,7 +306,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     /**
      * Returns {@code true} if the {@code resolution} representation is strictly
      * below month (day, hour, etc..).
-     * 
+     *
      * @param resolution
      *            the given resolution
      * @return whether the {@code resolution} is below the month resolution
@@ -314,7 +315,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns all available resolutions for the widget.
-     * 
+     *
      * @return all available resolutions
      */
     protected Stream<R> getResolutions() {
@@ -323,7 +324,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Finds the resolution by the {@code filter}.
-     * 
+     *
      * @param filter
      *            predicate to filter resolutions
      * @return the resolution accepted by the {@code filter}
@@ -423,7 +424,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Checks whether the widget is not editable (read-only).
-     * 
+     *
      * @return {@code true} if the widget is read-only
      */
     protected boolean isReadonly() {
@@ -432,7 +433,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Checks whether the widget is enabled.
-     * 
+     *
      * @return {@code true} is the widget is enabled
      */
     protected boolean isEnabled() {
@@ -595,9 +596,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns date time service for the widget.
-     * 
+     *
      * @see #setDateTimeService(DateTimeService)
-     * 
+     *
      * @return date time service
      */
     protected DateTimeService getDateTimeService() {
@@ -606,7 +607,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns the date field which this panel is attached to.
-     * 
+     *
      * @return the "parent" date field
      */
     protected VDateField<R> getDateField() {
@@ -630,6 +631,10 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     public void setShowISOWeekNumbers(boolean showISOWeekNumbers) {
         this.showISOWeekNumbers = showISOWeekNumbers;
+        if (initialRenderDone && isBelowMonth(resolution)) {
+            clearCalendarBody(false);
+            buildCalendarBody();
+        }
     }
 
     /**
@@ -899,7 +904,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Subclasses may override this method to provide a custom implementation
      * avoiding {@link #renderCalendar(boolean)} override. The latter method
      * contains a common logic which should not be overriden.
-     * 
+     *
      * @param updateDate
      *            The value false prevents setting the selected date of the
      *            calendar based on focusedDate. That can be used when only the
@@ -1662,7 +1667,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * The actual implementation of the logic which sets the data of the Panel.
      * The method {@link #setDate(Date)} just delegate a call to this method
      * providing additional config parameters.
-     * 
+     *
      * @param currentDate
      *            currentDate The date to set
      * @param needRerender

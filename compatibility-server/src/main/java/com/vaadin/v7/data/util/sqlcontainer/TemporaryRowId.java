@@ -15,6 +15,9 @@
  */
 package com.vaadin.v7.data.util.sqlcontainer;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @Deprecated
 public class TemporaryRowId extends RowId {
     private static final long serialVersionUID = -641983830469018329L;

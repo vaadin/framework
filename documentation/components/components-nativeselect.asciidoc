@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.nativeselect]]
-= [classname]#NativeSelect#
+= NativeSelect
 
 ifdef::web[]
 [.sampler]
@@ -25,9 +25,6 @@ NativeSelect<String> select =
 // Add some items
 select.setItems("Mercury", "Venus", ...);
 ----
-
-The [methodname]#setColumns()# allows setting the width of the list as
-"columns", which is a measure that depends on the browser.
 
 [[figure.components.nativeselect.basic]]
 .The [classname]#NativeSelect# Component

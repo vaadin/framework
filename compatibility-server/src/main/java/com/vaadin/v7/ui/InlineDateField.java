@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 
 import java.util.Date;
 
+import com.vaadin.ui.InlineDateTimeField;
 import com.vaadin.v7.data.Property;
 
 /**
@@ -30,6 +31,9 @@ import com.vaadin.v7.data.Property;
  * @see PopupDateField
  * @author Vaadin Ltd.
  * @since 5.0
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.ui.InlineDateField} and
+ *             {@link InlineDateTimeField} based on LocalDate
  */
 @Deprecated
 public class InlineDateField extends DateField {

@@ -22,8 +22,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -32,6 +30,7 @@ import com.vaadin.client.FastStringSet;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.connectors.AbstractMultiSelectConnector.MultiSelectWidget;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.listselect.ListSelectState;
 
 import elemental.json.JsonObject;
 
@@ -40,8 +39,8 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd
  */
-public class VListSelect extends Composite implements ClickHandler, Field,
-        Focusable, HasEnabled, MultiSelectWidget {
+public class VListSelect extends Composite
+        implements Field, Focusable, HasEnabled, MultiSelectWidget {
 
     private List<BiConsumer<Set<String>, Set<String>>> selectionChangeListeners = new ArrayList<>();
 
@@ -59,15 +58,28 @@ public class VListSelect extends Composite implements ClickHandler, Field,
      */
     public VListSelect() {
         container = new FlowPanel();
+
         initWidget(container);
 
         select = new ListBox();
         select.setMultipleSelect(true);
-        select.addClickHandler(this);
+
+        // Add event handlers
+        select.addClickHandler(
+                clickEvent -> selectionEvent(clickEvent.getSource()));
+        select.addChangeHandler(
+                changeEvent -> selectionEvent(changeEvent.getSource()));
 
         container.add(select);
 
         updateEnabledState();
+        setStylePrimaryName(ListSelectState.PRIMARY_STYLENAME);
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        select.setStyleName(style + "-select");
     }
 
     /**
@@ -99,24 +111,6 @@ public class VListSelect extends Composite implements ClickHandler, Field,
         Objects.nonNull(listener);
         selectionChangeListeners.add(listener);
         return (Registration) () -> selectionChangeListeners.remove(listener);
-    }
-
-    @Override
-    public void setStyleName(String style) {
-        super.setStyleName(style);
-        updateStyleNames();
-    }
-
-    @Override
-    public void setStylePrimaryName(String style) {
-        super.setStylePrimaryName(style);
-        updateStyleNames();
-    }
-
-    /** Update the style names for container & select. */
-    protected void updateStyleNames() {
-        container.setStyleName(getStylePrimaryName());
-        select.setStyleName(getStylePrimaryName() + "-select");
     }
 
     @Override
@@ -160,9 +154,8 @@ public class VListSelect extends Composite implements ClickHandler, Field,
         return selectedItemKeys;
     }
 
-    @Override
-    public void onClick(ClickEvent event) {
-        if (event.getSource() == select) {
+    private void selectionEvent(Object source) {
+        if (source == select) {
             // selection can change by adding and at the same time removing
             // previous keys, or by just adding (e.g. when modifier keys are
             // pressed)

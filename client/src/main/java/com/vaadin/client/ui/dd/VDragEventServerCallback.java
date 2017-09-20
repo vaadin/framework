@@ -16,7 +16,14 @@
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
+import com.vaadin.shared.ui.dnd.DropTargetRpc;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 {@link DropTargetRpc}
+ */
+@Deprecated
 public interface VDragEventServerCallback {
 
     public void handleResponse(boolean accepted, UIDL response);

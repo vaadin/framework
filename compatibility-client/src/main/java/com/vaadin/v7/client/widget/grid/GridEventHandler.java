@@ -27,8 +27,8 @@ public interface GridEventHandler<T> {
     /**
      * Attempts to handle the given grid event.
      *
-     * @param gridEvent
+     * @param event
      *            the event that occurred
      */
-    public void onEvent(GridEvent<T> gridEvent);
+    public void onEvent(GridEvent<T> event);
 }

@@ -5,7 +5,7 @@
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test</artifactId>
     <name>vaadin-test</name>
-    <version>8.0-SNAPSHOT</version>
+    <version>8.2-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <properties>
@@ -13,10 +13,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jetty.version>9.3.7.v20160115</jetty.version>
         <phantomjs.version>2.1.1</phantomjs.version>
-        <vaadin.version>8.0-SNAPSHOT</vaadin.version>
+        <vaadin.version>8.2-SNAPSHOT</vaadin.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <contextmenu.version>2.0-SNAPSHOT</contextmenu.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
     </properties>
@@ -62,6 +63,7 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Project modules -->
@@ -91,6 +93,7 @@
     <modules>
         <module>widget-set-testutil</module>
         <module>default-widget-set</module>
+        <module>vaadin7-widget-set</module>
         <module>own-widget-set</module>
         <module>addon-using-own-widget-set</module>
         <module>addon-using-no-defined-widget-set</module>
@@ -98,9 +101,14 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
+        <module>servlet-containers/generic</module>
         <module>cdi</module>
+        <module>servlet-containers/jsp-integration</module>
+        <module>servlet-containers/karaf</module>
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
+        <module>dependency-rewrite-addon</module>
+        <module>dependency-rewrite</module>
     </modules>
 
     <build>

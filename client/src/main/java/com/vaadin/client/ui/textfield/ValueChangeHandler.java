@@ -23,6 +23,8 @@ import com.vaadin.shared.ui.ValueChangeMode;
 /**
  * Helper for dealing with scheduling value change events based on a given mode
  * and possibly timeout.
+ * 
+ * @since 8.0
  */
 public class ValueChangeHandler {
 
@@ -136,9 +138,9 @@ public class ValueChangeHandler {
 
     /**
      * Checks whether the value change is scheduled for sending.
-     * 
-     * @since 8.0.0
-     * 
+     *
+     * @since 8.0
+     *
      * @return {@code true} if value change is scheduled for sending,
      *         {@code false} otherwise
      */

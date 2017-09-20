@@ -20,8 +20,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
+import org.jsoup.select.Selector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,14 +33,18 @@ import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.SelectionModel.Single;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.Query;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.tests.data.bean.Address;
+import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
+import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.HeaderCell;
@@ -175,7 +183,7 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         boolean sortable = false;
         column1.setSortable(sortable);
         boolean editable = true;
-        column1.setEditorComponentGenerator(component -> null);
+        column1.setEditorComponent(new TextField(), Person::setLastName);
         column1.setEditable(editable);
         boolean resizable = false;
         column1.setResizable(resizable);
@@ -743,4 +751,139 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         return person;
     }
 
+    @Test
+    public void beanItemType() throws Exception {
+        Class<Person> beanClass = Person.class;
+        String beanClassName = beanClass.getName();
+        //@formatter:off
+        String design = String.format( "<%s data-item-type=\"%s\"></%s>",
+                getComponentTag() , beanClassName, getComponentTag());
+        //@formatter:on
+
+        @SuppressWarnings("unchecked")
+        Grid<Person> grid = read(design);
+        Assert.assertEquals(beanClass, grid.getBeanType());
+
+        testWrite(design, grid);
+    }
+
+    @Test
+    public void beanGridDefaultColumns() {
+        Grid<Person> grid = new Grid<>(Person.class);
+        String design = write(grid, false);
+        assertDeclarativeColumnCount(11, design);
+
+        Person testPerson = new Person("the first", "the last", "The email", 64,
+                Sex.MALE, new Address("the street", 12313, "The city",
+                        Country.SOUTH_AFRICA));
+        @SuppressWarnings("unchecked")
+        Grid<Person> readGrid = read(design);
+
+        assertColumns(11, grid.getColumns(), readGrid.getColumns(), testPerson);
+    }
+
+    private void assertDeclarativeColumnCount(int i, String design) {
+        Document html = Jsoup.parse(design);
+        Elements cols = Selector.select("vaadin-grid", html)
+                .select("colgroup > col");
+        Assert.assertEquals("Number of columns in the design file", i,
+                cols.size());
+
+    }
+
+    private void assertColumns(int expectedCount,
+            List<Column<Person, ?>> expectedColumns,
+            List<Column<Person, ?>> columns, Person testPerson) {
+        Assert.assertEquals(expectedCount, expectedColumns.size());
+        Assert.assertEquals(expectedCount, columns.size());
+        for (int i = 0; i < expectedColumns.size(); i++) {
+            Column<Person, ?> expectedColumn = expectedColumns.get(i);
+            Column<Person, ?> column = columns.get(i);
+
+            // Property mapping
+            Assert.assertEquals(expectedColumn.getId(), column.getId());
+            // Header caption
+            Assert.assertEquals(expectedColumn.getCaption(),
+                    column.getCaption());
+
+            // Value providers are not stored in the declarative file
+            // so this only works for bean properties
+            if (column.getId() != null
+                    && !column.getId().equals("column" + i)) {
+                Assert.assertEquals(
+                        expectedColumn.getValueProvider().apply(testPerson),
+                        column.getValueProvider().apply(testPerson));
+            }
+        }
+
+    }
+
+    @Test
+    public void beanGridNoColumns() {
+        Grid<Person> grid = new Grid<>(Person.class);
+        grid.setColumns();
+        String design = write(grid, false);
+        assertDeclarativeColumnCount(0, design);
+
+        Person testPerson = new Person("the first", "the last", "The email", 64,
+                Sex.MALE, new Address("the street", 12313, "The city",
+                        Country.SOUTH_AFRICA));
+        @SuppressWarnings("unchecked")
+        Grid<Person> readGrid = read(design);
+
+        assertColumns(0, grid.getColumns(), readGrid.getColumns(), testPerson);
+
+        // Can add a mapped property
+        Assert.assertEquals("The email", readGrid.addColumn("email")
+                .getValueProvider().apply(testPerson));
+    }
+
+    @Test
+    public void beanGridOnlyCustomColumns() {
+        // Writes columns without propertyId even though name matches, reads
+        // columns without propertyId mapping, can add new columns using
+        // propertyId
+        Grid<Person> grid = new Grid<>(Person.class);
+        grid.setColumns();
+        grid.addColumn(Person::getFirstName).setCaption("First Name");
+        String design = write(grid, false);
+        assertDeclarativeColumnCount(1, design);
+        Person testPerson = new Person("the first", "the last", "The email", 64,
+                Sex.MALE, new Address("the street", 12313, "The city",
+                        Country.SOUTH_AFRICA));
+        @SuppressWarnings("unchecked")
+        Grid<Person> readGrid = read(design);
+
+        assertColumns(1, grid.getColumns(), readGrid.getColumns(), testPerson);
+        // First name should not be mapped to the property
+        Assert.assertNull(readGrid.getColumns().get(0).getValueProvider()
+                .apply(testPerson));
+
+        // Can add a mapped property
+        Assert.assertEquals("the last", readGrid.addColumn("lastName")
+                .getValueProvider().apply(testPerson));
+    }
+
+    @Test
+    public void beanGridOneCustomizedColumn() {
+        // Writes columns with propertyId except one without
+        // Reads columns to match initial setup
+        Grid<Person> grid = new Grid<>(Person.class);
+        grid.addColumn(
+                person -> person.getFirstName() + " " + person.getLastName())
+                .setCaption("First and Last");
+        String design = write(grid, false);
+        assertDeclarativeColumnCount(12, design);
+        Person testPerson = new Person("the first", "the last", "The email", 64,
+                Sex.MALE, new Address("the street", 12313, "The city",
+                        Country.SOUTH_AFRICA));
+        @SuppressWarnings("unchecked")
+        Grid<Person> readGrid = read(design);
+
+        assertColumns(12, grid.getColumns(), readGrid.getColumns(), testPerson);
+        // First and last name should not be mapped to anything but should exist
+        Assert.assertNull(readGrid.getColumns().get(11).getValueProvider()
+                .apply(testPerson));
+
+    }
 }

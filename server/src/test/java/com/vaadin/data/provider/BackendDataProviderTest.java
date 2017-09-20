@@ -23,7 +23,7 @@ public class BackendDataProviderTest extends
                 Comparator.comparing(StrBean::getRandomNumber));
     }
 
-    private Comparator<StrBean> getComparator(SortOrder<String> so) {
+    private static Comparator<StrBean> getComparator(SortOrder<String> so) {
         Comparator<StrBean> comparator = propertyToComparatorMap
                 .get(so.getSorted());
         if (so.getDirection() == SortDirection.DESCENDING) {
@@ -32,29 +32,38 @@ public class BackendDataProviderTest extends
         return comparator;
     }
 
-    @Override
-    protected BackEndDataProvider<StrBean, SerializablePredicate<StrBean>> createDataProvider() {
-        return dataProvider = new CallbackDataProvider<>(query -> {
-            Stream<StrBean> stream = data.stream()
-                    .filter(t -> query.getFilter().orElse(s -> true).test(t));
-            if (!query.getSortOrders().isEmpty()) {
-                Comparator<StrBean> sorting = query.getSortOrders().stream()
-                        .map(this::getComparator)
-                        .reduce((c1, c2) -> c1.thenComparing(c2)).get();
-                stream = stream.sorted(sorting);
-            }
-            List<StrBean> list = stream.skip(query.getOffset())
-                    .limit(query.getLimit()).collect(Collectors.toList());
-            list.forEach(s -> System.err.println(s.toString()));
-            return list.stream();
-        }, query -> (int) data.stream()
-                .filter(t -> query.getFilter().orElse(s -> true).test(t))
-                .count());
+    public static class StrBeanBackEndDataProvider extends
+            CallbackDataProvider<StrBean, SerializablePredicate<StrBean>> {
+
+        public StrBeanBackEndDataProvider(List<StrBean> data) {
+            super(query -> {
+                Stream<StrBean> stream = data.stream().filter(
+                        t -> query.getFilter().orElse(s -> true).test(t));
+                if (!query.getSortOrders().isEmpty()) {
+                    Comparator<StrBean> sorting = query.getSortOrders().stream()
+                            .map(BackendDataProviderTest::getComparator)
+                            .reduce((c1, c2) -> c1.thenComparing(c2)).get();
+                    stream = stream.sorted(sorting);
+                }
+                List<StrBean> list = stream.skip(query.getOffset())
+                        .limit(query.getLimit()).collect(Collectors.toList());
+                list.forEach(s -> System.err.println(s.toString()));
+                return list.stream();
+            }, query -> (int) data.stream()
+                    .filter(t -> query.getFilter().orElse(s -> true).test(t))
+                    .count());
+        }
     }
 
     @Override
-    protected void setSortOrder(List<SortOrder<String>> sortOrder,
+    protected BackEndDataProvider<StrBean, SerializablePredicate<StrBean>> createDataProvider() {
+        return dataProvider = new StrBeanBackEndDataProvider(data);
+    }
+
+    @Override
+    protected void setSortOrder(List<QuerySortOrder> sortOrder,
             Comparator<StrBean> comp) {
         getDataProvider().setSortOrders(sortOrder);
     }
+
 }

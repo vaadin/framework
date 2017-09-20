@@ -215,7 +215,7 @@ public class CurrentInstance implements Serializable {
      * Gets the currently set instances so that they can later be restored using
      * {@link #restoreInstances(Map)}.
      *
-     * @since 7.1
+     * @since 8.0
      *
      * @return a map containing the current instances
      */

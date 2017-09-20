@@ -39,7 +39,7 @@ public class LayoutAfterHidingError extends AbstractReindeerTestUI {
         gl.setWidth("100%");
         panel.setContent(gl);
 
-        final AbstractDateField df = new TestDateField();
+        final AbstractDateField<?, ?> df = new TestDateField();
         df.setWidth("100%");
         gl.addComponent(df);
 

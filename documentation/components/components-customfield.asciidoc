@@ -1,11 +1,11 @@
 ---
 title: Composite Fields with CustomField
-order: 32
+order: 34
 layout: page
 ---
 
 [[components.customfield]]
-= Composite Fields with [classname]#CustomField#
+= Composite Fields with CustomField
 
 The [classname]#CustomField# is a way to create composite components as with [classname]#CustomComponent#, except that it implements the [interfacename]#Field# interface and inherits [classname]#AbstractField#, described in <<dummy/../../../framework/components/components-fields#components.fields,"Field Components">>.
 A field allows editing a property value in the data model, and can be bound to data with [classname]#Binder#, as described in <<dummy/../../../framework/datamodel/datamodel-forms#datamodel.forms, "Binding Data to Forms">>.

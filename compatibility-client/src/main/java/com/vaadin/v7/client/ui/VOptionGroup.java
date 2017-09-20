@@ -87,7 +87,8 @@ public class VOptionGroup extends VOptionGroupBase
      */
     private boolean blurOccured = false;
 
-    private boolean htmlContentAllowed = false;
+    /** For internal use only. May be removed or replaced in the future. */
+    public boolean htmlContentAllowed = false;
 
     private boolean wasHtmlContentAllowed = false;
     private boolean wasMultiselect = false;
@@ -95,8 +96,8 @@ public class VOptionGroup extends VOptionGroupBase
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
-        optionsToKeys = new HashMap<>();
-        optionsEnabled = new HashMap<>();
+        optionsToKeys = new HashMap<CheckBox, String>();
+        optionsEnabled = new HashMap<CheckBox, Boolean>();
 
         wasMultiselect = isMultiselect();
     }
@@ -113,12 +114,12 @@ public class VOptionGroup extends VOptionGroupBase
          * rebuilt (losing focus) if number of elements or their order is
          * changed.
          */
-        HashMap<String, CheckBox> keysToOptions = new HashMap<>();
+        HashMap<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
         for (Map.Entry<CheckBox, String> entry : optionsToKeys.entrySet()) {
             keysToOptions.put(entry.getValue(), entry.getKey());
         }
-        ArrayList<Widget> existingwidgets = new ArrayList<>();
-        ArrayList<Widget> newwidgets = new ArrayList<>();
+        ArrayList<Widget> existingwidgets = new ArrayList<Widget>();
+        ArrayList<Widget> newwidgets = new ArrayList<Widget>();
 
         // Get current order of elements
         for (Widget wid : panel) {
@@ -137,7 +138,7 @@ public class VOptionGroup extends VOptionGroupBase
             final UIDL opUidl = (UIDL) it.next();
 
             String itemHtml = opUidl.getStringAttribute("caption");
-            if (!isHtmlContentAllowed()) {
+            if (!htmlContentAllowed) {
                 itemHtml = WidgetUtil.escapeHTML(itemHtml);
             }
 
@@ -152,8 +153,7 @@ public class VOptionGroup extends VOptionGroupBase
 
             // Need to recreate object if isMultiselect is changed (#10451)
             // OR if htmlContentAllowed changed due to Safari 5 issue
-            if ((op == null)
-                    || (isHtmlContentAllowed() != wasHtmlContentAllowed)
+            if ((op == null) || (htmlContentAllowed != wasHtmlContentAllowed)
                     || (isMultiselect() != wasMultiselect)) {
                 // Create a new element
                 if (isMultiselect()) {
@@ -195,7 +195,7 @@ public class VOptionGroup extends VOptionGroupBase
             }
         }
 
-        wasHtmlContentAllowed = isHtmlContentAllowed();
+        wasHtmlContentAllowed = htmlContentAllowed;
         wasMultiselect = isMultiselect();
     }
 
@@ -310,13 +310,5 @@ public class VOptionGroup extends VOptionGroupBase
                 }
             });
         }
-    }
-
-    public boolean isHtmlContentAllowed() {
-        return htmlContentAllowed;
-    }
-
-    public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        this.htmlContentAllowed = htmlContentAllowed;
     }
 }

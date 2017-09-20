@@ -15,9 +15,12 @@
  */
 package com.vaadin.ui.components.grid;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -26,6 +29,8 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.Query;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
@@ -51,39 +56,6 @@ import com.vaadin.ui.MultiSelect;
  */
 public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         implements MultiSelectionModel<T> {
-
-    /**
-     * State for showing the select all checkbox in the grid's default header
-     * row for the selection column.
-     * <p>
-     * Default value is {@link #DEFAULT}, which means that the select all is
-     * only visible if an in-memory data provider is used
-     * {@link DataProvider#isInMemory()}.
-     */
-    public enum SelectAllCheckBoxVisibility {
-        /**
-         * Shows the select all checkbox, regardless of data provider used.
-         * <p>
-         * <b>For a lazy data provider, selecting all will result in to all rows
-         * being fetched from backend to application memory!</b>
-         */
-        VISIBLE,
-        /**
-         * Never shows the select all checkbox, regardless of data provider
-         * used.
-         */
-        HIDDEN,
-        /**
-         * By default select all checkbox depends on the grid's dataprovider.
-         * <ul>
-         * <li>Visible, if the data provider is in-memory</li>
-         * <li>Hidden, if the data provider is NOT in-memory (lazy)</li>
-         * </ul>
-         *
-         * @see DataProvider#isInMemory()}.
-         */
-        DEFAULT;
-    }
 
     private class GridMultiSelectServerRpcImpl
             implements GridMultiSelectServerRpc {
@@ -119,7 +91,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    private Set<T> selection = new LinkedHashSet<>();
+    private List<T> selection = new ArrayList<>();
 
     private SelectAllCheckBoxVisibility selectAllCheckBoxVisibility = SelectAllCheckBoxVisibility.DEFAULT;
 
@@ -138,17 +110,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         return (MultiSelectionModelState) super.getState(markAsDirty);
     }
 
-    /**
-     * Sets the select all checkbox visibility mode.
-     * <p>
-     * The default value is {@link SelectAllCheckBoxVisibility#DEFAULT}, which
-     * means that the checkbox is only visible if the grid's data provider is
-     * in- memory.
-     *
-     * @param selectAllCheckBoxVisibility
-     *            the visiblity mode to use
-     * @see SelectAllCheckBoxVisibility
-     */
+    @Override
     public void setSelectAllCheckBoxVisibility(
             SelectAllCheckBoxVisibility selectAllCheckBoxVisibility) {
         if (this.selectAllCheckBoxVisibility != selectAllCheckBoxVisibility) {
@@ -157,27 +119,12 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
         }
     }
 
-    /**
-     * Gets the current mode for the select all checkbox visibility.
-     *
-     * @return the select all checkbox visibility mode
-     * @see SelectAllCheckBoxVisibility
-     * @see #isSelectAllCheckBoxVisible()
-     */
+    @Override
     public SelectAllCheckBoxVisibility getSelectAllCheckBoxVisibility() {
         return selectAllCheckBoxVisibility;
     }
 
-    /**
-     * Returns whether the select all checkbox will be visible with the current
-     * setting of
-     * {@link #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)}.
-     *
-     * @return {@code true} if the checkbox will be visible with the current
-     *         settings
-     * @see SelectAllCheckBoxVisibility
-     * @see #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)
-     */
+    @Override
     public boolean isSelectAllCheckBoxVisible() {
         updateCanSelectAll();
         return getState(false).selectAllCheckBoxVisible;
@@ -199,8 +146,20 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
     @Override
     public boolean isSelected(T item) {
         return isAllSelected()
-                || com.vaadin.ui.components.grid.MultiSelectionModel.super.isSelected(
-                        item);
+                || selectionContainsId(getGrid().getDataProvider().getId(item));
+    }
+
+    /**
+     * Returns if the given id belongs to one of the selected items.
+     *
+     * @param id
+     *            the id to check for
+     * @return {@code true} if id is selected, {@code false} if not
+     */
+    protected boolean selectionContainsId(Object id) {
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
+        return selection.stream().map(dataProvider::getId)
+                .anyMatch(i -> id.equals(i));
     }
 
     @Override
@@ -309,7 +268,7 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
             @Override
             public void setReadOnly(boolean readOnly) {
-                getState().selectionAllowed = !readOnly;
+                setUserSelectionAllowed(!readOnly);
             }
 
             @Override
@@ -355,12 +314,67 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             getState().allSelected = true;
         }
 
-        DataProvider<T, ?> dataSource = getGrid().getDataProvider();
+        Stream<T> allItemsStream;
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
         // this will fetch everything from backend
-        Stream<T> stream = dataSource.fetch(new Query<>());
+        if (dataProvider instanceof HierarchicalDataProvider) {
+            allItemsStream = fetchAllHierarchical(
+                    (HierarchicalDataProvider<T, ?>) dataProvider);
+        } else {
+            allItemsStream = fetchAll(dataProvider);
+        }
         LinkedHashSet<T> allItems = new LinkedHashSet<>();
-        stream.forEach(allItems::add);
+        allItemsStream.forEach(allItems::add);
         updateSelection(allItems, Collections.emptySet(), userOriginated);
+    }
+
+    /**
+     * Fetch all items from the given hierarchical data provider.
+     *
+     * @since 8.1
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return all items in the data provider
+     */
+    private Stream<T> fetchAllHierarchical(
+            HierarchicalDataProvider<T, ?> dataProvider) {
+        return fetchAllDescendants(null, dataProvider);
+    }
+
+    /**
+     * Fetch all the descendants of the given parent item from the given data
+     * provider.
+     *
+     * @since 8.1
+     * @param parent
+     *            the parent item to fetch descendants for
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return the stream of all descendant items
+     */
+    private Stream<T> fetchAllDescendants(T parent,
+            HierarchicalDataProvider<T, ?> dataProvider) {
+        List<T> children = dataProvider
+                .fetchChildren(new HierarchicalQuery<>(null, parent))
+                .collect(Collectors.toList());
+        if (children.isEmpty()) {
+            return Stream.empty();
+        }
+        return children.stream()
+                .flatMap(child -> Stream.concat(Stream.of(child),
+                        fetchAllDescendants(child, dataProvider)));
+    }
+
+    /**
+     * Fetch all items from the given data provider.
+     *
+     * @since 8.1
+     * @param dataProvider
+     *            the data provider to fetch from
+     * @return all items in this data provider
+     */
+    private Stream<T> fetchAll(DataProvider<T, ?> dataProvider) {
+        return dataProvider.fetch(new Query<>());
     }
 
     /**
@@ -436,18 +450,14 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
             set.addAll(addedItems);
 
             // refresh method is NOOP for items that are not present client side
-            DataCommunicator<T, ?> dataCommunicator = getGrid()
+            DataCommunicator<T> dataCommunicator = getGrid()
                     .getDataCommunicator();
             removedItems.forEach(dataCommunicator::refresh);
             addedItems.forEach(dataCommunicator::refresh);
         }, userOriginated);
     }
 
-    private boolean isUserSelectionAllowed() {
-        return getState(false).selectionAllowed;
-    }
-
-    private void doUpdateSelection(Consumer<Set<T>> handler,
+    private void doUpdateSelection(Consumer<Collection<T>> handler,
             boolean userOriginated) {
         if (getParent() == null) {
             throw new IllegalStateException(
@@ -459,5 +469,17 @@ public class MultiSelectionModelImpl<T> extends AbstractSelectionModel<T>
 
         fireEvent(new MultiSelectionEvent<>(getGrid(), asMultiSelect(),
                 oldSelection, userOriginated));
+    }
+
+    @Override
+    public void refreshData(T item) {
+        DataProvider<T, ?> dataProvider = getGrid().getDataProvider();
+        Object refreshId = dataProvider.getId(item);
+        for (int i = 0; i < selection.size(); ++i) {
+            if (dataProvider.getId(selection.get(i)).equals(refreshId)) {
+                selection.set(i, item);
+                return;
+            }
+        }
     }
 }

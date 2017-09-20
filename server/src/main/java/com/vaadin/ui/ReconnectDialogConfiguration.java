@@ -54,7 +54,7 @@ public interface ReconnectDialogConfiguration extends Serializable {
      * Sets the text to show in the reconnect dialog after giving up trying to
      * reconnect ({@link #getReconnectAttempts()} reached)
      *
-     * @param dialogText
+     * @param dialogTextGaveUp
      *            the text to show in the reconnect dialog after giving up
      */
     public void setDialogTextGaveUp(String dialogTextGaveUp);

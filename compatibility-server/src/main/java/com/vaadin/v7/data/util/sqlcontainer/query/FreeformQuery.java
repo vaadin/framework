@@ -33,6 +33,9 @@ import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
+/**
+ * @deprecated As of 8.0, no replacement available.
+ */
 @SuppressWarnings("serial")
 @Deprecated
 public class FreeformQuery extends AbstractTransactionalQuery
@@ -69,7 +72,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             JDBCConnectionPool connectionPool) {
         super(connectionPool);
         if (primaryKeyColumns == null) {
-            primaryKeyColumns = new ArrayList<>();
+            primaryKeyColumns = new ArrayList<String>();
         }
         if (primaryKeyColumns.contains("")) {
             throw new IllegalArgumentException(

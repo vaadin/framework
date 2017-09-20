@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +55,6 @@ import com.google.gwt.dom.client.TableSectionElement;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RequiresResize;
@@ -61,6 +62,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
@@ -195,7 +197,6 @@ abstract class JsniWorkaround {
      * to Java code.
      *
      * @see #createScrollListenerFunction(Escalator)
-     * @see Escalator#onScroll()
      * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject scrollListenerFunction;
@@ -205,7 +206,6 @@ abstract class JsniWorkaround {
      * it on to Java code.
      *
      * @see #createMousewheelListenerFunction(Escalator)
-     * @see Escalator#onScroll()
      * @see Escalator.Scroller#onScroll()
      */
     protected final JavaScriptObject mousewheelListenerFunction;
@@ -253,7 +253,7 @@ abstract class JsniWorkaround {
      *
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected abstract JavaScriptObject createScrollListenerFunction(
             Escalator esc);
@@ -264,7 +264,7 @@ abstract class JsniWorkaround {
      *
      * @param esc
      *            a reference to the current instance of {@link Escalator}
-     * @see Escalator#onScroll()
+     * @see Escalator.Scroller#onScroll()
      */
     protected abstract JavaScriptObject createMousewheelListenerFunction(
             Escalator esc);
@@ -308,6 +308,8 @@ public class Escalator extends Widget
         public static class TouchHandlerBundle {
 
             public static final String POINTER_EVENT_TYPE_TOUCH = "touch";
+
+            public static final int SIGNIFICANT_MOVE_THRESHOLD = 3;
 
             /**
              * A <a href=
@@ -389,6 +391,9 @@ public class Escalator extends Widget
             private boolean touching = false;
             // Two movement objects for storing status and processing touches
             private Movement yMov, xMov;
+            // true if moved significantly since touch start
+            private boolean movedSignificantly = false;
+            private double touchStartTime;
             final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500, F_ACC = 0.7,
                     F_AXIS = 1;
 
@@ -525,7 +530,9 @@ public class Escalator extends Widget
                     }
                     xMov.startTouch(event);
                     yMov.startTouch(event);
+                    touchStartTime = Duration.currentTimeMillis();
                     touching = true;
+                    movedSignificantly = false;
                 } else {
                     touching = false;
                     animation.cancel();
@@ -535,6 +542,26 @@ public class Escalator extends Widget
 
             public void touchMove(final CustomTouchEvent event) {
                 if (touching) {
+                    if (!movedSignificantly) {
+                        double distanceSquared = Math.abs(xMov.delta)
+                                * Math.abs(xMov.delta)
+                                + Math.abs(yMov.delta) * Math.abs(yMov.delta);
+                        movedSignificantly = distanceSquared > SIGNIFICANT_MOVE_THRESHOLD
+                                * SIGNIFICANT_MOVE_THRESHOLD;
+                    }
+                    // allow handling long press differently, without triggering
+                    // scrolling
+                    if (escalator.getDelayToCancelTouchScroll() >= 0
+                            && !movedSignificantly
+                            && Duration.currentTimeMillis()
+                                    - touchStartTime > escalator
+                                            .getDelayToCancelTouchScroll()) {
+                        // cancel touch handling, don't prevent event
+                        touching = false;
+                        animation.cancel();
+                        acceleration = 1;
+                        return;
+                    }
                     xMov.moveTouch(event);
                     yMov.moveTouch(event);
                     xMov.validate(yMov);
@@ -702,13 +729,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             return $entry(function(e) {
                 var target = e.target;
-
+        
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -729,29 +756,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // Delta mode 0 is in pixels; we don't need to do anything...
-
+        
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if(e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-
+        
                 // Other delta modes aren't supported
                 if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-
+        
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1055,9 +1082,8 @@ public class Escalator extends Widget
                     + columnConfiguration.getColumnWidthActual(columnIndex);
 
             final double viewportStartPx = getScrollLeft();
-            double viewportEndPx = viewportStartPx + WidgetUtil
-                    .getRequiredWidthBoundingClientRectDouble(getElement())
-                    - frozenPixels;
+            double viewportEndPx = viewportStartPx
+                    + getBoundingWidth(getElement()) - frozenPixels;
             if (verticalScrollbar.showsScrollHandle()) {
                 viewportEndPx -= WidgetUtil.getNativeScrollbarSize();
             }
@@ -1098,7 +1124,7 @@ public class Escalator extends Widget
         }
     }
 
-    protected abstract class AbstractRowContainer implements RowContainer {
+    public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
         private int rows;
@@ -1122,6 +1148,8 @@ public class Escalator extends Widget
 
         private double defaultRowHeight = INITIAL_DEFAULT_ROW_HEIGHT;
 
+        private boolean initialColumnSizesCalculated = false;
+
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
@@ -1138,10 +1166,10 @@ public class Escalator extends Widget
          * Usually {@code "th"} or {@code "td"}.
          * <p>
          * <em>Note:</em> To actually <em>create</em> such an element, use
-         * {@link #createCellElement(int, int)} instead.
+         * {@link #createCellElement(double)} instead.
          *
          * @return the tag name for the element to represent cells as
-         * @see #createCellElement(int, int)
+         * @see #createCellElement(double)
          */
         protected abstract String getCellElementTagName();
 
@@ -1188,9 +1216,6 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             if (!isAttached()) {
                 return;
@@ -1206,8 +1231,9 @@ public class Escalator extends Widget
          * range of logical indices. This may be fewer than {@code numberOfRows}
          * , even zero, if not all the removed rows are actually visible.
          * <p>
-         * The implementation must call {@link #paintRemoveRow(Element, int)}
-         * for each row that is removed from the DOM.
+         * The implementation must call
+         * {@link #paintRemoveRow(TableRowElement, int)} for each row that is
+         * removed from the DOM.
          *
          * @param index
          *            the logical index of the first removed row
@@ -1314,10 +1340,6 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
-
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -1325,21 +1347,28 @@ public class Escalator extends Widget
             if (isAttached()) {
                 paintInsertRows(index, numberOfRows);
 
+                /*
+                 * We are inserting the first rows in this container. We
+                 * potentially need to set the widths for the cells for the
+                 * first time.
+                 */
                 if (rows == numberOfRows) {
-                    /*
-                     * We are inserting the first rows in this container. We
-                     * potentially need to set the widths for the cells for the
-                     * first time.
-                     */
-                    Map<Integer, Double> colWidths = new HashMap<>();
-                    for (int i = 0; i < getColumnConfiguration()
-                            .getColumnCount(); i++) {
-                        Double width = Double.valueOf(
-                                getColumnConfiguration().getColumnWidth(i));
-                        Integer col = Integer.valueOf(i);
-                        colWidths.put(col, width);
-                    }
-                    getColumnConfiguration().setColumnWidths(colWidths);
+                    Scheduler.get().scheduleFinally(() -> {
+                        if (initialColumnSizesCalculated) {
+                            return;
+                        }
+                        initialColumnSizesCalculated = true;
+
+                        Map<Integer, Double> colWidths = new HashMap<>();
+                        for (int i = 0; i < getColumnConfiguration()
+                                .getColumnCount(); i++) {
+                            Double width = Double.valueOf(
+                                    getColumnConfiguration().getColumnWidth(i));
+                            Integer col = Integer.valueOf(i);
+                            colWidths.put(col, width);
+                        }
+                        getColumnConfiguration().setColumnWidths(colWidths);
+                    });
                 }
             }
         }
@@ -1736,8 +1765,7 @@ public class Escalator extends Widget
                 final boolean isVisible = !cell.getStyle().getDisplay()
                         .equals(Display.NONE.getCssName());
                 if (isVisible) {
-                    maxWidth = Math.max(maxWidth, WidgetUtil
-                            .getRequiredWidthBoundingClientRectDouble(cell));
+                    maxWidth = Math.max(maxWidth, getBoundingWidth(cell));
                 }
                 row = TableRowElement.as(row.getNextSiblingElement());
             }
@@ -1974,8 +2002,7 @@ public class Escalator extends Widget
 
             detectionTr.appendChild(cellElem);
             root.appendChild(detectionTr);
-            double boundingHeight = WidgetUtil
-                    .getRequiredHeightBoundingClientRectDouble(cellElem);
+            double boundingHeight = getBoundingHeight(cellElem);
             defaultRowHeight = Math.max(1.0d, boundingHeight);
             root.removeChild(detectionTr);
 
@@ -2051,8 +2078,7 @@ public class Escalator extends Widget
             cellClone.getStyle().clearWidth();
 
             cell.getParentElement().insertBefore(cellClone, cell);
-            double requiredWidth = WidgetUtil
-                    .getRequiredWidthBoundingClientRectDouble(cellClone);
+            double requiredWidth = getBoundingWidth(cellClone);
             if (BrowserInfo.get().isIE()) {
                 /*
                  * IE browsers have some issues with subpixels. Occasionally
@@ -2124,7 +2150,14 @@ public class Escalator extends Widget
          */
         protected abstract double getHeightOfSection();
 
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        /**
+         * Gets the logical row index for the given table row element.
+         *
+         * @param tr
+         *            the table row element inside this container.
+         * @return the logical index of the given element
+         */
+        public int getLogicalRowIndex(final TableRowElement tr) {
             return tr.getSectionRowIndex();
         };
 
@@ -2391,6 +2424,12 @@ public class Escalator extends Widget
         @Deprecated
         private int topRowLogicalIndex = 0;
 
+        /**
+         * A callback function to be executed after new rows are added to the
+         * escalator.
+         */
+        private Consumer<List<TableRowElement>> newEscalatorRowCallback;
+
         private void setTopRowLogicalIndex(int topRowLogicalIndex) {
             if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
                 Logger.getLogger("Escalator.BodyRowContainer")
@@ -2656,6 +2695,24 @@ public class Escalator extends Widget
         private int getLogicalRowIndex(final double px) {
             double rowPx = px - spacerContainer.getSpacerHeightsSumUntilPx(px);
             return (int) (rowPx / getDefaultRowHeight());
+        }
+
+        @Override
+        public void insertRows(int index, int numberOfRows) {
+            super.insertRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                setHeightByRows(getRowCount());
+            }
+        }
+
+        @Override
+        public void removeRows(int index, int numberOfRows) {
+            super.removeRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                setHeightByRows(getRowCount());
+            }
         }
 
         @Override
@@ -2955,7 +3012,7 @@ public class Escalator extends Widget
         private List<TableRowElement> fillAndPopulateEscalatorRowsIfNeeded(
                 final int index, final int numberOfRows) {
 
-            final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
+            final int escalatorRowsStillFit = getMaxVisibleRowCount()
                     - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
@@ -2982,22 +3039,33 @@ public class Escalator extends Widget
                     y += spacerContainer.getSpacerHeight(i);
                 }
 
+                // Execute the registered callback function for newly created
+                // rows
+                Optional.ofNullable(newEscalatorRowCallback)
+                        .ifPresent(callback -> callback.accept(addedRows));
+
                 return addedRows;
             } else {
                 return Collections.emptyList();
             }
         }
 
-        private int getMaxEscalatorRowCapacity() {
-            final int maxEscalatorRowCapacity = (int) Math
-                    .ceil(getHeightOfSection() / getDefaultRowHeight()) + 1;
+        private int getMaxVisibleRowCount() {
+            double heightOfSection = getHeightOfSection();
+            // By including the possibly shown scrollbar height, we get a
+            // consistent count and do not add/remove rows whenever a scrollbar
+            // is shown
+            heightOfSection += horizontalScrollbarDeco.getOffsetHeight();
+            double defaultRowHeight = getDefaultRowHeight();
+            final int maxVisibleRowCount = (int) Math
+                    .ceil(heightOfSection / defaultRowHeight) + 1;
 
             /*
-             * maxEscalatorRowCapacity can become negative if the headers and
-             * footers start to overlap. This is a crazy situation, but Vaadin
-             * blinks the components a lot, so it's feasible.
+             * maxVisibleRowCount can become negative if the headers and footers
+             * start to overlap. This is a crazy situation, but Vaadin blinks
+             * the components a lot, so it's feasible.
              */
-            return Math.max(0, maxEscalatorRowCapacity);
+            return Math.max(0, maxVisibleRowCount);
         }
 
         @Override
@@ -3093,50 +3161,27 @@ public class Escalator extends Widget
                  */
                 int rowsLeft = getRowCount();
                 if (rowsLeft < escalatorRowCount) {
-                    int escalatorRowsToRemove = escalatorRowCount - rowsLeft;
-                    for (int i = 0; i < escalatorRowsToRemove; i++) {
-                        final TableRowElement tr = visualRowOrder
-                                .remove(removedVisualInside.getStart());
-
-                        paintRemoveRow(tr, index);
+                    /*
+                     * Remove extra DOM rows and refresh contents.
+                     */
+                    for (int i = escalatorRowCount - 1; i >= rowsLeft; i--) {
+                        final TableRowElement tr = visualRowOrder.remove(i);
+                        paintRemoveRow(tr, i);
                         removeRowPosition(tr);
                     }
-                    escalatorRowCount -= escalatorRowsToRemove;
 
-                    /*
-                     * Because we're removing escalator rows, we don't have
-                     * anything to scroll by. Let's make sure the viewport is
-                     * scrolled to top, to render any rows possibly left above.
-                     */
-                    body.setBodyScrollPosition(tBodyScrollLeft, 0);
+                    // Move rest of the rows to the Escalator's top
+                    Range visualRange = Range.withLength(0,
+                            visualRowOrder.size());
+                    moveAndUpdateEscalatorRows(visualRange, 0, 0);
 
-                    /*
-                     * We might have removed some rows from the middle, so let's
-                     * make sure we're not left with any holes. Also remember:
-                     * visualIndex == logicalIndex applies now.
-                     */
-                    final int dirtyRowsStart = removedLogicalInside.getStart();
-                    double y = getRowTop(dirtyRowsStart);
-                    for (int i = dirtyRowsStart; i < escalatorRowCount; i++) {
-                        final TableRowElement tr = visualRowOrder.get(i);
-                        setRowPosition(tr, 0, y);
-                        y += getDefaultRowHeight();
-                        y += spacerContainer.getSpacerHeight(i);
-                    }
+                    sortDomElements();
+                    setTopRowLogicalIndex(0);
 
-                    /*
-                     * this is how many rows appeared into the viewport from
-                     * below
-                     */
-                    final int rowsToUpdateDataOn = numberOfRows
-                            - escalatorRowsToRemove;
-                    final int start = Math.max(0,
-                            escalatorRowCount - rowsToUpdateDataOn);
-                    final int end = escalatorRowCount;
-                    for (int i = start; i < end; i++) {
-                        final TableRowElement tr = visualRowOrder.get(i);
-                        refreshRow(tr, i);
-                    }
+                    scroller.recalculateScrollbarsForVirtualViewport();
+
+                    fireRowVisibilityChangeEvent();
+                    return;
                 }
 
                 else {
@@ -3433,7 +3478,7 @@ public class Escalator extends Widget
         }
 
         @Override
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        public int getLogicalRowIndex(final TableRowElement tr) {
             assert tr
                     .getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
@@ -3480,12 +3525,12 @@ public class Escalator extends Widget
              * TODO [[spacer]]: these assumptions will be totally broken with
              * spacers.
              */
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
             final int currentTopRowIndex = getLogicalRowIndex(
                     visualRowOrder.getFirst());
 
             final Range[] partitions = logicalRange.partitionWith(
-                    Range.withLength(currentTopRowIndex, maxEscalatorRows));
+                    Range.withLength(currentTopRowIndex, maxVisibleRowCount));
             final Range insideRange = partitions[1];
             return insideRange.offsetBy(-currentTopRowIndex);
         }
@@ -3597,8 +3642,8 @@ public class Escalator extends Widget
                 return;
             }
 
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
-            final int neededEscalatorRows = Math.min(maxEscalatorRows,
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
+            final int neededEscalatorRows = Math.min(maxVisibleRowCount,
                     body.getRowCount());
             final int neededEscalatorRowsDiff = neededEscalatorRows
                     - visualRowOrder.size();
@@ -3853,6 +3898,11 @@ public class Escalator extends Widget
                 if (tr == focusedRow) {
                     insertFirst = true;
                 } else if (insertFirst) {
+                    // remove row explicitly to work around an IE11 bug (#9850)
+                    if (BrowserInfo.get().isIE11() && tr
+                            .equals(root.getFirstChildElement())) {
+                        root.removeChild(tr);
+                    }
                     root.insertFirst(tr);
                 } else {
                     root.insertAfter(tr, focusedRow);
@@ -3990,6 +4040,12 @@ public class Escalator extends Widget
                 int padding) {
             spacerContainer.scrollToSpacer(spacerIndex, destination, padding);
         }
+
+        @Override
+        public void setNewRowCallback(
+                Consumer<List<TableRowElement>> callback) {
+            newEscalatorRowCallback = callback;
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -4001,6 +4057,9 @@ public class Escalator extends Widget
             private boolean measuringRequested = false;
 
             public void setWidth(double px) {
+                Profiler.enter(
+                        "Escalator.ColumnConfigurationImpl.Column.setWidth");
+
                 definedWidth = px;
 
                 if (px < 0) {
@@ -4016,6 +4075,9 @@ public class Escalator extends Widget
                 } else {
                     calculatedWidth = px;
                 }
+
+                Profiler.leave(
+                        "Escalator.ColumnConfigurationImpl.Column.setWidth");
             }
 
             public double getDefinedWidth() {
@@ -4091,6 +4153,10 @@ public class Escalator extends Widget
          */
         @Override
         public void removeColumns(final int index, final int numberOfColumns) {
+            if (numberOfColumns == 0) {
+                return;
+            }
+
             // Validate
             assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
@@ -4219,6 +4285,10 @@ public class Escalator extends Widget
          */
         @Override
         public void insertColumns(final int index, final int numberOfColumns) {
+            if (numberOfColumns == 0) {
+                return;
+            }
+
             // Validate
             if (index < 0 || index > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given index(" + index
@@ -4381,24 +4451,32 @@ public class Escalator extends Widget
                 return;
             }
 
-            for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
-                int index = entry.getKey().intValue();
-                double width = entry.getValue().doubleValue();
+            Profiler.enter("Escalator.ColumnConfigurationImpl.setColumnWidths");
+            try {
 
-                checkValidColumnIndex(index);
+                for (Entry<Integer, Double> entry : indexWidthMap.entrySet()) {
+                    int index = entry.getKey().intValue();
+                    double width = entry.getValue().doubleValue();
 
-                // Not all browsers will accept any fractional size..
-                width = WidgetUtil.roundSizeDown(width);
-                columns.get(index).setWidth(width);
+                    checkValidColumnIndex(index);
 
+                    // Not all browsers will accept any fractional size..
+                    width = WidgetUtil.roundSizeDown(width);
+                    columns.get(index).setWidth(width);
+
+                }
+
+                widthsArray = null;
+                header.reapplyColumnWidths();
+                body.reapplyColumnWidths();
+                footer.reapplyColumnWidths();
+
+                recalculateElementSizes();
+
+            } finally {
+                Profiler.leave(
+                        "Escalator.ColumnConfigurationImpl.setColumnWidths");
             }
-
-            widthsArray = null;
-            header.reapplyColumnWidths();
-            body.reapplyColumnWidths();
-            footer.reapplyColumnWidths();
-
-            recalculateElementSizes();
         }
 
         private void checkValidColumnIndex(int index)
@@ -5242,9 +5320,7 @@ public class Escalator extends Widget
             if (spacerDecoContainer.getParentElement() == null) {
                 getElement().appendChild(spacerDecoContainer);
                 // calculate the spacer deco width, it won't change
-                spacerDecoWidth = WidgetUtil
-                        .getRequiredWidthBoundingClientRectDouble(
-                                spacer.getDecoElement());
+                spacerDecoWidth = getBoundingWidth(spacer.getDecoElement());
             }
 
             initSpacerContent(spacer);
@@ -5580,6 +5656,8 @@ public class Escalator extends Widget
 
     private HeightMode heightMode = HeightMode.CSS;
 
+    private double delayToCancelTouchScroll = -1;
+
     private boolean layoutIsScheduled = false;
     private ScheduledCommand layoutCommand = new ScheduledCommand() {
         @Override
@@ -5643,6 +5721,19 @@ public class Escalator extends Widget
         setWidth(null);
 
         publishJSHelpers(root);
+    }
+
+    private double getBoundingWidth(Element element) {
+        // Gets the current width, including border and padding, for the element
+        // while ignoring any transforms applied to the element (e.g. scale)
+        return new ComputedStyle(element).getWidthIncludingBorderPadding();
+    }
+
+    private double getBoundingHeight(Element element) {
+        // Gets the current height, including border and padding, for the
+        // element while ignoring any transforms applied to the element (e.g.
+        // scale)
+        return new ComputedStyle(element).getHeightIncludingBorderPadding();
     }
 
     private int getBodyRowCount() {
@@ -6255,10 +6346,8 @@ public class Escalator extends Widget
         }
 
         Profiler.enter("Escalator.recalculateElementSizes");
-        widthOfEscalator = Math.max(0, WidgetUtil
-                .getRequiredWidthBoundingClientRectDouble(getElement()));
-        heightOfEscalator = Math.max(0, WidgetUtil
-                .getRequiredHeightBoundingClientRectDouble(getElement()));
+        widthOfEscalator = Math.max(0, getBoundingWidth(getElement()));
+        heightOfEscalator = Math.max(0, getBoundingHeight(getElement()));
 
         header.recalculateSectionHeight();
         body.recalculateSectionHeight();
@@ -6360,7 +6449,7 @@ public class Escalator extends Widget
             @SuppressWarnings("deprecation")
             com.google.gwt.user.client.Element castElement = (com.google.gwt.user.client.Element) possibleWidgetNode
                     .cast();
-            Widget w = WidgetUtil.findWidget(castElement, null);
+            Widget w = WidgetUtil.findWidget(castElement);
 
             // Ensure findWidget did not traverse past the cell element in the
             // DOM hierarchy
@@ -6401,12 +6490,12 @@ public class Escalator extends Widget
      * @param rows
      *            the number of rows that should be visible in Escalator's body
      * @throws IllegalArgumentException
-     *             if {@code rows} is &leq; 0, {@link Double#isInifinite(double)
+     *             if {@code rows} is &leq; 0, {@link Double#isInfinite(double)
      *             infinite} or {@link Double#isNaN(double) NaN}.
      * @see #setHeightMode(HeightMode)
      */
     public void setHeightByRows(double rows) throws IllegalArgumentException {
-        if (rows <= 0) {
+        if (rows < 0) {
             throw new IllegalArgumentException(
                     "The number of rows must be a positive number.");
         } else if (Double.isInfinite(rows)) {
@@ -6594,6 +6683,49 @@ public class Escalator extends Widget
         return addHandler(handler, ScrollEvent.TYPE);
     }
 
+    /**
+     * Returns true if the Escalator is currently scrolling by touch, or has not
+     * made the decision yet whether to accept touch actions as scrolling or
+     * not.
+     *
+     * @see #setDelayToCancelTouchScroll(double)
+     *
+     * @return true when the component is touch scrolling at the moment
+     * @since 8.1
+     */
+    public boolean isTouchScrolling() {
+        return scroller.touchHandlerBundle.touching;
+    }
+
+    /**
+     * Returns the time after which to not consider a touch event a scroll event
+     * if the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @return delay in milliseconds after which to cancel touch scrolling if
+     *         there is no movement, -1 means scrolling is always allowed
+     * @since 8.1
+     */
+    public double getDelayToCancelTouchScroll() {
+        return delayToCancelTouchScroll;
+    }
+
+    /**
+     * Sets the time after which to not consider a touch event a scroll event if
+     * the user has not moved the touch. This can be used to differentiate
+     * between quick touch move (scrolling) and long tap (e.g. context menu or
+     * drag and drop operation).
+     *
+     * @param delayToCancelTouchScroll
+     *            delay in milliseconds after which to cancel touch scrolling if
+     *            there is no movement, -1 to always allow scrolling
+     * @since 8.1
+     */
+    public void setDelayToCancelTouchScroll(double delayToCancelTouchScroll) {
+        this.delayToCancelTouchScroll = delayToCancelTouchScroll;
+    }
+
     @Override
     public boolean isWorkPending() {
         return body.domSorter.waiting || verticalScrollbar.isWorkPending()
@@ -6615,7 +6747,7 @@ public class Escalator extends Widget
      * @return the maximum capacity
      */
     public int getMaxVisibleRowCount() {
-        return body.getMaxEscalatorRowCapacity();
+        return body.getMaxVisibleRowCount();
     }
 
     /**
@@ -6625,8 +6757,7 @@ public class Escalator extends Widget
      * @return escalator's inner width
      */
     public double getInnerWidth() {
-        return WidgetUtil
-                .getRequiredWidthBoundingClientRectDouble(tableWrapper);
+        return getBoundingWidth(tableWrapper);
     }
 
     /**
@@ -6668,6 +6799,21 @@ public class Escalator extends Widget
         }
 
         return null;
+    }
+
+    /**
+     * Returns the {@code <div class="{primary-stylename}-tablewrapper" />}
+     * element which has the table inside it. {primary-stylename} is .e.g
+     * {@code v-grid}.
+     * <p>
+     * <em>NOTE: you should not do any modifications to the returned element.
+     * This API is only available for querying data from the element.</em>
+     *
+     * @return the table wrapper element
+     * @since 8.1
+     */
+    public Element getTableWrapper() {
+        return tableWrapper;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {

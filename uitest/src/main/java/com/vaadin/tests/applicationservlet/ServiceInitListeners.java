@@ -24,5 +24,7 @@ public class ServiceInitListeners extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         log("Init count: " + TestingServiceInitListener.getInitCount());
         log("Request count: " + TestingServiceInitListener.getRequestCount());
+        log("Connector id count: "
+                + TestingServiceInitListener.getConnectorIdCount());
     }
 }

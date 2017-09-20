@@ -25,11 +25,15 @@ import com.vaadin.v7.data.Container;
 /**
  * This is a simple list select without, for instance, support for new items,
  * lazyloading, and other advanced features.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.ListSelect} based on
+ *             the new data binding API
  */
 @SuppressWarnings("serial")
 @Deprecated
 public class ListSelect extends AbstractSelect {
 
+    private int columns = 0;
     private int rows = 0;
 
     public ListSelect() {
@@ -46,6 +50,46 @@ public class ListSelect extends AbstractSelect {
 
     public ListSelect(String caption) {
         super(caption);
+    }
+
+    /**
+     * Sets the width of the component so that it can display approximately the
+     * given number of letters.
+     * <p>
+     * Calling {@code setColumns(10);} is equivalent to calling
+     * {@code setWidth("10em");}
+     * </p>
+     *
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     * @param columns
+     *            the number of columns to set.
+     */
+    @Deprecated
+    public void setColumns(int columns) {
+        if (columns < 0) {
+            columns = 0;
+        }
+        if (this.columns != columns) {
+            this.columns = columns;
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Gets the number of columns for the component.
+     *
+     * @see #setColumns(int)
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     */
+    @Deprecated
+    public int getColumns() {
+        return columns;
     }
 
     public int getRows() {
@@ -72,6 +116,11 @@ public class ListSelect extends AbstractSelect {
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        target.addAttribute("type", "list");
+        // Adds the number of columns
+        if (columns != 0) {
+            target.addAttribute("cols", columns);
+        }
         // Adds the number of rows
         if (rows != 0) {
             target.addAttribute("rows", rows);

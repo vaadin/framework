@@ -99,8 +99,8 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
         addComponents("Class resource pdf", resource, components);
 
         Button downloadUtf8File = new Button("Download UTF-8 named file");
-        FileDownloader fd = new FileDownloader(
-                new ClassResource(new EmbeddedPdf().getClass(), "åäö-日本語.pdf"));
+        FileDownloader fd = new FileDownloader(new ClassResource(
+                new EmbeddedPdf().getClass(), "File åäö-日本語.pdf"));
         fd.setOverrideContentType(false);
         fd.extend(downloadUtf8File);
         addComponent(downloadUtf8File);

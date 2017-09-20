@@ -64,9 +64,8 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
         LabelElement eventCount = $(LabelElement.class).get(4);
         // we can type any string in date field element
         elem.setValue(TYPED_STRING);
-        // invalid values are cleared from the field
-        Assert.assertEquals("", elem.getValue());
-        Assert.assertEquals("1", eventCount.getText());
+        // invalid values should stay unchanged
+        Assert.assertEquals(TYPED_STRING, elem.getValue());
     }
 
     // helper methods

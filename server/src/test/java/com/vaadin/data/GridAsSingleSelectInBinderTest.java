@@ -34,7 +34,8 @@ public class GridAsSingleSelectInBinderTest
             extends SingleSelectionModelImpl<Sex> {
 
         public void setSelectedFromClient(Sex item) {
-            setSelectedFromClient(itemToKey(item));
+            setSelectedFromClient(
+                    getGrid().getDataCommunicator().getKeyMapper().key(item));
         }
     }
 

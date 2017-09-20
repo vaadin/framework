@@ -16,6 +16,11 @@
 
 package com.vaadin.v7.data;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.server.Setter;
+
 import java.io.Serializable;
 
 /**
@@ -42,10 +47,11 @@ import java.io.Serializable;
  * needs to be changed through the implementing class.
  * </p>
  *
- * @param T
+ * @param <T>
  *            type of values of the property
  *
  * @author Vaadin Ltd
+ * @deprecated As of 8.0, replaced by {@link HasValue}, {@link ValueProvider}, {@link Setter}, see {@link Binder}
  * @since 3.0
  */
 @Deprecated

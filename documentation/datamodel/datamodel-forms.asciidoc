@@ -54,7 +54,7 @@ Button saveButton = new Button("Save",
       binder.writeBean(person);
       // A real application would also save the updated person
       // using the application's backend
-    } catch (BindingException e) {
+    } catch (ValidationException e) {
       Notification.show("Person could not be saved, " +
         "please check error messages for each field.");
     }
@@ -186,17 +186,18 @@ We can save the binding to a local variable and trigger a revalidation when anot
 
 [source, java]
 ----
+Binder<Trip> binder = new Binder<>();
 DateField departing = new DateField("Departing");
 DateField returning = new DateField("Returning");
 
 // Store return date binding so we can revalidate it later
-Binding<Trip, LocalDate> returnBinding = binder.forField(returning)
+Binder.BindingBuilder<Trip, LocalDate> returnBindingBuilder = binder.forField(returning)
   .withValidator(returnDate -> !returnDate.isBefore(departing.getValue()),
   "Cannot return before departing");
-returnBinding.bind(Trip::getReturnDate, Trip::setReturnDate);
+Binder.Binding<Trip, LocalDate> returnBinder = returnBindingBuilder.bind(Trip::getReturnDate, Trip::setReturnDate);
 
 // Revalidate return date when departure date changes
-departing.addValueChangeListener(event -> returnBinding.validate());
+departing.addValueChangeListener(event -> returnBinder.validate());
 ----
 
 [[datamodel.forms.conversion]]
@@ -227,7 +228,7 @@ binder.forField(salaryLevelField)
 
 Multiple validators and converters can be used for building one binding.
 Each validator or converter is used in the order they were defined for a value provided by the user.
-The value is passed along until a final converted value is stored in the business objet, or until the first validation error or impossible conversion is encountered.
+The value is passed along until a final converted value is stored in the business object, or until the first validation error or impossible conversion is encountered.
 When updating the UI components, values from the business object are passed through each converter in the reverse order without doing any validation.
 
 [NOTE]
@@ -362,7 +363,7 @@ if (saved) {
   MyBackend.updatePersonInDatabase(person);
 } else {
   Notification.show("Validation error count: "
-    + binder.getValidationErrors().size());
+    + binder.validate().getValidationErrors().size());
 }
 ----
 --
@@ -374,11 +375,11 @@ We can use that event to make the save and reset buttons of our forms become ena
 [source, java]
 ----
 binder.addStatusChangeListener(event -> {
-  boolean isValid = !event.hasValidationErrors();
-  boolean hasChanges = binder.hasChanges();
+  boolean isValid = event.getBinder().isValid();
+  boolean hasChanges = event.getBinder().hasChanges();
 
   saveButton.setEnabled(hasChanges && isValid);
-  resetButton.setEnable(hasChanges);
+  resetButton.setEnabled(hasChanges);
 });
 ----
 
@@ -439,13 +440,16 @@ binder.forField(yearOfBirthField)
 [NOTE]
 Code using strings to identify properties will cause exceptions during runtime if the string contains a typo or if the name of the setter and getter methods have been changed without also updating the string.
 
-Bindings created based on a property name will automatically use JSR 303 Bean Validation annotations from the bean class if a Bean Validation implementation is available.
+If you have a Bean Validation implementation available in your classpath and 
+want to use JSR 303 Bean Validation annotations then a [classname]#BeanValidationBinder# should be used.
+[classname]#BeanValidationBinder# extends [classname]#Binder# class so it has the same API but its implementation 
+automatically adds a bean validator which takes care of JSR 303 constraints.
 Constraints defined for properties in the bean will work in the same way as if configured when the binding is created.
 
 [source, java]
 ----
 public class Person {
-  @Min(2000)
+  @Max(2000)
   private int yearOfBirth;
 
   //Non-standard constraint provided by Hibernate Validator
@@ -457,7 +461,24 @@ public class Person {
 }
 ----
 
+[source, java]
+----
+BeanValidationBinder<Person> binder = new BeanValidationBinder<>(Person.class);
+
+binder.bind(nameField, "name");
+binder.forField(yearOfBirthField)
+  .withConverter(
+    new StringToIntegerConverter("Please enter a number"))
+  .bind("yearOfBirth");
+----
+
 Constraint annotations can also be defined on the bean level instead of being defined for any specific property.
+
+There are some number of predefined constraint annotations that mark a bound field as required using 
+[classname]#BeanValidationBinder#.[methodname]#setRequiredIndicatorVisible#. By default [classname]#@NotNull#,
+[classname]#@NotEmpty# and [classname]#@Size# (if [methodname]#min()# value is greater than 0) 
+configures the field as required. It's possible to change this behavior using 
+the [classname]#BeanValidationBinder#.[methodname]#setRequiredConfigurator# method.
 
 [NOTE]
 Bean level validation can only be performed once the bean has been updated. This means that this functionality can only be used together with `setBean`. You need to trigger validation manually if using `readBean` and `writeBean`.
@@ -536,7 +557,7 @@ public class PersonFormDesign extends FormLayout {
     protected TextField yearOfBirth;
     protected Button save;
 
-    public MyFormDesign() {
+    public PersonFormDesign() {
         Design.read(this);
     }
 }

@@ -48,12 +48,14 @@ public class ComboBoxDeclarativeTest
         int pageLength = 7;
         String popupWidth = "11%";
         boolean emptySelectionAllowed = false;
+        String emptySelectionCaption = "foo";
 
         String design = String.format(
                 "<%s placeholder='%s' text-input-allowed='%s' page-length='%d' "
-                        + "popup-width='%s' empty-selection-allowed='%s' scroll-to-selected-item/>",
+                        + "popup-width='%s' empty-selection-allowed='%s' "
+                        + "scroll-to-selected-item empty-selection-caption='%s'/>",
                 getComponentTag(), placeholder, textInputAllowed, pageLength,
-                popupWidth, emptySelectionAllowed);
+                popupWidth, emptySelectionAllowed, emptySelectionCaption);
 
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setPlaceholder(placeholder);
@@ -62,9 +64,24 @@ public class ComboBoxDeclarativeTest
         comboBox.setPopupWidth(popupWidth);
         comboBox.setScrollToSelectedItem(true);
         comboBox.setEmptySelectionAllowed(emptySelectionAllowed);
+        comboBox.setEmptySelectionCaption(emptySelectionCaption);
 
         testRead(design, comboBox);
         testWrite(design, comboBox);
+    }
+
+    @Test
+    public void extendedComboBox() {
+        ExtendedComboBox combo = new ExtendedComboBox();
+        String design = "<html>" //
+                + "<head>" //
+                + "<meta name='package-mapping' content='com_vaadin_tests_server_component_combobox:com.vaadin.tests.server.component.combobox'>"
+                + "</meta>" + "</head>" + "<body>"
+                + "<com_vaadin_tests_server_component_combobox-extended-combo-box>"
+                + "</com_vaadin_tests_server_component_combobox-extended-combo-box>"
+                + "</body></html>";
+        testWrite(design, combo);
+        testRead(design, combo);
     }
 
     @Test

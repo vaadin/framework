@@ -1,5 +1,3 @@
-package com.vaadin.server;
-
 /*
  * Copyright 2000-2016 Vaadin Ltd.
  *
@@ -15,6 +13,7 @@ package com.vaadin.server;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.server;
 
 import java.lang.reflect.Type;
 import java.util.Collection;

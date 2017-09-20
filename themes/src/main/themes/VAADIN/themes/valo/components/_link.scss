@@ -30,6 +30,7 @@ $v-link-cursor: pointer !default;
     @include valo-link-style;
 
     a {
+      @include valo-link-style;
       cursor: inherit;
       color: inherit;
       text-decoration: inherit;

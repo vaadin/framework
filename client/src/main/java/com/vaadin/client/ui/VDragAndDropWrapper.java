@@ -392,6 +392,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     public boolean html5DragDrop(VHtml5DragEvent event) {
         if (dropHandler == null || !currentlyValid) {
+            VDragAndDropManager.get().interruptDrag();
             return true;
         }
         try {
@@ -666,11 +667,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 drag.getCurrentGwtEvent(), 0.2);
         drag.getDropDetails().put("horizontalLocation",
                 horizontalDropLocation.toString());
-        if (oldHL != horizontalDropLocation || oldVL != verticalDropLocation) {
-            return true;
-        } else {
-            return false;
-        }
+        return oldHL != horizontalDropLocation || oldVL != verticalDropLocation;
     }
 
     protected void deEmphasis(boolean doLayout) {

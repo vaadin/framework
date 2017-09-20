@@ -195,6 +195,7 @@ public class DesignFormatter implements Serializable {
      *            Type to convert to/from.
      * @param converter
      *            Converter.
+     * @since 8.0
      */
     protected <T> void addConverter(Class<?> type,
             Converter<String, ?> converter) {
@@ -301,6 +302,7 @@ public class DesignFormatter implements Serializable {
      *            be returned.
      * @return A valid converter for a given type or its supertype, <b>null</b>
      *         if it was not found.
+     * @since 8.0
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected <T> Converter<String, T> findConverterFor(
@@ -336,6 +338,7 @@ public class DesignFormatter implements Serializable {
      *            Type to find a converter for.
      * @return A valid converter for a given type or its subtype, <b>null</b> if
      *         it was not found.
+     * @since 8.0
      */
     protected <T> Converter<String, T> findConverterFor(
             Class<? extends T> sourceType) {

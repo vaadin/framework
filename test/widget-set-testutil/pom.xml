@@ -2,24 +2,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.vaadin</groupId>
     <artifactId>vaadin-test-widget-set-testutil</artifactId>
+    <version>8.2-SNAPSHOT</version>
     <packaging>jar</packaging>
-    
-    <parent>
-        <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
-        <version>8.0-SNAPSHOT</version>
-    </parent>
+    <!-- 
+        This module does not inherit the vaadin-test on purpose. It is done 
+        so to allow installing this module as stand-alone and used when running any 
+        of the test modules without requiring everything to be installed. 
+    -->
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <vaadin.version>${project.version}</vaadin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-server</artifactId>
+            <version>${vaadin.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench-api</artifactId>
+            <version>${vaadin.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

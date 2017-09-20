@@ -61,6 +61,7 @@ public abstract class AbstractConnector
 
     private ApplicationConnection connection;
     private String id;
+    private int tag = -1;
 
     private HandlerManager handlerManager;
     private FastStringMap<HandlerManager> statePropertyHandlerManagers;
@@ -124,8 +125,7 @@ public abstract class AbstractConnector
         // been set but before init() is called to enable e.g.
         // JavaScriptConnector to use connection when determining the tag name
         if (this instanceof ComponentConnector) {
-            setConnectorId(
-                    ((ComponentConnector) this).getWidget().getElement(),
+            setConnectorId(((ComponentConnector) this).getWidget().getElement(),
                     connectorId);
         }
 
@@ -523,5 +523,19 @@ public abstract class AbstractConnector
             return true;
         }
 
+    }
+
+    @Override
+    public int getTag() {
+        return tag;
+    }
+
+    @Override
+    public void setTag(int tag) {
+        if (this.tag >= 0) {
+            throw new IllegalStateException(
+                    "Tag already set for this " + getClass().getSimpleName());
+        }
+        this.tag = tag;
     }
 }

@@ -17,6 +17,8 @@ package com.vaadin.data.provider;
 
 import java.io.Serializable;
 
+import com.vaadin.data.ValueProvider;
+
 /**
  * DataKeyMapper to map data objects to key strings.
  *
@@ -35,6 +37,16 @@ public interface DataKeyMapper<T> extends Serializable {
      * @return key for given data object
      */
     String key(T dataObject);
+
+    /**
+     * Check whether this key mapper contains the given data object.
+     *
+     * @param dataObject
+     *            the data object to check
+     * @return {@code true} if the given data object is contained in this key
+     *         mapper, {@code false} otherwise
+     */
+    boolean has(T dataObject);
 
     /**
      * Gets the data object identified by given key.
@@ -59,4 +71,27 @@ public interface DataKeyMapper<T> extends Serializable {
      * Dropped keys are not reused.
      */
     void removeAll();
+
+    /**
+     * Updates any existing mappings of given data object. The equality of two
+     * data objects is determined by the equality of their identifiers provided
+     * by the given value provider.
+     *
+     * @param dataObject
+     *            the data object to update
+     *
+     * @since 8.1
+     *
+     */
+    void refresh(T dataObject);
+
+    /**
+     * Takes identifier getter into use and updates existing mappings
+     *
+     * @param identifierGetter has to return a unique key for every bean, and the returned key has to
+     *                         follow general {@code hashCode()} and {@code equals()} contract,
+     *                         see {@link Object#hashCode()} for details.
+     * @since 8.1
+     */
+    void setIdentifierGetter(ValueProvider<T, Object> identifierGetter);
 }

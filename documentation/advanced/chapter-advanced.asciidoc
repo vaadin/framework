@@ -37,3 +37,5 @@ include::advanced-push.asciidoc[leveloffset=+2]
 include::advanced-cdi.asciidoc[leveloffset=+2]
 
 include::advanced-spring.asciidoc[leveloffset=+2]
+
+include::advanced-osgi.asciidoc[leveloffset=+2]

@@ -1,0 +1,113 @@
+---
+title: Letting The User Download A File
+order: 6
+layout: page
+---
+
+[[letting-the-user-download-a-file]]
+Letting The User Download A File
+--------------------------------
+
+Providing a file for download to the user might be trickier that what it
+seems - the file should be downloaded instead of just opened by the
+browser, download blockers should be avoided, a unique URL should be
+generated and server-side memory should be released when the file is no
+longer available for download. All this is taken care of by the new
+`FileDownloader` extension that can make almost any component start a
+download when clicked.
+
+[source,java]
+....
+public class LettingUserDownladFile extends UI {
+
+    @Override
+    protected void init(VaadinRequest request) {
+        Button downloadButton = new Button("Download image");
+
+        StreamResource myResource = createResource();
+        FileDownloader fileDownloader = new FileDownloader(myResource);
+        fileDownloader.extend(downloadButton);
+
+        setContent(downloadButton);
+    }
+
+    private StreamResource createResource() {
+        return new StreamResource(new StreamSource() {
+            @Override
+            public InputStream getStream() {
+                String text = "My image";
+
+                BufferedImage bi = new BufferedImage(100, 30, BufferedImage.TYPE_3BYTE_BGR);
+                bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(), 10, 20);
+
+                try {
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ImageIO.write(bi, "png", bos);
+                    return new ByteArrayInputStream(bos.toByteArray());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+            }
+        }, "myImage.png");
+    }
+}
+....
+
+To use `FileDownloader`, you just create an instance of the extension
+and use it to extend the component that should start the download. You
+should also note that `FileDownloader` works best with resources that
+are served by Vaadin as it relies on sending some special HTTP headers
+along with the file to ensure the browser doesn't try to open the file
+even if it's is a file type that the browser knows how to deal with.
+
+[[lazily-determine-the-content-and-the-name-of-the-file-being-server]]
+Lazily determine the content and the name of the file being server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+One can lazily determine the content of the file using a
+`StreamResource`. Yet the name of the file that is going to be
+downloaded has to be known at creation time of the `FileDownloader`. It
+seems that a way around this, is in fact missing from Vaadin 7 as of
+now.
+
+A possible solution is to subclass `FileDownloader` and set the name right
+before the download happens:
+
+[source,java]
+....
+/**
+ * This specializes {@link FileDownloader} in a way, such that both the file name and content can be determined
+ * on-demand, i.e. when the user has clicked the component.
+ */
+public class OnDemandFileDownloader extends FileDownloader {
+
+  /**
+   * Provide both the {@link StreamSource} and the filename in an on-demand way.
+   */
+  public interface OnDemandStreamResource extends StreamSource {
+    String getFilename ();
+  }
+
+  private static final long serialVersionUID = 1L;
+  private final OnDemandStreamResource onDemandStreamResource;
+
+  public OnDemandFileDownloader (OnDemandStreamResource onDemandStreamResource) {
+    super(new StreamResource(onDemandStreamResource, ""));
+    this.onDemandStreamResource = checkNotNull(onDemandStreamResource,
+      "The given on-demand stream resource may never be null!");
+  }
+
+  @Override
+  public boolean handleConnectorRequest (VaadinRequest request, VaadinResponse response, String path)
+      throws IOException {
+    getResource().setFilename(onDemandStreamResource.getFilename());
+    return super.handleConnectorRequest(request, response, path);
+  }
+
+  private StreamResource getResource () {
+    return (StreamResource) this.getResource("dl");
+  }
+}
+....

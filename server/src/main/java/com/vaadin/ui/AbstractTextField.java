@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import java.util.Collection;
 import java.util.Objects;
 
+import com.vaadin.event.FieldEvents;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
@@ -44,7 +45,7 @@ import elemental.json.Json;
  * @since 8.0
  */
 public abstract class AbstractTextField extends AbstractField<String>
-        implements HasValueChangeMode {
+        implements HasValueChangeMode, FieldEvents.FocusNotifier, FieldEvents.BlurNotifier {
 
     private final class AbstractTextFieldServerRpcImpl
             implements AbstractTextFieldServerRpc {
@@ -84,7 +85,7 @@ public abstract class AbstractTextField extends AbstractField<String>
     /**
      * Sets the value of this text field. If the new value is not equal to
      * {@code getValue()}, fires a {@link ValueChangeEvent}. Throws
-     * {@code NullPointerException} if the value is not null.
+     * {@code NullPointerException} if the value is null.
      *
      * @param value
      *            the new value, not {@code null}
@@ -134,6 +135,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @param placeholder
      *            the placeholder text to set
+     * @since 8.0
      */
     public void setPlaceholder(String placeholder) {
         getState().placeholder = placeholder;
@@ -200,6 +202,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @see Registration
      */
+    @Override
     public Registration addFocusListener(FocusListener listener) {
         return addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
                 FocusListener.focusMethod);
@@ -215,6 +218,7 @@ public abstract class AbstractTextField extends AbstractField<String>
      *
      * @see Registration
      */
+    @Override
     public Registration addBlurListener(BlurListener listener) {
         return addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
@@ -267,14 +271,6 @@ public abstract class AbstractTextField extends AbstractField<String>
     @Override
     protected void doSetValue(String value) {
         getState().text = value;
-    }
-
-    /**
-     * Clears the value of this field.
-     */
-    @Override
-    public void clear() {
-        setValue("");
     }
 
     @Override

@@ -227,6 +227,18 @@ public class VFilterSelect extends Composite
             }
             return true;
         }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + VFilterSelect.this.hashCode();
+            result = prime * result + ((key == null) ? 0 : key.hashCode());
+            result = prime * result + ((caption == null) ? 0 : caption.hashCode());
+            result = prime * result + ((untranslatedIconUri == null) ? 0 : untranslatedIconUri.hashCode());
+            result = prime * result + ((style == null) ? 0 : style.hashCode());
+            return result;
+        }
     }
 
     /** An inner class that handles all logic related to mouse wheel. */
@@ -243,12 +255,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -1450,7 +1462,10 @@ public class VFilterSelect extends Composite
     };
 
     private class IconWidget extends Widget {
+        private Icon icon;
+
         IconWidget(Icon icon) {
+            this.icon = icon;
             setElement(icon.getElement());
             addDomHandler(VFilterSelect.this, ClickEvent.getType());
         }
@@ -1473,7 +1488,7 @@ public class VFilterSelect extends Composite
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<>();
+    public final List<FilterSelectSuggestion> currentSuggestions = new ArrayList<FilterSelectSuggestion>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
@@ -1908,23 +1923,57 @@ public class VFilterSelect extends Composite
                 afterSelectedItemIconChange();
             }
         } else {
+            IconWidget newIcon = new IconWidget(client.getIcon(iconUri));
+            if (iconEquals(newIcon, selectedItemIcon)) {
+                /*
+                 * Do not update the icon if nothing has changed. Otherwise we
+                 * can cause problems such as not being able to click in the
+                 * icon to open the popup (blur might occur and call this
+                 * method, icon is replaced and the click event is not delivered
+                 * to the new icon)
+                 */
+                return;
+            }
+
             if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
             }
-            selectedItemIcon = new IconWidget(client.getIcon(iconUri));
+
             // Older IE versions don't scale icon correctly if DOM
             // contains height and width attributes.
-            selectedItemIcon.getElement().removeAttribute("height");
-            selectedItemIcon.getElement().removeAttribute("width");
-            selectedItemIcon.addDomHandler(new LoadHandler() {
+            newIcon.getElement().removeAttribute("height");
+            newIcon.getElement().removeAttribute("width");
+            newIcon.addDomHandler(new LoadHandler() {
                 @Override
                 public void onLoad(LoadEvent event) {
                     afterSelectedItemIconChange();
                 }
             }, LoadEvent.getType());
-            panel.insert(selectedItemIcon, 0);
+            panel.insert(newIcon, 0);
+            selectedItemIcon = newIcon;
             afterSelectedItemIconChange();
         }
+    }
+
+    /**
+     * Checks if the icon widgets show the same icon.
+     *
+     * @param icon1
+     *            the first widget
+     * @param icon2
+     *            the second widget
+     * @return <code>true</code> if they show the same icon, <code>false</code>
+     *         otherwise
+     */
+    private static boolean iconEquals(IconWidget icon1, IconWidget icon2) {
+        if (icon1 == null) {
+            return icon2 == null;
+        } else if (icon2 == null) {
+            return false;
+        } else {
+            return icon1.icon.getUri().equals(icon2.icon.getUri());
+        }
+
     }
 
     private void afterSelectedItemIconChange() {
@@ -1957,7 +2006,7 @@ public class VFilterSelect extends Composite
                 Unit.PX);
     }
 
-    private static Set<Integer> navigationKeyCodes = new HashSet<>();
+    private static Set<Integer> navigationKeyCodes = new HashSet<Integer>();
     static {
         navigationKeyCodes.add(KeyCodes.KEY_DOWN);
         navigationKeyCodes.add(KeyCodes.KEY_UP);
@@ -2392,6 +2441,7 @@ public class VFilterSelect extends Composite
                 }
             } else if (currentSuggestion != null) {
                 setPromptingOff(currentSuggestion.caption);
+                setSelectedItemIcon(currentSuggestion.getIconUri());
             }
         }
         removeStyleDependentName("focus");

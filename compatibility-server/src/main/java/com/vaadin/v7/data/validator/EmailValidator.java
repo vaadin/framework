@@ -20,8 +20,7 @@ package com.vaadin.v7.data.validator;
  * complete according to RFC 822 but handles the vast majority of valid e-mail
  * addresses correctly.
  *
- * See {@link com.vaadin.v7.data.validator.AbstractStringValidator} for more
- * information.
+ * See {@link AbstractStringValidator} for more information.
  *
  * <p>
  * An empty string or a null is always accepted - use the required flag on

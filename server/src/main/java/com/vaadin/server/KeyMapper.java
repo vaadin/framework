@@ -18,7 +18,9 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataKeyMapper;
 
 /**
@@ -32,9 +34,32 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
 
     private int lastKey = 0;
 
-    private final HashMap<V, String> objectKeyMap = new HashMap<>();
+    private final HashMap<Object, String> objectIdKeyMap = new HashMap<>();
 
     private final HashMap<String, V> keyObjectMap = new HashMap<>();
+
+    private ValueProvider<V, Object> identifierGetter;
+
+    /**
+     * Constructs a new mapper
+     *
+     * @param identifierGetter
+     *            has to return a unique key for every bean, and the returned
+     *            key has to follow general {@code hashCode()} and
+     *            {@code equals()} contract, see {@link Object#hashCode()} for
+     *            details.
+     * @since 8.1
+     */
+    public KeyMapper(ValueProvider<V, Object> identifierGetter) {
+        this.identifierGetter = identifierGetter;
+    }
+
+    /**
+     * Constructs a new mapper with trivial {@code identifierGetter}
+     */
+    public KeyMapper() {
+        this(v -> v);
+    }
 
     /**
      * Gets key for an object.
@@ -50,17 +75,35 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
         }
 
         // If the object is already mapped, use existing key
-        String key = objectKeyMap.get(o);
+        Object id = identifierGetter.apply(o);
+        String key = objectIdKeyMap.get(id);
         if (key != null) {
             return key;
         }
 
         // If the object is not yet mapped, map it
-        key = String.valueOf(++lastKey);
-        objectKeyMap.put(o, key);
+        key = createKey();
+        objectIdKeyMap.put(id, key);
         keyObjectMap.put(key, o);
 
         return key;
+    }
+
+    /**
+     * Creates a key for a new item.
+     *
+     * This method can be overridden to customize the keys used.
+     *
+     * @return new key
+     * @since 8.1.2
+     */
+    protected String createKey() {
+        return String.valueOf(++lastKey);
+    }
+
+    @Override
+    public boolean has(V o) {
+        return objectIdKeyMap.containsKey(identifierGetter.apply(o));
     }
 
     /**
@@ -83,10 +126,9 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
      */
     @Override
     public void remove(V removeobj) {
-        final String key = objectKeyMap.get(removeobj);
-
+        final String key = objectIdKeyMap
+                .remove(identifierGetter.apply(removeobj));
         if (key != null) {
-            objectKeyMap.remove(removeobj);
             keyObjectMap.remove(key);
         }
     }
@@ -96,21 +138,41 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
      */
     @Override
     public void removeAll() {
-        objectKeyMap.clear();
+        objectIdKeyMap.clear();
         keyObjectMap.clear();
     }
 
     /**
      * Checks if the given key is mapped to an object.
      *
-     * @since 7.7
-     *
      * @param key
      *            the key to check
      * @return <code>true</code> if the key is currently mapped,
      *         <code>false</code> otherwise
+     * @since 7.7
      */
     public boolean containsKey(String key) {
         return keyObjectMap.containsKey(key);
+    }
+
+    @Override
+    public void refresh(V dataObject) {
+        Object id = identifierGetter.apply(dataObject);
+        String key = objectIdKeyMap.get(id);
+        if (key != null) {
+            keyObjectMap.put(key, dataObject);
+        }
+    }
+
+    @Override
+    public void setIdentifierGetter(ValueProvider<V, Object> identifierGetter) {
+        if (this.identifierGetter != identifierGetter) {
+            this.identifierGetter = identifierGetter;
+            objectIdKeyMap.clear();
+            for (Map.Entry<String, V> entry : keyObjectMap.entrySet()) {
+                objectIdKeyMap.put(identifierGetter.apply(entry.getValue()),
+                        entry.getKey());
+            }
+        }
     }
 }

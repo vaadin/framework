@@ -19,7 +19,7 @@ public abstract class AbstractListenerMethodsTestBase {
     }
 
     private static void findAllListenerMethods() {
-        Set<Class<?>> classes = new HashSet<>();
+        Set<Class<?>> classes = new HashSet<Class<?>>();
         for (Class<?> c : VaadinClasses.getAllServerSideClasses()) {
             while (c != null && c.getName().startsWith("com.vaadin.")) {
                 classes.add(c);
@@ -30,6 +30,7 @@ public abstract class AbstractListenerMethodsTestBase {
         for (Class<?> c : classes) {
             boolean found = false;
             for (Method m : c.getDeclaredMethods()) {
+                // Intentional change in compatibility package
                 String methodName = m.getName();
                 if (methodName.startsWith("add")
                         && methodName.endsWith("Listener")
@@ -154,6 +155,7 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getAddListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
+        // Intentional change in compatibility package
         return cls.getMethod("add" + listenerClass.getSimpleName(),
                 listenerClass);
 
@@ -161,6 +163,7 @@ public abstract class AbstractListenerMethodsTestBase {
 
     private Method getRemoveListenerMethod(Class<?> cls, Class<?> listenerClass)
             throws SecurityException, NoSuchMethodException {
+        // Intentional change in compatibility package
         return cls.getMethod("remove" + listenerClass.getSimpleName(),
                 listenerClass);
 

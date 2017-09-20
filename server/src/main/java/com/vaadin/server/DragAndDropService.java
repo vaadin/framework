@@ -39,9 +39,18 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 import elemental.json.JsonObject;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement, see {@link DragSourceExtension}
+ *             and {@link DropTargetExtension}.
+ */
+@Deprecated
 public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private int lastVisitId;

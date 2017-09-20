@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.nativeselect;
 
+import org.junit.Test;
+
 import com.vaadin.tests.server.component.abstractsingleselect.AbstractSingleSelectDeclarativeTest;
 import com.vaadin.ui.NativeSelect;
 
@@ -28,6 +30,25 @@ import com.vaadin.ui.NativeSelect;
  */
 public class NativeSelectDeclarativeTest
         extends AbstractSingleSelectDeclarativeTest<NativeSelect> {
+
+    @Test
+    public void nativeSelectSpecificPropertiesSerialize() {
+        boolean emptySelectionAllowed = false;
+        String emptySelectionCaption = "foo";
+
+        String design = String.format(
+                "<%s empty-selection-allowed='%s' "
+                        + "empty-selection-caption='%s'/>",
+                getComponentTag(), emptySelectionAllowed,
+                emptySelectionCaption);
+
+        NativeSelect<String> select = new NativeSelect<>();
+        select.setEmptySelectionAllowed(emptySelectionAllowed);
+        select.setEmptySelectionCaption(emptySelectionCaption);
+
+        testRead(design, select);
+        testWrite(design, select);
+    }
 
     @Override
     protected String getComponentTag() {

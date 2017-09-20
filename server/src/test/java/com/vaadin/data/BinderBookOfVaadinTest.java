@@ -66,6 +66,11 @@ public class BinderBookOfVaadinTest {
             title = origin.title;
         }
 
+        public BookPerson(String name, int yearOfBirth) {
+            lastName = name;
+            this.yearOfBirth = yearOfBirth;
+        }
+
         public String getLastName() {
             return lastName;
         }
@@ -724,7 +729,7 @@ public class BinderBookOfVaadinTest {
         AtomicBoolean eventIsFired = new AtomicBoolean(false);
 
         binder.addStatusChangeListener(event -> {
-            boolean isValid = !event.hasValidationErrors();
+            boolean isValid = event.getBinder().isValid();
             boolean hasChanges = event.getBinder().hasChanges();
             eventIsFired.set(true);
 
@@ -782,7 +787,7 @@ public class BinderBookOfVaadinTest {
         AtomicBoolean eventIsFired = new AtomicBoolean(false);
 
         binder.addStatusChangeListener(event -> {
-            boolean isValid = !event.hasValidationErrors();
+            boolean isValid = event.getBinder().isValid();
             boolean hasChanges = event.getBinder().hasChanges();
             eventIsFired.set(true);
 
@@ -822,6 +827,56 @@ public class BinderBookOfVaadinTest {
         Assert.assertFalse(saveButton.isEnabled());
         Assert.assertFalse(resetButton.isEnabled());
         verifyEventIsFired(eventIsFired);
+    }
+
+    @Test
+    public void statusChangeListener_multipleRequiredFields() {
+        Button saveButton = new Button();
+
+        binder.addStatusChangeListener(event -> {
+            boolean isValid = event.getBinder().isValid();
+            boolean hasChanges = event.getBinder().hasChanges();
+
+            saveButton.setEnabled(hasChanges && isValid);
+        });
+
+        binder.forField(field).asRequired("").bind(BookPerson::getLastName,
+                BookPerson::setLastName);
+        binder.forField(emailField).asRequired("").bind(BookPerson::getEmail,
+                BookPerson::setEmail);
+
+        Assert.assertFalse(saveButton.isEnabled());
+        field.setValue("not empty");
+        Assert.assertFalse(saveButton.isEnabled());
+        emailField.setValue("not empty");
+        Assert.assertTrue(saveButton.isEnabled());
+        field.clear();
+        Assert.assertFalse(saveButton.isEnabled());
+    }
+
+    @Test
+    public void writeBean_throwsValidationException_bookExampleShouldCompile() {
+        // The person to edit
+        // Would be loaded from the backend in a real application
+        BookPerson person = new BookPerson("John Doe", 1957);
+
+        // Updates the value in each bound field component
+        binder.readBean(person);
+
+        Button saveButton = new Button("Save", event -> {
+            try {
+                binder.writeBean(person);
+                // A real application would also save the updated person
+                // using the application's backend
+            } catch (ValidationException e) {
+                Notification.show("Person could not be saved, "
+                        + "please check error messages for each field.");
+            }
+        });
+
+        // Updates the fields again with the previously saved values
+        Button resetButton = new Button("Reset",
+                event -> binder.readBean(person));
     }
 
     private void verifyEventIsFired(AtomicBoolean flag) {

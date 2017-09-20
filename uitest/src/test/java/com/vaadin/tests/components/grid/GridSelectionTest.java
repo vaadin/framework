@@ -3,6 +3,11 @@ package com.vaadin.tests.components.grid;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -28,6 +33,11 @@ public class GridSelectionTest extends GridBasicsTest {
         toggleFirstRowSelection();
         assertTrue("row should become selected", getRow(0).isSelected());
         toggleFirstRowSelection();
+        assertFalse("row shouldn't remain selected", getRow(0).isSelected());
+
+        toggleFirstRowSelection();
+        assertTrue("row should become selected", getRow(0).isSelected());
+        getGridElement().getCell(0, 0).click();
         assertFalse("row shouldn't remain selected", getRow(0).isSelected());
     }
 
@@ -101,6 +111,11 @@ public class GridSelectionTest extends GridBasicsTest {
         assertTrue("First row was not selected.", getRow(0).isSelected());
         assertTrue("Selection event was not correct", logContainsText(
                 "SingleSelectionEvent: Selected: DataObject[0]"));
+        grid.getCell(0, 0).click();
+        assertFalse("First row was not deselected.", getRow(0).isSelected());
+        assertTrue("Deselection event was not correct",
+                logContainsText("SingleSelectionEvent: Selected: none"));
+
         grid.getCell(5, 0).click();
         assertTrue("Fifth row was not selected.", getRow(5).isSelected());
         assertFalse("First row was still selected.", getRow(0).isSelected());
@@ -401,6 +416,53 @@ public class GridSelectionTest extends GridBasicsTest {
 
         toggleFirstRowSelection();
         assertTrue(getGridElement().getRow(0).isSelected());
+    }
+
+    @Test
+    @Ignore("Removing rows is not implemented in the UI")
+    public void testRemoveSelectedRowMulti() {
+        openTestURL();
+
+        setSelectionModelMulti();
+        GridElement grid = getGridElement();
+        grid.getCell(5, 0).click();
+
+        selectMenuPath("Component", "Body rows", "Remove selected rows");
+        assertSelected();
+        grid.getCell(5, 0).click();
+        assertSelected(5);
+        grid.getCell(6, 0).click();
+        assertSelected(5, 6);
+        grid.getCell(5, 0).click();
+        assertSelected(6);
+        grid.getCell(5, 0).click();
+        grid.getCell(4, 0).click();
+        selectMenuPath("Component", "Body rows", "Remove selected rows");
+        assertSelected();
+        grid.getCell(0, 0).click();
+        assertSelected(0);
+        grid.getCell(5, 0).click();
+        assertSelected(0, 5);
+        grid.getCell(6, 0).click();
+        assertSelected(0, 5, 6);
+
+    }
+
+    private void assertSelected(Integer... selected) {
+        GridElement grid = getGridElement();
+        HashSet<Integer> expected = new HashSet<Integer>(
+                Arrays.asList(selected));
+        for (int i = 0; i < 10; i++) {
+            boolean rowSelected = grid.getRow(i).isSelected();
+            if (expected.contains(i)) {
+                Assert.assertTrue("Expected row " + i + " to be selected",
+                        rowSelected);
+            } else {
+                Assert.assertFalse("Expected row " + i + " not to be selected",
+                        rowSelected);
+            }
+        }
+
     }
 
     private void toggleUserSelectionAllowed() {

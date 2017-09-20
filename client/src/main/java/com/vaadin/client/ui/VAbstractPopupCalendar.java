@@ -61,6 +61,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  * then pass set it by calling the
  * <code>setCalendarPanel(VAbstractCalendarPanel panel)</code> method.
  *
+ * @since 8.0
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
@@ -254,9 +255,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets the state of the text field of this component. By default the text
      * field is enabled. Disabling it causes only the button for date selection
      * to be active, thus preventing the user from entering invalid dates. See
-     * {@link http://dev.vaadin.com/ticket/6790}.
+     * <a href="http://dev.vaadin.com/ticket/6790>#6790</a>.
      *
-     * @param state
+     * @param textFieldEnabled
      */
     public void setTextFieldEnabled(boolean textFieldEnabled) {
         this.textFieldEnabled = textFieldEnabled;
@@ -390,6 +391,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
             if (getCurrentDate() != null) {
                 calendar.setDate((Date) getCurrentDate().clone());
+            } else if (getDefaultDate() != null) {
+                calendar.setDate(getDefaultDate());
             } else {
                 calendar.setDate(new Date());
             }
@@ -413,7 +416,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     @Override
     public void onClick(ClickEvent event) {
         if (event.getSource() == calendarToggle && isEnabled()) {
-            if (!preventOpenPopupCalendar) {
+            if (open) {
+                closeCalendarPanel();
+            } else if (!preventOpenPopupCalendar) {
                 openCalendarPanel();
             }
             preventOpenPopupCalendar = false;
@@ -597,7 +602,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param rangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date rangeStart) {
@@ -608,7 +613,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param rangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date rangeEnd) {

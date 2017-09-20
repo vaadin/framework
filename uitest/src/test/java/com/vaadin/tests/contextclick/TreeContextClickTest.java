@@ -24,7 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TreeElement;
+import com.vaadin.v7.testbench.elements.TreeElement;
 
 public class TreeContextClickTest extends AbstractContextClickTest {
 

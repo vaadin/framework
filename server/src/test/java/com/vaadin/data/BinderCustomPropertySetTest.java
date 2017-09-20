@@ -16,6 +16,7 @@
 package com.vaadin.data;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -23,13 +24,12 @@ import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.Binder.BindingBuilder;
 import com.vaadin.server.Setter;
 import com.vaadin.ui.TextField;
 
 public class BinderCustomPropertySetTest {
     public static class MapPropertyDefinition
-            implements BinderPropertyDefinition<Map<String, String>, String> {
+            implements PropertyDefinition<Map<String, String>, String> {
 
         private MapPropertySet propertySet;
         private String name;
@@ -59,11 +59,9 @@ public class BinderCustomPropertySetTest {
         public Class<String> getType() {
             return String.class;
         }
-
-        @Override
-        public BindingBuilder<Map<String, String>, String> beforeBind(
-                BindingBuilder<Map<String, String>, String> originalBuilder) {
-            return originalBuilder;
+        
+        public Class<?> getPropertyHolderType(){
+            return Map.class;
         }
 
         @Override
@@ -72,26 +70,31 @@ public class BinderCustomPropertySetTest {
         }
 
         @Override
-        public BinderPropertySet<Map<String, String>> getPropertySet() {
+        public PropertySet<Map<String, String>> getPropertySet() {
             return propertySet;
+        }
+
+        @Override
+        public String getCaption() {
+            return name.toUpperCase(Locale.ENGLISH);
         }
 
     }
 
     public static class MapPropertySet
-            implements BinderPropertySet<Map<String, String>> {
+            implements PropertySet<Map<String, String>> {
         @Override
-        public Stream<BinderPropertyDefinition<Map<String, String>, ?>> getProperties() {
+        public Stream<PropertyDefinition<Map<String, String>, ?>> getProperties() {
             return Stream.of("one", "two", "three").map(this::createProperty);
         }
 
         @Override
-        public Optional<BinderPropertyDefinition<Map<String, String>, ?>> getProperty(
+        public Optional<PropertyDefinition<Map<String, String>, ?>> getProperty(
                 String name) {
             return Optional.of(createProperty(name));
         }
 
-        private BinderPropertyDefinition<Map<String, String>, ?> createProperty(
+        private PropertyDefinition<Map<String, String>, ?> createProperty(
                 String name) {
             return new MapPropertyDefinition(this, name);
         }

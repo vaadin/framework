@@ -15,9 +15,9 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -112,7 +112,7 @@ public class Panels extends VerticalLayout implements View {
         panelCaption.setExpandRatio(label, 1);
 
         Button action = new Button();
-        action.setIcon(FontAwesome.PENCIL);
+        action.setIcon(VaadinIcons.PENCIL);
         action.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
         action.addStyleName(ValoTheme.BUTTON_SMALL);
         action.addStyleName(ValoTheme.BUTTON_ICON_ONLY);
@@ -120,7 +120,7 @@ public class Panels extends VerticalLayout implements View {
         MenuBar dropdown = new MenuBar();
         dropdown.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
         dropdown.addStyleName(ValoTheme.MENUBAR_SMALL);
-        MenuItem addItem = dropdown.addItem("", FontAwesome.CHEVRON_DOWN, null);
+        MenuItem addItem = dropdown.addItem("", VaadinIcons.CHEVRON_DOWN, null);
         addItem.setStyleName("icon-only");
         addItem.addItem("Settings", null);
         addItem.addItem("Preferences", null);

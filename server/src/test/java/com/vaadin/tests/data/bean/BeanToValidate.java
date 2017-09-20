@@ -1,5 +1,6 @@
 package com.vaadin.tests.data.bean;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import javax.validation.Valid;
@@ -11,7 +12,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class BeanToValidate {
+public class BeanToValidate implements Serializable {
 
     @NotNull
     @Size(min = 3, max = 16)

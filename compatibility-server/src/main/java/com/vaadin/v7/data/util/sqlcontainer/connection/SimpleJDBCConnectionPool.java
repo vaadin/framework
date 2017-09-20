@@ -16,6 +16,7 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,6 +28,8 @@ import java.util.Set;
  * Simple implementation of the JDBCConnectionPool interface. Handles loading
  * the JDBC driver, setting up the connections and ensuring they are still
  * usable upon release.
+ *
+ *  @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -86,8 +89,8 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
     }
 
     private void initializeConnections() throws SQLException {
-        availableConnections = new HashSet<>(initialConnections);
-        reservedConnections = new HashSet<>(initialConnections);
+        availableConnections = new HashSet<Connection>(initialConnections);
+        reservedConnections = new HashSet<Connection>(initialConnections);
         for (int i = 0; i < initialConnections; i++) {
             availableConnections.add(createConnection());
         }
@@ -173,7 +176,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         initialized = false;
         out.defaultWriteObject();

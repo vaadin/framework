@@ -16,14 +16,17 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -41,6 +44,7 @@ import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -56,10 +60,12 @@ import com.vaadin.client.widgets.Grid.HeaderRow;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.grid.GridClientRpc;
 import com.vaadin.shared.ui.grid.GridConstants;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.shared.ui.grid.GridServerRpc;
 import com.vaadin.shared.ui.grid.GridState;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.shared.ui.grid.SectionState.CellState;
 import com.vaadin.shared.ui.grid.SectionState.RowState;
@@ -75,6 +81,8 @@ import elemental.json.JsonObject;
 @Connect(com.vaadin.ui.Grid.class)
 public class GridConnector extends AbstractListingConnector
         implements HasComponentsConnector, SimpleManagedLayout, DeferredWorker {
+
+    private Set<Runnable> refreshDetailsCallbacks = new HashSet<>();
 
     private class ItemClickHandler
             implements BodyClickHandler, BodyDoubleClickHandler {
@@ -110,6 +118,7 @@ public class GridConnector extends AbstractListingConnector
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
+    private boolean rowHeightScheduled = false;
 
     /**
      * Gets the string identifier of the given column in this grid.
@@ -139,9 +148,107 @@ public class GridConnector extends AbstractListingConnector
         return (Grid<JsonObject>) super.getWidget();
     }
 
+    /**
+     * Method called for a row details refresh. Runs all callbacks if any
+     * details were shown and clears the callbacks.
+     *
+     * @param detailsShown
+     *            True if any details were set visible
+     */
+    protected void detailsRefreshed(boolean detailsShown) {
+        if (detailsShown) {
+            refreshDetailsCallbacks.forEach(Runnable::run);
+        }
+        refreshDetailsCallbacks.clear();
+    }
+
+    /**
+     * Method target for when one single details has been updated and we might
+     * need to scroll it into view.
+     *
+     * @param rowIndex
+     *            index of updated row
+     */
+    protected void singleDetailsOpened(int rowIndex) {
+        addDetailsRefreshCallback(() -> {
+            if (rowHasDetails(rowIndex)) {
+                getWidget().scrollToRow(rowIndex);
+            }
+        });
+    }
+
+    /**
+     * Add a single use details runnable callback for when we get a call to
+     * {@link #detailsRefreshed(boolean)}.
+     *
+     * @param refreshCallback
+     *            Details refreshed callback
+     */
+    private void addDetailsRefreshCallback(Runnable refreshCallback) {
+        refreshDetailsCallbacks.add(refreshCallback);
+    }
+
+    /**
+     * Check if we have details for given row.
+     *
+     * @param rowIndex
+     * @return
+     */
+    private boolean rowHasDetails(int rowIndex) {
+        JsonObject row = getWidget().getDataSource().getRow(rowIndex);
+
+        return row != null && row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
+                && !row.getString(GridState.JSONKEY_DETAILS_VISIBLE).isEmpty();
+    }
+
     @Override
     protected void init() {
         super.init();
+
+        updateWidgetStyleNames();
+
+        // Remove default headers when initializing Grid widget
+        while (getWidget().getHeaderRowCount() > 0) {
+            getWidget().removeHeaderRow(0);
+        }
+
+        registerRpc(GridClientRpc.class, new GridClientRpc() {
+
+            @Override
+            public void scrollToRow(int row, ScrollDestination destination) {
+                Scheduler.get().scheduleFinally(
+                        () -> getWidget().scrollToRow(row, destination));
+                // Add details refresh listener and handle possible detail for
+                // scrolled row.
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(row)) {
+                        getWidget().scrollToRow(row, destination);
+                    }
+                });
+            }
+
+            @Override
+            public void scrollToStart() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToStart());
+            }
+
+            @Override
+            public void scrollToEnd() {
+                Scheduler.get()
+                        .scheduleFinally(() -> getWidget().scrollToEnd());
+                addDetailsRefreshCallback(() -> {
+                    if (rowHasDetails(getWidget().getDataSource().size() - 1)) {
+                        getWidget().scrollToEnd();
+                    }
+                });
+            }
+
+            @Override
+            public void recalculateColumnWidths() {
+                getWidget().recalculateColumnWidths();
+            }
+        });
 
         getWidget().addSortHandler(this::handleSortEvent);
         getWidget().setRowStyleGenerator(rowRef -> {
@@ -190,6 +297,12 @@ public class GridConnector extends AbstractListingConnector
                     column.getWidthActual());
         });
 
+        // Handling row height changes
+        getWidget().addRowHeightChangedHandler(event -> {
+            getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
+            getLayoutManager().layoutNow();
+        });
+
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
@@ -200,8 +313,10 @@ public class GridConnector extends AbstractListingConnector
     @SuppressWarnings("unchecked")
     @OnStateChange("columnOrder")
     void updateColumnOrder() {
-        getWidget().setColumnOrder(getState().columnOrder.stream()
-                .map(this::getColumn).toArray(size -> new Column[size]));
+        Scheduler.get()
+                .scheduleFinally(() -> getWidget().setColumnOrder(
+                        getState().columnOrder.stream().map(this::getColumn)
+                                .toArray(size -> new Column[size])));
     }
 
     @OnStateChange("columnResizeMode")
@@ -230,6 +345,58 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
+        grid.setHeaderVisible(state.visible);
+    }
+
+    @OnStateChange({ "bodyRowHeight", "headerRowHeight", "footerRowHeight" })
+    void updateRowHeight() {
+        if (rowHeightScheduled) {
+            return;
+        }
+
+        Scheduler.get().scheduleFinally(() -> {
+            GridState state = getState();
+            if (getWidget().isAttached() && rowHeightNeedsReset()) {
+                getWidget().resetSizesFromDom();
+            }
+            updateContainerRowHeigth(getWidget().getEscalator().getBody(),
+                    state.bodyRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getHeader(),
+                    state.headerRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getFooter(),
+                    state.footerRowHeight);
+            rowHeightScheduled = false;
+        });
+
+        rowHeightScheduled = true;
+    }
+
+    private boolean rowHeightNeedsReset() {
+        GridState state = getState();
+        // Body
+        boolean bodyAutoCalc = state.bodyRowHeight < 0;
+
+        // Header
+        boolean headerAutoCalc = state.headerRowHeight < 0;
+        boolean headerReset = headerAutoCalc && hasVisibleContent(state.header);
+
+        // Footer
+        boolean footerAutoCalc = state.footerRowHeight < 0;
+        boolean footerReset = footerAutoCalc && hasVisibleContent(state.footer);
+
+        return bodyAutoCalc || headerReset || footerReset;
+    }
+
+    private boolean hasVisibleContent(SectionState state) {
+        return state.visible && !state.rows.isEmpty();
+    }
+
+    private void updateContainerRowHeigth(RowContainer container,
+            double height) {
+        if (height >= 0) {
+            container.setDefaultRowHeight(height);
+        }
     }
 
     private void updateStaticRow(RowState rowState,
@@ -248,6 +415,7 @@ public class GridConnector extends AbstractListingConnector
             updateStaticCellFromState(row.join(columns),
                     cellGroupEntry.getKey());
         }
+        row.setStyleName(rowState.styleName);
     }
 
     private void updateStaticCellFromState(Grid.StaticSection.StaticCell cell,
@@ -293,6 +461,23 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
+        grid.setFooterVisible(state.visible);
+    }
+
+    @OnStateChange({ "sortColumns", "sortDirs" })
+    void updateSortOrder() {
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+
+        String[] sortColumns = getState().sortColumns;
+        SortDirection[] sortDirs = getState().sortDirs;
+
+        for (int i = 0; i < sortColumns.length; i++) {
+            sortOrder
+                    .add(new SortOrder(getColumn(sortColumns[i]), sortDirs[i]));
+        }
+
+        getWidget().setSortOrder(sortOrder);
     }
 
     @Override
@@ -333,11 +518,23 @@ public class GridConnector extends AbstractListingConnector
         idToColumn.remove(id);
     }
 
+    /**
+     * Method called by {@code CustomColumn} when its renderer changes. This
+     * method is used to maintain hierarchical renderer wrap in
+     * {@code TreeGrid}.
+     * 
+     * @param column
+     *            the column which now has a new renderer
+     * 
+     * @since 8.1
+     */
+    public void onColumnRendererChanged(CustomColumn column) {
+        // NO-OP
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
-
-        columnToIdMap.clear();
     }
 
     @Override
@@ -365,9 +562,15 @@ public class GridConnector extends AbstractListingConnector
                 sortDirections.add(so.getDirection());
             }
         }
-        getRpcProxy(GridServerRpc.class).sort(columnIds.toArray(new String[0]),
-                sortDirections.toArray(new SortDirection[0]),
-                event.isUserOriginated());
+        String[] colArray = columnIds.toArray(new String[0]);
+        SortDirection[] dirArray = sortDirections.toArray(new SortDirection[0]);
+
+        if (!Arrays.equals(colArray, getState().sortColumns)
+                || !Arrays.equals(dirArray, getState().sortDirs)) {
+            // State has actually changed, send to server
+            getRpcProxy(GridServerRpc.class).sort(colArray, dirArray,
+                    event.isUserOriginated());
+        }
     }
     /* HasComponentsConnector */
 

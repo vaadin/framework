@@ -15,12 +15,15 @@
  */
 package com.vaadin.v7.client.connectors;
 
+import java.util.logging.Logger;
+
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.renderers.Renderer;
 import com.vaadin.v7.client.widget.grid.selection.ClickSelectHandler;
+import com.vaadin.v7.client.widget.grid.selection.HasUserSelectionAllowed;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Single;
 import com.vaadin.v7.client.widget.grid.selection.SpaceSelectHandler;
@@ -75,14 +78,34 @@ public class SingleSelectionModelConnector extends
         selectionModel.setDeselectAllowed(getState().deselectAllowed);
     }
 
+    @OnStateChange("userSelectionAllowed")
+    void updateUserSelectionAllowed() {
+
+        if (selectionModel instanceof HasUserSelectionAllowed) {
+            ((HasUserSelectionAllowed) selectionModel)
+                    .setUserSelectionAllowed(getState().userSelectionAllowed);
+        } else {
+            getLogger().warning("userSelectionAllowed set to "
+                    + getState().userSelectionAllowed
+                    + " but the selection model does not implement "
+                    + HasUserSelectionAllowed.class.getSimpleName());
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(SingleSelectionModelConnector.class.getName());
+    }
+
     /**
      * SingleSelectionModel without a selection column renderer.
      */
     public class SingleSelectionModel extends AbstractSelectionModel
-            implements SelectionModel.Single<JsonObject> {
+            implements SelectionModel.Single<JsonObject>,
+            HasUserSelectionAllowed<JsonObject> {
 
         private RowHandle<JsonObject> selectedRow;
         private boolean deselectAllowed;
+        private boolean userSelectionAllowed = true;
 
         @Override
         public Renderer<Boolean> getSelectionColumnRenderer() {
@@ -153,8 +176,14 @@ public class SingleSelectionModelConnector extends
 
         @Override
         public boolean deselect(JsonObject row) {
-            if (getRowHandle(row).equals(selectedRow)) {
-                select(null);
+            if (isSelected(row)) {
+                // If no selection has happened client side, then selectedRow is
+                // null but must be set so that a deselection event with the
+                // correct key can be sent to the server
+                selectedRow = getRowHandle(row);
+                selectedRow.pin();
+
+                return select(null);
             }
             return false;
         }
@@ -175,6 +204,16 @@ public class SingleSelectionModelConnector extends
         @Override
         public boolean isDeselectAllowed() {
             return deselectAllowed;
+        }
+
+        @Override
+        public boolean isUserSelectionAllowed() {
+            return userSelectionAllowed;
+        }
+
+        @Override
+        public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+            this.userSelectionAllowed = userSelectionAllowed;
         }
     }
 }

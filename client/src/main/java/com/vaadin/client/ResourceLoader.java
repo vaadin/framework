@@ -16,11 +16,13 @@
 
 package com.vaadin.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
@@ -30,17 +32,12 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.user.client.Timer;
 
 /**
  * ResourceLoader lets you dynamically include external scripts and styles on
  * the page and lets you know when the resource has been loaded.
- *
- * You can also preload resources, allowing them to get cached by the browser
- * without being evaluated. This enables downloading multiple resources at once
- * while still controlling in which order e.g. scripts are executed.
  *
  * @author Vaadin Ltd
  * @since 7.0.0
@@ -52,7 +49,6 @@ public class ResourceLoader {
     public static class ResourceLoadEvent {
         private final ResourceLoader loader;
         private final String resourceUrl;
-        private final boolean preload;
 
         /**
          * Creates a new event.
@@ -61,19 +57,14 @@ public class ResourceLoader {
          *            the resource loader that has loaded the resource
          * @param resourceUrl
          *            the url of the loaded resource
-         * @param preload
-         *            true if the resource has only been preloaded, false if
-         *            it's fully loaded
          */
-        public ResourceLoadEvent(ResourceLoader loader, String resourceUrl,
-                boolean preload) {
+        public ResourceLoadEvent(ResourceLoader loader, String resourceUrl) {
             this.loader = loader;
             this.resourceUrl = resourceUrl;
-            this.preload = preload;
         }
 
         /**
-         * Gets the resource loader that has fired this event
+         * Gets the resource loader that has fired this event.
          *
          * @return the resource loader
          */
@@ -90,22 +81,10 @@ public class ResourceLoader {
             return resourceUrl;
         }
 
-        /**
-         * Returns true if the resource has been preloaded, false if it's fully
-         * loaded
-         *
-         * @see ResourceLoader#preloadResource(String, ResourceLoadListener)
-         *
-         * @return true if the resource has been preloaded, false if it's fully
-         *         loaded
-         */
-        public boolean isPreload() {
-            return preload;
-        }
     }
 
     /**
-     * Event listener that gets notified when a resource has been loaded
+     * Event listener that gets notified when a resource has been loaded.
      */
     public interface ResourceLoadListener {
         /**
@@ -143,10 +122,8 @@ public class ResourceLoader {
     private ApplicationConnection connection;
 
     private final Set<String> loadedResources = new HashSet<>();
-    private final Set<String> preloadedResources = new HashSet<>();
 
     private final Map<String, Collection<ResourceLoadListener>> loadListeners = new HashMap<>();
-    private final Map<String, Collection<ResourceLoadListener>> preloadListeners = new HashMap<>();
 
     private final Element head;
 
@@ -159,7 +136,7 @@ public class ResourceLoader {
         Document document = Document.get();
         head = document.getElementsByTagName("head").getItem(0);
 
-        // detect already loaded scripts and stylesheets
+        // detect already loaded scripts, html imports and stylesheets
         NodeList<Element> scripts = document.getElementsByTagName("script");
         for (int i = 0; i < scripts.getLength(); i++) {
             ScriptElement element = ScriptElement.as(scripts.getItem(i));
@@ -175,6 +152,10 @@ public class ResourceLoader {
             String rel = linkElement.getRel();
             String href = linkElement.getHref();
             if ("stylesheet".equalsIgnoreCase(rel) && href != null
+                    && href.length() != 0) {
+                loadedResources.add(href);
+            }
+            if ("import".equalsIgnoreCase(rel) && href != null
                     && href.length() != 0) {
                 loadedResources.add(href);
             }
@@ -196,7 +177,6 @@ public class ResourceLoader {
      * doesn't cause the script to be loaded again, but the listener will still
      * be notified when appropriate.
      *
-     *
      * @param scriptUrl
      *            the url of the script to load
      * @param resourceLoadListener
@@ -204,29 +184,8 @@ public class ResourceLoader {
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener) {
-        loadScript(scriptUrl, resourceLoadListener,
-                !supportsInOrderScriptExecution());
-    }
-
-    /**
-     * Load a script and notify a listener when the script is loaded. Calling
-     * this method when the script is currently loading or already loaded
-     * doesn't cause the script to be loaded again, but the listener will still
-     * be notified when appropriate.
-     *
-     *
-     * @param scriptUrl
-     *            url of script to load
-     * @param resourceLoadListener
-     *            listener to notify when script is loaded
-     * @param async
-     *            What mode the script.async attribute should be set to
-     * @since 7.2.4
-     */
-    public void loadScript(final String scriptUrl,
-            final ResourceLoadListener resourceLoadListener, boolean async) {
         final String url = WidgetUtil.getAbsoluteUrl(scriptUrl);
-        ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
+        ResourceLoadEvent event = new ResourceLoadEvent(this, url);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
                 resourceLoadListener.onLoad(event);
@@ -234,31 +193,16 @@ public class ResourceLoader {
             return;
         }
 
-        if (preloadListeners.containsKey(url)) {
-            // Preload going on, continue when preloaded
-            preloadResource(url, new ResourceLoadListener() {
-                @Override
-                public void onLoad(ResourceLoadEvent event) {
-                    loadScript(url, resourceLoadListener);
-                }
-
-                @Override
-                public void onError(ResourceLoadEvent event) {
-                    // Preload failed -> signal error to own listener
-                    if (resourceLoadListener != null) {
-                        resourceLoadListener.onError(event);
-                    }
-                }
-            });
-            return;
-        }
-
         if (addListener(url, resourceLoadListener, loadListeners)) {
+            getLogger().info("Loading script from " + url);
             ScriptElement scriptTag = Document.get().createScriptElement();
             scriptTag.setSrc(url);
             scriptTag.setType("text/javascript");
 
-            scriptTag.setPropertyBoolean("async", async);
+            // async=false causes script injected scripts to be executed in the
+            // injection order. See e.g.
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            scriptTag.setPropertyBoolean("async", false);
 
             addOnloadHandler(scriptTag, new ResourceLoadListener() {
                 @Override
@@ -276,101 +220,47 @@ public class ResourceLoader {
     }
 
     /**
-     * The current browser supports script.async='false' for maintaining
-     * execution order for dynamically-added scripts.
+     * Loads an HTML import and notify a listener when the HTML import is
+     * loaded. Calling this method when the HTML import is currently loading or
+     * already loaded doesn't cause the HTML import to be loaded again, but the
+     * listener will still be notified when appropriate.
      *
-     * @return Browser supports script.async='false'
-     * @since 7.2.4
-     */
-    public static boolean supportsInOrderScriptExecution() {
-        return BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge();
-    }
-
-    /**
-     * Download a resource and notify a listener when the resource is loaded
-     * without attempting to interpret the resource. When a resource has been
-     * preloaded, it will be present in the browser's cache (provided the HTTP
-     * headers allow caching), making a subsequent load operation complete
-     * without having to wait for the resource to be downloaded again.
-     *
-     * Calling this method when the resource is currently loading, currently
-     * preloading, already preloaded or already loaded doesn't cause the
-     * resource to be preloaded again, but the listener will still be notified
-     * when appropriate.
-     *
-     * @param url
-     *            the url of the resource to preload
+     * @param htmlUrl
+     *            url of HTML import to load
      * @param resourceLoadListener
-     *            the listener that will get notified when the resource is
-     *            preloaded
+     *            listener to notify when the HTML import is loaded
      */
-    public void preloadResource(String url,
-            ResourceLoadListener resourceLoadListener) {
-        url = WidgetUtil.getAbsoluteUrl(url);
-        ResourceLoadEvent event = new ResourceLoadEvent(this, url, true);
-        if (loadedResources.contains(url) || preloadedResources.contains(url)) {
-            // Already loaded or preloaded -> just fire listener
+    public void loadHtmlImport(final String htmlUrl,
+            final ResourceLoadListener resourceLoadListener) {
+        final String url = WidgetUtil.getAbsoluteUrl(htmlUrl);
+        ResourceLoadEvent event = new ResourceLoadEvent(this, url);
+        if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
                 resourceLoadListener.onLoad(event);
             }
             return;
         }
 
-        if (addListener(url, resourceLoadListener, preloadListeners)
-                && !loadListeners.containsKey(url)) {
-            // Inject loader element if this is the first time this is preloaded
-            // AND the resources isn't already being loaded in the normal way
+        if (addListener(url, resourceLoadListener, loadListeners)) {
+            LinkElement linkTag = Document.get().createLinkElement();
+            linkTag.setAttribute("rel", "import");
+            linkTag.setAttribute("href", url);
 
-            final Element element = getPreloadElement(url);
-            addOnloadHandler(element, new ResourceLoadListener() {
+            addOnloadHandler(linkTag, new ResourceLoadListener() {
                 @Override
                 public void onLoad(ResourceLoadEvent event) {
-                    fireLoad(event);
-                    Document.get().getBody().removeChild(element);
+                    // Must wait for all HTML imports to finish
+                    // processing to ensure that e.g. the template is
+                    // parsed when calling the element constructor.
+                    runWhenHtmlImportsReady(() -> fireLoad(event));
                 }
 
                 @Override
                 public void onError(ResourceLoadEvent event) {
                     fireError(event);
-                    Document.get().getBody().removeChild(element);
                 }
             }, event);
-
-            Document.get().getBody().appendChild(element);
-        }
-    }
-
-    private static Element getPreloadElement(String url) {
-        /*-
-         * TODO
-         * In Chrome, FF:
-         * <object> does not fire event if resource is 404 -> eternal spinner.
-         * <img> always fires onerror -> no way to know if it loaded -> eternal spinner
-         * <script type="text/javascript> fires, but also executes -> not preloading
-         * <script type="text/cache"> does not fire events
-         *  XHR not tested - should work, probably causes other issues
-         -*/
-        if (BrowserInfo.get().isIE()) {
-            // If ie11+ for some reason gets a preload request
-            if (BrowserInfo.get().getBrowserMajorVersion() >= 11) {
-                throw new RuntimeException(
-                        "Browser doesn't support preloading with text/cache");
-            }
-            ScriptElement element = Document.get().createScriptElement();
-            element.setSrc(url);
-            element.setType("text/cache");
-            return element;
-        } else {
-            ObjectElement element = Document.get().createObjectElement();
-            element.setData(url);
-            if (BrowserInfo.get().isChrome()) {
-                element.setType("text/cache");
-            } else {
-                element.setType("text/plain");
-            }
-            element.setHeight("0px");
-            element.setWidth("0px");
-            return element;
+            head.appendChild(linkTag);
         }
     }
 
@@ -424,7 +314,7 @@ public class ResourceLoader {
     public void loadStylesheet(final String stylesheetUrl,
             final ResourceLoadListener resourceLoadListener) {
         final String url = WidgetUtil.getAbsoluteUrl(stylesheetUrl);
-        final ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
+        final ResourceLoadEvent event = new ResourceLoadEvent(this, url);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
                 resourceLoadListener.onLoad(event);
@@ -432,32 +322,14 @@ public class ResourceLoader {
             return;
         }
 
-        if (preloadListeners.containsKey(url)) {
-            // Preload going on, continue when preloaded
-            preloadResource(url, new ResourceLoadListener() {
-                @Override
-                public void onLoad(ResourceLoadEvent event) {
-                    loadStylesheet(url, resourceLoadListener);
-                }
-
-                @Override
-                public void onError(ResourceLoadEvent event) {
-                    // Preload failed -> signal error to own listener
-                    if (resourceLoadListener != null) {
-                        resourceLoadListener.onError(event);
-                    }
-                }
-            });
-            return;
-        }
-
         if (addListener(url, resourceLoadListener, loadListeners)) {
+            getLogger().info("Loading style sheet from " + url);
             LinkElement linkElement = Document.get().createLinkElement();
             linkElement.setRel("stylesheet");
             linkElement.setType("text/css");
             linkElement.setHref(url);
 
-            if (BrowserInfo.get().isSafari()) {
+            if (BrowserInfo.get().isSafariOrIOS()) {
                 // Safari doesn't fire any events for link elements
                 // See http://www.phpied.com/when-is-a-stylesheet-really-loaded/
                 Scheduler.get().scheduleFixedPeriod(new RepeatingCommand() {
@@ -555,7 +427,7 @@ public class ResourceLoader {
             Map<String, Collection<ResourceLoadListener>> listenerMap) {
         Collection<ResourceLoadListener> listeners = listenerMap.get(url);
         if (listeners == null) {
-            listeners = new HashSet<>();
+            listeners = new ArrayList<>();
             listeners.add(listener);
             listenerMap.put(url, listeners);
             return true;
@@ -568,14 +440,8 @@ public class ResourceLoader {
     private void fireError(ResourceLoadEvent event) {
         String resource = event.getResourceUrl();
 
-        Collection<ResourceLoadListener> listeners;
-        if (event.isPreload()) {
-            // Also fire error for load listeners
-            fireError(new ResourceLoadEvent(this, resource, false));
-            listeners = preloadListeners.remove(resource);
-        } else {
-            listeners = loadListeners.remove(resource);
-        }
+        Collection<ResourceLoadListener> listeners = loadListeners
+                .remove(resource);
         if (listeners != null && !listeners.isEmpty()) {
             for (ResourceLoadListener listener : listeners) {
                 if (listener != null) {
@@ -587,19 +453,9 @@ public class ResourceLoader {
 
     private void fireLoad(ResourceLoadEvent event) {
         String resource = event.getResourceUrl();
-        Collection<ResourceLoadListener> listeners;
-        if (event.isPreload()) {
-            preloadedResources.add(resource);
-            listeners = preloadListeners.remove(resource);
-        } else {
-            if (preloadListeners.containsKey(resource)) {
-                // Also fire preload events for potential listeners
-                fireLoad(new ResourceLoadEvent(this, resource, true));
-            }
-            preloadedResources.remove(resource);
-            loadedResources.add(resource);
-            listeners = loadListeners.remove(resource);
-        }
+        Collection<ResourceLoadListener> listeners = loadListeners
+                .remove(resource);
+        loadedResources.add(resource);
         if (listeners != null && !listeners.isEmpty()) {
             for (ResourceLoadListener listener : listeners) {
                 if (listener != null) {
@@ -607,6 +463,42 @@ public class ResourceLoader {
                 }
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ResourceLoader.class.getName());
+    }
+
+    private static native boolean supportsHtmlWhenReady()
+    /*-{
+        return !!($wnd.HTMLImports && $wnd.HTMLImports.whenReady);
+    }-*/;
+
+    private static native void addHtmlImportsReadyHandler(Runnable handler)
+    /*-{
+        $wnd.HTMLImports.whenReady($entry(function() {
+            handler.@Runnable::run()();
+        }));
+    }-*/;
+
+    /**
+     * Executes a Runnable when all HTML imports are ready. If the browser does
+     * not support triggering an event when HTML imports are ready, the Runnable
+     * is executed immediately.
+     *
+     * @param runnable
+     *            the code to execute
+     * @since 8.1
+     */
+    protected void runWhenHtmlImportsReady(Runnable runnable) {
+        if (GWT.isClient() && supportsHtmlWhenReady()) {
+            addHtmlImportsReadyHandler(() -> {
+                runnable.run();
+            });
+        } else {
+            runnable.run();
+        }
+
     }
 
 }

@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors;
 
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.renderers.ButtonRenderer;
 import com.vaadin.client.renderers.ClickableRenderer.RendererClickHandler;
 import com.vaadin.shared.ui.Connect;
@@ -47,5 +48,11 @@ public class ButtonRendererConnector
     @Override
     public ButtonRendererState getState() {
         return (ButtonRendererState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getRenderer().setHtmlContentAllowed(getState().htmlContentAllowed);
     }
 }

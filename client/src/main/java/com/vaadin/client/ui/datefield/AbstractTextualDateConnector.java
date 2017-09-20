@@ -21,6 +21,15 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.VAbstractTextualDate;
 import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
 
+/**
+ * Abstract base class for date fields with textual date representation.
+ *
+ * @author Vaadin Ltd
+ * @since 8.0
+ *
+ * @param <R>
+ *            resolution type
+ */
 public abstract class AbstractTextualDateConnector<R extends Enum<R>>
         extends AbstractDateFieldConnector<R> {
 
@@ -32,10 +41,10 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
         if (origRes != getWidget().getCurrentResolution()
                 || oldLocale != getWidget().getCurrentLocale()) {
             // force recreating format string
-            getWidget().formatStr = null;
+            getWidget().setFormatString(null);
         }
         if (uidl.hasAttribute("format")) {
-            getWidget().formatStr = uidl.getStringAttribute("format");
+            getWidget().setFormatString(uidl.getStringAttribute("format"));
         }
 
         getWidget().lenient = !uidl.getBooleanAttribute("strict");

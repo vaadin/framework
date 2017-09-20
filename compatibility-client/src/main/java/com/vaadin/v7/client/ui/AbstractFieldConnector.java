@@ -43,6 +43,22 @@ public abstract class AbstractFieldConnector
 
     /**
      * Checks whether the required indicator should be shown for the field.
+     * Required indicators are hidden if the field or its data source is
+     * read-only.
+     * <p>
+     * NOTE: since 8.0 this only delegates to
+     * {@link #isRequiredIndicatorVisible()}, and is left for legacy reasons.
+     * 
+     * @deprecated Use {@link #isRequiredIndicatorVisible()} instead.
+     *
+     * @return true if required indicator should be shown
+     */
+    public boolean isRequired() {
+        return isRequiredIndicatorVisible();
+    }
+
+    /**
+     * Checks whether the required indicator should be shown for the field.
      *
      * Required indicators are hidden if the field or its data source is
      * read-only.

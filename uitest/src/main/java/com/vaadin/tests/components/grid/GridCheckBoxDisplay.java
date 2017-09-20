@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
@@ -41,21 +42,21 @@ public class GridCheckBoxDisplay extends AbstractReindeerTestUI {
 
         TextField taskField = new TextField();
         CheckBox doneField = new CheckBox();
-        Binder<Todo> binder = new Binder<>();
 
-        binder.bind(taskField, Todo::getTask, Todo::setTask);
-        binder.bind(doneField, Todo::isDone, Todo::setDone);
+        Binder<Todo> binder = grid.getEditor().getBinder();
 
-        grid.getEditor().setBinder(binder);
-        grid.getEditor().setEnabled(true);
+        Binding<Todo, Boolean> doneBinding = binder.bind(doneField,
+                Todo::isDone, Todo::setDone);
 
         Column<Todo, String> column = grid
                 .addColumn(todo -> String.valueOf(todo.isDone()));
         column.setWidth(75);
-        column.setEditorComponent(doneField);
+        column.setEditorBinding(doneBinding);
 
         grid.addColumn(Todo::getTask).setExpandRatio(1)
-                .setEditorComponent(taskField);
+                .setEditorComponent(taskField, Todo::setTask);
+
+        grid.getEditor().setEnabled(true);
 
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 

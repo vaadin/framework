@@ -217,4 +217,40 @@ public interface ServerConnector extends Connector {
      */
     public boolean hasEventListener(String eventIdentifier);
 
+    /**
+     * Sets the connector type tag for this connector. This should only be
+     * called from
+     * {@link WidgetSet#createConnector(int, ApplicationConfiguration)}
+     * <p>
+     * <strong>Note:</strong> This method is intended for internal use only.
+     *
+     * @see #getTag()
+     *
+     * @param tag
+     *            the connector type tag
+     *
+     * @throws IllegalStateException
+     *             if {@code tag} has already been set
+     *
+     * @since 8.1
+     */
+    public void setTag(int tag) throws IllegalStateException;
+
+    /**
+     * Gets the connector type tag for this connector. This type tag is an
+     * identifier used to map client-side connectors to their server-side
+     * classes. The server-side class information is stored in
+     * {@link ApplicationConfiguration} and contains class names and their
+     * hierarchy.
+     *
+     * @see ApplicationConfiguration#getServerSideClassNameForTag(Integer)
+     * @see ApplicationConfiguration#getTagsForServerSideClassName(String)
+     * @see ApplicationConfiguration#getParentTag(int)
+     *
+     * @return the connector type tag
+     *
+     * @since 8.1
+     */
+    public int getTag();
+
 }

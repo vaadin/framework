@@ -48,7 +48,7 @@ public class FocusAndBlurListeners extends TestBase {
         TextField tf = new TextField("TextField");
         l.addComponent(tf);
 
-        AbstractDateField df = new TestDateField("DateField");
+        AbstractDateField<?, ?> df = new TestDateField("DateField");
         l.addComponent(df);
 
         ComboBox cb = new ComboBox("ComboBox");

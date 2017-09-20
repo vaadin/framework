@@ -36,6 +36,7 @@ import com.vaadin.server.UploadException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload.FailedEvent;
 
@@ -46,6 +47,8 @@ import com.vaadin.ui.Upload.FailedEvent;
  * @since 7.1
  */
 public class FileUploadHandler implements RequestHandler {
+
+    public static final int MULTIPART_BOUNDARY_LINE_LIMIT = 20000;
 
     /**
      * Stream that extracts content from another stream until the boundary
@@ -305,6 +308,10 @@ public class FileUploadHandler implements RequestHandler {
                         "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
+            if(bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
+                throw new IOException(
+                        "The multipart stream does not contain boundary");
+            }
             readByte = stream.read();
         }
         byte[] bytes = bout.toByteArray();
@@ -675,7 +682,8 @@ public class FileUploadHandler implements RequestHandler {
      */
     protected void sendUploadResponse(VaadinRequest request,
             VaadinResponse response) throws IOException {
-        response.setContentType("text/html");
+        response.setContentType(
+                ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         try (OutputStream out = response.getOutputStream()) {
             final PrintWriter outWriter = new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));

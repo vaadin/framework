@@ -25,6 +25,9 @@ import com.vaadin.v7.data.Property;
 /**
  * A field that is used to enter secret text information like passwords. The
  * entered text is not displayed on the screen.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.PasswordField} based
+ *             on the new data binding API
  */
 @Deprecated
 public class PasswordField extends AbstractTextField {

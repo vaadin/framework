@@ -17,10 +17,17 @@ package com.vaadin.v7.data.util.filter;
 
 import java.util.Arrays;
 
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 
+/**
+ * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
+ * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
+ * filters are specific to the implementation.
+ */
 @Deprecated
 public class Between implements Filter {
 

@@ -18,6 +18,7 @@ package com.vaadin.tests.components.combobox;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
@@ -27,6 +28,7 @@ import com.vaadin.ui.ComboBox;
  * @author Vaadin Ltd
  *
  */
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ComboBoxEmptyCaption extends AbstractTestUI {
 
     @Override

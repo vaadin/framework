@@ -326,7 +326,7 @@ public class ListDataSource<T> implements DataSource<T> {
     /**
      * Handler for listening to changes in the underlying list.
      */
-    private Set<DataChangeHandler> changeHandlers = new LinkedHashSet<>();
+    private Set<DataChangeHandler> changeHandlers = new LinkedHashSet<DataChangeHandler>();
 
     /**
      * Constructs a new list data source.
@@ -344,7 +344,7 @@ public class ListDataSource<T> implements DataSource<T> {
         if (datasource == null) {
             throw new IllegalArgumentException("datasource cannot be null");
         }
-        ds = new ArrayList<>(datasource);
+        ds = new ArrayList<T>(datasource);
         wrapper = new ListWrapper();
     }
 
@@ -358,9 +358,9 @@ public class ListDataSource<T> implements DataSource<T> {
      */
     public ListDataSource(T... rows) {
         if (rows == null) {
-            ds = new ArrayList<>();
+            ds = new ArrayList<T>();
         } else {
-            ds = new ArrayList<>(Arrays.asList(rows));
+            ds = new ArrayList<T>(Arrays.asList(rows));
         }
         wrapper = new ListWrapper();
     }
@@ -463,7 +463,8 @@ public class ListDataSource<T> implements DataSource<T> {
     }
 
     private Stream<DataChangeHandler> getHandlers() {
-        Set<DataChangeHandler> copy = new LinkedHashSet<>(changeHandlers);
+        Set<DataChangeHandler> copy = new LinkedHashSet<DataChangeHandler>(
+                changeHandlers);
         return copy.stream();
     }
 

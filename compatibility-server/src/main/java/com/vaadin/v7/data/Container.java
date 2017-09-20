@@ -20,6 +20,11 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.data.provider.AbstractBackEndDataProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.data.provider.Query;
+import com.vaadin.server.SerializableComparator;
 import com.vaadin.v7.data.util.filter.SimpleStringFilter;
 import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 
@@ -79,6 +84,8 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
  *
  * @author Vaadin Ltd
  * @since 3.0
+ *
+ * @deprecated As of 8.0, replaced by {@link DataProvider}
  */
 @Deprecated
 public interface Container extends Serializable {
@@ -425,6 +432,13 @@ public interface Container extends Serializable {
      * Depending on the container type, sorting a container may permanently
      * change the internal order of items in the container.
      * </p>
+     *
+     * @deprecated As of 8.0, sorting is integrated into {@link DataProvider}
+     *             and {@link Query#getSortOrders()}. For in-memory case, you
+     *             can use also
+     *             {@link ListDataProvider#setSortComparator(SerializableComparator)}.
+     *             For back-end DataProviders, see
+     *             {@link AbstractBackEndDataProvider#setSortOrders(List)}.
      */
     @Deprecated
     public interface Sortable extends Ordered {
@@ -660,6 +674,8 @@ public interface Container extends Serializable {
      * <li>The Items in the hierarchy can be declared explicitly to be able or
      * unable to have children.
      * </ul>
+     *
+     * @deprecated See {@code HierarchicalDataProvider} and its implementations.
      */
     @Deprecated
     public interface Hierarchical extends Container {
@@ -744,7 +760,7 @@ public interface Container extends Serializable {
          * <p>
          * The children must be first explicitly removed with
          * {@link #setParent(Object itemId, Object newParentId)}or
-         * {@link com.vaadin.v7.data.Container#removeItem(Object itemId)}.
+         * {@link Container#removeItem(Object itemId)}.
          * </p>
          *
          * <p>
@@ -768,8 +784,9 @@ public interface Container extends Serializable {
         /**
          * Tests if the Item specified with <code>itemId</code> is a root Item.
          * The hierarchical container can have more than one root and must have
-         * at least one unless it is empty. The {@link #getParent(Object itemId)}
-         * method always returns <code>null</code> for root Items.
+         * at least one unless it is empty. The
+         * {@link #getParent(Object itemId)} method always returns
+         * <code>null</code> for root Items.
          *
          * @param itemId
          *            ID of the Item whose root status is to be tested
@@ -846,8 +863,8 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. The unfiltered position of items added at index
-     * 0, at index {@link com.vaadin.v7.data.Container#size()} or at an
-     * undefined position is up to the implementation.
+     * 0, at index {@link Container#size()} or at an undefined position is up to
+     * the implementation.
      * </p>
      * <p>
      * The functionality of SimpleFilterable can be implemented using the
@@ -920,6 +937,12 @@ public interface Container extends Serializable {
      * @see Filterable
      *
      * @since 6.6
+     *
+     * @deprecated As of 8.0, the whole filtering feature is integrated into
+     *             {@link DataProvider}. For in-memory case
+     *             ({@link ListDataProvider}), use predicates as filters. For
+     *             back-end DataProviders, filters are specific to the
+     *             implementation.
      */
     @Deprecated
     public interface Filter extends Serializable {
@@ -983,8 +1006,8 @@ public interface Container extends Serializable {
      * Adding items (if supported) to a filtered {@link Ordered} or
      * {@link Indexed} container should insert them immediately after the
      * indicated visible item. However, the unfiltered position of items added
-     * at index 0, at index {@link com.vaadin.v7.data.Container#size()} or at an
-     * undefined position is up to the implementation.
+     * at index 0, at index {@link Container#size()} or at an undefined position
+     * is up to the implementation.
      * </p>
      *
      * <p>
@@ -1267,6 +1290,7 @@ public interface Container extends Serializable {
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
          **/
         @Deprecated
-        public void removeListener(Container.PropertySetChangeListener listener);
+        public void removeListener(
+                Container.PropertySetChangeListener listener);
     }
 }

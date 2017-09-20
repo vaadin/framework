@@ -22,6 +22,7 @@ import java.util.HashSet;
 import org.junit.Assert;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.communication.ServerRpc;
 
@@ -65,24 +66,23 @@ public class ComponentTest {
      *            the component to update
      */
     public static void updateDiffState(AbstractComponent component) {
-        component.getUI().getSession().getCommunicationManager()
-                .encodeState(component, component.getState());
+        LegacyCommunicationManager.encodeState(component, component.getState());
 
     }
 
     /**
      * Gets the server rpc handler registered for a component.
      *
-     * @param component
-     *            the component which listens to the RPC
+     * @param connector
+     *            the connector which listens to the RPC
      * @param serverRpcClass
      *            the server RPC class
      * @return the server RPC handler
      */
-    public static <T extends ServerRpc> T getRpcProxy(Component component,
+    public static <T extends ServerRpc> T getRpcProxy(ClientConnector connector,
             Class<T> serverRpcClass) {
         try {
-            ServerRpcManager<?> rpcManager = component
+            ServerRpcManager<?> rpcManager = connector
                     .getRpcManager(serverRpcClass.getName());
             Method method = ServerRpcManager.class
                     .getDeclaredMethod("getImplementation");

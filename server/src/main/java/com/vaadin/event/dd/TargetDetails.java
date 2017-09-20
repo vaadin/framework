@@ -17,6 +17,8 @@ package com.vaadin.event.dd;
 
 import java.io.Serializable;
 
+import com.vaadin.ui.dnd.event.DropEvent;
+
 /**
  * TargetDetails wraps drop target related information about
  * {@link DragAndDropEvent}.
@@ -27,8 +29,9 @@ import java.io.Serializable;
  * drop target specific API.
  *
  * @since 6.3
- *
+ * @deprecated Replaced in 8.1 by {@link DropEvent#getTransferData(String)}
  */
+@Deprecated
 public interface TargetDetails extends Serializable {
 
     /**

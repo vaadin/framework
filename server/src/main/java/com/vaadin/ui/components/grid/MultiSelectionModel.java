@@ -16,6 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.shared.Registration;
@@ -32,6 +33,39 @@ import com.vaadin.ui.MultiSelect;
  */
 public interface MultiSelectionModel<T>
         extends GridSelectionModel<T>, com.vaadin.data.SelectionModel.Multi<T> {
+
+    /**
+     * State for showing the select all checkbox in the grid's default header
+     * row for the selection column.
+     * <p>
+     * Default value is {@link #DEFAULT}, which means that the select all is
+     * only visible if an in-memory data provider is used
+     * {@link DataProvider#isInMemory()}.
+     */
+    public enum SelectAllCheckBoxVisibility {
+        /**
+         * Shows the select all checkbox, regardless of data provider used.
+         * <p>
+         * <b>For a lazy data provider, selecting all will result in to all rows
+         * being fetched from backend to application memory!</b>
+         */
+        VISIBLE,
+        /**
+         * Never shows the select all checkbox, regardless of data provider
+         * used.
+         */
+        HIDDEN,
+        /**
+         * By default select all checkbox depends on the grid's dataprovider.
+         * <ul>
+         * <li>Visible, if the data provider is in-memory</li>
+         * <li>Hidden, if the data provider is NOT in-memory (lazy)</li>
+         * </ul>
+         *
+         * @see DataProvider#isInMemory()}.
+         */
+        DEFAULT;
+    }
 
     /**
      * Gets a wrapper to use this multiselection model as a multiselect in
@@ -65,4 +99,39 @@ public interface MultiSelectionModel<T>
      */
     public Registration addMultiSelectionListener(
             MultiSelectionListener<T> listener);
+
+    /**
+     * Sets the select all checkbox visibility mode.
+     * <p>
+     * The default value is {@link SelectAllCheckBoxVisibility#DEFAULT}, which
+     * means that the checkbox is only visible if the grid's data provider is
+     * in- memory.
+     *
+     * @param selectAllCheckBoxVisibility
+     *            the visiblity mode to use
+     * @see SelectAllCheckBoxVisibility
+     */
+    public void setSelectAllCheckBoxVisibility(
+            SelectAllCheckBoxVisibility selectAllCheckBoxVisibility);
+
+    /**
+     * Gets the current mode for the select all checkbox visibility.
+     *
+     * @return the select all checkbox visibility mode
+     * @see SelectAllCheckBoxVisibility
+     * @see #isSelectAllCheckBoxVisible()
+     */
+    public SelectAllCheckBoxVisibility getSelectAllCheckBoxVisibility();
+
+    /**
+     * Returns whether the select all checkbox will be visible with the current
+     * setting of
+     * {@link #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)}.
+     *
+     * @return {@code true} if the checkbox will be visible with the current
+     *         settings
+     * @see SelectAllCheckBoxVisibility
+     * @see #setSelectAllCheckBoxVisibility(SelectAllCheckBoxVisibility)
+     */
+    public boolean isSelectAllCheckBoxVisible();
 }

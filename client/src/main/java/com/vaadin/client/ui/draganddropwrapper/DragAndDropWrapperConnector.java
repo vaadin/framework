@@ -26,6 +26,8 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VDragAndDropWrapper;
 import com.vaadin.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -33,6 +35,13 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.DragAndDropWrapper;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DragSourceExtensionConnector} and
+ *             {@link DropTargetExtensionConnector}.
+ */
+@Deprecated
 @Connect(DragAndDropWrapper.class)
 public class DragAndDropWrapperConnector extends CustomComponentConnector
         implements Paintable, VDragAndDropWrapper.UploadHandler {

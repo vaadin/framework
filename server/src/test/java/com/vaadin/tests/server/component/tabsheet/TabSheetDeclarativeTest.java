@@ -18,7 +18,7 @@ package com.vaadin.tests.server.component.tabsheet;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;

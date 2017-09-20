@@ -59,9 +59,9 @@ public class ColorPickerPopup extends Window
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
@@ -133,7 +133,7 @@ public class ColorPickerPopup extends Window
     private ColorPickerSelect colorSelect;
 
     /** The selectors. */
-    private final Set<ColorSelector> selectors = new HashSet<>();
+    private final Set<ColorSelector> selectors = new HashSet<ColorSelector>();
 
     /**
      * Set true while the slider values are updated after colorChange. When
@@ -211,7 +211,7 @@ public class ColorPickerPopup extends Window
         history.setHeight("22px");
 
         // Create the default colors
-        List<Color> defaultColors = new ArrayList<>();
+        List<Color> defaultColors = new ArrayList<Color>();
         defaultColors.add(Color.BLACK);
         defaultColors.add(Color.WHITE);
 

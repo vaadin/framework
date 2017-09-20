@@ -3,6 +3,7 @@ package com.vaadin.tests.components.grid;
 import java.util.stream.IntStream;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -20,21 +21,18 @@ public class GridEditorMultiselect extends AbstractTestUI {
 
         Column<Person, String> nameColumn = grid.addColumn(Person::getFirstName)
                 .setCaption("name");
-        Column<Person, Number> ageColumn = grid
+        Column<Person, Integer> ageColumn = grid
                 .addColumn(Person::getAge, new NumberRenderer())
                 .setCaption("age");
 
-        Binder<Person> binder = new Binder<>();
-        grid.getEditor().setBinder(binder);
+        Binder<Person> binder = grid.getEditor().getBinder();
 
-        TextField name = new TextField();
-        nameColumn.setEditorComponent(name);
-        binder.bind(name, Person::getFirstName, Person::setFirstName);
+        nameColumn.setEditorComponent(new TextField(), Person::setFirstName);
 
-        TextField age = new TextField();
-        ageColumn.setEditorComponent(age);
-        binder.forField(age).withConverter(new StringToIntegerConverter(""))
+        Binding<Person, Integer> ageBinding = binder.forField(new TextField())
+                .withConverter(new StringToIntegerConverter(""))
                 .bind(Person::getAge, Person::setAge);
+        ageColumn.setEditorBinding(ageBinding);
 
         grid.setItems(IntStream.range(0, 30).mapToObj(this::createPerson));
 

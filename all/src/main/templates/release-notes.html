@@ -59,18 +59,14 @@
 
         <p>
             Vaadin Framework @version@ is a
+<!--            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below. -->
 <!--            feature release that includes -->
-            pre-release for evaluating
-            a number of new features and bug fixes, as listed in the <a
+                pre-release for evaluating
+                a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
-		With this beta release we will change things based on your feedback 
-		and that may lead to breaking changes.
+		The API in this alpha version is not considered final and may change based on your feedback.
 	</p>
-	<p>	Special note for add-on developers: please test your add-on against 
-		Framework 8.0 and update your add-on as needed.
-		
-        </p>
 
         <!-- ================================================================ -->
         <h3 id="changelog">Change Log for Vaadin Framework @version@</h3>
@@ -87,146 +83,30 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>New, simpler data binding API</li>
-            <li>Vaadin Framework is now based on Java 8</li>
-            <li>Vaadin Framework is using GWT 2.8, allowing client side code to use Java 8</li>
-            <li>Other Framework dependencies including Atmosphere have been upgraded</li>
+            <li>Separate row heights for header, body and footer in Grid</li>
+            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
+            <li>Binder supports removing bindings</li>
         </ul>
 
+        </p>
+
         <p>
-            The new data binding API replaces the old <tt>Container</tt>, <tt>Item</tt>, <tt>Property</tt>, <tt>FieldGroup</tt>,
-            <tt>Validator</tt>, <tt>Converter</tt> and related classes with new mechanisms.
-            Also components using those are replaced with updated implementations using the
-            new API, and the old data binding API and components have been moved to separate
-            compatibility packages for ease of migration.
-            For more details, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
+            For enhancements introduced in Vaadin Framework 8.1, see the <a
+                href="http://vaadin.com/download/release/8.1/8.1.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.1.0</a>.
+            For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
-        <p>
-            For enhancements introduced in Vaadin Framework 7.7, see the <a
-                href="http://vaadin.com/download/release/7.7/7.7.0/release-notes.html">Release
-                Notes for Vaadin Framework 7.7.0</a>.
-        </p>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
+        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>        
+        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
+        <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
+        <li><tt>DataCommunicator</tt> method <tt>getDataProviderSize</tt> is now <tt>public</tt>, not <tt>protected</tt>.</li>
+
+        <h2>For incompatible or behaviour-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
-        <ul><h4>Compatibility and requirements</h4>
-            <li>Vaadin Framework now requires Java 8 or later and Servlet 3.0 or later</li>
-            <li>Support for older browsers (including Microsoft IE 8-10) and Windows Phone has been dropped</li>
-            <li>Support for Google App Engine has been dropped</li>
-            <li><a href="#supportedservers">Supported servers</a></li>
-        </ul>
-        <ul><h4>New Data Binding API related changes</h4>
-            <li>Components using <tt>Property</tt>, <tt>Item</tt> or <tt>Container</tt> API have been reimplemented for the new API, except <tt>Tree</tt>, <tt>Table</tt>, <tt>TreeTable</tt> and <tt>Calendar</tt></li>
-            <li>Framework 7 versions of the components available in the v7 compatibility package for easier migration, <a href="#legacycomponents">see list of legacy components</a></li>
-            <li><tt>Binder</tt> is the replacement of <tt>FieldGroup</tt> and <tt>BeanFieldGroup</tt></li>
-            <li>Converters and Validators have been moved from Components to <tt>Binder</tt></li>
-            <li><tt>DataProvider</tt> is the replacement of <tt>Container</tt></li>
-            <ul>
-                <li><tt>ListDataProvider</tt> is the default in-memory data provider replacing <tt>IndexedContainer</tt>, <tt>BeanItemContainer</tt>, and <tt>BeanContainer</tt></li>
-                <li><tt>BackEndDataProvider</tt> is the basis for a lazy data provider</li>
-                <li><tt>SQLContainer</tt> is deprecated in v7 compatibility package and not directly replaced</li>
-                <li><tt>HierarchicalContainer</tt> is deprecated in v7 compatibility package and a replacement is planned for 8.1</li>
-            </ul>
-            <li>All components that list data are based on <tt>Listing / AbstractListing</tt></li>
-            <li>All <tt>Listing</tt> components have been typed with the type of items they are listing</li>
-            <li><tt>HasValue</tt> replaces the <tt>Field</tt> interface as the basis for all field components</li>
-            <li>Field components based on <tt>HasValue</tt> may or may not accept null values, depending on each component. There is no <tt>setNullRepresentation</tt> anymore</li>
-            <li><tt>AbstractField::setRequired(boolean)</tt> has been replaced with:
-            <ul>
-                <li><tt>HasValue::setRequiredIndicatorVisible(boolean)</tt> which only makes the <tt>*</tt> required indicator visible for the component</li>
-                <li><tt>BindingBuilder::setRequired(String)</tt> adds a "not-empty" validator when used in <tt>Binder</tt> and makes the <tt>*</tt> required indicator visible</li>
-            </ul>
-            <li><tt>setItemCaptionGenerator</tt> in <tt>AbstractListing</tt> replaces <tt>setItemCaption</tt>, <tt>setItemCaptionMode</tt> and <tt>setItemCaptionPropertyId</tt> from <tt>AbstractSelect</tt></li>
-            <li><tt>setItemIconGenerator</tt> in <tt>AbstractListing</tt> replaces <tt>setItemIcon</tt> and <tt>setItemIconPropertyId</tt> from <tt>AbstractSelect</tt></li>
-        </ul>
-        <ul><h4>General API changes</h4>
-            <li>All listeners and most single method interfaces have been marked as <tt>@FunctionalInterface</tt></li>
-            <li>All components are now immediate, and <tt>AbstractComponent::setImmediate(boolean immediate)</tt> has been removed.</li>
-            <li>Read-only is now a feature for field components and has been moved from <tt>AbstractComponent</tt> to <tt>HasValue</tt> </li>
-            <li>Some deprecated/obsolete parts of API have been removed</li>
-            <li>All addListener/removeListener methods have been removed - replaced with the Java 8 friendly <tt>addClickListener()</tt>, <tt>addValueChangeListener()</tt> etc. instead</li>
-            <li>All new listeners are unregistered using a <tt>Registration</tt> object returned by <tt>addXyzListener()</tt> rather than with a separate <tt>removeXyzListener()</tt></li>
-            <li>Input prompts have been replaced with placeholders utilizing the related browser functionality, API is now <tt>setPlaceHolder</tt> instead of <tt>setInputPrompt</tt></li>
-            <li>Valo is the default theme, instead of Reindeer</li>
-            <li>Valo is the only included theme, all other themes have been moved to the <tt>compatiblity-themes</tt> package and are available as a separate dependency</li>
-            <li><tt>SharedState</tt> and the getter methods for it have been added to each component, regardless of whether those are used for anything or not</li>
-            <li>The old liferay theme (Liferay 6.0 look) has been removed</li>
-            <li>FontAwesome icon constants have been deprecated, and will be moved to <tt>compability-server</tt> before 8.0 final. They will be replaced with <a href="https://vaadin.com/icons">Vaadin icons</a> in an upcoming beta</li>
-        </ul>
-        <ul><h4>Component specific API changes</h4>
-            <li><tt>DateField</tt> replaces old <tt>PopupDateField</tt></li>
-            <li><tt>DateField</tt> and <tt>InlineDateField</tt> are now based on Java 8 <tt>LocalDate</tt> instead of <tt>Date</tt></li>
-            <li><tt>DateField</tt> and <tt>InlineDateField</tt> don't support time anymore, meaning the highest resolution for those is <tt>Resolution.DAY</tt></li>
-            <li><tt>OptionGroup</tt> has been removed and replaced by:</li>
-            <ul>
-                <li><tt>CheckBoxGroup</tt> replaces <tt>OptionGroup</tt> in multiselect mode</li>
-                <li><tt>RadioButtonGroup</tt> replaces <tt>OptionGroup</tt> in single select mode</li>
-                <ul><tt>OptionGroup::setItemEnabled(Object, boolean)</tt> has been replaced by <tt>setItemEnabledProvider</tt> that accepts a predicate</ul>
-            </ul>
-            <li><tt>TwinColSelect</tt> is always in multiselect mode</li>
-            <li><tt>ListSelect</tt> is always in multiselect mode</li>
-            <li><tt>Upload</tt> has a separate immediate mode <tt>setImmediateMode(boolean)</tt> replacing <tt>setImmediate</tt> and is now by default in immediate mode</li>
-            <li><tt>RichTextArea</tt> no longer receives a special "v-richtextarea-readonly" class when readonly, only the standard "v-readonly" class</li>
-            <li><tt>Grid</tt> has been typed to the bean type it is using and its columns are specified with a value provider callback instead of "propertyId"</li>
-            <li><tt>Grid</tt> Editor now uses <tt>Binder</tt> instead of <tt>FieldGroup</tt>, and doesn't support a <tt>FieldFactory</tt></li>
-            <li><tt>Grid</tt> selection API has been removed from component level to <tt>GridSelectionModel</tt> which is available via <tt>Grid::getSelectionModel()</tt></li>
-            <li><tt>Grid::setSelectionModel(GridSelectionModel)</tt> visibility has been changed from <tt>public</tt> to <tt>protected</tt> to reduce confusion with <tt>Grid::setSelectionMode</tt></li>
-        </ul>
-        <ul><h4>Client side widget specific API changes</h4>
-            <li><tt>VTextualDate</tt></li> widget class is removed and replaced by abstract <tt>VAbstractTextualDate</tt> class which is supposed to be inherited by concrete date field implementation widgets
-        </ul>
-        <ul><h4>Component specific visual changes</h4>
-            <li>The default width of <tt>Label</tt> is now undefined, matching other components</li>
-            <li>The default width for <tt>ComboBox</tt> pop-up is now 100 % (previously undefined)</li>
-            <li><tt>VerticalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = true</tt></li>
-            <li><tt>HorizontalLayout</tt> has by default <tt>spacing = true</tt> and <tt>margin = false</tt></li>
-        </ul>
-        <ul><h4>Component specific declarative syntax changes</h4>
-            <li>Components in the compatibility packages now use the prefix <tt>vaadin7-"</tt> in declarative design files</li>
-            <li><tt>required-indicator-visible</tt> attribute replaces the <tt>required</tt> attribute</li>
-            <li><tt>placeholder</tt> attribute replaces the <tt>input-prompt</tt> attribute for input components</li>
-            <li><tt>multi-select</tt> attribute is no longer used for select components</li>
-            <li><tt>vaadin-option-group</tt> with attribute <tt>multi-select=true</tt> is replaced by <tt>v-check-box-group</tt></li>
-            <li><tt>vaadin-option-group</tt> with attribute <tt>multi-select=false</tt> is replaced by <tt>v-radio-button-group</tt></li>
-            <li><tt>immediate</tt> attribute is not used for any component</li>
-            <li><tt>read-only</tt> attribute is now only used for field components instead of all components</li>
-            <li><tt>vaadin-upload</tt> has a new attribute <tt>immediate-mode</tt> that replaces the removed <tt>immediate</tt> attribue</li>
-            <li><tt>vaadin-grid</tt> column elements don't have <tt>property-id</tt> attribute anymore. Columns aren't addressed by a property anymore but they have an id. So there is <tt>column-id</tt> attribute instead</li>
-            <li><tt>vaadin-grid</tt> doesn't have <tt>readonly</tt> attribute anymore. It  is replaced by <tt>selection-allowed</tt> attribute which has special meaning for a <tt>Grid</tt></li> 
-        </ul>
-        <ul id="legacycomponents"><h4>Legacy components in the v7 compatiblity package <tt>com.vaadin.v7.ui</tt> available as a separate dependency</h4>
-            <li><tt>Calendar</tt> - no replacement in 8</li>
-            <li><tt>CheckBox</tt></li>
-            <li><tt>ColorPicker</tt></li>
-            <li><tt>ColorPickerArea</tt></li>
-            <li><tt>ComboBox</tt></li>
-            <li><tt>CustomField</tt></li>
-            <li><tt>DateField</tt> - the replacing 8 version does not support selecting time</li>
-            <li><tt>Form</tt> - no replacement in 8</li>
-            <li><tt>Grid</tt> (and renderers)</li>
-            <li><tt>HorizontalLayout</tt></li>
-            <li><tt>InlineDateField</tt> - the replacing 8 version does not support selecting time</li>
-            <li><tt>Label</tt></li>
-            <li><tt>ListSelect</tt></li>
-            <li><tt>NativeSelect</tt></li>
-            <li><tt>OptionGroup</tt> - replaced by <tt>CheckBoxGroup</tt> (multiselection) and <tt>RadioButtonGroup</tt> (single selection)</li>
-            <li><tt>PasswordField</tt></li>
-            <li><tt>PopupDateField</tt> - replaced by partly by <tt>DateField</tt>, but doesn't allow selecting time</li>
-            <li><tt>ProgressBar</tt></li>
-            <li><tt>ProgressIndicator</tt></li>
-            <li><tt>RichTextArea</tt></li>
-            <li><tt>Select</tt> - removed, use <tt>ComboBox</tt> for single selection and <tt>ListSelect</tt> for multiselection</li>
-            <li><tt>Table</tt> - no replacement in 8.0, use Grid.</li>
-            <li><tt>TextArea</tt></li>
-            <li><tt>TextField</tt></li>
-            <li><tt>Tree</tt> - no replacement in 8.0, planned for 8.1</li>
-            <li><tt>TreeTable</tt> - no replacement in 8.0, TreeGrid planned for 8.1</li>
-            <li><tt>TwinColSelect</tt></li>
-            <li><tt>VerticalLayout</tt></li>
-            <li><tt>Upload</tt></li>
-        </ul>
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
@@ -234,6 +114,7 @@
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="https://github.com/vaadin/framework/issues/5170">#5170</a>)
             </li>
+            <li>Payload based drop criteria do not work on IE11 - use criteria scripts if IE11 support of drop validation is required</li>
             <li>Specifying layout sizes using <tt>em</tt> is currently discouraged, because it results in fractional
             components sizes in many cases, which might cause unwanted 1px gaps between components.
             </li>
@@ -245,7 +126,7 @@
                 <li>Push is currently not supported in portals (See <a
                     href="https://github.com/vaadin/framework/issues/3741">#3741</a>)
                 </li>
-                <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
+                <li>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
                      nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
@@ -254,8 +135,7 @@
                 </li>
             </ul>
             </li>
-            <li>Grid does not support adding components to cells. Instead light-weight Renderers can be
-                used to present and edit data.</li>
+            <li>The Maven GWT compilation for <tt>Vaadin7WidgetSet</tt> requires at least 1G of memory, when using the <tt>vaadin-client-compability</tt> package. If compiled inside Eclipse, possibly even more.</li>
         </ul>
 
 
@@ -364,7 +244,10 @@
             vaadin-server, vaadin-shared etc. The package
             vaadin-compatibility-client-compiled contains the widgetset
             <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
-            <tt>DefaultWidgetSet</tt>.
+            <tt>DefaultWidgetSet</tt>. Please note that the rename to com.vaadin.v7
+            has only been applied to classes that are only relevant for the
+            compatibility modules. Some classes have also been renamed while still
+            being part of the non-compatibility modules.
         </p>
         <p>
         All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
@@ -480,6 +363,7 @@
             <li>Wildfly 8-10</li>
             <li>Jetty 8-9</li>
             <li>Glassfish 4</li>
+            <li>Payara Server 164</li>
         </ul>
 
         <p>
@@ -491,6 +375,7 @@
 
         <ul>
             <li>Liferay Portal 6.2</li>
+            <li>Liferay Portal 7.0</li>
         </ul>
 
         <p>
@@ -498,11 +383,11 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox (latest version, currently 48)</li>
-            <li>Mozilla Firefox ESR (latest version, currently 45 ESR)</li>
+            <li>Mozilla Firefox (latest version, currently 54)</li>
+            <li>Mozilla Firefox ESR (latest version, currently 52 ESR)</li>
             <li>Internet Explorer 11, Edge (latest version)</li>
             <li>Safari 9+</li>
-            <li>Google Chrome (latest version, currently 52)</li>
+            <li>Google Chrome (latest version, currently 59)</li>
         </ul>
 
         <p>

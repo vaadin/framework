@@ -26,6 +26,9 @@ package com.vaadin.v7.data.validator;
  *
  * @author Vaadin Ltd.
  * @since 5.4
+ *
+ *
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.validator.AbstractValidator}
  */
 @SuppressWarnings("serial")
 @Deprecated

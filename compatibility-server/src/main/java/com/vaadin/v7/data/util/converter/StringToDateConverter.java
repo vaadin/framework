@@ -57,17 +57,9 @@ public class StringToDateConverter implements Converter<String, Date> {
         return f;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.lang.Class, java.util.Locale)
-     */
     @Override
     public Date convertToModel(String value, Class<? extends Date> targetType,
-            Locale locale)
-            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+            Locale locale) throws ConversionException {
         if (targetType != getModelType()) {
             throw new ConversionException(
                     "Converter only supports " + getModelType().getName()
@@ -91,17 +83,10 @@ public class StringToDateConverter implements Converter<String, Date> {
         return parsedValue;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
-     * .Object, java.lang.Class, java.util.Locale)
-     */
     @Override
     public String convertToPresentation(Date value,
             Class<? extends String> targetType, Locale locale)
-            throws com.vaadin.v7.data.util.converter.Converter.ConversionException {
+            throws ConversionException {
         if (value == null) {
             return null;
         }
@@ -109,21 +94,11 @@ public class StringToDateConverter implements Converter<String, Date> {
         return getFormat(locale).format(value);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.converter.Converter#getModelType()
-     */
     @Override
     public Class<Date> getModelType() {
         return Date.class;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.vaadin.data.util.converter.Converter#getPresentationType()
-     */
     @Override
     public Class<String> getPresentationType() {
         return String.class;

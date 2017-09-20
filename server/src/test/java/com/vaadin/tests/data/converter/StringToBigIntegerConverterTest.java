@@ -54,4 +54,16 @@ public class StringToBigIntegerConverterTest
                 "Value with specific locale was converted incorrectly",
                 expected, converted);
     }
+
+    @Test
+    public void customEmptyValue() {
+        StringToBigIntegerConverter converter = new StringToBigIntegerConverter(
+                BigInteger.ZERO, getErrorMessage());
+
+        assertValue(BigInteger.ZERO,
+                converter.convertToModel("", new ValueContext()));
+        Assert.assertEquals("0", converter
+                .convertToPresentation(BigInteger.ZERO, new ValueContext()));
+    }
+
 }

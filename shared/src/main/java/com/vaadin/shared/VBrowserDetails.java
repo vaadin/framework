@@ -47,11 +47,12 @@ public class VBrowserDetails implements Serializable {
     private boolean isWindowsPhone;
     private boolean isIPad;
     private boolean isIPhone;
+    private boolean isChromeOS;
 
     private OperatingSystem os = OperatingSystem.UNKNOWN;
 
     public enum OperatingSystem {
-        UNKNOWN, WINDOWS, MACOSX, LINUX, IOS, ANDROID;
+        UNKNOWN, WINDOWS, MACOSX, LINUX, IOS, ANDROID, CHROMEOS;
     }
 
     private float browserEngineVersion = -1;
@@ -79,7 +80,8 @@ public class VBrowserDetails implements Serializable {
         isWebKit = !isTrident && userAgent.indexOf("applewebkit") != -1;
 
         // browser name
-        isChrome = userAgent.indexOf(" chrome/") != -1;
+        isChrome = userAgent.indexOf(" chrome/") != -1
+                || userAgent.indexOf(" crios/") != -1;
         isOpera = userAgent.indexOf("opera") != -1;
         isIE = userAgent.indexOf("msie") != -1 && !isOpera
                 && (userAgent.indexOf("webtv") == -1);
@@ -120,13 +122,13 @@ public class VBrowserDetails implements Serializable {
                         .substring(userAgent.indexOf("webkit/") + 7);
                 tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
                 browserEngineVersion = Float.parseFloat(tmp);
-            } else if (isIE) {
-                int tridentPos = userAgent.indexOf("trident/");
-                if (tridentPos >= 0) {
-                    String tmp = userAgent
-                            .substring(tridentPos + "Trident/".length());
-                    tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
-                    browserEngineVersion = Float.parseFloat(tmp);
+            } else if (isTrident) {
+                String tmp = userAgent
+                        .substring(userAgent.indexOf("trident/") + 8);
+                tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
+                browserEngineVersion = Float.parseFloat(tmp);
+                if (browserEngineVersion > 7) {
+                    browserEngineVersion = 7;
                 }
             } else if (isEdge) {
                 browserEngineVersion = 0;
@@ -148,6 +150,10 @@ public class VBrowserDetails implements Serializable {
                         tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
                         parseVersionString(tmp);
                     }
+                } else if (isTrident) {
+                    // See
+                    // https://msdn.microsoft.com/en-us/library/ms537503(v=vs.85).aspx#TriToken
+                    setIEMode((int) browserEngineVersion + 4);
                 } else {
                     String ieVersionString = userAgent
                             .substring(userAgent.indexOf("msie ") + 5);
@@ -159,7 +165,12 @@ public class VBrowserDetails implements Serializable {
                 int i = userAgent.indexOf(" firefox/") + 9;
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
             } else if (isChrome) {
-                int i = userAgent.indexOf(" chrome/") + 8;
+                int i = userAgent.indexOf(" chrome/");
+                if (i != -1) {
+                    i += " chrome/".length();
+                } else {
+                    i = userAgent.indexOf(" crios/") + " crios/".length();
+                }
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
             } else if (isSafari) {
                 int i = userAgent.indexOf(" version/") + 9;
@@ -206,6 +217,48 @@ public class VBrowserDetails implements Serializable {
                 parseIOSVersion(userAgent);
             } else {
                 os = OperatingSystem.MACOSX;
+            }
+        } else if (userAgent.contains("; cros ")) {
+            os = OperatingSystem.CHROMEOS;
+            isChromeOS = true;
+            parseChromeOSVersion(userAgent);
+        }
+    }
+
+    // (X11; CrOS armv7l 6946.63.0)
+    private void parseChromeOSVersion(String userAgent) {
+        int start = userAgent.indexOf("; cros ");
+        if (start == -1) {
+            return;
+        }
+        int end = userAgent.indexOf(')', start);
+        if (end == -1) {
+            return;
+        }
+        int cur = end;
+        while (cur >= start && userAgent.charAt(cur) != ' ') {
+            cur--;
+        }
+        if (cur == start) {
+            return;
+        }
+        String osVersionString = userAgent.substring(cur + 1, end);
+        String[] parts = osVersionString.split("\\.");
+        parseChromeOsVersion(parts);
+    }
+
+    private void parseChromeOsVersion(String[] parts) {
+        osMajorVersion = -1;
+        osMinorVersion = -1;
+
+        if (parts.length > 2) {
+            try {
+                osMajorVersion = Integer.parseInt(parts[1]);
+            } catch (Exception e) {
+            }
+            try {
+                osMinorVersion = Integer.parseInt(parts[0]);
+            } catch (Exception e) {
             }
         }
     }
@@ -348,6 +401,17 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isSafari() {
         return isSafari;
+    }
+
+    /**
+     * Tests if the browser is Safari or runs on IOS (covering also Chrome on
+     * iOS).
+     *
+     * @return true if it is Safari or running on IOS, false otherwise
+     * @since 8.1
+     */
+    public boolean isSafariOrIOS() {
+        return isSafari() || isIOS();
     }
 
     /**
@@ -538,6 +602,16 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
+     * Tests if the browser is run on Chrome OS (e.g. a Chromebook).
+     *
+     * @return true if run on Chrome OS, false otherwise
+     * @since 8.1.1
+     */
+    public boolean isChromeOS() {
+        return isChromeOS;
+    }
+
+    /**
      * Returns the major version of the operating system. Currently only
      * supported for mobile devices (iOS/Android)
      *
@@ -565,7 +639,6 @@ public class VBrowserDetails implements Serializable {
      *         supported or might work
      */
     public boolean isTooOldToFunctionProperly() {
-        // Check Trident version to detect compatibility mode
         if (isIE() && getBrowserMajorVersion() < 11) {
             return true;
         }
@@ -573,10 +646,44 @@ public class VBrowserDetails implements Serializable {
         if (isSafari() && getBrowserEngineVersion() < 533) {
             return true;
         }
-        if (isFirefox() && getBrowserMajorVersion() < 4) {
+        if (isFirefox() && getBrowserMajorVersion() < 45) {
             return true;
         }
         if (isOpera() && getBrowserMajorVersion() < 11) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether the browser should support ES6 based on its vendor and
+     * version number.
+     *
+     * @return true if the browser supports ES6
+     * @since 8.1
+     */
+    public boolean isEs6Supported() {
+        // Safari 10+
+        if (isSafari() && getBrowserMajorVersion() >= 10) {
+            return true;
+        }
+        // Firefox 51+
+        if (isFirefox() && getBrowserMajorVersion() >= 51) {
+            return true;
+        }
+        // Opera 36+
+        if (isOpera() && getBrowserMajorVersion() >= 36) {
+            return true;
+        }
+        // Chrome 49+
+        if (isChrome() && getBrowserMajorVersion() >= 49) {
+            return true;
+        }
+        // Edge 15.15063+
+        if (isEdge() && (getBrowserMajorVersion() > 15
+                || (getBrowserMajorVersion() == 15
+                        && getBrowserMinorVersion() >= 15063))) {
             return true;
         }
 

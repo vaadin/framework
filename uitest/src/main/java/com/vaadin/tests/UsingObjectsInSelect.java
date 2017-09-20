@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;

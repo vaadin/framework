@@ -40,6 +40,7 @@ import elemental.json.JsonValue;
  *            the grid type this renderer can be attached to
  * @param <V>
  *            the type this renderer knows how to present
+ * @since 8.0
  */
 public abstract class AbstractRenderer<T, V> extends AbstractExtension
         implements Renderer<V> {

@@ -12,8 +12,7 @@ import com.vaadin.data.provider.Query;
  *
  * @author Vaadin Ltd
  */
-public class ItemDataProvider
-        extends CallbackDataProvider<String, String> {
+public class ItemDataProvider extends CallbackDataProvider<String, String> {
 
     public ItemDataProvider(int size) {
         super(q -> itemStream(q, size).skip(q.getOffset()).limit(q.getLimit()),

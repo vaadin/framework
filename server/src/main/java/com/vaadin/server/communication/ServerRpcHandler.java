@@ -275,9 +275,6 @@ public class ServerRpcHandler implements Serializable {
                     rpcRequest.getRpcInvocationsData());
         }
 
-        ui.getConnectorTracker()
-                .cleanConcurrentlyRemovedConnectorIds(rpcRequest.getSyncId());
-
         if (rpcRequest.isResynchronize()) {
             ui.getSession().getCommunicationManager().repaintAll(ui);
         }
@@ -353,11 +350,9 @@ public class ServerRpcHandler implements Serializable {
                 final ClientConnector connector = connectorTracker
                         .getConnector(invocation.getConnectorId());
                 if (connector == null) {
-                    getLogger().log(Level.WARNING,
-                            "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
-                            new Object[] { invocation.getConnectorId(),
-                                    invocation.getInterfaceName(),
-                                    invocation.getMethodName() });
+                    logUnknownConnector(invocation.getConnectorId(),
+                            invocation.getInterfaceName(),
+                            invocation.getMethodName());
                     continue;
                 }
 
@@ -426,6 +421,13 @@ public class ServerRpcHandler implements Serializable {
         }
     }
 
+    private void logUnknownConnector(String connectorId, String interfaceName,
+            String methodName) {
+        getLogger().log(Level.FINE,
+                "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
+                new Object[] { connectorId, interfaceName, methodName });
+    }
+
     /**
      * Handles the given RPC method invocation for the given connector
      *
@@ -457,7 +459,7 @@ public class ServerRpcHandler implements Serializable {
      *            the UI containing the connector
      * @param connector
      *            the connector the RPC is targeted to
-     * @param invocation
+     * @param legacyInvocation
      *            information about the rpc to invoke
      */
     protected void handleInvocation(UI ui, ClientConnector connector,
@@ -529,22 +531,6 @@ public class ServerRpcHandler implements Serializable {
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
 
-        if (connectorTracker.getConnector(connectorId) == null && !connectorId
-                .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
-
-            if (!connectorTracker.connectorWasPresentAsRequestWasSent(
-                    connectorId, lastSyncIdSeenByClient)) {
-                getLogger().log(Level.WARNING, "RPC call to " + interfaceName
-                        + "." + methodName + " received for connector "
-                        + connectorId
-                        + " but no such connector could be found. Resynchronizing client.");
-                // This is likely an out of sync issue (client tries to update a
-                // connector which is not present). Force resync.
-                connectorTracker.markAllConnectorsDirty();
-            }
-            return null;
-        }
-
         JsonArray parametersJson = invocationJson.getArray(3);
 
         if (LegacyChangeVariablesInvocation
@@ -594,7 +580,10 @@ public class ServerRpcHandler implements Serializable {
             JsonArray parametersJson, ConnectorTracker connectorTracker)
             throws JsonException {
         ClientConnector connector = connectorTracker.getConnector(connectorId);
-
+        if (connector == null) {
+            logUnknownConnector(connectorId, interfaceName, methodName);
+            return null;
+        }
         ServerRpcManager<?> rpcManager = connector.getRpcManager(interfaceName);
         if (rpcManager == null) {
             /*
@@ -602,10 +591,12 @@ public class ServerRpcHandler implements Serializable {
              * corresponding to the received method invocation has been
              * registered.
              */
-            getLogger().warning("Ignoring RPC call to " + interfaceName + "."
+            String message = "Ignoring RPC call to " + interfaceName + "."
                     + methodName + " in connector "
                     + connector.getClass().getName() + "(" + connectorId
-                    + ") as no RPC implementation is registered");
+                    + ") as no RPC implementation is registered";
+            assert rpcManager != null : message;
+            getLogger().warning(message);
             return null;
         }
 

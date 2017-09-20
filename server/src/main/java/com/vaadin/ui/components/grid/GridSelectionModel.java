@@ -43,4 +43,27 @@ public interface GridSelectionModel<T> extends SelectionModel<T>, Extension {
      */
     @Override
     public void remove();
+
+    /**
+     * Sets whether the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     *
+     * @param allowed
+     *            <code>true</code> if the user is allowed to change the
+     *            selection, <code>false</code> otherwise
+     */
+    public void setUserSelectionAllowed(boolean allowed);
+
+    /**
+     * Checks if the user is allowed to change the selection.
+     * <p>
+     * The check is done only for the client side actions. It doesn't affect
+     * selection requests sent from the server side.
+     *
+     * @return <code>true</code> if the user is allowed to change the selection,
+     *         <code>false</code> otherwise
+     */
+    public boolean isUserSelectionAllowed();
 }

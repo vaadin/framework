@@ -2,6 +2,7 @@ package com.example;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.vaadin.testbench.ScreenshotOnFailureRule;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -23,6 +25,10 @@ import com.vaadin.testbench.parallel.Browser;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
+
+    @Rule
+    public ScreenshotOnFailureRule screenshotRule = new ScreenshotOnFailureRule(
+            this, true);
 
     @LocalServerPort
     Integer port;

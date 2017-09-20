@@ -31,6 +31,9 @@ import com.vaadin.v7.shared.ui.slider.SliderState;;
  * A component for selecting a numerical value within a range.
  *
  * @author Vaadin Ltd.
+ *
+ * @deprecated As of 8.0 replaced by {@link com.vaadin.ui.Slider} based on the
+ *             new data binding API
  */
 @Deprecated
 public class Slider extends AbstractField<Double> {

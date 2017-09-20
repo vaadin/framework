@@ -1,0 +1,147 @@
+---
+title: Migrating to Framework 8
+order: 1
+layout: page
+---
+[[migration]]
+== Migration from Framework 7 to Framework 8
+
+Most Vaadin Framework 7 applications will need some changes when migrating to Vaadin Framework 8.
+To make migration from version 7 to 8 as straightforward as possible, Vaadin Framework 8 ships with compatibility packages that include all the old features and APIs that have changed between versions.
+
+The recommended migration path to take for any non-trivial Vaadin application is to first switch any incompatible components to using the APIs available in the compatibility packages, after which parts of the application can be migrated separately.
+This is primarily to get an existing Framework 7 project up and running with Framework 8 as quickly as possible, as well as to avoid having to switch to using completely new APIs throughout an entire project all at once.
+
+=== Updating Project Dependencies
+
+The very first step in migration is to ensure that your project is configured to use Framework 8 dependencies, as well as include any of the desired compatibility packages needed in your migration.
+Also note that Framework 8 requires JDK 8 for development.
+For deployment configurations, refer to the list of supported technologies in the release notes, available at link:https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#supportedversions[].
+
+==== Updating Maven Dependencies
+
+For maven based projects including compatibility packages is simply a matter of changing the artifactId of the desired non-compatibility dependency to the compatibility variant.
+For example in the case of changing the vaadin-server dependency from Framework version 7.7.6 to 8.0.0 would require changing
+
+```xml
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-server</artifactId>
+  <version>7.7.6</version>
+</dependency>
+```
+
+to either
+
+```xml
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-compatibility-server</artifactId>
+  <version>8.0.0</version>
+</dependency>
+```
+
+for including both compatibility features as well as non-compatibility ones, or alternatively
+
+```xml
+<dependency>
+  <groupId>com.vaadin</groupId>
+  <artifactId>vaadin-server</artifactId>
+  <version>8.0.0</version>
+</dependency>
+```
+
+to only include Framework 8 features.
+The full list of compatibility packages available for Framework 8 are the following:
+
+* vaadin-compatibility-server
+* vaadin-compatibility-client
+* vaadin-compatibility-client-compiled
+* vaadin-compatibility-shared
+* vaadin-compatibility-themes
+
+IMPORTANT: The themes Reindeer, Runo, Chameleon and Base have been deprecated in Vaadin Framework 8 and they now reside in the compatibility-themes package.
+Applications still using any of these themes must include this package.
+
+==== Pro Tools
+
+For migration of projects using Vaadin Pro Tools check the following sections:
+
+* <<dummy/../../../charts/java-api/charts-migration-vaadin8.asciidoc#charts4.migration, "Charts 3 to Charts 4 Migration Guide">> 
+
+* <<dummy/../../../testbench/testbench-migration.asciidoc#testbench.migration, "TestBench 4 to TestBench 5 Migration Guide">> 
+
+* <<dummy/../../../spreadsheet/spreadsheet-migration-vaaadin8.asciidoc#spreadsheet.migration, "Spreadsheet 1 to Spreadsheet 2 Migration Guide">> 
+
+==== Add-ons
+
+As with projects themselves, some addons built for Framework 7 will not be directly compatible with Framework 8, thus any add-on dependencies must also be updated to versions that are compatible with Framework 8.
+Be sure to check the add-on directory at link:https://vaadin.com/directory[] for updates to add-ons your project depends on.
+
+For add-on developers, the same steps outlined in this guide can also be applied to upgrading your add-ons from Framework 7 to 8.
+
+=== Using The Compatibility Packages
+
+Once your project's dependencies have been updated for Framework 8 migration there are a few steps to begin using the compatibility versions of the old APIs, namely changing of imports and ensuring that your widgetset is correctly set up.
+Optionally, if you are using Vaadin Designer or declarative files otherwise, the tag names for compatibility components need to be updated.
+
+==== The Migration Tool
+
+To ease the migration process, the vaadin maven plugin has a target `vaadin:upgrade8` which updates all
+imports in java files and prefixes in design files to point to the versions in the compatibility packages.
+This migration tool is available separately at link:https://github.com/vaadin/framework8-migration-tool[].
+
+==== Changing Imports
+
+The only change to classes in the compatibility packages is the change in their classpath. All compatibility classes can be found under `com.vaadin.v7.*`.
+For example the compatibility `TextField` is available through the import `import com.vaadin.v7.ui.TextField`, given that the project dependencies have been set up to include the compatibility variants, as described in the previous section.
+
+==== Widgetset Changes
+
+When using compatibility packages in your project you need to changes references from the default vaadin client side widgetset `com.vaadin.DefaultWidgetSet` to the one containing the compatibility packages `com.vaadin.v7.Vaadin7WidgetSet`, which is available in the vaadin-compatibility-client-compiled maven dependency.
+Typically, widgetset recompilation will handle this automatically for you, except for the following two cases which should be handled manually:
+
+* Your project defines a custom widgetset, in which case you need to make sure `Vaadin7WidgetSet` is inherited
+* An UI in your project defines its widgetset with the annotation `@Widgetset("com.vaadin.DefaultWidgetSet")`, which should be changed to `@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")`
+
+IMPORTANT: The widgetset compilation for `Vaadin7WidgetSet` requires at least 1G of memory. To ensure this, add
+`<extraJvmArgs>-Xmx1G</extraJvmArgs>` to the vaadin-maven-plugin configuration in your `pom.xml` file.
+
+==== Using Compatibility Components In Declarative Files
+
+Using components from the compatibility packages in your declarative files only requires you to change the prefix from `vaadin-` or alternatively `v-` to `vaadin7-`.
+For example, the conversion of a `com.vaadin.ui.TextField`
+
+```html
+  <vaadin-text-field _id="textField" />
+```
+
+to its compatibility equivalent, `com.vaadin.v7.ui.TextField`, would simply be achieved with the following replacement
+
+```html
+  <vaadin7-text-field _id="textField" />
+```
+
+in the corresponding design html file.
+
+
+=== Next Steps
+
+By replacing incompatible components of your application with ones from the compatibility packages your project should now be in a state where it can be compiled and run.
+To get started with using the new Framework 8 features it is now only a matter of replacing the usage of compatibility APIs where desired.
+
+Aside from minor API and default changes at the component level, the largest change in Vaadin Framework 8 is its new data model.
+Framework 8 no longer uses `Item`, `Property` nor `Container`.
+These building blocks for the old data binding have been deprecated in favor of more Java 8 friendly APIs.
+
+The new data model can be roughly split into three main topics, namely binding data to field components, providing data to listing components and handling selections.
+The revised <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Binding Components to Data">> chapter is the recommended resource to get started with learning these new concepts.
+For migration from Framework 7 the key references are the following sections:
+
+* <<dummy/../../../framework/datamodel/datamodel-fields.asciidoc#datamodel.fields, "Editing Values in Fields">> and <<dummy/../../../framework/datamodel/datamodel-forms.asciidoc#datamodel.forms, "Binding Data to Forms">>, which cover the new data binding concepts that replace `Property` and `FieldGroup`.
+
+* <<dummy/../../../framework/datamodel/datamodel-providers.asciidoc#datamodel.providers, "Showing Many Items in a Listing">>, which covers the new `Container` and `Item` replacement, the `DataProvider`, as well as the associated sorting and filtering APIs.
+
+* And for the new selection APIs,  <<dummy/../../../framework/datamodel/datamodel-selection.asciidoc#datamodel.selection, "Selecting Items">>.
+
+For a full list of incompatible changes between Framework 7 and 8, please refer to the _Incompatible or Behavior-altering Changes_ section of the release notes, available at link:https://vaadin.com/download/prerelease/8.0/8.0.0/8.0.0.beta1/release-notes.html#incompatible[].

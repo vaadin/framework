@@ -19,7 +19,8 @@ import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * Client to server RPC interface for RichTextArea.
- *
+ * 
+ * @since 8.0
  */
 public interface RichTextAreaServerRpc extends ServerRpc {
 

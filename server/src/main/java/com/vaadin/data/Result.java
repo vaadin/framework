@@ -36,6 +36,8 @@ import com.vaadin.server.SerializableSupplier;
  *
  * @param <R>
  *            the result value type
+ *
+ * @since 8.0
  */
 public interface Result<R> extends Serializable {
 

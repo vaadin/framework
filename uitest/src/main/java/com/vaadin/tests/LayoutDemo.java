@@ -17,7 +17,7 @@
 package com.vaadin.tests;
 
 import com.vaadin.server.ClassResource;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;

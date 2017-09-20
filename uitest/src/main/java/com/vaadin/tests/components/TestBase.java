@@ -1,6 +1,6 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
@@ -22,7 +22,7 @@ public abstract class TestBase extends AbstractTestCase {
         window.getContent().setSizeFull();
 
         Label label = new Label(getDescription(), ContentMode.HTML);
-        if (label.getValue() == null || "".equals(label.getValue())) {
+        if (label.getValue() == null || label.getValue().isEmpty()) {
             // This is only an ugly hack to be screenshot compatible to be able
             // to detect real problems when introducing IE font-size/line-height
             // fixes

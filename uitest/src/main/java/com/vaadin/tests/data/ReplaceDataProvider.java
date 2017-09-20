@@ -19,16 +19,6 @@ public class ReplaceDataProvider extends AbstractTestUI {
             this.hash = hash;
             someField = "a";
         }
-
-        @Override
-        public int hashCode() {
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return true;
-        }
     }
 
     @Override

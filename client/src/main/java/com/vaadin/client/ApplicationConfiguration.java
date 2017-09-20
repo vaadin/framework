@@ -48,8 +48,6 @@ import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.debug.internal.theme.DebugWindowStyles;
 import com.vaadin.client.event.PointerEventSupport;
-import com.vaadin.client.metadata.BundleLoadCallback;
-import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
@@ -240,7 +238,9 @@ public class ApplicationConfiguration implements EntryPoint {
      * always end with a slash (/).
      */
     private String vaadinDirUrl;
+    private String frontendUrl;
     private String serviceUrl;
+    private String contextRootUrl;
     private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
@@ -311,6 +311,17 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
+     * Gets the URL to the context root of the web application
+     *
+     * @return the URL to the server-side context root as a string
+     *
+     * @since 8.0.3
+     */
+    public String getContextRootUrl() {
+        return contextRootUrl;
+    }
+
+    /**
      * @return the theme name used when initializing the application
      * @deprecated as of 7.3. Use {@link UIConnector#getActiveTheme()} to get
      *             the theme currently in use
@@ -327,6 +338,17 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public String getVaadinDirUrl() {
         return vaadinDirUrl;
+    }
+
+    /**
+     * Gets the URL of the that the {@literal frontend://} protocol should
+     * resolve to.
+     *
+     * @return the URL of the frontend protocol
+     * @since 8.1
+     */
+    public String getFrontendUrl() {
+        return frontendUrl;
     }
 
     public void setAppId(String appId) {
@@ -394,7 +416,7 @@ public class ApplicationConfiguration implements EntryPoint {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
         serviceUrl = jsoConfiguration
                 .getConfigString(ApplicationConstants.SERVICE_URL);
-        if (serviceUrl == null || "".equals(serviceUrl)) {
+        if (serviceUrl == null || serviceUrl.isEmpty()) {
             /*
              * Use the current url without query parameters and fragment as the
              * default value.
@@ -413,8 +435,12 @@ public class ApplicationConfiguration implements EntryPoint {
             serviceUrl += '/';
         }
 
+        contextRootUrl = jsoConfiguration
+                .getConfigString(ApplicationConstants.CONTEXT_ROOT_URL);
         vaadinDirUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
                 .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
+        frontendUrl = WidgetUtil.getAbsoluteUrl(jsoConfiguration
+                .getConfigString(ApplicationConstants.FRONTEND_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
 
@@ -624,14 +650,18 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
+     * Runs the given command when all pending dependencies have been loaded, or
+     * immediately if no dependencies are being loaded.
+     *
      * @since 7.6
-     * @param c
+     * @param command
+     *            the command to run
      */
-    public static void runWhenDependenciesLoaded(Command c) {
+    public static void runWhenDependenciesLoaded(Command command) {
         if (dependenciesLoading == 0) {
-            c.execute();
+            command.execute();
         } else {
-            callbacks.add(c);
+            callbacks.add(command);
         }
     }
 
@@ -646,22 +676,6 @@ public class ApplicationConfiguration implements EntryPoint {
                 cmd.execute();
             }
             callbacks.clear();
-        } else if (dependenciesLoading == 0 && !ConnectorBundleLoader.get()
-                .isBundleLoaded(ConnectorBundleLoader.DEFERRED_BUNDLE_NAME)) {
-            ConnectorBundleLoader.get().loadBundle(
-                    ConnectorBundleLoader.DEFERRED_BUNDLE_NAME,
-                    new BundleLoadCallback() {
-                        @Override
-                        public void loaded() {
-                            // Nothing to do
-                        }
-
-                        @Override
-                        public void failed(Throwable reason) {
-                            getLogger().log(Level.SEVERE,
-                                    "Error loading deferred bundle", reason);
-                        }
-                    });
         }
     }
 
@@ -700,56 +714,6 @@ public class ApplicationConfiguration implements EntryPoint {
         // Register pointer events (must be done before any events are used)
         PointerEventSupport.init();
 
-        // Prepare the debugging window
-        if (isDebugMode()) {
-            /*
-             * XXX Lots of implementation details here right now. This should be
-             * cleared up when an API for extending the debug window is
-             * implemented.
-             */
-            VDebugWindow window = VDebugWindow.get();
-
-            if (LogConfiguration.loggingIsEnabled()) {
-                window.addSection((Section) GWT.create(LogSection.class));
-            }
-            window.addSection((Section) GWT.create(InfoSection.class));
-            window.addSection((Section) GWT.create(HierarchySection.class));
-            window.addSection((Section) GWT.create(NetworkSection.class));
-            window.addSection((Section) GWT.create(TestBenchSection.class));
-            if (Profiler.isEnabled()) {
-                window.addSection((Section) GWT.create(ProfilerSection.class));
-            }
-
-            if (isQuietDebugMode()) {
-                window.close();
-            } else {
-                // Load debug window styles asynchronously
-                GWT.runAsync(new RunAsyncCallback() {
-                    @Override
-                    public void onSuccess() {
-                        DebugWindowStyles dws = GWT
-                                .create(DebugWindowStyles.class);
-                        dws.css().ensureInjected();
-                    }
-
-                    @Override
-                    public void onFailure(Throwable reason) {
-                        Window.alert(
-                                "Failed to load Vaadin debug window styles");
-                    }
-                });
-
-                window.init();
-            }
-
-            // Connect to the legacy API
-            VConsole.setImplementation(window);
-
-            Handler errorNotificationHandler = GWT
-                    .create(ErrorNotificationHandler.class);
-            Logger.getLogger("").addHandler(errorNotificationHandler);
-        }
-
         if (LogConfiguration.loggingIsEnabled()) {
             GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
@@ -777,7 +741,62 @@ public class ApplicationConfiguration implements EntryPoint {
             // page once done compiling
             return;
         }
-        registerCallback(GWT.getModuleName());
+
+        if (isDebugMode()) {
+            // Load debug window bundle and continue the bootstrap sequence once
+            // it's loaded
+            GWT.runAsync(VDebugWindow.class, new RunAsyncCallback() {
+                @Override
+                public void onSuccess() {
+                    initDebugWindow();
+                    registerCallback(GWT.getModuleName());
+                }
+
+                @Override
+                public void onFailure(Throwable reason) {
+                    Window.alert("Failed to load Vaadin debug window");
+                    registerCallback(GWT.getModuleName());
+                }
+            });
+        } else {
+            // Continue the bootstrap sequence right away
+            registerCallback(GWT.getModuleName());
+        }
+    }
+
+    private static void initDebugWindow() {
+        /*
+         * XXX Lots of implementation details here right now. This should be
+         * cleared up when an API for extending the debug window is implemented.
+         */
+        VDebugWindow window = VDebugWindow.get();
+
+        if (LogConfiguration.loggingIsEnabled()) {
+            window.addSection((Section) GWT.create(LogSection.class));
+        }
+        window.addSection((Section) GWT.create(InfoSection.class));
+        window.addSection((Section) GWT.create(HierarchySection.class));
+        window.addSection((Section) GWT.create(NetworkSection.class));
+        window.addSection((Section) GWT.create(TestBenchSection.class));
+        if (Profiler.isEnabled()) {
+            window.addSection((Section) GWT.create(ProfilerSection.class));
+        }
+
+        if (isQuietDebugMode()) {
+            window.close();
+        } else {
+            DebugWindowStyles dws = GWT.create(DebugWindowStyles.class);
+            dws.css().ensureInjected();
+
+            window.init();
+        }
+
+        // Connect to the legacy API
+        VConsole.setImplementation(window);
+
+        Handler errorNotificationHandler = GWT
+                .create(ErrorNotificationHandler.class);
+        Logger.getLogger("").addHandler(errorNotificationHandler);
     }
 
     /**

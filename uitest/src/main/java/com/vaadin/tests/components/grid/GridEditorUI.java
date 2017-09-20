@@ -19,9 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
-import com.vaadin.data.Binder;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.tests.util.Person;
 import com.vaadin.tests.util.TestDataGenerator;
 import com.vaadin.ui.Grid;
@@ -30,7 +29,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.renderers.NumberRenderer;
 
-public class GridEditorUI extends AbstractTestUI {
+public class GridEditorUI extends AbstractReindeerTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -67,40 +66,36 @@ public class GridEditorUI extends AbstractTestUI {
     protected Grid<Person> createGrid() {
         Grid<Person> grid = new Grid<>();
 
-        Binder<Person> binder = new Binder<>();
-        grid.getEditor().setBinder(binder);
-
-        grid.addColumn(Person::getEmail).setCaption("Email");
+        grid.addColumn(Person::getEmail).setCaption("Email").setId("email");
         Column<Person, String> fistNameColumn = grid
-                .addColumn(Person::getFirstName).setCaption("First Name");
+                .addColumn(Person::getFirstName).setCaption("First Name")
+                .setId("firstName");
         Column<Person, String> lastNameColumn = grid
-                .addColumn(Person::getLastName).setCaption("Last Name");
+                .addColumn(Person::getLastName).setCaption("Last Name")
+                .setId("lastName");
 
         Column<Person, String> phoneColumn = grid
-                .addColumn(Person::getPhoneNumber).setCaption("Phone Number");
+                .addColumn(Person::getPhoneNumber).setCaption("Phone Number")
+                .setId("phone");
         grid.addColumn(person -> person.getAddress().getStreetAddress())
-                .setCaption("Street Address");
+                .setCaption("Street Address").setId("street");
         grid.addColumn(person -> person.getAddress().getPostalCode(),
-                new NumberRenderer()).setCaption("Postal Code");
+                new NumberRenderer()).setCaption("Postal Code").setId("zip");
         grid.addColumn(person -> person.getAddress().getCity())
-                .setCaption("City");
+                .setCaption("City").setId("city");
 
         grid.getEditor().setEnabled(true);
 
         PasswordField passwordField = new PasswordField();
-        fistNameColumn.setEditorComponent(passwordField);
-        binder.bind(passwordField, Person::getFirstName, Person::setFirstName);
+        fistNameColumn.setEditorComponent(passwordField, Person::setFirstName);
 
         TextField lastNameEditor = new TextField();
-        lastNameColumn.setEditorComponent(lastNameEditor);
+        lastNameColumn.setEditorComponent(lastNameEditor, Person::setLastName);
         lastNameEditor.setMaxLength(50);
-        binder.bind(lastNameEditor, Person::getLastName, Person::setLastName);
 
         TextField phoneEditor = new TextField();
         phoneEditor.setReadOnly(true);
-        phoneColumn.setEditorComponent(phoneEditor);
-        binder.bind(phoneEditor, Person::getPhoneNumber,
-                Person::setPhoneNumber);
+        phoneColumn.setEditorComponent(phoneEditor, Person::setPhoneNumber);
 
         return grid;
     }

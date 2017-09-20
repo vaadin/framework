@@ -18,10 +18,11 @@ package com.vaadin.tests.components.radiobutton;
 import java.util.LinkedHashMap;
 import java.util.stream.IntStream;
 
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for RadioButtonGroup component
@@ -46,6 +47,7 @@ public class RadioButtonGroupTestUI
         createSelectionMenu();
         createItemIconGeneratorMenu();
         createItemCaptionGeneratorMenu();
+        createItemDescriptionGeneratorMenu();
     }
 
     protected void createSelectionMenu() {
@@ -71,7 +73,7 @@ public class RadioButtonGroupTestUI
             boolean activate, Object data) {
         if (activate) {
             group.setItemIconGenerator(
-                    item -> FontAwesome.values()[getIndex(item) + 1]);
+                    item -> VaadinIcons.values()[getIndex(item) + 1]);
         } else {
             group.setItemIconGenerator(item -> null);
         }
@@ -88,6 +90,21 @@ public class RadioButtonGroupTestUI
         createSelectAction("Item Caption Generator", "Item Caption Generator",
                 options, "None", (radioButtonGroup, captionGenerator, data) -> {
                     radioButtonGroup.setItemCaptionGenerator(captionGenerator);
+                    radioButtonGroup.getDataProvider().refreshAll();
+                }, true);
+    }
+
+    private void createItemDescriptionGeneratorMenu() {
+        LinkedHashMap<String, DescriptionGenerator<Object>> options = new LinkedHashMap<>();
+        options.put("Null Description Generator", item -> null);
+        options.put("Default Description Generator", item -> item.toString());
+        options.put("Custom Description Generator",
+                item -> item.toString() + " Description");
+
+        createSelectAction("Item Description Generator",
+                "Item Description Generator", options, "None",
+                (radioButtonGroup, generator, data) -> {
+                    radioButtonGroup.setItemDescriptionGenerator(generator);
                     radioButtonGroup.getDataProvider().refreshAll();
                 }, true);
     }

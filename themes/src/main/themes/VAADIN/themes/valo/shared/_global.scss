@@ -329,21 +329,13 @@ $valo-shared-pathPrefix: null;
     @include valo-nativeselect-select-style;
   }
 
-  button {
-    font: inherit;
-    font-weight: 400;
-    line-height: $v-line-height;
-  }
-
-  a {
-    @include valo-link-style;
-  }
-
   .v-disabled {
     cursor: default !important;
   }
 
   @include valo-drag-element;
+
+  @include valo-draggable;
 
   @include valo-tooltip;
 

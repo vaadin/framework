@@ -141,7 +141,7 @@ public class Upload extends AbstractComponent
     /**
      * Invoked when the value of a variable has changed.
      *
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
+     * @see com.vaadin.ui.LegacyComponent#changeVariables(java.lang.Object,
      *      java.util.Map)
      */
     @Override
@@ -237,9 +237,9 @@ public class Upload extends AbstractComponent
                     .getDeclaredMethod("uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
                     .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }
@@ -344,7 +344,7 @@ public class Upload extends AbstractComponent
          * @param filename
          * @param MIMEType
          * @param length
-         * @param exception
+         * @param reason
          */
         public FailedEvent(Upload source, String filename, String MIMEType,
                 long length, Exception reason) {
@@ -358,7 +358,6 @@ public class Upload extends AbstractComponent
          * @param filename
          * @param MIMEType
          * @param length
-         * @param exception
          */
         public FailedEvent(Upload source, String filename, String MIMEType,
                 long length) {
@@ -456,7 +455,7 @@ public class Upload extends AbstractComponent
          * @param source
          * @param filename
          * @param MIMEType
-         * @param length
+         * @param contentLength
          */
         public StartedEvent(Upload source, String filename, String MIMEType,
                 long contentLength) {
@@ -635,6 +634,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addStartedListener(StartedListener listener) {
         return addListener(StartedEvent.class, listener, UPLOAD_STARTED_METHOD);
@@ -656,6 +656,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addFinishedListener(FinishedListener listener) {
         return addListener(FinishedEvent.class, listener,
@@ -678,6 +679,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addFailedListener(FailedListener listener) {
         return addListener(FailedEvent.class, listener, UPLOAD_FAILED_METHOD);
@@ -699,6 +701,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to be added, not null
+     * @since 8.0
      */
     public Registration addSucceededListener(SucceededListener listener) {
         return addListener(SucceededEvent.class, listener,
@@ -721,6 +724,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the progress listener to be added
+     * @since 8.0
      */
     public Registration addProgressListener(ProgressListener listener) {
         Objects.requireNonNull(listener, "Listener must not be null.");
@@ -753,6 +757,7 @@ public class Upload extends AbstractComponent
      *
      * @param listener
      *            the Listener to add, not null
+     * @since 8.0
      */
     public Registration addChangeListener(ChangeListener listener) {
         return addListener(EventId.CHANGE, ChangeEvent.class, listener,
@@ -775,7 +780,6 @@ public class Upload extends AbstractComponent
      *
      * @param filename
      * @param MIMEType
-     * @param length
      */
     protected void fireStarted(String filename, String MIMEType) {
         fireEvent(new Upload.StartedEvent(this, filename, MIMEType,
@@ -837,9 +841,7 @@ public class Upload extends AbstractComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners
-                    .iterator(); it.hasNext();) {
-                ProgressListener l = it.next();
+            for (ProgressListener l : progressListeners) {
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -1138,6 +1140,7 @@ public class Upload extends AbstractComponent
      *
      * @param immediateMode
      *            {@code true} for immediate mode, {@code false} for not
+     * @since 8.0
      */
     public void setImmediateMode(boolean immediateMode) {
         getState().immediateMode = immediateMode;
@@ -1151,6 +1154,7 @@ public class Upload extends AbstractComponent
      * @return {@code true} if the upload is in immediate mode, {@code false} if
      *         the upload is not in immediate mode
      * @see #setImmediateMode(boolean)
+     * @since 8.0
      */
     public boolean isImmediateMode() {
         return getState(false).immediateMode;

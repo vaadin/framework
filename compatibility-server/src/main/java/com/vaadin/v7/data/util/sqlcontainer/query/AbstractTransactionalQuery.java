@@ -30,6 +30,8 @@ import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
  *
  * @author Vaadin Ltd
  * @since 6.8.9
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public abstract class AbstractTransactionalQuery implements Serializable {

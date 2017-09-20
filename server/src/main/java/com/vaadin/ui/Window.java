@@ -59,7 +59,6 @@ import com.vaadin.util.ReflectTools;
  * A component that represents a floating popup window that can be added to a
  * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}.
- * </p>
  * <p>
  * The contents of a window is set using {@link #setContent(Component)} or by
  * using the {@link #Window(String, Component)} constructor.
@@ -338,7 +337,7 @@ public class Window extends Panel
      *
      * @see UI#addWindowOrderUpdateListener(com.vaadin.ui.UI.WindowOrderUpdateListener)
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return window order position.
      */
@@ -367,9 +366,9 @@ public class Window extends Panel
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
                     .getDeclaredMethod("windowClose", CloseEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window close method not found");
         }
     }
@@ -468,6 +467,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the WindowModeChangeListener to add.
+     * @since 8.0
      */
     public Registration addWindowOrderChangeListener(
             WindowOrderChangeListener listener) {
@@ -528,6 +528,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the CloseListener to add, not null
+     * @since 8.0
      */
     public Registration addCloseListener(CloseListener listener) {
         return addListener(CloseEvent.class, listener, WINDOW_CLOSE_METHOD);
@@ -627,6 +628,7 @@ public class Window extends Panel
      *
      * @param listener
      *            the WindowModeChangeListener to add.
+     * @since 8.0
      */
     public Registration addWindowModeChangeListener(
             WindowModeChangeListener listener) {
@@ -660,9 +662,9 @@ public class Window extends Panel
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
                     .getDeclaredMethod("windowResized", ResizeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window resized method not found");
         }
     }
@@ -710,6 +712,7 @@ public class Window extends Panel
      * @param listener
      *            the listener to add, not null
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addResizeListener(ResizeListener listener) {
         return addListener(ResizeEvent.class, listener, WINDOW_RESIZE_METHOD);
@@ -1282,7 +1285,7 @@ public class Window extends Panel
      * This postfix is read to assistive device users after the window caption,
      * but not visible on the page.
      *
-     * @param prefix
+     * @param assistivePostfix
      *            String that is placed after the window caption
      */
     public void setAssistivePostfix(String assistivePostfix) {

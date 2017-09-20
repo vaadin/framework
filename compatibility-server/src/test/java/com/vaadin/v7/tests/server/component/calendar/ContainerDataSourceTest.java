@@ -279,7 +279,7 @@ public class ContainerDataSourceTest {
 
         // Use a container data source
         calendar.setEventProvider(new ContainerEventProvider(
-                new BeanItemContainer<>(BasicEvent.class)));
+                new BeanItemContainer<BasicEvent>(BasicEvent.class)));
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -307,7 +307,7 @@ public class ContainerDataSourceTest {
 
         // Use a container data source
         calendar.setEventProvider(new ContainerEventProvider(
-                new BeanItemContainer<>(BasicEvent.class)));
+                new BeanItemContainer<BasicEvent>(BasicEvent.class)));
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -366,7 +366,7 @@ public class ContainerDataSourceTest {
 
     @Test
     public void testAutomaticScaleVisibleHoursOfDay() {
-        BeanItemContainer<CalendarEvent> container = new BeanItemContainer<>(
+        BeanItemContainer<CalendarEvent> container = new BeanItemContainer<CalendarEvent>(
                 CalendarEvent.class);
         java.util.Calendar start = java.util.Calendar.getInstance();
         java.util.Calendar end = java.util.Calendar.getInstance();
@@ -416,7 +416,7 @@ public class ContainerDataSourceTest {
     }
 
     private static Indexed createTestBeanItemContainer() {
-        BeanItemContainer<CalendarEvent> eventContainer = new BeanItemContainer<>(
+        BeanItemContainer<CalendarEvent> eventContainer = new BeanItemContainer<CalendarEvent>(
                 CalendarEvent.class);
         java.util.Calendar cal = java.util.Calendar.getInstance();
         for (int i = 1; i <= 10; i++) {

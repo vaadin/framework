@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.loginform.LoginFormConstants;
 import com.vaadin.shared.ui.loginform.LoginFormRpc;
@@ -271,9 +272,9 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * implementations, override {@link #createUsernameField()},
      * {@link #createPasswordField()} and {@link #createLoginButton()}. If you
      * only want to change the default captions, override
-     * {@link #getUsernameCaption()}, {@link #getPasswordCaption()}
-     * and {@link #getLoginButtonCaption()}. You do not have to use the login
-     * button in your layout.
+     * {@link #getUsernameCaption()}, {@link #getPasswordCaption()} and
+     * {@link #getLoginButtonCaption()}. You do not have to use the login button
+     * in your layout.
      *
      * @param userNameField
      *            the user name text field
@@ -307,7 +308,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
 
         StreamResource resource = new StreamResource(new LoginStreamSource(),
                 LoginFormConstants.LOGIN_RESOURCE_NAME);
-        resource.setMIMEType("text/html; charset=utf-8");
+        resource.setMIMEType(ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         resource.setCacheTime(-1);
         setResource(LoginFormConstants.LOGIN_RESOURCE_NAME, resource);
 
@@ -359,6 +360,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * @param listener
      *            the listener to add
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addLoginListener(LoginListener listener) {
         return addListener(LoginEvent.class, listener, ON_LOGIN_METHOD);

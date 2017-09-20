@@ -26,6 +26,7 @@ import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -42,6 +43,17 @@ public class VaadinServiceTest {
         public void sessionDestroy(SessionDestroyEvent event) {
             callCount++;
         }
+    }
+
+    private class TestServiceDestroyListener implements ServiceDestroyListener {
+
+        int callCount = 0;
+
+        @Override
+        public void serviceDestroy(ServiceDestroyEvent event) {
+            callCount++;
+        }
+
     }
 
     private String createCriticalNotification(String caption, String message,
@@ -169,4 +181,22 @@ public class VaadinServiceTest {
         return service;
     }
 
+    @Test
+    public void fireServiceDestroy() {
+        VaadinService service = createService();
+        TestServiceDestroyListener listener = new TestServiceDestroyListener();
+        TestServiceDestroyListener listener2 = new TestServiceDestroyListener();
+        service.addServiceDestroyListener(listener);
+        Registration remover2 = service.addServiceDestroyListener(listener2);
+
+        service.destroy();
+        Assert.assertEquals(1, listener.callCount);
+        Assert.assertEquals(1, listener2.callCount);
+        service.removeServiceDestroyListener(listener);
+        remover2.remove();
+
+        service.destroy();
+        Assert.assertEquals(1, listener.callCount);
+        Assert.assertEquals(1, listener2.callCount);
+    }
 }

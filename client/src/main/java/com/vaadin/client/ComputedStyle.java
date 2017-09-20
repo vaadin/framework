@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Element;
 
 public class ComputedStyle {
 
+    private static final String CONTENT_BOX = "content-box";
     protected final JavaScriptObject computedStyle;
     private final Element elem;
 
@@ -32,7 +33,6 @@ public class ComputedStyle {
      *
      * @param elem
      *            the element
-     * @return the computed style
      */
     public ComputedStyle(Element elem) {
         computedStyle = getComputedStyle(elem);
@@ -55,6 +55,7 @@ public class ComputedStyle {
     }-*/;
 
     /**
+     * Gets the value of the given property.
      *
      * @param name
      *            name of the CSS property in camelCase
@@ -130,7 +131,7 @@ public class ComputedStyle {
     }-*/;
 
     /**
-     * Retrieves the given computed property as an integer
+     * Retrieves the given computed property as an integer.
      *
      * Returns 0 if the property cannot be converted to an integer
      *
@@ -147,7 +148,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Retrieves the given computed property as a double
+     * Retrieves the given computed property as a double.
      *
      * Returns NaN if the property cannot be converted to a double
      *
@@ -165,8 +166,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current margin values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current margin values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getMargin() {
         int[] margin = { 0, 0, 0, 0 };
@@ -178,8 +181,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current padding values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current padding values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getPadding() {
         int[] padding = { 0, 0, 0, 0 };
@@ -191,8 +196,10 @@ public class ComputedStyle {
     }
 
     /**
-     * Get current border values from the DOM. The array order is the default
-     * CSS order: top, right, bottom, left.
+     * Get current border values from the DOM.
+     *
+     * @return an array containing four values for the four edges, in the
+     *         default CSS order: top, right, bottom, left.
      */
     public final int[] getBorder() {
         int[] border = { 0, 0, 0, 0 };
@@ -226,7 +233,7 @@ public class ComputedStyle {
     /**
      * Takes a String value e.g. "12px" and parses that to Integer 12.
      *
-     * @param String
+     * @param value
      *            a value starting with a number
      * @return Integer the value from the string before any non-numeric
      *         characters. If the value cannot be parsed to a number, returns
@@ -282,7 +289,7 @@ public class ComputedStyle {
     }-*/;
 
     /**
-     * Returns the sum of the top and bottom border width
+     * Returns the sum of the top and bottom border width.
      *
      * @since 7.5.3
      * @return the sum of the top and bottom border
@@ -295,7 +302,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the left and right border width
+     * Returns the sum of the left and right border width.
      *
      * @since 7.5.3
      * @return the sum of the left and right border
@@ -308,7 +315,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom padding
+     * Returns the sum of the top and bottom padding.
      *
      * @since 7.5.3
      * @return the sum of the top and bottom padding
@@ -321,7 +328,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom padding
+     * Returns the sum of the top and bottom padding.
      *
      * @since 7.5.3
      * @return the sum of the left and right padding
@@ -334,7 +341,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom margin
+     * Returns the sum of the top and bottom margin.
      *
      * @since 7.5.6
      * @return the sum of the top and bottom margin
@@ -347,7 +354,7 @@ public class ComputedStyle {
     }
 
     /**
-     * Returns the sum of the top and bottom margin
+     * Returns the sum of the left and right margin.
      *
      * @since 7.5.6
      * @return the sum of the left and right margin
@@ -357,6 +364,48 @@ public class ComputedStyle {
         marginWidth += getDoubleProperty("marginRight");
 
         return marginWidth;
+    }
+
+    /**
+     * Returns the current height, padding and border from the DOM.
+     *
+     * @return the computed height including padding and borders
+     */
+    public double getHeightIncludingBorderPadding() {
+        double h = getHeight();
+        if (BrowserInfo.get().isIE() || isContentBox()) {
+            // IE11 always returns only the height without padding/border
+            h += getBorderHeight() + getPaddingHeight();
+        }
+
+        return h;
+    }
+
+    /**
+     * Returns the current width, padding and border from the DOM.
+     *
+     * @return the computed width including padding and borders
+     */
+    public double getWidthIncludingBorderPadding() {
+        double w = getWidth();
+        if (BrowserInfo.get().isIE() || isContentBox()) {
+            // IE11 always returns only the width without padding/border
+            w += getBorderWidth() + getPaddingWidth();
+        }
+        return w;
+    }
+
+    private boolean isContentBox() {
+        return getBoxSizing().equals(CONTENT_BOX);
+    }
+
+    /**
+     * Returns the value of the boxSizing property.
+     *
+     * @return the value of the boxSizing property
+     */
+    private String getBoxSizing() {
+        return getProperty("boxSizing");
     }
 
 }

@@ -148,8 +148,8 @@ public class Responsive extends AbstractExtension {
      * Enable responsive width and height range styling for the target component
      * or UI instance.
      *
-     * @param target
-     *            The component which should be able to respond to width and/or
+     * @param components
+     *            The components which should be able to respond to width and/or
      *            height changes.
      */
     public static void makeResponsive(Component... components) {

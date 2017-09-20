@@ -15,11 +15,7 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Binder;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.server.VaadinRequest;
@@ -42,52 +38,36 @@ public class GridEditorCustomField extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<ComplexPerson> grid = createGrid();
-
         ListDataProvider<ComplexPerson> dataProvider = ComplexPerson
                 .createDataProvider(100);
 
-        grid.setDataProvider(dataProvider);
-
-        Set<String> cities = new HashSet<>();
-        dataProvider.fetch(new Query<>()).forEach(person -> {
-            cities.add(person.getAddress().getCity());
-        });
-        CustomCitySelect cityEditor = new CustomCitySelect(
-                cities.toArray(new String[cities.size()]));
+        String[] cities = dataProvider.fetch(new Query<>())
+                .map(person -> person.getAddress().getCity()).distinct()
+                .toArray(String[]::new);
+        CustomCitySelect cityEditor = new CustomCitySelect(cities);
 
         TextField firstNameField = new TextField();
         TextField lastNameField = new TextField();
-        Binder<ComplexPerson> binder = new Binder<>();
 
-        binder.bind(firstNameField, ComplexPerson::getFirstName,
-                ComplexPerson::setFirstName);
-        binder.bind(lastNameField, ComplexPerson::getLastName,
-                ComplexPerson::setLastName);
-        binder.bind(cityEditor, person -> person.getAddress().getCity(),
-                (person, city) -> person.getAddress().setCity(city));
-
-        grid.getEditor().setBinder(binder);
-        grid.getColumn(ADDRESS_CITY_IDENTIFIER).setEditorComponent(cityEditor);
-        grid.getColumn(FIRST_NAME_IDENTIFIER)
-                .setEditorComponent(firstNameField);
-        grid.getColumn(LAST_NAME_IDENTIFIER).setEditorComponent(lastNameField);
-
-        addComponent(grid);
-    }
-
-    private Grid<ComplexPerson> createGrid() {
         Grid<ComplexPerson> grid = new Grid<>();
         grid.setWidth("800px");
         grid.addColumn(person -> person.getFirstName())
-                .setId(FIRST_NAME_IDENTIFIER).setCaption("First Name");
+                .setId(FIRST_NAME_IDENTIFIER).setCaption("First Name")
+                .setEditorComponent(firstNameField,
+                        ComplexPerson::setFirstName);
         grid.addColumn(person -> person.getLastName())
-                .setId(LAST_NAME_IDENTIFIER).setCaption("Last Name");
+                .setId(LAST_NAME_IDENTIFIER).setCaption("Last Name")
+                .setEditorComponent(lastNameField, ComplexPerson::setLastName);
         grid.addColumn(person -> person.getAddress().getCity())
-                .setId(ADDRESS_CITY_IDENTIFIER).setCaption("City Name");
+                .setId(ADDRESS_CITY_IDENTIFIER).setCaption("City Name")
+                .setEditorComponent(cityEditor,
+                        (person, city) -> person.getAddress().setCity(city));
+
         grid.getEditor().setEnabled(true);
 
-        return grid;
+        grid.setDataProvider(dataProvider);
+
+        addComponent(grid);
     }
 
     public static class CustomCitySelect extends CustomField<String> {

@@ -608,12 +608,17 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             String widgetName) {
 
         List<String> ids = getIDsForConnector(connector);
+        String exactClass = connector.getConnection().getConfiguration()
+                .getServerSideClassNameForTag(connector.getTag());
+        if (!ids.contains(exactClass)) {
+            ids.add(exactClass);
+        }
 
         List<Integer> widgetTags = new ArrayList<>();
         widgetTags.addAll(getTags(widgetName));
 
         if (widgetTags.size() == 0) {
-            widgetTags.addAll(getTags("com.vaadin.ui" + widgetName));
+            widgetTags.addAll(getTags("com.vaadin.ui." + widgetName));
         }
 
         for (int i = 0, l = ids.size(); i < l; ++i) {

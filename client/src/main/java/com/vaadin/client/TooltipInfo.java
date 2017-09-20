@@ -15,11 +15,14 @@
  */
 package com.vaadin.client;
 
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.util.SharedUtil;
 
 public class TooltipInfo {
 
     private String title;
+
+    private ContentMode contentMode;
 
     private String errorMessageHtml;
 
@@ -32,16 +35,57 @@ public class TooltipInfo {
     }
 
     public TooltipInfo(String tooltip) {
-        setTitle(tooltip);
+        this(tooltip, ContentMode.PREFORMATTED);
     }
 
+    /**
+     * Constructs a new instance using the {@code tooltip} for the title and
+     * {@code errorMessage} as a description.
+     * 
+     * @param tooltip
+     *            tooltip title
+     * @param errorMessage
+     *            error description
+     * 
+     * @deprecated use {@link #TooltipInfo(String, ContentMode, String)} instead
+     */
+    @Deprecated
     public TooltipInfo(String tooltip, String errorMessage) {
-        this(tooltip, errorMessage, null);
+        this(tooltip, ContentMode.HTML, errorMessage, null);
     }
 
+    /**
+     * Constructs a new instance using the {@code tooltip} for the title,
+     * {@code errorMessage} as a description and {@code identifier} as its id.
+     * 
+     * @param tooltip
+     *            tooltip title
+     * @param errorMessage
+     *            error description
+     * @param identifier
+     * 
+     * @deprecated use {@link #TooltipInfo(String, ContentMode, String, Object)}
+     *             instead
+     */
+    @Deprecated
     public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
+        this(tooltip, ContentMode.HTML, errorMessage, identifier);
+    }
+
+    public TooltipInfo(String tooltip, ContentMode mode) {
+        setTitle(tooltip);
+        setContentMode(mode);
+    }
+
+    public TooltipInfo(String tooltip, ContentMode mode, String errorMessage) {
+        this(tooltip, mode, errorMessage, null);
+    }
+
+    public TooltipInfo(String tooltip, ContentMode mode, String errorMessage,
+            Object identifier) {
         setIdentifier(identifier);
         setTitle(tooltip);
+        setContentMode(mode);
         setErrorMessage(errorMessage);
     }
 
@@ -67,6 +111,14 @@ public class TooltipInfo {
 
     public void setErrorMessage(String errorMessage) {
         errorMessageHtml = errorMessage;
+    }
+
+    public ContentMode getContentMode() {
+        return contentMode;
+    }
+
+    public void setContentMode(ContentMode contentMode) {
+        this.contentMode = contentMode;
     }
 
     /**

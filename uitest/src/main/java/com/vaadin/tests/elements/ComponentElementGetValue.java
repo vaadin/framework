@@ -1,3 +1,18 @@
+/*
+ * Copyright 2000-2014 Vaadin Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package com.vaadin.tests.elements;
 
 import java.time.LocalDate;
@@ -23,22 +38,6 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
-/*
- * Copyright 2000-2014 Vaadin Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 /**
  * UI test for getValue() method of components: TextField, TextArea,
  * PasswordField, ComboBox, ListSelect, NativeSelect, OptionGroup, CheckBox,
@@ -63,14 +62,6 @@ public class ComponentElementGetValue extends AbstractTestUI {
     public static final String CHECKBOX_VALUE_CHANGE = "checkboxValueChange";
     public static final String DATEFIELD_VALUE_CHANGE = "dateFieldValueChange";
     public static final String MULTI_SELECT_VALUE_CHANGE = "multiSelectValueChange";
-
-    private List<String> createTestItems() {
-        List<String> options = new ArrayList<String>();
-        options.add("item 1");
-        options.add(TEST_STRING_VALUE);
-        options.add("item 3");
-        return options;
-    }
 
     private void addSingleSelectComponents() {
         List<String> options = new ArrayList<String>();

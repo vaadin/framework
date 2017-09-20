@@ -124,7 +124,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
             getWidget().totalMatches = 0;
         }
 
-        List<FilterSelectSuggestion> newSuggestions = new ArrayList<>();
+        List<FilterSelectSuggestion> newSuggestions = new ArrayList<FilterSelectSuggestion>();
 
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();

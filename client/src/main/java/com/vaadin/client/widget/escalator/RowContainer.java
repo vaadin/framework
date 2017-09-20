@@ -16,6 +16,9 @@
 
 package com.vaadin.client.widget.escalator;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.dom.client.TableSectionElement;
@@ -116,6 +119,18 @@ public interface RowContainer {
         @Override
         public void removeRows(int index, int numberOfRows)
                 throws IndexOutOfBoundsException, IllegalArgumentException;
+
+        /**
+         * Sets a callback function that is executed when new rows are added to
+         * the escalator.
+         *
+         * @param consumer
+         *            A Consumer function that receives the newly added table
+         *            row elements.
+         * @since 8.1
+         */
+        public void setNewRowCallback(
+                Consumer<List<TableRowElement>> consumer);
     }
 
     /**

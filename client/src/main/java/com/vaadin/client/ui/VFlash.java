@@ -37,6 +37,9 @@ public class VFlash extends HTML {
     protected String width;
     protected String height;
 
+    private int slotOffsetHeight = -1;
+    private int slotOffsetWidth = -1;
+
     public VFlash() {
         setStyleName(CLASSNAME);
     }
@@ -103,8 +106,7 @@ public class VFlash extends HTML {
 
     @Override
     public void setWidth(String width) {
-        // super.setWidth(height);
-
+        // explicitly not calling super here
         if (this.width != width) {
             this.width = width;
             needsRebuild = true;
@@ -113,8 +115,7 @@ public class VFlash extends HTML {
 
     @Override
     public void setHeight(String height) {
-        // super.setHeight(height);
-
+        // explicitly not calling super here
         if (this.height != height) {
             this.height = height;
             needsRebuild = true;
@@ -136,13 +137,34 @@ public class VFlash extends HTML {
         }
     }
 
+    /**
+     * Set dimensions of the containing layout slot so that the size of the
+     * embed object can be calculated from percentages if needed.
+     *
+     * Triggers embed resizing if percentage sizes are in use.
+     *
+     * @since 7.7.8
+     * @param slotOffsetHeight
+     *            offset height of the layout slot
+     * @param slotOffsetWidth
+     *            offset width of the layout slot
+     */
+    public void setSlotHeightAndWidth(int slotOffsetHeight,
+            int slotOffsetWidth) {
+        this.slotOffsetHeight = slotOffsetHeight;
+        this.slotOffsetWidth = slotOffsetWidth;
+        if (hasPercentageHeight() || hasPercentageWidth()) {
+            resizeEmbedElement();
+        }
+
+    }
+
     protected String createFlashEmbed() {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
          * inside it a EMBED for all other browsers.
          */
-
         StringBuilder html = new StringBuilder();
 
         // Start the object tag
@@ -223,8 +245,19 @@ public class VFlash extends HTML {
         // Build inner EMBED tag
         html.append("<embed ");
         html.append("src=\"" + WidgetUtil.escapeAttribute(source) + "\" ");
-        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+        if (hasPercentageWidth() && slotOffsetWidth >= 0) {
+            html.append("width=\"" + getRelativePixelWidth() + "\" ");
+        } else {
+            html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+        }
+
+        if (hasPercentageHeight() && slotOffsetHeight >= 0) {
+            html.append("height=\"" + getRelativePixelHeight() + "px\" ");
+        } else {
+            html.append(
+                    "height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+        }
+
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Add the parameters to the Embed
@@ -248,6 +281,48 @@ public class VFlash extends HTML {
         html.append("</object>");
 
         return html.toString();
+    }
+
+    private void resizeEmbedElement() {
+        // find <embed> element
+        com.google.gwt.dom.client.Element objectElem = getElement()
+                .getFirstChildElement();
+        com.google.gwt.dom.client.Element objectChild = objectElem
+                .getFirstChildElement();
+        while (!"EMBED".equalsIgnoreCase(objectChild.getTagName())) {
+            objectChild = objectChild.getNextSiblingElement();
+            if (objectChild == null) {
+                return;
+            }
+        }
+        // update height & width from slot offset, if percentage size is given
+        if (hasPercentageHeight() && slotOffsetHeight >= 0) {
+            objectChild.setAttribute("height", getRelativePixelHeight());
+        }
+        if (hasPercentageWidth() && slotOffsetWidth >= 0) {
+            objectChild.setAttribute("width", getRelativePixelWidth());
+        }
+
+    }
+
+    private String getRelativePixelWidth() {
+        float relative = WidgetUtil.parseRelativeSize(width);
+        int widthInPixels = (int) (relative / 100) * slotOffsetWidth;
+        return widthInPixels + "px";
+    }
+
+    private String getRelativePixelHeight() {
+        float relative = WidgetUtil.parseRelativeSize(height);
+        int heightInPixels = (int) (relative / 100) * slotOffsetHeight;
+        return heightInPixels + "px";
+    }
+
+    private boolean hasPercentageHeight() {
+        return ((height != null) && (height.indexOf('%') > 0));
+    }
+
+    private boolean hasPercentageWidth() {
+        return ((width != null) && (width.indexOf('%') > 0));
     }
 
 }

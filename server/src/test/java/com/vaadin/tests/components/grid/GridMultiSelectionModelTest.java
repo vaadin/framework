@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.vaadin.data.provider.CallbackDataProvider;
+import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.bov.Person;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
@@ -34,8 +34,9 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 
 import elemental.json.JsonObject;
 
@@ -616,7 +617,7 @@ public class GridMultiSelectionModelTest {
         UI ui = new MockUI();
 
         Grid<String> grid = new Grid<>();
-        MultiSelectionModelImpl<String> model = (MultiSelectionModelImpl<String>) grid
+        MultiSelectionModel<String> model = (MultiSelectionModel<String>) grid
                 .setSelectionMode(SelectionMode.MULTI);
 
         ui.setContent(grid);
@@ -655,7 +656,7 @@ public class GridMultiSelectionModelTest {
         UI ui = new MockUI();
         ui.setContent(grid);
 
-        MultiSelectionModelImpl<String> model = (MultiSelectionModelImpl<String>) grid
+        MultiSelectionModel<String> model = (MultiSelectionModel<String>) grid
                 .setSelectionMode(SelectionMode.MULTI);
 
         // no items yet, default data provider is empty not in memory one
@@ -664,13 +665,15 @@ public class GridMultiSelectionModelTest {
                 model.getSelectAllCheckBoxVisibility());
 
         grid.setDataProvider(
-                new CallbackDataProvider<String, String>(
-                        q -> IntStream
-                                .range(q.getOffset(),
-                                        Math.max(q.getOffset() + q.getLimit()
-                                                + 1, 1000))
-                                .mapToObj(i -> "Item " + i),
-                        q -> 1000));
+                DataProvider
+                        .fromCallbacks(
+                                query -> IntStream
+                                        .range(query.getOffset(),
+                                                Math.max(query.getOffset()
+                                                        + query.getLimit() + 1,
+                                                        1000))
+                                        .mapToObj(i -> "Item " + i),
+                                query -> 1000));
 
         // not in-memory -> checkbox is hidden
         Assert.assertFalse(model.isSelectAllCheckBoxVisible());

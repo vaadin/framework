@@ -26,8 +26,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -82,6 +82,25 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         Assert.assertEquals("yeah@cool.com", grid.getCell(0, 0).getText());
 
         getColumnHidingToggle(grid, "custom age column caption").click();
+        Assert.assertEquals("46", grid.getCell(0, 0).getText());
+        Assert.assertEquals("18", grid.getCell(1, 0).getText());
+        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
+        Assert.assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
+    }
+
+    @Test
+    public void clientHideServerShowColumns() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+
+        getSidebarOpenButton(grid).click();
+        // Assuming client-side hiding works. See clientHideColumns()
+        getColumnHidingToggle(grid, "custom age column caption").click();
+        getColumnHidingToggle(grid, "Name").click();
+
+        // Show from server
+        $(ButtonElement.class).caption("server side toggle age column").first()
+                .click();
         Assert.assertEquals("46", grid.getCell(0, 0).getText());
         Assert.assertEquals("18", grid.getCell(1, 0).getText());
         Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());

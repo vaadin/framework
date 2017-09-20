@@ -28,7 +28,7 @@ import java.lang.management.MemoryMXBean;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.StreamResource;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;

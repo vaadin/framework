@@ -31,6 +31,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 public abstract class UIProvider implements Serializable {
 
@@ -40,13 +41,7 @@ public abstract class UIProvider implements Serializable {
     public abstract Class<? extends UI> getUIClass(UIClassSelectionEvent event);
 
     public UI createInstance(UICreateEvent event) {
-        try {
-            return event.getUIClass().newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Could not instantiate UI class", e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Could not access UI class", e);
-        }
+        return ReflectTools.createInstance(event.getUIClass());
     }
 
     /**

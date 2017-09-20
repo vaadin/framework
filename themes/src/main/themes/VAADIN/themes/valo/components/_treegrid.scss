@@ -1,0 +1,108 @@
+@import "grid";
+
+/** Expander width and item indentation constants*/
+$v-treegrid-expander-width: 1.5em !default;
+
+$v-treegrid-indent: 1em !default;
+
+// Classname for depth styling
+$v-treegrid-class-depth: depth !default;
+
+/** Expander button visual - collapsed */
+@mixin valo-treegrid-collapsed-icon-style {
+    content: "\f0da";
+    font-family: ThemeIcons;
+}
+
+/** Expander button visual - expanded */
+@mixin valo-treegrid-expanded-icon-style {
+    content: "\f0d7";
+    font-family: ThemeIcons;
+}
+
+
+@mixin valo-treegrid ($primary-stylename: v-treegrid) {
+
+  @include valo-grid($primary-stylename);
+
+
+  .#{$primary-stylename}-expander {
+    display: inline-block;
+    vertical-align: top;
+
+    &::before {
+      display: inline-block;
+      width: $v-treegrid-expander-width;
+      text-align: center;
+      content: "";
+
+      // Expander for expanded item
+      &.expanded {
+        @include valo-treegrid-expanded-icon-style;
+      }
+
+      // Expander for collapsed item
+      &.collapsed {
+        @include valo-treegrid-collapsed-icon-style;
+      }
+
+      &.collapse-disabled {
+        @include opacity($v-disabled-opacity);
+        cursor: default;
+      }
+    }
+  }
+
+  // Hierarchy depth styling
+  .#{$primary-stylename}-node {
+    @for $i from 0 through 15 {
+      &.#{$v-treegrid-class-depth}-#{$i} {
+        padding-left: $v-treegrid-indent * $i;
+      }
+    }
+  }
+
+  // Expander and cell content in same line
+  .#{$primary-stylename}-cell-content {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .#{$primary-stylename}-row-focused {
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: $v-grid-cell-focused-border;
+      display: none;
+      pointer-events: none;
+    }
+  }
+
+  // Needed for hiding the included style
+  .#{$primary-stylename}-cell-focused {
+    position: static;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-row-focused::before {
+    display: block;
+  }
+
+  .#{$primary-stylename}.v-disabled:focus .#{$primary-stylename}-row-focused::before {
+    // Disabled TreeGrid should not show row focus outline
+    display: none;
+  }
+
+  .#{$primary-stylename}:focus .#{$primary-stylename}-cell-focused::before {
+    display: none;
+  }
+}
+

@@ -21,8 +21,8 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class PasswordFieldElement extends AbstractTextFieldElement {
     /**
      * Return value of the password element
-     * 
-     * @since
+     *
+     * @since 8.0
      * @return value of the password element
      */
     @Override

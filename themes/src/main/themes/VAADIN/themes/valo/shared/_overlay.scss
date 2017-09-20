@@ -275,6 +275,15 @@ $v-selection-item-selection-color: $v-selection-color !default;
   }
 }
 
+@mixin valo-draggable {
+  .v-draggable {
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+}
+
 /**
  * Outputs the styles for generic dragging ghost elements.
  *

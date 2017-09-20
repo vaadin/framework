@@ -109,6 +109,7 @@ public abstract class AbstractExtension extends AbstractClientConnector
      *            The parent to set
      */
     private void internalSetParent(ClientConnector parent) {
+        ClientConnector oldParent = getParent();
 
         // Send a detach event if the component is currently attached
         if (isAttached()) {
@@ -123,6 +124,9 @@ public abstract class AbstractExtension extends AbstractClientConnector
             attach();
         }
 
+        if (oldParent != null) {
+            oldParent.markAsDirty();
+        }
     }
 
     @Override

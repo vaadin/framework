@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.combobox]]
-= [classname]#ComboBox#
+= ComboBox
 
 ifdef::web[]
 [.sampler]
@@ -82,7 +82,7 @@ select.setNewItemHandler(inputString -> {
     select.setItems(planets);
 
     // Remember to set the selection to the new item
-    select.select(newPlanet);
+    select.setSelectedItem(newPlanet);
 });
 ----
 

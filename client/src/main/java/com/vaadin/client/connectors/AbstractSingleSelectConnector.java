@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.AbstractSingleSelectState;
  * An abstract class for single selection connectors.
  *
  * @author Vaadin Ltd
- * @since 8.0.0
+ * @since 8.0
  */
 public abstract class AbstractSingleSelectConnector<WIDGET extends Widget & HasAllFocusHandlers>
         extends AbstractFocusableListingConnector<WIDGET>

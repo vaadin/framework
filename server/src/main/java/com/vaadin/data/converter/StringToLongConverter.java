@@ -37,18 +37,34 @@ public class StringToLongConverter
         extends AbstractStringToNumberConverter<Long> {
 
     /**
-     * Creates a new converter instance with the given error message.
+     * Creates a new converter instance with the given error message. Empty
+     * strings are converted to <code>null</code>.
      *
      * @param errorMessage
      *            the error message to use if conversion fails
      */
     public StringToLongConverter(String errorMessage) {
-        super(errorMessage);
+        this(null, errorMessage);
     }
 
     /**
-     * Returns the format used by {@link #convertToPresentation(Object, ValueContext)}
-     * and {@link #convertToModel(String, ValueContext)}.
+     * Creates a new converter instance with the given empty string value and
+     * error message.
+     *
+     * @param emptyValue
+     *            the presentation value to return when converting an empty
+     *            string, may be <code>null</code>
+     * @param errorMessage
+     *            the error message to use if conversion fails
+     */
+    public StringToLongConverter(Long emptyValue, String errorMessage) {
+        super(emptyValue, errorMessage);
+    }
+
+    /**
+     * Returns the format used by
+     * {@link #convertToPresentation(Object, ValueContext)} and
+     * {@link #convertToModel(String, ValueContext)}.
      *
      * @param locale
      *            The locale to use

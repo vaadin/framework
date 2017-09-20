@@ -1,5 +1,6 @@
 package com.vaadin.tests.data.converter;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.ValueContext;
@@ -30,5 +31,16 @@ public class StringToFloatConverterTest extends AbstractStringConverterTest {
     public void testValueConversion() {
         assertValue(Float.valueOf(10),
                 getConverter().convertToModel("10", new ValueContext()));
+    }
+
+    @Test
+    public void customEmptyValue() {
+        StringToFloatConverter converter = new StringToFloatConverter(
+                (float) 0.0, getErrorMessage());
+
+        assertValue((float) 0.0,
+                converter.convertToModel("", new ValueContext()));
+        Assert.assertEquals("0", converter.convertToPresentation((float) 0.0,
+                new ValueContext()));
     }
 }

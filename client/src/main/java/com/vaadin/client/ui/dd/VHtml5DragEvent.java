@@ -17,12 +17,16 @@ package com.vaadin.client.ui.dd;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.NativeEvent;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 
 /**
  * Helper class to access html5 style drag events.
  *
- * TODO Gears support ?
+ * @author Vaadin Ltd
+ * @deprecated Since 8.1, no direct replacement currently, see
+ *             {@link DropTargetExtensionConnector}
  */
+@Deprecated
 public class VHtml5DragEvent extends NativeEvent {
     protected VHtml5DragEvent() {
     }
@@ -97,15 +101,15 @@ public class VHtml5DragEvent extends NativeEvent {
                 }
             }
         }
-
+    
         // Zero sized files without a type are also likely to be folders
         var file = this.dataTransfer.files[fileIndex];
         if (file.size == 0 && !file.type) {
             return false;
         }
-
+    
         // TODO Make it detect folders on all browsers
-
+    
         return true;
     }-*/;
 

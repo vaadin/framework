@@ -308,6 +308,8 @@ public class Escalator extends Widget
     static class JsniUtil {
         public static class TouchHandlerBundle {
 
+            public static final String POINTER_EVENT_TYPE_TOUCH = "touch";
+
             /**
              * A <a href=
              * "http://www.gwtproject.org/doc/latest/DevGuideCodingBasicsOverlay.html"
@@ -339,6 +341,11 @@ public class Escalator extends Widget
                 public native int getPageY()
                 /*-{
                     return this.targetTouches[0].pageY;
+                }-*/;
+
+                public native String getPointerType()
+                /*-{
+                    return this.pointerType;
                 }-*/;
             }
 
@@ -457,6 +464,15 @@ public class Escalator extends Widget
                 }
 
                 int pagePosition(CustomTouchEvent event) {
+                    // Use native event's screen x and y for IE11 and Edge
+                    // since there is no touches for these browsers (#18737)
+                    if (isCurrentBrowserIE11OrEdge()) {
+                        return vertical
+                                ? event.getNativeEvent().getClientY()
+                                        + Window.getScrollTop()
+                                : event.getNativeEvent().getClientX()
+                                        + Window.getScrollLeft();
+                    }
                     JsArray<Touch> a = event.getNativeEvent().getTouches();
                     return vertical ? a.get(0).getPageY() : a.get(0).getPageX();
                 }
@@ -496,7 +512,7 @@ public class Escalator extends Widget
             };
 
             public void touchStart(final CustomTouchEvent event) {
-                if (event.getNativeEvent().getTouches().length() == 1) {
+                if (allowTouch(event)) {
                     if (yMov == null) {
                         yMov = new Movement(true);
                         xMov = new Movement(false);
@@ -541,6 +557,20 @@ public class Escalator extends Widget
                             && Math.abs(yMov.offset) > Math.abs(xMov.offset);
                     double delta = Math.abs((vert ? yMov : xMov).offset);
                     animation.run((int) (3 * DURATION * easingOutExp(delta)));
+                }
+            }
+
+            // Allow touchStart for IE11 and Edge even though there is no touch
+            // (#18737),
+            // otherwise allow touch only if there is a single touch in the
+            // event
+            private boolean allowTouch(
+                    final TouchHandlerBundle.CustomTouchEvent event) {
+                if (isCurrentBrowserIE11OrEdge()) {
+                    return (POINTER_EVENT_TYPE_TOUCH
+                            .equals(event.getPointerType()));
+                } else {
+                    return (event.getNativeEvent().getTouches().length() == 1);
                 }
             }
 
@@ -859,8 +889,8 @@ public class Escalator extends Widget
                 if (position instanceof AbsolutePosition) {
                     /*
                      * we don't want to put "top: 0" on the footer, since it'll
-                     * render wrong, as we already have "bottom: $footer-height"
-                     * .
+                     * render wrong, as we already have
+                     * "bottom: $footer-height".
                      */
                     footElem.getStyle().setLeft(-scrollLeft, Unit.PX);
                 } else {
@@ -901,7 +931,7 @@ public class Escalator extends Widget
 
         public native void detachScrollListener(Element element)
         /*
-         * Attaching events with JSNI instead of the GWT event mechanism because
+         * Detaching events with JSNI instead of the GWT event mechanism because
          * GWT didn't provide enough details in events, or triggering the event
          * handlers with GWT bindings was unsuccessful. Maybe, with more time
          * and skill, it could be done with better success. JavaScript overlay
@@ -978,6 +1008,50 @@ public class Escalator extends Widget
             element.removeEventListener("touchcancel", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
         }-*/;
 
+        /**
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
+         *
+         * @param element
+         */
+        public native void attachPointerEventListeners(Element element)
+        /*
+         * Attaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            element.addEventListener("pointerdown", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchStartFunction);
+            element.addEventListener("pointermove", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.addEventListener("pointerup", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+            element.addEventListener("pointercancel", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+        }-*/;
+
+        /**
+         * Using pointerdown, pointermove, pointerup, and pointercancel for IE11
+         * and Edge instead of touch* listeners (#18737)
+         *
+         * @param element
+         */
+        public native void detachPointerEventListeners(Element element)
+        /*
+         * Detaching events with JSNI instead of the GWT event mechanism because
+         * GWT didn't provide enough details in events, or triggering the event
+         * handlers with GWT bindings was unsuccessful. Maybe, with more time
+         * and skill, it could be done with better success. JavaScript overlay
+         * types might work. This might also get rid of the JsniWorkaround
+         * class.
+         */
+        /*-{
+            element.removeEventListener("pointerdown", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchStartFunction);
+            element.removeEventListener("pointermove", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchMoveFunction);
+            element.removeEventListener("pointerup", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+            element.removeEventListener("pointercancel", this.@com.vaadin.v7.client.widgets.JsniWorkaround::touchEndFunction);
+         }-*/;
+
         public void scrollToColumn(final int columnIndex,
                 final ScrollDestination destination, final int padding) {
             assert columnIndex >= columnConfiguration.frozenColumns : "Can't scroll to a frozen column";
@@ -1044,7 +1118,7 @@ public class Escalator extends Widget
         }
     }
 
-    protected abstract class AbstractRowContainer implements RowContainer {
+    public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
         private int rows;
@@ -1134,9 +1208,6 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             if (!isAttached()) {
                 return;
@@ -1260,9 +1331,6 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
-            if (heightMode == HeightMode.UNDEFINED) {
-                heightByRows = rows;
-            }
 
             /*
              * only add items in the DOM if the widget itself is attached to the
@@ -2070,7 +2138,14 @@ public class Escalator extends Widget
          */
         protected abstract double getHeightOfSection();
 
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        /**
+         * Gets the logical row index for the given table row element.
+         *
+         * @param tr
+         *            the table row element inside this container
+         * @return the logical index of the given element
+         */
+        public int getLogicalRowIndex(final TableRowElement tr) {
             return tr.getSectionRowIndex();
         };
 
@@ -2430,6 +2505,24 @@ public class Escalator extends Widget
 
         public BodyRowContainerImpl(final TableSectionElement bodyElement) {
             super(bodyElement);
+        }
+
+        @Override
+        public void insertRows(int index, int numberOfRows) {
+            super.insertRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = getRowCount();
+            }
+        }
+
+        @Override
+        public void removeRows(int index, int numberOfRows) {
+            super.removeRows(index, numberOfRows);
+
+            if (heightMode == HeightMode.UNDEFINED) {
+                heightByRows = getRowCount();
+            }
         }
 
         @Override
@@ -2901,7 +2994,7 @@ public class Escalator extends Widget
         private List<TableRowElement> fillAndPopulateEscalatorRowsIfNeeded(
                 final int index, final int numberOfRows) {
 
-            final int escalatorRowsStillFit = getMaxEscalatorRowCapacity()
+            final int escalatorRowsStillFit = getMaxVisibleRowCount()
                     - getDomRowCount();
             final int escalatorRowsNeeded = Math.min(numberOfRows,
                     escalatorRowsStillFit);
@@ -2934,16 +3027,22 @@ public class Escalator extends Widget
             }
         }
 
-        private int getMaxEscalatorRowCapacity() {
-            final int maxEscalatorRowCapacity = (int) Math
-                    .ceil(getHeightOfSection() / getDefaultRowHeight()) + 1;
+        private int getMaxVisibleRowCount() {
+            double heightOfSection = getHeightOfSection();
+            // By including the possibly shown scrollbar height, we get a
+            // consistent count and do not add/remove rows whenever a scrollbar
+            // is shown
+            heightOfSection += horizontalScrollbarDeco.getOffsetHeight();
+            double defaultRowHeight = getDefaultRowHeight();
+            final int maxVisibleRowCount = (int) Math
+                    .ceil(heightOfSection / defaultRowHeight) + 1;
 
             /*
-             * maxEscalatorRowCapacity can become negative if the headers and
-             * footers start to overlap. This is a crazy situation, but Vaadin
-             * blinks the components a lot, so it's feasible.
+             * maxVisibleRowCount can become negative if the headers and footers
+             * start to overlap. This is a crazy situation, but Vaadin blinks
+             * the components a lot, so it's feasible.
              */
-            return Math.max(0, maxEscalatorRowCapacity);
+            return Math.max(0, maxVisibleRowCount);
         }
 
         @Override
@@ -3379,7 +3478,7 @@ public class Escalator extends Widget
         }
 
         @Override
-        protected int getLogicalRowIndex(final TableRowElement tr) {
+        public int getLogicalRowIndex(final TableRowElement tr) {
             assert tr
                     .getParentNode() == root : "The given element isn't a row element in the body";
             int internalIndex = visualRowOrder.indexOf(tr);
@@ -3426,12 +3525,12 @@ public class Escalator extends Widget
              * TODO [[spacer]]: these assumptions will be totally broken with
              * spacers.
              */
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
             final int currentTopRowIndex = getLogicalRowIndex(
                     visualRowOrder.getFirst());
 
             final Range[] partitions = logicalRange.partitionWith(
-                    Range.withLength(currentTopRowIndex, maxEscalatorRows));
+                    Range.withLength(currentTopRowIndex, maxVisibleRowCount));
             final Range insideRange = partitions[1];
             return insideRange.offsetBy(-currentTopRowIndex);
         }
@@ -3543,8 +3642,8 @@ public class Escalator extends Widget
                 return;
             }
 
-            final int maxEscalatorRows = getMaxEscalatorRowCapacity();
-            final int neededEscalatorRows = Math.min(maxEscalatorRows,
+            final int maxVisibleRowCount = getMaxVisibleRowCount();
+            final int neededEscalatorRows = Math.min(maxVisibleRowCount,
                     body.getRowCount());
             final int neededEscalatorRowsDiff = neededEscalatorRows
                     - visualRowOrder.size();
@@ -4190,6 +4289,11 @@ public class Escalator extends Widget
                 frozenColumns += numberOfColumns;
             }
 
+            // Add to DOM
+            header.paintInsertColumns(index, numberOfColumns, frozen);
+            body.paintInsertColumns(index, numberOfColumns, frozen);
+            footer.paintInsertColumns(index, numberOfColumns, frozen);
+
             // this needs to be before the scrollbar adjustment.
             boolean scrollbarWasNeeded = horizontalScrollbar
                     .getOffsetSize() < horizontalScrollbar.getScrollSize();
@@ -4197,13 +4301,11 @@ public class Escalator extends Widget
             boolean scrollbarIsNowNeeded = horizontalScrollbar
                     .getOffsetSize() < horizontalScrollbar.getScrollSize();
             if (!scrollbarWasNeeded && scrollbarIsNowNeeded) {
+                // This might as a side effect move rows around (when scrolled
+                // all the way down) and require the DOM to be up to date, i.e.
+                // the column to be added
                 body.verifyEscalatorCount();
             }
-
-            // Add to DOM
-            header.paintInsertColumns(index, numberOfColumns, frozen);
-            body.paintInsertColumns(index, numberOfColumns, frozen);
-            footer.paintInsertColumns(index, numberOfColumns, frozen);
 
             // fix initial width
             if (header.getRowCount() > 0 || body.getRowCount() > 0
@@ -5734,7 +5836,13 @@ public class Escalator extends Widget
         scroller.attachScrollListener(verticalScrollbar.getElement());
         scroller.attachScrollListener(horizontalScrollbar.getElement());
         scroller.attachMousewheelListener(getElement());
-        scroller.attachTouchListeners(getElement());
+
+        if (isCurrentBrowserIE11OrEdge()) {
+            // Touch listeners doesn't work for IE11 and Edge (#18737)
+            scroller.attachPointerEventListeners(getElement());
+        } else {
+            scroller.attachTouchListeners(getElement());
+        }
     }
 
     @Override
@@ -5743,7 +5851,13 @@ public class Escalator extends Widget
         scroller.detachScrollListener(verticalScrollbar.getElement());
         scroller.detachScrollListener(horizontalScrollbar.getElement());
         scroller.detachMousewheelListener(getElement());
-        scroller.detachTouchListeners(getElement());
+
+        if (isCurrentBrowserIE11OrEdge()) {
+            // Touch listeners doesn't work for IE11 and Edge (#18737)
+            scroller.detachPointerEventListeners(getElement());
+        } else {
+            scroller.detachTouchListeners(getElement());
+        }
 
         /*
          * We can call paintRemoveRows here, because static ranges are simple to
@@ -6577,7 +6691,7 @@ public class Escalator extends Widget
      * @return the maximum capacity
      */
     public int getMaxVisibleRowCount() {
-        return body.getMaxEscalatorRowCapacity();
+        return body.getMaxVisibleRowCount();
     }
 
     /**
@@ -6799,5 +6913,14 @@ public class Escalator extends Widget
      */
     double getMinCellWidth(int colIndex) {
         return columnConfiguration.getMinCellWidth(colIndex);
+    }
+
+    /**
+     * Internal method for checking whether the browser is IE11 or Edge
+     *
+     * @return true only if the current browser is IE11, or Edge
+     */
+    private static boolean isCurrentBrowserIE11OrEdge() {
+        return BrowserInfo.get().isIE11() || BrowserInfo.get().isEdge();
     }
 }

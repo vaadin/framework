@@ -37,8 +37,11 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         ComboBoxElement cb = $(ComboBoxElement.class).first();
         WebElement textbox = cb.findElement(By.vaadin("#textbox"));
         textbox.sendKeys("I");
-        cb.openPopup();
-        cb.openPopup(); // openPopup() actually toggles
+        // Toggle the popup
+        // Uses #clickElement instead of ComboBoxElement#openPopup() due to an
+        // issue with the firefox driver
+        clickElement(cb.findElement(By.vaadin("#button")));
+        clickElement(cb.findElement(By.vaadin("#button")));
         // The entered value should remain
         assertEquals("I", textbox.getAttribute("value"));
     }
@@ -51,7 +54,10 @@ public class ComboBoxClosePopupRetainTextTest extends MultiBrowserTest {
         WebElement textbox = cb.findElement(By.vaadin("#textbox"));
         textbox.clear();
         textbox.sendKeys("I");
-        cb.openPopup();
+        // Close the open suggestions popup
+        // Uses #clickElement instead of ComboBoxElement#openPopup() due to an
+        // issue with the firefox driver
+        clickElement(cb.findElement(By.vaadin("#button")));
         // Entered value should remain in the text field even though the popup
         // is opened
         assertEquals("I", textbox.getAttribute("value"));

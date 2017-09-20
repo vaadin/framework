@@ -15,11 +15,16 @@
  */
 package com.vaadin.v7.data.fieldgroup;
 
+import com.vaadin.ui.Component;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * @deprecated As of 8.0, no replacement available, use {@link Component#setCaption}.
+ */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Deprecated

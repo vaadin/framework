@@ -29,7 +29,7 @@ import com.vaadin.v7.client.widgets.Grid;
  * @since 7.4
  */
 public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
-        implements SelectionModel.Single<T> {
+        implements SelectionModel.Single<T>, HasUserSelectionAllowed<T> {
 
     private Grid<T> grid;
     private RowHandle<T> selectedRow;
@@ -41,6 +41,7 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
     private ClickSelectHandler<T> clickSelectHandler;
 
     private boolean deselectAllowed = true;
+    private boolean userSelectionAllowed = true;
 
     @Override
     public boolean isSelected(T row) {
@@ -172,4 +173,13 @@ public class SelectionModelSingle<T> extends AbstractRowHandleSelectionModel<T>
         }
     }
 
+    @Override
+    public boolean isUserSelectionAllowed() {
+        return userSelectionAllowed;
+    }
+
+    @Override
+    public void setUserSelectionAllowed(boolean userSelectionAllowed) {
+        this.userSelectionAllowed = userSelectionAllowed;
+    }
 }

@@ -59,7 +59,7 @@ public class VUpload extends SimplePanel {
             super.onBrowserEvent(event);
             if (event.getTypeInt() == Event.ONCHANGE) {
                 if (isImmediateMode() && fu.getFilename() != null
-                        && !"".equals(fu.getFilename())) {
+                        && !fu.getFilename().isEmpty()) {
                     submit();
                 }
             } else if (BrowserInfo.get().isIE()
@@ -267,10 +267,12 @@ public class VUpload extends SimplePanel {
                             t.cancel();
                         }
                         VConsole.log("VUpload:Submit complete");
-                        ((UploadConnector) ConnectorMap.get(client)
-                                .getConnector(VUpload.this))
-                                        .getRpcProxy(UploadServerRpc.class)
-                                        .poll();
+                        if (isAttached()) {
+                            // no need to call poll() if component is already
+                            // detached #8728
+                            ((UploadConnector) ConnectorMap.get(client).getConnector(VUpload.this))
+                                .getRpcProxy(UploadServerRpc.class).poll();
+                        }
                     }
 
                     rebuildPanel();

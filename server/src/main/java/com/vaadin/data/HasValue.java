@@ -19,7 +19,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Objects;
+import java.util.Optional;
 
+import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.Registration;
@@ -46,7 +48,8 @@ public interface HasValue<V> extends Serializable {
      * @param <V>
      *            the value type
      */
-    public class ValueChangeEvent<V> extends EventObject {
+    public class ValueChangeEvent<V> extends EventObject
+            implements HasUserOriginated {
 
         private final boolean userOriginated;
         private final Component component;
@@ -100,7 +103,7 @@ public interface HasValue<V> extends Serializable {
         /**
          * Returns the value of the source before this value change event
          * occurred.
-         * 
+         *
          * @return the value previously held by the source of this event
          */
         public V getOldValue() {
@@ -116,13 +119,7 @@ public interface HasValue<V> extends Serializable {
             return value;
         }
 
-        /**
-         * Returns whether this event was triggered by user interaction, on the
-         * client side, or programmatically, on the server side.
-         *
-         * @return {@code true} if this event originates from the client,
-         *         {@code false} otherwise.
-         */
+        @Override
         public boolean isUserOriginated() {
             return userOriginated;
         }
@@ -220,6 +217,18 @@ public interface HasValue<V> extends Serializable {
     }
 
     /**
+     * Returns the current value of this object, wrapped in an {@code Optional}.
+     * <p>
+     * The {@code Optional} will be empty if the value is {@code null} or
+     * {@code isEmpty()} returns {@code true}.
+     *
+     * @return the current value, wrapped in an {@code Optional}
+     */
+    public default Optional<V> getOptionalValue() {
+        return isEmpty() ? Optional.empty() : Optional.ofNullable(getValue());
+    }
+
+    /**
      * Returns whether this {@code HasValue} is considered to be empty.
      * <p>
      * By default this is an equality check between current value and empty
@@ -282,5 +291,20 @@ public interface HasValue<V> extends Serializable {
      */
     public default void clear() {
         setValue(getEmptyValue());
+    }
+
+    /**
+     * Returns a validator that checks the internal state of the HasValue. This
+     * should be overridden for components with internal value conversion or
+     * validation, eg. when the user is providing a string that has to be parsed
+     * into a date. An invalid input from user will be exposed to
+     * a {@link Binder} and can be seen as a validation failure.
+     * 
+     * @since 8.1
+     * @return internal state validator
+     * @see Binder#validate()
+     */
+    public default Validator<V> getDefaultValidator() {
+        return Validator.alwaysPass();
     }
 }

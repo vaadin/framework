@@ -16,7 +16,7 @@
 
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -343,7 +343,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         connection.flushActiveConnector();
     }
 
-    private native static void loadAppIdListFromDOM(ArrayList<String> list)
+    private native static void loadAppIdListFromDOM(List<String> list)
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {

@@ -209,6 +209,29 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
     }
 
     @Test
+    public void testColumnReorder_draggingFrozenColumnsContainingHiddenColumns_impossible() {
+        // given
+        openTestURL();
+        selectMenuPath("Component", "Size", "Width", "900px");
+        toggleColumnReordering();
+        setFrozenColumns(4);
+        toggleColumnHidden(1);
+        toggleColumnHidden(2);
+        assertColumnHeaderOrder(0, 3, 4, 5);
+
+        // when
+        // drag frozen column out between non-frozen columns
+        dragAndDropDefaultColumnHeader(1, 2, CellSide.RIGHT);
+
+        // then
+        // everything should be as before
+        assertColumnHeaderOrder(0, 3, 4, 5);
+        assertTrue(getGridElement().getHeaderCell(0, 0).isFrozen());
+        assertTrue(getGridElement().getHeaderCell(0, 1).isFrozen());
+        assertFalse(getGridElement().getHeaderCell(0, 2).isFrozen());
+    }
+
+    @Test
     public void testColumnReorder_draggingColumnOnTopOfFrozenColumn_columnDroppedRightOfFrozenColumns() {
         // given
         openTestURL();
@@ -230,7 +253,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         toggleColumnReordering();
         selectMenuPath("Component", "State", "Selection mode", "multi");
         List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
@@ -240,7 +263,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 1", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 0", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
@@ -254,7 +277,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "multi");
         setFrozenColumns(1);
         List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
@@ -264,7 +287,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 1", gridHeaderRowCells.get(3));
@@ -278,7 +301,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
         selectMenuPath("Component", "State", "Selection mode", "multi");
         setFrozenColumns(-1);
         List<TestBenchElement> gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 0", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 1", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));
@@ -288,7 +311,7 @@ public class GridColumnReorderTest extends GridBasicFeaturesTest {
 
         // then
         gridHeaderRowCells = getGridHeaderRowCells();
-        assertTrue(gridHeaderRowCells.get(0).getText().equals(""));
+        assertTrue(gridHeaderRowCells.get(0).getText().isEmpty());
         assertColumnHeader("Column 1", gridHeaderRowCells.get(1));
         assertColumnHeader("Column 0", gridHeaderRowCells.get(2));
         assertColumnHeader("Column 2", gridHeaderRowCells.get(3));

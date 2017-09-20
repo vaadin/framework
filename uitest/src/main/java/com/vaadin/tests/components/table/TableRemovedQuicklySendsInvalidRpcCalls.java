@@ -91,6 +91,11 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
+        public void cleanConnectorMap(boolean force) {
+            tracker.cleanConnectorMap(force);
+        }
+
+        @Override
         public void cleanConnectorMap() {
             tracker.cleanConnectorMap();
         }
@@ -175,22 +180,8 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
-        public boolean connectorWasPresentAsRequestWasSent(String connectorId,
-                long lastSyncIdSeenByClient) {
-            return tracker.connectorWasPresentAsRequestWasSent(connectorId,
-                    lastSyncIdSeenByClient);
-        }
-
-        @Override
         public int getCurrentSyncId() {
             return tracker.getCurrentSyncId();
-        }
-
-        @Override
-        public void cleanConcurrentlyRemovedConnectorIds(
-                int lastSyncIdSeenByClient) {
-            tracker.cleanConcurrentlyRemovedConnectorIds(
-                    lastSyncIdSeenByClient);
         }
 
         @Override

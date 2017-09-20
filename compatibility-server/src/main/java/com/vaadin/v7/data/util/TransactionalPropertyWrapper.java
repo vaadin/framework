@@ -34,13 +34,16 @@ import com.vaadin.v7.data.Property.ValueChangeNotifier;
  * fired at the end of a successful transaction, whereas listeners attached to
  * the underlying property may receive multiple value change events.
  *
- * @see com.vaadin.v7.data.Property.Transactional
+ * @see Property.Transactional
  *
  * @author Vaadin Ltd
  * @since 7.0
  *
  * @param <T>
+ *
+ * @deprecated As of 8.0, no replacement available.
  */
+
 @Deprecated
 public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
         implements ValueChangeNotifier, Property.Transactional<T> {

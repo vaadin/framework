@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[layout.absolutelayout]]
-= [classname]#AbsoluteLayout#
+= AbsoluteLayout
 
 ifdef::web[]
 [.sampler]
@@ -72,11 +72,6 @@ The result of the above code examples is shown in
 [[figure.layout.absolutelayout.bottomright]]
 .Components Positioned Relative to Various Edges
 image::img/absolutelayout-bottomright.png[width=60%, scaledwidth=80%]
-
-Drag and drop is very useful for moving the components contained in an
-[classname]#AbsoluteLayout#. Check out the example in
-<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.drop-on-component,"Dropping
-on a Component">>.
 
 [[layout.absolutelayout.area]]
 == Placing a Component in an Area

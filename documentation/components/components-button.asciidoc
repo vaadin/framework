@@ -5,7 +5,7 @@ layout: page
 ---
 
 [[components.button]]
-= [classname]#Button#
+= Button
 
 ifdef::web[]
 [.sampler]

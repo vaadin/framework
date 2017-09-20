@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.themes;
 
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Notification.Type;
 
 /**
@@ -110,6 +109,13 @@ public class ValoTheme {
      * icon next to the title. Can be combined with any other Label style.
      */
     public static final String NOTIFICATION_FAILURE = "failure";
+
+    /**
+     * Styles the notification to look like {@link Type#ERROR_MESSAGE}, without
+     * setting the position and delay and without the close button. Can be
+     * combined with any other Notification style.
+     */
+    public static final String NOTIFICATION_CRITICAL_ERROR = "critical-error";
 
     /***************************************************************************
      *
@@ -1036,14 +1042,14 @@ public class ValoTheme {
      * <p>
      * The text content of the logo should be very short, since the logo area
      * only shows approximately three letters. Using one of the
-     * {@link FontAwesome} icons is a good way to quickly create a logo for your
-     * application.
+     * Vaadin Icons is a good way to quickly create a logo for your
+     * application. Vaadin Icons are included in the Valo theme.
      * <p>
      *
      * <h4>Example</h4>
      *
      * <pre>
-     * Label logo = new Label(FontAwesome.ROCKET.getHtml(), ContentMode.HTML);
+     * Label logo = new Label(VaadinIcons.ROCKET.getHtml(), ContentMode.HTML);
      * logo.setSizeUndefined();
      * logo.setPrimaryStyleName(ValoTheme.MENU_LOGO);
      * </pre>

@@ -16,10 +16,16 @@
 package com.vaadin.client.ui.dd;
 
 import com.google.gwt.core.client.GWT;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * A class via all AcceptCriteria instances are fetched by an identifier.
+ * 
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with
+ *             {@link DropTargetExtension#setDropCriteria(String)}
  */
+@Deprecated
 public class VAcceptCriteria {
     private static VAcceptCriterionFactory impl;
 

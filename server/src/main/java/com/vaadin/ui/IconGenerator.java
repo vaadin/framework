@@ -23,6 +23,7 @@ import com.vaadin.server.SerializableFunction;
  *
  * @param <T>
  *            item type for which the icon is generated
+ * @since 8.0
  */
 @FunctionalInterface
 public interface IconGenerator<T> extends SerializableFunction<T, Resource> {

@@ -61,6 +61,9 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     private boolean readonly;
 
     /** For internal use only. May be removed or replaced in the future. */
+    public int cols = 0;
+
+    /** For internal use only. May be removed or replaced in the future. */
     public int rows = 0;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -132,6 +135,15 @@ public abstract class VOptionGroupBase extends Composite implements Field,
 
     protected boolean isNullSelectionItemAvailable() {
         return nullSelectionItemAvailable;
+    }
+
+    /**
+     * For internal use only. May be removed or replaced in the future.
+     *
+     * @return "cols" specified in uidl, 0 if not specified
+     */
+    public int getColumns() {
+        return cols;
     }
 
     /**

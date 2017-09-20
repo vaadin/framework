@@ -32,7 +32,17 @@ public class Html5File implements Serializable {
     private StreamVariable streamVariable;
     private final String type;
 
-    Html5File(String name, long size, String mimeType) {
+    /**
+     * Constructs a new Html5 file wrapper.
+     *
+     * @param name
+     *            the file name
+     * @param size
+     *            the size of the file
+     * @param mimeType
+     *            the type of the file
+     */
+    public Html5File(String name, long size, String mimeType) {
         this.name = name;
         this.size = size;
         type = mimeType;

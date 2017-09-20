@@ -7,7 +7,6 @@ layout: page
 [[themes.fonticon]]
 = Font Icons
 
-*_This section has not yet been updated for Vaadin Framework 8._*
 
 Font icons are icons included in a font. Fonts have many advantages over bitmap
 images. Browsers are usually faster in rendering fonts than loading image files.
@@ -18,18 +17,11 @@ property.
 [[themes.fonticon.enabling]]
 == Loading Icon Fonts
 
-Vaadin currently comes with one custom icon font: FontAwesome. It is
-automatically enabled in the Valo theme. For other themes, you need to include
-it with the following line in your project theme, after importing the base
-theme:
+Vaadin currently comes with one custom icon font: [literal]#++Vaadin Icons++#. It is
+automatically included in the Valo theme.
 
-----
-@include fonticons;
-----
-
-If you use other icon fonts, as described in <<themes.fonticon.custom>>, and the
-font is not loaded by a base theme, you need to load it with a
-`font` mixin in Sass, as described in
+If you use other icon fonts, as described in <<themes.fonticon.custom>>,
+ you need to load it with a `font` mixin in Sass, as described in
 <<themes-fonts#themes.fonts.loading,"Loading Local Fonts">>.
 
 
@@ -40,20 +32,22 @@ Font icons are resources of type [classname]#FontIcon#, which implements the
 [interfacename]#Resource# interface. You can use these special resources for
 component icons and such, but not as embedded images, for example.
 
-Each icon has a Unicode codepoint, by which you can use it. Vaadin includes an
-awesome icon font, [literal]#++FontAwesome++#, which comes with an enumeration
-of all the icons included in the font.
+Each icon has a Unicode codepoint, by which you can use it. Vaadin Framework includes its
+own icon font, [literal]#++Vaadin Icons++#, which comes with an enumeration [classname]#VaadinIcons# with all the icons included in the font.
 
 Most typically, you set a component icon as follows:
 
+////
+This code and rest of examples in this file are in uitest/src/main/.../VaadinIconUI.java
+////
 [source, Java]
 ----
 TextField name = new TextField("Name");
-name.setIcon(FontAwesome.USER);
+name.setIcon(VaadinIcons.USER);
 layout.addComponent(name);
 
 // Button allows specifying icon resource in constructor
-Button ok = new Button("OK", FontAwesome.CHECK);
+Button ok = new Button("OK", VaadinIcons.CHECK);
 layout.addComponent(ok);
 ----
 
@@ -73,7 +67,7 @@ HTML elements that display icons in Vaadin have the [literal]#++v-icon++# style
 name.
 
 ----
-.v-icon {
+.blueicon .v-icon {
     color: blue;
 }
 ----
@@ -91,20 +85,11 @@ generating the HTML to display the icon with the [methodname]#getHtml()# method.
 [source, Java]
 ----
 Label label = new Label("I " +
-    FontAwesome.HEART.getHtml() + " Vaadin",
+    VaadinIcons.HEART.getHtml() + Vaadin",
     ContentMode.HTML);
 label.addStyleName("redicon");
-layout.addComponent(label);
 ----
 
-The HTML code has the [stylename]#v-icon# style, which you can modify in CSS:
-
-[source, css]
-----
-.redicon .v-icon {
-    color: red;
-}
-----
 
 The result is illustrated in <<figure.themes.fonticon-html.label>>, with the color
 styling described next.
@@ -137,15 +122,15 @@ public String getHtml() {
 You can include a font icon in any text by its Unicode codepoint, which you can
 get with the [methodname]#getCodePoint()# method. In such case, however, you
 need to use the same font for other text in the same string as well. The
-FontAwesome provided in Vaadin includes a basic character set.
+VaadinIcons provided with Valo theme includes a basic character set.
 
 
 ----
 TextField amount = new TextField("Amount (in " +
    new String(Character.toChars(
-           FontAwesome.BTC.getCodepoint())) +
+           VaadinIcons.DOLLAR.getCodepoint())) +
    ")");
-amount.addStyleName("awesomecaption");
+amount.addStyleName("amount");
 layout.addComponent(amount);
 ----
 
@@ -153,8 +138,8 @@ You need to set the font family in CSS.
 
 
 ----
-.v-caption-awesomecaption .v-captiontext {
-    font-family: FontAwesome;
+.v-caption-amount .v-captiontext {
+    font-family: Vaadin-Icons;
 }
 ----
 
@@ -171,10 +156,6 @@ You are free to use any of the many ways to create icons and embed them into
 fonts. Here, we give basic instructions for using the
 link:http://icomoon.io/app/[IcoMoon] service, where you can pick icons from a
 large library of well-designed icons.
-
-Font Awesome is included in IcoMoon's selection of icon libraries. Note that the
-codepoints of the icons are not fixed, so the [classname]#FontAwesome# enum is
-not compatible with such custom icon fonts.
 
 After you have selected the icons that you want in your font, you can download
 them in a ZIP package. The package contains the icons in multiple formats,
@@ -193,7 +174,7 @@ ifdef::web[]
 You can define a font icon for any font available in the browser by implementing
 the [interfacename]#FontIcon# interface. The normal pattern for implementing it
 is to implement an enumeration for all the symbols available in the font. See
-the implementation of [classname]#FontAwesome# for more details.
+the implementation of [classname]#VaadinIcons# for more details.
 
 You need a FontIcon API for the icons. In the following, we define a font icon
 using a normal sans-serif font built-in in the browser.

@@ -177,7 +177,7 @@ public class DateTimeService {
 
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
-        if (month == 1 && true == isLeapYear(date)) {
+        if (month == 1 && isLeapYear(date)) {
             return 29;
         }
         return maxDaysInMonth[month];

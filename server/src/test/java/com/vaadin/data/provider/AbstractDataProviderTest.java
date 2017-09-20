@@ -31,6 +31,7 @@ public class AbstractDataProviderTest {
 
     private static class TestDataProvider
             extends AbstractDataProvider<Object, Object> {
+
         @Override
         public Stream<Object> fetch(Query<Object, Object> t) {
             return null;
@@ -50,7 +51,7 @@ public class AbstractDataProviderTest {
     @Test
     public void refreshAll_notifyListeners() {
         TestDataProvider dataProvider = new TestDataProvider();
-        AtomicReference<DataChangeEvent> event = new AtomicReference<>();
+        AtomicReference<DataChangeEvent<Object>> event = new AtomicReference<>();
         dataProvider.addDataProviderListener(ev -> {
             Assert.assertNull(event.get());
             event.set(ev);
@@ -63,7 +64,7 @@ public class AbstractDataProviderTest {
     @Test
     public void removeListener_listenerIsNotNotified() {
         TestDataProvider dataProvider = new TestDataProvider();
-        AtomicReference<DataChangeEvent> event = new AtomicReference<>();
+        AtomicReference<DataChangeEvent<Object>> event = new AtomicReference<>();
         Registration registration = dataProvider
                 .addDataProviderListener(ev -> event.set(ev));
         registration.remove();

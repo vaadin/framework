@@ -95,7 +95,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
 
     @Override
     public void valueChange(ValueChangeEvent event) {
-        AbstractField field = (AbstractField) event.getProperty();
+        AbstractField<?> field = (AbstractField<?>) event.getProperty();
         // if (field == localeSelect) {
         // return;
         // }

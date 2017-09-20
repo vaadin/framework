@@ -17,6 +17,7 @@ package com.vaadin.data.provider;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A data provider that lazy loads items from a back end.
@@ -25,6 +26,7 @@ import java.util.List;
  *            data provider data type
  * @param <F>
  *            data provider filter type
+ * @since 8.0
  */
 public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
 
@@ -37,12 +39,28 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      * sorting is also used to determine the ordering of items that are
      * considered equal by the sorting defined in the query.
      *
-     * @see #setSortOrder(SortOrder)
+     * @see #setSortOrder(QuerySortOrder)
      *
      * @param sortOrders
      *            a list of sort orders to set, not <code>null</code>
      */
-    void setSortOrders(List<SortOrder<String>> sortOrders);
+    void setSortOrders(List<QuerySortOrder> sortOrders);
+
+    /**
+     * Sets the sort order to use, given a {@link QuerySortOrderBuilder}.
+     * Shorthand for {@code setSortOrders(builder.build())}.
+     *
+     * @see QuerySortOrderBuilder
+     *
+     * @param builder
+     *            the sort builder to retrieve the sort order from
+     * @throws NullPointerException
+     *             if builder is null
+     */
+    default void setSortOrders(QuerySortOrderBuilder builder) {
+        Objects.requireNonNull(builder, "Sort builder cannot be null.");
+        setSortOrders(builder.build());
+    }
 
     /**
      * Sets a single sort order to use as the default sorting for this data
@@ -59,7 +77,7 @@ public interface BackEndDataProvider<T, F> extends DataProvider<T, F> {
      *            a sort order to set, or <code>null</code> to clear any
      *            previously set sort orders
      */
-    default void setSortOrder(SortOrder<String> sortOrder) {
+    default void setSortOrder(QuerySortOrder sortOrder) {
         if (sortOrder == null) {
             setSortOrders(Collections.emptyList());
         } else {

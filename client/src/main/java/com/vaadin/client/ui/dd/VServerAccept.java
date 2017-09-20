@@ -13,17 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-/**
- *
- */
 package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
+/**
+ *
+ * @author Vaadin Ltd
+ * @deprecated Replaced in 8.1 with {@link DropTargetExtension}
+ */
+@Deprecated
 @AcceptCriterion(ServerSideCriterion.class)
-final public class VServerAccept extends VAcceptCriterion {
+public final class VServerAccept extends VAcceptCriterion {
     @Override
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {

@@ -1,7 +1,10 @@
 package com.vaadin.tests.requesthandlers;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.elements.LinkElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -49,5 +52,11 @@ public class AppResource404Test extends MultiBrowserTest {
     protected void disableWaitingAndWait() {
         testBench().disableWaitForVaadin();
         sleep(500);
+    }
+
+    @Override
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // IE11 does not show the details on the 404 page
+        return super.getBrowsersExcludingIE();
     }
 }

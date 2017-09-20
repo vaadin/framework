@@ -386,4 +386,41 @@ public class BeanItemTest {
         // Should not be exception
         property.setValue(null);
     }
+
+    @Test
+    public void testChangeBean() {
+        BeanItem<MyClass> beanItem = new BeanItem<BeanItemTest.MyClass>(
+                new MyClass("Foo"));
+        beanItem.setBean(new MyClass("Bar"));
+        Assert.assertEquals("Bar", beanItem.getItemProperty("name").getValue());
+    }
+
+    @Test
+    public void testChangeBeanNestedProperty() {
+        BeanItem<MyClass> beanItem = new BeanItem<BeanItemTest.MyClass>(
+                new MyClass("Foo"));
+        beanItem.setBean(new MyClass("Bar"));
+        Assert.assertEquals("Bar", beanItem.getItemProperty("name").getValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeBeanToIncompatibleOne() {
+        BeanItem<Object> beanItem = new BeanItem<Object>(new MyClass("Foo"));
+        beanItem.setBean(new Generic<String>());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeBeanToSubclass() {
+        BeanItem<MyClass> beanItem = new BeanItem<BeanItemTest.MyClass>(
+                new MyClass("Foo"));
+        beanItem.setBean(new MyClass("Bar"));
+        beanItem.setBean(new MyClass2("foo"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testChangeBeanToNull() {
+        BeanItem<Object> beanItem = new BeanItem<Object>(new MyClass("Foo"));
+        beanItem.setBean(null);
+    }
+
 }

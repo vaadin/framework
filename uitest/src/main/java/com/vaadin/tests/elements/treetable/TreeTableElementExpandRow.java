@@ -6,7 +6,6 @@ import com.vaadin.v7.ui.TreeTable;
 
 public class TreeTableElementExpandRow extends AbstractTestUI {
 
-
     TreeTable treeTable = new TreeTable();
     public static final String TEST_VALUE = "testValue";
 

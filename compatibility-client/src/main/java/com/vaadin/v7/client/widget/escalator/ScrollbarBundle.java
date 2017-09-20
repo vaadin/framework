@@ -362,6 +362,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
     private HandlerRegistration scrollSizeTemporaryScrollHandler;
     private HandlerRegistration offsetSizeTemporaryScrollHandler;
+    private HandlerRegistration scrollInProgress;
 
     private ScrollbarBundle() {
         root.appendChild(scrollSizeElement);
@@ -435,6 +436,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         boolean offsetSizeBecomesGreaterThanScrollSize = showsScrollHandle()
                 && newOffsetSizeIsGreaterThanScrollSize;
         if (offsetSizeBecomesGreaterThanScrollSize && getScrollPos() != 0) {
+            if (offsetSizeTemporaryScrollHandler != null) {
+                offsetSizeTemporaryScrollHandler.removeHandler();
+            }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
                     new ScrollHandler() {
@@ -523,6 +527,17 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         scrollPos = Math.max(0, Math.min(maxScrollPos, truncate(px)));
 
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
+            if (scrollInProgress == null) {
+                // Only used for tracking that there is "workPending"
+                scrollInProgress = addScrollHandler(new ScrollHandler() {
+                    @Override
+                    public void onScroll(ScrollEvent event) {
+                        scrollInProgress.removeHandler();
+                        scrollInProgress = null;
+                    }
+                });
+            }
+
             if (isInvisibleScrollbar) {
                 invisibleScrollbarTemporaryResizer.show();
             }
@@ -631,7 +646,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
          * This needs to be made step-by-step because IE8 flat-out refuses to
          * fire a scroll event when the scroll size becomes smaller than the
          * offset size. All other browser need to suffer alongside.
-         * 
+         *
          * This really should be changed to not use any temporary scroll
          * handlers at all once IE8 support is dropped, like now done only for
          * Firefox.
@@ -649,7 +664,11 @@ public abstract class ScrollbarBundle implements DeferredWorker {
              * 'delayedSizeSet'
              */
             boolean delayedSizeSet = !BrowserInfo.get().isFirefox();
+            // must be a field because Java insists.
             if (delayedSizeSet) {
+                if (scrollSizeTemporaryScrollHandler != null) {
+                    scrollSizeTemporaryScrollHandler.removeHandler();
+                }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
                         new ScrollHandler() {
                             @Override
@@ -911,6 +930,6 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         // requestAnimationFrame - which is not automatically checked
         return scrollSizeTemporaryScrollHandler != null
                 || offsetSizeTemporaryScrollHandler != null
-                || scrollEventFirer.isBeingFired;
+                || scrollInProgress != null || scrollEventFirer.isBeingFired;
     }
 }

@@ -16,19 +16,22 @@
 package com.vaadin.tests.components.javascriptcomponent;
 
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 
-public class JavaScriptPreloading extends AbstractReindeerTestUI {
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class JavaScriptPreloading extends AbstractTestUI {
 
     public static class JsLabelState extends JavaScriptComponentState {
         public String xhtml;
     }
 
-    @JavaScript({ "js_label.js", "wholly_different.js" })
+    @JavaScript("js_label.js")
+    @JavaScript("wholly_different.js")
     public class JsLabel extends AbstractJavaScriptComponent {
 
         public JsLabel(final String xhtml) {

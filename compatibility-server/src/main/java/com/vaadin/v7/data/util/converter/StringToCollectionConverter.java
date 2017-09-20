@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util.converter;
 
+import com.vaadin.data.Binder;
+
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ import java.util.Locale;
  * @since 7.5.0
  *
  * @author Vaadin Ltd
+ *
+ * @deprecated As of 8.0, a lightweight lambda-based converter can be build with
+ *  {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
 public class StringToCollectionConverter
@@ -210,9 +215,9 @@ public class StringToCollectionConverter
         public Collection<?> createCollection(
                 Class<? extends Collection> type) {
             if (type.isAssignableFrom(ArrayList.class)) {
-                return new ArrayList();
+                return new ArrayList<Object>();
             } else if (type.isAssignableFrom(HashSet.class)) {
-                return new HashSet();
+                return new HashSet<Object>();
             } else if (!type.isInterface()
                     && !Modifier.isAbstract(type.getModifiers())) {
                 try {
@@ -221,7 +226,7 @@ public class StringToCollectionConverter
                 } catch (IllegalAccessException ignore) {
                 }
             }
-            return new ArrayList();
+            return new ArrayList<Object>();
         }
 
     }

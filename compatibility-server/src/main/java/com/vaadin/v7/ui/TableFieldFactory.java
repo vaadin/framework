@@ -21,7 +21,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 
 /**
- * Factory interface for creating new LegacyField-instances based on Container
+ * Factory interface for creating new Field-instances based on Container
  * (datasource), item id, property id and uiContext (the component responsible
  * for displaying fields). Currently this interface is used by {@link Table},
  * but might later be used by some other components for {@link Field}
@@ -32,6 +32,8 @@ import com.vaadin.v7.data.Container;
  * @author Vaadin Ltd.
  * @since 6.0
  * @see FormFieldFactory
+ *
+ * @deprecated As of 8.0, Table is replaced by {@link com.vaadin.ui.Grid}
  */
 @Deprecated
 public interface TableFieldFactory extends Serializable {

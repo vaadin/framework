@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -71,14 +70,18 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.WindowOrderRpc;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
+import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.Window.WindowOrderChangeListener;
 import com.vaadin.ui.declarative.Design;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 import com.vaadin.util.ConnectorHelper;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
@@ -191,14 +194,8 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
 
         @Override
-        public void acknowledge() {
-            // Nothing to do, just need the message to be sent and processed
-        }
-
-        @Override
         public void popstate(String uri) {
             getPage().updateLocation(uri, true, true);
-
         }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -263,8 +260,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     private WindowOrderRpc windowOrderRpc = new WindowOrderRpc() {
 
         @Override
-        public void windowOrderChanged(
-                HashMap<Integer, Connector> windowOrders) {
+        public void windowOrderChanged(Map<Integer, Connector> windowOrders) {
             Map<Integer, Window> orders = new LinkedHashMap<>();
             for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
                 if (entry.getValue() instanceof Window) {
@@ -299,6 +295,11 @@ public abstract class UI extends AbstractSingleComponentContainer
      * the client has id 0.
      */
     private int lastProcessedClientToServerId = -1;
+
+    /**
+     * Stores the extension of the active drag source component
+     */
+    private DragSourceExtension<? extends AbstractComponent> activeDragSource;
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -463,7 +464,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         components.addAll(windows);
 
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /*
@@ -661,6 +662,8 @@ public abstract class UI extends AbstractSingleComponentContainer
     private String uiPathInfo;
 
     private String uiRootPath;
+
+    private boolean mobileHtml5DndPolyfillLoaded;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -1028,6 +1031,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @param listener
      *            The listener to add, not null
      * @return a registration object for removing the listener
+     * @since 8.0
      */
     public Registration addClickListener(ClickListener listener) {
         return addListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
@@ -1854,7 +1858,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @param listener
      *            the WindowModeChangeListener to add.
-     * @since 8.0.0
+     * @since 8.0
      *
      * @return a registration object for removing the listener
      */
@@ -1867,6 +1871,99 @@ public abstract class UI extends AbstractSingleComponentContainer
     }
 
     /**
+     * Sets the drag source of an active HTML5 drag event.
+     *
+     * @param extension
+     *            Extension of the drag source component.
+     * @see DragSourceExtension
+     * @since 8.1
+     */
+    public void setActiveDragSource(
+            DragSourceExtension<? extends AbstractComponent> extension) {
+        activeDragSource = extension;
+    }
+
+    /**
+     * Gets the drag source of an active HTML5 drag event.
+     *
+     * @return Extension of the drag source component if the drag event is
+     *         active and originated from this UI, {@literal null} otherwise.
+     * @see DragSourceExtension
+     * @since 8.1
+     */
+    public DragSourceExtension<? extends AbstractComponent> getActiveDragSource() {
+        return activeDragSource;
+    }
+
+    /**
+     * Returns whether HTML5 DnD extensions {@link DragSourceExtension} and
+     * {@link DropTargetExtension} and alike should be enabled for mobile
+     * devices.
+     * <p>
+     * By default, it is disabled.
+     *
+     * @return {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     * @see #setMobileHtml5DndEnabled(boolean)
+     */
+    public boolean isMobileHtml5DndEnabled() {
+        return getState(false).enableMobileHTML5DnD;
+    }
+
+    /**
+     * Enable or disable HTML5 DnD for mobile devices.
+     * <p>
+     * Usually you should enable the support in the {@link #init(VaadinRequest)}
+     * method. By default, it is disabled. This operation is NOOP when the user
+     * is not on a mobile device.
+     * <p>
+     * Changing this will effect all {@link DragSourceExtension} and
+     * {@link DropTargetExtension} (and subclasses) that have not yet been
+     * attached to the UI on the client side.
+     * <p>
+     * <em>NOTE: When disabling this after it has been enabled, it will not
+     * affect {@link DragSourceExtension} and {@link DropTargetExtension} (and
+     * subclasses) that have been previously added. Those extensions should be
+     * explicitly removed to make sure user cannot perform DnD operations
+     * anymore.</em>
+     *
+     * @param enabled
+     *            {@code true} if enabled, {@code false} if not
+     * @since 8.1
+     */
+    public void setMobileHtml5DndEnabled(boolean enabled) {
+        if (getState(false).enableMobileHTML5DnD != enabled) {
+            getState().enableMobileHTML5DnD = enabled;
+
+            if (isMobileHtml5DndEnabled()) {
+                loadMobileHtml5DndPolyfill();
+            }
+        }
+    }
+
+    /**
+     * Load and initialize the mobile drag-drop-polyfill if needed and not yet
+     * done so.
+     */
+    private void loadMobileHtml5DndPolyfill() {
+        if (mobileHtml5DndPolyfillLoaded) {
+            return;
+        }
+        if (!getPage().getWebBrowser().isTouchDevice()) {
+            return;
+        }
+        mobileHtml5DndPolyfillLoaded = true;
+
+        String vaadinLocation = getSession().getService().getStaticFileLocation(
+                VaadinService.getCurrentRequest()) + "/VAADIN/";
+
+        getPage().addDependency(new Dependency(Type.JAVASCRIPT,
+                vaadinLocation + ApplicationConstants.MOBILE_DND_POLYFILL_JS));
+
+        getRpcProxy(PageClientRpc.class).initializeMobileHtml5DndPolyfill();
+    }
+
+    /**
      * Event which is fired when the ordering of the windows is updated.
      * <p>
      * The other way to listen window position for specific window is
@@ -1875,7 +1972,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      * @see Window.WindowOrderChangeEvent
      *
      * @author Vaadin Ltd
-     * @since 8.0.0
+     * @since 8.0
      *
      */
     public static class WindowOrderUpdateEvent extends Component.Event {
@@ -1902,7 +1999,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     /**
      * An interface used for listening to Windows order update events.
      *
-     * @since 8.0.0
+     * @since 8.0
      *
      * @see Window.WindowOrderChangeEvent
      */

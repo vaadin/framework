@@ -34,7 +34,7 @@ import com.vaadin.ui.CheckBoxGroup;
 
 public class BinderMultiSelectTest
         extends BinderTestBase<Binder<BeanWithEnums>, BeanWithEnums> {
-    public class TestEnumSetToStringConverter
+    public static class TestEnumSetToStringConverter
             implements Converter<Set<TestEnum>, String> {
         @Override
         public Result<String> convertToModel(Set<TestEnum> value,

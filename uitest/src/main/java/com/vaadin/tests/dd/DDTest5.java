@@ -52,11 +52,10 @@ public class DDTest5 extends TestBase {
         HorizontalSortableCssLayoutWithWrappers verticalSortableCssLayoutWithWrappers = new HorizontalSortableCssLayoutWithWrappers();
         w.addWindow(verticalSortableCssLayoutWithWrappers);
         verticalSortableCssLayoutWithWrappers.setPositionX(200);
-        verticalSortableCssLayoutWithWrappers
-                .setPositionY(40); /*
-                                    * FIXME: subwindow horizontal position does
-                                    * not work if only x set
-                                    */
+        /*
+         * FIXME: subwindow horizontal position does not work if only x set
+         */
+        verticalSortableCssLayoutWithWrappers.setPositionY(40);
 
         Label l;
 
@@ -148,7 +147,7 @@ public class DDTest5 extends TestBase {
 
                     String data = (String) dropEvent.getTransferable()
                             .getData("text/plain");
-                    if (data == null || "".equals(data)) {
+                    if (data == null || data.isEmpty()) {
                         data = "-- no Text --";
                     }
                     cssLayout.addComponent(new WrappedLabel(data));

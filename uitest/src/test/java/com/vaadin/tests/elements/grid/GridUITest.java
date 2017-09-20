@@ -83,7 +83,7 @@ public class GridUITest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         grid.getHeaderCellByCaption(1, "extra row");
     }
-    
+
     private int checkRows() {
         int rowCount = 0;
         for (final GridRowElement row : getRows()) {

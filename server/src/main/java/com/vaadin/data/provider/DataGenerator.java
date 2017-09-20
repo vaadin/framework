@@ -62,4 +62,14 @@ public interface DataGenerator<T> extends Serializable {
      */
     public default void destroyAllData() {
     }
+
+    /**
+     * Informs the {@code DataGenerator} that a data object has been updated.
+     * This method should update any unneeded information stored for given item.
+     *
+     * @param item
+     *            the updated item
+     */
+    public default void refreshData(T item) {
+    }
 }

@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 /**
  * Interface for implementing connection pools to be used with SQLContainer.
+ * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
 public interface JDBCConnectionPool extends Serializable {

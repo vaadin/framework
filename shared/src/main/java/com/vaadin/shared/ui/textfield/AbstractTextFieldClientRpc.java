@@ -19,7 +19,8 @@ import com.vaadin.shared.communication.ClientRpc;
 
 /**
  * Server to client RPC interface for AbstractTextField.
- *
+ * 
+ * @since 8.0
  */
 public interface AbstractTextFieldClientRpc extends ClientRpc {
     /**

@@ -16,6 +16,8 @@
 
 package com.vaadin.v7.data;
 
+import com.vaadin.data.Binder;
+
 import java.io.Serializable;
 
 /**
@@ -27,6 +29,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated As of 8.0, no direct replacement available. See {@link Binder}, {@link com.vaadin.data.Validator}.
  */
 @Deprecated
 public interface BufferedValidatable

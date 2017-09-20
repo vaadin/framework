@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import com.vaadin.data.HasDataProvider;
 import com.vaadin.data.provider.DataProvider;
@@ -51,9 +52,13 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
      */
     public NativeSelect() {
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
-        addDataGenerator(
-                (item, json) -> json.put(DataCommunicatorConstants.DATA,
-                        getItemCaptionGenerator().apply(item)));
+        addDataGenerator((item, json) -> {
+            String caption = getItemCaptionGenerator().apply(item);
+            if (caption == null) {
+                caption = "";
+            }
+            json.put(DataCommunicatorConstants.DATA, caption);
+        });
 
         setItemCaptionGenerator(String::valueOf);
     }
@@ -138,5 +143,93 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
     @Override
     public ItemCaptionGenerator<T> getItemCaptionGenerator() {
         return super.getItemCaptionGenerator();
+    }
+
+    /**
+     * Returns whether the user is allowed to select nothing in the combo box.
+     *
+     * @return true if empty selection is allowed, false otherwise
+     * @since 8.0
+     */
+    public boolean isEmptySelectionAllowed() {
+        return getState(false).emptySelectionAllowed;
+    }
+
+    /**
+     * Sets whether the user is allowed to select nothing in the combo box. When
+     * true, a special empty item is shown to the user.
+     *
+     * @param emptySelectionAllowed
+     *            true to allow not selecting anything, false to require
+     *            selection
+     * @since 8.0
+     */
+    public void setEmptySelectionAllowed(boolean emptySelectionAllowed) {
+        getState().emptySelectionAllowed = emptySelectionAllowed;
+    }
+
+    /**
+     * Returns the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     *
+     * @see #setEmptySelectionAllowed(boolean)
+     * @see #isEmptySelectionAllowed()
+     * @see #setEmptySelectionCaption(String)
+     * @see #isSelected(Object)
+     *
+     * @return the empty selection caption, not {@code null}
+     * @since 8.0
+     */
+    public String getEmptySelectionCaption() {
+        return getState(false).emptySelectionCaption;
+    }
+
+    /**
+     * Sets the empty selection caption.
+     * <p>
+     * The empty string {@code ""} is the default empty selection caption.
+     * <p>
+     * If empty selection is allowed via the
+     * {@link #setEmptySelectionAllowed(boolean)} method (it is by default) then
+     * the empty item will be shown with the given caption.
+     *
+     * @param caption
+     *            the caption to set, not {@code null}
+     * @see #isSelected(Object)
+     * @since 8.0
+     */
+    public void setEmptySelectionCaption(String caption) {
+        Objects.nonNull(caption);
+        getState().emptySelectionCaption = caption;
+    }
+
+    /**
+     * Sets the number of items that are visible. If only one item is visible,
+     * then the box will be displayed as a drop-down list (the default).
+     *
+     * @since 8.1
+     * @param visibleItemCount
+     *            the visible item count
+     * @throws IllegalArgumentException
+     *             if the value is smaller than one
+     */
+    public void setVisibleItemCount(int visibleItemCount) {
+        if (visibleItemCount < 1) {
+            throw new IllegalArgumentException(
+                    "There must be at least one item visible");
+        }
+        getState().visibleItemCount = visibleItemCount;
+    }
+
+    /**
+     * Gets the number of items that are visible. If only one item is visible,
+     * then the box will be displayed as a drop-down list.
+     *
+     * @since 8.1
+     * @return the visible item count
+     */
+    public int getVisibleItemCount() {
+        return getState(false).visibleItemCount;
     }
 }

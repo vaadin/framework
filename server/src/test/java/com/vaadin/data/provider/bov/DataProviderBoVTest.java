@@ -25,9 +25,8 @@ import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.SortOrder;
+import com.vaadin.data.provider.QuerySortOrder;
 import com.vaadin.shared.data.sort.SortDirection;
 
 /**
@@ -102,7 +101,7 @@ public class DataProviderBoVTest {
     }
 
     private DataProvider<Person, ?> createUnsortedDataProvider() {
-        DataProvider<Person, ?> dataProvider = new CallbackDataProvider<>(
+        DataProvider<Person, ?> dataProvider = DataProvider.fromCallbacks(
                 // First callback fetches items based on a query
                 query -> {
                     // The index of the first item to load
@@ -130,11 +129,11 @@ public class DataProviderBoVTest {
     }
 
     private DataProvider<Person, ?> createSortedDataProvider() {
-        DataProvider<Person, ?> dataProvider = new CallbackDataProvider<>(
+        DataProvider<Person, ?> dataProvider = DataProvider.fromCallbacks(
                 // First callback fetches items based on a query
                 query -> {
                     List<PersonService.PersonSort> sortOrders = new ArrayList<>();
-                    for (SortOrder<String> queryOrder : query.getSortOrders()) {
+                    for (QuerySortOrder queryOrder : query.getSortOrders()) {
                         PersonService.PersonSort sort = personService
                                 .createSort(
                                         // The name of the sorted property

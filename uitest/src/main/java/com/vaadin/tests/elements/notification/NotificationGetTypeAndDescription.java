@@ -11,9 +11,10 @@ import com.vaadin.ui.Notification.Type;
 public class NotificationGetTypeAndDescription extends AbstractTestUI {
 
     private final static Type[] types = { Type.WARNING_MESSAGE,
-            Type.ERROR_MESSAGE, Type.HUMANIZED_MESSAGE, Type.TRAY_NOTIFICATION };
-    public final static String[] type_names = { "warning", "error",
-            "humanized", "tray_notification" };
+            Type.ERROR_MESSAGE, Type.HUMANIZED_MESSAGE,
+            Type.TRAY_NOTIFICATION };
+    public final static String[] type_names = { "warning", "error", "humanized",
+            "tray_notification" };
     public final static String[] captions = { "warningC", "errorC",
             "humanizedC", "tray_notificationC" };
     public final static String[] descriptions = { "warning", "error",

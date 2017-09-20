@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -43,7 +44,7 @@ import com.vaadin.ui.TextField;
 public class BinderConverterValidatorTest
         extends BinderTestBase<Binder<Person>, Person> {
 
-    private static class StatusBean {
+    private static class StatusBean implements Serializable {
         private String status;
 
         public String getStatus() {

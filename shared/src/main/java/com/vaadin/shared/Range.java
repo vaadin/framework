@@ -27,7 +27,7 @@ import java.io.Serializable;
  * The range is considered {@link #isEmpty() empty} if the start is the same as
  * the end.
  *
- * @since 7.4
+ * @since 8.0
  * @author Vaadin Ltd
  */
 public final class Range implements Serializable {
@@ -229,7 +229,7 @@ public final class Range implements Serializable {
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [" + getStart() + ".." + getEnd()
-                + "[" + (isEmpty() ? " (empty)" : "");
+                + "]" + (isEmpty() ? " (empty)" : "");
     }
 
     @Override

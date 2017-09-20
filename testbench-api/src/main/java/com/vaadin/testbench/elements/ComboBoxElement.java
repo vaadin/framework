@@ -20,15 +20,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.ComboBox")
-public class ComboBoxElement extends AbstractSelectElement {
+public class ComboBoxElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySuggestionPopup = By
             .vaadin("#popup");
@@ -53,7 +53,7 @@ public class ComboBoxElement extends AbstractSelectElement {
             return;
         }
         getInputField().clear();
-        sendInputFieldKeys(text);
+        getInputField().sendKeys(text);
 
         selectSuggestion(text);
     }
@@ -86,7 +86,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     private boolean selectSuggestion(String text) {
         for (WebElement suggestion : getPopupSuggestionElements()) {
             if (text.equals(suggestion.getText())) {
-                suggestion.click();
+                clickElement(suggestion);
                 return true;
             }
         }
@@ -108,29 +108,13 @@ public class ComboBoxElement extends AbstractSelectElement {
         return !isReadOnly(getInputField());
     }
 
-    /*
-     * Workaround selenium's bug: sendKeys() will not send left parentheses
-     * properly. See #14048.
+    /**
+     * Checks whether the suggestion popup is open or not.
+     *
+     * @return {@code true} if popup is open, {@code false if not}
      */
-    private void sendInputFieldKeys(String text) {
-        WebElement textBox = getInputField();
-        if (!text.contains("(")) {
-            textBox.sendKeys(text);
-            return;
-        }
-
-        String OPEN_PARENTHESES = "_OPEN_PARENT#H#ESES_";
-        String tamperedText = text.replaceAll("\\(", OPEN_PARENTHESES);
-        textBox.sendKeys(tamperedText);
-
-        JavascriptExecutor js = getCommandExecutor();
-        String jsScript = String.format(
-                "arguments[0].value = arguments[0].value.replace(/%s/g, '(')",
-                OPEN_PARENTHESES);
-        js.executeScript(jsScript, textBox);
-
-        // refresh suggestions popupBox
-        textBox.sendKeys("a" + Keys.BACK_SPACE);
+    public boolean isPopupOpen() {
+        return isElementPresent(bySuggestionPopup);
     }
 
     /**
@@ -146,7 +130,7 @@ public class ComboBoxElement extends AbstractSelectElement {
      * @return List of suggestion texts
      */
     public List<String> getPopupSuggestions() {
-        List<String> suggestionsTexts = new ArrayList<String>();
+        List<String> suggestionsTexts = new ArrayList<>();
         List<WebElement> suggestions = getPopupSuggestionElements();
         for (WebElement suggestion : suggestions) {
             String text = suggestion.getText();
@@ -181,9 +165,11 @@ public class ComboBoxElement extends AbstractSelectElement {
      */
     public boolean openNextPage() {
         try {
-            getSuggestionPopup().findElement(byNextPage).click();
+            clickElement(getSuggestionPopup().findElement(byNextPage));
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (WebDriverException e) {
+            // PhantomJS driver can throw WDE instead of the more specific
+            // NoSuchElementException
             return false;
         }
     }
@@ -195,9 +181,11 @@ public class ComboBoxElement extends AbstractSelectElement {
      */
     public boolean openPrevPage() {
         try {
-            getSuggestionPopup().findElement(byPrevPage).click();
+            clickElement(getSuggestionPopup().findElement(byPrevPage));
             return true;
-        } catch (NoSuchElementException e) {
+        } catch (WebDriverException e) {
+            // PhantomJS driver can throw WDE instead of the more specific
+            // NoSuchElementException
             return false;
         }
     }
@@ -211,7 +199,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the combo box element
+     * Return value of the combo box element.
      *
      * @return value of the combo box element
      */
@@ -269,6 +257,15 @@ public class ComboBoxElement extends AbstractSelectElement {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
             }
+        }
+    }
+
+    private void clickElement(WebElement element) {
+        if (isFirefox()) {
+            // Workaround for Selenium/TB and Firefox 45 issue
+            ((TestBenchElement) element).clickHiddenElement();
+        } else {
+            element.click();
         }
     }
 }
