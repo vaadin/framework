@@ -42,6 +42,7 @@ public class WebBrowser implements Serializable {
     private int rawTimezoneOffset = 0;
     private int dstSavings;
     private boolean dstInEffect;
+    private String timeZoneId;
     private boolean touchDevice;
 
     private VBrowserDetails browserDetails;
@@ -354,6 +355,17 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Returns the TimeZone Id (like "Europe/Helsinki") provided by the browser
+     * (if the browser supports this feature).
+     *
+     * @return the TimeZone Id if provided by the browser, null otherwise.
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/resolvedOptions">Intl.DateTimeFormat.prototype.resolvedOptions()</a>
+     */
+    public String getTimeZoneId() {
+        return timeZoneId;
+    }
+
+    /**
      * Returns the browser-reported TimeZone offset in milliseconds from GMT
      * ignoring possible daylight saving adjustments that may be in effect in
      * the browser.
@@ -450,7 +462,7 @@ public class WebBrowser implements Serializable {
      * @param touchDevice
      */
     void updateClientSideDetails(String sw, String sh, String tzo, String rtzo,
-            String dstSavings, String dstInEffect, String curDate,
+            String dstSavings, String dstInEffect, String tzId, String curDate,
             boolean touchDevice) {
         if (sw != null) {
             try {
@@ -486,6 +498,11 @@ public class WebBrowser implements Serializable {
         }
         if (dstInEffect != null) {
             this.dstInEffect = Boolean.parseBoolean(dstInEffect);
+        }
+        if (tzId == null || "undefined".equals(tzId)) {
+            this.timeZoneId = null;
+        } else {
+            this.timeZoneId = tzId;
         }
         if (curDate != null) {
             try {
@@ -525,6 +542,7 @@ public class WebBrowser implements Serializable {
                     request.getParameter("v-rtzo"),
                     request.getParameter("v-dstd"),
                     request.getParameter("v-dston"),
+                    request.getParameter("v-tzid"),
                     request.getParameter("v-curdate"),
                     request.getParameter("v-td") != null);
         }

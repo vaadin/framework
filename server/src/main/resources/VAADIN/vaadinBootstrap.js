@@ -329,6 +329,13 @@
 			
 			// DST in effect?
 			params += '&v-dston=' + (tzo1 != rtzo);
+
+            // Time zone id (if available)
+            try {
+            	params += '&v-tzid=' + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone);
+			} catch (err) {
+
+			}
 			
 			var pe = document.getElementById(parentElementId);
 			if (pe) {
