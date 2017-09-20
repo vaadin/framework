@@ -637,7 +637,7 @@ public class LayoutDependencyTree {
     }
 
     private static String getSizeDefinition(String size) {
-        if (size == null || size.length() == 0) {
+        if (size == null || size.isEmpty()) {
             return "undefined";
         } else if (size.endsWith("%")) {
             return "relative";

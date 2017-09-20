@@ -141,7 +141,7 @@ public class ResourceLoader {
         for (int i = 0; i < scripts.getLength(); i++) {
             ScriptElement element = ScriptElement.as(scripts.getItem(i));
             String src = element.getSrc();
-            if (src != null && src.length() != 0) {
+            if (src != null && !src.isEmpty()) {
                 loadedResources.add(src);
             }
         }
@@ -152,11 +152,11 @@ public class ResourceLoader {
             String rel = linkElement.getRel();
             String href = linkElement.getHref();
             if ("stylesheet".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
             if ("import".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
         }

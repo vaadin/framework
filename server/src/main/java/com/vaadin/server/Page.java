@@ -203,7 +203,7 @@ public class Page implements Serializable {
         private void paintContent(PaintTarget target) throws PaintException {
             target.startTag("open");
             target.addAttribute("src", resource);
-            if (name != null && name.length() > 0) {
+            if (name != null && !name.isEmpty()) {
                 target.addAttribute("name", name);
             }
             if (!tryToOpenAsPopup) {

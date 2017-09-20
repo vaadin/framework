@@ -110,7 +110,7 @@ public class TextChangeEvents extends AbstractTestUIWithLog {
         }
 
         private String findMatch(String currentTextContent) {
-            if (currentTextContent.length() > 0) {
+            if (!currentTextContent.isEmpty()) {
                 for (int i = 0; i < names.length; i++) {
                     if (names[i].startsWith(currentTextContent)) {
                         return names[i];

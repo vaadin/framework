@@ -307,7 +307,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
         String templateName = getState(false).templateName;
-        if (templateName != null && templateName.length() != 0) {
+        if (templateName != null && !templateName.isEmpty()) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();
             String resourceName = "layouts/" + templateName + ".html";

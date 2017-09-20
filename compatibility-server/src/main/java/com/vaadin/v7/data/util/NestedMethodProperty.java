@@ -146,7 +146,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         }
         for (int i = 0; i < simplePropertyNames.length; i++) {
             String simplePropertyName = simplePropertyNames[i].trim();
-            if (simplePropertyName.length() > 0) {
+            if (!simplePropertyName.isEmpty()) {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;
                 try {

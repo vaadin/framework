@@ -98,15 +98,15 @@ public class VLink extends HTML implements ClickHandler, HasEnabled {
             }
 
             if (targetWidth > 0) {
-                features += (features.length() > 0 ? "," : "") + "width="
+                features += (features.isEmpty() ? "" : ",") + "width="
                         + targetWidth;
             }
             if (targetHeight > 0) {
-                features += (features.length() > 0 ? "," : "") + "height="
+                features += (features.isEmpty() ? "" : ",") + "height="
                         + targetHeight;
             }
 
-            if (features.length() > 0) {
+            if (!features.isEmpty()) {
                 // if 'special features' are set, use window.open(), unless
                 // a modifier key is held (ctrl to open in new tab etc)
                 Event e = DOM.eventGetCurrentEvent();

@@ -187,7 +187,7 @@ public class StringToCollectionConverter
             }
             builder.append(delimiter);
         }
-        if (builder.length() > 0) {
+        if (builder.length() != 0) {
             return builder.substring(0, builder.length() - delimiter.length());
         } else {
             return builder.toString();

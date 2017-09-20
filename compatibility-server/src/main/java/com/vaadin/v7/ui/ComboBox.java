@@ -188,7 +188,7 @@ public class ComboBox extends AbstractSelect
     }
 
     private boolean isFilteringNeeded() {
-        return filterstring != null && filterstring.length() > 0
+        return filterstring != null && !filterstring.isEmpty()
                 && filteringMode != FilteringMode.OFF;
     }
 
@@ -762,7 +762,7 @@ public class ComboBox extends AbstractSelect
         } else if (isNewItemsAllowed()) {
             // New option entered (and it is allowed)
             final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
+            if (newitem != null && !newitem.isEmpty()) {
                 getNewItemHandler().addNewItem(newitem);
                 // rebuild list
                 filterstring = null;

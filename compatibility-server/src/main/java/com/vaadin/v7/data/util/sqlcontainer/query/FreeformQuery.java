@@ -267,7 +267,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
                 StatementHelper sh = ((FreeformStatementDelegate) delegate)
                         .getCountStatement();
                 if (sh != null && sh.getQueryString() != null
-                        && sh.getQueryString().length() > 0) {
+                        && !sh.getQueryString().isEmpty()) {
                     return true;
                 }
             } catch (UnsupportedOperationException e) {
@@ -276,7 +276,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
         }
         try {
             String queryString = delegate.getQueryString(0, 50);
-            return queryString != null && queryString.length() > 0;
+            return queryString != null && !queryString.isEmpty();
         } catch (UnsupportedOperationException e) {
             return false;
         }

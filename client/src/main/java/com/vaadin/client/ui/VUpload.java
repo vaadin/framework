@@ -332,7 +332,7 @@ public class VUpload extends SimplePanel {
             VConsole.log("Submit cancelled (disabled or already submitted)");
             return;
         }
-        if (fu.getFilename().length() == 0) {
+        if (fu.getFilename().isEmpty()) {
             VConsole.log("Submitting empty selection (no file)");
         }
         // flush possibly pending variable changes, so they will be handled

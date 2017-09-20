@@ -465,7 +465,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // New option entered (and it is allowed)
         if (isNewItemsAllowed()) {
             final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
+            if (newitem != null && !newitem.isEmpty()) {
                 getNewItemHandler().addNewItem(newitem);
             }
         }

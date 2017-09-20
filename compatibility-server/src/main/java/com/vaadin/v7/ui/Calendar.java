@@ -1825,7 +1825,7 @@ public class Calendar extends AbstractLegacyComponent
 
         @Override
         public void weekClick(String event) {
-            if (event.length() > 0 && event.contains("w")) {
+            if (!event.isEmpty() && event.contains("w")) {
                 String[] splitted = event.split("w");
                 if (splitted.length == 2) {
                     try {

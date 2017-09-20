@@ -155,7 +155,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         public void createNewItem(String itemValue) {
             // New option entered
             if (getNewItemHandler() != null && itemValue != null
-                    && itemValue.length() > 0) {
+                    && !itemValue.isEmpty()) {
                 getNewItemHandler().accept(itemValue);
             }
         }
