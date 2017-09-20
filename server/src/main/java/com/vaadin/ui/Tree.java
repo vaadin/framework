@@ -55,6 +55,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -1142,4 +1143,52 @@ public class Tree<T> extends Composite
             return (Tree<T>) super.getComponent();
         }
     }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @throws IllegalArgumentException
+     *            if the provided row is outside the item range
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        treeGrid.scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        treeGrid.scrollTo(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     */
+    public void scrollToStart() {
+        treeGrid.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     */
+    public void scrollToEnd() {
+        treeGrid.scrollToEnd();
+    }
+
 }

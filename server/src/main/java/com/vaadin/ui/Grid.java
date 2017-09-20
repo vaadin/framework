@@ -3989,7 +3989,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *             if the provided id is not recognized by the data source.
+     *            if the provided row is outside the item range
      */
     public void scrollTo(int row) throws IllegalArgumentException {
         scrollTo(row, ScrollDestination.ANY);
@@ -4013,7 +4013,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Objects.requireNonNull(destination,
                 "ScrollDestination can not be null");
 
-        if (row > getDataProvider().size(new Query())) {
+        if (row > getDataCommunicator().getDataProviderSize()) {
             throw new IllegalArgumentException("Row outside dataProvider size");
         }
 
