@@ -13,26 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.ui;
+package com.vaadin.shared.ui.notification;
 
-import java.io.Serializable;
+import com.vaadin.shared.communication.ServerRpc;
 
-public class UIConstants implements Serializable {
-    /**
-     * Attribute name for the lazy resize setting .
-     */
-    @Deprecated
-    public static final String RESIZE_LAZY = "rL";
+/**
+ * Client to server RPC interface for Notification.
+ *
+ * @author Vaadin Ltd.
+ *
+ * @since
+ */
+public interface NotificationServerRpc extends ServerRpc {
 
-    @Deprecated
-    public static final String ATTRIBUTE_PUSH_STATE = "ps";
-
-    @Deprecated
-    public static final String ATTRIBUTE_REPLACE_STATE = "rs";
-
-    /**
-     * Name of the parameter used to transmit UI ids back and forth
-     */
-    public static final String UI_ID_PARAMETER = "v-uiId";
-
+    void closed();
 }

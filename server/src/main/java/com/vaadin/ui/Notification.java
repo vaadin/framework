@@ -17,10 +17,18 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 
+import com.vaadin.event.ConnectorEvent;
+import com.vaadin.server.AbstractClientConnector;
+import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.Position;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.notification.NotificationServerRpc;
+import com.vaadin.shared.ui.notification.NotificationState;
 
 /**
  * A notification message, used to display temporary messages to the user - for
@@ -61,7 +69,15 @@ import com.vaadin.shared.Position;
  * </p>
  *
  */
-public class Notification implements Serializable {
+public class Notification extends AbstractExtension implements Serializable {
+
+    /**
+     * The server RPC.
+     */
+    protected NotificationServerRpc rpc = () -> {
+        fireEvent(new CloseEvent(Notification.this));
+    };
+
     public enum Type {
         HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE(
                 "warning"), ERROR_MESSAGE("error"), TRAY_NOTIFICATION("tray"),
@@ -117,7 +133,7 @@ public class Notification implements Serializable {
     private String description;
     private Resource icon;
     private Position position = Position.MIDDLE_CENTER;
-    private int delayMsec = 0;
+    private int delayMsec = DELAY_NONE;
     private String styleName;
     private boolean htmlContentAllowed;
 
@@ -199,9 +215,10 @@ public class Notification implements Serializable {
      */
     public Notification(String caption, String description, Type type,
             boolean htmlContentAllowed) {
-        this.caption = caption;
-        this.description = description;
-        this.htmlContentAllowed = htmlContentAllowed;
+        registerRpc(rpc);
+        setCaption(caption);
+        setDescription(description);
+        setHtmlContentAllowed(htmlContentAllowed);
         setType(type);
     }
 
@@ -238,7 +255,7 @@ public class Notification implements Serializable {
     }
 
     /**
-     * Sets the caption part of the notification message
+     * Sets the caption part of the notification message.
      *
      * @param caption
      *            The message caption
@@ -250,7 +267,7 @@ public class Notification implements Serializable {
     /**
      * Gets the description part of the notification message.
      *
-     * @return The message description.
+     * @return The message description
      */
     public String getDescription() {
         return description;
@@ -260,6 +277,7 @@ public class Notification implements Serializable {
      * Sets the description part of the notification message.
      *
      * @param description
+     *            The message description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -306,7 +324,8 @@ public class Notification implements Serializable {
     /**
      * Gets the delay before the notification disappears.
      *
-     * @return the delay in msec, -1 indicates the message has to be clicked.
+     * @return the delay in milliseconds, {@value #DELAY_FOREVER}
+     *            indicates the message has to be clicked.
      */
     public int getDelayMsec() {
         return delayMsec;
@@ -316,8 +335,8 @@ public class Notification implements Serializable {
      * Sets the delay before the notification disappears.
      *
      * @param delayMsec
-     *            the desired delay in msec, -1 to require the user to click the
-     *            message
+     *            the desired delay in milliseconds, {@value #DELAY_FOREVER}
+     *            to require the user to click the message
      */
     public void setDelayMsec(int delayMsec) {
         this.delayMsec = delayMsec;
@@ -327,7 +346,7 @@ public class Notification implements Serializable {
      * Sets the style name for the notification message.
      *
      * @param styleName
-     *            The desired style name.
+     *            The desired style name
      */
     public void setStyleName(String styleName) {
         this.styleName = styleName;
@@ -336,7 +355,7 @@ public class Notification implements Serializable {
     /**
      * Gets the style name for the notification message.
      *
-     * @return
+     * @return The style name
      */
     public String getStyleName() {
         return styleName;
@@ -357,10 +376,11 @@ public class Notification implements Serializable {
     }
 
     /**
-     * Checks whether caption and description are interpreted as html or plain
+     * Checks whether caption and description are interpreted as HTML or plain
      * text.
      *
-     * @return true if the texts are used as html, false if used as plain text
+     * @return {@code true} if the texts are used as HTML,
+     *         {@code false} if used as plain text
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
@@ -374,8 +394,36 @@ public class Notification implements Serializable {
      *            The page on which the notification should be shown
      */
     public void show(Page page) {
-        // TODO Can avoid deprecated API when Notification extends Extension
-        page.showNotification(this);
+        extend(page.getUI());
+    }
+
+    @Override
+    protected void extend(AbstractClientConnector target) {
+        NotificationState state = getState();
+        state.caption = getCaption();
+        state.description = getDescription();
+        state.htmlContentAllowed = isHtmlContentAllowed();
+        if (getIcon() != null) {
+            ResourceReference reference = ResourceReference.create(
+                    getIcon(), target, "");
+            state.iconUri = reference.getURL();
+        }
+        if (getPosition() != null) {
+            state.position = getPosition().ordinal();
+        }
+        state.styleName = getStyleName();
+        state.delay = getDelayMsec();
+        super.extend(target);
+    }
+
+    @Override
+    protected NotificationState getState() {
+        return (NotificationState) super.getState();
+    }
+
+    @Override
+    protected NotificationState getState(boolean markAsDirty) {
+        return (NotificationState) super.getState(markAsDirty);
     }
 
     /**
@@ -389,16 +437,20 @@ public class Notification implements Serializable {
      *
      * @param caption
      *            The message
+     * @return
+     *            The Notification
      */
-    public static void show(String caption) {
-        new Notification(caption).show(Page.getCurrent());
+    public static Notification show(String caption) {
+        Notification notification = new Notification(caption);
+        notification.extend(UI.getCurrent());
+        return notification;
     }
 
     /**
      * Shows a notification message the current page. The position and behavior
      * of the message depends on the type, which is one of the basic types
      * defined in {@link Notification}, for instance
-     * Notification.TYPE_WARNING_MESSAGE.
+     * {@link Type#WARNING_MESSAGE}.
      *
      * The caption is rendered as plain text with HTML automatically escaped.
      *
@@ -409,9 +461,13 @@ public class Notification implements Serializable {
      *            The message
      * @param type
      *            The message type
+     * @return
+     *            The Notification
      */
-    public static void show(String caption, Type type) {
-        new Notification(caption, type).show(Page.getCurrent());
+    public static Notification show(String caption, Type type) {
+        Notification notification = new Notification(caption, type);
+        notification.extend(UI.getCurrent());
+        return notification;
     }
 
     /**
@@ -431,8 +487,73 @@ public class Notification implements Serializable {
      *            The message description
      * @param type
      *            The message type
+     * @return
+     *            The Notification
      */
-    public static void show(String caption, String description, Type type) {
-        new Notification(caption, description, type).show(Page.getCurrent());
+    public static Notification show(String caption, String description, Type type) {
+        Notification notification = new Notification(caption, description, type);
+        notification.extend(UI.getCurrent());
+        return notification;
     }
+
+    /**
+     * Adds a CloseListener to the Notification.
+     *
+     * @param listener
+     *            the CloseListener to add, not {@code null}
+     * @since
+     */
+    public Registration addCloseListener(CloseListener listener) {
+        return addListener(CloseEvent.class, listener, CLOSE_METHOD);
+    }
+
+    private static final Method CLOSE_METHOD;
+    static {
+        try {
+            CLOSE_METHOD = CloseListener.class
+                    .getDeclaredMethod("notificationClose", CloseEvent.class);
+        } catch (final NoSuchMethodException e) {
+            // This should never happen
+            throw new RuntimeException(
+                    "Internal error, notification close method not found");
+        }
+    }
+
+    public static class CloseEvent extends ConnectorEvent {
+
+        /**
+         * @param source
+         */
+        public CloseEvent(Notification source) {
+            super(source);
+        }
+
+        /**
+         * Gets the Notification.
+         *
+         * @return The Notification
+         */
+        public Notification getNotification() {
+            return (Notification) getSource();
+        }
+    }
+
+    /**
+     * An interface used for listening to Notification close events. Add the
+     * CloseListener to a Notification and
+     * {@link CloseListener#notificationClose(CloseEvent)} will be called whenever the
+     * Notification is closed.
+     */
+    @FunctionalInterface
+    public interface CloseListener extends Serializable {
+        /**
+         * Use {@link CloseEvent#getNotification()} to get a reference to the
+         * {@link Notification} that was closed.
+         *
+         * @param e
+         *            The triggered event
+         */
+        public void notificationClose(CloseEvent e);
+    }
+
 }

@@ -504,7 +504,7 @@ public class Window extends Panel
          * {@link Window} that was closed.
          *
          * @param e
-         *            Event containing
+         *            The triggered event
          */
         public void windowClose(CloseEvent e);
     }
