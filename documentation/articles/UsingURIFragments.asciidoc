@@ -1,3 +1,9 @@
+---
+title: Using URI Fragments
+order: 26
+layout: page
+---
+
 [[using-uri-fragments]]
 Using URI fragments
 -------------------

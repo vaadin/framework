@@ -1,3 +1,9 @@
+---
+title: Accessing Web Page And Browser Information
+order: 27
+layout: page
+---
+
 [[accessing-web-page-and-browser-information]]
 Accessing web page and browser information
 ------------------------------------------

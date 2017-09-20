@@ -1,3 +1,9 @@
+---
+title: Creating A Simple Component
+order: 32
+layout: page
+---
+
 [[creating-a-simple-component]]
 Creating a simple component
 ---------------------------

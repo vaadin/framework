@@ -1,3 +1,9 @@
+---
+title: Using Font Icons
+order: 53
+layout: page
+---
+
 [[using-font-icons-in-vaadin-7.2]]
 Using font icons in Vaadin 7.2
 ------------------------------

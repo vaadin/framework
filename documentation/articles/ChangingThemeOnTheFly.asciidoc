@@ -1,3 +1,9 @@
+---
+title: Changing Theme On The Fly
+order: 60
+layout: page
+---
+
 [[changing-theme-on-the-fly]]
 Changing theme on the fly
 -------------------------

@@ -1,3 +1,9 @@
+---
+title: Integrating An Existing GWT Widget
+order: 33
+layout: page
+---
+
 [[integrating-an-existing-gwt-widget]]
 Integrating an existing GWT widget
 ----------------------------------

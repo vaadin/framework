@@ -1,3 +1,9 @@
+---
+title: Read Only Vs Disabled Fields
+order: 56
+layout: page
+---
+
 [[read-only-vs-disabled-fields]]
 Read-only vs Disabled fields
 ----------------------------

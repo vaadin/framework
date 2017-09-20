@@ -1,3 +1,9 @@
+---
+title: Getting Started On NetBeans
+order: 76
+layout: page
+---
+
 [[getting-started-on-netbeans]]
 Getting started on NetBeans
 ---------------------------

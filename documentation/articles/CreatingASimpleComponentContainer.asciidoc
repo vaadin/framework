@@ -1,3 +1,9 @@
+---
+title: Creating A Simple Component Container
+order: 70
+layout: page
+---
+
 [[creating-a-simple-component-container]]
 Creating a simple component container
 -------------------------------------

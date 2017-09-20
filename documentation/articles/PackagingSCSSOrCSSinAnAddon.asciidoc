@@ -1,3 +1,9 @@
+---
+title: Packaging SCSS Or CSS in An Addon
+order: 62
+layout: page
+---
+
 [[packaging-scss-or-css-in-an-add-on]]
 Packaging SCSS or CSS in an add-on
 ----------------------------------

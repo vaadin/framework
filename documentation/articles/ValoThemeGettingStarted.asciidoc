@@ -1,3 +1,9 @@
+---
+title: Valo Theme Getting Started
+order: 57
+layout: page
+---
+
 [[valo-theme-getting-started]]
 Valo theme - Getting started
 ----------------------------

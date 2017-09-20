@@ -1,3 +1,9 @@
+---
+title: Vaadin CDI
+order: 47
+layout: page
+---
+
 [[vaadin-cdi]]
 Vaadin CDI
 ----------

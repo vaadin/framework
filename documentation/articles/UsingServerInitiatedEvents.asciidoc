@@ -1,3 +1,9 @@
+---
+title: Using Server Initiated Events
+order: 30
+layout: page
+---
+
 [[using-server-initiated-events]]
 Using server-initiated events
 -----------------------------

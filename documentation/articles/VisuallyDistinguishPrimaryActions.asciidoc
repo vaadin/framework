@@ -1,3 +1,9 @@
+---
+title: Visually Distinguish Primary Actions
+order: 66
+layout: page
+---
+
 [[visually-distinguish-primary-actions]]
 Visually distinguish primary actions
 ------------------------------------

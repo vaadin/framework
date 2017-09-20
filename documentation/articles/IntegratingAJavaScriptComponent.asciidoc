@@ -1,3 +1,9 @@
+---
+title: Integrating A JavaScript Component
+order: 38
+layout: page
+---
+
 [[integrating-a-javascript-component]]
 Integrating a JavaScript component
 ----------------------------------

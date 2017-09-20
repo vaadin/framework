@@ -1,3 +1,9 @@
+---
+title: Configuring Push For Your Environment
+order: 15
+layout: page
+---
+
 [[configuring-push-for-your-environment]]
 Configuring push for your environment
 -------------------------------------

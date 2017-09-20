@@ -1,3 +1,9 @@
+---
+title: Contents
+order: 1
+layout: page
+---
+
 = Community articles for Vaadin Framework
 
 Helpful articles about Vaadin Framework written by the users for the users. The
@@ -10,6 +16,8 @@ are great, too.
 
 [discrete]
 == Articles
+- link:AccessControlForViews.asciidoc[Access control or views]
+- link:CreatingAServlet3.0Application.asciidoc[Creating a Servlet 3.0 application]
 - link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing portlets for the WebSphere Portal Server]
 - link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
 - link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]

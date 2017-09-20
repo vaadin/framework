@@ -1,3 +1,9 @@
+---
+title: Creating A Component Extension
+order: 72
+layout: page
+---
+
 [[creating-a-component-extension]]
 Creating a component extension
 ------------------------------

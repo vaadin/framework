@@ -1,3 +1,9 @@
+---
+title: Vaadin On Grails Database Access
+order: 36
+layout: page
+---
+
 [[vaadin-on-grails-database-access]]
 Vaadin on grails - Database access
 ----------------------------------

@@ -1,3 +1,9 @@
+---
+title: Valo Examples
+order: 55
+layout: page
+---
+
 [[valo-examples]]
 Valo examples
 -------------

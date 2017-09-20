@@ -1,3 +1,9 @@
+---
+title: Handling Logout
+order: 21
+layout: page
+---
+
 [[handling-logout]]
 Handling logout
 ---------------

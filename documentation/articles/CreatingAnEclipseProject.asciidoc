@@ -1,3 +1,9 @@
+---
+title: Creating An Eclipse Project
+order: 69
+layout: page
+---
+
 [[creating-an-eclipse-project]]
 Creating an Eclipse project
 ---------------------------

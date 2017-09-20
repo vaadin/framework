@@ -1,3 +1,9 @@
+---
+title: Using RPC To Send Events To The Client
+order: 71
+layout: page
+---
+
 [[using-rpc-to-send-events-to-the-client]]
 Using RPC to send events to the client
 --------------------------------------

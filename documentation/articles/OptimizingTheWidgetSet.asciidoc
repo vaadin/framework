@@ -1,3 +1,9 @@
+---
+title: Optimizing The Widget Set
+order: 29
+layout: page
+---
+
 [[optimizing-the-widget-set]]
 Optimizing the widget set
 -------------------------

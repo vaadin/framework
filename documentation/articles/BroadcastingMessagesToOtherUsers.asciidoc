@@ -1,3 +1,9 @@
+---
+title: Broadcasting Messages To Other Users
+order: 82
+layout: page
+---
+
 [[broadcasting-messages-to-other-users]]
 Broadcasting messages to other users
 ------------------------------------

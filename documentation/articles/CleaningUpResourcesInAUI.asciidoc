@@ -1,3 +1,9 @@
+---
+title: Cleaning Up Resources In A UI
+order: 11
+layout: page
+---
+
 [[cleaning-up-resources-in-a-ui]]
 Cleaning up resources in a UI
 -----------------------------

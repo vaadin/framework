@@ -1,3 +1,9 @@
+---
+title: Using Bean Validation To Validate Input
+order: 45
+layout: page
+---
+
 [[using-bean-validation-to-validate-input]]
 Using Bean Validation to validate input
 ---------------------------------------
