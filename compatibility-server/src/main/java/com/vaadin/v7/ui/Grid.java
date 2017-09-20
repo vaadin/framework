@@ -3266,10 +3266,6 @@ public class Grid extends AbstractComponent
             getRowState().defaultRow = value;
         }
 
-        private boolean isDefaultRow() {
-            return getRowState().defaultRow;
-        }
-
         @Override
         protected HeaderCell createCell() {
             return new HeaderCell(this);
