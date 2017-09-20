@@ -1077,9 +1077,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             VALUE_CHANGE_METHOD = Property.ValueChangeListener.class
                     .getDeclaredMethod("valueChange",
                             new Class[] { Property.ValueChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in AbstractField");
         }
     }
@@ -1150,9 +1150,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             READ_ONLY_STATUS_CHANGE_METHOD = Property.ReadOnlyStatusChangeListener.class
                     .getDeclaredMethod("readOnlyStatusChange", new Class[] {
                             Property.ReadOnlyStatusChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in AbstractField");
         }
     }

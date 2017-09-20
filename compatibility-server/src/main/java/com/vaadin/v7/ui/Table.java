@@ -5327,9 +5327,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 HEADER_CLICK_METHOD = HeaderClickListener.class
                         .getDeclaredMethod("headerClick",
                                 new Class[] { HeaderClickEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5368,9 +5368,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 FOOTER_CLICK_METHOD = FooterClickListener.class
                         .getDeclaredMethod("footerClick",
                                 new Class[] { FooterClickEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5600,9 +5600,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 COLUMN_RESIZE_METHOD = ColumnResizeListener.class
                         .getDeclaredMethod("columnResize",
                                 new Class[] { ColumnResizeEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5729,9 +5729,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 METHOD = ColumnReorderListener.class.getDeclaredMethod(
                         "columnReorder",
                         new Class[] { ColumnReorderEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
