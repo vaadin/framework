@@ -45,7 +45,7 @@ public class LinkToPercentage extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(5488);
+        return 5488;
     }
 
 }

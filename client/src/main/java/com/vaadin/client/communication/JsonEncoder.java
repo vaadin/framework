@@ -85,12 +85,12 @@ public class JsonEncoder {
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, connection);
         } else if (value instanceof Map) {
-            return encodeMap((Map) value, type, connection);
+            return encodeMap((Map<?, ?>) value, type, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return Json.create(connector.getConnectorId());
         } else if (value instanceof Collection) {
-            return encodeCollection((Collection) value, type, connection);
+            return encodeCollection((Collection<?>) value, type, connection);
         } else if (value instanceof UidlValue) {
             return encodeVariableChange((UidlValue) value, connection);
         } else {
@@ -163,7 +163,7 @@ public class JsonEncoder {
         return jsonArray;
     }
 
-    private static JsonValue encodeMap(Map<Object, Object> map, Type type,
+    private static JsonValue encodeMap(Map<?, ?> map, Type type,
             ApplicationConnection connection) {
         /*
          * As we have no info about declared types, we instead select encoding
@@ -203,7 +203,7 @@ public class JsonEncoder {
         }
     }
 
-    private static JsonArray encodeObjectMap(Map<Object, Object> map, Type type,
+    private static JsonArray encodeObjectMap(Map<?, ?> map, Type type,
             ApplicationConnection connection) {
         JsonArray keys = Json.createArray();
         JsonArray values = Json.createArray();
@@ -224,7 +224,7 @@ public class JsonEncoder {
         return keysAndValues;
     }
 
-    private static JsonValue encodeConnectorMap(Map<Object, Object> map,
+    private static JsonValue encodeConnectorMap(Map<?, ?> map,
             Type type, ApplicationConnection connection) {
         JsonObject jsonMap = Json.createObject();
 
@@ -240,7 +240,7 @@ public class JsonEncoder {
         return jsonMap;
     }
 
-    private static JsonValue encodeStringMap(Map<Object, Object> map, Type type,
+    private static JsonValue encodeStringMap(Map<?, ?> map, Type type,
             ApplicationConnection connection) {
         JsonObject jsonMap = Json.createObject();
 
@@ -270,7 +270,7 @@ public class JsonEncoder {
         return jsonArray;
     }
 
-    private static JsonArray encodeCollection(Collection collection, Type type,
+    private static JsonArray encodeCollection(Collection<?> collection, Type type,
             ApplicationConnection connection) {
         JsonArray jsonArray = Json.createArray();
         int idx = 0;

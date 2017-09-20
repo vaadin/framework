@@ -47,7 +47,7 @@ public class CustomComponentHideContent extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9895);
+        return 9895;
     }
 
 }

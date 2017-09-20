@@ -374,7 +374,7 @@ public class BinderConverterValidatorTest
         binder.withValidator(Validator
                 .from(bean -> beanLevelValidationRun.getAndSet(true), ""));
 
-        ageField.setValue(String.valueOf(12));
+        ageField.setValue("12");
 
         assertTrue(beanLevelValidationRun.get());
     }

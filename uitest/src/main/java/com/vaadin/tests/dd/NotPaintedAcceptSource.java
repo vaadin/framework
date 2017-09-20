@@ -75,7 +75,7 @@ public class NotPaintedAcceptSource extends TestBase {
         table.addContainerProperty("value", String.class, "");
         for (int i = 0; i < 10; i++) {
             table.addItem(new Object[] { caption + " value " + i },
-                    Integer.valueOf(i));
+                    i);
         }
         table.setWidth("300px");
         return table;
@@ -88,7 +88,7 @@ public class NotPaintedAcceptSource extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8730);
+        return 8730;
     }
 
 }

@@ -961,16 +961,16 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
     private void verifyHeaderCellColspan(int row, int column, int colspan) {
         try {
-            assertEquals(Integer.valueOf(colspan),
-                    Integer.valueOf(Integer.parseInt(
+            assertEquals(colspan,
+                    Integer.parseInt(
                             getGridElement().getHeaderCell(row, column)
-                                    .getAttribute("colspan"))));
+                                    .getAttribute("colspan")));
         } catch (NumberFormatException nfe) {
             // IE8 has colSpan
-            assertEquals(Integer.valueOf(colspan),
-                    Integer.valueOf(Integer.parseInt(
+            assertEquals(colspan,
+                    Integer.parseInt(
                             getGridElement().getHeaderCell(row, column)
-                                    .getAttribute("colSpan"))));
+                                    .getAttribute("colSpan")));
         }
     }
 

@@ -42,7 +42,7 @@ public class GridAddRowBuiltinContainerTest {
     public void testSimpleCase() {
         Object itemId = grid.addRow("Hello");
 
-        Assert.assertEquals(Integer.valueOf(1), itemId);
+        Assert.assertEquals(1, itemId);
 
         Assert.assertEquals("There should be one item in the container", 1,
                 container.size());
@@ -68,25 +68,25 @@ public class GridAddRowBuiltinContainerTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testAddInvalidType() {
-        grid.addRow(Integer.valueOf(5));
+        grid.addRow(5);
     }
 
     @Test
     public void testMultipleProperties() {
         grid.addColumn("myOther", Integer.class);
 
-        Object itemId = grid.addRow("Hello", Integer.valueOf(3));
+        Object itemId = grid.addRow("Hello", 3);
 
         Item item = container.getItem(itemId);
         Assert.assertEquals("Hello",
                 item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        Assert.assertEquals(3,
                 item.getItemProperty("myOther").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidPropertyAmount() {
-        grid.addRow("Hello", Integer.valueOf(3));
+        grid.addRow("Hello", 3);
     }
 
     @Test
@@ -94,12 +94,12 @@ public class GridAddRowBuiltinContainerTest {
         grid.addColumn("myOther", Integer.class);
         grid.removeColumn("myColumn");
 
-        grid.addRow(Integer.valueOf(3));
+        grid.addRow(3);
 
-        Item item = container.getItem(Integer.valueOf(1));
+        Item item = container.getItem(1);
         Assert.assertEquals("Default value should be used for removed column",
                 "", item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        Assert.assertEquals(3,
                 item.getItemProperty("myOther").getValue());
     }
 
@@ -109,19 +109,19 @@ public class GridAddRowBuiltinContainerTest {
 
         grid.setColumnOrder("myOther", "myColumn");
 
-        grid.addRow(Integer.valueOf(3), "Hello");
+        grid.addRow(3, "Hello");
 
-        Item item = container.getItem(Integer.valueOf(1));
+        Item item = container.getItem(1);
         Assert.assertEquals("Hello",
                 item.getItemProperty("myColumn").getValue());
-        Assert.assertEquals(Integer.valueOf(3),
+        Assert.assertEquals(3,
                 item.getItemProperty("myOther").getValue());
     }
 
     @Test
     public void testInvalidType_NothingAdded() {
         try {
-            grid.addRow(Integer.valueOf(5));
+            grid.addRow(5);
 
             // Can't use @Test(expect = Foo.class) since we also want to verify
             // state after exception was thrown

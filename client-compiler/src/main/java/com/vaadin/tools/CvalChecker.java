@@ -90,7 +90,7 @@ public final class CvalChecker {
                 } else if (clz == JsonObject.class) {
                     ret = o.getObject(k);
                 } else if (clz == Integer.class) {
-                    ret = Integer.valueOf((int) o.getNumber(k));
+                    ret = (int) o.getNumber(k);
                 } else if (clz == Date.class) {
                     ret = new Date((long) o.getNumber(k));
                 } else if (clz == Boolean.class) {

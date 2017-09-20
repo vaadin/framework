@@ -5563,7 +5563,7 @@ public class Grid extends AbstractComponent
             } else {
                 throw new IllegalArgumentException(
                         "Grid does not contain column for property "
-                                + String.valueOf(propertyId));
+                                + propertyId);
             }
         }
 

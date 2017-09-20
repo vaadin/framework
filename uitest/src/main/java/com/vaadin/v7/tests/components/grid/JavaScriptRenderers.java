@@ -53,14 +53,13 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         IndexedContainer container = new IndexedContainer();
-        container.addContainerProperty("id", Integer.class, Integer.valueOf(0));
+        container.addContainerProperty("id", Integer.class, 0);
         container.addContainerProperty("bean", MyBean.class, null);
         container.addContainerProperty("string", String.class, "");
 
         for (int i = 0; i < 1000; i++) {
-            Integer itemId = Integer.valueOf(i);
-            Item item = container.addItem(itemId);
-            item.getItemProperty("id").setValue(itemId);
+            Item item = container.addItem(i);
+            item.getItemProperty("id").setValue(i);
             item.getItemProperty("bean")
                     .setValue(new MyBean(i + 1, Integer.toString(i - 1)));
             item.getItemProperty("string").setValue("string" + i);

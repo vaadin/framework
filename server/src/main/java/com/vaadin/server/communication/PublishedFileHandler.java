@@ -113,7 +113,7 @@ public class PublishedFileHandler implements RequestHandler {
         int resourceCacheTime = request.getService()
                 .getDeploymentConfiguration().getResourceCacheTime();
         if (resourceCacheTime > 0) {
-            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+            cacheControl = "max-age=" + resourceCacheTime;
         }
         response.setHeader("Cache-Control", cacheControl);
 

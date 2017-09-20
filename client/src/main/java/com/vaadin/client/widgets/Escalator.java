@@ -1362,10 +1362,9 @@ public class Escalator extends Widget
                         Map<Integer, Double> colWidths = new HashMap<>();
                         for (int i = 0; i < getColumnConfiguration()
                                 .getColumnCount(); i++) {
-                            Double width = Double.valueOf(
-                                    getColumnConfiguration().getColumnWidth(i));
-                            Integer col = Integer.valueOf(i);
-                            colWidths.put(col, width);
+                            double width =
+                                    getColumnConfiguration().getColumnWidth(i);
+                            colWidths.put(i, width);
                         }
                         getColumnConfiguration().setColumnWidths(colWidths);
                     });
@@ -3866,7 +3865,7 @@ public class Escalator extends Widget
              */
             for (int i = -1; i < visualRowOrder.size(); i++) {
                 SpacerContainer.SpacerImpl spacer = spacers
-                        .remove(Integer.valueOf(getTopRowLogicalIndex() + i));
+                        .remove(getTopRowLogicalIndex() + i);
 
                 if (spacer != null) {
                     orderedBodyRows.add(i + 1, spacer.getRootElement());
@@ -4337,10 +4336,9 @@ public class Escalator extends Widget
                     || footer.getRowCount() > 0) {
 
                 Map<Integer, Double> colWidths = new HashMap<>();
-                Double width = Double.valueOf(Column.DEFAULT_COLUMN_WIDTH_PX);
+                double width = Column.DEFAULT_COLUMN_WIDTH_PX;
                 for (int i = index; i < index + numberOfColumns; i++) {
-                    Integer col = Integer.valueOf(i);
-                    colWidths.put(col, width);
+                    colWidths.put(i, width);
                 }
                 getColumnConfiguration().setColumnWidths(colWidths);
             }
@@ -4435,8 +4433,7 @@ public class Escalator extends Widget
         @Override
         public void setColumnWidth(int index, double px)
                 throws IllegalArgumentException {
-            setColumnWidths(Collections.singletonMap(Integer.valueOf(index),
-                    Double.valueOf(px)));
+            setColumnWidths(Collections.singletonMap(index, px));
         }
 
         @Override
@@ -5290,7 +5287,7 @@ public class Escalator extends Widget
         }
 
         private boolean spacerExists(int rowIndex) {
-            return rowIndexToSpacer.containsKey(Integer.valueOf(rowIndex));
+            return rowIndexToSpacer.containsKey(rowIndex);
         }
 
         @SuppressWarnings("boxing")
@@ -5333,7 +5330,7 @@ public class Escalator extends Widget
         }
 
         public SpacerImpl getSpacer(int rowIndex) {
-            return rowIndexToSpacer.get(Integer.valueOf(rowIndex));
+            return rowIndexToSpacer.get(rowIndex);
         }
 
         private void removeSpacer(int rowIndex) {
@@ -5410,7 +5407,7 @@ public class Escalator extends Widget
         }
 
         public Element getSubPartElement(int index) {
-            SpacerImpl spacer = rowIndexToSpacer.get(Integer.valueOf(index));
+            SpacerImpl spacer = rowIndexToSpacer.get(index);
             if (spacer != null) {
                 return spacer.getElement();
             } else {
@@ -5483,8 +5480,8 @@ public class Escalator extends Widget
         public void set(final Element e, final double x, final double y) {
             assert e != null : "Element was null";
             position.set(e, x, y);
-            elementTopPositionMap.put(e, Double.valueOf(y));
-            elementLeftPositionMap.put(e, Double.valueOf(x));
+            elementTopPositionMap.put(e, y);
+            elementLeftPositionMap.put(e, x);
         }
 
         public double getTop(final Element e) {

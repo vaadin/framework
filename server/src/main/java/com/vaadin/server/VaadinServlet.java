@@ -833,7 +833,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String cacheControl = "public, max-age=0, must-revalidate";
         int resourceCacheTime = getCacheTime(filename);
         if (resourceCacheTime > 0) {
-            cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
+            cacheControl = "max-age=" + resourceCacheTime;
         }
         response.setHeader("Cache-Control", cacheControl);
         response.setDateHeader("Expires",

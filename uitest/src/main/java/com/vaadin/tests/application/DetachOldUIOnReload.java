@@ -80,7 +80,7 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10338);
+        return 10338;
     }
 
 }

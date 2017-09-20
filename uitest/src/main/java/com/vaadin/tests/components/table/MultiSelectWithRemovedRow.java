@@ -89,6 +89,6 @@ public class MultiSelectWithRemovedRow extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8584);
+        return 8584;
     }
 }

@@ -14,7 +14,7 @@ public class ComponentPositionTest {
 
     private static final String CSS = "top:7.0px;right:7.0%;bottom:7.0pc;left:7.0em;z-index:7;";
     private static final String PARTIAL_CSS = "top:7.0px;left:7.0em;";
-    private static final Float CSS_VALUE = Float.valueOf(7);
+    private static final Float CSS_VALUE = 7F;
 
     private static final Unit UNIT_UNSET = Sizeable.Unit.PIXELS;
 
@@ -129,7 +129,7 @@ public class ComponentPositionTest {
      */
     @Test
     public void testSetPosition() {
-        final Float SIZE = Float.valueOf(12);
+        final Float SIZE = 12F;
 
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
@@ -164,7 +164,7 @@ public class ComponentPositionTest {
      */
     @Test
     public void testSetPosition2() {
-        final Float SIZE = Float.valueOf(12);
+        final Float SIZE = 12F;
         AbsoluteLayout layout = new AbsoluteLayout();
         Button b = new Button();
         layout.addComponent(b);

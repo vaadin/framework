@@ -45,7 +45,7 @@ public class TableToggleVisibility extends AbstractTestCase {
         for (int i = 1; i < LENGTHS[0]; i++) {
             tables[0].addItem(
                     new Object[] { "MAN", "XYZ", "1-ABC-" + format.format(i) },
-                    Integer.valueOf(i));
+                    i);
         }
         tables[0].setPageLength(LENGTHS[0]);
 
@@ -64,7 +64,7 @@ public class TableToggleVisibility extends AbstractTestCase {
         for (int i = 1; i < LENGTHS[1]; i++) {
             tables[1].addItem(
                     new Object[] { "Cooler", "1-QQQ-" + format.format(i) },
-                    Integer.valueOf(i));
+                    i);
         }
         tables[1].setPageLength(LENGTHS[1]);
 
@@ -84,7 +84,7 @@ public class TableToggleVisibility extends AbstractTestCase {
         for (int i = 1; i < LENGTHS[2]; i++) {
             tables[2].addItem(
                     new Object[] { "King", "Vabis", "HR-" + format.format(i) },
-                    Integer.valueOf(i));
+                    i);
         }
         tables[2].setPageLength(LENGTHS[2]);
 

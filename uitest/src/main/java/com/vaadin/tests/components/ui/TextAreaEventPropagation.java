@@ -101,7 +101,7 @@ public class TextAreaEventPropagation extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12424);
+        return 12424;
     }
 
 }

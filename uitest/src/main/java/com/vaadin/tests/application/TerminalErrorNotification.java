@@ -64,7 +64,7 @@ public class TerminalErrorNotification extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8778);
+        return 8778;
     }
 
 }

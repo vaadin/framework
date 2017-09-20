@@ -38,7 +38,7 @@ public class GridColumnAutoWidthClientWidget
         @Override
         public String getValue(List<String> row) {
             int index = grid.getColumns().indexOf(this);
-            return "<span>" + String.valueOf(row.get(index)) + "</span>";
+            return "<span>" + row.get(index) + "</span>";
         }
     }
 

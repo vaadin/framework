@@ -312,7 +312,7 @@ public class DragSourceExtension<T extends AbstractComponent>
      * @see DropTargetExtension#setDropCriterion(String, String)
      */
     public void setPayload(String key, String value) {
-        setPayload(key, String.valueOf(value), Payload.ValueType.STRING);
+        setPayload(key, value, Payload.ValueType.STRING);
     }
 
     /**

@@ -45,7 +45,7 @@ public class MarginsInLabels extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8671);
+        return 8671;
     }
 
 }

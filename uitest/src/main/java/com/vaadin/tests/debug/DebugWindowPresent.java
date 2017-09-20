@@ -16,7 +16,7 @@ public class DebugWindowPresent extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7555);
+        return 7555;
     }
 
 }

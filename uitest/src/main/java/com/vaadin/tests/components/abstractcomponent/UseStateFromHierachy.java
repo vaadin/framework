@@ -49,7 +49,7 @@ public class UseStateFromHierachy extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10151);
+        return 10151;
     }
 
 }

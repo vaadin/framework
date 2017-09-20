@@ -62,7 +62,7 @@ public class RetainSplitterPositionWhenOutOfBounds
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10596);
+        return 10596;
     }
 
 }

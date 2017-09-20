@@ -156,7 +156,7 @@ public class CloseSession extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9859);
+        return 9859;
     }
 
     @Override

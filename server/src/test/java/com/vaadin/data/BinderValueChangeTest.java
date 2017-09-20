@@ -144,7 +144,7 @@ public class BinderValueChangeTest
         binder.setBean(item);
 
         Assert.assertNull(event.get());
-        ageField.setValue(String.valueOf(1));
+        ageField.setValue("1");
         verifyEvent(ageField);
     }
 

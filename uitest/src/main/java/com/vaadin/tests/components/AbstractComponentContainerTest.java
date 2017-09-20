@@ -283,7 +283,7 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
                 removeAllComponentsCommand, null);
         for (int i = 0; i < 20; i++) {
             createClickAction("Remove component " + i, byIndexCategory,
-                    removeComponentByIndexCommand, Integer.valueOf(i));
+                    removeComponentByIndexCommand, i);
         }
 
     }
@@ -352,18 +352,16 @@ public abstract class AbstractComponentContainerTest<T extends AbstractComponent
             createCategory(componentHeightCategory, heightCategory);
 
             createClickAction("auto", componentHeightCategory,
-                    setComponentHeight, Integer.valueOf(i), null);
+                    setComponentHeight, i, null);
             createClickAction("auto", componentWidthCategory, setComponentWidth,
-                    Integer.valueOf(i), null);
+                    i, null);
             for (String option : options) {
                 createClickAction(option, componentHeightCategory,
-                        setComponentHeight, Integer.valueOf(i), option);
+                        setComponentHeight, i, option);
                 createClickAction(option, componentWidthCategory,
-                        setComponentWidth, Integer.valueOf(i), option);
+                        setComponentWidth, i, option);
             }
-
         }
-
     }
 
     @Override

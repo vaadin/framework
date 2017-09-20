@@ -38,7 +38,7 @@ public class FormLayoutErrorHover extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8794);
+        return 8794;
     }
 
 }

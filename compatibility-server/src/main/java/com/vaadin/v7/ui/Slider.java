@@ -359,7 +359,7 @@ public class Slider extends AbstractField<Double> {
 
     @Override
     public void clear() {
-        super.setValue(Double.valueOf(getState().minValue));
+        super.setValue(getState().minValue);
     }
 
     @Override

@@ -87,38 +87,38 @@ public class SerializerTest extends AbstractReindeerTestUI {
         state.booleanArray = new boolean[] { true, true, false, true, false,
                 false };
 
-        rpc.sendByte((byte) 5, Byte.valueOf((byte) -12),
+        rpc.sendByte((byte) 5, (byte) -12,
                 new byte[] { 3, 1, 2 });
         state.byteValue = (byte) 5;
-        state.byteObjectValue = Byte.valueOf((byte) -12);
+        state.byteObjectValue = (byte) -12;
         state.byteArray = new byte[] { 3, 1, 2 };
 
-        rpc.sendChar('\u222b', Character.valueOf('å'), "aBcD".toCharArray());
+        rpc.sendChar('\u222b', 'å', "aBcD".toCharArray());
         state.charValue = '\u222b';
-        state.charObjectValue = Character.valueOf('å');
+        state.charObjectValue = 'å';
         state.charArray = "aBcD".toCharArray();
 
-        rpc.sendInt(Integer.MAX_VALUE, Integer.valueOf(0), new int[] { 5, 7 });
+        rpc.sendInt(Integer.MAX_VALUE, 0, new int[] { 5, 7 });
         state.intValue = Integer.MAX_VALUE;
-        state.intObjectValue = Integer.valueOf(42);
+        state.intObjectValue = 42;
         state.intArray = new int[] { 5, 7 };
 
-        rpc.sendLong(577431841358l, Long.valueOf(0),
-                new long[] { -57841235865l, 57 });
+        rpc.sendLong(577431841358L, 0L,
+                new long[] { -57841235865L, 57 });
         state.longValue = 577431841359l;
-        state.longObjectValue = Long.valueOf(577431841360l);
+        state.longObjectValue = 577431841360L;
         state.longArray = new long[] { -57841235865l, 57 };
 
-        rpc.sendFloat(3.14159f, Float.valueOf(Math.nextUp(1)),
+        rpc.sendFloat(3.14159f, Math.nextUp(1),
                 new float[] { 57, 0, -12 });
         state.floatValue = 3.14159f;
-        state.floatObjectValue = Float.valueOf(Math.nextUp(1));
+        state.floatObjectValue = Math.nextUp(1);
         state.floatArray = new float[] { 57, 0, -12 };
 
-        rpc.sendDouble(Math.PI, Double.valueOf(-Math.E),
+        rpc.sendDouble(Math.PI, (double) (-Math.E),
                 new double[] { Double.MAX_VALUE, Double.MIN_VALUE });
         state.doubleValue = Math.PI;
-        state.doubleObjectValue = Double.valueOf(-Math.E);
+        state.doubleObjectValue = (double) (-Math.E);
         state.doubleArray = new double[] { Double.MAX_VALUE, Double.MIN_VALUE };
 
         rpc.sendString("This is a tesing string ‡", new String[] { "‡", null });
@@ -513,7 +513,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8655);
+        return 8655;
     }
 
     private static class ConnectorComparator implements Comparator<Connector> {
@@ -528,7 +528,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
             implements Comparator<SimpleTestBean> {
         @Override
         public int compare(SimpleTestBean o1, SimpleTestBean o2) {
-            return Integer.valueOf(o1.getValue()).compareTo(o2.getValue());
+            return Integer.compare(o1.getValue(), o2.getValue());
         }
     }
 }

@@ -45,7 +45,7 @@ public class ChangeStateWhenReattaching extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(10532);
+        return 10532;
     }
 
 }

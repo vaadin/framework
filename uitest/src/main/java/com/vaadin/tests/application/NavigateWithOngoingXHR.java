@@ -110,7 +110,7 @@ public class NavigateWithOngoingXHR extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8891);
+        return 8891;
     }
 
 }

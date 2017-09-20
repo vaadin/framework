@@ -134,6 +134,6 @@ public class NullRenderers extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(13334);
+        return 13334;
     }
 }

@@ -38,6 +38,6 @@ public class CustomComponentGrowingContent extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7326);
+        return 7326;
     }
 }

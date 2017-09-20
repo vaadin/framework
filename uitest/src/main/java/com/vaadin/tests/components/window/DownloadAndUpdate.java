@@ -28,7 +28,7 @@ public class DownloadAndUpdate extends TestBase {
         table.addContainerProperty("A", String.class, "");
         for (int i = 0; i < 100; i++) {
             table.addItem(new Object[] { Integer.toString(i) },
-                    Integer.valueOf(i));
+                    i);
         }
         addComponent(table);
     }
@@ -40,7 +40,7 @@ public class DownloadAndUpdate extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8781);
+        return 8781;
     }
 
 }

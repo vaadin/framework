@@ -55,7 +55,7 @@ public class RefreshCloseConnection extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(14251);
+        return 14251;
     }
 
 }

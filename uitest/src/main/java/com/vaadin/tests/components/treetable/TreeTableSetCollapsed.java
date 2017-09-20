@@ -41,7 +41,7 @@ public class TreeTableSetCollapsed extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7605);
+        return 7605;
     }
 
 }

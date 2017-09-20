@@ -76,7 +76,7 @@ public class PushFromInit extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11529);
+        return 11529;
     }
 
 }

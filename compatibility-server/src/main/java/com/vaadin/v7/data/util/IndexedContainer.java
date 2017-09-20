@@ -379,9 +379,9 @@ public class IndexedContainer
      * @return
      */
     private Serializable generateId() {
-        Serializable id;
+        int id;
         do {
-            id = Integer.valueOf(nextGeneratedItemId++);
+            id = nextGeneratedItemId++;
         } while (items.containsKey(id));
 
         return id;

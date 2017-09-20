@@ -49,6 +49,6 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7894);
+        return 7894;
     }
 }

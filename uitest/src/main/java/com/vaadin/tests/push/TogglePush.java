@@ -40,8 +40,7 @@ public class TogglePush extends AbstractReindeerTestUI {
                         ? PushMode.DISABLED : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
-        pushSetting.setValue(Boolean
-                .valueOf(getPushConfiguration().getPushMode().isEnabled()));
+        pushSetting.setValue(getPushConfiguration().getPushMode().isEnabled());
         pushSetting.addValueChangeListener(event -> {
             if (event.getValue()) {
                 getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
@@ -90,7 +89,7 @@ public class TogglePush extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11506);
+        return 11506;
     }
 
 }

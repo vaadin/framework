@@ -61,8 +61,7 @@ public class GridEditorTest {
     public void setup() throws SecurityException, NoSuchMethodException {
         IndexedContainer container = new IndexedContainer();
         container.addContainerProperty(PROPERTY_NAME, String.class, "[name]");
-        container.addContainerProperty(PROPERTY_AGE, Integer.class,
-                Integer.valueOf(-1));
+        container.addContainerProperty(PROPERTY_AGE, Integer.class, -1);
 
         Item item = container.addItem(ITEM_ID);
         item.getItemProperty(PROPERTY_NAME).setValue(DEFAULT_NAME);

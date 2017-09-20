@@ -52,8 +52,8 @@ public class ValueAfterClearingContainer extends TestBase {
                         } else {
                             for (int i = 0; i < 5; i++) {
                                 table.addItem(
-                                        new Object[] { Integer.valueOf(i) },
-                                        Integer.valueOf(i));
+                                        new Object[] { i },
+                                        i);
                             }
                         }
                     }
@@ -143,7 +143,7 @@ public class ValueAfterClearingContainer extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9986);
+        return 9986;
     }
 
 }

@@ -23,7 +23,7 @@ public class StringToLongConverterTest extends AbstractStringConverterTest {
 
     @Test
     public void testValueConversion() {
-        assertValue(Long.valueOf(10),
+        assertValue(10L,
                 getConverter().convertToModel("10", new ValueContext()));
     }
 

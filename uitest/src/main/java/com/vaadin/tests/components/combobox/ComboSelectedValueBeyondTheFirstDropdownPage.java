@@ -43,7 +43,7 @@ public class ComboSelectedValueBeyondTheFirstDropdownPage
         combobox.setItems(items);
 
         combobox.addValueChangeListener(
-                event -> value.setValue(String.valueOf(event.getValue())));
+                event -> value.setValue(event.getValue()));
 
         return combobox;
     }

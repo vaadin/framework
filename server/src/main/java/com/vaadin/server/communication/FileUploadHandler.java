@@ -430,7 +430,7 @@ public class FileUploadHandler implements RequestHandler {
         try {
             return Long.parseLong(request.getHeader("Content-Length"));
         } catch (NumberFormatException e) {
-            return -1l;
+            return -1L;
         }
     }
 

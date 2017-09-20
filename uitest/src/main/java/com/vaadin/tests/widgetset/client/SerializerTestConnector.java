@@ -55,14 +55,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> updated = new HashMap<>();
 
                 SimpleTestBean firstValue = generics.values().iterator().next()
-                        .get(Integer.valueOf(1)).get(0);
+                        .get(1).get(0);
                 Set<SimpleTestBean> key = new HashSet<>(
                         Arrays.asList(firstValue));
 
                 Map<Integer, List<SimpleTestBean>> value = new HashMap<>();
                 Set<SimpleTestBean> firstKeyValue = generics.keySet().iterator()
                         .next();
-                value.put(Integer.valueOf(1), new ArrayList<>(firstKeyValue));
+                value.put(1, new ArrayList<>(firstKeyValue));
 
                 updated.put(key, value);
 
@@ -85,7 +85,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 Set<Integer> updatedIntSet = new HashSet<>();
 
                 for (Integer integer : intSet) {
-                    updatedIntSet.add(Integer.valueOf(-integer.intValue()));
+                    updatedIntSet.add(-integer);
                 }
                 rpc.sendSet(updatedIntSet,
                         Collections.singleton(getUIConnector()), beanSet);
@@ -116,14 +116,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                         Collections.singletonMap(getThisConnector(),
                                 connectorMap.get(getUIConnector())),
                         Collections.singletonMap(
-                                Integer.valueOf(stringMap.size()),
+                                stringMap.size(),
                                 getThisConnector()),
                         updatedBeanMap);
             }
 
             @Override
             public void sendLong(long value, Long boxedValue, long[] array) {
-                rpc.sendLong(array[0], Long.valueOf(value),
+                rpc.sendLong(array[0], value,
                         new long[] { array[1], boxedValue.longValue() });
             }
 
@@ -140,7 +140,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
             @Override
             public void sendInt(int value, Integer boxedValue, int[] array) {
-                rpc.sendInt(array.length, Integer.valueOf(array[0]),
+                rpc.sendInt(array.length, array[0],
                         new int[] { value, boxedValue.intValue() });
             }
 
@@ -148,15 +148,14 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendFloat(float value, Float boxedValue,
                     float[] array) {
                 Arrays.sort(array);
-                rpc.sendFloat(boxedValue.floatValue(), Float.valueOf(value),
-                        array);
+                rpc.sendFloat(boxedValue, value, array);
             }
 
             @Override
             public void sendDouble(double value, Double boxedValue,
                     double[] array) {
-                rpc.sendDouble(value + boxedValue.doubleValue(),
-                        Double.valueOf(value - boxedValue.doubleValue()),
+                rpc.sendDouble(value + boxedValue,
+                        value - boxedValue,
                         new double[] { array.length, array[0], array[1] });
             }
 
@@ -169,7 +168,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendChar(char value, Character boxedValue,
                     char[] array) {
                 rpc.sendChar(Character.toUpperCase(boxedValue.charValue()),
-                        Character.valueOf(value),
+                        value,
                         new String(array).toLowerCase().toCharArray());
             }
 
@@ -189,7 +188,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     inverseArray[i] = !array[i];
                 }
                 rpc.sendBoolean(boxedValue == Boolean.TRUE,
-                        Boolean.valueOf(!value), inverseArray);
+                        !value, inverseArray);
             }
 
             @Override
@@ -223,8 +222,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 List<Integer[]> updatedObjectArrayList = new ArrayList<>();
                 for (int[] array : primitiveArrayList) {
                     updatedObjectArrayList
-                            .add(new Integer[] { Integer.valueOf(array.length),
-                                    Integer.valueOf(array[0]) });
+                            .add(new Integer[] { array.length, array[0] });
                 }
 
                 rpc.sendArrayList(

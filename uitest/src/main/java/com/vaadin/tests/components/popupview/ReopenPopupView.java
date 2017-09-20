@@ -44,7 +44,7 @@ public class ReopenPopupView extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8804);
+        return 8804;
     }
 
 }

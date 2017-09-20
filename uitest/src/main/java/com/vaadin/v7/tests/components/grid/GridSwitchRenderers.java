@@ -47,7 +47,7 @@ public class GridSwitchRenderers extends AbstractTestUIWithLog {
         Random rand = new Random();
         rand.setSeed(13334);
         for (int row = 0; row < ROWS; row++) {
-            Item item = ds.addItem(Integer.valueOf(row));
+            Item item = ds.addItem(row);
             fillRow("" + row, item);
             item.getItemProperty(getColumnProperty(1)).setReadOnly(true);
         }

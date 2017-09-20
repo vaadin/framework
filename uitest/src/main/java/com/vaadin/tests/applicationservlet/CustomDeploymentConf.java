@@ -48,7 +48,7 @@ public class CustomDeploymentConf extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(14215);
+        return 14215;
     }
 
 }

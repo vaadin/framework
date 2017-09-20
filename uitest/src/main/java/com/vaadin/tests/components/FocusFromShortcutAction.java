@@ -46,7 +46,7 @@ public class FocusFromShortcutAction extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7539);
+        return 7539;
     }
 
 }

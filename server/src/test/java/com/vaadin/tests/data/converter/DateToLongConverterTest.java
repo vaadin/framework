@@ -25,7 +25,7 @@ public class DateToLongConverterTest extends AbstractConverterTest {
     public void testValueConversion() {
         Date d = new Date(100, 0, 1);
         assertValue(
-                Long.valueOf(946677600000l
+                Long.valueOf(946677600000L
                         + (d.getTimezoneOffset() + 120) * 60 * 1000L),
                 getConverter().convertToModel(d, new ValueContext()));
     }

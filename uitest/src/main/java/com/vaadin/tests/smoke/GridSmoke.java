@@ -32,15 +32,15 @@ public class GridSmoke extends AbstractReindeerTestUI {
         grid.addColumn("firstName");
         grid.addColumn("age", Integer.class);
 
-        grid.addRow("Lorem", Integer.valueOf(1));
-        grid.addRow("Ipsum", Integer.valueOf(2));
+        grid.addRow("Lorem", 1);
+        grid.addRow("Ipsum", 2);
 
         addComponent(grid);
 
         addComponent(new Button("Add new row", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                grid.addRow("Dolor", Integer.valueOf(3));
+                grid.addRow("Dolor", 3);
             }
         }));
 

@@ -586,7 +586,7 @@ public class Profiler {
                     // Ignore missing value
                     continue;
                 }
-                timings.put(key, Double.valueOf(now - value));
+                timings.put(key, now - value);
             }
 
             if (timings.isEmpty()) {

@@ -38,7 +38,7 @@ public class VerifyAssertionsEnabled extends AbstractTestUIWithLog {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9450);
+        return 9450;
     }
 
 }

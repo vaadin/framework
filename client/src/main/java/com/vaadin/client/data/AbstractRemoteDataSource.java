@@ -238,10 +238,10 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         Object key = handle.key;
         Integer count = pinnedCounts.get(key);
         if (count == null) {
-            count = Integer.valueOf(0);
+            count = 0;
             pinnedRows.put(key, handle);
         }
-        pinnedCounts.put(key, Integer.valueOf(count.intValue() + 1));
+        pinnedCounts.put(key, count + 1);
     }
 
     /**
@@ -261,11 +261,11 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         if (count == null) {
             throw new IllegalStateException("Row " + handle.getRow()
                     + " with key " + key + " was not pinned to begin with");
-        } else if (count.equals(Integer.valueOf(1))) {
+        } else if (count == 1) {
             pinnedRows.remove(key);
             pinnedCounts.remove(key);
         } else {
-            pinnedCounts.put(key, Integer.valueOf(count.intValue() - 1));
+            pinnedCounts.put(key, count - 1);
         }
     }
 
@@ -366,7 +366,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
         for (int i = range.getStart(); i < range.getEnd(); i++) {
             // Called after dropping from cache. Dropped row is passed as a
             // parameter, but is no longer present in the DataSource
-            T removed = indexToRowMap.remove(Integer.valueOf(i));
+            T removed = indexToRowMap.remove(i);
             if (removed != null) {
                 onDropFromCache(i, removed);
                 keyToIndexMap.remove(getRowKey(removed));
@@ -432,7 +432,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     @Override
     public T getRow(int rowIndex) {
-        return indexToRowMap.get(Integer.valueOf(rowIndex));
+        return indexToRowMap.get(rowIndex);
     }
 
     /**
@@ -503,8 +503,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             int start = newUsefulData.getStart();
             for (int i = start; i < newUsefulData.getEnd(); i++) {
                 final T row = rowData.get(i - firstRowIndex);
-                indexToRowMap.put(Integer.valueOf(i), row);
-                keyToIndexMap.put(getRowKey(row), Integer.valueOf(i));
+                indexToRowMap.put(i, row);
+                keyToIndexMap.put(getRowKey(row), i);
             }
 
             Profiler.enter(
@@ -750,7 +750,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
             }
 
             for (int i = firstRowIndex; i < oldCacheEnd; i++) {
-                T row = indexToRowMap.remove(Integer.valueOf(i));
+                T row = indexToRowMap.remove(i);
                 keyToIndexMap.remove(getRowKey(row));
             }
         }

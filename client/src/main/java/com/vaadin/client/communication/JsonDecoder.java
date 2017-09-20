@@ -105,19 +105,19 @@ public class JsonDecoder {
         } else if (String.class.getName().equals(baseTypeName)) {
             return jsonValue.asString();
         } else if (Integer.class.getName().equals(baseTypeName)) {
-            return Integer.valueOf((int) jsonValue.asNumber());
+            return (int) jsonValue.asNumber();
         } else if (Long.class.getName().equals(baseTypeName)) {
-            return Long.valueOf((long) jsonValue.asNumber());
+            return (long) jsonValue.asNumber();
         } else if (Float.class.getName().equals(baseTypeName)) {
-            return Float.valueOf((float) jsonValue.asNumber());
+            return (float) jsonValue.asNumber();
         } else if (Double.class.getName().equals(baseTypeName)) {
-            return Double.valueOf(jsonValue.asNumber());
+            return jsonValue.asNumber();
         } else if (Boolean.class.getName().equals(baseTypeName)) {
             return Boolean.valueOf(jsonValue.asString());
         } else if (Byte.class.getName().equals(baseTypeName)) {
-            return Byte.valueOf((byte) jsonValue.asNumber());
+            return (byte) jsonValue.asNumber();
         } else if (Character.class.getName().equals(baseTypeName)) {
-            return Character.valueOf(jsonValue.asString().charAt(0));
+            return jsonValue.asString().charAt(0);
         } else if (Connector.class.getName().equals(baseTypeName)) {
             return ConnectorMap.get(connection)
                     .getConnector(jsonValue.asString());

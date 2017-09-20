@@ -194,8 +194,8 @@ public class GridClientColumnRendererConnector
                         getWidget().addColumn(column);
 
                         getWidget().getDefaultHeaderRow().getCell(column)
-                                .setText("Column " + String.valueOf(
-                                        getWidget().getColumnCount() + 1));
+                                .setText("Column " +
+                                        getWidget().getColumnCount() + 1);
                     }
 
                     @Override

@@ -359,22 +359,22 @@ public class JsonPaintTarget implements PaintTarget {
 
     @Override
     public void addAttribute(String name, int value) throws PaintException {
-        tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
+        tag.addAttribute("\"" + name + "\":" + value);
     }
 
     @Override
     public void addAttribute(String name, long value) throws PaintException {
-        tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
+        tag.addAttribute("\"" + name + "\":" + value);
     }
 
     @Override
     public void addAttribute(String name, float value) throws PaintException {
-        tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
+        tag.addAttribute("\"" + name + "\":" + value);
     }
 
     @Override
     public void addAttribute(String name, double value) throws PaintException {
-        tag.addAttribute("\"" + name + "\":" + String.valueOf(value));
+        tag.addAttribute("\"" + name + "\":" + value);
     }
 
     @Override

@@ -102,9 +102,9 @@ public class AcceptFromComponent extends Window {
 
                         try {
                             layout.getPosition(component)
-                                    .setTopValue(Float.valueOf(clientY - top));
+                                    .setTopValue((float) (clientY - top));
                             layout.getPosition(component).setLeftValue(
-                                    Float.valueOf(clientX - left));
+                                    (float) (clientX - left));
                         } catch (Exception e) {
                             // TODO: handle exception
                         }

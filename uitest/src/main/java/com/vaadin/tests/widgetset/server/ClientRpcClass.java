@@ -41,7 +41,7 @@ public class ClientRpcClass extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(13056);
+        return 13056;
     }
 
 }

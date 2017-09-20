@@ -95,7 +95,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            the number of milliseconds since epoch
      */
     public void setDateHeader(String name, long timestamp) {
-        headers.put(name, Long.valueOf(timestamp));
+        headers.put(name, timestamp);
     }
 
     /**

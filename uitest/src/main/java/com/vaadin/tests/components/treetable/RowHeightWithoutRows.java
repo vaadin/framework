@@ -85,6 +85,6 @@ public class RowHeightWithoutRows extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9203);
+        return 9203;
     }
 }

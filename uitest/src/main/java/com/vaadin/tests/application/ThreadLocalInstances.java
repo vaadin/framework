@@ -91,7 +91,7 @@ public class ThreadLocalInstances extends AbstractTestCase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7895);
+        return 7895;
     }
 
     private void reportCurrentStatus(String phase) {

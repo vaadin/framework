@@ -36,7 +36,7 @@ public class DelegateToWidgetTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(9297);
+        return 9297;
     }
 
 }

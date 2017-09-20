@@ -42,7 +42,7 @@ public class VerifyJreVersion extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11835);
+        return 11835;
     }
 
 }

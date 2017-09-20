@@ -68,7 +68,7 @@ public abstract class AbstractOrderedLayoutTest<T extends AbstractOrderedLayout>
 
             for (String option : options.keySet()) {
                 createClickAction(option, componentExpandRatioCategory,
-                        setComponentExpandRatio, Integer.valueOf(i),
+                        setComponentExpandRatio, i,
                         options.get(option));
             }
 

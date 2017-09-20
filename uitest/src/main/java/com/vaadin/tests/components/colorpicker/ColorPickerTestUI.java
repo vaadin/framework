@@ -129,12 +129,12 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
             drawable.setColor(java.awt.Color.blue);
             drawable.drawRect(0, 0, 269, 269);
             drawable.setColor(java.awt.Color.black);
-            drawable.drawString("r=" + String.valueOf(fgColor.getRed()) + ",g="
-                    + String.valueOf(fgColor.getGreen()) + ",b="
-                    + String.valueOf(fgColor.getBlue()), 50, 100);
-            drawable.drawString("r=" + String.valueOf(bgColor.getRed()) + ",g="
-                    + String.valueOf(bgColor.getGreen()) + ",b="
-                    + String.valueOf(bgColor.getBlue()), 5, 15);
+            drawable.drawString("r=" + fgColor.getRed() + ",g="
+                    + fgColor.getGreen() + ",b="
+                    + fgColor.getBlue(), 50, 100);
+            drawable.drawString("r=" + bgColor.getRed() + ",g="
+                    + bgColor.getGreen() + ",b="
+                    + bgColor.getBlue(), 5, 15);
 
             try {
                 /* Write the image to a buffer. */

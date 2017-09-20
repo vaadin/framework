@@ -90,7 +90,7 @@ public class NoLayout extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(12936);
+        return 12936;
     }
 
 }

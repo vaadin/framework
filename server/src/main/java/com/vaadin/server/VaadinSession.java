@@ -892,11 +892,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void removeUI(UI ui) {
         assert hasLock();
         assert UI.getCurrent() == ui;
-        Integer id = Integer.valueOf(ui.getUIId());
+        int id = ui.getUIId();
         ui.setSession(null);
         uIs.remove(id);
         String embedId = ui.getEmbedId();
-        if (embedId != null && id.equals(embedIdMap.get(embedId))) {
+        if (embedId != null && id == embedIdMap.get(embedId)) {
             embedIdMap.remove(embedId);
         }
     }
@@ -1193,7 +1193,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                     "The UI belongs to a different session");
         }
 
-        Integer uiId = Integer.valueOf(ui.getUIId());
+        int uiId = ui.getUIId();
         uIs.put(uiId, ui);
 
         String embedId = ui.getEmbedId();

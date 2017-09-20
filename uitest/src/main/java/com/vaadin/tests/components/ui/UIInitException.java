@@ -27,7 +27,7 @@ public class UIInitException extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8243);
+        return 8243;
     }
 
 }

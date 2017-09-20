@@ -39,7 +39,7 @@ public class SerializerNamespaceTest extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8683);
+        return 8683;
     }
 
 }

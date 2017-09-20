@@ -128,7 +128,7 @@ public class LinkInsideDisabledContainerTest extends MultiBrowserTest {
         return $(LinkElement.class).first().isEnabled();
     }
 
-    private Integer clicksOnLink() {
+    private int clicksOnLink() {
 
         if (!getLogs().isEmpty()) {
             Matcher m = CLICK_MATCHER.matcher(getLogRow(0));

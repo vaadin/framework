@@ -30,7 +30,7 @@ public class JavaScriptResizeListener extends AbstractReindeerTestUI {
     @JavaScript("ResizeJsConnector.js")
     public class ResizeJsComponent extends AbstractJavaScriptComponent {
         public void setListenerEnabled(boolean enabled) {
-            callFunction("setListenerEnabled", Boolean.valueOf(enabled));
+            callFunction("setListenerEnabled", enabled);
         }
     }
 
@@ -83,7 +83,7 @@ public class JavaScriptResizeListener extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(11996);
+        return 11996;
     }
 
 }

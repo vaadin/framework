@@ -39,6 +39,6 @@ public class PushWithPreserveOnRefresh extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(13620);
+        return 13620;
     }
 }

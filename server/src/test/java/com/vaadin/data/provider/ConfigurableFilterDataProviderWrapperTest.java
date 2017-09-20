@@ -66,7 +66,7 @@ public class ConfigurableFilterDataProviderWrapperTest {
 
     @Test
     public void predicate_setFilter() {
-        configurablePredicate.setFilter(Integer.valueOf(50));
+        configurablePredicate.setFilter(50);
 
         Assert.assertEquals("Set filter should be used", 49,
                 configurablePredicate.size(new Query<>()));
@@ -88,7 +88,7 @@ public class ConfigurableFilterDataProviderWrapperTest {
 
     @Test
     public void predicate_combinedFilters() {
-        configurablePredicate.setFilter(Integer.valueOf(50));
+        configurablePredicate.setFilter(50);
 
         Assert.assertEquals("Both filters should be used", 0,
                 configurablePredicate.size(new Query<>("Xyz")));

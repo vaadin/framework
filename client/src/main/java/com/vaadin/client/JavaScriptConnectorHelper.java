@@ -492,7 +492,7 @@ public class JavaScriptConnectorHelper {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
         ArrayList<String> initFunctionNames = new ArrayList<String>();
-        Integer tag = Integer.valueOf(connector.getTag());
+        Integer tag = connector.getTag();
         while (tag != null) {
             String initFunctionName = conf.getServerSideClassNameForTag(tag);
             initFunctionName = initFunctionName.replaceAll("\\.", "_");

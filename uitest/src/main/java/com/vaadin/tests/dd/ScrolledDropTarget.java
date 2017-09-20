@@ -23,7 +23,7 @@ public class ScrolledDropTarget extends TestBase {
         table.addContainerProperty("A", String.class, "");
         for (int i = 0; i < 100; i++) {
             table.addItem(new Object[] { Integer.toString(i) },
-                    Integer.valueOf(i));
+                    i);
         }
 
         table.setDragMode(TableDragMode.ROW);
@@ -64,7 +64,7 @@ public class ScrolledDropTarget extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(6021);
+        return 6021;
     }
 
 }

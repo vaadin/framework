@@ -107,7 +107,7 @@ public class TableInTabsheet extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8714);
+        return 8714;
     }
 
 }

@@ -54,7 +54,7 @@ public class TableColumnResizeContentsWidth extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7393);
+        return 7393;
     }
 
 }

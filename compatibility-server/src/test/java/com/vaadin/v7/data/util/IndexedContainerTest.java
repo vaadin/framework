@@ -296,16 +296,16 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         Object itemId;
 
         itemId = container.addItem();
-        assertEquals(Integer.valueOf(1), itemId);
+        assertEquals(1, itemId);
 
         itemId = container.addItem();
-        assertEquals(Integer.valueOf(2), itemId);
+        assertEquals(2, itemId);
 
         itemId = container.addItemAfter(null);
-        assertEquals(Integer.valueOf(3), itemId);
+        assertEquals(3, itemId);
 
         itemId = container.addItemAt(2);
-        assertEquals(Integer.valueOf(4), itemId);
+        assertEquals(4, itemId);
     }
 
     @Test
@@ -314,14 +314,14 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
         Object itemId;
 
         itemId = container.addItem();
-        assertEquals(Integer.valueOf(1), itemId);
+        assertEquals(1, itemId);
 
         container.removeItem(itemId);
 
         itemId = container.addItem();
         assertEquals(
                 "Id sequence should continue from the previous value even if an item is removed",
-                Integer.valueOf(2), itemId);
+                2, itemId);
     }
 
     @Test

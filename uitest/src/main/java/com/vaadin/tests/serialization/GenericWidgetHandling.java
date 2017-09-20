@@ -40,7 +40,7 @@ public class GenericWidgetHandling extends AbstractReindeerTestUI {
     @Override
     protected Integer getTicketNumber() {
         // Also 12900 if someone happens to care
-        return Integer.valueOf(12873);
+        return 12873;
     }
 
 }

@@ -40,7 +40,7 @@ public class AddNodesOnExpand extends TestBase {
         });
 
         for (int i = 0; i < 3; i++) {
-            treetable.addItem(new String[] { "Item " + i }, Integer.valueOf(i));
+            treetable.addItem(new String[] { "Item " + i }, i);
         }
 
         addComponent(treetable);
@@ -53,6 +53,6 @@ public class AddNodesOnExpand extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(8041);
+        return 8041;
     }
 }

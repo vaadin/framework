@@ -40,7 +40,7 @@ public class StringToIntegerConverterTest extends AbstractConverterTest {
 
     @Test
     public void testValueConversion() {
-        assertValue(Integer.valueOf(10),
+        assertValue(10,
                 getConverter().convertToModel("10", new ValueContext()));
     }
 

@@ -769,7 +769,7 @@ public class Window extends Panel
                         w.bringToFront.intValue());
             }
         }
-        bringToFront = Integer.valueOf(maxBringToFront + 1);
+        bringToFront = maxBringToFront + 1;
         markAsDirty();
     }
 

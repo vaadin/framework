@@ -179,24 +179,22 @@ public class TabSheetTest<T extends TabSheet> extends
             createCategory(tabIconCategory, iconCategory);
 
             createClickAction("(null)", tabCaptionCategory, setTabCaption,
-                    Integer.valueOf(i), null);
+                    i, null);
             createClickAction("(null)", tabIconCategory, setTabIcon,
-                    Integer.valueOf(i), null);
+                    i, null);
 
             for (String option : captionOptions) {
                 option = option.replace("{id}", String.valueOf(i));
                 createClickAction(option, tabCaptionCategory, setTabCaption,
-                        Integer.valueOf(i), option);
+                        i, option);
             }
 
             for (String option : iconOptions.keySet()) {
                 Resource icon = iconOptions.get(option);
                 createClickAction(option, tabIconCategory, setTabIcon,
-                        Integer.valueOf(i), icon);
+                        i, icon);
             }
-
         }
-
     }
 
     private void tabClosed(TabSheet tabSheet, Tab tab) {

@@ -62,7 +62,7 @@ public class JavaScriptPreloading extends AbstractTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(13956);
+        return 13956;
     }
 
 }

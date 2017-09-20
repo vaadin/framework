@@ -43,7 +43,7 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        return Integer.valueOf(7536);
+        return 7536;
     }
 
 }
