@@ -1,5 +1,5 @@
 ---
-title: Integrating A Java Script Library As An Extension
+title: Integrating A JavaScript Library As An Extension
 order: 39
 layout: page
 ---
