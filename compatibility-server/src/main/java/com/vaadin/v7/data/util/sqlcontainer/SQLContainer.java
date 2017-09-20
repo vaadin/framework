@@ -16,6 +16,8 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -1682,12 +1684,12 @@ public class SQLContainer implements Container, Container.Filterable,
         return refdCont.getItem(getReferencedItemId(itemId, refdCont));
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
     }
 
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         if (notificationsEnabled) {

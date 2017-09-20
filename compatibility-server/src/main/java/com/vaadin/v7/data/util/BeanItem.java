@@ -16,6 +16,7 @@
 
 package com.vaadin.v7.data.util;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -212,7 +213,7 @@ public class BeanItem<BT> extends PropertysetItem {
                     pdMap.put(pd.getName(), vaadinPropertyDescriptor);
                 }
             }
-        } catch (final java.beans.IntrospectionException ignored) {
+        } catch (final IntrospectionException ignored) {
         }
 
         return pdMap;

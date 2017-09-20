@@ -18,6 +18,7 @@ package com.vaadin.util;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -82,7 +83,7 @@ public class ReflectTools implements Serializable {
      *             If the value could not be retrieved
      */
     public static Object getJavaFieldValue(Object object,
-            java.lang.reflect.Field field) throws IllegalArgumentException,
+            Field field) throws IllegalArgumentException,
             IllegalAccessException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
@@ -126,7 +127,7 @@ public class ReflectTools implements Serializable {
      *             If the value could not be retrieved
      */
     public static Object getJavaFieldValue(Object object,
-            java.lang.reflect.Field field, Class<?> propertyType)
+            Field field, Class<?> propertyType)
             throws IllegalArgumentException, IllegalAccessException,
             InvocationTargetException {
         PropertyDescriptor pd;
@@ -173,7 +174,7 @@ public class ReflectTools implements Serializable {
      *             If the value could not be assigned to the field
      */
     public static void setJavaFieldValue(Object object,
-            java.lang.reflect.Field field, Object value)
+            Field field, Object value)
             throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
         PropertyDescriptor pd;

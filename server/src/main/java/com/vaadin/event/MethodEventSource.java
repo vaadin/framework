@@ -57,7 +57,7 @@ public interface MethodEventSource extends Serializable {
      * @param method
      *            the activation method.
      * @return a registration object for removing the listener
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
      * @throws NullPointerException
@@ -95,7 +95,7 @@ public interface MethodEventSource extends Serializable {
      * @param methodName
      *            the name of the activation method.
      * @return a registration object for removing the listener
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             unless <code>method</code> has exactly one match in
      *             <code>object</code>
      * @throws NullPointerException
