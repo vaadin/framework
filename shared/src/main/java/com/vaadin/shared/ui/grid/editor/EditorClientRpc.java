@@ -32,8 +32,11 @@ public interface EditorClientRpc extends ClientRpc {
      *
      * @param rowIndex
      *            the index of the edited row
+     * @param fromServer
+     *            whether the request was server-originated
+     *
      */
-    void bind(int rowIndex);
+    void bind(int rowIndex, boolean fromServer);
 
     /**
      * Tells the client to cancel editing and hide the editor.

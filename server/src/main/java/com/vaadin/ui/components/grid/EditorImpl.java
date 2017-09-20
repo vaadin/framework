@@ -294,13 +294,13 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
             throw new IllegalArgumentException("Row number " + rowNumber
                     + "did not yield any item from data provider");
         }
-        if (isBuffered() && !beanToEdit.equals(edited)) {
+        if (isBuffered() && edited != null && !beanToEdit.equals(edited)) {
             throw new IllegalStateException("Editing item " + beanToEdit
                     + " failed. Item editor is already editing item "
                     + edited);
         }
-        rpc.bind(rowNumber);
-        doEdit(edited);
+        rpc.bind(rowNumber, true);
+        doEdit(beanToEdit);
     }
 
     private void doCancel(boolean afterBeingSaved) {

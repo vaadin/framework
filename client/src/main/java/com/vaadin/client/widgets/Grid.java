@@ -1630,8 +1630,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         }
                     }
                 });
-                grid.scrollToRow(rowIndex, isBuffered()
-                        ? ScrollDestination.MIDDLE : ScrollDestination.ANY);
+                grid.scrollToRow(rowIndex, isBuffered() ? ScrollDestination.MIDDLE : ScrollDestination.ANY);
             }
         }
 
