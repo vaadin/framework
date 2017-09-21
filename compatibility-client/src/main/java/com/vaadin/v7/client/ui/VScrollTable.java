@@ -5350,8 +5350,8 @@ public class VScrollTable extends FlowPanel
          * To get this work properly crossplatform, we will also set the width
          * of td.
          *
-         * @param colIndex
-         * @param w
+         * @param colIndex The column Index
+         * @param w The content width
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
@@ -7725,8 +7725,12 @@ public class VScrollTable extends FlowPanel
     /**
      * Handles the keyboard events handled by the table
      *
-     * @param event
-     *            The keyboard event received
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
      * @return true iff the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl,

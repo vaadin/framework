@@ -97,7 +97,7 @@ public class StringToCollectionConverter
      *
      * @param tokenConverter
      *            converter for token
-     * @param tokenType
+     * @param tokenClass
      *            expected token model type
      * @param delimiter
      *            delimiter in presentation string
@@ -117,7 +117,7 @@ public class StringToCollectionConverter
      *
      * @param tokenConverter
      *            converter for token
-     * @param tokenType
+     * @param tokenClass
      *            expected token model type
      * @param delimiter
      *            delimiter in presentation string

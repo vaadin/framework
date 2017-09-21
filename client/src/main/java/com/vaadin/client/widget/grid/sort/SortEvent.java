@@ -43,8 +43,8 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
      *            a grid reference
      * @param order
      *            an array dictating the desired sort order of the data source
-     * @param originator
-     *            a value indicating where this event originated from
+     * @param userOriginated
+     *            where this event originated from the user or not
      */
     public SortEvent(Grid<T> grid, List<SortOrder> order,
             boolean userOriginated) {

@@ -2020,7 +2020,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param newRangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date newRangeStart) {
@@ -2039,7 +2039,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param newRangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date newRangeEnd) {

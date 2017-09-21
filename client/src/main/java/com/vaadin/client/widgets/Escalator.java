@@ -1381,7 +1381,6 @@ public class Escalator extends Widget
          *            the DOM index to add rows into
          * @param numberOfRows
          *            the number of rows to insert
-         * @return a list of the added row elements
          */
         protected abstract void paintInsertRows(final int visualIndex,
                 final int numberOfRows);

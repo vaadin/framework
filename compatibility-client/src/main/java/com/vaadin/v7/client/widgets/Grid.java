@@ -5299,11 +5299,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @param pixels
          *            the maximum width
-         * @param immediately
-         *            <code>true</code> if the widths should be executed
-         *            immediately (ignoring lazy loading completely), or
-         *            <code>false</code> if the command should be run after a
-         *            while (duplicate non-immediately invocations are ignored).
          * @return this column
          */
         public Column<C, T> setMaximumWidth(double pixels) {
@@ -5345,7 +5340,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
          *
-         * @param expandRatio
+         * @param ratio
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
          *            value.
@@ -6703,8 +6698,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the header section.
      *
-     * @param index
-     *            the position of the row
+     * @param rowIndex
+     *            the index of the row
      *
      * @throws IllegalArgumentException
      *             if no row exists at given index
@@ -6852,7 +6847,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the footer section.
      *
-     * @param index
+     * @param rowIndex
      *            the position of the row
      *
      * @throws IllegalArgumentException
@@ -8723,7 +8718,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the handler responsible for binding data and editor widgets to the
      * editor.
      *
-     * @param rowHandler
+     * @param handler
      *            the new editor handler
      *
      * @throws IllegalStateException
@@ -9210,9 +9205,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the buffered editor mode.
      *
      * @since 7.6
-     * @param editorUnbuffered
-     *            <code>true</code> to enable buffered editor,
-     *            <code>false</code> to disable it
+     * @param editorBuffered
+     *            {@code true} to enable buffered editor,
+     *            {@code false} to disable it
      */
     public void setEditorBuffered(boolean editorBuffered) {
         editor.setBuffered(editorBuffered);

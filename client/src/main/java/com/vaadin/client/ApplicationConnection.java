@@ -1226,8 +1226,8 @@ public class ApplicationConnection implements HasHandlers {
      * Use to notify that the given component's caption has changed; layouts may
      * have to be recalculated.
      *
-     * @param component
-     *            the Paintable whose caption has changed
+     * @param widget
+     *            The Widget whose caption has changed
      * @deprecated As of 7.0.2, has not had any effect for a long time
      */
     @Deprecated
