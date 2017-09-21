@@ -234,7 +234,7 @@ public class Tree<T> extends Composite
      *
      * @since 8.1
      */
-    public final static class TreeMultiSelectionModel<T>
+    public static final class TreeMultiSelectionModel<T>
             extends MultiSelectionModelImpl<T> {
 
         @Override

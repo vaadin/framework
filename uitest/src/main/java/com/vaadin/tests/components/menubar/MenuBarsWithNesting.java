@@ -41,16 +41,16 @@ public class MenuBarsWithNesting extends AbstractReindeerTestUI {
     private final Label label = new Label("Initial content");
 
     // The captions and icons used in the second MenuBar.
-    public final static String[] itemNames = { "Icon item", "Arrow down",
+    public static final String[] itemNames = { "Icon item", "Arrow down",
             "Arrow up", "Warning" };
-    private final static Resource[] itemIcons = {
+    private static final Resource[] itemIcons = {
             new ThemeResource("window/img/restore.png"), VaadinIcons.ARROW_DOWN,
             VaadinIcons.ARROW_UP, VaadinIcons.WARNING };
 
     // The last menu item is nested with the following submenu items.
-    public final static String[] nestedItemnames = { "No icon", "Font icon",
+    public static final String[] nestedItemnames = { "No icon", "Font icon",
             "Image icon" };
-    private final static Resource[] nestedItemIcons = { null, VaadinIcons.LINK,
+    private static final Resource[] nestedItemIcons = { null, VaadinIcons.LINK,
             new ThemeResource("window/img/restore.png") };
 
     private MenuBar.Command selectionCommand;

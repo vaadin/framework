@@ -170,11 +170,11 @@ public class VDragAndDropWrapper extends VCustomComponent
         return false;
     }
 
-    protected final static int NONE = 0;
-    protected final static int COMPONENT = 1;
-    protected final static int WRAPPER = 2;
-    protected final static int HTML5 = 3;
-    protected final static int COMPONENT_OTHER = 4;
+    protected static final int NONE = 0;
+    protected static final int COMPONENT = 1;
+    protected static final int WRAPPER = 2;
+    protected static final int HTML5 = 3;
+    protected static final int COMPONENT_OTHER = 4;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int dragStartMode;

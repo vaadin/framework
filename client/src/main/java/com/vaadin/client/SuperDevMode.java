@@ -122,7 +122,7 @@ public class SuperDevMode {
                 + ".nocache.js";
     }
 
-    private native static String getRecompileParameters(String moduleName)
+    private static native String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
     
@@ -217,7 +217,7 @@ public class SuperDevMode {
         return isSuperDevModeEnabledInModule(moduleName);
     }
 
-    protected native static boolean isSuperDevModeEnabledInModule(
+    protected static native boolean isSuperDevModeEnabledInModule(
             String moduleName)
     /*-{
         if (!$wnd.__gwt_activeModules)

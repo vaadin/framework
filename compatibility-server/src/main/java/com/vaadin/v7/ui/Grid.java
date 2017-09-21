@@ -327,7 +327,7 @@ public class Grid extends AbstractComponent
      * @since 7.6.1
      */
     @Deprecated
-    public final static class DetailComponentManager
+    public static final class DetailComponentManager
             extends AbstractGridExtension implements DataGenerator {
 
         /**
@@ -982,7 +982,7 @@ public class Grid extends AbstractComponent
      * Base class for editor related events
      */
     @Deprecated
-    public static abstract class EditorEvent extends Component.Event {
+    public abstract static class EditorEvent extends Component.Event {
 
         private Object itemID;
 
@@ -1437,7 +1437,7 @@ public class Grid extends AbstractComponent
      * reusable.
      */
     @Deprecated
-    public static abstract class AbstractSelectionModel extends
+    public abstract static class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
         protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
 
@@ -2646,7 +2646,7 @@ public class Grid extends AbstractComponent
                 }
             }
 
-            abstract protected String getCellTagName();
+            protected abstract String getCellTagName();
 
             void detach() {
                 for (CELLTYPE cell : cells.values()) {
@@ -4318,7 +4318,7 @@ public class Grid extends AbstractComponent
      *            the type this renderer knows how to present
      */
     @Deprecated
-    public static abstract class AbstractRenderer<T>
+    public abstract static class AbstractRenderer<T>
             extends AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
@@ -4477,7 +4477,7 @@ public class Grid extends AbstractComponent
      * @since 7.5
      */
     @Deprecated
-    public static abstract class AbstractGridExtension
+    public abstract static class AbstractGridExtension
             extends AbstractExtension {
 
         /**

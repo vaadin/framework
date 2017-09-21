@@ -12,7 +12,7 @@ import org.junit.Test;
 public class PerformanceTestIndexedContainerTest {
 
     private static final int REPEATS = 10;
-    private final static int ITEMS = 50000;
+    private static final int ITEMS = 50000;
     private static final long ADD_ITEM_FAIL_THRESHOLD = 200;
     // TODO should improve performance of these methods
     private static final long ADD_ITEM_AT_FAIL_THRESHOLD = 5000;

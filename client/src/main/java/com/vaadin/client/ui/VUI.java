@@ -330,7 +330,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         Profiler.leave("VUI.sendClientResized");
     }
 
-    public native static void goTo(String url)
+    public static native void goTo(String url)
     /*-{
        $wnd.location = url;
      }-*/;
@@ -343,7 +343,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         connection.flushActiveConnector();
     }
 
-    private native static void loadAppIdListFromDOM(List<String> list)
+    private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {

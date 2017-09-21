@@ -156,7 +156,7 @@ public class TabKeyboardNavigationTest extends MultiBrowserTest {
     /*
      * Delay for PhantomJS.
      */
-    private final static int DELAY = 10;
+    private static final int DELAY = 10;
 
     private void assertSheet(int index) {
         String labelCaption = "Tab " + index;

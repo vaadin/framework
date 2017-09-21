@@ -692,12 +692,12 @@ public class VCaption extends HTML {
         return getOwnerPid(e);
     }
 
-    private native static void setOwnerPid(Element el, String pid)
+    private static native void setOwnerPid(Element el, String pid)
     /*-{
         el.vOwnerPid = pid;
     }-*/;
 
-    public native static String getOwnerPid(Element el)
+    public static native String getOwnerPid(Element el)
     /*-{
         return el.vOwnerPid;
     }-*/;

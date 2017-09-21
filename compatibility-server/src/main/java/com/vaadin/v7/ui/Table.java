@@ -5232,7 +5232,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * during that drag and drop operation.
      */
     @Deprecated
-    public static abstract class TableDropCriterion
+    public abstract static class TableDropCriterion
             extends ServerSideCriterion {
 
         private Table table;

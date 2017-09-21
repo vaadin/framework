@@ -46,7 +46,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
 
-    private final static int LAYERS_SHOWN = 4;
+    private static final int LAYERS_SHOWN = 4;
 
     /**
      * Recursively checks given component and its subtree for invalid layout

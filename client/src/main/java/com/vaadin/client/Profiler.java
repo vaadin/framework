@@ -396,7 +396,7 @@ public class Profiler {
         return RELATIVE_TIME_SUPPLIER.getRelativeTime();
     }
 
-    private static native final void logGwtEvent(String name, String type)
+    private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
             evtGroup: @com.vaadin.client.Profiler::evtGroup,

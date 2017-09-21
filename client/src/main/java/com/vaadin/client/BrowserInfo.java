@@ -351,7 +351,7 @@ public class BrowserInfo {
         return browserDetails.isOpera() && getBrowserMajorVersion() == 11;
     }
 
-    public native static String getBrowserString()
+    public static native String getBrowserString()
     /*-{
     	return $wnd.navigator.userAgent;
     }-*/;

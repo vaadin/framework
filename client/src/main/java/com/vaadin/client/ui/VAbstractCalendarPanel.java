@@ -2010,7 +2010,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         private void setLabel() {
             if (getDateField() instanceof VAbstractPopupCalendar) {
-                ((VAbstractPopupCalendar) getDateField()).setFocusedDate(this);
+                ((VAbstractPopupCalendar<?, ?>) getDateField()).setFocusedDate(this);
             }
         }
     }

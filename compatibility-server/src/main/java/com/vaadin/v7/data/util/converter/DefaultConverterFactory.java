@@ -39,7 +39,7 @@ import com.vaadin.server.VaadinSession;
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private final static Logger log = Logger
+    private static final Logger log = Logger
             .getLogger(DefaultConverterFactory.class.getName());
 
     @Override

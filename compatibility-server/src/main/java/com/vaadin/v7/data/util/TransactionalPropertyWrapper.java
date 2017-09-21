@@ -82,7 +82,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
     }
 
     @Override
-    public Class getType() {
+    public Class<? extends T> getType() {
         return wrappedProperty.getType();
     }
 

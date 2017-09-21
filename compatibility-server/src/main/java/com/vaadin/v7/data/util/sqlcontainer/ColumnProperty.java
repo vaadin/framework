@@ -33,7 +33,7 @@ import com.vaadin.v7.data.util.converter.Converter.ConversionException;
  * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
-final public class ColumnProperty implements Property {
+public final class ColumnProperty implements Property {
     private static final long serialVersionUID = -3694463129581802457L;
 
     private RowItem owner;

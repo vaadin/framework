@@ -39,7 +39,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
 
     private List<T> testComponents = new ArrayList<>();
 
-    abstract protected Class<T> getTestClass();
+    protected abstract Class<T> getTestClass();
 
     protected static ThemeResource uncacheableThemeResource(
             String resourceLocation) {
@@ -51,7 +51,7 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         return new ThemeResource(resourceLocation);
     }
 
-    abstract protected void initializeComponents();
+    protected abstract void initializeComponents();
 
     @Override
     protected void setup(VaadinRequest request) {
