@@ -1742,8 +1742,8 @@ public class Escalator extends Widget
          *
          * @param tr
          *            the row element to check whether it,
-         *            or one if its children elements can be frozen
-         * @return <code>true</code> if this the given element, or any of its
+         *            or any of its its descendants can be frozen
+         * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
         abstract protected boolean rowCanBeFrozen(TableRowElement tr);
