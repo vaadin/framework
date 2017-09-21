@@ -421,7 +421,7 @@ public class VCustomLayout extends ComplexPanel {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param el The element
+     * @param el The first element of the layout
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
