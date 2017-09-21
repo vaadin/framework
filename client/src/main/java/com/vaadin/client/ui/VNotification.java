@@ -494,7 +494,7 @@ public class VNotification extends VOverlay {
      * @param styleName
      *            The Notification style name, can be {@code null}.
      * @param position
-     *            The desired {@link Position}.
+     *            The desired {@link Position}, can not be {@code null}.
      * @param delayMsec
      *            The delay in milliseconds before disappearing, -1 for forever.
      *

@@ -287,9 +287,13 @@ public class Notification extends AbstractExtension implements Serializable {
      * Sets the position of the notification message.
      *
      * @param position
-     *            The desired notification position
+     *            The desired notification position,
+     *            not {@code null}
      */
     public void setPosition(Position position) {
+        if (position == null) {
+            throw new IllegalArgumentException("Position can not be null");
+        }
         getState().position = position;
     }
 

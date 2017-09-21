@@ -49,9 +49,10 @@ public class NotificationState extends SharedState {
     public String styleName;
 
     /**
-     * The {@link Position} of the {@link com.vaadin.ui.Notification}.
+     * The {@link Position} of the {@link com.vaadin.ui.Notification},
+     *            can not be {@code null}.
      */
-    public Position position;
+    public Position position = Position.TOP_LEFT;
 
     /**
      * The delay in milliseconds before disappearing, {@code -1} for forever.
