@@ -4,7 +4,7 @@ order: 16
 layout: page
 ---
 
-[[setting-and-reading-ookies]]
+[[setting-and-reading-cookies]]
 Setting And Reading Cookies
 ---------------------------
 
