@@ -982,6 +982,8 @@ public class Upload extends AbstractComponent
     }
 
     /**
+     * Returns the string rendered into button that fires uploading.
+     *
      * @return String to be rendered into button that fires uploading
      */
     public String getButtonCaption() {
@@ -989,6 +991,8 @@ public class Upload extends AbstractComponent
     }
 
     /**
+     * Returns the stylename rendered into button that fires uploading.
+     *
      * @return Stylename to be rendered into button that fires uploading
      * @since 8.2
      */
