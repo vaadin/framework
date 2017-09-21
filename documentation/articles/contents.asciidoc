@@ -16,87 +16,87 @@ are great, too.
 
 [discrete]
 == Articles
-- link:AccessControlForViews.asciidoc[Access control or views]
-- link:CreatingAServlet3.0Application.asciidoc[Creating a Servlet 3.0 application]
-- link:DevelopingPortletsForTheWebspherePortalServer.asciidoc[Developing portlets for the WebSphere Portal Server]
-- link:ConfigureComboBoxesWisely.asciidoc[Configure ComboBoxes wisely]
-- link:LettingTheUserDownloadAFile.asciidoc[Letting the user download a file]
-- link:UsingVaadinInIBMDomino.asciidoc[Using Vaadin in IBM Domino]
-- link:VaadinTutorialForSwingDevelopers.asciidoc[Vaadin tutorial for Swing developers]
-- link:SettingAndReadingSessionAttributes.asciidoc[Setting and reading session attributes]
-- link:EnablingServerPush.asciidoc[Enabling server push]
-- link:CleaningUpResourcesInAUI.asciidoc[Cleaning up resources in a UI]
-- link:SendingEmailFromJavaApplications.asciidoc[Sending email from Java applications]
-- link:OptimizingSluggishUI.asciidoc[Optimizing sluggish UI]
-- link:UsingParametersWithViews.asciidoc[Using parameters with views]
-- link:ConfiguringPushForYourEnvironment.asciidoc[Configuring push for your environment]
-- link:SettingAndReadingCookies.asciidoc[Setting and reading cookies]
-- link:UsingPolling.asciidoc[Using polling]
-- link:FindingTheCurrentUIAndPageAndVaadinSession.asciidoc[Finding the current UI and page and Vaadin Session]
-- link:CreatingAnApplicationThatPreservesStateOnRefresh.asciidoc[Creating an application that preserves state on refresh]
-- link:SendingEventsFromTheClientToTheServerUsingRPC.asciidoc[Sending events from the client to the server using RPC]
-- link:HandlingLogout.asciidoc[Handling logout]
-- link:ScalableWebApplications.asciidoc[Scalable web applications]
-- link:RememberToTheSetTheLocale.asciidoc[Remember to the set the locale]
-- link:MVCBasicsInITMillToolkit.asciidoc[MVC Basics in IT Mill Toolkit]
-- link:CustomizingTheStartupPageInAnApplication.asciidoc[Customizing the startup page in an application]
-- link:UsingURIFragments.asciidoc[Using URI fragments]
-- link:AccessingWebPageAndBrowserInformation.asciidoc[Accessing web page and browser information]
-- link:GeneratingDynamicResourcesBasedOnURIOrParameters.asciidoc[Generating dynamic resources based on URI or parameters]
-- link:OptimizingTheWidgetSet.asciidoc[Optimizing the widget set]
-- link:UsingServerInitiatedEvents.asciidoc[Using server-initiated events]
-- link:ChooseInputFieldComponentsWisely.asciidoc[Choose input field components wisely]
-- link:CreatingASimpleComponent.asciidoc[Creating a simple component]
-- link:IntegratingAnExistingGWTWidget.asciidoc[Integrating an existing GWT widget]
-- link:IntegrationExperiences.asciidoc[Integration experiences]
-- link:VaadinOnGrailsCreateProjectInIntelliJIDEA.asciidoc[Vaadin on grails - Create project in IntelliJ IDEA]
-- link:VaadinOnGrailsDatabaseAccess.asciidoc[Vaadin on grails - Database access]
-- link:VaadinOnGrailsMultipleUIs.asciidoc[Vaadin on grails - Multiple UIs]
-- link:IntegratingAJavaScriptComponent.asciidoc[Integrating a JavaScript component]
-- link:IntegratingAJavaScriptLibraryAsAnExtension.asciidoc[Integrating a JavaScript library as an extension]
-- link:UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn.asciidoc[Using a JavaScript library or a style sheet in an add-on]
-- link:ExposingServerSideAPIToJavaScript.asciidoc[Exposing server-side API to JavaScript]
-- link:UsingRPCFromJavaScript.asciidoc[Using RPC from JavaScript]
-- link:IBGettingStartedWithVaadinSpringWithoutSpringBoot.asciidoc[I b - Getting started with Vaadin Spring withoout Spring Boot]
-- link:Vaadin7SpringSecurityBaseAuthentification.asciidoc[Vaadin 7 + Spring Security (base authentication)]
-- link:UsingBeanValidationToValidateInput.asciidoc[Using Bean Validation to validate input]
-- link:VaadinSpringTips.asciidoc[Vaadin Spring tips]
-- link:VaadinCDI.asciidoc[Vaadin CDI]
-- link:IIInjectionAndScopes.asciidoc[II - Injection and scopes]
-- link:CreatingSecureVaadinApplicationsUsingJEE6.asciidoc[Creating secure Vaadin applications using JEE6]
-- link:UsingVaadinCDIWithJAASAuthentication.asciidoc[Using Vaadin CDI with JAAS authentication]
-- link:LoadTestingWithGatling.asciidoc[Load testing with Gatling]
-- link:VaadinScalabilityTestingWithAmazonWebServices.asciidoc[Vaadin scalability testing with Amazon Web Services]
-- link:UsingFontIcons.asciidoc[Using font icons in Vaadin 7.2]
-- link:DynamicallyInjectingCSS.asciidoc[Dynamically injecting CSS]
-- link:ValoExamples.asciidoc[Valo examples]
-- link:ReadOnlyVsDisabledFields.asciidoc[Read-only vs Disabled fields]
-- link:ValoThemeGettingStarted.asciidoc[Valo theme - Getting started]
-- link:UseTooltipsToClarifyFunctions.asciidoc[Use tooltips to clarify functions]
-- link:EnableAndDisableButtonsToIndicateState.asciidoc[Enable and disable buttons to indicate state]
-- link:ChangingThemeOnTheFly.asciidoc[Changing theme on the fly]
-- link:MarkRequiredFieldsAsSuch.asciidoc[Mark required fields as such]
-- link:PackagingSCSSOrCSSinAnAddon.asciidoc[Packaging SCSS or CSS in an add-on]
-- link:RightAlignComparableNumericalFields.asciidoc[Right-align comparable numerical fields]
-- link:CustomizingComponentThemeWithSass.asciidoc[Customizing component theme with Sass]
-- link:WidgetStylingUsingOnlyCSS.asciidoc[Widget styling using only CSS]
-- link:VisuallyDistinguishPrimaryActions.asciidoc[Visually distinguish primary actions]
-- link:LabelButtonsExpressively.asciidoc[Label buttons expressively]
-- link:CreatingAServlet3.0Application.asciidoc[Creating a servlet 3.0 application]
-- link:CreatingAnEclipseProject.asciidoc[Creating an Eclipse project]
-- link:CreatingASimpleComponentContainer.asciidoc[Creating a simple component container]
-- link:UsingRPCToSendEventsToTheClient.asciidoc[Using RPC to send events to the client]
-- link:CreatingAComponentExtension.asciidoc[Creating a component extension]
-- link:CreatingAUIExtension.asciidoc[Creating a UI extension]
-- link:UsingDeclarativeServices.asciidoc[Using declarative services]
-- link:DynamicallyUpdatingStateBeforeSendingChangesToClient.asciidoc[Dynamically updating state before sending changes to client]
-- link:GettingStartedOnNetBeans.asciidoc[Getting started on NetBeans]
-- link:ComponentAddonProjectSetupHOWTO.asciidoc[Component add-on project setup how-to]
-- link:CreatingAThemeUsingSass.asciidoc[Creating a theme using Sass]
-- link:OpeningAUIInAPopupWindow.asciidoc[Opening a UI in a popup window]
-- link:ViewChangeConfirmations.asciidoc[View change confirmations]
-- link:CreatingABookmarkableApplicationWithBackButtonSupport.asciidoc[Creating a bookmarkable application with back button support]
-- link:BroadcastingMessagesToOtherUsers.asciidoc[Broadcasting messages to other users]
-- link:ConfigureInputFieldsToGuideDataEntry.asciidoc[Configure input fields to guide data entry]
-- link:CreatingMultiTabApplications.asciidoc[Creating multi-tab applications]
-- link:AddingASplashScreen.asciidoc[Adding a splash screen]
+- <<AccessControlForViews#access-control-for-views,"Access control or views">>
+- <<CreatingAServlet3%2E0Application#creating-a-servlet-3.0-application,"Creating a Servlet 3.0 application">>
+- <<DevelopingPortletsForTheWebSpherePortalServer#developing-portlets-for-the-websphere-portal-server,"Developing portlets for the WebSphere Portal Server">>
+- <<ConfigureComboBoxesWisely#configure-comboboxes-wisely,"Configure ComboBoxes wisely">>
+- <<LettingTheUserDownloadAFile#letting-the-user-download-a-file,"Letting the user download a file">>
+- <<UsingVaadinInIBMDomino#using-vaadin-in-ibm-domino,"Using Vaadin in IBM Domino">>
+- <<VaadinTutorialForSwingDevelopers#a-hitchhikers-guide-to-convert-aswing-appto-modern-web-app,"Vaadin tutorial for Swing developers">>
+- <<SettingAndReadingSessionAttributes#setting-and-reading-session-attributes,"Setting and reading session attributes">>
+- <<EnablingServerPush#enabling-server-push,"Enabling server push">>
+- <<CleaningUpResourcesInAUI#cleaning-up-resources-in-a-ui,"Cleaning up resources in a UI">>
+- <<SendingEmailFromJavaApplications#sending-email-from-java-applications,"Sending email from Java applications">>
+- <<OptimizingSluggishUI#optimizing-sluggish-ui,"Optimizing sluggish UI">>
+- <<UsingParametersWithViews#using-parameters-with-views,"Using parameters with views">>
+- <<ConfiguringPushForYourEnvironment#configuring-push-for-your-environment,"Configuring push for your environment">>
+- <<SettingAndReadingCookies#setting-and-reading-cookies,"Setting and reading cookies">>
+- <<UsingPolling#using-polling,"Using polling">>
+- <<FindingTheCurrentUIAndPageAndVaadinSession#finding-the-current-ui-and-page-and-vaadin-session,"Finding the current UI and page and Vaadin Session">>
+- <<CreatingAnApplicationThatPreservesStateOnRefresh#creating-an-application-that-preserves-state-on-refresh,"Creating an application that preserves state on refresh">>
+- <<SendingEventsFromTheClientToTheServerUsingRPC#sending-events-from-the-client-to-the-server-using-RPC,"Sending events from the client to the server using RPC">>
+- <<HandlingLogout#handling-logout,"Handling logout">>
+- <<ScalableWebApplications#scalable-web-applications,"Scalable web applications">>
+- <<RememberToTheSetTheLocale#remember-to-the-set-the-locale,"Remember to the set the locale">>
+- <<MVCBasicsInITMillToolkit#mvc-basics-in-itmill-toolkit,"MVC Basics in IT Mill Toolkit">>
+- <<CustomizingTheStartupPageInAnApplication#customizing-the-startup-page-in-an-application,"Customizing the startup page in an application">>
+- <<UsingURIFragments#using-uri-fragments,"Using URI fragments">>
+- <<AccessingWebPageAndBrowserInformation#accessing-web-page-and-browser-information,"Accessing web page and browser information">>
+- <<GeneratingDynamicResourcesBasedOnURIOrParameters#generating-dynamic-resources-based-on-uri-or-parameters,"Generating dynamic resources based on URI or parameters">>
+- <<OptimizingTheWidgetSet#optimizing-the-widget-set,"Optimizing the widget set">>
+- <<UsingServerInitiatedEvents#using-server-initiated-events,"Using server-initiated events">>
+- <<ChooseInputFieldComponentsWisely#choosing-input-field-components-wisely,"Choose input field components wisely">>
+- <<CreatingASimpleComponent#creating-a-simple-component,"Creating a simple component">>
+- <<IntegratingAnExistingGWTWidget#integrating-an-existing-gwt-widget,"Integrating an existing GWT widget">>
+- <<IntegrationExperiences#integrating-vaadin-applications-with-other-technologies,"Integration experiences">>
+- <<VaadinOnGrailsCreateProjectInIntelliJIDEA#vaadin-on-grails-with-intellij-idea,"Vaadin on grails - Create project in IntelliJ IDEA">>
+- <<VaadinOnGrailsDatabaseAccess#vaadin-on-grails-database-access,"Vaadin on grails - Database access">>
+- <<VaadinOnGrailsMultipleUIs#vaadin-on-grails-multiple-uis,"Vaadin on grails - Multiple UIs">>
+- <<IntegratingAJavaScriptComponent#integrating-a-javascript-component,"Integrating a JavaScript component">>
+- <<IntegratingAJavaScriptLibraryAsAnExtension#integrating-a-javascript-library-as-an-extension,"Integrating a JavaScript library as an extension">>
+- <<UsingAJavaScriptLibraryOrAStyleSheetInAnAddOn#using-a-javascript-library-or-a-style-sheet-in-an-addon,"Using a JavaScript library or a style sheet in an add-on">>
+- <<ExposingServerSideAPIToJavaScript#exposing-server-side-api-to-javascript,"Exposing server-side API to JavaScript">>
+- <<UsingRPCFromJavaScript#using-rpc-from-javascript,"Using RPC from JavaScript">>
+- <<IBGettingStartedWithVaadinSpringWithoutSpringBoot#i-b-getting-started-with-vaadin-spring-without-spring-boot,"I b - Getting started with Vaadin Spring withoout Spring Boot">>
+- <<Vaadin7SpringSecurityBaseAuthentification#vaadin-7-spring-security-base-authentication,"Vaadin 7 + Spring Security (base authentication)">>
+- <<UsingBeanValidationToValidateInput#using-bean-validation-to-validate-input,"Using Bean Validation to validate input">>
+- <<VaadinSpringTips#vaadin-spring-tips,"Vaadin Spring tips">>
+- <<VaadinCDI#vaadin-cdi,"Vaadin CDI">>
+- <<IIInjectionAndScopes#ii-injection-and-scopes,"II - Injection and scopes">>
+- <<CreatingSecureVaadinApplicationsUsingJEE6#creating-secure-vaadin-applications-using-jee6,"Creating secure Vaadin applications using JEE6">>
+- <<UsingVaadinCDIWithJAASAuthentication#using-vaadin-cdi-with-jaas-authentication,"Using Vaadin CDI with JAAS authentication">>
+- <<LoadTestingWithGatling#loading-testing-with-gatling,"Load testing with Gatling">>
+- <<VaadinScalabilityTestingWithAmazonWebServices#vaadin-scalability-testing-with-amazon-web-services,"Vaadin scalability testing with Amazon Web Services">>
+- <<UsingFontIcons#using-font-icons-in-vaadin-7.2,"Using font icons in Vaadin 7.2">>
+- <<DynamicallyInjectingCSS#dynamically-injecting-css,"Dynamically injecting CSS">>
+- <<ValoExamples#valo-examples,"Valo examples">>
+- <<ReadOnlyVsDisabledFields#read-only-vs-disabled-fields,"Read-only vs Disabled fields">>
+- <<ValoThemeGettingStarted#valo-theme-getting-started,"Valo theme - Getting started">>
+- <<UseTooltipsToClarifyFunctions#use-tooltips-to-clarify-functions,"Use tooltips to clarify functions">>
+- <<EnableAndDisableButtonsToIndicateState#enable-and-disable-buttons-to-indicate-state,"Enable and disable buttons to indicate state">>
+- <<ChangingThemeOnTheFly#changing-theme-on-the-fly,"Changing theme on the fly">>
+- <<MarkRequiredFieldsAsSuch#mark-required-fields-as-such,"Mark required fields as such">>
+- <<PackagingSCSSOrCSSinAnAddon#packaging-scss-or-css-in-an-add-on,"Packaging SCSS or CSS in an add-on">>
+- <<RightAlignComparableNumericalFields#right-align-comparable-numeric-fields,"Right-align comparable numerical fields">>
+- <<CustomizingComponentThemeWithSass#customizing-component-theme-with-sass,"Customizing component theme with Sass">>
+- <<WidgetStylingUsingOnlyCSS#widget-styling-using-only-css,"Widget styling using only CSS">>
+- <<VisuallyDistinguishPrimaryActions#visually-distinguish-primary-actions,"Visually distinguish primary actions">>
+- <<LabelButtonsExpressively#label-buttons-expressively,"Label buttons expressively">>
+- <<CreatingAServlet3%2E0Application#creating-a-servlet-3.0-application,"Creating a servlet 3.0 application">>
+- <<CreatingAnEclipseProject#creating-an-eclipse-project,"Creating an Eclipse project">>
+- <<CreatingASimpleComponentContainer#creating-a-simple-component-container,"Creating a simple component container">>
+- <<UsingRPCToSendEventsToTheClient#using-rpc-to-send-events-to-the-client,"Using RPC to send events to the client">>
+- <<CreatingAComponentExtension#creating-a-component-extension,"Creating a component extension">>
+- <<CreatingAUIExtension#creating-a-ui-extension,"Creating a UI extension">>
+- <<UsingDeclarativeServices#using-declarative-services,"Using declarative services">>
+- <<DynamicallyUpdatingStateBeforeSendingChangesToClient#dynamically-updating-state-before-sending-changes-to-client,"Dynamically updating state before sending changes to client">>
+- <<GettingStartedOnNetBeans#getting-started-on-netbeans,"Getting started on NetBeans">>
+- <<ComponentAddonProjectSetupHOWTO#component-add-on-project-setup-howto,"Component add-on project setup how-to">>
+- <<CreatingAThemeUsingSass#creating-a-theme-using-sass,"Creating a theme using Sass">>
+- <<OpeningAUIInAPopupWindow#opening-a-ui-in-a-popup-window,"Opening a UI in a popup window">>
+- <<ViewChangeConfirmations#view-change-confirmations,"View change confirmations">>
+- <<CreatingABookmarkableApplicationWithBackButtonSupport#creating-a-bookmarkable-application-with-back-button-support,"Creating a bookmarkable application with back button support">>
+- <<BroadcastingMessagesToOtherUsers#broadcasting-messages-to-other-users,"Broadcasting messages to other users">>
+- <<ConfigureInputFieldsToGuideDataEntry#configure-input-fields-to-guide-data-entry,"Configure input fields to guide data entry">>
+- <<CreatingMultiTabApplications#creating-multi-tab-applications,"Creating multi-tab applications">>
+- <<AddingASplashScreen#adding-a-splash-sreen,"Adding a splash screen">>
