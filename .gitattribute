@@ -1,0 +1,6 @@
+# the default behavior
+* text=auto
+
+*.java text
+*.xml text
+*.bnd text
