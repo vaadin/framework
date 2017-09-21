@@ -91,7 +91,7 @@ public class DateCellDayEvent extends FocusableHTML
         weekGrid = parent;
 
         Style s = getElement().getStyle();
-        if (event.getStyleName().length() > 0) {
+        if (!event.getStyleName().isEmpty()) {
             addStyleDependentName(event.getStyleName());
         }
         s.setPosition(Position.ABSOLUTE);

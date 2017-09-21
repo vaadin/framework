@@ -247,7 +247,7 @@ public class VNotification extends VOverlay {
             removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
-        if (style != null && style.length() > 0) {
+        if (style != null && !style.isEmpty()) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
@@ -635,7 +635,7 @@ public class VNotification extends VOverlay {
             html.append("</p>");
         }
 
-        if (html.length() > 0) {
+        if (html.length() != 0) {
 
             // Add error description
             if (details != null) {

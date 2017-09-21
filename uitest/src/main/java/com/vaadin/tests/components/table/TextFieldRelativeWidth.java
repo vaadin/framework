@@ -57,7 +57,7 @@ public class TextFieldRelativeWidth extends AbstractReindeerTestUI {
             Object itemId = idc.addItemAt(size - 1);
             Item newItem = idc.getItem(itemId);
             TextField tf = new TextField();
-            if (inputPrompt != null && inputPrompt.length() > 0) {
+            if (inputPrompt != null && !inputPrompt.isEmpty()) {
                 tf.setInputPrompt(inputPrompt);
             }
             tf.setWidth("100%");
@@ -70,7 +70,7 @@ public class TextFieldRelativeWidth extends AbstractReindeerTestUI {
             newItem = idc.getItem(itemId);
 
             tf = new TextField();
-            if (inputPromptChild != null && inputPromptChild.length() > 0) {
+            if (inputPromptChild != null && !inputPromptChild.isEmpty()) {
                 tf.setInputPrompt(inputPromptChild);
             }
             tf.setWidth("100%");

@@ -1412,7 +1412,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             servletPath = request.getContextPath() + request.getServletPath();
         }
 
-        if (servletPath.length() == 0
+        if (servletPath.isEmpty()
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath += "/";
         }

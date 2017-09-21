@@ -331,7 +331,7 @@ public class JavaScriptConnectorHelper {
     }
 
     private ServerConnector getConnector(String connectorId) {
-        if (connectorId == null || connectorId.length() == 0) {
+        if (connectorId == null || connectorId.isEmpty()) {
             return connector;
         }
 
@@ -364,7 +364,7 @@ public class JavaScriptConnectorHelper {
             // TODO Resolve conflicts using argument count and types
             String interfaceList = "";
             for (String iface : interfaces) {
-                if (interfaceList.length() != 0) {
+                if (!interfaceList.isEmpty()) {
                     interfaceList += ", ";
                 }
                 interfaceList += getJsInterfaceName(iface);

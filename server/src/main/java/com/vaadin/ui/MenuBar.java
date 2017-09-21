@@ -139,7 +139,7 @@ public class MenuBar extends AbstractComponent
             }
 
             String description = item.getDescription();
-            if (description != null && description.length() > 0) {
+            if (description != null && !description.isEmpty()) {
                 target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }

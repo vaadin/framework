@@ -7256,8 +7256,8 @@ public class VScrollTable extends FlowPanel
 
     @Override
     public void setHeight(String height) {
-        if (height.length() == 0
-                && getElement().getStyle().getHeight().length() != 0) {
+        if (height.isEmpty()
+                && !getElement().getStyle().getHeight().isEmpty()) {
             /*
              * Changing from defined to undefined size -> should do a size init
              * to take page length into account again
