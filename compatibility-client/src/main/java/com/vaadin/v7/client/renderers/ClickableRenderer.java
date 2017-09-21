@@ -79,7 +79,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
      *            the row type of the containing Grid
      */
     @SuppressWarnings("rawtypes")
-    public static class RendererClickEvent<R>
+    public static final class RendererClickEvent<R>
             extends MouseEvent<RendererClickHandler> {
 
         @SuppressWarnings("unchecked")

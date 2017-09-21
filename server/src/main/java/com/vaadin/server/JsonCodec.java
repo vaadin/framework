@@ -64,7 +64,7 @@ import elemental.json.impl.JreJsonArray;
  *
  * @since 7.0
  */
-public class JsonCodec implements Serializable {
+public final class JsonCodec implements Serializable {
 
     /* Immutable Encode Result representing null */
     private static final EncodeResult ENCODE_RESULT_NULL = new EncodeResult(

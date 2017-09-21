@@ -31,7 +31,7 @@ import com.vaadin.util.ReflectTools;
  * @deprecated As of 7.1. Will be removed or refactored in the future.
  */
 @Deprecated
-public class ServletPortletHelper implements Serializable {
+public final class ServletPortletHelper implements Serializable {
     public static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
     /**
      * The default SystemMessages (read-only).

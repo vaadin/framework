@@ -752,7 +752,7 @@ public class FieldGroup implements Serializable {
      *
      */
     @Deprecated
-    public static class CommitEvent implements Serializable {
+    public static final class CommitEvent implements Serializable {
         private FieldGroup fieldBinder;
 
         private CommitEvent(FieldGroup fieldBinder) {

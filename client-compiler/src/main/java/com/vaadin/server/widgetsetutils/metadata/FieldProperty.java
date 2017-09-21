@@ -28,7 +28,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.user.rebind.SourceWriter;
 
-public class FieldProperty extends Property {
+public final class FieldProperty extends Property {
 
     private final JField field;
 

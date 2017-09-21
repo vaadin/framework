@@ -693,7 +693,7 @@ public class DesignContext implements Serializable {
      *
      * @author Vaadin Ltd
      */
-    public class ComponentCreatedEvent implements Serializable {
+    public final class ComponentCreatedEvent implements Serializable {
         private final String localId;
         private final Component component;
         private final DesignContext context;

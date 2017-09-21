@@ -78,7 +78,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * A comparator that sorts the listed items before other items. Otherwise,
      * the order is undefined.
      */
-    private static class ListedItemsFirstComparator
+    private static final class ListedItemsFirstComparator
             implements Comparator<Object>, Serializable {
         private final Collection<?> itemIds;
 

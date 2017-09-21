@@ -51,7 +51,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class CurrentInstance implements Serializable {
+public final class CurrentInstance implements Serializable {
     private static final Object NULL_OBJECT = new Object();
     private static final CurrentInstance CURRENT_INSTANCE_NULL = new CurrentInstance(
             NULL_OBJECT);

@@ -263,7 +263,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
         return false;
     }
 
-    private class HierarchyItem extends Composite {
+    private final class HierarchyItem extends Composite {
 
         private FlowPanel panel;
         private Expander expander;
@@ -343,7 +343,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             }
         }
 
-        private class Expander extends Widget implements HasClickHandlers {
+        private final class Expander extends Widget implements HasClickHandlers {
 
             private Expander() {
                 Element span = DOM.createSpan();

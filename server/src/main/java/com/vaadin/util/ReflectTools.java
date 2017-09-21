@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
  *
  * @since 6.2
  */
-public class ReflectTools implements Serializable {
+public final class ReflectTools implements Serializable {
 
     static final String CREATE_INSTANCE_FAILED = "Unable to create an instance of {0}. Make sure it has a no-arg constructor";
     static final String CREATE_INSTANCE_FAILED_FOR_NON_STATIC_MEMBER_CLASS = "Unable to create an instance of {0}. Make sure the class is static if it is a nested class.";

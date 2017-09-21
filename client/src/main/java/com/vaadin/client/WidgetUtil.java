@@ -1435,7 +1435,7 @@ public class WidgetUtil {
      * @author Vaadin Ltd
      */
     @SuppressWarnings("serial")
-    public static class CssSize implements Serializable {
+    public static final class CssSize implements Serializable {
 
         /*
          * Map the size units with their type.

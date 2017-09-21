@@ -624,7 +624,7 @@ public class ListenerMethod implements EventListener, Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class MethodException extends RuntimeException
+    public final class MethodException extends RuntimeException
             implements Serializable {
 
         private MethodException(String message, Throwable cause) {

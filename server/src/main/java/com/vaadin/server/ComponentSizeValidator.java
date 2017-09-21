@@ -44,7 +44,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings({ "serial", "deprecation" })
-public class ComponentSizeValidator implements Serializable {
+public final class ComponentSizeValidator implements Serializable {
 
     private final static int LAYERS_SHOWN = 4;
 

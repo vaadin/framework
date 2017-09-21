@@ -184,7 +184,7 @@ public class PropertysetItem
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    private static class PropertySetChangeEvent extends EventObject
+    private static final class PropertySetChangeEvent extends EventObject
             implements Item.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Item source) {

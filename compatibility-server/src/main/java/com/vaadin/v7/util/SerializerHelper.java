@@ -28,7 +28,7 @@ import java.io.ObjectOutputStream;
  * @deprecated Only used for compatibility-server
  */
 @Deprecated
-public class SerializerHelper {
+public final class SerializerHelper {
 
     /**
      * Serializes the class reference so {@link #readClass(ObjectInputStream)}

@@ -226,7 +226,7 @@ public final class BeanUtil implements Serializable {
         }
     }
 
-    private static class LazyValidationAvailability implements Serializable {
+    private static final class LazyValidationAvailability implements Serializable {
         private static final boolean BEAN_VALIDATION_AVAILABLE = isAvailable();
 
         private static boolean isAvailable() {
