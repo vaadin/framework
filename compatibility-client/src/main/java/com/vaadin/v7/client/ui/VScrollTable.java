@@ -7727,7 +7727,7 @@ public class VScrollTable extends FlowPanel
      *
      * @param event
      *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @return true if the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl,
             boolean shift) {

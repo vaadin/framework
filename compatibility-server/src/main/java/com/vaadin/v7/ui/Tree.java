@@ -295,7 +295,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return true iff the item is expanded.
+     * @return true if the item is expanded.
      */
     public boolean isExpanded(Object itemId) {
         return expanded.contains(itemId);
@@ -306,7 +306,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return True iff the expand operation succeeded
+     * @return True if the expand operation succeeded
      */
     public boolean expandItem(Object itemId) {
         boolean success = expandItem(itemId, true);
@@ -368,7 +368,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are expanded.
      *
      * @param startItemId
-     * @return True iff the expand operation succeeded
+     * @return True if the expand operation succeeded
      */
     public boolean expandItemsRecursively(Object startItemId) {
 
@@ -397,7 +397,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return True iff the collapse operation succeeded
+     * @return True if the collapse operation succeeded
      */
     public boolean collapseItem(Object itemId) {
 
@@ -421,7 +421,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are collapsed.
      *
      * @param startItemId
-     * @return True iff the collapse operation succeeded
+     * @return True if the collapse operation succeeded
      */
     public boolean collapseItemsRecursively(Object startItemId) {
 

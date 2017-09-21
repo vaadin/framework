@@ -239,7 +239,7 @@ public class Grid extends AbstractComponent
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid source, Column column,
@@ -534,7 +534,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the id of the item for which to check details visibility
-         * @return <code>true</code> iff the details are visible
+         * @return <code>true</code> if the details are visible
          */
         public boolean isDetailsVisible(Object itemId) {
             return openDetails.contains(itemId);
@@ -1177,7 +1177,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the item id to check for
-         * @return <code>true</code> iff the item is selected
+         * @return <code>true</code> if the item is selected
          */
         boolean isSelected(Object itemId);
 
@@ -1294,7 +1294,7 @@ public class Grid extends AbstractComponent
             /**
              * Marks all the items in the current Container as selected
              *
-             * @return <code>true</code> iff some items were previously not
+             * @return <code>true</code> if some items were previously not
              *         selected
              * @see #deselectAll()
              */
@@ -1303,7 +1303,7 @@ public class Grid extends AbstractComponent
             /**
              * Marks all the items in the current Container as deselected
              *
-             * @return <code>true</code> iff some items were previously selected
+             * @return <code>true</code> if some items were previously selected
              * @see #selectAll()
              */
             boolean deselectAll();
@@ -4135,7 +4135,7 @@ public class Grid extends AbstractComponent
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
+         *            <code>true</code> if the column may be hidable by the
          *            user via UI interaction
          * @return this column
          */
@@ -5872,7 +5872,7 @@ public class Grid extends AbstractComponent
      *
      * @param itemId
      *            the item id to check for
-     * @return <code>true</code> iff the item is selected
+     * @return <code>true</code> if the item is selected
      */
     // keep this javadoc in sync with SelectionModel.isSelected
     public boolean isSelected(Object itemId) {
@@ -6963,7 +6963,7 @@ public class Grid extends AbstractComponent
     /**
      * Checks whether the item editor UI is enabled for this grid.
      *
-     * @return <code>true</code> iff the editor is enabled for this grid
+     * @return <code>true</code> if the editor is enabled for this grid
      *
      * @see #setEditorEnabled(boolean)
      * @see #getEditedItemId()
@@ -7012,7 +7012,7 @@ public class Grid extends AbstractComponent
     /**
      * Returns whether an item is currently being edited in the editor.
      *
-     * @return true iff the editor is open
+     * @return true if the editor is open
      */
     public boolean isEditorActive() {
         return editorActive;
@@ -7480,7 +7480,7 @@ public class Grid extends AbstractComponent
      * @since 7.5.0
      * @param itemId
      *            the id of the item for which to check details visibility
-     * @return <code>true</code> iff the details are visible
+     * @return <code>true</code> if the details are visible
      */
     public boolean isDetailsVisible(Object itemId) {
         return detailComponentManager.isDetailsVisible(itemId);

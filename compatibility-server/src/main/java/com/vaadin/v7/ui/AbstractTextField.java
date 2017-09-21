@@ -430,7 +430,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
              * Fire a "simulated" text change event before value change event if
              * change is coming from the client side.
              *
-             * Iff there is both value change and textChangeEvent in same
+             * if there is both value change and textChangeEvent in same
              * variable burst, it is a text field in non immediate mode and the
              * text change event "flushed" queued value change event. In this
              * case textChangeEventPending flag is already on and text change

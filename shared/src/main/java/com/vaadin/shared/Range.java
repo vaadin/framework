@@ -141,7 +141,7 @@ public final class Range implements Serializable {
     /**
      * Checks whether the range has no elements between the start and end.
      *
-     * @return <code>true</code> iff the range contains no elements.
+     * @return <code>true</code> if the range contains no elements.
      */
     public boolean isEmpty() {
         return getStart() >= getEnd();
@@ -164,7 +164,7 @@ public final class Range implements Serializable {
      *
      * @param integer
      *            an integer to test for presence in this range
-     * @return <code>true</code> iff <code>integer</code> is in this range
+     * @return <code>true</code> if <code>integer</code> is in this range
      */
     public boolean contains(final int integer) {
         return getStart() <= integer && integer < getEnd();
@@ -173,7 +173,7 @@ public final class Range implements Serializable {
     /**
      * Checks whether this range is a subset of another range.
      *
-     * @return <code>true</code> iff <code>other</code> completely wraps this
+     * @return <code>true</code> if <code>other</code> completely wraps this
      *         range
      */
     public boolean isSubsetOf(final Range other) {
@@ -267,7 +267,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range starts before the
+     * @return <code>true</code> if this range starts before the
      *         <code>other</code>
      */
     public boolean startsBefore(final Range other) {
@@ -279,7 +279,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range ends before the
+     * @return <code>true</code> if this range ends before the
      *         <code>other</code>
      */
     public boolean endsBefore(final Range other) {
@@ -291,7 +291,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range ends after the
+     * @return <code>true</code> if this range ends after the
      *         <code>other</code>
      */
     public boolean endsAfter(final Range other) {
@@ -303,7 +303,7 @@ public final class Range implements Serializable {
      *
      * @param other
      *            the other range to compare against
-     * @return <code>true</code> iff this range starts after the
+     * @return <code>true</code> if this range starts after the
      *         <code>other</code>
      */
     public boolean startsAfter(final Range other) {

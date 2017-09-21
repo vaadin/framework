@@ -4943,10 +4943,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Is sorting disabled altogether.
      *
-     * True iff no sortable columns are given even in the case where data source
+     * True if no sortable columns are given even in the case where data source
      * would support this.
      *
-     * @return True iff sorting is disabled.
+     * @return True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
     @Deprecated
@@ -4967,7 +4967,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Disables the sorting by the user altogether.
      *
      * @param sortDisabled
-     *            True iff sorting is disabled.
+     *            True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
      */
     @Deprecated
