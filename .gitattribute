@@ -4,3 +4,9 @@
 *.java text
 *.xml text
 *.bnd text
+*.svg text
+*.md text
+*.txt text
+*.css text
+*.scss text
+*.graffle text
