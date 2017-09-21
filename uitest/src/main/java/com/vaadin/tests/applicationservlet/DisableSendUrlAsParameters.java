@@ -17,14 +17,12 @@ package com.vaadin.tests.applicationservlet;
 
 import com.vaadin.launcher.CustomDeploymentConfiguration;
 import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
-import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.server.Constants;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 
 @CustomDeploymentConfiguration({
         @Conf(name = Constants.SERVLET_PARAMETER_SENDURLSASPARAMETERS, value = "false") })
-@PushStateNavigation
 public class DisableSendUrlAsParameters extends AbstractTestUIWithLog {
 
     @Override
