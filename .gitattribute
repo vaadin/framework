@@ -1,4 +1,4 @@
-# the default behavior
+# The default behavior
 * text=auto
 
 *.java text
@@ -12,4 +12,6 @@
 *.txt text
 *.css text
 *.scss text
+
+# To be verified
 *.graffle binary
