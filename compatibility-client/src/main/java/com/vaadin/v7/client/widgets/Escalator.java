@@ -5920,7 +5920,7 @@ public class Escalator extends Widget
      * Check whether there are both columns and any row data (for either
      * headers, body or footer).
      *
-     * @return <code>true</code> if header, body or footer has rows && there
+     * @return <code>true</code> if header, body or footer has rows and there
      *         are columns
      */
     private boolean hasColumnAndRowData() {

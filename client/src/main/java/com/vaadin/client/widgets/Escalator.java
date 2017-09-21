@@ -1740,8 +1740,8 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check for if it is or has elements that
-         *            can be frozen
+         *            the row element to check whether it,
+         *            or one if its children elements can be frozen
          * @return <code>true</code> if this the given element, or any of its
          *         descendants, can be frozen
          */
@@ -5935,7 +5935,7 @@ public class Escalator extends Widget
      * Check whether there are both columns and any row data (for either
      * headers, body or footer).
      *
-     * @return <code>true</code> if header, body or footer has rows && there
+     * @return <code>true</code> if header, body or footer has rows and there
      *         are columns
      */
     private boolean hasColumnAndRowData() {
