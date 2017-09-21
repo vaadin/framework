@@ -493,8 +493,8 @@ public class VNotification extends VOverlay {
      *            The icon URI, can be {@code null}.
      * @param styleName
      *            The Notification style name, can be {@code null}.
-     * @param positionOrdinal
-     *            The ordinal of the {@link Position}.
+     * @param position
+     *            The desired {@link Position}.
      * @param delayMsec
      *            The delay in milliseconds before disappearing, -1 for forever.
      *
@@ -502,7 +502,7 @@ public class VNotification extends VOverlay {
      */
     public static VNotification showNotification(ApplicationConnection client,
             String caption, String description, boolean htmlContentAllowed,
-            String iconUri, String styleName, int positionOrdinal, int delayMsec) {
+            String iconUri, String styleName, Position position, int delayMsec) {
         String html = "";
         if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();
@@ -523,8 +523,6 @@ public class VNotification extends VOverlay {
             html += "<p class='" + getDependentStyle(client, DESCRIPTION) + "'>"
                     + description + "</p>";
         }
-
-        Position position = Position.values()[positionOrdinal];
 
         VNotification vNotification = createNotification(delayMsec,
                 client.getUIConnector().getWidget());
