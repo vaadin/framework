@@ -1117,8 +1117,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Set the number when a week starts
      *
-     * @param dayNumber
-     *            The number of the day
+     * @param hour
+     *            The hour of the day
      */
     public void setFirstHourOfTheDay(int hour) {
         assert (hour >= 0 && hour <= 23);
@@ -1135,8 +1135,8 @@ public class VCalendar extends Composite implements VHasDropHandler {
     /**
      * Set the number when a week ends
      *
-     * @param dayNumber
-     *            The number of the day
+     * @param hour
+     *            The hour of the day
      */
     public void setLastHourOfTheDay(int hour) {
         assert (hour >= 0 && hour <= 23);
@@ -1589,9 +1589,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * <p>
      * The default is false, i.e. to render that caption as plain text.
      *
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param eventCaptionAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
         this.eventCaptionAsHtml = eventCaptionAsHtml;

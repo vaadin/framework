@@ -55,7 +55,7 @@ public class Heartbeat {
     /**
      * Initializes the heartbeat for the given application connection
      *
-     * @param connection
+     * @param applicationConnection
      *            the connection
      */
     public void init(ApplicationConnection applicationConnection) {

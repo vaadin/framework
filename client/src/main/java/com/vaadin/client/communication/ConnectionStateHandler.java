@@ -77,7 +77,7 @@ public interface ConnectionStateHandler {
      *
      * @param pushConnection
      *            The push connection which was closed
-     * @param response
+     * @param responseObject
      *            An object containing response data
      */
     void pushClosed(PushConnection pushConnection,
@@ -153,8 +153,8 @@ public interface ConnectionStateHandler {
      * Called when invalid content (not JSON) was returned from the server as
      * the result of an XmlHttpRequest request
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
+     * @param xhrConnectionError
+     *            The error containing what was being sent to the server and what
      *            was returned
      */
     void xhrInvalidContent(XhrConnectionError xhrConnectionError);
@@ -163,8 +163,8 @@ public interface ConnectionStateHandler {
      * Called when invalid status code (not 200) was returned by the server as
      * the result of an XmlHttpRequest.
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
+     * @param xhrConnectionError
+     *            The error containing what was being sent to the server and what
      *            was returned
      */
     void xhrInvalidStatusCode(XhrConnectionError xhrConnectionError);
@@ -187,9 +187,10 @@ public interface ConnectionStateHandler {
      * Called when invalid content (not JSON) was pushed from the server through
      * the push connection
      *
-     * @param communicationProblemEvent
-     *            An event containing what was being sent to the server and what
-     *            was returned
+     * @param pushConnection
+     *            The push connection used
+     * @param message
+     *            The message which was sent to the server
      */
     void pushInvalidContent(PushConnection pushConnection, String message);
 

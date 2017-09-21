@@ -809,8 +809,8 @@ public class VTabsheet extends VTabsheetBase
     /**
      * Load the content of a tab of the provided index.
      *
-     * @param index
-     *            of the tab to load
+     * @param tabIndex
+     *            The index of the tab to load
      *
      * @return true if the specified sheet gets loaded, otherwise false.
      */

@@ -226,7 +226,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * method must be called.
      *
      * @since 7.6
-     * @param Slot
+     * @param slot
      *            to remove
      */
     protected void removeSlot(Slot slot) {

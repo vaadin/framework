@@ -109,9 +109,10 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * Creates a new checkbox that is connected to a boolean property.
      *
-     * @param state
-     *            the Initial state of the switch-button.
+     * @param caption
+     *            the Initial caption of the checkbox.
      * @param dataSource
+     *            the data source
      */
     public CheckBox(String caption, Property<?> dataSource) {
         this(caption);

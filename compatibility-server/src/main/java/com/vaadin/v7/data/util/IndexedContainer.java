@@ -146,7 +146,7 @@ public class IndexedContainer
     /**
      * Gets the type of a Property stored in the list.
      *
-     * @param id
+     * @param propertyId
      *            the ID of the Property.
      * @return Type of the requested Property
      */

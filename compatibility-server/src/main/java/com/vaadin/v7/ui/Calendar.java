@@ -1932,9 +1932,9 @@ public class Calendar extends AbstractLegacyComponent
      * <p>
      * The default is false, i.e. to render that caption as plain text.
      *
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param eventCaptionAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
         getState().eventCaptionAsHtml = eventCaptionAsHtml;

@@ -65,11 +65,6 @@ public class ColorPickerSelect extends CustomComponent
 
     /**
      * Instantiates a new color picker select.
-     *
-     * @param rows
-     *            the rows
-     * @param columns
-     *            the columns
      */
     public ColorPickerSelect() {
 

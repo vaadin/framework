@@ -718,7 +718,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * </p>
      *
      * @since 7.5.7
-     * @param newValue
+     * @param newFieldValue
      *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded
      *            True if caller is sure that repaint is not needed.

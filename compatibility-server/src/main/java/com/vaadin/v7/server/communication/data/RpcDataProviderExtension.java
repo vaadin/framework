@@ -416,8 +416,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *
      * @param component
      *            the remote data grid component to extend
-     * @param columnKeys
-     *            the key mapper for columns
      */
     public void extend(Grid component) {
         super.extend(component);

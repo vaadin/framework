@@ -180,8 +180,8 @@ public interface ColumnConfiguration {
      *
      * @param index
      *            the index of the first row that will be updated
-     * @param numberOfRows
-     *            the number of rows to update, starting from the index
+     * @param numberOfColumns
+     *            the number of columns to update, starting from the index
      * @throws IndexOutOfBoundsException
      *             if any integer number in the range
      *             <code>[index..(index+numberOfColumns)]</code> is not an
