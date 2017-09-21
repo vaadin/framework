@@ -128,8 +128,6 @@ public class Notification extends AbstractExtension implements Serializable {
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
 
-    private Resource icon;
-
     /**
      * Creates a "humanized" notification message.
      *
@@ -305,7 +303,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The message icon
      */
     public Resource getIcon() {
-        return icon;
+        return getResource("icon");
     }
 
     /**
@@ -315,7 +313,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The desired message icon
      */
     public void setIcon(Resource icon) {
-        this.icon = icon;
+        setResource("icon", icon);
     }
 
     /**
@@ -392,20 +390,6 @@ public class Notification extends AbstractExtension implements Serializable {
      */
     public void show(Page page) {
         extend(page.getUI());
-    }
-
-    protected void extend(UI ui) {
-        NotificationState state = getState();
-        Resource icon = getIcon();
-        if (icon != null) {
-            ui.getSession().getGlobalResourceHandler(true)
-                .register(icon, ui);
-
-            ResourceReference reference = ResourceReference.create(
-                    icon, ui, "");
-            state.iconUri = reference.getURL();
-        }
-        super.extend(ui);
     }
 
     @Override

@@ -44,11 +44,6 @@ public class NotificationState extends SharedState {
     public boolean htmlContentAllowed;
 
     /**
-     * The icon URI, can be {@code null}.
-     */
-    public String iconUri;
-
-    /**
      * The style name, can be {@code null}.
      */
     public String styleName;
