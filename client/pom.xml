@@ -17,6 +17,7 @@
     <description>Vaadin client</description>
 
     <dependencies>
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
