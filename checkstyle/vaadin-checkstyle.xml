@@ -64,8 +64,8 @@
     </module>
     <module name="RegexpMultiline">
         <property name="message"
-            value="File contains carriage return (Windows newlines)" />
-        <property name="format" value="\r" />
+            value="File contains carriage return" />
+        <property name="format" value="system" />
     </module>
 
 
