@@ -195,7 +195,7 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    public static abstract class ApplicationConnectionEvent
+    public abstract static class ApplicationConnectionEvent
             extends GwtEvent<CommunicationHandler> {
 
         private ApplicationConnection connection;

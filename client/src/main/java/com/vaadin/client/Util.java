@@ -1149,7 +1149,7 @@ public class Util {
      *            a JavaScript object to be converted to a string
      * @return JSON in string representation
      */
-    private native static String stringify(JavaScriptObject json)
+    private static native String stringify(JavaScriptObject json)
     /*-{
         return JSON.stringify(json);
     }-*/;
@@ -1162,7 +1162,7 @@ public class Util {
      * @param jsonAsString
      * @return a JavaScript object constructed from the parse
      */
-    public native static <T extends JavaScriptObject> T parse(
+    public static native <T extends JavaScriptObject> T parse(
             String jsonAsString)
     /*-{
         return JSON.parse(jsonAsString);

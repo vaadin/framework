@@ -323,7 +323,7 @@ public class Escalator extends Widget
              * {@link com.google.gwt.dom.client.NativeEvent NativeEvent} isn't
              * properly populated with the correct values.
              */
-            private final static class CustomTouchEvent
+            private static final class CustomTouchEvent
                     extends JavaScriptObject {
                 protected CustomTouchEvent() {
                 }
@@ -1481,7 +1481,7 @@ public class Escalator extends Widget
             return elem;
         }
 
-        abstract protected void recalculateSectionHeight();
+        protected abstract void recalculateSectionHeight();
 
         /**
          * Returns the height of all rows in the row container.
@@ -1731,7 +1731,7 @@ public class Escalator extends Widget
          * @return <code>true</code> iff this the given element, or any of its
          *         descendants, can be frozen
          */
-        abstract protected boolean rowCanBeFrozen(TableRowElement tr);
+        protected abstract boolean rowCanBeFrozen(TableRowElement tr);
 
         /**
          * Iterates through all the cells in a column and returns the width of

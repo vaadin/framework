@@ -247,7 +247,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
         void contextMenu(ContextMenuEvent event, Widget widget);
     }
 
-    private static abstract class AbstractEventComparator
+    private abstract static class AbstractEventComparator
             implements Comparator<CalendarEvent> {
 
         @Override

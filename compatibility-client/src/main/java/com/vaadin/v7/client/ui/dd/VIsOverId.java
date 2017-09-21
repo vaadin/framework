@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.v7.ui.AbstractSelect;
 
 @AcceptCriterion(AbstractSelect.TargetItemIs.class)
-final public class VIsOverId extends VAcceptCriterion {
+public final class VIsOverId extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

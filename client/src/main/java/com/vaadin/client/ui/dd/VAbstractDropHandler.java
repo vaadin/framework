@@ -113,7 +113,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      *
      * @param drag
      */
-    abstract protected void dragAccepted(VDragEvent drag);
+    protected abstract void dragAccepted(VDragEvent drag);
 
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
         Command checkCriteria = new Command() {

@@ -159,7 +159,7 @@ public class SQLContainer implements Container, Container.Filterable,
 
     @Override
     public Object addItem() throws UnsupportedOperationException {
-        Object emptyKey[] = new Object[queryDelegate.getPrimaryKeyColumns()
+        Object[] emptyKey = new Object[queryDelegate.getPrimaryKeyColumns()
                 .size()];
         RowId itemId = new TemporaryRowId(emptyKey);
         // Create new empty column properties for the row item.

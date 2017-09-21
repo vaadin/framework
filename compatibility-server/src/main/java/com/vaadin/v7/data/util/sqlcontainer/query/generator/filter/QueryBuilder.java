@@ -45,7 +45,7 @@ public class QueryBuilder implements Serializable {
         addFilterTranslator(new SimpleStringTranslator());
     }
 
-    public synchronized static void addFilterTranslator(
+    public static synchronized void addFilterTranslator(
             FilterTranslator translator) {
         filterTranslators.add(translator);
     }
@@ -79,7 +79,7 @@ public class QueryBuilder implements Serializable {
      *            the statement helper to update with the value(s) of the filter
      * @return a string representing the filter.
      */
-    public synchronized static String getWhereStringForFilter(Filter filter,
+    public static synchronized String getWhereStringForFilter(Filter filter,
             StatementHelper sh) {
         for (FilterTranslator ft : filterTranslators) {
             if (ft.translatesFilter(filter)) {

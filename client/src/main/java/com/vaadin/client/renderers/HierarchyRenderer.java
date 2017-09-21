@@ -71,12 +71,12 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
             return (TableCellElement) element;
         }
 
-        private native static RowReference<Object> getRowReference(
+        private static native RowReference<Object> getRowReference(
                 RendererCellReference cell) /*-{
             return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference()();
         }-*/;
 
-        private native static FlyweightCell getFlyweightCell(
+        private static native FlyweightCell getFlyweightCell(
                 RendererCellReference cell) /*-{
             return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
         }-*/;

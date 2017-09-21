@@ -144,7 +144,7 @@ public abstract class AbstractLocalDateField
         if (value == null) return "";
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
         Locale locale = getLocale();
-        if (locale != null){
+        if (locale != null) {
             dateTimeFormatter = dateTimeFormatter.withLocale(locale);
         }
         return value.format(dateTimeFormatter);

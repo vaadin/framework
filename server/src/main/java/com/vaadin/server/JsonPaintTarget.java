@@ -49,7 +49,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     /* Document type declarations */
 
-    private final static String UIDL_ARG_NAME = "name";
+    private static final String UIDL_ARG_NAME = "name";
 
     private final Deque<String> mOpenTags;
 
@@ -206,7 +206,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @return A new string instance where all occurrences of XML sensitive
      *         characters are substituted with entities.
      */
-    static public String escapeXML(String xml) {
+    public static String escapeXML(String xml) {
         if (xml == null || xml.length() <= 0) {
             return "";
         }
@@ -248,7 +248,7 @@ public class JsonPaintTarget implements PaintTarget {
      *            The string to escape
      * @return Escaped version of the string
      */
-    static public String escapeJSON(String s) {
+    public static String escapeJSON(String s) {
         // FIXME: Move this method to another class as other classes use it
         // also.
         if (s == null) {
