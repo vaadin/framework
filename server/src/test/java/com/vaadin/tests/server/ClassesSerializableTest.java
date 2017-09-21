@@ -271,7 +271,7 @@ public class ClassesSerializableTest {
      *
      * @return List of class path segment strings
      */
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();
 
@@ -382,7 +382,7 @@ public class ClassesSerializableTest {
      *            File representing the directory to scan
      * @return collection of fully qualified class names in the directory
      */
-    private final static Collection<String> findClassesInDirectory(
+    private static final Collection<String> findClassesInDirectory(
             String parentPackage, File parent) {
         if (parent.isHidden()
                 || parent.getPath().contains(File.separator + ".")) {

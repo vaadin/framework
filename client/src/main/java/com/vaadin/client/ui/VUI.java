@@ -343,7 +343,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         connection.flushActiveConnector();
     }
 
-    private native static void loadAppIdListFromDOM(List<String> list)
+    private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {

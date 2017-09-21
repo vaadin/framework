@@ -2046,7 +2046,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @since 6.3
      *
      */
-    private static abstract class AbstractItemSetCriterion
+    private abstract static class AbstractItemSetCriterion
             extends ClientSideCriterion {
         protected final Collection<Object> itemIds = new HashSet<Object>();
         protected AbstractSelect select;

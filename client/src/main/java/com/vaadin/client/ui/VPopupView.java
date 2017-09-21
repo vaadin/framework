@@ -416,7 +416,7 @@ public class VPopupView extends HTML
             }
             return handler;
         }
-    }// class CustomPopup
+    }
 
     public HandlerRegistration addVisibilityChangeHandler(
             final VisibilityChangeHandler visibilityChangeHandler) {
@@ -442,4 +442,4 @@ public class VPopupView extends HTML
         return popupShowInProgress;
     }
 
-}// class VPopupView
+}

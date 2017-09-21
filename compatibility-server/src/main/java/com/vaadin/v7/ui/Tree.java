@@ -1636,7 +1636,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * during that drag and drop operation.
      */
     @Deprecated
-    public static abstract class TreeDropCriterion extends ServerSideCriterion {
+    public abstract static class TreeDropCriterion extends ServerSideCriterion {
 
         private Tree tree;
 

@@ -417,9 +417,8 @@ public class AtmospherePushConnection implements PushConnection {
         getConnectionStateHandler().pushReconnectPending(this);
     }
 
-    public static abstract class AbstractJSO extends JavaScriptObject {
+    public abstract static class AbstractJSO extends JavaScriptObject {
         protected AbstractJSO() {
-
         }
 
         protected final native String getStringValue(String key)

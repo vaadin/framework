@@ -92,9 +92,9 @@ public class TabKeyboardNavigation extends AbstractReindeerTestUI {
         return 5100;
     }
 
-    public final static String LABEL_ID = "sheetLabel";
+    public static final String LABEL_ID = "sheetLabel";
 
-    public final static String labelID(int index) {
+    public static final String labelID(int index) {
         return LABEL_ID + index;
     }
 

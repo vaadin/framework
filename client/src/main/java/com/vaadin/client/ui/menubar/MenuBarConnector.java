@@ -167,11 +167,10 @@ public class MenuBarConnector extends AbstractComponentConnector
                 itr = iteratorStack.pop();
                 currentMenu = menuStack.pop();
             }
-        } // while
+        }
 
         getLayoutManager().setNeedsHorizontalLayout(this);
-
-    }// updateFromUIDL
+    }
 
     @Override
     public VMenuBar getWidget() {

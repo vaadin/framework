@@ -58,10 +58,10 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private final static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
 
     // translates string <-> object
-    private final static DesignFormatter FORMATTER = new DesignFormatter();
+    private static final DesignFormatter FORMATTER = new DesignFormatter();
 
     /**
      * Returns the currently used formatter. All primitive types and all types

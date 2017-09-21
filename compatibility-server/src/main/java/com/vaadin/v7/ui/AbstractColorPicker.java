@@ -437,7 +437,7 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
      * Sets the default styles of the component
      *
      */
-    abstract protected void setDefaultStyles();
+    protected abstract void setDefaultStyles();
 
     /**
      * Shows a popup-window for color selection.

@@ -232,7 +232,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         return getApplicationRunnerURIs(request).applicationClassname;
     }
 
-    private final static class ProxyDeploymentConfiguration
+    private static final class ProxyDeploymentConfiguration
             implements InvocationHandler, Serializable {
         private final DeploymentConfiguration originalConfiguration;
 

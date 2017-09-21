@@ -41,5 +41,5 @@ public abstract class ShortcutListener extends ShortcutAction
     }
 
     @Override
-    abstract public void handleAction(Object sender, Object target);
+    public abstract void handleAction(Object sender, Object target);
 }
