@@ -1080,18 +1080,6 @@ public class Grid extends AbstractComponent
                         new ConnectorErrorEvent(Grid.this, event.getCause()));
             }
         }
-
-        private Object getFirstPropertyId(FieldGroup fieldGroup,
-                Set<Field<?>> keySet) {
-            for (Column c : getColumns()) {
-                Object propertyId = c.getPropertyId();
-                Field<?> f = fieldGroup.getField(propertyId);
-                if (keySet.contains(f)) {
-                    return propertyId;
-                }
-            }
-            return null;
-        }
     }
 
     /**

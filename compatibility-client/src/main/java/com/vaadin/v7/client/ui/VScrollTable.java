@@ -6648,18 +6648,6 @@ public class VScrollTable extends FlowPanel
                 return paintableId;
             }
 
-            private int getColIndexOf(Widget child) {
-                com.google.gwt.dom.client.Element widgetCell = child
-                        .getElement().getParentElement().getParentElement();
-                NodeList<TableCellElement> cells = rowElement.getCells();
-                for (int i = 0; i < cells.getLength(); i++) {
-                    if (cells.getItem(i) == widgetCell) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-
             public Widget getWidgetForPaintable() {
                 return this;
             }
