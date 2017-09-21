@@ -48,7 +48,7 @@ public interface EditorClientRpc extends ClientRpc {
      * the client.
      *
      * @param bindSucceeded
-     *            <code>true</code> iff the bind action was successful
+     *            <code>true</code> if the bind action was successful
      */
     void confirmBind(boolean bindSucceeded);
 
@@ -57,7 +57,7 @@ public interface EditorClientRpc extends ClientRpc {
      * the client.
      *
      * @param saveSucceeded
-     *            <code>true</code> iff the save action was successful
+     *            <code>true</code> if the save action was successful
      * @param errorMessage
      *            the error message to show the user
      * @param errorColumnsIds
