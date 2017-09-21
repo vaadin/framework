@@ -37,7 +37,7 @@ import org.junit.Test;
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.PushStateManager;
-import com.vaadin.navigator.Navigator.UriFragmentManager;
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewBeforeLeaveEvent;
 import com.vaadin.navigator.ViewChangeListener;
@@ -45,8 +45,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.PopStateEvent;
-import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ui.PageState;
@@ -273,6 +271,14 @@ public class NavigatorTest {
         private final Page page;
     }
 
+    @PushStateNavigation
+    private static class TestPushStateUI extends TestUI {
+
+        TestPushStateUI(Page page) {
+            super(page);
+        }
+    }
+
     private static class TestPage extends Page {
 
         public TestPage() {
@@ -388,7 +394,7 @@ public class NavigatorTest {
     @Test(expected = NullPointerException.class)
     public void testDestroy_unsetNavigatorInUIAndPopstateManager() {
         TestPage page = new TestPage();
-        UI ui = new TestUI(page);
+        UI ui = new TestPushStateUI(page);
 
         TestNavigator navigator = new TestNavigator(ui);
         Assert.assertTrue("Add URI fragment Page method has not been called",
