@@ -280,7 +280,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The position
      */
     public Position getPosition() {
-        return Position.values()[getState(false).position];
+        return getState(false).position;
     }
 
     /**
@@ -290,11 +290,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The desired notification position
      */
     public void setPosition(Position position) {
-        int ordinal = 0;
-        if (position != null) {
-            ordinal = position.ordinal();
-        }
-        getState().position = ordinal;
+        getState().position = position;
     }
 
     /**
