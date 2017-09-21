@@ -238,7 +238,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          *            property descriptor
          * @param useLongFormName
          *            use format grandparent.parent.property for name if true
-         * @since 8.y.x
+         * @since
          */
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent, PropertyDescriptor descriptor,
@@ -483,7 +483,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @param filterDefinition
      *            filtering conditions for nested properties
      * @return the bean property set, not <code>null</code>
-     * @since 8.x.y
+     * @since
      */
     @SuppressWarnings("unchecked")
     public static <T> PropertySet<T> get(Class<? extends T> beanType,
