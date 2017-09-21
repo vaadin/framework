@@ -22,7 +22,6 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-elemental</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

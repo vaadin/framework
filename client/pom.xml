@@ -17,14 +17,7 @@
     <description>Vaadin client</description>
 
     <dependencies>
-        <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-shared</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-server</artifactId>
@@ -35,12 +28,6 @@
                     <artifactId>vaadin-sass-compiler</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- Needed GWT dependencies, includes gwt-user -->
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-elemental</artifactId>
         </dependency>
     </dependencies>
 
