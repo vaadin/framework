@@ -1167,7 +1167,7 @@ public class WidgetUtil {
      *
      * @return The active element or null if no active element could be found.
      */
-    public native static Element getFocusedElement()
+    public static native Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
@@ -1315,7 +1315,7 @@ public class WidgetUtil {
      *
      * @since 7.3
      */
-    public native static void setSelectionRange(Element elem, int pos,
+    public static native void setSelectionRange(Element elem, int pos,
             int length, String direction)
     /*-{
        try {
@@ -1335,7 +1335,7 @@ public class WidgetUtil {
      *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
-    public native static void setTextSelectionEnabled(Element e, boolean enable)
+    public static native void setTextSelectionEnabled(Element e, boolean enable)
     /*-{
         if (!enable) {
             e.ondrag = function () { return false; };
@@ -1353,7 +1353,7 @@ public class WidgetUtil {
      *
      * @since 7.6
      */
-    public native static void clearTextSelection()
+    public static native void clearTextSelection()
     /*-{
         if ($wnd.getSelection) {
             $wnd.getSelection().removeAllRanges();

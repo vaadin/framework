@@ -91,7 +91,7 @@ public class TabSelectionRevertedByServerTest extends MultiBrowserTest {
     /*
      * Delay for PhantomJS.
      */
-    private final static int DELAY = 10;
+    private static final int DELAY = 10;
 
     /*
      * Provide the tab at specified index.

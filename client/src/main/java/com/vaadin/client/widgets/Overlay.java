@@ -352,7 +352,7 @@ public class Overlay extends PopupPanel {
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis)
+    private static native int detectRelativeBodyFixes(String axis)
     /*-{
         try {
             var b = $wnd.document.body;

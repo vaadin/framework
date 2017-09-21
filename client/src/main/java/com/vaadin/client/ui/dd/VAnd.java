@@ -28,7 +28,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  */
 @Deprecated
 @AcceptCriterion(And.class)
-final public class VAnd extends VAcceptCriterion implements VAcceptCallback {
+public final class VAnd extends VAcceptCriterion implements VAcceptCallback {
     private boolean b1;
 
     static VAcceptCriterion getCriteria(VDragEvent drag, UIDL configuration,

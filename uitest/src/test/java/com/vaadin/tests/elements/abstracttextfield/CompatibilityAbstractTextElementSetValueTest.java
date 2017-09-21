@@ -29,7 +29,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CompatibilityAbstractTextElementSetValueTest
         extends MultiBrowserTest {
-    private final static String TYPED_STRING = "this is typed string";
+    private static final String TYPED_STRING = "this is typed string";
 
     @Before
     public void init() {

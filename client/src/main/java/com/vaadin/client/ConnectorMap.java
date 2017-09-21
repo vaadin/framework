@@ -139,7 +139,7 @@ public class ConnectorMap {
      *            element of the connector whose id is desired
      * @return the id of the element's connector, if it's a connector
      */
-    native static final String getConnectorId(Element el)
+    static final native String getConnectorId(Element el)
     /*-{
         return el.tkPid;
     }-*/;

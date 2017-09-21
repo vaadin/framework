@@ -205,7 +205,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see VerticalScrollbarBundle#getElement()
      */
-    public final static class VerticalScrollbarBundle extends ScrollbarBundle {
+    public static final class VerticalScrollbarBundle extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -275,7 +275,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle
+    public static final class HorizontalScrollbarBundle
             extends ScrollbarBundle {
 
         @Override

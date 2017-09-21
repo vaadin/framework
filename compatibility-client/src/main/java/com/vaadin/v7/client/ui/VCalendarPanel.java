@@ -1183,38 +1183,27 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // Ctrl and Shift selection not supported
         if (ctrl || shift) {
             return false;
-        }
-
-        else if (keycode == getPreviousKey()) {
+        } else if (keycode == getPreviousKey()) {
             focusNextYear(10); // Add 10 years
             return true;
-        }
-
-        else if (keycode == getForwardKey()) {
+        } else if (keycode == getForwardKey()) {
             focusNextYear(1); // Add 1 year
             return true;
-        }
-
-        else if (keycode == getNextKey()) {
+        } else if (keycode == getNextKey()) {
             focusPreviousYear(10); // Subtract 10 years
             return true;
-        }
-
-        else if (keycode == getBackwardKey()) {
+        } else if (keycode == getBackwardKey()) {
             focusPreviousYear(1); // Subtract 1 year
             return true;
-
         } else if (keycode == getSelectKey()) {
             value = (Date) focusedDate.clone();
             onSubmit();
             return true;
-
         } else if (keycode == getResetKey()) {
             // Restore showing value the selected value
             focusedDate.setTime(value.getTime());
             renderCalendar();
             return true;
-
         } else if (keycode == getCloseKey()) {
             // TODO fire listener, on users responsibility??
 
@@ -1402,24 +1391,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
             boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
-        }
-
-        else if (resolution == Resolution.YEAR) {
+        } else if (resolution == Resolution.YEAR) {
             return handleNavigationYearMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.MONTH) {
+        } else if (resolution == Resolution.MONTH) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.DAY) {
+        } else if (resolution == Resolution.DAY) {
+            return handleNavigationDayMode(keycode, ctrl, shift);
+        } else {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
-
-        else {
-            return handleNavigationDayMode(keycode, ctrl, shift);
-        }
-
     }
 
     /**

@@ -61,7 +61,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
 public class DevelopmentServerLauncher {
 
     private static final String KEYSTORE = "src/main/resources/com/vaadin/launcher/keystore";
-    private final static int serverPort = 8888;
+    private static final int serverPort = 8888;
 
     /**
      * Main function for running Jetty.

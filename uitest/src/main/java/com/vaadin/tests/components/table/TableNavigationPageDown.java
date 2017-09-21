@@ -21,7 +21,7 @@ import com.vaadin.v7.ui.Table;
 
 public class TableNavigationPageDown extends AbstractReindeerTestUI {
 
-    private final static int ROW_NUMBER = 50;
+    private static final int ROW_NUMBER = 50;
 
     @Override
     protected void setup(VaadinRequest req) {

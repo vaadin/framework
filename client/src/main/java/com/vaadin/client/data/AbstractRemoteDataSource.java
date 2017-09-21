@@ -882,7 +882,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @return a non-null object that uniquely and consistently represents the
      *         row object
      */
-    abstract public Object getRowKey(T row);
+    public abstract Object getRowKey(T row);
 
     @Override
     public int size() {
