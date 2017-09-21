@@ -507,7 +507,7 @@ public class Navigator implements Serializable {
      *            The ViewDisplay used to display the views.
      */
     public Navigator(UI ui, ViewDisplay display) {
-        this(ui, new PushStateManager(ui), display);
+        this(ui, null, display);
     }
 
     /**
@@ -575,7 +575,7 @@ public class Navigator implements Serializable {
         this.ui = ui;
         this.ui.setNavigator(this);
         if (stateManager == null) {
-            stateManager = new PushStateManager(ui);
+            stateManager = createNavigationStateManager(ui);
         }
         if (stateManager != null && this.stateManager != null
                 && stateManager != this.stateManager) {
@@ -584,6 +584,22 @@ public class Navigator implements Serializable {
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
+    }
+
+    /**
+     * Creates a navigation state manager for given UI. This method should take
+     * into account any navigation related annotations.
+     * 
+     * @param ui
+     *            the ui
+     * @return the navigation state manager
+     */
+    protected NavigationStateManager createNavigationStateManager(UI ui) {
+        if (ui.getClass().getAnnotation(PushStateNavigation.class) != null) {
+            return new PushStateManager(ui);
+        }
+        // Fall back to old default
+        return new UriFragmentManager(ui.getPage());
     }
 
     /**
