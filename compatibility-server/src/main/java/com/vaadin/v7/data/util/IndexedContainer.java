@@ -415,7 +415,7 @@ public class IndexedContainer
         }
 
         /**
-         * if one item is added, gives its index.
+         * If and only if one item is added, gives its index.
          *
          * @return -1 if either multiple items are changed or some other change
          *         than add is done.

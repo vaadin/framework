@@ -454,7 +454,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param repaintIsNotNeeded
      *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
-     *            True if if the read-only check should be ignored
+     *            True if the read-only check should be ignored
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -996,7 +996,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
      *
-     * @return true if the invalid values are allowed.
+     * @return true if invalid values are allowed.
      * @see Validatable#isInvalidAllowed()
      */
     @Override
