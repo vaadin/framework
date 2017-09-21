@@ -128,13 +128,7 @@ public class Notification extends AbstractExtension implements Serializable {
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
 
-    private String caption;
-    private String description;
     private Resource icon;
-    private Position position = Position.MIDDLE_CENTER;
-    private int delayMsec = DELAY_NONE;
-    private String styleName;
-    private boolean htmlContentAllowed;
 
     /**
      * Creates a "humanized" notification message.
@@ -222,21 +216,21 @@ public class Notification extends AbstractExtension implements Serializable {
     }
 
     private void setType(Type type) {
-        styleName = type.getStyle();
+        setStyleName(type.getStyle());
         switch (type) {
         case WARNING_MESSAGE:
-            delayMsec = 1500;
+            setDelayMsec(1500);
             break;
         case ERROR_MESSAGE:
-            delayMsec = -1;
+            setDelayMsec(DELAY_FOREVER);
             break;
         case TRAY_NOTIFICATION:
-            delayMsec = 3000;
-            position = Position.BOTTOM_RIGHT;
+            setDelayMsec(3000);
+            setPosition(Position.BOTTOM_RIGHT);
             break;
         case ASSISTIVE_NOTIFICATION:
-            delayMsec = 3000;
-            position = Position.ASSISTIVE;
+            setDelayMsec(3000);
+            setPosition(Position.ASSISTIVE);
             break;
         case HUMANIZED_MESSAGE:
         default:
@@ -250,7 +244,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The message caption
      */
     public String getCaption() {
-        return caption;
+        return getState(false).caption;
     }
 
     /**
@@ -260,7 +254,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The message caption
      */
     public void setCaption(String caption) {
-        this.caption = caption;
+        getState().caption = caption;
     }
 
     /**
@@ -269,7 +263,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The message description
      */
     public String getDescription() {
-        return description;
+        return getState(false).description;
     }
 
     /**
@@ -279,7 +273,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The message description
      */
     public void setDescription(String description) {
-        this.description = description;
+        getState().description = description;
     }
 
     /**
@@ -288,7 +282,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The position
      */
     public Position getPosition() {
-        return position;
+        return Position.values()[getState(false).position];
     }
 
     /**
@@ -298,7 +292,11 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The desired notification position
      */
     public void setPosition(Position position) {
-        this.position = position;
+        int ordinal = 0;
+        if (position != null) {
+            ordinal = position.ordinal();
+        }
+        getState().position = ordinal;
     }
 
     /**
@@ -327,7 +325,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            indicates the message has to be clicked.
      */
     public int getDelayMsec() {
-        return delayMsec;
+        return getState(false).delay;
     }
 
     /**
@@ -338,7 +336,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            to require the user to click the message
      */
     public void setDelayMsec(int delayMsec) {
-        this.delayMsec = delayMsec;
+        getState().delay = delayMsec;
     }
 
     /**
@@ -348,7 +346,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The desired style name
      */
     public void setStyleName(String styleName) {
-        this.styleName = styleName;
+        getState().styleName = styleName;
     }
 
     /**
@@ -357,7 +355,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @return The style name
      */
     public String getStyleName() {
-        return styleName;
+        return getState(false).styleName;
     }
 
     /**
@@ -371,7 +369,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            text
      */
     public void setHtmlContentAllowed(boolean htmlContentAllowed) {
-        this.htmlContentAllowed = htmlContentAllowed;
+        getState().htmlContentAllowed = htmlContentAllowed;
     }
 
     /**
@@ -383,7 +381,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
-        return htmlContentAllowed;
+        return getState(false).htmlContentAllowed;
     }
 
     /**
@@ -398,9 +396,6 @@ public class Notification extends AbstractExtension implements Serializable {
 
     protected void extend(UI ui) {
         NotificationState state = getState();
-        state.caption = getCaption();
-        state.description = getDescription();
-        state.htmlContentAllowed = isHtmlContentAllowed();
         Resource icon = getIcon();
         if (icon != null) {
             ui.getSession().getGlobalResourceHandler(true)
@@ -410,11 +405,6 @@ public class Notification extends AbstractExtension implements Serializable {
                     icon, ui, "");
             state.iconUri = reference.getURL();
         }
-        if (getPosition() != null) {
-            state.position = getPosition().ordinal();
-        }
-        state.styleName = getStyleName();
-        state.delay = getDelayMsec();
         super.extend(ui);
     }
 
