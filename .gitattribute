@@ -3,6 +3,9 @@
 
 *.java text
 *.xml text
+*.htm text
+*.html text
+*.js text
 *.bnd text
 *.svg text
 *.md text
