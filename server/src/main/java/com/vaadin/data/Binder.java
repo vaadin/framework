@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -1037,7 +1038,7 @@ public class Binder<BEAN> implements Serializable {
 
     private BEAN bean;
 
-    private final Set<Binding<BEAN, ?>> bindings = new LinkedHashSet<>();
+    private final Collection<Binding<BEAN, ?>> bindings = new ArrayList<>();
 
     private final Map<HasValue<?>, BindingBuilder<BEAN, ?>> incompleteBindings = new IdentityHashMap<>();
 
@@ -1051,7 +1052,7 @@ public class Binder<BEAN> implements Serializable {
 
     private BinderValidationStatusHandler<BEAN> statusHandler;
 
-    private Set<Binding<BEAN, ?>> hasChanges = new LinkedHashSet<>();
+    private Set<Binding<BEAN, ?>> changedBindings = new LinkedHashSet<>();
 
     /**
      * Creates a binder using a custom {@link PropertySet} implementation for
@@ -1076,9 +1077,9 @@ public class Binder<BEAN> implements Serializable {
      *            the binding whose value has been changed
      */
     protected void handleFieldValueChange(Binding<BEAN, ?> binding) {
-        hasChanges.add(binding);
+        changedBindings.add(binding);
         if (getBean() != null) {
-            doWriteIfValid(getBean(), hasChanges);
+            doWriteIfValid(getBean(), changedBindings);
         } else {
             binding.validate();
         }
@@ -1377,7 +1378,7 @@ public class Binder<BEAN> implements Serializable {
         if (bean == null) {
             clearFields();
         } else {
-            hasChanges.clear();
+            changedBindings.clear();
             getBindings().forEach(binding -> binding.initFieldValue(bean));
             getValidationStatusHandler().statusChange(
                     BinderValidationStatus.createUnresolvedStatus(this));
@@ -1453,7 +1454,7 @@ public class Binder<BEAN> implements Serializable {
      */
     @SuppressWarnings({ "unchecked" })
     private BinderValidationStatus<BEAN> doWriteIfValid(BEAN bean,
-            Set<Binding<BEAN, ?>> bindings) {
+            Collection<Binding<BEAN, ?>> bindings) {
         Objects.requireNonNull(bean, "bean cannot be null");
         List<ValidationResult> binderResults = Collections.emptyList();
 
@@ -1477,7 +1478,7 @@ public class Binder<BEAN> implements Serializable {
                 restoreBeanState(bean, oldValues);
             } else if (getBean() == null || bean.equals(getBean())) {
                 // Changes have been succesfully saved.
-                hasChanges.clear();
+                changedBindings.clear();
             }
         }
 
@@ -1525,7 +1526,7 @@ public class Binder<BEAN> implements Serializable {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected Map<Binding<BEAN, ?>, Object> getBeanState(BEAN bean,
-            Set<Binding<BEAN, ?>> bindings) {
+            Collection<Binding<BEAN, ?>> bindings) {
         Map<Binding<BEAN, ?>, Object> oldValues = new HashMap<>();
         bindings.stream().map(binding -> (BindingImpl) binding)
                 .filter(binding -> binding.setter != null)
@@ -1616,7 +1617,7 @@ public class Binder<BEAN> implements Serializable {
         if (hasChanges()) {
             fireStatusChangeEvent(false);
         }
-        hasChanges.clear();
+        changedBindings.clear();
     }
 
     /**
@@ -1665,9 +1666,10 @@ public class Binder<BEAN> implements Serializable {
                     bindingStatuses, Collections.emptyList());
         } else {
             Map<Binding<BEAN, ?>, Object> beanState = getBeanState(getBean(),
-                    hasChanges);
-            hasChanges.forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
-                    .writeFieldValue(getBean()));
+                    changedBindings);
+            changedBindings
+                    .forEach(binding -> ((BindingImpl<BEAN, ?, ?>) binding)
+                            .writeFieldValue(getBean()));
             validationStatus = new BinderValidationStatus<>(this,
                     bindingStatuses, validateBean(getBean()));
             restoreBeanState(getBean(), beanState);
@@ -1966,7 +1968,7 @@ public class Binder<BEAN> implements Serializable {
      *
      * @return a list of the bindings
      */
-    protected List<BindingImpl<BEAN, ?, ?>> getBindings() {
+    protected Collection<BindingImpl<BEAN, ?, ?>> getBindings() {
         return bindings.stream().map(b -> ((BindingImpl<BEAN, ?, ?>) b))
                 .collect(Collectors.toList());
     }
@@ -2043,7 +2045,7 @@ public class Binder<BEAN> implements Serializable {
      *         setBean, readBean, writeBean or writeBeanIfValid
      */
     public boolean hasChanges() {
-        return !hasChanges.isEmpty();
+        return !changedBindings.isEmpty();
     }
 
     /**
@@ -2092,7 +2094,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     private void doRemoveBean(boolean fireStatusEvent) {
-        hasChanges.clear();
+        changedBindings.clear();
         if (bean != null) {
             bean = null;
         }
