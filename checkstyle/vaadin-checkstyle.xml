@@ -4,45 +4,45 @@
           "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!-- Checkstyle configuration for Vaadin that is based on the the sun coding
-	conventions from:
-	- the Java Language Specification at http://java.sun.com/docs/books/jls/second_edition/html/index.html
-	- the Sun Code Conventions at http://java.sun.com/docs/codeconv/
-	- the Javadoc guidelines at http://java.sun.com/j2se/javadoc/writingdoccomments/index.html
-	- the JDK Api documentation http://java.sun.com/j2se/docs/api/index.html
-	- some best practices Vaadin specific changes:
-	- Removed DoubleCheckedLocking because it doesn't work in CheckStyle 5.6
-	-> http://www.smartics.eu/bugzilla/show_bug.cgi?id=593
-	- Modified HiddenField Check to allow field shadowing on Constructor, Setter
-	and Abstract Method parameters.
-	- Modified StaticVariableName Check format for PUBLIC variables from ^[a-z][a-zA-Z0-9]*$
-	to ^[A-Z_]*$ . Others (protected, package and private) still have ^[a-z][a-zA-Z0-9]*$
-	- Modified the severity of the following Checks from error to info:
-	• JavadocPackage (checks for package-info.java)
-	- Modified the severity of the following Checks from error to warning and the scope from private to protected:
-	• JavadocType (class and interface declarations)
-	• JavadocMethod (method declarations)
-	• JavadocVariable (variable declarations)
-	• JavadocStyle (Javadocs are "well formed")
-	- Modified the severity of the following Checks from error to warning because not so critical:
-	• LineLenght (the default value is 80 which is also used in formatter, but
-	i.e. member declarations are not wrapped onto next line)
-	• RedundantModifier (i.e. using public in interface method declarations)
-	• RedundantThrows (causes unnecessary fails when can't get class information)
-	• MethodLength (default maxLength is 150)
-	• ParameterNumber (default maxLength is 7)
-	• EmptyBlock (if-else statements have some blocks if x -> no action)
-	• UpperEll (should use L instead of l with long)
-	• TodoComment (not serious)
-	• WhitespaceAroundCheck (expects whitespace around some operators)
-	NOTE other checks are also warning but should be error.
-	- Modified the severity of the following Checks from error to ignore:
-	• FinalParameters (method parameters can be modified)
-	• VisibilityModifier (i.e. in state classes public members are allowed)
-	• DesignForExtension (this design is not used)
-	• FileLength (bad design to have files with over 2000 lines? see VScrollTable)
-	• MagicNumber (MagicNumbers like error codes are used, but could just ignore
-	this in some classes)
-	• AvoidInlineConditionals ( you like these ? ignore : error ) -->
+    conventions from:
+    - the Java Language Specification at http://java.sun.com/docs/books/jls/second_edition/html/index.html
+    - the Sun Code Conventions at http://java.sun.com/docs/codeconv/
+    - the Javadoc guidelines at http://java.sun.com/j2se/javadoc/writingdoccomments/index.html
+    - the JDK Api documentation http://java.sun.com/j2se/docs/api/index.html
+    - some best practices Vaadin specific changes:
+    - Removed DoubleCheckedLocking because it doesn't work in CheckStyle 5.6
+    -> http://www.smartics.eu/bugzilla/show_bug.cgi?id=593
+    - Modified HiddenField Check to allow field shadowing on Constructor, Setter
+    and Abstract Method parameters.
+    - Modified StaticVariableName Check format for PUBLIC variables from ^[a-z][a-zA-Z0-9]*$
+    to ^[A-Z_]*$ . Others (protected, package and private) still have ^[a-z][a-zA-Z0-9]*$
+    - Modified the severity of the following Checks from error to info:
+    • JavadocPackage (checks for package-info.java)
+    - Modified the severity of the following Checks from error to warning and the scope from private to protected:
+    • JavadocType (class and interface declarations)
+    • JavadocMethod (method declarations)
+    • JavadocVariable (variable declarations)
+    • JavadocStyle (Javadocs are "well formed")
+    - Modified the severity of the following Checks from error to warning because not so critical:
+    • LineLenght (the default value is 80 which is also used in formatter, but
+    i.e. member declarations are not wrapped onto next line)
+    • RedundantModifier (i.e. using public in interface method declarations)
+    • RedundantThrows (causes unnecessary fails when can't get class information)
+    • MethodLength (default maxLength is 150)
+    • ParameterNumber (default maxLength is 7)
+    • EmptyBlock (if-else statements have some blocks if x -> no action)
+    • UpperEll (should use L instead of l with long)
+    • TodoComment (not serious)
+    • WhitespaceAroundCheck (expects whitespace around some operators)
+    NOTE other checks are also warning but should be error.
+    - Modified the severity of the following Checks from error to ignore:
+    • FinalParameters (method parameters can be modified)
+    • VisibilityModifier (i.e. in state classes public members are allowed)
+    • DesignForExtension (this design is not used)
+    • FileLength (bad design to have files with over 2000 lines? see VScrollTable)
+    • MagicNumber (MagicNumbers like error codes are used, but could just ignore
+    this in some classes)
+    • AvoidInlineConditionals ( you like these ? ignore : error ) -->
 
 <module name="Checker">
     <!-- If you set the basedir property below, then all reported file names 
