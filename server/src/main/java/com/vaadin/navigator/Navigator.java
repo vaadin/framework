@@ -142,7 +142,8 @@ public class Navigator implements Serializable {
                 String uiRootPath = ui.getUiRootPath();
                 path = path.substring(uiRootPath.length());
             } else {
-                // TODO: Fallback?
+                throw new IllegalStateException(getClass().getSimpleName()
+                        + " is unable to determine the view path from the URL.");
             }
 
             if (path.startsWith("/")) {
@@ -165,7 +166,8 @@ public class Navigator implements Serializable {
             if (location != null) {
                 ui.getPage().pushState(location.resolve(sb.toString()));
             } else {
-                // TODO: Fallback?
+                throw new IllegalStateException(
+                        "The Page of the UI does not have a location.");
             }
         }
     }

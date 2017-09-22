@@ -24,11 +24,13 @@ import java.lang.annotation.Target;
 
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.Page.PopStateEvent;
+import com.vaadin.ui.UI;
 
 /**
- * Annotation for selecting the PushState navigation mode. PushState navigation
- * is an alternative way to handle URLs in the {@link Navigator}. It uses path
- * info, HTML5 push state and {@link PopStateEvent}s to track views and enable
+ * Annotation for {@link UI}s to enable the PushState navigation mode when
+ * initializing a {@link Navigator} for it. PushState navigation is an
+ * alternative way to handle URLs in the {@link Navigator}. It uses path info,
+ * HTML5 push state and {@link PopStateEvent}s to track views and enable
  * listening to view changes.
  * <p>
  * <strong>Note:</strong> For PushState navigation to work, the

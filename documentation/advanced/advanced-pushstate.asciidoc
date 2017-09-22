@@ -36,9 +36,9 @@ A call to _pushState_ creates a new entry to browsers history. If you wish to av
 
 
 [[advanced.pushstate.popstate]]
-== Listening for "in-page" URI change Changes
+== Listening for "in-page" URI Changes
 
-If your application uses pushState to update location and after that the users uses browsers back/forward button, a full page reload does not happen and the UIs init method is not called like when entering the page for the first time. To detect these change you can use [interfacename]#PopChangeListener#.
+If your application uses pushState to update the location and after that the user uses browsers back/forward button, a full page reload does not happen and the UIs init method is not called like when entering the page for the first time. To detect these change you can use [interfacename]#PopChangeListener#.
 
 For example, we could define the listener as follows in the [methodname]#init()#
 method of a UI class:
@@ -46,6 +46,7 @@ method of a UI class:
 
 [source, java]
 ----
+@PushStateNavigation
 public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
