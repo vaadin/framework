@@ -46,16 +46,25 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  *
  */
+@SuppressWarnings("unused")
 public class BinderBookOfVaadinTest {
 
     private static class BookPerson {
         private String lastName;
-        private String email, phone;
+        private String email, phone, title;
         private int yearOfBirth, salaryLevel;
 
         public BookPerson(int yearOfBirth, int salaryLevel) {
             this.yearOfBirth = yearOfBirth;
             this.salaryLevel = salaryLevel;
+        }
+
+        public BookPerson(BookPerson origin) {
+            this(origin.yearOfBirth, origin.salaryLevel);
+            lastName = origin.lastName;
+            email = origin.email;
+            phone = origin.phone;
+            title = origin.title;
         }
 
         public BookPerson(String name, int yearOfBirth) {
@@ -99,10 +108,18 @@ public class BinderBookOfVaadinTest {
             return phone;
         }
 
-        @SuppressWarnings("unused")
         public void setPhone(String phone) {
             this.phone = phone;
         }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
     }
 
     public static class Trip {
