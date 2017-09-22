@@ -24,7 +24,7 @@ import com.vaadin.v7.client.widget.escalator.FlyweightRow.CellIterator;
 import com.vaadin.v7.client.widgets.Escalator;
 
 /**
- * A {@link FlyweightCell} represents a cell in the {@link Grid} or
+ * A {@link FlyweightCell} represents a cell in the {@link com.vaadin.v7.client.widgets.Grid Grid} or
  * {@link Escalator} at a certain point in time.
  *
  * <p>

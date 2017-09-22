@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.treetable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 

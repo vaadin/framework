@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;

@@ -19,7 +19,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Grid.Column;
 
 /**
- * Sorting information for {@link Grid}.
+ * Sorting information for {@link com.vaadin.ui.Grid Grid}.
  *
  * @param <T>
  *            the grid type
@@ -28,7 +28,7 @@ import com.vaadin.ui.Grid.Column;
 public class GridSortOrder<T> extends SortOrder<Column<T, ?>> {
 
     /**
-     * Construct sorting information for usage in a {@link Grid}.
+     * Construct sorting information for usage in a {@link com.vaadin.ui.Grid Grid}.
      *
      * @param column
      *            the column to be sorted

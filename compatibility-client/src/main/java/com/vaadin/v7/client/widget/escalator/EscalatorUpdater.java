@@ -26,7 +26,8 @@ import com.vaadin.v7.client.widgets.Escalator;
  * The updater is responsible for internally handling all remote communication,
  * should the displayed data need to be fetched remotely.
  * <p>
- * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
+ * This has a similar function to {@link com.vaadin.v7.client.widgets.Grid Grid's}
+ * {@link com.vaadin.v7.client.renderers.Renderer Renderers}
  * , although they operate on different abstraction levels.
  *
  * @since 7.4

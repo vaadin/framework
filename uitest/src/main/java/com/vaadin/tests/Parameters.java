@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.server.ExternalResource;

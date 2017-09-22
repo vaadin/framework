@@ -2,7 +2,6 @@ package com.vaadin.tests.integration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;

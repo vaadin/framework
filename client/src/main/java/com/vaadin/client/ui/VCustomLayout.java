@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;

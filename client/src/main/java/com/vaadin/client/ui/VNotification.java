@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;

@@ -813,7 +813,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * size callback.
      * <p>
      * This method is a shorthand for making a {@link CallbackDataProvider} that
-     * handles a partial {@link Query} object.
+     * handles a partial {@link com.vaadin.data.provider.Query Query} object.
      *
      * @param fetchItems
      *            a callback for fetching items
@@ -836,7 +836,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * strings.
      *
      * @see #setItems(CaptionFilter, Collection)
-     * @see #setItems(CaptionFilter, Object[])
+     * @see #setItems(CaptionFilter, Object...)
      * @since 8.0
      */
     @FunctionalInterface

@@ -828,7 +828,7 @@ public class WidgetUtil {
      * DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
      * {@code C}, this method will not find {@code W} but returns {@code C}.
      * This may also be the case with other Composite-like classes that hijack
      * the event handling of their child widget(s).

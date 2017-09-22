@@ -23,7 +23,6 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;

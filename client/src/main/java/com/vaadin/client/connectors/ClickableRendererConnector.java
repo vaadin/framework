@@ -26,7 +26,9 @@ import com.vaadin.shared.ui.grid.renderers.RendererClickRpc;
 import elemental.json.JsonObject;
 
 /**
- * An abstract base class for {@link ClickableRenderer} connectors.
+ * An abstract base class for
+ * {@link com.vaadin.client.renderers.ClickableRenderer ClickableRenderer}
+ * connectors.
  *
  * @param <T>
  *            the presentation type of the renderer

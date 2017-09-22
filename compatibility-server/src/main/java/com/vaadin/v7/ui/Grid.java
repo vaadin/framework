@@ -1532,7 +1532,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Single}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}.
      */
     @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
@@ -1658,7 +1659,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation for a {@link SelectionModel.None}
+     * A default implementation for a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.None SelectionModel.None}.
      */
     @Deprecated
     public static class NoSelectionModel extends AbstractSelectionModel
@@ -1686,7 +1688,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Multi}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}.
      */
     @Deprecated
     public static class MultiSelectionModel extends AbstractSelectionModel
@@ -5897,7 +5900,7 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} is supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single} is supported.
      *
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
@@ -5934,8 +5937,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @param itemId
      *            the itemId to mark as selected
@@ -5980,8 +5984,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @param itemId
      *            the itemId to remove from being selected
@@ -6027,8 +6032,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId was already selected

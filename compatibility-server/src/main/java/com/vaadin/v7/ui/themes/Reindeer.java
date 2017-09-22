@@ -173,7 +173,7 @@ public class Reindeer extends BaseTheme {
 
     /**
      * Changes the background of a layout to white. Applies to
-     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
+     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link com.vaadin.ui.GridLayout GridLayout},
      * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
@@ -184,7 +184,7 @@ public class Reindeer extends BaseTheme {
 
     /**
      * Changes the background of a layout to a shade of blue. Applies to
-     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link GridLayout},
+     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link com.vaadin.ui.GridLayout GridLayout},
      * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
@@ -202,7 +202,7 @@ public class Reindeer extends BaseTheme {
      * </p>
      * <p>
      * Applies to {@link VerticalLayout}, {@link HorizontalLayout},
-     * {@link GridLayout}, {@link FormLayout} and {@link CssLayout}.
+     * {@link com.vaadin.ui.GridLayout GridLayout}, {@link FormLayout} and {@link CssLayout}.
      * </p>
      *
      */
