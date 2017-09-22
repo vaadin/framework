@@ -752,8 +752,8 @@ public abstract class UI extends AbstractSingleComponentContainer
                 && getSession().getConfiguration().isSendUrlsAsParameters()
                 && getPage().getLocation() != null) {
             String uiRootPath = getPage().getLocation().getPath();
-            if (getUiPathInfo() != null
-                    && getUiPathInfo().contains(uiPathInfo)) {
+
+            if (uiPathInfo != null && uiRootPath.contains(uiPathInfo)) {
                 uiRootPath = uiRootPath.substring(0,
                         uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
             } else if (request.getPathInfo() != null) {
