@@ -835,8 +835,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Predicate to check {@link ComboBox} item captions against user typed
      * strings.
      *
-     * @see #setItems(CaptionFilter, Collection)
-     * @see #setItems(CaptionFilter, Object...)
+     * @see ComboBox#setItems(CaptionFilter, Collection)
+     * @see ComboBox#setItems(CaptionFilter, Object[])
      * @since 8.0
      */
     @FunctionalInterface
