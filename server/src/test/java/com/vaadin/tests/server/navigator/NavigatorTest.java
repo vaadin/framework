@@ -36,7 +36,6 @@ import org.junit.Test;
 
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.Navigator.PushStateManager;
 import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewBeforeLeaveEvent;
@@ -364,7 +363,7 @@ public class NavigatorTest {
         return new Navigator(createMockUI(), manager, display);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testDestroy_unsetNavigatorInUIAndUriFragmentManager() {
         TestPageWithUriFragments page = new TestPageWithUriFragments();
         UI ui = new TestUI(page);
@@ -384,14 +383,17 @@ public class NavigatorTest {
         Assert.assertNull("Navigator is not null in UI after destroy",
                 ui.getNavigator());
 
-        page.setUriFragment("foobar", true);
-
-        Assert.fail(
-                "Expected null pointer exception after call uriFragmentChanged "
-                        + "for destroyed navigator");
+        try {
+            page.setUriFragment("foobar", true); // This should throw
+            Assert.fail(
+                    "Expected null pointer exception after call uriFragmentChanged "
+                            + "for destroyed navigator");
+        } catch (NullPointerException e) {
+            // All ok.
+        }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testDestroy_unsetNavigatorInUIAndPopstateManager() {
         TestPage page = new TestPage();
         UI ui = new TestPushStateUI(page);
@@ -409,14 +411,16 @@ public class NavigatorTest {
                 page.removePopstateCalled());
         Assert.assertNull("Navigator is not null in UI after destroy",
                 ui.getNavigator());
-        PushStateManager manager = (PushStateManager) navigator
-                .getStateManager();
 
-        page.updateLocation("http://server/path/info", true, true);
+        try {
+            page.updateLocation("http://server/path/info", true, true);
 
-        Assert.fail(
-                "Expected null pointer exception after call uriFragmentChanged "
-                        + "for destroyed navigator");
+            Assert.fail(
+                    "Expected null pointer exception after call uriFragmentChanged "
+                            + "for destroyed navigator");
+        } catch (NullPointerException e) {
+            // All ok.
+        }
     }
 
     @Test

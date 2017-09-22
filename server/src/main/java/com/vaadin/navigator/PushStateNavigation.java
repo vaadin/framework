@@ -22,8 +22,21 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.Page.PopStateEvent;
+
 /**
- * Annotation for selecting the PushState navigation mode.
+ * Annotation for selecting the PushState navigation mode. PushState navigation
+ * is an alternative way to handle URLs in the {@link Navigator}. It uses path
+ * info, HTML5 push state and {@link PopStateEvent}s to track views and enable
+ * listening to view changes.
+ * <p>
+ * <strong>Note:</strong> For PushState navigation to work, the
+ * {@link DeploymentConfiguration} parameter
+ * {@link DeploymentConfiguration#isSendUrlsAsParameters() SendUrlAsParameters}
+ * must not be set to {@code false}.
+ * 
+ * @since 8.2
  */
 @Retention(RUNTIME)
 @Target(TYPE)

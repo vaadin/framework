@@ -86,26 +86,25 @@ public class Navigator implements Serializable {
     /**
      * A {@link NavigationStateManager} using path info, HTML5 push state and
      * {@link PopStateEvent}s to track views and enable listening to view
-     * changes.
+     * changes. This manager can be enabled with UI annotation
+     * {@link PushStateNavigation}.
      * <p>
      * The part of path after UI's "root path" (UI's path without view
-     * identifier), until the next slash or to the end of the path is used as
-     * {@link View}s identifier. The rest of the path can be used by the
-     * developer for extra parameters for the View.
+     * identifier) is used as {@link View}s identifier. The rest of the path
+     * after the view name can be used by the developer for extra parameters for
+     * the View.
      * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
      *
-     * @since 8.0
+     * @since 8.2
      */
     public static class PushStateManager implements NavigationStateManager {
-        private Navigator navigator;
         private Registration popStateListenerRegistration;
         private UI ui;
 
         /**
-         * Creates a new PushStateManager and attach it to listen to URI changes
-         * of a {@link Page} attached to given {@link UI}.
+         * Creates a new PushStateManager.
          *
          * @param ui
          *            the UI where the Navigator is attached to
@@ -116,15 +115,16 @@ public class Navigator implements Serializable {
 
         @Override
         public void setNavigator(Navigator navigator) {
-            if (this.navigator == null && navigator != null) {
+            if (popStateListenerRegistration != null) {
+                popStateListenerRegistration.remove();
+                popStateListenerRegistration = null;
+            }
+            if (navigator != null) {
                 popStateListenerRegistration = ui.getPage()
                         .addPopStateListener(e -> {
                             navigator.navigateTo(getState());
                         });
-            } else if (this.navigator != null && navigator == null) {
-                popStateListenerRegistration.remove();
             }
-            this.navigator = navigator;
         }
 
         @Override
@@ -167,13 +167,11 @@ public class Navigator implements Serializable {
      * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
-     *
-     * @deprecated Since 8.0 replaced by {@link PushStateManager}, which is
-     *             based on HTML5 History API, but this is still available for
-     *             backwards compatibility. This implementation may also be
-     *             still handy in certain environments like portals.
+     * <p>
+     * <strong>Note:</strong> Since 8.2 you can use {@link PushStateManager},
+     * which is based on HTML5 History API. To use it, add
+     * {@link PushStateNavigation} annotation to the UI.
      */
-    @Deprecated
     public static class UriFragmentManager implements NavigationStateManager {
         private final Page page;
         private Navigator navigator;
