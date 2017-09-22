@@ -1069,9 +1069,10 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Informs the Binder that a value in Binding was changed. This will trigger
-     * writing the bean if using {@link #setBean(Object)}. If using
-     * {@link #readBean(Object)} then field validation is run.
+     * Informs the Binder that a value in Binding was changed. This method will
+     * trigger validating and writing of the whole bean if using
+     * {@link #setBean(Object)}. If using {@link #readBean(Object)} only the
+     * field validation is run.
      * 
      * @param binding
      *            the binding whose value has been changed
@@ -1477,7 +1478,14 @@ public class Binder<BEAN> implements Serializable {
                 // Bean validator failed, revert values
                 restoreBeanState(bean, oldValues);
             } else if (getBean() == null || bean.equals(getBean())) {
-                // Changes have been succesfully saved.
+                /*
+                 * Changes have been succesfully saved. The set is only cleared
+                 * if using readBean/writeBean or when the changes are stored in
+                 * the currently set bean.
+                 * 
+                 * Writing changes to another bean when using setBean does not
+                 * clear the set of changed bindings.
+                 */
                 changedBindings.clear();
             }
         }
