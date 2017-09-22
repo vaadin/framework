@@ -84,8 +84,8 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     }
 
     private WebElement getCurrentErrorMessage() {
-        return getDriver()
-                .findElement(By.xpath("//div[@class='v-errormessage']"));
+        return getDriver().findElement(
+                By.xpath("//div[contains(@class, 'v-errormessage')]"));
     }
 
     private void assertTooltip(String tooltip) {
