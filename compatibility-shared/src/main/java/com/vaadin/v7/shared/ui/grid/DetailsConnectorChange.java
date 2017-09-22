@@ -168,7 +168,7 @@ public class DetailsConnectorChange implements Serializable {
      * Checks whether whether the details should remain open, even if connector
      * might be <code>null</code>.
      *
-     * @return <code>true</code> iff the details should remain open, even if
+     * @return <code>true</code> if the details should remain open, even if
      *         connector might be <code>null</code>
      */
     public boolean isShouldStillBeVisible() {
@@ -180,7 +180,7 @@ public class DetailsConnectorChange implements Serializable {
      * <code>null</code>.
      *
      * @param shouldStillBeVisible
-     *            <code>true</code> iff the details should remain open, even if
+     *            <code>true</code> if the details should remain open, even if
      *            connector might be <code>null</code>
      */
     public void setShouldStillBeVisible(boolean shouldStillBeVisible) {

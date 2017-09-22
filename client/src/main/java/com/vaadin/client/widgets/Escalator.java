@@ -1740,9 +1740,9 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check for if it is or has elements that
-         *            can be frozen
-         * @return <code>true</code> iff this the given element, or any of its
+         *            the row element to check whether it,
+         *            or any of its its descendants can be frozen
+         * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
         protected abstract boolean rowCanBeFrozen(TableRowElement tr);
@@ -5935,7 +5935,7 @@ public class Escalator extends Widget
      * Check whether there are both columns and any row data (for either
      * headers, body or footer).
      *
-     * @return <code>true</code> iff header, body or footer has rows && there
+     * @return <code>true</code> if header, body or footer has rows and there
      *         are columns
      */
     private boolean hasColumnAndRowData() {
@@ -5947,7 +5947,7 @@ public class Escalator extends Widget
     /**
      * Check whether there are any cells in the DOM.
      *
-     * @return <code>true</code> iff header, body or footer has any child
+     * @return <code>true</code> if header, body or footer has any child
      *         elements
      */
     private boolean hasSomethingInDom() {
@@ -6657,7 +6657,7 @@ public class Escalator extends Widget
      *
      * @param direction
      *            the direction of the scroll of which to check the lock status
-     * @return <code>true</code> iff the direction is locked
+     * @return <code>true</code> if the direction is locked
      */
     public boolean isScrollLocked(ScrollbarBundle.Direction direction) {
         switch (direction) {

@@ -113,7 +113,7 @@ public class GridElement extends AbstractComponentElement {
          *
          * @param colIndex
          *            column index
-         * @return <code>true</code> iff the field is marked with an error
+         * @return <code>true</code> if the field is marked with an error
          */
         public boolean isFieldErrorMarked(int colIndex) {
             return getField(colIndex).getAttribute("class").contains("error");
