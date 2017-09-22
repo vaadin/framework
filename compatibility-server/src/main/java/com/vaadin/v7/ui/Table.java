@@ -56,6 +56,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.HasChildMeasurementHint;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UniqueSerializable;
@@ -80,8 +81,6 @@ import com.vaadin.v7.shared.ui.table.TableConstants;
 import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 import com.vaadin.v7.shared.ui.table.TableServerRpc;
 import com.vaadin.v7.shared.ui.table.TableState;
-
-import com.vaadin.ui.Grid;
 
 /**
  * <p>
@@ -1762,10 +1761,6 @@ public class Table extends AbstractSelect implements Action.Container,
         if (rows > 0) {
             pageBufferFirstIndex = firstIndex;
         }
-        if (getPageLength() != 0) {
-            removeUnnecessaryRows();
-        }
-
         setRowCacheInvalidated(true);
         markAsDirty();
         maybeThrowCacheUpdateExceptions();
@@ -1829,48 +1824,6 @@ public class Table extends AbstractSelect implements Action.Container,
             return table;
         }
 
-    }
-
-    /**
-     * Removes rows that fall outside the required cache.
-     */
-    private void removeUnnecessaryRows() {
-        int minPageBufferIndex = getMinPageBufferIndex();
-        int maxPageBufferIndex = getMaxPageBufferIndex();
-
-        int maxBufferSize = maxPageBufferIndex - minPageBufferIndex + 1;
-
-        /*
-         * Number of rows that were previously cached. This is not necessarily
-         * the same as pageLength if we do not have enough rows in the
-         * container.
-         */
-        int currentlyCachedRowCount = pageBuffer[CELL_ITEMID].length;
-
-        if (currentlyCachedRowCount <= maxBufferSize) {
-            // removal unnecessary
-            return;
-        }
-
-        /* Figure out which rows to get rid of. */
-        int firstCacheRowToRemoveInPageBuffer = -1;
-        if (minPageBufferIndex > pageBufferFirstIndex) {
-            firstCacheRowToRemoveInPageBuffer = pageBufferFirstIndex;
-        } else if (maxPageBufferIndex < pageBufferFirstIndex
-                + currentlyCachedRowCount) {
-            firstCacheRowToRemoveInPageBuffer = maxPageBufferIndex + 1;
-        }
-
-        if (firstCacheRowToRemoveInPageBuffer
-                - pageBufferFirstIndex < currentlyCachedRowCount) {
-            /*
-             * Unregister all components that fall beyond the cache limits after
-             * inserting the new rows.
-             */
-            unregisterComponentsAndPropertiesInRows(
-                    firstCacheRowToRemoveInPageBuffer, currentlyCachedRowCount
-                            - firstCacheRowToRemoveInPageBuffer);
-        }
     }
 
     /**
@@ -2975,13 +2928,12 @@ public class Table extends AbstractSelect implements Action.Container,
             // TODO could be optimized.
             variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
-        }
-
-        /*
-         * The AbstractSelect cannot handle the multiselection properly, instead
-         * we handle it ourself
-         */
-        else if (isSelectable() && isMultiSelect()
+        } else if (
+                /*
+                 * The AbstractSelect cannot handle the multiselection properly, instead
+                 * we handle it ourself
+                 */
+                isSelectable() && isMultiSelect()
                 && variables.containsKey("selected")
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
@@ -3175,10 +3127,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 fireEvent(new ItemClickEvent(this, item, itemId, propertyId,
                         evt));
             }
-        }
-
-        // Header click event
-        else if (variables.containsKey("headerClickEvent")) {
+        } else if (
+                // Header click event
+                variables.containsKey("headerClickEvent")) {
 
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("headerClickEvent"));
@@ -3189,10 +3140,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 propertyId = columnIdMap.get(cid.toString());
             }
             fireEvent(new HeaderClickEvent(this, propertyId, details));
-        }
-
-        // Footer click event
-        else if (variables.containsKey("footerClickEvent")) {
+        } else if (
+                // Footer click event
+                variables.containsKey("footerClickEvent")) {
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("footerClickEvent"));
 
@@ -4990,10 +4940,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Is sorting disabled altogether.
      *
-     * True iff no sortable columns are given even in the case where data source
+     * True if no sortable columns are given even in the case where data source
      * would support this.
      *
-     * @return True iff sorting is disabled.
+     * @return True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
     @Deprecated
@@ -5014,7 +4964,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Disables the sorting by the user altogether.
      *
      * @param sortDisabled
-     *            True iff sorting is disabled.
+     *            True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
      */
     @Deprecated
@@ -5279,7 +5229,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * during that drag and drop operation.
      */
     @Deprecated
-    public static abstract class TableDropCriterion
+    public abstract static class TableDropCriterion
             extends ServerSideCriterion {
 
         private Table table;
@@ -5374,9 +5324,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 HEADER_CLICK_METHOD = HeaderClickListener.class
                         .getDeclaredMethod("headerClick",
                                 new Class[] { HeaderClickEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5415,9 +5365,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 FOOTER_CLICK_METHOD = FooterClickListener.class
                         .getDeclaredMethod("footerClick",
                                 new Class[] { FooterClickEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5647,9 +5597,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 COLUMN_RESIZE_METHOD = ColumnResizeListener.class
                         .getDeclaredMethod("columnResize",
                                 new Class[] { ColumnResizeEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -5776,9 +5726,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 METHOD = ColumnReorderListener.class.getDeclaredMethod(
                         "columnReorder",
                         new Class[] { ColumnReorderEvent.class });
-            } catch (final java.lang.NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException(e);
             }
         }
 

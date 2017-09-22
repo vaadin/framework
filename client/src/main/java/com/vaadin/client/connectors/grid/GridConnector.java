@@ -16,6 +16,7 @@
 package com.vaadin.client.connectors.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.grid.ColumnConnector.CustomColumn;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.EventCellReference;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
@@ -116,6 +118,7 @@ public class GridConnector extends AbstractListingConnector
     /* Child component list for HasComponentsConnector */
     private List<ComponentConnector> childComponents;
     private ItemClickHandler itemClickHandler = new ItemClickHandler();
+    private boolean rowHeightScheduled = false;
 
     /**
      * Gets the string identifier of the given column in this grid.
@@ -202,6 +205,13 @@ public class GridConnector extends AbstractListingConnector
     protected void init() {
         super.init();
 
+        updateWidgetStyleNames();
+
+        // Remove default headers when initializing Grid widget
+        while (getWidget().getHeaderRowCount() > 0) {
+            getWidget().removeHeaderRow(0);
+        }
+
         registerRpc(GridClientRpc.class, new GridClientRpc() {
 
             @Override
@@ -232,6 +242,11 @@ public class GridConnector extends AbstractListingConnector
                         getWidget().scrollToEnd();
                     }
                 });
+            }
+
+            @Override
+            public void recalculateColumnWidths() {
+                getWidget().recalculateColumnWidths();
             }
         });
 
@@ -282,6 +297,12 @@ public class GridConnector extends AbstractListingConnector
                     column.getWidthActual());
         });
 
+        // Handling row height changes
+        getWidget().addRowHeightChangedHandler(event -> {
+            getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
+            getLayoutManager().layoutNow();
+        });
+
         /* Item click events */
         getWidget().addBodyClickHandler(itemClickHandler);
         getWidget().addBodyDoubleClickHandler(itemClickHandler);
@@ -323,6 +344,58 @@ public class GridConnector extends AbstractListingConnector
             }
 
             updateStaticRow(rowState, row);
+        }
+
+        grid.setHeaderVisible(state.visible);
+    }
+
+    @OnStateChange({ "bodyRowHeight", "headerRowHeight", "footerRowHeight" })
+    void updateRowHeight() {
+        if (rowHeightScheduled) {
+            return;
+        }
+
+        Scheduler.get().scheduleFinally(() -> {
+            GridState state = getState();
+            if (getWidget().isAttached() && rowHeightNeedsReset()) {
+                getWidget().resetSizesFromDom();
+            }
+            updateContainerRowHeigth(getWidget().getEscalator().getBody(),
+                    state.bodyRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getHeader(),
+                    state.headerRowHeight);
+            updateContainerRowHeigth(getWidget().getEscalator().getFooter(),
+                    state.footerRowHeight);
+            rowHeightScheduled = false;
+        });
+
+        rowHeightScheduled = true;
+    }
+
+    private boolean rowHeightNeedsReset() {
+        GridState state = getState();
+        // Body
+        boolean bodyAutoCalc = state.bodyRowHeight < 0;
+
+        // Header
+        boolean headerAutoCalc = state.headerRowHeight < 0;
+        boolean headerReset = headerAutoCalc && hasVisibleContent(state.header);
+
+        // Footer
+        boolean footerAutoCalc = state.footerRowHeight < 0;
+        boolean footerReset = footerAutoCalc && hasVisibleContent(state.footer);
+
+        return bodyAutoCalc || headerReset || footerReset;
+    }
+
+    private boolean hasVisibleContent(SectionState state) {
+        return state.visible && !state.rows.isEmpty();
+    }
+
+    private void updateContainerRowHeigth(RowContainer container,
+            double height) {
+        if (height >= 0) {
+            container.setDefaultRowHeight(height);
         }
     }
 
@@ -388,6 +461,23 @@ public class GridConnector extends AbstractListingConnector
 
             updateStaticRow(rowState, row);
         }
+
+        grid.setFooterVisible(state.visible);
+    }
+
+    @OnStateChange({ "sortColumns", "sortDirs" })
+    void updateSortOrder() {
+        List<SortOrder> sortOrder = new ArrayList<SortOrder>();
+
+        String[] sortColumns = getState().sortColumns;
+        SortDirection[] sortDirs = getState().sortDirs;
+
+        for (int i = 0; i < sortColumns.length; i++) {
+            sortOrder
+                    .add(new SortOrder(getColumn(sortColumns[i]), sortDirs[i]));
+        }
+
+        getWidget().setSortOrder(sortOrder);
     }
 
     @Override
@@ -428,6 +518,20 @@ public class GridConnector extends AbstractListingConnector
         idToColumn.remove(id);
     }
 
+    /**
+     * Method called by {@code CustomColumn} when its renderer changes. This
+     * method is used to maintain hierarchical renderer wrap in
+     * {@code TreeGrid}.
+     * 
+     * @param column
+     *            the column which now has a new renderer
+     * 
+     * @since 8.1
+     */
+    public void onColumnRendererChanged(CustomColumn column) {
+        // NO-OP
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
@@ -458,9 +562,15 @@ public class GridConnector extends AbstractListingConnector
                 sortDirections.add(so.getDirection());
             }
         }
-        getRpcProxy(GridServerRpc.class).sort(columnIds.toArray(new String[0]),
-                sortDirections.toArray(new SortDirection[0]),
-                event.isUserOriginated());
+        String[] colArray = columnIds.toArray(new String[0]);
+        SortDirection[] dirArray = sortDirections.toArray(new SortDirection[0]);
+
+        if (!Arrays.equals(colArray, getState().sortColumns)
+                || !Arrays.equals(dirArray, getState().sortDirs)) {
+            // State has actually changed, send to server
+            getRpcProxy(GridServerRpc.class).sort(colArray, dirArray,
+                    event.isUserOriginated());
+        }
     }
     /* HasComponentsConnector */
 

@@ -46,6 +46,15 @@ public class ApplicationConstants implements Serializable {
     public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
     /**
+     * An internal protocol used for referencing frontend resources.
+     *
+     * @see #FRONTEND_URL
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_PROTOCOL_PREFIX = "frontend://";
+
+    /**
      * Prefix used for theme resource URLs
      *
      * @see com.vaadin.server.ThemeResource
@@ -54,6 +63,11 @@ public class ApplicationConstants implements Serializable {
     public static final String THEME_PROTOCOL_PREFIX = "theme://";
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
+
+    /**
+     * @since 8.0.6
+     */
+    public static final String UIDL_PUSH_ID = "Vaadin-Push-ID";
 
     @Deprecated
     public static final String UPDATE_VARIABLE_INTERFACE = "v";
@@ -80,7 +94,7 @@ public class ApplicationConstants implements Serializable {
     /**
      * Configuration parameter giving the (in some cases relative) URL to the
      * web application context root.
-     * 
+     *
      * @since 8.0.3
      */
     public static final String CONTEXT_ROOT_URL = "contextRootUrl";
@@ -94,6 +108,18 @@ public class ApplicationConstants implements Serializable {
      * </p>
      */
     public static final String VAADIN_DIR_URL = "vaadinDir";
+
+    /**
+     * Configuration parameter giving the (in some cases relative) URL to the
+     * frontend resource folder from where frontend files are served (this is
+     * what frontend:// should resolve to).
+     * <p>
+     * By default, this is "vaadin://es6" ("vaadin://es5" for browsers which
+     * does not support ES6).
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_URL = "frontendUrl";
 
     /**
      * The name of the javascript containing the bootstrap code. The file is
@@ -121,6 +147,13 @@ public class ApplicationConstants implements Serializable {
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
+
+    /**
+     * Name of the parameter used to transmit the push connection identifier.
+     *
+     * @since 8.0.6
+     */
+    public static final String PUSH_ID_PARAMETER = "v-pushId";
 
     /**
      * The name of the parameter used to transmit RPC invocations
@@ -171,5 +204,51 @@ public class ApplicationConstants implements Serializable {
      * @since 7.6
      */
     public static final String WIDGETSET_VERSION_ID = "wsver";
+
+    /**
+     * Content type to use for text/html responses (should always be UTF-8).
+     */
+    public static final String CONTENT_TYPE_TEXT_HTML_UTF_8 = "text/html; charset=utf-8";
+
+    /**
+     * Configuration name for the {@literal frontend://} URL when using a
+     * browser which is not ES6 compatible (i.e. IE11 or Safari 9).
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_URL_ES5 = "frontend.url.es5";
+
+    /**
+     * Configuration name for the {@literal frontend://} URL when using an ES6
+     * compatible browser.
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_URL_ES6 = "frontend.url.es6";
+
+    /**
+     * Default value of the configuration of the build URL of ES6 web
+     * components.
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_URL_ES6_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
+            + "frontend/es6/";
+
+    /**
+     * Default value of the configuration of the build URL of ES5 web
+     * components.
+     *
+     * @since 8.1
+     */
+    public static final String FRONTEND_URL_ES5_DEFAULT_VALUE = VAADIN_PROTOCOL_PREFIX
+            + "frontend/es5/";
+
+    /**
+     * Name of the HTML5 DnD Polyfill JavaScript file.
+     *
+     * @since 8.1
+     */
+    public static final String MOBILE_DND_POLYFILL_JS = "drag-drop-polyfill.min.js";
 
 }

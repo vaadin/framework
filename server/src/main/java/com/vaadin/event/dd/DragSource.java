@@ -19,8 +19,8 @@ import java.util.Map;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.event.dnd.DragSourceExtension;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.dnd.DragSourceExtension;
 
 /**
  * DragSource is a {@link Component} that builds a {@link Transferable} for a

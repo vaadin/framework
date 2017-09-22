@@ -20,6 +20,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
+@SuppressWarnings("unused")
 public class ConfiguringColumnWidths extends UI {
 
     @Override

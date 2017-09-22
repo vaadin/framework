@@ -4,9 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Assert;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.server.component.abstractlisting.AbstractListingDeclarativeTest;
 import com.vaadin.ui.TreeGrid;
@@ -28,7 +28,7 @@ public class TreeGridDeclarativeTest
         Person person6 = createPerson("ca", "last-name");
         Person person7 = createPerson("caa", "last-name");
 
-        HierarchyData<Person> data = new HierarchyData<>();
+        TreeData<Person> data = new TreeData<>();
         data.addItems(null, person1, person4, person5);
         data.addItems(person1, person2, person3);
         data.addItem(person5, person6);
@@ -38,7 +38,7 @@ public class TreeGridDeclarativeTest
         grid.addColumn(Person::getLastName).setId("id").setCaption("Id");
 
         grid.setHierarchyColumn("id");
-        grid.setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        grid.setDataProvider(new TreeDataProvider<>(data));
 
         String design = String.format(
                 "<%s hierarchy-column='id'><table><colgroup>"

@@ -25,6 +25,7 @@ import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorClientRpc;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.DataRequestRpc;
@@ -97,20 +98,18 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
             getRpcProxy(DataRequestRpc.class).requestRows(firstRowIndex,
                     numberOfRows, getCachedRange().getStart(),
                     getCachedRange().length());
-
-            JsonArray dropped = Json.createArray();
-            int i = 0;
-            for (String key : droppedKeys) {
-                dropped.set(i++, key);
-            }
-            droppedKeys.clear();
-
-            getRpcProxy(DataRequestRpc.class).dropRows(dropped);
+            sendDroppedRows();
         }
 
         @Override
         public String getRowKey(JsonObject row) {
             return row.getString(DataCommunicatorConstants.KEY);
+        }
+
+        @Override
+        protected void dropFromCache(Range range) {
+            super.dropFromCache(range);
+            sendDroppedRows();
         }
 
         @Override
@@ -133,6 +132,22 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
                 onRowDataUpdate(rowData, oldRowData);
 
                 setRowData(index, Collections.singletonList(rowData));
+            }
+        }
+
+        /**
+         * Inform the server of any dropped rows.
+         */
+        private void sendDroppedRows() {
+            if (!droppedKeys.isEmpty()) {
+                JsonArray dropped = Json.createArray();
+                int i = 0;
+                for (String key : droppedKeys) {
+                    dropped.set(i++, key);
+                }
+                droppedKeys.clear();
+
+                getRpcProxy(DataRequestRpc.class).dropRows(dropped);
             }
         }
     }

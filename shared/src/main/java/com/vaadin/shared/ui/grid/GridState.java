@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
+
 import elemental.json.JsonArray;
 
 /**
@@ -102,7 +103,7 @@ public class GridState extends AbstractSingleSelectState {
 
     /**
      * Column resize mode in grid.
-     * 
+     *
      * @since 7.7.5
      */
     public ColumnResizeMode columnResizeMode = ColumnResizeMode.ANIMATED;
@@ -145,4 +146,27 @@ public class GridState extends AbstractSingleSelectState {
     @DelegateToWidget
     public boolean columnReorderingAllowed;
 
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double bodyRowHeight = -1;
+
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double headerRowHeight = -1;
+
+    /**
+     * Explicit body row height in pixels for grid rows, or -1 to calculate
+     * automatically based on the theme.
+     *
+     * @since 8.2
+     */
+    public double footerRowHeight = -1;
 }

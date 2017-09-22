@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
@@ -23,6 +24,16 @@ public class TreeTableMemory extends AbstractBeansMemoryTest<TreeTable> {
     public static class Servlet extends VaadinServlet {
     }
 
+    private boolean initiallyExpanded = false;
+
+    @Override
+    protected void init(VaadinRequest request) {
+        if (request.getParameter("initiallyExpanded") != null) {
+            initiallyExpanded = true;
+        }
+        super.init(request);
+    }
+
     @Override
     protected TreeTable createComponent() {
         TreeTable treeTable = new TreeTable();
@@ -38,14 +49,19 @@ public class TreeTableMemory extends AbstractBeansMemoryTest<TreeTable> {
         container.addContainerProperty("street", String.class, null);
         container.addContainerProperty("zip", String.class, null);
         container.addContainerProperty("city", String.class, null);
+        treeTable.setContainerDataSource(container);
 
-        if (data.size() % 2 == 0) {
+        if (data.size() != 0 && data.size() % 2 == 0) {
             createItem(0, container, data);
+            treeTable.setCollapsed(0, false);
             int n = 0;
             while (2 * n + 2 < data.size()) {
                 for (int i : new Integer[] { 1, 2 }) {
                     createItem(2 * n + i, container, data);
                     container.setParent(2 * n + i, n);
+                    if (initiallyExpanded) {
+                        treeTable.setCollapsed(2 * n + i, false);
+                    }
                 }
                 n++;
             }
@@ -54,7 +70,6 @@ public class TreeTableMemory extends AbstractBeansMemoryTest<TreeTable> {
                 createItem(i, container, data);
             }
         }
-        treeTable.setContainerDataSource(container);
     }
 
     private void createItem(int index, HierarchicalContainer container,

@@ -64,6 +64,8 @@ public class GridDataChangeHandlerWidget extends Composite {
         public RemoteDelayedDataSource(List<String> datasource) {
             super();
             rows = datasource;
+            // Make Grid request not exceed actual size.
+            resetDataAndSize(rows.size());
         }
 
         @Override
@@ -85,7 +87,6 @@ public class GridDataChangeHandlerWidget extends Composite {
         public Object getRowKey(String row) {
             return row;
         }
-
     }
 
     public GridDataChangeHandlerWidget() {

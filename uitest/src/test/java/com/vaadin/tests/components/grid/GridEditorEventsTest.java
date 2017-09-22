@@ -25,10 +25,6 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-/**
- * @author Vaadin Ltd
- *
- */
 public class GridEditorEventsTest extends MultiBrowserTest {
 
     @Test
@@ -45,13 +41,17 @@ public class GridEditorEventsTest extends MultiBrowserTest {
         GridEditorElement editor = updateField(index, grid, "foo");
         editor.save();
 
-        Assert.assertEquals((index * 2 + 1) + ". editor is saved",
+        Assert.assertEquals((index * 4 + 1) + ". editor is opened",
+                getLogRow(1));
+        Assert.assertEquals((index * 4 + 2) + ". editor is saved",
                 getLogRow(0));
 
         editor = updateField(index, grid, "bar");
         editor.cancel();
 
-        Assert.assertEquals((index * 2 + 2) + ". editor is canceled",
+        Assert.assertEquals((index * 4 + 3) + ". editor is opened",
+                getLogRow(1));
+        Assert.assertEquals((index * 4 + 4) + ". editor is canceled",
                 getLogRow(0));
     }
 

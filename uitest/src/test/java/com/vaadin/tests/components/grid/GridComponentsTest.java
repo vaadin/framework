@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.grid;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -7,14 +10,21 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
+import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class GridComponentsTest extends MultiBrowserTest {
 
     @Test
     public void testReuseTextFieldOnScroll() {
+        if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
+            // skip test on PhantomJS as it often crashes the browser
+            return;
+        }
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         editTextFieldInCell(grid, 0, 1);
@@ -55,6 +65,21 @@ public class GridComponentsTest extends MultiBrowserTest {
         assertRowExists(5, "Row 1005");
     }
 
+    @Test
+    public void testTextFieldSize() {
+        openTestURL();
+        GridCellElement cell = $(GridElement.class).first().getCell(0, 1);
+        int cellWidth = cell.getSize().getWidth();
+        int fieldWidth = cell.findElement(By.tagName("input")).getSize()
+                .getWidth();
+        // padding left and right, +1 to fix sub pixel issues
+        int padding = 18 * 2 + 1;
+
+        int extraSpace = Math.abs(fieldWidth - cellWidth);
+        Assert.assertTrue("Too much unused space in cell. Expected: " + padding
+                + " Actual: " + extraSpace, extraSpace <= padding);
+    }
+
     private void editTextFieldInCell(GridElement grid, int row, int col) {
         WebElement textField = grid.getCell(row, col)
                 .findElement(By.tagName("input"));
@@ -72,12 +97,43 @@ public class GridComponentsTest extends MultiBrowserTest {
     public void testRow0() {
         openTestURL();
         assertRowExists(0, "Row 0");
+        Assert.assertEquals("Grid row height is not what it should be", 40,
+                $(GridElement.class).first().getRow(0).getSize().getHeight());
     }
 
     @Test
     public void testRow999() {
         openTestURL();
         assertRowExists(999, "Row 999");
+    }
+
+    @Test
+    public void testRow30() {
+        openTestURL();
+        Stream.of(30, 130, 230, 330).forEach(this::assertNoButton);
+        IntStream.range(300, 310).forEach(this::assertNoButton);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testRow31() {
+        openTestURL();
+        // There is a button on row 31. This should fail.
+        assertNoButton(31);
+    }
+
+    @Test
+    public void testHeaders() {
+        openTestURL();
+        GridElement grid = $(GridElement.class).first();
+        GridCellElement headerCell = grid.getHeaderCell(0, 0);
+        Assert.assertTrue("First header should contain a Label",
+                headerCell.isElementPresent(LabelElement.class));
+        Assert.assertEquals("Label",
+                headerCell.$(LabelElement.class).first().getText());
+        Assert.assertFalse("Second header should not contain a component",
+                grid.getHeaderCell(0, 1).isElementPresent(LabelElement.class));
+        Assert.assertEquals("Other Components",
+                grid.getHeaderCell(0, 1).getText());
     }
 
     private void assertRowExists(int i, String string) {
@@ -90,5 +146,11 @@ public class GridComponentsTest extends MultiBrowserTest {
         Assert.assertTrue("Notification should contain given text",
                 $(NotificationElement.class).first().getText()
                         .contains(string));
+    }
+
+    private void assertNoButton(int i) {
+        GridRowElement row = $(GridElement.class).first().getRow(i);
+        Assert.assertFalse("Row " + i + " should not have a button",
+                row.getCell(2).isElementPresent(ButtonElement.class));
     }
 }

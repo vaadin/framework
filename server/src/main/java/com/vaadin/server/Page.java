@@ -20,11 +20,15 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.vaadin.annotations.HtmlImport;
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.BorderStyle;
@@ -33,6 +37,7 @@ import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Dependency;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -198,7 +203,7 @@ public class Page implements Serializable {
         private void paintContent(PaintTarget target) throws PaintException {
             target.startTag("open");
             target.addAttribute("src", resource);
-            if (name != null && name.length() > 0) {
+            if (name != null && !name.isEmpty()) {
                 target.addAttribute("name", name);
             }
             if (!tryToOpenAsPopup) {
@@ -559,6 +564,8 @@ public class Page implements Serializable {
 
     private String newPushState;
     private String newReplaceState;
+
+    private List<Dependency> pendingDependencies;
 
     public Page(UI uI, PageState state) {
         this.uI = uI;
@@ -1425,5 +1432,44 @@ public class Page implements Serializable {
 
     private boolean hasEventRouter() {
         return eventRouter != null;
+    }
+
+    /**
+     * Add a dependency that should be added to the current page.
+     * <p>
+     * These dependencies are always added before the dependencies included by
+     * using the annotations {@link HtmlImport}, {@link JavaScript} and
+     * {@link StyleSheet} during the same request.
+     * <p>
+     * Please note that these dependencies are always sent to the client side
+     * and not filtered out by any {@link DependencyFilter}.
+     *
+     * @param dependency
+     *            the dependency to add
+     * @since 8.1
+     */
+    public void addDependency(Dependency dependency) {
+        if (pendingDependencies == null) {
+            pendingDependencies = new ArrayList<>();
+        }
+        pendingDependencies.add(dependency);
+    }
+
+    /**
+     * Returns all pending dependencies.
+     * <p>
+     * For internal use only, calling this method will clear the pending
+     * dependencies.
+     *
+     * @return the pending dependencies to the current page
+     * @since 8.1
+     */
+    public Collection<Dependency> getPendingDependencies() {
+        ArrayList<Dependency> copy = new ArrayList<>();
+        if (pendingDependencies != null) {
+            copy.addAll(pendingDependencies);
+        }
+        pendingDependencies = null;
+        return copy;
     }
 }

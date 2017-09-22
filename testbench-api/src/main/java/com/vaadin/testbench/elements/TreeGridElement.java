@@ -15,6 +15,9 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
@@ -97,8 +100,9 @@ public class TreeGridElement extends GridElement {
     public boolean isRowExpanded(int rowIndex, int hierarchyColumnIndex) {
         WebElement expandElement = getExpandElement(rowIndex,
                 hierarchyColumnIndex);
-        return expandElement.getAttribute("expanded") != null
-                && expandElement.getAttribute("collapsed") == null;
+        List<String> classes = Arrays
+                .asList(expandElement.getAttribute("class").split(" "));
+        return classes.contains("expanded") && !classes.contains("collapsed");
     }
 
     /**
@@ -111,10 +115,25 @@ public class TreeGridElement extends GridElement {
      * @return {@code true} if collapsed, {@code false} if expanded
      */
     public boolean isRowCollapsed(int rowIndex, int hierarchyColumnIndex) {
+        return !isRowExpanded(rowIndex, hierarchyColumnIndex);
+    }
+
+    /**
+     * Check whether the given indices correspond to a cell that contains a
+     * visible hierarchy toggle element.
+     *
+     * @param rowIndex
+     *            0-based row index
+     * @param hierarchyColumnIndex
+     *            0-based index of the hierarchy column
+     * @return {@code true} if this cell has the expand toggle visible
+     */
+    public boolean hasExpandToggle(int rowIndex, int hierarchyColumnIndex) {
         WebElement expandElement = getExpandElement(rowIndex,
                 hierarchyColumnIndex);
-        return expandElement.getAttribute("collapsed") != null
-                && expandElement.getAttribute("expanded") == null;
+        List<String> classes = Arrays
+                .asList(expandElement.getAttribute("class").split(" "));
+        return classes.contains("expanded") || classes.contains("collapsed");
     }
 
     /**
@@ -131,7 +150,7 @@ public class TreeGridElement extends GridElement {
      */
     public WebElement getExpandElement(int rowIndex, int hierarchyColumnIndex) {
         return getCell(rowIndex, hierarchyColumnIndex)
-                .findElement(By.className("v-tree-grid-expander"));
+                .findElement(By.className("v-treegrid-expander"));
 
     }
 }

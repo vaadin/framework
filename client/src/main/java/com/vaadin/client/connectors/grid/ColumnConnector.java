@@ -20,6 +20,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.ColumnState;
@@ -36,7 +37,8 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    static abstract class CustomColumn extends Column<Object, JsonObject> {
+    public abstract static class CustomColumn
+            extends Column<Object, JsonObject> {
 
         private final String connectorId;
 
@@ -46,6 +48,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
 
         public String getConnectorId() {
             return connectorId;
+        }
+
+        @Override
+        protected void setDefaultHeaderContent(HeaderCell cell) {
+            // NO-OP, Server takes care of header contents.
         }
     }
 
@@ -73,7 +80,12 @@ public class ColumnConnector extends AbstractExtensionConnector {
                 return null;
             }
         };
+
+        // Initially set a renderer
+        updateRenderer();
+
         getParent().addColumn(column, getState().internalId);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -94,6 +106,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("renderer")
     void updateRenderer() {
         column.setRenderer(getRendererConnector().getRenderer());
+        getParent().onColumnRendererChanged(column);
     }
 
     @OnStateChange("hidingToggleCaption")
@@ -126,6 +139,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setMinimumWidth(getState().minWidth);
     }
 
+    @OnStateChange("minimumWidthFromContent")
+    void updateMinimumWidthFromContent() {
+        column.setMinimumWidthFromContent(getState().minimumWidthFromContent);
+    }
+
     @OnStateChange("maxWidth")
     void updateMaxWidth() {
         column.setMaximumWidth(getState().maxWidth);
@@ -149,6 +167,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             // time to remove columns (and have problems with frozen columns)
             // before throwing everything away
             parent.removeColumn(column);
+            parent = null;
         }
         column = null;
     }

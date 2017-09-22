@@ -39,8 +39,12 @@ import com.vaadin.annotations.DesignRoot;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentRootSetter;
+import com.vaadin.ui.Composite;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Design is used for reading a component hierarchy from an html string or input
@@ -172,7 +176,7 @@ public class Design implements Serializable {
                             + " which is not a Vaadin Component class";
 
             try {
-                return componentClass.newInstance();
+                return ReflectTools.createInstance(componentClass);
             } catch (Exception e) {
                 throw new DesignException(
                         "Could not create component " + fullyQualifiedClassName,
@@ -409,9 +413,11 @@ public class Design implements Serializable {
      *            the html tree
      * @param componentRoot
      *            optional component root instance. The type must match the type
-     *            of the root element in the design. Any member fields whose
-     *            type is assignable from {@link Component} are bound to fields
-     *            in the design based on id/local id/caption
+     *            of the root element in the design or be a
+     *            {@link CustomComponent} or {@link Composite}, in which case
+     *            the root component will be set as the composition root. Any
+     *            member fields whose type is assignable from {@link Component}
+     *            are bound to fields in the design based on id/local id/caption
      */
     private static DesignContext designToComponentTree(Document doc,
             Component componentRoot) {
@@ -432,12 +438,19 @@ public class Design implements Serializable {
      * If a component root is given, the component instances created during
      * reading the design are assigned to its member fields based on their id,
      * local id, and caption
+     * <p>
+     * If the root is a custom component or composite, its composition root will
+     * be populated with the design contents. Note that even if the root
+     * component is a custom component/composite, the root element of the design
+     * should not be to avoid nesting a custom component in a custom component.
      *
      * @param doc
      *            the html tree
      * @param componentRoot
      *            optional component root instance. The type must match the type
-     *            of the root element in the design.
+     *            of the root element in the design or be a
+     *            {@link CustomComponent} or {@link Composite}, in which case
+     *            the root component will be set as the composition root.
      * @param classWithFields
      *            a class (componentRoot class or a super class) with some
      *            member fields. The member fields whose type is assignable from
@@ -480,8 +493,15 @@ public class Design implements Serializable {
                 binder.bindField(event.getComponent(), event.getLocalId());
             };
             designContext.addComponentCreationListener(creationListener);
+
             // create subtree
-            designContext.readDesign(element, componentRoot);
+            if (componentRoot instanceof CustomComponent
+                    || componentRoot instanceof Composite) {
+                Component rootComponent = designContext.readDesign(element);
+                ComponentRootSetter.setRoot(componentRoot, rootComponent);
+            } else {
+                designContext.readDesign(element, componentRoot);
+            }
             // make sure that all the member fields are bound
             Collection<String> unboundFields = binder.getUnboundFields();
             if (!unboundFields.isEmpty()) {
@@ -550,6 +570,12 @@ public class Design implements Serializable {
      * id/local id/caption in the design file.
      * <p>
      * The type of the root component must match the root element in the design
+     * or the root component must be a {@link CustomComponent} or
+     * {@link Composite}. If the root is a custom component or composite, its
+     * composition root will be populated with the design contents. Note that
+     * even if the root component is a custom component/composite, the root
+     * element of the design should not be to avoid nesting a custom component
+     * in a custom component.
      *
      * @param rootComponent
      *            The root component of the layout
@@ -640,7 +666,13 @@ public class Design implements Serializable {
      * design. Matching is done based on field name in the component class and
      * id/local id/caption in the design file.
      * <p>
-     * The type of the root component must match the root element in the design.
+     * The type of the root component must match the root element in the design
+     * or the root component must be a {@link CustomComponent} or
+     * {@link Composite}. If the root is a custom component or composite, its
+     * composition root will be populated with the design contents. Note that
+     * even if the root component is a custom component/composite, the root
+     * element of the design should not be to avoid nesting a custom component
+     * in a custom component.
      *
      * @param filename
      *            The file name to load. Loaded from the same package as the
@@ -680,8 +712,13 @@ public class Design implements Serializable {
      * design. Matching is done based on field name in the component class and
      * id/local id/caption in the design file.
      * <p>
-     * If rootComponent is not null, its type must match the type of the root
-     * element in the design
+     * The type of the root component must match the root element in the design
+     * or the root component must be a {@link CustomComponent} or
+     * {@link Composite}. If the root is a custom component or composite, its
+     * composition root will be populated with the design contents. Note that
+     * even if the root component is a custom component/composite, the root
+     * element of the design should not be to avoid nesting a custom component
+     * in a custom component.
      *
      * @param stream
      *            The stream to read the design from

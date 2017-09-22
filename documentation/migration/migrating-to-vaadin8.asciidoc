@@ -102,7 +102,7 @@ When using compatibility packages in your project you need to changes references
 Typically, widgetset recompilation will handle this automatically for you, except for the following two cases which should be handled manually:
 
 * Your project defines a custom widgetset, in which case you need to make sure `Vaadin7WidgetSet` is inherited
-* An UI in your project defines its widgetset with the annotation `@WidgetSet("com.vaadin.DefaultWidgetSet")`, which should be changed to `@WidgetSet("com.vaadin.v7.Vaadin7WidgetSet")`
+* An UI in your project defines its widgetset with the annotation `@Widgetset("com.vaadin.DefaultWidgetSet")`, which should be changed to `@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")`
 
 IMPORTANT: The widgetset compilation for `Vaadin7WidgetSet` requires at least 1G of memory. To ensure this, add
 `<extraJvmArgs>-Xmx1G</extraJvmArgs>` to the vaadin-maven-plugin configuration in your `pom.xml` file.

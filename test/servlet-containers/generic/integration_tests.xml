@@ -59,8 +59,8 @@
         <fail unless="server-name" message="Server name must be defined in server-name" />
         <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
-	<property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
-         <!-- The junit task does not create the report dir... -->
+        <property name="server.report.dir" location="${report.dir}/integration-test-tb3/${server-name}" />
+        <!-- The junit task does not create the report dir... -->
         <mkdir dir="${server.report.dir}" />
 
         <junit showoutput="no" printsummary="no" fork="yes">
@@ -93,13 +93,6 @@
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat8" />
-        </antcall>
-    </target>
-
-    <target name="integration-test-osgi">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="10" />
-            <param name="target-server" value="karaf4" />
         </antcall>
     </target>
 
@@ -193,7 +186,6 @@
             <antcall target="integration-test-jetty9" />
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
-            <antcall target="integration-test-osgi" />
             <antcall target="integration-test-tomcat7apacheproxy" />
         </parallel>
 

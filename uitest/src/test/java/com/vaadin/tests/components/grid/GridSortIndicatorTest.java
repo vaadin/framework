@@ -15,44 +15,48 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
-import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.SingleBrowserTest;
 
 @TestCategory("grid")
-public class GridSortIndicatorTest extends MultiBrowserTest {
+public class GridSortIndicatorTest extends SingleBrowserTest {
 
     @Test
-    @Ignore
-    /*
-     * Should be enabled once #8316 is fixed.
-     */
     public void testIndicators() throws InterruptedException {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
-        // Clicking the left header cell should set ascending sort order for
-        // both columns.
-        grid.getHeaderCell(0, 0).click();
-        assertTrue(grid.getHeaderCell(0, 0).getAttribute("class")
-                .contains("sort-asc"));
-        assertTrue(grid.getHeaderCell(0, 1).getAttribute("class")
-                .contains("sort-asc"));
-        // Click the left column to change the sort direction.
-        grid.getHeaderCell(0, 0).click();
-        assertTrue(grid.getHeaderCell(0, 0).getAttribute("class")
-                .contains("sort-desc"));
-        assertTrue(grid.getHeaderCell(0, 1).getAttribute("class")
-                .contains("sort-desc"));
-        // Clicking on the right column should have no effect.
-        grid.getHeaderCell(0, 1).click();
-        assertTrue(grid.getHeaderCell(0, 0).getAttribute("class")
-                .contains("sort-desc"));
-        assertTrue(grid.getHeaderCell(0, 1).getAttribute("class")
-                .contains("sort-desc"));
+
+        $(ButtonElement.class).caption("Sort both").first().click();
+        Assert.assertTrue("First column should be sorted ascending",
+                grid.getHeaderCell(0, 0).getAttribute("class")
+                        .contains("sort-asc"));
+        Assert.assertEquals("First column should have aria-sort other", "other",
+                grid.getHeaderCell(0, 0).getAttribute("aria-sort"));
+        Assert.assertEquals("First column should be first in sort order", "1",
+                grid.getHeaderCell(0, 0).getAttribute("sort-order"));
+        Assert.assertTrue("Second column should be sorted ascending",
+                grid.getHeaderCell(0, 1).getAttribute("class")
+                        .contains("sort-asc"));
+        Assert.assertEquals("Second column should have aria-sort other", "other",
+                grid.getHeaderCell(0, 1).getAttribute("aria-sort"));
+        Assert.assertEquals("Second column should be also sorted", "2",
+                grid.getHeaderCell(0, 1).getAttribute("sort-order"));
+
+        $(ButtonElement.class).caption("Sort first").first().click();
+        Assert.assertEquals("First column should have aria-sort ascending", "ascending",
+                grid.getHeaderCell(0, 0).getAttribute("aria-sort"));
+        Assert.assertTrue("First column should be sorted ascending",
+                grid.getHeaderCell(0, 0).getAttribute("class")
+                        .contains("sort-asc"));
+        Assert.assertEquals("Second column should have aria-sort none", "none",
+                grid.getHeaderCell(0, 1).getAttribute("aria-sort"));
+        Assert.assertFalse("Second column should not be sorted",
+                grid.getHeaderCell(0, 1).getAttribute("class")
+                        .contains("sort-asc"));
     }
 }

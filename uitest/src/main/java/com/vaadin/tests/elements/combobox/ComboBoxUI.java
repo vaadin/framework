@@ -18,14 +18,13 @@ package com.vaadin.tests.elements.combobox;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.annotations.Widgetset;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
 
-/**
- *
- */
-@SuppressWarnings("serial")
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ComboBoxUI extends AbstractTestUI {
 
     public static final List<String> currencies = new ArrayList<String>();
@@ -37,11 +36,23 @@ public class ComboBoxUI extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ComboBox comboBox = new ComboBox("NullAllowedComboBox", currencies);
+        ComboBox<String> comboBox = new ComboBox<>("NullAllowedComboBox",
+                currencies);
         addComponent(comboBox);
 
-        comboBox = new ComboBox("NullForbiddenComboBox", currencies);
+        comboBox = new ComboBox<>("NullForbiddenComboBox", currencies);
         comboBox.setEmptySelectionAllowed(false);
+        addComponent(comboBox);
+
+        comboBox = new ComboBox<>("With icons", currencies);
+        comboBox.setId("with-icons");
+        comboBox.setItemIconGenerator(item -> {
+            if (item.equals("EUR")) {
+                return new ThemeResource("shared/img/spinner.gif");
+            } else {
+                return new ThemeResource("notfound.png");
+            }
+        });
         addComponent(comboBox);
     }
 

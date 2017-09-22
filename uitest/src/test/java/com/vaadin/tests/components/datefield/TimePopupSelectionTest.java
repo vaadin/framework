@@ -24,7 +24,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.DateTimeFieldElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**

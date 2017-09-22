@@ -18,6 +18,7 @@ package com.vaadin.testbench.elements;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -81,11 +82,11 @@ public class GridElement extends AbstractComponentElement {
 
         /**
          * Gets the editor field for column in given index.
-         * 
+         *
          * @param colIndex
          *            the column index
          * @return the editor field for given location
-         * 
+         *
          * @throws NoSuchElementException
          *             if {@code isEditable(colIndex) == false}
          */
@@ -96,7 +97,7 @@ public class GridElement extends AbstractComponentElement {
         /**
          * Gets whether the column with the given index is editable, that is,
          * has an associated editor field.
-         * 
+         *
          * @param colIndex
          *            the column index
          * @return {@code true} if the column has an editor field, {@code false}
@@ -109,10 +110,10 @@ public class GridElement extends AbstractComponentElement {
 
         /**
          * Checks whether a field is marked with an error.
-         * 
+         *
          * @param colIndex
          *            column index
-         * @return <code>true</code> iff the field is marked with an error
+         * @return <code>true</code> if the field is marked with an error
          */
         public boolean isFieldErrorMarked(int colIndex) {
             return getField(colIndex).getAttribute("class").contains("error");
@@ -157,7 +158,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Scrolls Grid element so that wanted row is displayed
-     * 
+     *
      * @param index
      *            Target row
      */
@@ -171,7 +172,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets cell element with given row and column index.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @param colIndex
@@ -186,7 +187,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets row element with given row index.
-     * 
+     *
      * @param index
      *            Row index
      * @return Row element with given index.
@@ -198,7 +199,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets header cell element with given row and column index.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @param colIndex
@@ -211,8 +212,8 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Finds the header cell element with the given caption. If
-     * there are multiple headers with the same name, the first one is returned.
+     * Finds the header cell element with the given caption. If there are
+     * multiple headers with the same name, the first one is returned.
      *
      * @param caption
      *            The header caption
@@ -280,7 +281,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets list of header cell elements on given row.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @return Header cell elements on given row.
@@ -298,7 +299,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets list of header cell elements on given row.
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @return Header cell elements on given row.
@@ -316,7 +317,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get header row count
-     * 
+     *
      * @return Header row count
      */
     public int getHeaderCount() {
@@ -325,7 +326,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get footer row count
-     * 
+     *
      * @return Footer row count
      */
     public int getFooterCount() {
@@ -334,7 +335,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get a header row by index
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @return The th element of the row
@@ -345,7 +346,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get a footer row by index
-     * 
+     *
      * @param rowIndex
      *            Row index
      * @return The tr element of the row
@@ -356,7 +357,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the vertical scroll element
-     * 
+     *
      * @return The element representing the vertical scrollbar
      */
     public TestBenchElement getVerticalScroller() {
@@ -366,7 +367,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the horizontal scroll element
-     * 
+     *
      * @return The element representing the horizontal scrollbar
      */
     public TestBenchElement getHorizontalScroller() {
@@ -376,7 +377,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the header element
-     * 
+     *
      * @return The thead element
      */
     public TestBenchElement getHeader() {
@@ -385,7 +386,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the body element
-     * 
+     *
      * @return the tbody element
      */
     public TestBenchElement getBody() {
@@ -394,7 +395,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the footer element
-     * 
+     *
      * @return the tfoot element
      */
     public TestBenchElement getFooter() {
@@ -403,7 +404,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Get the element wrapping the table element
-     * 
+     *
      * @return The element that wraps the table element
      */
     public TestBenchElement getTableWrapper() {
@@ -418,7 +419,7 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Helper function to get Grid subparts wrapped correctly
-     * 
+     *
      * @param subPartSelector
      *            SubPart to be used in ComponentLocator
      * @return SubPart element wrapped in TestBenchElement class
@@ -429,8 +430,8 @@ public class GridElement extends AbstractComponentElement {
 
     /**
      * Gets the element that contains the details of a row.
-     * 
-     * @since
+     *
+     * @since 8.0
      * @param rowIndex
      *            the index of the row for the details
      * @return the element that contains the details of a row. <code>null</code>
@@ -441,6 +442,34 @@ public class GridElement extends AbstractComponentElement {
     public TestBenchElement getDetails(int rowIndex)
             throws NoSuchElementException {
         return getSubPart("#details[" + rowIndex + "]");
+    }
+
+    /**
+     * Toggles the column visibility. Column is identified by its hiding toggle
+     * caption.
+     *
+     * @param toggleCaption
+     * @since 8.0.6
+     */
+    public void toggleColumnHidden(String toggleCaption) {
+        if (!isElementPresent(By.className("v-grid-sidebar-content"))) {
+            // Open sidebar menu
+            WebElement sidebarButton = findElement(
+                    By.className("v-grid-sidebar"))
+                            .findElement(By.tagName("button"));
+            sidebarButton.click();
+        }
+        Optional<WebElement> toggleButton = getDriver()
+                .findElement(By.className("v-grid-sidebar-content"))
+                .findElements(By.className("column-hiding-toggle")).stream()
+                .filter(e -> e.getText().equals(toggleCaption)).findAny();
+        if (toggleButton.isPresent()) {
+            toggleButton.ifPresent(e -> e.click());
+        } else {
+            throw new IllegalArgumentException(
+                    "No column hiding toggle with caption '" + toggleCaption
+                            + "'");
+        }
     }
 
     /**
@@ -468,14 +497,17 @@ public class GridElement extends AbstractComponentElement {
      */
     public Iterable<GridRowElement> getRows() {
         return new Iterable<GridElement.GridRowElement>() {
+            @Override
             public Iterator<GridRowElement> iterator() {
                 return new Iterator<GridElement.GridRowElement>() {
                     int nextIndex = 0;
 
+                    @Override
                     public GridRowElement next() {
                         return getRow(nextIndex++);
                     }
 
+                    @Override
                     public boolean hasNext() {
                         try {
                             getRow(nextIndex);
@@ -485,6 +517,7 @@ public class GridElement extends AbstractComponentElement {
                         }
                     }
 
+                    @Override
                     public void remove() {
                         throw new UnsupportedOperationException(
                                 "remove not supported");

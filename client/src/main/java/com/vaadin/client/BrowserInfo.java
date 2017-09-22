@@ -112,10 +112,10 @@ public class BrowserInfo {
 
     private native int getIEDocumentMode()
     /*-{
-    	var mode = $wnd.document.documentMode;
-    	if (!mode)
-    		 return -1;
-    	return mode;
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+             return -1;
+        return mode;
     }-*/;
 
     /**
@@ -197,13 +197,13 @@ public class BrowserInfo {
             }
 
             cssClass = prefix + browserIdentifier;
-            if (!"".equals(majorVersionClass)) {
+            if (!majorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + majorVersionClass;
             }
-            if (!"".equals(minorVersionClass)) {
+            if (!minorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + minorVersionClass;
             }
-            if (!"".equals(browserEngineClass)) {
+            if (!browserEngineClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + browserEngineClass;
             }
             String osClass = getOperatingSystemClass();
@@ -251,6 +251,17 @@ public class BrowserInfo {
 
     public boolean isSafari() {
         return browserDetails.isSafari();
+    }
+
+    /**
+     * Returns true if the browser is Safari or is a browser that is running on
+     * iOS and using the Safari rendering engine.
+     *
+     * @return true if the browser is using the Safari rendering engine
+     * @since 8.1
+     */
+    public boolean isSafariOrIOS() {
+        return browserDetails.isSafariOrIOS();
     }
 
     @Deprecated
@@ -340,19 +351,19 @@ public class BrowserInfo {
         return browserDetails.isOpera() && getBrowserMajorVersion() == 11;
     }
 
-    public native static String getBrowserString()
+    public static native String getBrowserString()
     /*-{
-    	return $wnd.navigator.userAgent;
+        return $wnd.navigator.userAgent;
     }-*/;
 
     public native int getScreenWidth()
     /*-{
-    	return $wnd.screen.width;
+        return $wnd.screen.width;
     }-*/;
 
     public native int getScreenHeight()
     /*-{
-    	return $wnd.screen.height;
+        return $wnd.screen.height;
     }-*/;
 
     /**

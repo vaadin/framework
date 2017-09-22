@@ -41,10 +41,9 @@ public class MissingHierarchyDetectionTest extends SingleBrowserTest {
         assertNoSystemNotifications();
         Assert.assertTrue(isElementPresent(LabelElement.class));
 
-        ButtonElement toggleInproperly = $(ButtonElement.class)
+        ButtonElement toggleImproperly = $(ButtonElement.class)
                 .caption("Toggle improperly").first();
-        toggleInproperly.click();
-
+        toggleImproperly.click();
         assertSystemNotification();
     }
 }

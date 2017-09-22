@@ -1,0 +1,20 @@
+$vaadin-icons-pathPrefix: null;
+
+@if $v-relative-paths == false {
+  $vaadin-icons-pathPrefix: "../valo/fonts/vaadin-icons/";
+}
+
+@font-face {
+    font-family: 'Vaadin-Icons';
+    src: url('#{$vaadin-icons-pathPrefix}Vaadin-Icons.eot');
+    src: url('#{$vaadin-icons-pathPrefix}Vaadin-Icons.eot?#iefix') format('embedded-opentype'),
+         url('#{$vaadin-icons-pathPrefix}Vaadin-Icons.woff') format('woff'),
+         url('#{$vaadin-icons-pathPrefix}Vaadin-Icons.ttf') format('truetype'),
+         url('#{$vaadin-icons-pathPrefix}Vaadin-Icons.svg#icomoon') format('svg');
+}
+.Vaadin-Icons {
+    font-family: 'Vaadin-Icons';
+}
+
+@mixin vaadin-icons {
+}

@@ -72,11 +72,6 @@ public class VaadinPortletService extends VaadinService {
         return portlet;
     }
 
-    private String getPortalProperty(VaadinRequest request,
-            String propertyName) {
-        return ((VaadinPortletRequest) request).getPortalProperty(propertyName);
-    }
-
     private String getParameter(VaadinRequest request, String name,
             String defaultValue) {
         VaadinPortletRequest portletRequest = (VaadinPortletRequest) request;

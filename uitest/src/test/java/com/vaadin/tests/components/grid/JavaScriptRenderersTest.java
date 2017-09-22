@@ -56,6 +56,8 @@ public class JavaScriptRenderersTest extends MultiBrowserTest {
     @Test
     public void testJavaScriptRendererDestroy() {
         openTestURL("debug");
+        // make sure the log tab is open
+        openDebugLogTab();
         waitForDebugMessage(
                 "Your JavaScript connector (com_vaadin_tests_components_grid_JavaScriptStringRendererWithDestoryMethod) has a typo. The destory method should be renamed to destroy.");
 

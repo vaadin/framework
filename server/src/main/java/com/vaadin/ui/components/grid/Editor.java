@@ -177,6 +177,17 @@ public interface Editor<T> extends Serializable {
     public Registration addCancelListener(EditorCancelListener<T> listener);
 
     /**
+     * Adds an editor open {@code listener}.
+     * 
+     * @param listener
+     *            open listener
+     * @return a registration object for removing the listener
+     * 
+     * @since 8.1
+     */
+    public Registration addOpenListener(EditorOpenListener<T> listener);
+
+    /**
      * Gets the Grid instance which this editor belongs to.
      * 
      * @return the grid which owns the editor

@@ -17,7 +17,7 @@ public class DisabledSortingTableTest extends MultiBrowserTest {
     Class<?> uiClass;
 
     @Override
-    protected java.lang.Class<?> getUIClass() {
+    protected Class<?> getUIClass() {
         return uiClass;
     };
 

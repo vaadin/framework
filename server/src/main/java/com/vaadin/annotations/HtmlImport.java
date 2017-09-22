@@ -40,8 +40,10 @@ import com.vaadin.server.ClientConnector;
  * <li>Absolute URLs including protocol and host are used as is on the
  * client-side.
  * </ul>
- * Note that it is a good idea to use URLs starting with {@literal vaadin://}
- * and place all HTML imports inside {@literal VAADIN/bower_components}. Polymer
+ * Note that you should (almost) always use URLs starting with
+ * {@literal frontend://} so that the framework can resolve the files to either
+ * {@literal VAADIN/es5} or {@literal VAADIN/es6} depending on if the browser
+ * supports ES6 classes (most browers) or not (IE11 and Safari <= 9). Polymer
  * elements rely on importing dependencies using relative paths
  * {@literal ../../other-element/other-element.html}, which will not work if
  * they are installed in different locations.
@@ -50,10 +52,10 @@ import com.vaadin.server.ClientConnector;
  * added at the same time.
  * <p>
  * Example:
- * <code>@HtmlImport("bower_components/paper-slider/paper-slider.html")</code>
- * on the class com.example.MyConnector would load the file
- * http://host.com/VAADIN/bower_components/paper-slider/paper-slider.html before
- * the {@code init()} method of the client side connector is invoked.
+ * <code>@HtmlImport("frontend://paper-slider/paper-slider.html")</code> on the
+ * class com.example.MyConnector would load the file
+ * {@literal http://host.com/VAADIN/es[56]/paper-slider/paper-slider.html}
+ * before the {@code init()} method of the client side connector is invoked.
  *
  * @author Vaadin Ltd
  * @since 8.0

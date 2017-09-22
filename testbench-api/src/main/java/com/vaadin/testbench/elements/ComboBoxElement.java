@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
@@ -29,7 +28,7 @@ import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.ComboBox")
-public class ComboBoxElement extends AbstractSelectElement {
+public class ComboBoxElement extends AbstractSingleSelectElement {
 
     private static org.openqa.selenium.By bySuggestionPopup = By
             .vaadin("#popup");
@@ -54,7 +53,7 @@ public class ComboBoxElement extends AbstractSelectElement {
             return;
         }
         getInputField().clear();
-        sendInputFieldKeys(text);
+        getInputField().sendKeys(text);
 
         selectSuggestion(text);
     }
@@ -116,31 +115,6 @@ public class ComboBoxElement extends AbstractSelectElement {
      */
     public boolean isPopupOpen() {
         return isElementPresent(bySuggestionPopup);
-    }
-
-    /*
-     * Workaround selenium's bug: sendKeys() will not send left parentheses
-     * properly. See #14048.
-     */
-    private void sendInputFieldKeys(String text) {
-        WebElement textBox = getInputField();
-        if (!text.contains("(")) {
-            textBox.sendKeys(text);
-            return;
-        }
-
-        String OPEN_PARENTHESES = "_OPEN_PARENT#H#ESES_";
-        String tamperedText = text.replaceAll("\\(", OPEN_PARENTHESES);
-        textBox.sendKeys(tamperedText);
-
-        JavascriptExecutor js = getCommandExecutor();
-        String jsScript = String.format(
-                "arguments[0].value = arguments[0].value.replace(/%s/g, '(')",
-                OPEN_PARENTHESES);
-        js.executeScript(jsScript, textBox);
-
-        // refresh suggestions popupBox
-        textBox.sendKeys("a" + Keys.BACK_SPACE);
     }
 
     /**
@@ -225,7 +199,7 @@ public class ComboBoxElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the combo box element
+     * Return value of the combo box element.
      *
      * @return value of the combo box element
      */

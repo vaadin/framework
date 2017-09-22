@@ -18,7 +18,7 @@ package com.vaadin.client.ui.dd;
 import java.util.HashSet;
 
 import com.vaadin.client.UIDL;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  *

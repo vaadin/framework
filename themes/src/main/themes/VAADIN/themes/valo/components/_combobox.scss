@@ -18,6 +18,10 @@
       position: absolute;
       pointer-events: none;
     }
+
+    .v-icon.FontAwesome {
+        margin-left: 0px;
+      }
   }
 
   .#{$primary-stylename}-error {
@@ -161,6 +165,12 @@
     width: $unit-size;
     line-height: 1;
     padding-top: .12em;
+
+    $padding-width: ceil($unit-size/6);
+    @if $border-radius {
+      $padding-width: $padding-width + ceil($border-radius/3);
+    }
+    margin-left: $padding-width;
   }
 
   &[class*="prompt"] > [class*="input"] {

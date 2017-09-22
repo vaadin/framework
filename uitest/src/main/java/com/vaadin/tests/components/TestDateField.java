@@ -17,13 +17,13 @@ package com.vaadin.tests.components;
 
 import java.time.LocalDate;
 
-import com.vaadin.ui.AbstractLocalDateField;
+import com.vaadin.ui.DateField;
 
 /**
  * @author Vaadin Ltd
  *
  */
-public class TestDateField extends AbstractLocalDateField {
+public class TestDateField extends DateField {
 
     /**
      * Constructs an empty <code>DateField</code> with no caption.

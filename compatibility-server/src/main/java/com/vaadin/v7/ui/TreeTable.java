@@ -67,7 +67,7 @@ import com.vaadin.v7.ui.Tree.ExpandListener;
  * {@link Collapsible} containers can not be shared among several users as they
  * share UI state in the container.
  *
- * @deprecated As of 8.0. New hierarchical components are planned in an upcoming version of Vaadin Framework 8.
+ * @deprecated See {@code TreeGrid}.
  */
 @SuppressWarnings({ "serial" })
 @Deprecated

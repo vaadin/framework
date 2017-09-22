@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.DateTimeFieldElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldPopupTest extends MultiBrowserTest {

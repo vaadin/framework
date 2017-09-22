@@ -234,14 +234,14 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
     @Override
     public void setHeight(String height) {
         super.setHeight(height);
-        if (height == null || height.equals("")) {
+        if (height == null || height.isEmpty()) {
             rta.setHeight("");
         }
     }
 
     @Override
     public void setWidth(String width) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             /*
              * IE cannot calculate the width of the 100% iframe correctly if
              * there is no width specified for the parent. In this case we would

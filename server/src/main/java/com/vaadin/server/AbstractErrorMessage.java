@@ -129,7 +129,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
                     sb.append("</div>\n");
                 }
             }
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 result = sb.toString();
             }
         }

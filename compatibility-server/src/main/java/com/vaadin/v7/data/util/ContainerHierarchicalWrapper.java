@@ -47,8 +47,9 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
- * version of Vaadin Framework 8.
+ * @deprecated No direct replacement - use an appropriate implementation of
+ *             {@code HierarchicalDataProvider} such as {@code TreeDataProvider}
+ *             or {@code AbstractBackEndHierarchicalDataProvider}.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -149,10 +150,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 parent = new Hashtable<Object, Object>();
                 children = new Hashtable<Object, LinkedList<Object>>();
                 roots = new LinkedHashSet<Object>(container.getItemIds());
-            }
-
-            // Check that the hierarchy is up-to-date
-            else {
+            } else {
+                // Check that the hierarchy is up-to-date
 
                 // ensure order of root and child lists is same as in wrapped
                 // container

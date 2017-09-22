@@ -105,9 +105,11 @@ public class ComboBoxConnector extends AbstractListingConnector
             suggestions.remove(0);
             addEmptySelectionItem();
         }
+        getWidget().setEmptySelectionCaption(getState().emptySelectionCaption);
     }
 
-    @OnStateChange({ "selectedItemKey", "selectedItemCaption", "selectedItemIcon" })
+    @OnStateChange({ "selectedItemKey", "selectedItemCaption",
+            "selectedItemIcon" })
     private void onSelectionChange() {
         getDataReceivedHandler().updateSelectionFromServer(
                 getState().selectedItemKey, getState().selectedItemCaption,
@@ -208,7 +210,7 @@ public class ComboBoxConnector extends AbstractListingConnector
                 page = 0;
             }
         }
-        int adjustment = getWidget().nullSelectionAllowed && "".equals(filter)
+        int adjustment = getWidget().nullSelectionAllowed && filter.isEmpty()
                 ? 1 : 0;
         int startIndex = Math.max(0,
                 page * getWidget().pageLength - adjustment);

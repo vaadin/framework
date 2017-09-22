@@ -203,4 +203,33 @@ public class NativeSelect<T> extends AbstractSingleSelect<T>
         Objects.nonNull(caption);
         getState().emptySelectionCaption = caption;
     }
+
+    /**
+     * Sets the number of items that are visible. If only one item is visible,
+     * then the box will be displayed as a drop-down list (the default).
+     *
+     * @since 8.1
+     * @param visibleItemCount
+     *            the visible item count
+     * @throws IllegalArgumentException
+     *             if the value is smaller than one
+     */
+    public void setVisibleItemCount(int visibleItemCount) {
+        if (visibleItemCount < 1) {
+            throw new IllegalArgumentException(
+                    "There must be at least one item visible");
+        }
+        getState().visibleItemCount = visibleItemCount;
+    }
+
+    /**
+     * Gets the number of items that are visible. If only one item is visible,
+     * then the box will be displayed as a drop-down list.
+     *
+     * @since 8.1
+     * @return the visible item count
+     */
+    public int getVisibleItemCount() {
+        return getState(false).visibleItemCount;
+    }
 }

@@ -11,11 +11,11 @@ public class EmbeddedCssTest {
 
     public EmbeddedCssTest(TestSampler parent) {
         Embedded e = new Embedded("Embedded with a caption",
-                new ThemeResource(parent.ICON_URL));
+                new ThemeResource(TestSampler.ICON_URL));
         e.setId("embedded" + debugIdCounter);
         parent.addComponent(e);
 
-        e = new Embedded(null, new ThemeResource(parent.ICON_URL));
+        e = new Embedded(null, new ThemeResource(TestSampler.ICON_URL));
         e.setId("embedded" + debugIdCounter);
         parent.addComponent(e);
 

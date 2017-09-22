@@ -309,7 +309,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
     /**
      * Used to determine what port the test is running on
      *
-     * @return The port teh test is running on, by default 8888
+     * @return The port the test is running on, by default 8888
      */
     protected abstract int getDeploymentPort();
 
@@ -771,7 +771,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
         // Remove any possible URL parameters
         String pathWithoutQueryParameters = pathWithQueryParameters
                 .replaceAll("\\?.*", "");
-        if ("".equals(pathWithoutQueryParameters)) {
+        if (pathWithoutQueryParameters.isEmpty()) {
             return "ROOT";
         }
 
@@ -1080,8 +1080,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
      */
     protected WebElement getMenuElement(String menuCaption)
             throws NoSuchElementException {
+        // Need the parent span to obtain the correct size
         return getDriver().findElement(
-                By.xpath("//span[text() = '" + menuCaption + "']"));
+                By.xpath("//span[text() = '" + menuCaption + "']/.."));
     }
 
     /**
@@ -1111,7 +1112,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementPresent(By by) {
         Assert.assertTrue("Element is not present", isElementPresent(by));
@@ -1121,7 +1122,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
      * Asserts that an element is not present
      *
      * @param by
-     *            the locatore for the element
+     *            the locator for the element
      */
     protected void assertElementNotPresent(By by) {
         Assert.assertFalse("Element is present", isElementPresent(by));
@@ -1170,18 +1171,29 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void assertNoHorizontalScrollbar(WebElement element,
             String errorMessage) {
+        assertHasHorizontalScrollbar(element, errorMessage, false);
+    }
+
+    protected void assertHorizontalScrollbar(WebElement element,
+            String errorMessage) {
+        assertHasHorizontalScrollbar(element, errorMessage, true);
+    }
+
+    private void assertHasHorizontalScrollbar(WebElement element,
+            String errorMessage, boolean expected) {
         // IE rounds clientWidth/clientHeight down and scrollHeight/scrollWidth
         // up, so using clientWidth/clientHeight will fail if the element height
         // is not an integer
         int clientWidth = getClientWidth(element);
         int scrollWidth = getScrollWidth(element);
         boolean hasScrollbar = scrollWidth > clientWidth;
-
-        Assert.assertFalse(
-                "The element should not have a horizontal scrollbar (scrollWidth: "
-                        + scrollWidth + ", clientWidth: " + clientWidth + "): "
-                        + errorMessage,
-                hasScrollbar);
+        String message = "The element should";
+        if (!expected) {
+            message += " not";
+        }
+        message += " have a horizontal scrollbar (scrollWidth: " + scrollWidth
+                + ", clientWidth: " + clientWidth + "): " + errorMessage;
+        Assert.assertEquals(message, expected, hasScrollbar);
     }
 
     protected void assertNoVerticalScrollbar(WebElement element,

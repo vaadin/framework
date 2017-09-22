@@ -56,7 +56,7 @@ import com.vaadin.shared.ui.dd.DragEventType;
  * {@link #get()} to get instance.
  *
  * TODO cancel drag and drop if more than one touches !?
- * 
+ *
  * @author Vaadin Ltd
  * @deprecated Replaced in 8.1 with {@link DropTargetExtensionConnector} and
  *             {@link DragSourceExtensionConnector}
@@ -419,7 +419,7 @@ public class VDragAndDropManager {
      */
     protected VDropHandler findDragTarget(Element element) {
         try {
-            Widget w = WidgetUtil.findWidget(element, null);
+            Widget w = WidgetUtil.findWidget(element);
             if (w == null) {
                 return null;
             }
@@ -517,7 +517,7 @@ public class VDragAndDropManager {
 
         /*
          * Remove class name indicating drag source when server visit is done
-         * iff server visit was not initiated. Otherwise it will be removed once
+         * if server visit was not initiated. Otherwise it will be removed once
          * the server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {

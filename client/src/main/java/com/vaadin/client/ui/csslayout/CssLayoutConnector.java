@@ -93,7 +93,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             // as it is added directly to the child component?
             String[] cssRules = css.split(";");
             for (String cssRule : cssRules) {
-                String parts[] = cssRule.split(":", 2);
+                String[] parts = cssRule.split(":", 2);
                 if (parts.length == 2) {
                     style.setProperty(makeCamelCase(parts[0].trim()),
                             parts[1].trim());
@@ -114,19 +114,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent event) {
         Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange");
-        Profiler.enter(
-                "CssLayoutConnector.onConnectorHierarchyChange add children");
-        int index = 0;
-        for (ComponentConnector child : getChildComponents()) {
-            VCaption childCaption = childIdToCaption
-                    .get(child.getConnectorId());
-            if (childCaption != null) {
-                getWidget().addOrMove(childCaption, index++);
-            }
-            getWidget().addOrMove(child.getWidget(), index++);
-        }
-        Profiler.leave(
-                "CssLayoutConnector.onConnectorHierarchyChange add children");
 
         // Detach old child widgets and possibly their caption
         Profiler.enter(
@@ -145,6 +132,21 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         }
         Profiler.leave(
                 "CssLayoutConnector.onConnectorHierarchyChange remove old children");
+
+        Profiler.enter(
+                "CssLayoutConnector.onConnectorHierarchyChange add children");
+        int index = 0;
+        for (ComponentConnector child : getChildComponents()) {
+            VCaption childCaption = childIdToCaption
+                    .get(child.getConnectorId());
+            if (childCaption != null) {
+                getWidget().addOrMove(childCaption, index++);
+            }
+            getWidget().addOrMove(child.getWidget(), index++);
+        }
+        Profiler.leave(
+                "CssLayoutConnector.onConnectorHierarchyChange add children");
+
         Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange");
     }
 

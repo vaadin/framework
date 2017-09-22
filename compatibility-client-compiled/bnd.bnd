@@ -1,0 +1,8 @@
+Bundle-SymbolicName: ${project.groupId}.compatibility-client-compiled
+Bundle-Name: Compatibility Widgetset
+Bundle-Version: ${osgi.bundle.version}
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0
+Import-Package: com.vaadin*;version='[${osgi.bundle.version},${osgi.bundle.version}]',\
+    *
+Export-Package: com.vaadin.osgi.compatibility.widgetset;-noimport:=true

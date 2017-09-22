@@ -41,7 +41,8 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
      * @param filter
      *            filtering for fetching; can be <code>null</code>
      * @param parent
-     *            the hierarchical parent object, can be <code>null</code>
+     *            the hierarchical parent object, <code>null</code>
+     *            corresponding to the root node
      */
     public HierarchicalQuery(F filter, T parent) {
         super(filter);
@@ -63,7 +64,8 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
      * @param filter
      *            filtering for fetching; can be <code>null</code>
      * @param parent
-     *            the hierarchical parent object, can be <code>null</code>
+     *            the hierarchical parent object, <code>null</code>
+     *            corresponding to the root node
      */
     public HierarchicalQuery(int offset, int limit,
             List<QuerySortOrder> sortOrders, Comparator<T> inMemorySorting,
@@ -73,9 +75,10 @@ public class HierarchicalQuery<T, F> extends Query<T, F> {
     }
 
     /**
-     * Get the hierarchical parent object, can be <code>null</code>.
+     * Get the hierarchical parent object, where <code>null</code> corresponds
+     * to the root node.
      *
-     * @return the hierarchical parent object, can be <code>null</code>
+     * @return the hierarchical parent object
      */
     public T getParent() {
         return parent;

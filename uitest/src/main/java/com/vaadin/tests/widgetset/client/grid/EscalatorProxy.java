@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.TableRowElement;
@@ -125,6 +127,13 @@ public class EscalatorProxy extends Escalator {
         @Override
         public SpacerUpdater getSpacerUpdater() {
             return rowContainer.getSpacerUpdater();
+        }
+
+        @Override
+        public void setNewRowCallback(
+                Consumer<List<TableRowElement>> consumer) {
+            throw new UnsupportedOperationException(
+                    "setNewRowCallback is not supported");
         }
     }
 

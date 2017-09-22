@@ -391,6 +391,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
             if (getCurrentDate() != null) {
                 calendar.setDate((Date) getCurrentDate().clone());
+            } else if (getDefaultDate() != null) {
+                calendar.setDate(getDefaultDate());
             } else {
                 calendar.setDate(new Date());
             }

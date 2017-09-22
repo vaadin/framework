@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.splitpanel;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -135,6 +136,10 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
                 percentagePositionWithPixelLimitsHorizontalResersed);
 
         verticalLayout.setSizeFull();
+        // a hack for a Chrome 55+ issue (extra scrollbars) that is only seen on
+        // the testing cluster
+        Page.getCurrent().getStyles().add(
+                ".v-tabsheet-tabsheetpanel .v-scrollable { overflow: hidden }");
         tabs.addComponent(verticalLayout);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();

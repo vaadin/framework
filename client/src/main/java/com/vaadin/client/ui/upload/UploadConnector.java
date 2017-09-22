@@ -78,6 +78,10 @@ public class UploadConnector extends AbstractComponentConnector
         if (uidl.hasAttribute("buttoncaption")) {
             getWidget().submitButton
                     .setText(uidl.getStringAttribute("buttoncaption"));
+            if (uidl.hasAttribute("buttonstylename")) {
+                getWidget().submitButton
+                        .setStyleName(uidl.getStringAttribute("buttonstylename"));
+            }
             getWidget().submitButton.setVisible(true);
         } else {
             getWidget().submitButton.setVisible(false);

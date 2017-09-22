@@ -19,6 +19,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -70,6 +79,42 @@ public class AbstractClientConnectorTest {
         verify(mock, times(1)).registerRpc(implementation, ClickRpc.class);
     }
 
+    @Test
+    public void stateTypeCacheDoesNotLeakMemory()
+            throws IllegalArgumentException, IllegalAccessException,
+            NoSuchFieldException, SecurityException, InterruptedException,
+            ClassNotFoundException {
+        Field stateTypeCacheField = AbstractClientConnector.class
+                .getDeclaredField("stateTypeCache");
+        stateTypeCacheField.setAccessible(true);
+        Map<Class<?>, ?> stateTypeCache = (Map<Class<?>, ?>) stateTypeCacheField
+                .get(null);
+
+        WeakReference<Class<?>> classRef = loadClass(
+                "com.vaadin.server.AbstractClientConnector");
+        stateTypeCache.put(classRef.get(), null);
+        int size = stateTypeCache.size();
+        Assert.assertNotNull("Class should not yet be garbage collected",
+                classRef.get());
+
+        for (int i = 0; i < 100; ++i) {
+            System.gc();
+            if (stateTypeCache.size() < size) {
+                break;
+            }
+            Thread.sleep(100);
+        }
+        Assert.assertTrue(stateTypeCache.size() < size);
+        Assert.assertNull("Class should be garbage collected", classRef.get());
+    }
+
+    private WeakReference<Class<?>> loadClass(String name)
+            throws ClassNotFoundException {
+        ClassLoader loader = new TestClassLoader();
+        Class<?> loaded = loader.loadClass(name);
+        return new WeakReference<>(loaded);
+    }
+
     private class ServerRpcLastMock
             implements Comparable<ServerRpcLastMock>, ClickRpc {
         private static final long serialVersionUID = -2822356895755286180L;
@@ -108,6 +153,26 @@ public class AbstractClientConnectorTest {
 
         }
 
+    }
+
+    private static class TestClassLoader extends ClassLoader {
+
+        @Override
+        public Class<?> loadClass(String name) throws ClassNotFoundException {
+            if (!name.startsWith("com.vaadin.")) {
+                return super.loadClass(name);
+            }
+            String path = name.replace('.', '/')
+                    .concat(".class");
+            URL resource = Thread.currentThread().getContextClassLoader()
+                    .getResource(path);
+            try (InputStream stream = resource.openStream()) {
+                byte[] bytes = IOUtils.toByteArray(stream);
+                return defineClass(name, bytes, 0, bytes.length);
+            } catch (IOException e) {
+                throw new ClassNotFoundException();
+            }
+        }
     }
 
 }

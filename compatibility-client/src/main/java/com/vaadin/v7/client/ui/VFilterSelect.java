@@ -227,6 +227,18 @@ public class VFilterSelect extends Composite
             }
             return true;
         }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + VFilterSelect.this.hashCode();
+            result = prime * result + ((key == null) ? 0 : key.hashCode());
+            result = prime * result + ((caption == null) ? 0 : caption.hashCode());
+            result = prime * result + ((untranslatedIconUri == null) ? 0 : untranslatedIconUri.hashCode());
+            result = prime * result + ((style == null) ? 0 : style.hashCode());
+            return result;
+        }
     }
 
     /** An inner class that handles all logic related to mouse wheel. */
@@ -643,20 +655,6 @@ public class VFilterSelect extends Composite
                     pagesToScroll++;
                     cancel();
                     schedule(200);
-                }
-            }
-        }
-
-        private void scroll(double deltaY) {
-            boolean scrollActive = menu.isScrollActive();
-
-            debug("VFS.SP: scroll() scrollActive: " + scrollActive);
-
-            if (!scrollActive) {
-                if (deltaY > 0d) {
-                    lazyPageScroller.scrollDown();
-                } else {
-                    lazyPageScroller.scrollUp();
                 }
             }
         }
@@ -1327,7 +1325,7 @@ public class VFilterSelect extends Composite
             String height = getElement().getStyle().getHeight();
             String preferredHeight = getPreferredHeight(pageLength);
 
-            return !(height == null || height.length() == 0
+            return !(height == null || height.isEmpty()
                     || height.equals(preferredHeight));
         }
 
@@ -1904,7 +1902,7 @@ public class VFilterSelect extends Composite
      */
     public void setSelectedItemIcon(String iconUri) {
 
-        if (iconUri == null || iconUri.length() == 0) {
+        if (iconUri == null || iconUri.isEmpty()) {
             if (selectedItemIcon != null) {
                 panel.remove(selectedItemIcon);
                 selectedItemIcon = null;
@@ -2290,7 +2288,7 @@ public class VFilterSelect extends Composite
         for (FilterSelectSuggestion suggestion : currentSuggestions) {
             // Collect captions so we can calculate minimum width for
             // textarea
-            if (captions.length() > 0) {
+            if (!captions.isEmpty()) {
                 captions += "|";
             }
             captions += WidgetUtil
@@ -2537,7 +2535,7 @@ public class VFilterSelect extends Composite
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (width.length() != 0) {
+        if (!width.isEmpty()) {
             tb.setWidth("100%");
         }
     }

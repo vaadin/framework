@@ -17,8 +17,8 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.event.dnd.DropListener;
-import com.vaadin.event.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
+import com.vaadin.ui.dnd.event.DropListener;
 
 /**
  * Vaadin Widgets that want to receive something via drag and drop implement
@@ -55,8 +55,8 @@ public interface VDropHandler {
      * drop was performed on this Paintable.
      *
      *
-     * @param dragEvent
-     *            DragEvent which contains the transferable and other
+     * @param drag
+     *            VDragEvent which contains the transferable and other
      *            information for the operation
      *
      * @return true if the Tranferrable of this drag event needs to be sent to

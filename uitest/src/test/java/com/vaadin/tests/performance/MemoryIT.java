@@ -34,19 +34,26 @@ public class MemoryIT extends SingleBrowserTest {
 
     @Test
     public void measureMemory() {
-        performTest(GridMemory.PATH, 1, "grid-v8-one-item-");
-        performTest(CompatibilityGridMemory.PATH, 1, "grid-v7-one-item-");
+        performTest(GridMemory.PATH + "?items=1", "grid-v8-one-item-");
+        performTest(CompatibilityGridMemory.PATH + "?items=1",
+                "grid-v7-one-item-");
 
-        performTest(GridMemory.PATH, 100000, "grid-v8-100thousand-items-");
-        performTest(CompatibilityGridMemory.PATH, 100000,
+        performTest(GridMemory.PATH + "?items=1", "grid-v8-100thousand-items-");
+        performTest(CompatibilityGridMemory.PATH + "?items=100000",
                 "grid-v7-100thousand-items-");
 
-        performTest(TreeGridMemory.PATH, 1, "tree-grid-one-item-");
-        performTest(TreeTableMemory.PATH, 1, "tree-table-one-item-");
+        performTest(TreeGridMemory.PATH + "?items=1", "tree-grid-one-item-");
+        performTest(TreeTableMemory.PATH + "?items=1", "tree-table-one-item-");
 
-        performTest(TreeGridMemory.PATH, 100000,
+
+        performTest(TreeGridMemory.PATH + "?items=100&initiallyExpanded",
+                "tree-grid-100-items-initially-expanded-");
+        performTest(TreeTableMemory.PATH + "?items=100&initiallyExpanded",
+                "tree-table-100-items-initially-expanded-");
+
+        performTest(TreeGridMemory.PATH + "?items=100000",
                 "tree-grid-100thousand-items-");
-        performTest(TreeTableMemory.PATH, 100000,
+        performTest(TreeTableMemory.PATH + "?items=100000",
                 "tree-table-100thousand-items-");
     }
 
@@ -54,14 +61,13 @@ public class MemoryIT extends SingleBrowserTest {
     protected void closeApplication() {
     }
 
-    private void performTest(String path, int itemsCount,
-            String teamcityStatPrefix) {
+    private void performTest(String path, String teamcityStatPrefix) {
         double lastResult = 0;
         int stableNumber = 0;
         List<Long> renderingTimes = new ArrayList<>();
         List<Long> requestTimes = new ArrayList<>();
         for (int i = 0; i < MAX_ITERATIONS; i++) {
-            openUI(path, itemsCount);
+            openUI(path);
             renderingTimes.add(testBench().totalTimeSpentRendering());
             requestTimes.add(testBench().totalTimeSpentServicingRequests());
             long currentResult = Long
@@ -104,10 +110,10 @@ public class MemoryIT extends SingleBrowserTest {
         return delta < deltaLimit;
     }
 
-    private void openUI(String path, int itemsNumber) {
-        getDriver().get(StringUtils.strip(getBaseURL(), "/") + path + "?items="
-                + itemsNumber);
+    private void openUI(String path) {
+        getDriver().get(StringUtils.strip(getBaseURL(), "/") + path);
         Assert.assertTrue(isElementPresent(By.className("v-grid"))
+                || isElementPresent(By.className("v-treegrid"))
                 || isElementPresent(By.className("v-table")));
     }
 

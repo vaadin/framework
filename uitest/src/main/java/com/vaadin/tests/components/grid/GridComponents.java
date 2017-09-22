@@ -24,9 +24,12 @@ public class GridComponents extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Grid<String> grid = new Grid<String>();
-        grid.addColumn(string -> new Label(string), new ComponentRenderer());
-        grid.addColumn(string -> {
+        Grid<String> grid = new Grid<>();
+        grid.addColumn(string -> new Label(string), new ComponentRenderer())
+                .setId("label").setCaption("Column 0");
+        grid.getDefaultHeaderRow().getCell("label")
+                .setComponent(new Label("Label"));
+        grid.addComponentColumn(string -> {
             if (textFields.containsKey(string)) {
                 log("Reusing old text field for: " + string);
                 return textFields.get(string);
@@ -34,6 +37,7 @@ public class GridComponents extends AbstractTestUIWithLog {
 
             TextField textField = new TextField();
             textField.setValue(string);
+            textField.setWidth("100%");
             // Make sure all changes are sent immediately
             textField.setValueChangeMode(ValueChangeMode.EAGER);
             textField.addValueChangeListener(e -> {
@@ -41,15 +45,23 @@ public class GridComponents extends AbstractTestUIWithLog {
                 textFields.put(string, textField);
             });
             return textField;
-        }, new ComponentRenderer());
+        }).setId("textField").setCaption("TextField");
         grid.addColumn(string -> {
+            if (string.contains("30")) {
+                return null;
+            }
             Button button = new Button("Click Me!",
                     e -> Notification.show(
                             "Clicked button on row for: " + string,
                             Type.WARNING_MESSAGE));
             button.setId(string.replace(' ', '_').toLowerCase());
             return button;
-        }, new ComponentRenderer());
+        }, new ComponentRenderer()).setId("button").setCaption("Button");
+        // make sure the buttons and focus outlines fit completely in a row
+        grid.setRowHeight(40);
+
+        grid.getDefaultHeaderRow().join("textField", "button")
+                .setText("Other Components");
 
         addComponent(grid);
         grid.setSizeFull();

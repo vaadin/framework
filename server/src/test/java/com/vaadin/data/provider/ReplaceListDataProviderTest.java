@@ -45,5 +45,4 @@ public class ReplaceListDataProviderTest {
         Assert.assertTrue("Old test object should be stale",
                 dataProvider.isStale(TEST_OBJECT));
     }
-
 }

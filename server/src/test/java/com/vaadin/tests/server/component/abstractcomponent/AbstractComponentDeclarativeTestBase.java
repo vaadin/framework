@@ -212,7 +212,7 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
     }
 
     @Test
-    public void sizeUnderfinedDeserialization()
+    public void sizeUndefinedDeserialization()
             throws InstantiationException, IllegalAccessException {
         String design = String.format("<%s/>", getComponentTag());
 
@@ -237,7 +237,7 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
     }
 
     @Test
-    public void widthUnderfinedDeserialization()
+    public void widthUndefinedDeserialization()
             throws InstantiationException, IllegalAccessException {
         String design = String.format("<%s/>", getComponentTag());
 

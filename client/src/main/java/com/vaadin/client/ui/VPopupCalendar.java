@@ -24,7 +24,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 /**
  * Represents a date selection component with a text field and a popup date
  * selector.
- * 
+ *
  * @author Vaadin Ltd
  *
  */
@@ -112,6 +112,11 @@ public class VPopupCalendar
             format = format.replaceAll("M", "");
         }
         return super.cleanFormat(format);
+    }
+
+    @Override
+    protected boolean supportsTime() {
+        return false;
     }
 
 }

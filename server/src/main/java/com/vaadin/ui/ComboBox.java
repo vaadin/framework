@@ -29,6 +29,7 @@ import org.jsoup.nodes.Element;
 
 import com.vaadin.data.HasFilterableDataProvider;
 import com.vaadin.data.HasValue;
+import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataKeyMapper;
@@ -56,7 +57,6 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
 
-import elemental.json.Json;
 import elemental.json.JsonObject;
 
 /**
@@ -155,7 +155,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         public void createNewItem(String itemValue) {
             // New option entered
             if (getNewItemHandler() != null && itemValue != null
-                    && itemValue.length() > 0) {
+                    && !itemValue.isEmpty()) {
                 getNewItemHandler().accept(itemValue);
             }
         }
@@ -188,8 +188,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     public ComboBox() {
         super(new DataCommunicator<T>() {
             @Override
-            protected DataKeyMapper<T> createKeyMapper() {
-                return new KeyMapper<T>() {
+            protected DataKeyMapper<T> createKeyMapper(
+                    ValueProvider<T, Object> identifierGetter) {
+                return new KeyMapper<T>(identifierGetter) {
                     @Override
                     public void remove(T removeobj) {
                         // never remove keys from ComboBox to support selection
@@ -828,23 +829,6 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 q -> fetchItems.fetchItems(q.getFilter().orElse(""),
                         q.getOffset(), q.getLimit()),
                 q -> sizeCallback.applyAsInt(q.getFilter().orElse(""))));
-    }
-
-    @Override
-    protected void setSelectedFromClient(String key) {
-        super.setSelectedFromClient(key);
-
-        /*
-         * The client side for combo box always expects a state change for
-         * selectedItemKey after it has sent a selection change. This means that
-         * we must store a value in the diffstate that guarantees that a new
-         * value will be sent, regardless of what the value actually is at the
-         * time when changes are sent.
-         *
-         * Keys are always strings (or null), so using a non-string type will
-         * always trigger a diff mismatch and a resend.
-         */
-        updateDiffstate("selectedItemKey", Json.create(0));
     }
 
     /**

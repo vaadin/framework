@@ -35,7 +35,7 @@ public class MyPickerWidget extends ComplexPanel {
     }
 
     public void setButtonText(String buttonText, boolean adjustSpace) {
-        if (buttonText == null || buttonText.length() == 0) {
+        if (buttonText == null || buttonText.isEmpty()) {
             buttonText = "...";
         }
         button.setText(buttonText);

@@ -26,8 +26,8 @@ public class AbstractComponentElement extends AbstractElement {
     /**
      * Returns the caption of the Component element
      *
-     * @since
-     * @return
+     * @since 8.0
+     * @return component caption
      */
     public String getCaption() {
         final String GWT_ID_ATTRIBUTE = "aria-labelledby";
@@ -36,7 +36,7 @@ public class AbstractComponentElement extends AbstractElement {
         captionId = getAttribute(GWT_ID_ATTRIBUTE);
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
-        if (captionId == null || captionId.equals("")) {
+        if (captionId == null || captionId.isEmpty()) {
             WebElement elem = findElement(
                     By.xpath(".//*[@" + GWT_ID_ATTRIBUTE + "]"));
             captionId = elem.getAttribute(GWT_ID_ATTRIBUTE);

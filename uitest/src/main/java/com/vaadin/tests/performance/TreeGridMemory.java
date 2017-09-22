@@ -1,13 +1,15 @@
 package com.vaadin.tests.performance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.HierarchyData;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
@@ -21,6 +23,16 @@ public class TreeGridMemory extends AbstractBeansMemoryTest<TreeGrid<Person>> {
             + "*", name = "TreeGridServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = TreeGridMemory.class, productionMode = false)
     public static class Servlet extends VaadinServlet {
+    }
+
+    private boolean initiallyExpanded = false;
+
+    @Override
+    protected void init(VaadinRequest request) {
+        if (request.getParameter("initiallyExpanded") != null) {
+            initiallyExpanded = true;
+        }
+        super.init(request);
     }
 
     @Override
@@ -42,21 +54,26 @@ public class TreeGridMemory extends AbstractBeansMemoryTest<TreeGrid<Person>> {
     @Override
     protected void setInMemoryContainer(TreeGrid<Person> treeGrid,
             List<Person> data) {
-        HierarchyData<Person> hierarchyData = new HierarchyData<>();
-        if (data.size() % 2 == 0) {
+        TreeData<Person> treeData = new TreeData<>();
+        treeGrid.setDataProvider(
+                new TreeDataProvider<>(treeData));
+        List<Person> toExpand = new ArrayList<>();
+        if (data.size() != 0 && data.size() % 2 == 0) {
             // treat list as if it were a balanced binary tree
-            hierarchyData.addItem(null, data.get(0));
+            treeData.addItem(null, data.get(0));
             int n = 0;
             while (2 * n + 2 < data.size()) {
-                hierarchyData.addItems(data.get(n),
+                treeData.addItems(data.get(n),
                         data.subList(2 * n + 1, 2 * n + 3));
+                toExpand.add(data.get(n));
                 n++;
             }
         } else {
-            hierarchyData.addItems(null, data);
+            treeData.addItems(null, data);
         }
-        treeGrid.setDataProvider(
-                new InMemoryHierarchicalDataProvider<>(hierarchyData));
+        if (initiallyExpanded) {
+            treeGrid.expand(toExpand);
+        }
     }
 
     @Override

@@ -73,7 +73,6 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.tabsheet.TabState;
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;
@@ -340,8 +339,8 @@ public class VTabsheet extends VTabsheetBase
             if (tabState.description != null
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
-                        ContentMode.PREFORMATTED, tabState.componentError,
-                        this));
+                        tabState.descriptionContentMode,
+                        tabState.componentError, this));
             } else {
                 setTooltipInfo(null);
             }
@@ -810,8 +809,8 @@ public class VTabsheet extends VTabsheetBase
     /**
      * Load the content of a tab of the provided index.
      *
-     * @param index
-     *            of the tab to load
+     * @param tabIndex
+     *            The index of the tab to load
      *
      * @return true if the specified sheet gets loaded, otherwise false.
      */
@@ -1342,7 +1341,7 @@ public class VTabsheet extends VTabsheetBase
             scroller.getStyle().setDisplay(Display.NONE);
         }
 
-        if (BrowserInfo.get().isSafari()) {
+        if (BrowserInfo.get().isSafariOrIOS()) {
             /*
              * another hack for webkits. tabscroller sometimes drops without
              * "shaking it" reproducable in

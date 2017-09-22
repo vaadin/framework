@@ -272,8 +272,4 @@ public abstract class AbstractProperty<T> implements Property<T>,
 
         return Collections.EMPTY_LIST;
     }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(AbstractProperty.class.getName());
-    }
 }

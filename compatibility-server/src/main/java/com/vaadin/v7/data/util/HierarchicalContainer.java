@@ -36,8 +36,9 @@ import com.vaadin.v7.data.Item;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
- * version of Vaadin Framework 8.
+ * @deprecated Use an appropriate implementation of
+ *             {@code HierarchicalDataProvider} such as {@code TreeDataProvider}
+ *             or {@code AbstractBackEndHierarchicalDataProvider}.
  */
 @Deprecated
 @SuppressWarnings("serial")

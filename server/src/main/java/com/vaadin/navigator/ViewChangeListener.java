@@ -18,6 +18,7 @@ package com.vaadin.navigator;
 
 import java.io.Serializable;
 import java.util.EventObject;
+import java.util.Map;
 
 /**
  * Interface for listening to View changes before and after they occur.
@@ -103,6 +104,33 @@ public interface ViewChangeListener extends Serializable {
          */
         public String getParameters() {
             return parameters;
+        }
+
+        /**
+         * Returns the parameters for the view being activated parsed to a map,
+         * using {@literal &} as the parameter separator character.
+         *
+         * @return navigation parameters (potentially bookmarkable) for the new
+         *         view
+         * @since 8.1
+         */
+        public Map<String, String> getParameterMap() {
+            return getParameterMap("&");
+        }
+
+        /**
+         * Returns the parameters for the view being activated parsed to a map,
+         * using the given string as the parameter separator character.
+         *
+         * @param separator
+         *            the parameter separator string to use
+         * @return navigation parameters (potentially bookmarkable) for the new
+         *         view
+         * @since 8.1
+         */
+        public Map<String, String> getParameterMap(String separator) {
+            return getNavigator().parseParameterStringToMap(getParameters(),
+                    separator);
         }
     }
 

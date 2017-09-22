@@ -7,40 +7,40 @@ layout: page
 [[datamodel.hierarchical]]
 = Hierarchical Data
 
-IMPORTANT: The [interfacename]#HierarchicalDataProvider# is currently being developed and only available in the Framework 8.1 prerelease versions, starting from 8.1.0.alpha1.
-
-The [classname]#TreeGrid# component allows you to show data with hierarchical relationships between items.
+The [classname]#Tree# and the [classname]#TreeGrid# components allow you to show data with hierarchical relationships between items.
 That data can be populated by on-demand from a back end by implementing the [interfacename]#HierarchicalDataProvider# interface. If you have the data available in-memory on the server,
-you use the collection style API of [classname]#HierarchyData# and then pass it to a [classname]#InMemoryHierarchicalDataProvider#. This chapter introduces the hierarchical data providers and how they work. For using them with the [classname]#TreeGrid# component you should see <<dummy/../../../framework/components/components-grid.asciidoc#components.treegrid,"its documentation">>.
+you use the collection style API of [classname]#TreeData# and then pass it to a [classname]#TreeDataProvider#. This chapter introduces the hierarchical data providers and how they work.
+For using them with the components you should see <<dummy/../../../framework/components/components-tree.asciidoc#components.tree,"Tree">>
+and <<dummy/../../../framework/components/components-treegrid.asciidoc#components.treegrid,"TreeGrid">> documentation.
 
 == In-memory Hierarchical Data
 
-When the hierarchical data is available in the server side memory, you can use it to populate the [classname]#HierarchyData# that is the source of data for an [classname]#InMemoryHierarchicalDataProvider#. It contains collection style API to construct the hierarchical structure of your data, and also verifies that the hierarchy structure is valid.
+When the hierarchical data is available in the server side memory, you can use it to populate the [classname]#TreeData# that is the source of data for an [classname]#TreeDataProvider#. It contains collection style API to construct the hierarchical structure of your data, and also verifies that the hierarchy structure is valid.
 
-The following example populates a [classname]#HierarchyData# with two levels of data:
+The following example populates a [classname]#TreeData# with two levels of data:
 
 [source, java]
 ----
 Collection<Project> projects = service.getProjects();
 
-HierarchyData<Project> data = new HierarchyData<>();
+TreeData<Project> data = new TreeData<>();
 // add root level items
 data.addItems(null, projects);
 
 // add children for the root level items
-projects.forEach(project -> data.addItems(project, project.getChildren());
+projects.forEach(project -> data.addItems(project, project.getChildren()));
 
 // construct the data provider for the hierarchical data we've built
-InMemoryHierarchicalDataProvider<Project> dataProvider = new InMemoryHierarchicalDataProvider<>(data);
+TreeDataProvider<Project> dataProvider = new TreeDataProvider<>(data);
 ----
 
 === Updating data
 
-When adding or removing items from the [classname]#HierarchyData#, you need to always notify the data provider that it should refresh its data. This can be done with the [methodname]#refreshAll# method in the data provider.
+When adding or removing items from the [classname]#TreeData#, you need to always notify the data provider that it should refresh its data. This can be done with the [methodname]#refreshAll# method in the data provider.
 
 [source, java]
 ----
-HierarchyData<Project> data = dataProvider.getHierarchyData();
+TreeData<Project> data = dataProvider.getTreeData();
 data.addItem(null, newProject);
 data.addItems(newProject, newProject.getChildren());
 
@@ -53,14 +53,14 @@ dataProvider.refreshAll();
 
 === Sorting and Filtering
 
-For [classname]#InMemoryHierarchicalDataProvider#, both the sorting and filtering API is the same as in [classname]ListDataProvider#. Sorting and filtering are applied separately for each hierarchy level, meaning e.g. that for a node that has not passed the filter there are no children shown.
+For [classname]#TreeDataProvider#, both the sorting and filtering API is the same as in [classname]#ListDataProvider#. Sorting and filtering are applied separately for each hierarchy level, meaning e.g. that for a node that has not passed the filter there are no children shown.
 
 [source, java]
 ----
 // setting sorting or filtering automatically refreshes the data
 dataProvider.setSortComparator((projectA, projectB) ->
       projectA.getHours().compareTo(projectB.getHours()));
-      
+
 dataProvider.setFilter(project -> project.getHours() > 100);
 ----
 
@@ -70,7 +70,7 @@ The lazy loading hierarchical data, same concepts apply as with the non-hierarch
 
 To load hierarchical data on-demand from your back end, you should extend the [classname]#AbstractHierarchicalDataProvider# class. Then you just have to implement the following three methods:
 
-* `boolean hasChildren(T item)` 
+* `boolean hasChildren(T item)`
 ** This tells the data provider whether the given item has children and should be expandable. Note that this method is called frequently and should not do any costly operations.
 
 * `int getChildCount(HierarchicalQuery<T, F> query)`
@@ -85,14 +85,15 @@ To load hierarchical data on-demand from your back end, you should extend the [c
 ** The parent node is available in the [classname]#HierarchicalQuery# via the [methodname]#getParent# method, which returns `null` for the root level.
 ** This method is called whenever the data should be displayed in the UI
 
-Note that the [classname]#HierarchicalQuery# query object contains the relevant information regarding the sorting and filtering. 
+Note that the [classname]#HierarchicalQuery# query object contains the relevant information regarding the sorting and filtering.
 
 The following code snippet shows a simple example on how to building a lazy hierarchical data provider based on file system structure:
 
 [source, java]
 ----
-class FileSystemDataProvider
-      extends AbstractHierarchicalDataProvider<File, FilenameFilter> {
+class FileSystemDataProvider extends
+      AbstractBackEndHierarchicalDataProvider<File, FilenameFilter> {
+
   private final File root;
 
   public FileSystemDataProvider(File root) {
@@ -106,7 +107,7 @@ class FileSystemDataProvider
   }
 
   @Override
-  public Stream<File> fetchChildren(
+  public Stream<File> fetchChildrenFromBackEnd(
       HierarchicalQuery<File, FilenameFilter> query) {
     final File parent = query.getParentOptional().orElse(root);
     return query.getFilter()
@@ -118,11 +119,6 @@ class FileSystemDataProvider
   @Override
   public boolean hasChildren(File item) {
     return item.list() != null && item.list().length > 0;
-  }
-
-  @Override
-  public boolean isInMemory() {
-    return false;
   }
 }
 ----

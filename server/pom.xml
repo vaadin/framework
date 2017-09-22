@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-server</artifactId>
     <name>vaadin-server</name>
@@ -18,6 +18,14 @@
         <!-- API DEPENDENCIES -->
 
         <!-- Liferay Portal Service -->
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>com.liferay.portal.kernel</artifactId>
+            <version>${liferay.portal-kernel.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Liferay 6 -->
         <dependency>
             <groupId>com.liferay.portal</groupId>
             <artifactId>portal-service</artifactId>
@@ -80,9 +88,20 @@
 
         <!-- Small reflection library -->
         <dependency>
-            <groupId>com.googlecode.gentyref</groupId>
+            <groupId>com.vaadin.external</groupId>
             <artifactId>gentyref</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.0.vaadin1</version>
+        </dependency>
+
+        <!-- OSGi API -->
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
         </dependency>
 
         <!-- TESTING DEPENDENCIES -->
@@ -118,7 +137,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>copy-font-icons</id>
@@ -141,7 +159,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -225,46 +242,10 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-RequiredExecutionEnvironment>${osgi.execution.environment}</Bundle-RequiredExecutionEnvironment>
-                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-                        <Export-Package>VAADIN;version="${osgi.bundle.version}",com.vaadin.*;version="${osgi.bundle.version}"</Export-Package>
-                        <!-- Note that Liferay 6 does not use OSGi, and the dependency is optional for non-Liferay deployments -->
-                        <Import-Package>javax.servlet;version="${osgi.javax.servlet.version}",
-                            javax.servlet.http;version="${osgi.javax.servlet.version}",
-                            javax.validation;version="${javax.validation.version}";resolution:=optional,
-                            org.jsoup;version="${jsoup.version}",
-                            org.jsoup.parser;version="${jsoup.version}",
-                            org.jsoup.nodes;version="${jsoup.version}",
-                            org.jsoup.helper;version="${jsoup.version}",
-                            org.jsoup.safety;version="${jsoup.version}",
-                            org.jsoup.select;version="${jsoup.version}",
-                            javax.portlet;version="[${javax.portlet.version},3)";resolution:=optional,
-                            javax.portlet.filter;version="[${javax.portlet.version},3)";resolution:=optional,
-                            com.liferay.portal.kernel.util;version="[7,8)";resolution:=optional</Import-Package>
-                        <Require-Bundle>
-                            com.vaadin.shared;bundle-version="${osgi.bundle.version}",
-                            com.vaadin.push;bundle-version="${osgi.bundle.version}";resolution:=optional,
-                            com.vaadin.sass-compiler;bundle-version="${vaadin.sass.version}";resolution:=optional</Require-Bundle>
-                    </instructions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -277,7 +258,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-                <!-- Package src/test into a jar so that compatbility-server 
+                <!-- Package src/test into a jar so that compatbility-server
                     can use the same test classes, e.g. test beans -->
                 <executions>
                     <execution>
@@ -293,7 +274,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
-        
+
         <pluginManagement>
             <plugins>
                 <!-- Make Eclipse add the source folder -->
@@ -334,5 +315,5 @@
             </plugins>
         </pluginManagement>
     </build>
-    
+
 </project>

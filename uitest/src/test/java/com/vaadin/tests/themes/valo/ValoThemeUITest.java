@@ -26,9 +26,9 @@ import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.CssLayoutElement;
 import com.vaadin.testbench.elements.LabelElement;
-import com.vaadin.testbench.elements.TreeElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.v7.testbench.elements.TreeElement;
 
 public class ValoThemeUITest extends MultiBrowserTest {
 

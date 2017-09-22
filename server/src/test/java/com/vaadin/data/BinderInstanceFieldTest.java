@@ -73,6 +73,11 @@ public class BinderInstanceFieldTest {
         private IntegerTextField firstName;
     }
 
+    public static class BindOneFieldRequiresConverter extends FormLayout {
+        private TextField firstName;
+        private TextField age;
+    }
+
     public static class BindGeneric<T> extends FormLayout {
         private CustomField<T> firstName;
     }
@@ -391,8 +396,26 @@ public class BinderInstanceFieldTest {
         Assert.assertFalse(binder.validate().isOk());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void bindInstanceFields_explicitelyBoundFieldAndNotBoundField_throwNoBoundFields() {
+    @Test
+    public void bindInstanceFields_preconfiguredFieldNotBoundToPropertyPreserved() {
+        BindOneFieldRequiresConverter form = new BindOneFieldRequiresConverter();
+        form.age = new TextField();
+        form.firstName = new TextField();
+        Binder<Person> binder = new Binder<>(Person.class);
+        binder.forField(form.age)
+                .withConverter(str -> Integer.parseInt(str) / 2,
+                        integer -> Integer.toString(integer * 2))
+                .bind(Person::getAge, Person::setAge);
+        binder.bindInstanceFields(form);
+        Person person = new Person();
+        person.setFirstName("first");
+        person.setAge(45);
+        binder.setBean(person);
+        Assert.assertEquals("90", form.age.getValue());
+    }
+
+    @Test
+    public void bindInstanceFields_explicitelyBoundFieldAndNotBoundField() {
         BindOnlyOneField form = new BindOnlyOneField();
         Binder<Person> binder = new Binder<>(Person.class);
 
@@ -401,8 +424,8 @@ public class BinderInstanceFieldTest {
         binder.bindInstanceFields(form);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void bindInstanceFields_tentativelyBoundFieldAndNotBoundField_throwNoBoundFields() {
+    @Test
+    public void bindInstanceFields_tentativelyBoundFieldAndNotBoundField() {
         BindOnlyOneField form = new BindOnlyOneField();
         Binder<Person> binder = new Binder<>(Person.class);
 
@@ -413,8 +436,9 @@ public class BinderInstanceFieldTest {
         // manually
         binder.forMemberField(field);
 
-        // bindInstance expects at least one auto configured field (there is no
-        // such, only incomplete one) and fails
+        // bindInstanceFields will not complain even though it can't bind
+        // anything as there is a binding in progress (an exception will be
+        // thrown later if the binding is not completed)
         binder.bindInstanceFields(form);
     }
 }

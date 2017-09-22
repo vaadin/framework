@@ -35,6 +35,8 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
         $(ButtonElement.class).caption("Open dialog window").first().click();
 
         WindowElement window = $(WindowElement.class).first();
+        // for PhantomJS to have the focus in the right place
+        window.click();
         window.$(TextFieldElement.class).first().sendKeys(Keys.ESCAPE);
 
         // Window should have been closed

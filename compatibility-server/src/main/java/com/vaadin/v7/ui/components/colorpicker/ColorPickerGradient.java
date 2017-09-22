@@ -37,9 +37,9 @@ public class ColorPickerGradient extends AbstractComponent implements
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }

@@ -1158,6 +1158,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
             bundles.add(bundle);
         }
 
+        Collection<JClassType> none = connectorsByLoadStyle.get(LoadStyle.NONE);
+        for (JClassType type : none) {
+            logger.log(Type.TRACE,
+                    "Ignoring " + type.getName() + " with LoadStyle.NONE");
+        }
+
         return bundles;
     }
 

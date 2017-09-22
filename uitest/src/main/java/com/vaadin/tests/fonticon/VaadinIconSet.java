@@ -140,6 +140,7 @@ public class VaadinIconSet extends AbstractTestUI {
                 ((ComboBox) sel).setItemIconGenerator(item -> icon);
             }
             gl.addComponent(sel);
+            sel.setWidth("100%");
         }
 
         // MenuBar, caption + item + sub-item icons

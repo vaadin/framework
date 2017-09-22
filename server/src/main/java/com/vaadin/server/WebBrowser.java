@@ -141,7 +141,9 @@ public class WebBrowser implements Serializable {
     }
 
     /**
-     * Tests whether the user is using Safari.
+     * Tests whether the user is using Safari. Note that Chrome on iOS is not
+     * detected as Safari but as Chrome although the underlying browser engine
+     * is the same.
      *
      * @return true if the user is using Safari, false if the user is not using
      *         Safari or if no information on the browser is present
@@ -325,6 +327,17 @@ public class WebBrowser implements Serializable {
      */
     public boolean isIPad() {
         return browserDetails.isIPad();
+    }
+
+    /**
+     * Tests if the browser is run on ChromeOS (e.g. a Chromebook).
+     *
+     * @return true if run on ChromeOS false if the user is not using ChromeOS
+     *         or if no information on the browser is present
+     * @since 8.1.1
+     */
+    public boolean isChromeOS() {
+        return browserDetails.isChromeOS();
     }
 
     /**
@@ -538,4 +551,19 @@ public class WebBrowser implements Serializable {
         return browserDetails.isTooOldToFunctionProperly();
     }
 
+    /**
+     * Checks if the browser supports ECMAScript 6, based on the user agent.
+     *
+     * @return <code>true</code> if the browser supports ES6, <code>false</code>
+     *         otherwise.
+     * @since 8.1
+     */
+    public boolean isEs6Supported() {
+        if (browserDetails == null) {
+            // Don't know, so assume no
+            return false;
+        }
+        return browserDetails.isEs6Supported();
+
+    }
 }

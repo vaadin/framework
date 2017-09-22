@@ -58,13 +58,8 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private final static FileFilter DIRECTORIES_ONLY = (File f) -> {
-        if (f.exists() && f.isDirectory()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
+    private static final FileFilter DIRECTORIES_ONLY = (File f) ->
+            f.exists() && f.isDirectory();
 
     /**
      * Contains information about widgetsets and themes found on the classpath
@@ -306,7 +301,7 @@ public class ClassPathExplorer {
      *
      * @return filtered list of class path entries
      */
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         // try to keep the order of the classpath
         List<String> locations = new ArrayList<>();
 
@@ -344,7 +339,7 @@ public class ClassPathExplorer {
      *            string
      * @return map of classpath locations, see {@link #classpathLocations}
      */
-    private final static Map<String, URL> getClasspathLocations(
+    private static final Map<String, URL> getClasspathLocations(
             List<String> rawClasspathEntries) {
         long start = System.currentTimeMillis();
         // try to keep the order of the classpath
@@ -433,7 +428,7 @@ public class ClassPathExplorer {
      * @param file
      * @param locations
      */
-    private final static void include(String name, File file,
+    private static final void include(String name, File file,
             Map<String, URL> locations) {
         if (!file.exists()) {
             return;

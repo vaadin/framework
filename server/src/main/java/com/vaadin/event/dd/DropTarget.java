@@ -17,8 +17,8 @@ package com.vaadin.event.dd;
 
 import java.util.Map;
 
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * DropTarget is an interface for components supporting drop operations. A

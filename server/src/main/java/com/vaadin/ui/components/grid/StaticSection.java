@@ -158,6 +158,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
                         iterator.remove();
                     }
                 }
+                cell.detach();
             }
         }
 
@@ -797,4 +798,28 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         return Collections.unmodifiableList(rows);
     }
 
+    /**
+     * Sets the visibility of this section.
+     * 
+     * @param visible
+     *            {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public void setVisible(boolean visible) {
+        if (getState(false).visible != visible) {
+            getState(true).visible = visible;
+        }
+    }
+
+    /**
+     * Gets the visibility of this section.
+     * 
+     * @return {@code true} if visible; {@code false} if not
+     * 
+     * @since 8.1.1
+     */
+    public boolean isVisible() {
+        return getState(false).visible;
+    }
 }

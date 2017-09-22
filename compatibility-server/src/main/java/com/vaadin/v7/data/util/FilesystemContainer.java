@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.Resource;
 import com.vaadin.util.FileTypeResolver;
 import com.vaadin.v7.data.Container;
@@ -43,8 +42,9 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no replacement available yet. A new hierarchical data API is planned in an upcoming
- * version of Vaadin Framework 8.
+ * @deprecated No direct replacement - use a subclass of
+ *             {@code AbstractBackEndHierarchicalDataProvider}, such as the
+ *             example in Vaadin Sampler for File System Explorer.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -75,13 +75,13 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public static Collection<String> FILE_PROPERTIES;
 
-    private final static Method FILEITEM_LASTMODIFIED;
+    private static final Method FILEITEM_LASTMODIFIED;
 
-    private final static Method FILEITEM_NAME;
+    private static final Method FILEITEM_NAME;
 
-    private final static Method FILEITEM_ICON;
+    private static final Method FILEITEM_ICON;
 
-    private final static Method FILEITEM_SIZE;
+    private static final Method FILEITEM_SIZE;
 
     static {
 

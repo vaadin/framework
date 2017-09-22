@@ -19,8 +19,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  *
@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.dd.AcceptCriterion;
  */
 @Deprecated
 @AcceptCriterion(SourceIs.class)
-final public class VDragSourceIs extends VAcceptCriterion {
+public final class VDragSourceIs extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

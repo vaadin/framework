@@ -41,10 +41,10 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
         if (origRes != getWidget().getCurrentResolution()
                 || oldLocale != getWidget().getCurrentLocale()) {
             // force recreating format string
-            getWidget().formatStr = null;
+            getWidget().setFormatString(null);
         }
         if (uidl.hasAttribute("format")) {
-            getWidget().formatStr = uidl.getStringAttribute("format");
+            getWidget().setFormatString(uidl.getStringAttribute("format"));
         }
         if (uidl.hasAttribute("timeZoneJSON")) {
             getWidget().timeZoneJSON = uidl.getStringAttribute("timeZoneJSON");

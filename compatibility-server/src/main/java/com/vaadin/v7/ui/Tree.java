@@ -76,7 +76,7 @@ import com.vaadin.v7.shared.ui.tree.TreeState;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0. New hierarchical components are planned in an upcoming version of Vaadin Framework 8.
+ * @deprecated See {@code com.vaadin.ui.Tree}.
  */
 @SuppressWarnings({ "serial", "deprecation" })
 @Deprecated
@@ -295,7 +295,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return true iff the item is expanded.
+     * @return true if the item is expanded.
      */
     public boolean isExpanded(Object itemId) {
         return expanded.contains(itemId);
@@ -306,7 +306,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return True iff the expand operation succeeded
+     * @return True if the expand operation succeeded
      */
     public boolean expandItem(Object itemId) {
         boolean success = expandItem(itemId, true);
@@ -368,7 +368,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are expanded.
      *
      * @param startItemId
-     * @return True iff the expand operation succeeded
+     * @return True if the expand operation succeeded
      */
     public boolean expandItemsRecursively(Object startItemId) {
 
@@ -397,7 +397,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *
      * @param itemId
      *            the item id.
-     * @return True iff the collapse operation succeeded
+     * @return True if the collapse operation succeeded
      */
     public boolean collapseItem(Object itemId) {
 
@@ -421,7 +421,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * succeeds only if all expandable items are collapsed.
      *
      * @param startItemId
-     * @return True iff the collapse operation succeeded
+     * @return True if the collapse operation succeeded
      */
     public boolean collapseItemsRecursively(Object startItemId) {
 
@@ -723,10 +723,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (!iteratorStack.isEmpty()) {
                     target.endTag("node");
                 }
-            }
-
-            // Adds the item on current level
-            else {
+            } else {
+                // Adds the item on current level
                 final Object itemId = i.next();
 
                 // Starts the item / node
@@ -1309,10 +1307,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Removes used iterator from the stack
                 iteratorStack.pop();
-            }
-
-            // Adds the item on current level
-            else {
+            } else {
+                // Adds the item on current level
                 final Object itemId = i.next();
 
                 visible.add(itemId);
@@ -1636,7 +1632,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * during that drag and drop operation.
      */
     @Deprecated
-    public static abstract class TreeDropCriterion extends ServerSideCriterion {
+    public abstract static class TreeDropCriterion extends ServerSideCriterion {
 
         private Tree tree;
 

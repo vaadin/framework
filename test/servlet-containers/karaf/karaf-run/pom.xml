@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>vaadin-test-karaf</artifactId>
+        <groupId>com.vaadin</groupId>
+        <relativePath>..</relativePath>
+        <version>8.2-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>karaf-run</artifactId>
+    <name>Vaadin Karaf Test Runner</name>
+
+    <dependencies>
+        <!--Vaadin dependencies should not be in a classpath-->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-server</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-themes</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <async>true</async>
+                            <asyncDestroyOnShutdown>true</asyncDestroyOnShutdown>
+                            <commandlineArgs>-f karaf-run-pom.xml karaf:run</commandlineArgs>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-maven-plugin</artifactId>
+                <version>4.0.8</version>
+                <executions>
+                    <execution>
+                        <id>karaf-client-ctrl</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>client</goal>
+                        </goals>
+                        <configuration>
+                            <delay>5</delay>
+                            <attempts>150</attempts>
+                            <commands>
+                                <!--Scheduled shutdown in 15 minutes-->
+                                <command>shutdown -f +10</command>
+                                <command>feature:install http</command>
+                                <command>feature:install http-whiteboard</command>
+                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.8.3</command>
+                                <command>bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-shared/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-server/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}</command>
+                                <command>bundle:install -s mvn:com.vaadin/vaadin-themes/${vaadin.version}</command>
+                                <command>
+                                    <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
+                                <command>
+                                    <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle2/target/vaadin-karaf-bundle2-${project.version}.jar]]></command>
+                            </commands>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>karaf-client-shutdown</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>client</goal>
+                        </goals>
+                        <configuration>
+                            <delay>5</delay>
+                            <attempts>10</attempts>
+                            <commands>
+                                <command>system:shutdown -f</command>
+                            </commands>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.19.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <environmentVariables>
+                        <vaadin.version>${vaadin.version}</vaadin.version>
+                    </environmentVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

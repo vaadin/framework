@@ -59,12 +59,13 @@
 
         <p>
             Vaadin Framework @version@ is a
+<!--            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below. -->
 <!--            feature release that includes -->
-            pre-release for evaluating
-            a number of new features and bug fixes, as listed in the <a
+                pre-release for evaluating
+                a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
                 href="#changelog">change log</a> below.
-		The API in this alpha version is not considered final and will change based on your feedback.
+		The API in this alpha version is not considered final and may change based on your feedback.
 	</p>
 
         <!-- ================================================================ -->
@@ -82,28 +83,29 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Components In Grid</li>
-            <li>HTML5 Drag and Drop support</li>
-            <li>TreeGrid and HierarchicalDataProvider</li>
+            <li>Separate row heights for header, body and footer in Grid</li>
+            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
+            <li>Binder supports removing bindings</li>
         </ul>
 
         </p>
 
         <p>
-            For enhancements introduced in Vaadin Framework 8.0, see the <a
-                href="http://vaadin.com/download/release/8.0/8.0.0/release-notes.html">Release
-                Notes for Vaadin Framework 8.0.0</a>.
+            For enhancements introduced in Vaadin Framework 8.1, see the <a
+                href="http://vaadin.com/download/release/8.1/8.1.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.1.0</a>.
             For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
-        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version@</h2>
-        
-        <li>The <tt>TreeGrid</tt> component replaces both <tt>TreeTable</tt> and <tt>Tree</tt> component</li>
-        <li>The <tt>HierarchicalDataProvider</tt> interface replaces <tt>Container.Hierarchical</tt> and <<tt>InMemoryHierarchicalDataProvider</tt> replaces <tt>HierarchicalContainer</tt></li>
-        <li>The <tt>DragSourceExtension</tt> and <tt>DropTargetExtension</tt> extensions replace the old DnD features</li>
-        
-        <h2>For incompatible or behaviour-altering changes in 8.0, please see <a href="https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#incompatible">8.0 release notes</a></h2>
+        <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
+
+        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>        
+        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
+        <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
+        <li><tt>DataCommunicator</tt> method <tt>getDataProviderSize</tt> is now <tt>public</tt>, not <tt>protected</tt>.</li>
+
+        <h2>For incompatible or behaviour-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
@@ -112,6 +114,7 @@
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="https://github.com/vaadin/framework/issues/5170">#5170</a>)
             </li>
+            <li>Payload based drop criteria do not work on IE11 - use criteria scripts if IE11 support of drop validation is required</li>
             <li>Specifying layout sizes using <tt>em</tt> is currently discouraged, because it results in fractional
             components sizes in many cases, which might cause unwanted 1px gaps between components.
             </li>
@@ -123,7 +126,7 @@
                 <li>Push is currently not supported in portals (See <a
                     href="https://github.com/vaadin/framework/issues/3741">#3741</a>)
                 </li>
-                <li>>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
+                <li>Transport mode WEBSOCKET does not support invalidating the session on Tomcat 7,
                      nor setting cookies for the session. The new transport mode WEBSOCKET_XHR can be
                      used to bypass these limitations.
                      <br />
@@ -241,7 +244,10 @@
             vaadin-server, vaadin-shared etc. The package
             vaadin-compatibility-client-compiled contains the widgetset
             <tt>com.vaadin.v7.Vaadin7WidgetSet</tt> which can be used instead of
-            <tt>DefaultWidgetSet</tt>.
+            <tt>DefaultWidgetSet</tt>. Please note that the rename to com.vaadin.v7
+            has only been applied to classes that are only relevant for the
+            compatibility modules. Some classes have also been renamed while still
+            being part of the non-compatibility modules.
         </p>
         <p>
         All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
@@ -369,6 +375,7 @@
 
         <ul>
             <li>Liferay Portal 6.2</li>
+            <li>Liferay Portal 7.0</li>
         </ul>
 
         <p>
@@ -376,11 +383,11 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox (latest version, currently 48)</li>
-            <li>Mozilla Firefox ESR (latest version, currently 45 ESR)</li>
+            <li>Mozilla Firefox (latest version, currently 54)</li>
+            <li>Mozilla Firefox ESR (latest version, currently 52 ESR)</li>
             <li>Internet Explorer 11, Edge (latest version)</li>
             <li>Safari 9+</li>
-            <li>Google Chrome (latest version, currently 52)</li>
+            <li>Google Chrome (latest version, currently 59)</li>
         </ul>
 
         <p>

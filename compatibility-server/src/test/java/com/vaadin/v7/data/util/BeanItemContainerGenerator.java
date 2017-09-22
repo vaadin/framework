@@ -6,9 +6,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class BeanItemContainerGenerator {
 
     public static class PortableRandom {
-        private final static long multiplier = 0x5DEECE66DL;
-        private final static long addend = 0xBL;
-        private final static long mask = (1L << 48) - 1;
+        private static final long multiplier = 0x5DEECE66DL;
+        private static final long addend = 0xBL;
+        private static final long mask = (1L << 48) - 1;
         private AtomicLong seed;
 
         public PortableRandom(long seed) {

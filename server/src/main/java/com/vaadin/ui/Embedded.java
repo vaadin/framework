@@ -161,25 +161,25 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
             target.addAttribute("src", getSource());
         }
 
-        if (mimeType != null && !"".equals(mimeType)) {
+        if (mimeType != null && !mimeType.isEmpty()) {
             target.addAttribute("mimetype", mimeType);
         }
-        if (classId != null && !"".equals(classId)) {
+        if (classId != null && !classId.isEmpty()) {
             target.addAttribute("classid", classId);
         }
-        if (codebase != null && !"".equals(codebase)) {
+        if (codebase != null && !codebase.isEmpty()) {
             target.addAttribute("codebase", codebase);
         }
-        if (codetype != null && !"".equals(codetype)) {
+        if (codetype != null && !codetype.isEmpty()) {
             target.addAttribute("codetype", codetype);
         }
-        if (standby != null && !"".equals(standby)) {
+        if (standby != null && !standby.isEmpty()) {
             target.addAttribute("standby", standby);
         }
-        if (archive != null && !"".equals(archive)) {
+        if (archive != null && !archive.isEmpty()) {
             target.addAttribute("archive", archive);
         }
-        if (altText != null && !"".equals(altText)) {
+        if (altText != null && !altText.isEmpty()) {
             target.addAttribute(EmbeddedConstants.ALTERNATE_TEXT, altText);
         }
 

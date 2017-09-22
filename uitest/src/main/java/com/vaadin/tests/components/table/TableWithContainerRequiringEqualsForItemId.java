@@ -77,8 +77,7 @@ public class TableWithContainerRequiringEqualsForItemId
         }
 
         t.setContainerDataSource(container);
-        t.setVisibleColumns(
-                new Object[] { "id", "created", "name", "Actions" });
+        t.setVisibleColumns("id", "created", "name", "Actions");
 
         addComponent(t);
         addComponent(log);

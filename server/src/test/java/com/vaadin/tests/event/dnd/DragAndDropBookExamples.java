@@ -2,14 +2,14 @@ package com.vaadin.tests.event.dnd;
 
 import java.util.Optional;
 
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class DragAndDropBookExamples {
@@ -22,7 +22,7 @@ public class DragAndDropBookExamples {
         // set the allowed effect
         dragSource.setEffectAllowed(EffectAllowed.MOVE);
         // set the data to transfer
-        dragSource.setTransferData("text/plain", "hello receiver");
+        dragSource.setDataTransferText("hello receiver");
         dragSource.addDragStartListener(
                 event -> event.getComponent().addStyleName("dragged"));
         dragSource.addDragEndListener(
@@ -51,9 +51,7 @@ public class DragAndDropBookExamples {
                 dropTargetLayout.addComponent(dragSource.get());
 
                 // get possible transfer data
-                // NOTE that "text" is same as "text/plain" from drag source
-                // data
-                String message = event.getTransferData("text");
+                String message = event.getDataTransferText();
                 Notification.show("DropEvent with data transfer: " + message);
             }
         });

@@ -58,10 +58,10 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private final static Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
 
     // translates string <-> object
-    private final static DesignFormatter FORMATTER = new DesignFormatter();
+    private static final DesignFormatter FORMATTER = new DesignFormatter();
 
     /**
      * Returns the currently used formatter. All primitive types and all types
@@ -188,7 +188,7 @@ public class DesignAttributeHandler implements Serializable {
 
     /**
      * Writes the specified attribute to the design if it differs from the
-     * default value got from the <code> defaultInstance <code>
+     * default value got from the <code> defaultInstance </code>
      *
      * @param component
      *            the component used to get the attribute value
@@ -327,7 +327,7 @@ public class DesignAttributeHandler implements Serializable {
         String[] words = propertyName.split("(?<!^)(?=[A-Z])");
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < words.length; i++) {
-            if (builder.length() > 0) {
+            if (builder.length() != 0) {
                 builder.append("-");
             }
             builder.append(words[i].toLowerCase());

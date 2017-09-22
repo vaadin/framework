@@ -19,11 +19,15 @@ import com.vaadin.shared.ui.grid.GridState;
 
 /**
  * The shared state for the {@link com.vaadin.ui.TreeGrid} component.
- * 
+ *
  * @since 8.1
  * @author Vaadin Ltd
  */
 public class TreeGridState extends GridState {
+
+    {
+        primaryStyleName = "v-treegrid";
+    }
 
     /**
      * Contains ID of the hierarchy column set by the developer.

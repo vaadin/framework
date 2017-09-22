@@ -39,6 +39,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
@@ -194,7 +195,7 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    public static abstract class ApplicationConnectionEvent
+    public abstract static class ApplicationConnectionEvent
             extends GwtEvent<CommunicationHandler> {
 
         private ApplicationConnection connection;
@@ -333,6 +334,13 @@ public class ApplicationConnection implements HasHandlers {
         @Override
         protected String getContextRootUrl() {
             return getConfiguration().getContextRootUrl();
+        }
+
+        @Override
+        protected String getFrontendUrl() {
+            String url = getConfiguration().getFrontendUrl();
+            assert url.endsWith("/");
+            return url;
         }
     };
 
@@ -1218,8 +1226,8 @@ public class ApplicationConnection implements HasHandlers {
      * Use to notify that the given component's caption has changed; layouts may
      * have to be recalculated.
      *
-     * @param component
-     *            the Paintable whose caption has changed
+     * @param widget
+     *            The Widget whose caption has changed
      * @deprecated As of 7.0.2, has not had any effect for a long time
      */
     @Deprecated
@@ -1471,16 +1479,17 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the active connector for focused element in browser.
+     * Gets the active connector for the focused element in the browser.
      *
-     * @return Connector for focused element or null.
+     * @return the connector for the focused element or <code>null</code> if
+     *         none found or no element is focused.
      */
     private ComponentConnector getActiveConnector() {
         Element focusedElement = WidgetUtil.getFocusedElement();
         if (focusedElement == null) {
             return null;
         }
-        return Util.getConnectorForElement(this, getUIConnector().getWidget(),
+        return Util.getConnectorForElement(this, RootPanel.get(),
                 focusedElement);
     }
 

@@ -15,12 +15,14 @@
  */
 package com.vaadin.client.widget.treegrid.events;
 
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
+import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.HierarchyRenderer;
 import com.vaadin.client.widget.escalator.RowContainer;
-import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler;
+import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridClickHandler;
 import com.vaadin.client.widget.grid.events.GridClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.shared.ui.grid.GridConstants;
@@ -36,13 +38,21 @@ import com.vaadin.shared.ui.grid.GridConstants;
  */
 public class TreeGridClickEvent extends GridClickEvent {
 
-    public TreeGridClickEvent(TreeGrid grid, CellReference<?> targetCell) {
-        super(grid, targetCell);
+    public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
+            BrowserEvents.CLICK, new TreeGridClickEvent());
+
+    @Override
+    public Type<GridClickHandler> getAssociatedType() {
+        return TYPE;
     }
 
     @Override
     public TreeGrid getGrid() {
-        return (TreeGrid) super.getGrid();
+        EventTarget target = getNativeEvent().getEventTarget();
+        if (!Element.is(target)) {
+            return null;
+        }
+        return WidgetUtil.findWidget(Element.as(target), TreeGrid.class, false);
     }
 
     @Override

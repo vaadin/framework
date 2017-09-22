@@ -3,7 +3,7 @@ package com.vaadin.tests.components.treegrid;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.components.treegrid.TreeGridBasicFeatures.HierarchicalTestBean;
+import com.vaadin.tests.data.bean.HierarchicalTestBean;
 import com.vaadin.ui.TreeGrid;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")

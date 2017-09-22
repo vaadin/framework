@@ -1,11 +1,11 @@
 ---
-title: Composition with CustomComponent
-order: 32
+title: Composition with Composite and CustomComponent
+order: 33
 layout: page
 ---
 
 [[components.customcomponent]]
-= Composition with CustomComponent
+= Composition with Composite and CustomComponent
 
 The ease of making new user interface components is one of the core features of
 Vaadin. Typically, you simply combine existing built-in components to produce
@@ -15,15 +15,24 @@ the majority of the user interface.
 As described earlier in
 <<dummy/../../../framework/application/application-architecture#application.architecture.composition,"Compositing
 Components">>, you have two basic ways to create a composite - either by
-extending a layout component or the [classname]#CustomComponent#, which
-typically wraps around a layout component. The benefit of wrapping a layout
-composite in [classname]#CustomComponent# is mainly encapsulation - hiding the
+extending a layout component or by using a composition component (a
+[classname]#Composite# or a [classname]#CustomComponent#), which typically
+wraps around a layout component.
+The benefit of wrapping a layout composite is mainly encapsulation - hiding the
 implementation details of the composition. Otherwise, a user of the composite
 could rely on implementation details, which would create an unwanted dependency.
 
-To create a composite, you need to inherit the [classname]#CustomComponent# and
-set the __composition root__ component in the constructor. The composition root
-is typically a layout component that contains other components.
+To create a composite, you need to inherit [classname]#Composite# or
+[classname]#CustomComponent# and set the __composition root__ component in the
+constructor. The composition root is typically a layout component that contains
+other components.
+
+The difference between the two composition classes is that a
+[classname]#CustomComponent# introduces another layer in the DOM on the
+browser, which can be used e.g. for styling but does require its own size
+setting etc. On the other hand, a [classname]#Composite# is a more light-weight
+version that has no visual representation in the browser, and is effectively
+replaced by its contents.
 
 For example:
 
@@ -41,21 +50,23 @@ class MyComposite extends CustomComponent {
         panelContent.addComponent(label);
         panelContent.addComponent(new Button("Ok"));
 
+        // The composition root MUST be set
+        setCompositionRoot(panel);
+
         // Set the size as undefined at all levels
         panelContent.setSizeUndefined();
         panel.setSizeUndefined();
+        // this is not needed for a Composite
         setSizeUndefined();
-
-        // The composition root MUST be set
-        setCompositionRoot(panel);
     }
 }
 ----
 
 Take note of the sizing when trying to make a customcomponent that shrinks to
 fit the contained components. You have to set the size as undefined at all
-levels; the sizing of the composite component and the composition root are
-separate.
+levels. In the case of [classname]#CustomComponent#, the sizing of the composite
+component and the composition root are separate, whereas [classname]#Composite#
+delegates its size management to its composition root.
 
 You can use the component as follows:
 

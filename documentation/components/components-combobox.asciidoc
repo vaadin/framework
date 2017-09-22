@@ -82,7 +82,7 @@ select.setNewItemHandler(inputString -> {
     select.setItems(planets);
 
     // Remember to set the selection to the new item
-    select.select(newPlanet);
+    select.setSelectedItem(newPlanet);
 });
 ----
 

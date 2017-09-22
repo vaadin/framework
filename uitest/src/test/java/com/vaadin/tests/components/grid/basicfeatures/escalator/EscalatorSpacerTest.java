@@ -48,7 +48,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     // translate3d(0px, 40px, 123px);
     // translate3d(24px, 15.251px, 0);
     // translate(0, 40px);
-    private final static String TRANSLATE_VALUE_REGEX =
+    private static final String TRANSLATE_VALUE_REGEX =
             "translate(?:3d|)" // "translate" or "translate3d"
             + "\\(" // literal "("
                 + "(" // start capturing the x argument
@@ -74,7 +74,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
 
     // 40px;
     // 12.34px
-    private final static String PIXEL_VALUE_REGEX =
+    private static final String PIXEL_VALUE_REGEX =
             "(" // capture the pixel value
                 + "[0-9]+" // the pixel argument
                 + "(?:" // start of the subpixel part of the value
@@ -87,16 +87,16 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
     //@formatter:on
 
     // also matches "-webkit-transform";
-    private final static Pattern TRANSFORM_CSS_PATTERN = Pattern
+    private static final Pattern TRANSFORM_CSS_PATTERN = Pattern
             .compile("transform: (.*?);");
-    private final static Pattern TOP_CSS_PATTERN = Pattern.compile(
+    private static final Pattern TOP_CSS_PATTERN = Pattern.compile(
             "top: ([0-9]+(?:\\.[0-9]+)?(?:px)?);?", Pattern.CASE_INSENSITIVE);
-    private final static Pattern LEFT_CSS_PATTERN = Pattern.compile(
+    private static final Pattern LEFT_CSS_PATTERN = Pattern.compile(
             "left: ([0-9]+(?:\\.[0-9]+)?(?:px)?);?", Pattern.CASE_INSENSITIVE);
 
-    private final static Pattern TRANSLATE_VALUE_PATTERN = Pattern
+    private static final Pattern TRANSLATE_VALUE_PATTERN = Pattern
             .compile(TRANSLATE_VALUE_REGEX);
-    private final static Pattern PIXEL_VALUE_PATTERN = Pattern
+    private static final Pattern PIXEL_VALUE_PATTERN = Pattern
             .compile(PIXEL_VALUE_REGEX, Pattern.CASE_INSENSITIVE);
 
     @Before

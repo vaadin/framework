@@ -19,6 +19,8 @@ package com.vaadin.v7.data.util;
 import static com.vaadin.util.ReflectTools.convertPrimitiveType;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -100,7 +102,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
@@ -126,7 +128,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
@@ -203,7 +205,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         getMethod = null;
         try {
             getMethod = initGetterMethod(beanPropertyName, beanClass);
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             throw new MethodException(this,
                     "Bean property " + beanPropertyName + " can not be found");
         }
@@ -216,7 +218,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             setMethod = beanClass.getMethod("set" + beanPropertyName,
                     new Class[] { returnType });
-        } catch (final java.lang.NoSuchMethodException skipped) {
+        } catch (final NoSuchMethodException skipped) {
         }
 
         // Gets the return type from get method
@@ -386,8 +388,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
             }
             if (j == c.length) {
 
-                // all paramteters matched
-                if (found == true) {
+                // all parameters matched
+                if (found) {
                     throw new MethodException(this,
                             "Could not uniquely identify " + getMethodName
                                     + "-method");
@@ -397,7 +399,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 }
             }
         }
-        if (found != true) {
+        if (!found) {
             throw new MethodException(this,
                     "Could not find " + getMethodName + "-method");
         }
@@ -440,7 +442,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                 if (j == c.length) {
 
                     // all parameters match
-                    if (found == true) {
+                    if (found) {
                         throw new MethodException(this,
                                 "Could not identify unique " + setMethodName
                                         + "-method");
@@ -450,7 +452,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                     }
                 }
             }
-            if (found != true) {
+            if (!found) {
                 throw new MethodException(this,
                         "Could not identify " + setMethodName + "-method");
             }
@@ -545,11 +547,11 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         try {
             getMethod = beanClass.getMethod("get" + propertyName,
                     new Class[] {});
-        } catch (final java.lang.NoSuchMethodException ignored) {
+        } catch (final NoSuchMethodException ignored) {
             try {
                 getMethod = beanClass.getMethod("is" + propertyName,
                         new Class[] {});
-            } catch (final java.lang.NoSuchMethodException ignoredAsWell) {
+            } catch (final NoSuchMethodException ignoredAsWell) {
                 getMethod = beanClass.getMethod("are" + propertyName,
                         new Class[] {});
             }

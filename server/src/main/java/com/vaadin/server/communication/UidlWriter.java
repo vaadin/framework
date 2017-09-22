@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.DependencyFilter.FilterContext;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
@@ -89,10 +90,9 @@ public class UidlWriter implements Serializable {
 
         while (true) {
             ArrayList<ClientConnector> connectorsToProcess = new ArrayList<>();
-            for (ClientConnector c : uiConnectorTracker.getDirtyConnectors()) {
-                if (!processedConnectors.contains(c)
-                        && LegacyCommunicationManager
-                                .isConnectorVisibleToClient(c)) {
+            for (ClientConnector c : uiConnectorTracker
+                    .getDirtyVisibleConnectors()) {
+                if (!processedConnectors.contains(c)) {
                     connectorsToProcess.add(c);
                 }
             }
@@ -101,9 +101,25 @@ public class UidlWriter implements Serializable {
                 break;
             }
 
+            // process parents before children
+            Collections.sort(connectorsToProcess,
+                    Comparator.comparingInt(conn -> {
+                        int depth = 0;
+                        ClientConnector connector = conn;
+                        // this is a very fast operation, even for 100+ levels
+                        while (connector.getParent() != null) {
+                            ++depth;
+                            connector = connector.getParent();
+                        }
+                        return depth;
+                    }));
+
             for (ClientConnector connector : connectorsToProcess) {
-                boolean initialized = uiConnectorTracker
-                        .isClientSideInitialized(connector);
+                // call isDirty() to find out if ConnectorTracker knows the
+                // connector
+                boolean initialized = uiConnectorTracker.isDirty(connector)
+                        && uiConnectorTracker
+                                .isClientSideInitialized(connector);
                 processedConnectors.add(connector);
 
                 try {
@@ -282,8 +298,10 @@ public class UidlWriter implements Serializable {
                 }
             });
 
-            List<Dependency> dependencies = Dependency
-                    .findDependencies(newConnectorTypes, manager);
+            List<Dependency> dependencies = new ArrayList<>();
+            dependencies.addAll(ui.getPage().getPendingDependencies());
+            dependencies.addAll(Dependency.findDependencies(newConnectorTypes,
+                    manager, new FilterContext(session)));
 
             // Include dependencies in output if there are any
             if (!dependencies.isEmpty()) {
@@ -303,7 +321,7 @@ public class UidlWriter implements Serializable {
             writePerformanceData(ui, writer);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
-            uiConnectorTracker.cleanConnectorMap();
+            uiConnectorTracker.cleanConnectorMap(true);
         }
     }
 

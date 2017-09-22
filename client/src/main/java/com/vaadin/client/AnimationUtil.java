@@ -88,7 +88,7 @@ public class AnimationUtil {
     /**
      * Removes the given animation listener.
      *
-     * @param element
+     * @param elem
      *            the element which has the listener
      * @param animationEndListener
      *            the listener to remove

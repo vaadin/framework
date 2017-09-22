@@ -8,9 +8,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -129,6 +129,8 @@ public abstract class ThemeTest extends MultiBrowserTest {
     private void testNotification(int id, String identifier)
             throws IOException {
         $(ButtonElement.class).id("notifButt" + id).click();
+        // For some reason, this seems to be more reliable on IE11
+        waitUntil(driver -> isElementPresent(NotificationElement.class), 10);
         compareScreen(identifier);
         $(NotificationElement.class).first().close();
     }
@@ -187,13 +189,13 @@ public abstract class ThemeTest extends MultiBrowserTest {
 
     private void testDates() throws IOException {
         compareScreen("dates");
-        $(AbstractDateFieldElement.class).id("datefield0").openPopup();
+        $(DateFieldElement.class).id("datefield0").openPopup();
         compareScreen("dates-first-popup");
-        $(AbstractDateFieldElement.class).id("datefield1").openPopup();
+        $(DateFieldElement.class).id("datefield1").openPopup();
         compareScreen("dates-second-popup");
-        $(AbstractDateFieldElement.class).id("datefield2").openPopup();
+        $(DateFieldElement.class).id("datefield2").openPopup();
         compareScreen("dates-third-popup");
-        $(AbstractDateFieldElement.class).id("datefield3").openPopup();
+        $(DateFieldElement.class).id("datefield3").openPopup();
         compareScreen("dates-fourth-popup");
     }
 }

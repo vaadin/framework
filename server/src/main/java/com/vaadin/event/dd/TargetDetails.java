@@ -17,7 +17,7 @@ package com.vaadin.event.dd;
 
 import java.io.Serializable;
 
-import com.vaadin.event.dnd.DropEvent;
+import com.vaadin.ui.dnd.event.DropEvent;
 
 /**
  * TargetDetails wraps drop target related information about

@@ -24,7 +24,7 @@ public class TextAreaElement extends AbstractTextFieldElement {
     /**
      * Return value of the field element
      *
-     * @since
+     * @since 8.0
      * @return value of the field element
      */
     @Override

@@ -15,9 +15,8 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -28,22 +27,31 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.vaadin.data.HierarchyData;
+import com.vaadin.data.BeanPropertySet;
+import com.vaadin.data.HasHierarchicalDataProvider;
+import com.vaadin.data.HasValue;
+import com.vaadin.data.PropertyDefinition;
+import com.vaadin.data.PropertySet;
+import com.vaadin.data.TreeData;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataCommunicator;
 import com.vaadin.data.provider.HierarchicalDataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
-import com.vaadin.data.provider.InMemoryHierarchicalDataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.event.CollapseEvent;
+import com.vaadin.event.CollapseEvent.CollapseListener;
+import com.vaadin.event.ExpandEvent;
+import com.vaadin.event.ExpandEvent.ExpandListener;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.treegrid.FocusParentRpc;
+import com.vaadin.shared.ui.treegrid.FocusRpc;
 import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
+import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
 import com.vaadin.shared.ui.treegrid.TreeGridState;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.declarative.DesignFormatter;
-import com.vaadin.ui.renderers.AbstractRenderer;
-import com.vaadin.ui.renderers.Renderer;
-import com.vaadin.util.ReflectTools;
 
 /**
  * A grid component for displaying hierarchical tabular data.
@@ -54,150 +62,152 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the grid bean type
  */
-public class TreeGrid<T> extends Grid<T> {
+public class TreeGrid<T> extends Grid<T>
+        implements HasHierarchicalDataProvider<T> {
 
     /**
-     * Item expand event listener.
-     * 
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the expanded item's type
+     * Creates a new {@code TreeGrid} without support for creating columns based
+     * on property names. Use an alternative constructor, such as
+     * {@link TreeGrid#TreeGrid(Class)}, to create a {@code TreeGrid} that
+     * automatically sets up columns based on the type of presented data.
      */
-    @FunctionalInterface
-    public interface ExpandListener<T> extends Serializable {
-
-        public static final Method EXPAND_METHOD = ReflectTools.findMethod(
-                ExpandListener.class, "itemExpand", ExpandEvent.class);
-
-        /**
-         * Callback method for when an item has been expanded.
-         * 
-         * @param event
-         *            the expand event
-         */
-        public void itemExpand(ExpandEvent<T> event);
-    }
-
-    /**
-     * Item collapse event listener.
-     * 
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the collapsed item's type
-     */
-    @FunctionalInterface
-    public interface CollapseListener<T> extends Serializable {
-
-        public static final Method COLLAPSE_METHOD = ReflectTools.findMethod(
-                CollapseListener.class, "itemCollapse", CollapseEvent.class);
-
-        /**
-         * Callback method for when an item has been collapsed.
-         * 
-         * @param event
-         *            the collapse event
-         */
-        public void itemCollapse(CollapseEvent<T> event);
-    }
-
-    /**
-     * An event that is fired when an item is expanded.
-     * 
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            the expanded item's type
-     */
-    public static class ExpandEvent<T> extends Component.Event {
-
-        private final T expandedItem;
-
-        /**
-         * Construct an expand event.
-         * 
-         * @param source
-         *            the tree grid this event originated from
-         * @param item
-         *            the item that was expanded
-         */
-        public ExpandEvent(TreeGrid<T> source, T expandedItem) {
-            super(source);
-            this.expandedItem = expandedItem;
-        }
-
-        /**
-         * Get the expanded item that triggered this event.
-         * 
-         * @return the expanded item
-         */
-        public T getExpandedItem() {
-            return expandedItem;
-        }
-    }
-
-    /**
-     * An event that is fired when an item is collapsed. Note that expanded
-     * subtrees of the collapsed item will not trigger collapse events.
-     * 
-     * @author Vaadin Ltd
-     * @since 8.1
-     * @param <T>
-     *            collapsed item type
-     */
-    public static class CollapseEvent<T> extends Component.Event {
-
-        private final T collapsedItem;
-
-        /**
-         * Construct a collapse event.
-         * 
-         * @param source
-         *            the tree grid this event originated from
-         * @param item
-         *            the item that was collapsed
-         */
-        public CollapseEvent(TreeGrid<T> source, T collapsedItem) {
-            super(source);
-            this.collapsedItem = collapsedItem;
-        }
-
-        /**
-         * Get the collapsed item that triggered this event.
-         * 
-         * @return the collapsed item
-         */
-        public T getCollapsedItem() {
-            return collapsedItem;
-        }
-    }
-
     public TreeGrid() {
-        super(new HierarchicalDataCommunicator<>());
+        this(new HierarchicalDataCommunicator<>());
+    }
+
+    /**
+     * Creates a new {@code TreeGrid} that uses reflection based on the provided
+     * bean type to automatically set up an initial set of columns. All columns
+     * will be configured using the same {@link Object#toString()} renderer that
+     * is used by {@link #addColumn(ValueProvider)}.
+     *
+     * @param beanType
+     *            the bean type to use, not {@code null}
+     */
+    public TreeGrid(Class<T> beanType) {
+        this(BeanPropertySet.get(beanType),
+                new HierarchicalDataCommunicator<>());
+    }
+
+    /**
+     * Creates a new {@code TreeGrid} using the given
+     * {@code HierarchicalDataProvider}, without support for creating columns
+     * based on property names. Use an alternative constructor, such as
+     * {@link TreeGrid#TreeGrid(Class)}, to create a {@code TreeGrid} that
+     * automatically sets up columns based on the type of presented data.
+     *
+     * @param dataProvider
+     *            the data provider, not {@code null}
+     */
+    public TreeGrid(HierarchicalDataProvider<T, ?> dataProvider) {
+        this();
+        setDataProvider(dataProvider);
+    }
+
+    /**
+     * Creates a {@code TreeGrid} using a custom {@link PropertySet}
+     * implementation and custom data communicator.
+     * <p>
+     * Property set is used for configuring the initial columns and resolving
+     * property names for {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     *
+     * @param propertySet
+     *            the property set implementation to use, not {@code null}
+     * @param dataCommunicator
+     *            the data communicator to use, not {@code null}
+     */
+    protected TreeGrid(PropertySet<T> propertySet,
+            HierarchicalDataCommunicator<T> dataCommunicator) {
+        super(propertySet, dataCommunicator);
 
         registerRpc(new NodeCollapseRpc() {
             @Override
             public void setNodeCollapsed(String rowKey, int rowIndex,
-                    boolean collapse) {
-                if (collapse) {
-                    getDataCommunicator().doCollapse(rowKey, rowIndex);
+                    boolean collapse, boolean userOriginated) {
+                T item = getDataCommunicator().getKeyMapper().get(rowKey);
+                if (collapse && getDataCommunicator().isExpanded(item)) {
+                    getDataCommunicator().doCollapse(item,
+                            Optional.of(rowIndex));
                     fireCollapseEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
-                } else {
-                    getDataCommunicator().doExpand(rowKey, rowIndex);
+                            getDataCommunicator().getKeyMapper().get(rowKey),
+                            userOriginated);
+                } else if (!collapse
+                        && !getDataCommunicator().isExpanded(item)) {
+                    getDataCommunicator().doExpand(item, Optional.of(rowIndex));
                     fireExpandEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey));
+                            getDataCommunicator().getKeyMapper().get(rowKey),
+                            userOriginated);
+                }
+            }
+        });
+
+        registerRpc(new FocusParentRpc() {
+            @Override
+            public void focusParent(String rowKey, int cellIndex) {
+                Integer parentIndex = getDataCommunicator().getParentIndex(
+                        getDataCommunicator().getKeyMapper().get(rowKey));
+                if (parentIndex != null) {
+                    getRpcProxy(FocusRpc.class).focusCell(parentIndex,
+                            cellIndex);
                 }
             }
         });
     }
 
     /**
+     * Creates a new TreeGrid with the given data communicator and without
+     * support for creating columns based on property names.
+     *
+     * @param dataCommunicator
+     *            the custom data communicator to set
+     */
+    protected TreeGrid(HierarchicalDataCommunicator<T> dataCommunicator) {
+        this(new PropertySet<T>() {
+            @Override
+            public Stream<PropertyDefinition<T, ?>> getProperties() {
+                // No columns configured by default
+                return Stream.empty();
+            }
+
+            @Override
+            public Optional<PropertyDefinition<T, ?>> getProperty(String name) {
+                throw new IllegalStateException(
+                        "A TreeGrid created without a bean type class literal or a custom property set"
+                                + " doesn't support finding properties by name.");
+            }
+        }, dataCommunicator);
+    }
+
+    /**
+     * Creates a {@code TreeGrid} using a custom {@link PropertySet}
+     * implementation for creating a default set of columns and for resolving
+     * property names with {@link #addColumn(String)} and
+     * {@link Column#setEditorComponent(HasValue)}.
+     * <p>
+     * This functionality is provided as static method instead of as a public
+     * constructor in order to make it possible to use a custom property set
+     * without creating a subclass while still leaving the public constructors
+     * focused on the common use cases.
+     *
+     * @see TreeGrid#TreeGrid()
+     * @see TreeGrid#TreeGrid(Class)
+     *
+     * @param propertySet
+     *            the property set implementation to use, not {@code null}
+     * @return a new tree grid using the provided property set, not {@code null}
+     */
+    public static <BEAN> TreeGrid<BEAN> withPropertySet(
+            PropertySet<BEAN> propertySet) {
+        return new TreeGrid<BEAN>(propertySet,
+                new HierarchicalDataCommunicator<>());
+    }
+
+    /**
      * Adds an ExpandListener to this TreeGrid.
-     * 
+     *
      * @see ExpandEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -209,9 +219,9 @@ public class TreeGrid<T> extends Grid<T> {
 
     /**
      * Adds a CollapseListener to this TreeGrid.
-     * 
+     *
      * @see CollapseEvent
-     * 
+     *
      * @param listener
      *            the listener to add
      * @return a registration for the listener
@@ -221,124 +231,48 @@ public class TreeGrid<T> extends Grid<T> {
                 CollapseListener.COLLAPSE_METHOD);
     }
 
-    /**
-     * Sets the data items of this component provided as a collection.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Arrays.asList("a","b"));
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(Collection<T> items) {
-        Objects.requireNonNull(items, "Given collection may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
-    }
-
-    /**
-     * Sets the data items of this component provided as a stream.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems(Stream.of("a","b"));
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(Stream<T> items) {
-        Objects.requireNonNull(items, "Given stream may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
-    }
-
-    /**
-     * Sets the data items of this listing.
-     * <p>
-     * The provided items are wrapped into a
-     * {@link InMemoryHierarchicalDataProvider} backed by a flat
-     * {@link HierarchyData} structure. The data provider instance is used as a
-     * parameter for the {@link #setDataProvider(DataProvider)} method. It means
-     * that the items collection can be accessed later on via
-     * {@link InMemoryHierarchicalDataProvider#getData()}:
-     *
-     * <pre>
-     * <code>
-     * TreeGrid<String> treeGrid = new TreeGrid<>();
-     * treeGrid.setItems("a","b");
-     * ...
-     *
-     * HierarchyData<String> data = ((InMemoryHierarchicalDataProvider<String>)treeGrid.getDataProvider()).getData();
-     * </code>
-     * </pre>
-     * <p>
-     * The returned HierarchyData instance may be used as-is to add, remove or
-     * modify items in the hierarchy. These modifications to the object are not
-     * automatically reflected back to the TreeGrid. Items modified should be
-     * refreshed with {@link HierarchicalDataProvider#refreshItem(Object)} and
-     * when adding or removing items
-     * {@link HierarchicalDataProvider#refreshAll()} should be called.
-     *
-     * @param items
-     *            the data items to display, not null
-     */
-    @Override
-    public void setItems(@SuppressWarnings("unchecked") T... items) {
-        Objects.requireNonNull(items, "Given items may not be null");
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(
-                new HierarchyData<T>().addItems(null, items)));
-    }
-
     @Override
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         if (!(dataProvider instanceof HierarchicalDataProvider)) {
             throw new IllegalArgumentException(
                     "TreeGrid only accepts hierarchical data providers");
         }
+        getRpcProxy(TreeGridClientRpc.class).clearPendingExpands();
         super.setDataProvider(dataProvider);
+    }
+
+    /**
+     * Get the currently set hierarchy column.
+     *
+     * @return the currently set hierarchy column, or {@code null} if no column
+     *         has been explicitly set
+     */
+    public Column<T, ?> getHierarchyColumn() {
+        return getColumnByInternalId(getState(false).hierarchyColumnId);
+    }
+
+    /**
+     * Set the column that displays the hierarchy of this grid's data. By
+     * default the hierarchy will be displayed in the first column.
+     * <p>
+     * Setting a hierarchy column by calling this method also sets the column to
+     * be visible and not hidable.
+     * <p>
+     * <strong>Note:</strong> Changing the Renderer of the hierarchy column is
+     * not supported.
+     *
+     * @param column
+     *            the column to use for displaying hierarchy
+     */
+    public void setHierarchyColumn(Column<T, ?> column) {
+        Objects.requireNonNull(column, "column may not be null");
+        if (!getColumns().contains(column)) {
+            throw new IllegalArgumentException(
+                    "Given column is not a column of this TreeGrid");
+        }
+        column.setHidden(false);
+        column.setHidable(false);
+        getState().hierarchyColumnId = getInternalIdForColumn(column);
     }
 
     /**
@@ -361,9 +295,101 @@ public class TreeGrid<T> extends Grid<T> {
         if (getColumn(id) == null) {
             throw new IllegalArgumentException("No column found for given id");
         }
-        getColumn(id).setHidden(false);
-        getColumn(id).setHidable(false);
-        getState().hierarchyColumnId = getInternalIdForColumn(getColumn(id));
+        setHierarchyColumn(getColumn(id));
+    }
+
+    /**
+     * Sets the item collapse allowed provider for this TreeGrid. The provider
+     * should return {@code true} for any item that the user can collapse.
+     * <p>
+     * <strong>Note:</strong> This callback will be accessed often when sending
+     * data to the client. The callback should not do any costly operations.
+     * <p>
+     * This method is a shortcut to method with the same name in
+     * {@link HierarchicalDataCommunicator}.
+     *
+     * @param provider
+     *            the item collapse allowed provider, not {@code null}
+     *
+     * @see HierarchicalDataCommunicator#setItemCollapseAllowedProvider(ItemCollapseAllowedProvider)
+     */
+    public void setItemCollapseAllowedProvider(
+            ItemCollapseAllowedProvider<T> provider) {
+        getDataCommunicator().setItemCollapseAllowedProvider(provider);
+    }
+
+    /**
+     * Expands the given items.
+     * <p>
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
+     *
+     * @param items
+     *            the items to expand
+     */
+    public void expand(T... items) {
+        expand(Arrays.asList(items));
+    }
+
+    /**
+     * Expands the given items.
+     * <p>
+     * If an item is currently expanded, does nothing. If an item does not have
+     * any children, does nothing.
+     *
+     * @param items
+     *            the items to expand
+     */
+    public void expand(Collection<T> items) {
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (!communicator.isExpanded(item)
+                    && communicator.hasChildren(item)) {
+                communicator.expand(item);
+                fireExpandEvent(item, false);
+            }
+        });
+    }
+
+    /**
+     * Collapse the given items.
+     * <p>
+     * For items that are already collapsed, does nothing.
+     *
+     * @param items
+     *            the collection of items to collapse
+     */
+    public void collapse(T... items) {
+        collapse(Arrays.asList(items));
+    }
+
+    /**
+     * Collapse the given items.
+     * <p>
+     * For items that are already collapsed, does nothing.
+     *
+     * @param items
+     *            the collection of items to collapse
+     */
+    public void collapse(Collection<T> items) {
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (communicator.isExpanded(item)) {
+                communicator.collapse(item);
+                fireCollapseEvent(item, false);
+            }
+        });
+    }
+
+    /**
+     * Returns whether a given item is expanded or collapsed.
+     *
+     * @param item
+     *            the item to check
+     * @return true if the item is expanded, false if collapsed
+     */
+    public boolean isExpanded(T item) {
+        return getDataCommunicator().isExpanded(item);
     }
 
     @Override
@@ -404,7 +430,7 @@ public class TreeGrid<T> extends Grid<T> {
             List<DeclarativeValueProvider<T>> providers) {
         getSelectionModel().deselectAll();
         List<T> selectedItems = new ArrayList<>();
-        HierarchyData<T> data = new HierarchyData<T>();
+        TreeData<T> data = new TreeData<T>();
 
         for (Element row : body.children()) {
             T item = deserializeDeclarativeRepresentation(row.attr("item"));
@@ -425,7 +451,7 @@ public class TreeGrid<T> extends Grid<T> {
             }
         }
 
-        setDataProvider(new InMemoryHierarchicalDataProvider<>(data));
+        setDataProvider(new TreeDataProvider<>(data));
         selectedItems.forEach(getSelectionModel()::select);
     }
 
@@ -464,48 +490,42 @@ public class TreeGrid<T> extends Grid<T> {
                             .map(DesignFormatter::encodeForTextNode)
                             .orElse(""));
         }
-        getDataProvider().fetch(new HierarchicalQuery<>(null, item))
-                .forEach(childItem -> writeRow(container, childItem, item,
-                        context));
-    }
-
-    @Override
-    protected <V> Column<T, V> createColumn(ValueProvider<T, V> valueProvider,
-            AbstractRenderer<? super T, ? super V> renderer) {
-        return new Column<T, V>(valueProvider, renderer) {
-
-            @Override
-            public com.vaadin.ui.Grid.Column<T, V> setRenderer(
-                    Renderer<? super V> renderer) {
-                // Disallow changing renderer for the hierarchy column
-                if (getInternalIdForColumn(this).equals(
-                        TreeGrid.this.getState(false).hierarchyColumnId)) {
-                    throw new IllegalStateException(
-                            "Changing the renderer of the hierarchy column is not allowed.");
-                }
-
-                return super.setRenderer(renderer);
-            }
-        };
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeRow(container, childItem, item, context));
     }
 
     /**
      * Emit an expand event.
-     * 
+     *
      * @param item
      *            the item that was expanded
+     * @param userOriginated
+     *            whether the expand was triggered by a user interaction or the
+     *            server
      */
-    private void fireExpandEvent(T item) {
-        fireEvent(new ExpandEvent<>(this, item));
+    private void fireExpandEvent(T item, boolean userOriginated) {
+        fireEvent(new ExpandEvent<>(this, item, userOriginated));
     }
 
     /**
      * Emit a collapse event.
-     * 
+     *
      * @param item
      *            the item that was collapsed
+     * @param userOriginated
+     *            whether the collapse was triggered by a user interaction or
+     *            the server
      */
-    private void fireCollapseEvent(T item) {
-        fireEvent(new CollapseEvent<>(this, item));
+    private void fireCollapseEvent(T item, boolean userOriginated) {
+        fireEvent(new CollapseEvent<>(this, item, userOriginated));
+    }
+
+    /**
+     * Gets the item collapse allowed provider.
+     *
+     * @return the item collapse allowed provider
+     */
+    public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
+        return getDataCommunicator().getItemCollapseAllowedProvider();
     }
 }

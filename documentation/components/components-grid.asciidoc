@@ -150,7 +150,7 @@ SingleSelectionModel<Person> defaultModel =
       (SingleSelectionModel<Person>) grid.getSelectionModel();
 
 // Use multi-selection mode
-MultiSelectionModel<Person> selectionModel = 
+MultiSelectionModel<Person> selectionModel =
       (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
 ----
 
@@ -200,7 +200,7 @@ access to [classname]#MultiSelectionEvent#, which allows to easily access differ
 // Grid in multi-selection mode
 Grid<Person> grid = Grid<>()
 grid.setItems(people);
-MultiSelectionModel<Person> selectionModel 
+MultiSelectionModel<Person> selectionModel
       = (MultiSelectionModel<Person>) grid.setSelectionMode(SelectionMode.MULTI);
 
 selectionModel.selectAll();
@@ -237,7 +237,6 @@ with an [interfacename]#ItemClickListener#. The [classname]#ItemClickEvent#
 object contains various information, most importantly the ID of the clicked row
 and column.
 
-
 [source, java]
 ----
 grid.addCellClickListener(event ->
@@ -250,7 +249,16 @@ The focus indication is themed so that the focused cell has a visible focus
 indicator style by default, while the row does not. You can enable row focus, as
 well as disable cell focus, in a custom theme. See <<components.grid.css>>.
 
+[[components.grid.right.clicks]]
+=== Right-clicks
+Right-clicks are supported similar way via `addContextClickListener()` method
 
+[source, java]
+----
+  grid.addContextClickListener(event -> Notification.show(
+        ((GridContextClickEvent<Person>)event).getItem() + " Clicked")
+  );
+----
 
 [[components.grid.columns]]
 == Configuring Columns
@@ -263,7 +271,7 @@ The setter methods in [classname]#Column# have _fluent API_, so you can easily c
 
 [source, java]
 ----
-grid.addColumn(Person:getBirthDate, new DateRenderer())
+grid.addColumn(Person::getBirthDate, new DateRenderer())
       .setCaption("Birth Date")
       .setWidth("100px")
       .setResizable(false);
@@ -325,7 +333,7 @@ explicitly through the column object with [methodname]#setCaption()#.
 
 [source, java]
 ----
-Column<Date> bornColumn = grid.addColumn(Person:getBirthDate);
+Column<Date> bornColumn = grid.addColumn(Person::getBirthDate);
 bornColumn.setCaption("Born date");
 ----
 
@@ -344,7 +352,11 @@ value with [methodname]#setWidth()#, or relatively using expand ratios with
 [methodname]#setExpandRatio()#.
 
 When using expand ratios, the columns with a non-zero expand ratio use the extra
-space remaining from other columns, in proportion to the defined ratios.
+space remaining from other columns, in proportion to the defined ratios. Do note
+that the minimum width of an expanded column by default is based on the contents
+of the column (the initially rendered rows). To allow the column to become
+narrower than this, use [methodname]#setMinimumWidthFromContent(false)#
+(introduced in 8.1).
 
 You can specify minimum and maximum widths for the expanding columns with
 [methodname]#setMinimumWidth()# and [methodname]#setMaximumWidth()#,
@@ -403,7 +415,7 @@ You set the column renderer in the [classname]#Grid.Column# object as follows:
 [source, java]
 ----
 // the type of birthYear is a number
-Column<Person, Integer> bornColumn = grid.addColumn(Person:getBirthYear,
+Column<Person, Integer> bornColumn = grid.addColumn(Person::getBirthYear,
       new NumberRenderer("born in %d AD"));
 ----
 
@@ -415,7 +427,7 @@ When you change the renderer, the content of Grid is refreshed.
 ----
 Column<Person, Integer> ageColumn = grid.addColumn(Person::getBirthYear);
 // The default renderer is TextRenderer
-addComponent(new Button("Change renderer", 
+addComponent(new Button("Change renderer",
 	clickEvent -> ageColumn.setRenderer(new NumberRenderer())
 ));
 ----
@@ -446,9 +458,9 @@ people.add(new Person("Johannes Kepler", 1571));
 Grid<Person> grid = new Grid<>(people);
 
 // Render a button that deletes the data row (item)
-grid.addColumn(person -> "Delete", 
+grid.addColumn(person -> "Delete",
       new ButtonRenderer(clickEvent -> {
-          people.remove(clickEvent.getValue());
+          people.remove(clickEvent.getItem());
           grid.setItems(people);
     }));
 ----
@@ -475,7 +487,7 @@ format specifier, such as "[literal]#++%tF++#".
 +
 [source, java]
 ----
-Grid.Column<Date> bornColumn = grid.addColumn(person:getBirthDate,
+Column<Person, Date> bornColumn = grid.addColumn(Person::getBirthDate,
       new DateRenderer("%1$tB %1$te, %1$tY",
                      Locale.ENGLISH));
 ----
@@ -516,26 +528,77 @@ Column<Integer> birthYear = grid.addColumn(Person::getBirthYear,
 [classname]#ProgressBarRenderer#:: Renders a progress bar in a column with a [classname]#Double# type. The value
 must be between 0.0 and 1.0.
 
+[classname]#LocalDateRenderer#::
+Formats a column with the [classname]#LocalDate# type.
+The renderer can be constructed with a [classname]#DateTimeFormatter#, or with a custom pattern string.
+The locale is either given explicitly with the pattern, resolved from the given [classname]#DateTimeFormatter# or from the grid the renderer is attached to, if neither of the previous are given.
+For the pattern string syntax, refer to the following documentation: link:https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns[docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#patterns].
+
++
+[source, java]
+----
+DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG)
+        .withLocale(Locale.ENGLISH);
+
+Column<Person, LocalDate> bornColumn =
+        grid.addColumn(
+          Person::getBirthDate,
+          new LocalDateRenderer(formatter));
+
+// Alternatively, with a custom pattern:
+Column<Person, LocalDate> bornColumn =
+        grid.addColumn(
+          Person::getBirthDate,
+          new LocalDateRenderer("yyyy MM dd"));
+----
+
+[classname]#LocalDateTimeRenderer#::
+Otherwise the same as [classname]#LocalDateRenderer#, except for the [classname]#LocalDateTime# type.
+
++
+[source, java]
+----
+DateTimeFormatter formatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.LONG, FormatStyle.SHORT)
+        .withLocale(Locale.ENGLISH);
+
+Column<Person, LocalDateTime> bornColumn =
+        grid.addColumn(
+          Person::getBirthDateAndTime,
+          new LocalDateTimeRenderer(formatter));
+
+// Alternatively, with a custom pattern:
+Column<Person, LocalDateTime> bornColumn =
+        grid.addColumn(
+          Person::getBirthDateAndTime,
+          new LocalDateTimeRenderer("yyyy.MM.dd 'at' hh:mm"));
+----
+
+
 [classname]#ComponentRenderer#:: Renders a Vaadin [classname]#Component# in a column. Since components
 are quite complex, the [classname]#ComponentRenderer# comes with possible performance issues.
-To use it efficiently you should use as few nested components as possible.
+To use it efficiently you should use as few nested components as possible. If the components used are
+of a different size than the default row height, [methodname]#Grid.setBodyRowHeight()# can be used to adjust
+the height of all rows in the Grid.
 
 +
 Use [classname]#Button# in [classname]#Grid#:
 +
 ----
-grid.addColumn(person -> {
+grid.addComponentColumn(person -> {
       Button button = new Button("Click me!");
-      button.addClickListener(click -> 
+      button.addClickListener(click ->
             Notification.show("Clicked: " + person.toString()));
       return button;
-}, new ComponentRenderer());
+});
+// make sure the buttons fit in the cells of the Grid
+grid.setBodyRowHeight(40);
 ----
-
-Components will occasionally be generated again during runtime. If you have a state in your 
++
+Components will occasionally be generated again during runtime. If you have a state in your
 component and not in the data object, you need to handle storing it yourself. Below is a simple
 example on how to achieve this.
-
 +
 Store a [classname]#TextField# with changed value.
 +
@@ -550,11 +613,13 @@ grid.addColumn(person -> {
       TextField textField = new TextField();
       textField.setValue(person.getLastname());
       // Store the text field when user updates the value
-      textField.addValueChangeListener(change -> 
+      textField.addValueChangeListener(change ->
             textFields.put(person, textField));
       return textField;
       }, new ComponentRenderer());
 ----
+
+[classname]#Components# in [classname]#Grid# [classname]#ComponentRenderer# are wrapped in a [literal]#++div++# with the style name [literal]#++component-wrap++#. This can be used to style the alignment and size of the [classname]#Component#.
 
 [[components.grid.renderer.custom]]
 === Custom Renderers
@@ -839,6 +904,34 @@ You can modify the error message by implementing a custom
 [interfacename]#EditorErrorGenerator# with for the [classname]#Editor#.
 
 
+[[components.grid.presentation.provider]]
+=== Presentation Value Providers
+
+By default, a renderer displays the column value. If you want to edit an
+internal value (such as an address object) but show a simpler representation
+when not editing a row, a presentation value provider can be used. 
+
+A presentation value provider converts the value of a cell (obtained with a
+value provider, and used by the editor) to a different representation to be
+shown by renderers when the cell is not being edited. A custom renderer can
+optionally be used for the presentation values.
+
+In the following example, we demonstrate one way to use a simplified
+presentation of an address column while allowing editing the full address:
+
+[source, java]
+----
+Column<Person, Address> column = grid.addColumn(Person::getAddress);
+// alternatively, the presentation provider can be given as an extra parameter
+// to addColumn()
+column.setRenderer(
+    address -> address.getCity() + " " + address.getCountry(),
+    new TextRenderer());
+column.setCaption("Address");
+column.setEditorComponent(new AddressField(), Person::setAddress);
+----
+
+
 ////
 // Not supported in 8
 [[components.grid.scrolling]]
@@ -848,6 +941,12 @@ You can scroll to first item with [methodname]#scrollToStart()#, to end with
 [methodname]#scrollToEnd()#, or to a specific row with [methodname]#scrollTo()#.
 ////
 
+== Drag and Drop of Rows
+
+Please refer to the
+<<dummy/../../../framework/advanced/advanced-dragndrop#advanced.dragndrop.grid,"Drag and Drop Rows in Grid">> documentation.
+
+[[advanced.dragndrop.grid]]
 
 [[components.grid.stylegeneration]]
 == Generating Row or Cell Styles

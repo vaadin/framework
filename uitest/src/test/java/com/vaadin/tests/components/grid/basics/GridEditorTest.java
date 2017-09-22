@@ -77,8 +77,8 @@ public abstract class GridEditorTest extends GridBasicsTest {
     }
 
     protected void assertEditorOpen() {
-        assertTrue("Editor is supposed to be open",
-                getGridElement().isElementPresent(By.vaadin("#editor")));
+        waitUntil(driver -> getGridElement()
+                .isElementPresent(By.vaadin("#editor")));
     }
 
     protected void assertEditorClosed() {
@@ -197,12 +197,11 @@ public abstract class GridEditorTest extends GridBasicsTest {
                 editorPos == editor.getLocation().getY());
     }
 
-    @Ignore("Needs programmatic sorting")
     @Test
     public void testEditorClosedOnSort() {
         editRow(5);
 
-        selectMenuPath("Component", "State", "Sort by column", "Column 0, ASC");
+        selectMenuPath("Component", "Columns", "Column 0", "Sort ASC");
 
         assertEditorClosed();
     }

@@ -46,6 +46,7 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  *
  */
+@SuppressWarnings("unused")
 public class BinderBookOfVaadinTest {
 
     private static class BookPerson {
@@ -64,6 +65,11 @@ public class BinderBookOfVaadinTest {
             email = origin.email;
             phone = origin.phone;
             title = origin.title;
+        }
+
+        public BookPerson(String name, int yearOfBirth) {
+            lastName = name;
+            this.yearOfBirth = yearOfBirth;
         }
 
         public String getLastName() {
@@ -847,6 +853,31 @@ public class BinderBookOfVaadinTest {
         Assert.assertTrue(saveButton.isEnabled());
         field.clear();
         Assert.assertFalse(saveButton.isEnabled());
+    }
+
+    @Test
+    public void writeBean_throwsValidationException_bookExampleShouldCompile() {
+        // The person to edit
+        // Would be loaded from the backend in a real application
+        BookPerson person = new BookPerson("John Doe", 1957);
+
+        // Updates the value in each bound field component
+        binder.readBean(person);
+
+        Button saveButton = new Button("Save", event -> {
+            try {
+                binder.writeBean(person);
+                // A real application would also save the updated person
+                // using the application's backend
+            } catch (ValidationException e) {
+                Notification.show("Person could not be saved, "
+                        + "please check error messages for each field.");
+            }
+        });
+
+        // Updates the fields again with the previously saved values
+        Button resetButton = new Button("Reset",
+                event -> binder.readBean(person));
     }
 
     private void verifyEventIsFired(AtomicBoolean flag) {

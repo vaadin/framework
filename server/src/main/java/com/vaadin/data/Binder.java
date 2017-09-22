@@ -126,6 +126,23 @@ public class Binder<BEAN> implements Serializable {
          */
         public BindingValidationStatus<TARGET> validate();
 
+        /**
+         * Gets the validation status handler for this Binding.
+         * 
+         * @return the validation status handler for this binding
+         * 
+         * @since 8.2
+         */
+        public BindingValidationStatusHandler getValidationStatusHandler();
+
+        /**
+         * Unbinds the binding from its respective {@code Binder}
+         * Removes any {@code ValueChangeListener} {@code Registration} from
+         * associated {@code HasValue}
+         *
+         * @since 8.2
+         */
+        public void unbind();
     }
 
     /**
@@ -487,14 +504,14 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Sets the field to be required. This means two things:
          * <ol>
-         * <li>the required indicator is visible</li>
-         * <li>the field value is validated for not being empty*</li>
+         * <li>the required indicator will be displayed for this field</li>
+         * <li>the field value is validated for not being empty, i.e. that the
+         * field's value is not equal to what {@link HasValue#getEmptyValue()}
+         * returns</li>
          * </ol>
+         * <p>
          * For localizing the error message, use
          * {@link #asRequired(ErrorMessageProvider)}.
-         * <p>
-         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
-         * returns.
          *
          * @see #asRequired(ErrorMessageProvider)
          * @see HasValue#setRequiredIndicatorVisible(boolean)
@@ -511,11 +528,11 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Sets the field to be required. This means two things:
          * <ol>
-         * <li>the required indicator is visible</li>
-         * <li>the field value is validated for not being empty*</li>
+         * <li>the required indicator will be displayed for this field</li>
+         * <li>the field value is validated for not being empty, i.e. that the
+         * field's value is not equal to what {@link HasValue#getEmptyValue()}
+         * returns</li>
          * </ol>
-         * *Value not being the equal to what {@link HasValue#getEmptyValue()}
-         * returns.
          *
          * @see HasValue#setRequiredIndicatorVisible(boolean)
          * @see HasValue#isEmpty()
@@ -541,7 +558,7 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingBuilderImpl<BEAN, FIELDVALUE, TARGET>
             implements BindingBuilder<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
         private final HasValue<FIELDVALUE> field;
         private BindingValidationStatusHandler statusHandler;
@@ -711,6 +728,9 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
+            // Mark this step to be bound to prevent modifying multiple times.
+            bound = true;
+
             if (resetNullRepresentation) {
                 getBinder().initialConverters.get(field).setIdentity();
             }
@@ -763,9 +783,9 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements Binding<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
-        private final HasValue<FIELDVALUE> field;
+        private HasValue<FIELDVALUE> field;
         private final BindingValidationStatusHandler statusHandler;
 
         private final SerializableFunction<BEAN, TARGET> getter;
@@ -821,12 +841,30 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
+            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
                             Arrays.asList(status), Collections.emptyList()));
             getBinder().fireStatusChangeEvent(status.isError());
             return status;
+        }
+
+        /**
+         * Removes this binding from its binder and unregisters the
+         * {@code ValueChangeListener} from any bound {@code HasValue}
+         *
+         * @since 8.2
+         */
+        @Override
+        public void unbind() {
+            if (onValueChange != null) {
+                onValueChange.remove();
+                onValueChange = null;
+            }
+            binder.removeBindingInternal(this);
+            binder = null;
+            field = null;
         }
 
         /**
@@ -869,9 +907,9 @@ public class Binder<BEAN> implements Serializable {
          */
         protected ValueContext createValueContext() {
             if (field instanceof Component) {
-                return new ValueContext((Component) field);
+                return new ValueContext((Component) field, field);
             }
-            return new ValueContext(findLocale());
+            return new ValueContext(null, field, findLocale());
         }
 
         /**
@@ -960,8 +998,9 @@ public class Binder<BEAN> implements Serializable {
             return binder;
         }
 
-        private void notifyStatusHandler(BindingValidationStatus<?> status) {
-            statusHandler.statusChange(status);
+        @Override
+        public BindingValidationStatusHandler getValidationStatusHandler() {
+            return statusHandler;
         }
     }
 
@@ -1187,7 +1226,8 @@ public class Binder<BEAN> implements Serializable {
         getStatusLabel().ifPresent(label -> label.setValue(""));
 
         return createBinding(field, createNullRepresentationAdapter(field),
-                this::handleValidationStatus);
+                this::handleValidationStatus)
+                        .withValidator(field.getDefaultValidator());
     }
 
     /**
@@ -1561,7 +1601,10 @@ public class Binder<BEAN> implements Serializable {
      * Clear all the bound fields for this binder.
      */
     private void clearFields() {
-        bindings.forEach(binding -> binding.getField().clear());
+        bindings.forEach(binding -> {
+            binding.getField().clear();
+            clearError(binding.getField());
+        });
         if (hasChanges()) {
             fireStatusChangeEvent(false);
         }
@@ -1602,7 +1645,13 @@ public class Binder<BEAN> implements Serializable {
      * level validators if a bean is currently set with
      * {@link #setBean(Object)}, and returns whether any of the validators
      * failed.
-     * 
+     * <p>
+     * <b>Note:</b> Calling this method will not trigger status change events,
+     * unlike {@link #validate()} and will not modify the UI. To also update
+     * error indicators on fields, use {@code validate().isOk()}.
+     *
+     * @see #validate()
+     *
      * @return whether this binder is in a valid state
      * @throws IllegalStateException
      *             if bean level validators have been configured and no bean is
@@ -1789,7 +1838,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * The listener is added to all fields regardless of whether the method is
      * invoked before or after field is bound.
-     * 
+     *
      * @see ValueChangeEvent
      * @see ValueChangeListener
      *
@@ -1908,9 +1957,7 @@ public class Binder<BEAN> implements Serializable {
     protected void handleBinderValidationStatus(
             BinderValidationStatus<BEAN> binderStatus) {
         // let field events go to binding status handlers
-        binderStatus.getFieldValidationStatuses()
-                .forEach(status -> ((BindingImpl<?, ?, ?>) status.getBinding())
-                        .notifyStatusHandler(status));
+        binderStatus.notifyBindingValidationStatusHandlers();
 
         // show first possible error or OK status in the label if set
         if (getStatusLabel().isPresent()) {
@@ -1933,12 +1980,16 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Check whether any of the bound fields' values have changed since last
-     * explicit call to {@link #setBean(Object)}, {@link #readBean(Object)},
-     * {@link #removeBean()}, {@link #writeBean(Object)} or
-     * {@link #writeBeanIfValid(Object)}. Unsuccessful write operations will not
-     * affect this value. Return values for each case are compiled into the
-     * following table:
+     * Check whether any of the bound fields' have uncommitted changes since
+     * last explicit call to {@link #readBean(Object)}, {@link #removeBean()},
+     * {@link #writeBean(Object)} or {@link #writeBeanIfValid(Object)}.
+     * Unsuccessful write operations will not affect this value.
+     * <p>
+     * Note that if you use {@link #setBean(Object)} method, Binder tries to
+     * commit changes as soon as all validators have passed. Thus, when using
+     * this method with it seldom makes sense and almost always returns false.
+     *
+     * Return values for each case are compiled into the following table:
      *
      * <p>
      *
@@ -2094,7 +2145,7 @@ public class Binder<BEAN> implements Serializable {
      *
      * MyForm myForm = new MyForm();
      * ...
-     * binder.bindMemberFields(myForm);
+     * binder.bindInstanceFields(myForm);
      * </pre>
      *
      * This binds the firstName TextField to a "firstName" property in the item,
@@ -2124,14 +2175,33 @@ public class Binder<BEAN> implements Serializable {
                 .stream()
                 .filter(memberField -> HasValue.class
                         .isAssignableFrom(memberField.getType()))
+                .filter(memberField -> !isFieldBound(memberField,
+                        objectWithMemberFields))
                 .map(memberField -> handleProperty(memberField,
                         objectWithMemberFields,
                         (property, type) -> bindProperty(objectWithMemberFields,
                                 memberField, property, type)))
                 .reduce(0, this::accumulate, Integer::sum);
-        if (numberOfBoundFields == 0) {
+        if (numberOfBoundFields == 0 && bindings.isEmpty()
+                && incompleteBindings.isEmpty()) {
+            // Throwing here for incomplete bindings would be wrong as they
+            // may be completed after this call. If they are not, setBean and
+            // other methods will throw for those cases
             throw new IllegalStateException("There are no instance fields "
                     + "found for automatic binding");
+        }
+
+    }
+
+    private boolean isFieldBound(Field memberField,
+            Object objectWithMemberFields) {
+        try {
+            HasValue field = (HasValue) getMemberFieldValue(memberField,
+                    objectWithMemberFields);
+            return bindings.stream()
+                    .anyMatch(binding -> binding.getField() == field);
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -2139,13 +2209,17 @@ public class Binder<BEAN> implements Serializable {
         return value ? count + 1 : count;
     }
 
-    @SuppressWarnings("unchecked")
     private BindingBuilder<BEAN, ?> getIncompleteMemberFieldBinding(
             Field memberField, Object objectWithMemberFields) {
+        return incompleteMemberFieldBindings
+                .get(getMemberFieldValue(memberField, objectWithMemberFields));
+    }
+
+    private Object getMemberFieldValue(Field memberField,
+            Object objectWithMemberFields) {
         memberField.setAccessible(true);
         try {
-            return incompleteMemberFieldBindings
-                    .get(memberField.get(objectWithMemberFields));
+            return memberField.get(objectWithMemberFields);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             throw new RuntimeException(e);
         } finally {
@@ -2227,12 +2301,10 @@ public class Binder<BEAN> implements Serializable {
     private HasValue<?> makeFieldInstance(
             Class<? extends HasValue<?>> fieldClass) {
         try {
-            return fieldClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException(
-                    String.format("Couldn't create an '%s' type instance",
-                            fieldClass.getName()),
-                    e);
+            return ReflectTools.createInstance(fieldClass);
+        } catch (IllegalArgumentException e) {
+            // Rethrow as the exception type declared for bindInstanceFields
+            throw new IllegalStateException(e);
         }
     }
 
@@ -2338,5 +2410,80 @@ public class Binder<BEAN> implements Serializable {
 
     private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {
         getEventRouter().fireEvent(event);
+    }
+
+    /**
+     * Returns the fields this binder has been bound to.
+     *
+     * @return the fields with bindings
+     * @since 8.1
+     */
+    public Stream<HasValue<?>> getFields() {
+        return bindings.stream().map(Binding::getField);
+    }
+
+    /**
+     * Finds and removes all Bindings for the given field.
+     * 
+     * @param field
+     *            the field to remove from bindings
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(HasValue<?> field) {
+        Objects.requireNonNull(field, "Field can not be null");
+        Set<BindingImpl<BEAN, ?, ?>> toRemove = bindings.stream()
+                .filter(binding -> field.equals(binding.getField()))
+                .collect(Collectors.toSet());
+        toRemove.forEach(Binding::unbind);
+    }
+
+    /**
+     * Removes the given Binding from this Binder.
+     * 
+     * @param binding
+     *            the binding to remove
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(Binding<BEAN, ?> binding) {
+        Objects.requireNonNull(binding, "Binding can not be null");
+        binding.unbind();
+    }
+
+    /**
+     * Removes (internally) the {@code Binding} from the bound properties map
+     * (if present) and from the list of {@code Binding}s. Note that this DOES
+     * NOT remove the {@code ValueChangeListener} that the {@code Binding} might
+     * have registered with any {@code HasValue}s or decouple the {@code Binder}
+     * from within the {@code Binding}. To do that, use
+     *
+     * {@link Binding#unbind()}
+     *
+     * This method should just be used for internal cleanup.
+     *
+     * @param binding The {@code Binding} to remove from the binding map
+     *
+     * @since 8.2
+     */
+    protected void removeBindingInternal(Binding<BEAN, ?> binding) {
+        if (bindings.remove(binding)) {
+            boundProperties.entrySet()
+                    .removeIf(entry -> entry.getValue().equals(binding));
+        }
+    }
+
+    /**
+     * Finds and removes the Binding for the given property name.
+     * 
+     * @param propertyName
+     *            the propertyName to remove from bindings
+     * 
+     * @since 8.2
+     */
+    public void removeBinding(String propertyName) {
+        Objects.requireNonNull(propertyName, "Property name can not be null");
+        Optional.ofNullable(boundProperties.get(propertyName))
+                .ifPresent(Binding::unbind);
     }
 }

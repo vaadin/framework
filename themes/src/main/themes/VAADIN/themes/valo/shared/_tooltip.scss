@@ -119,6 +119,11 @@ $v-tooltip-border-radius: $v-border-radius - 1px !default;
     h4 {
       color: inherit;
     }
+
+    pre.v-tooltip-pre {
+      font: inherit;
+      white-space: pre-wrap;
+    }
   }
 }
 

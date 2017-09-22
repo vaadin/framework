@@ -19,12 +19,14 @@ package com.vaadin.client.ui;
 import java.util.Date;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
@@ -54,6 +56,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         HandlesAriaRequired, KeyDownHandler {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
+    private static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    private static final String ISO_DATE_PATTERN = "yyyy-MM-dd";
 
     /** For internal use only. May be removed or replaced in the future. */
     public final TextBox text;
@@ -64,7 +68,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     private final String TEXTFIELD_ID = "field";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String formatStr;
+    private String formatStr;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String timeZoneJSON;
@@ -81,6 +85,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             addDomHandler(this, KeyDownEvent.getType());
         }
         add(text);
+        publishJSHelpers(getElement());
     }
 
     /**
@@ -100,24 +105,44 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      */
     protected String getFormatString() {
         if (formatStr == null) {
-            if (isYear(getCurrentResolution())) {
-                formatStr = "yyyy"; // force full year
-            } else {
-
-                try {
-                    String frmString = LocaleService
-                            .getDateFormat(currentLocale);
-                    frmString = cleanFormat(frmString);
-
-                    formatStr = frmString;
-                } catch (LocaleNotLoadedException e) {
-                    // TODO should die instead? Can the component survive
-                    // without format string?
-                    VConsole.error(e);
-                }
-            }
+            setFormatString(createFormatString());
         }
         return formatStr;
+    }
+
+    /**
+     * Create a format string suitable for the widget in its current state.
+     *
+     * @return a date format string to use when formatting and parsing the text
+     *         in the input field
+     * @since 8.1
+     */
+    protected String createFormatString() {
+        if (isYear(getCurrentResolution())) {
+            return "yyyy"; // force full year
+        } else {
+            try {
+                String frmString = LocaleService.getDateFormat(currentLocale);
+                return cleanFormat(frmString);
+            } catch (LocaleNotLoadedException e) {
+                // TODO should die instead? Can the component survive
+                // without format string?
+                VConsole.error(e);
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Sets the date format string to use for the text field.
+     *
+     * @param formatString
+     *            the format string to use, or null to force re-creating the
+     *            format string from the locale the next time it is needed
+     * @since 8.1
+     */
+    public void setFormatString(String formatString) {
+        this.formatStr = formatString;
     }
 
     @Override
@@ -151,9 +176,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // Create the initial text for the textfield
         String dateText;
         Date currentDate = getDate();
+        // Always call this to ensure the format ends up in the element
+        String formatString = getFormatString();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    getFormatString(), timeZoneJSON);
+                    formatString, timeZoneJSON);
         } else {
             dateText = "";
         }
@@ -183,7 +210,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        if (!text.getText().equals("")) {
+        if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
 
@@ -357,5 +384,67 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
         // Needed for tooltip event handling
         fireEvent(event);
+    }
+
+    /**
+     * Publish methods/properties on the element to be used from JavaScript.
+     *
+     * @since 8.1
+     */
+    private native void publishJSHelpers(Element root)
+    /*-{
+        var self = this;
+        root.setISOValue = $entry(function (value) {
+           self.@VAbstractTextualDate::setISODate(*)(value);
+        });
+        root.getISOValue = $entry(function () {
+           return self.@VAbstractTextualDate::getISODate()();
+        });
+    }-*/;
+
+    /**
+     * Sets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @param isoDate
+     *            the date to set in ISO8601 format, or null to clear the date
+     *            value
+     * @since 8.1
+     */
+    public void setISODate(String isoDate) {
+        if (isoDate == null) {
+            setDate(null);
+        } else {
+            Date date = getIsoFormatter().parse(isoDate);
+            setDate(date);
+        }
+        updateDateVariables();
+    }
+
+    /**
+     * Gets the value of the date field as a locale independent ISO date
+     * (yyyy-MM-dd'T'HH:mm:ss or yyyy-MM-dd depending on whether this is a date
+     * field or a date and time field).
+     *
+     * @return the current date in ISO8601 format, or null if no date is set
+     *
+     * @since 8.1
+     */
+    public String getISODate() {
+        Date date = getDate();
+        if (date == null) {
+            return null;
+        } else {
+            return getIsoFormatter().format(date);
+        }
+    }
+
+    private DateTimeFormat getIsoFormatter() {
+        if (supportsTime()) {
+            return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
+        } else {
+            return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+        }
     }
 }

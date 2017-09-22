@@ -36,6 +36,10 @@ public interface NodeCollapseRpc extends ServerRpc {
      *            index where the row is in grid (all rows)
      * @param collapse
      *            {@code true} to collapse, {@code false} to expand
+     * @param userOriginated
+     *            {@code true} if this RPC was triggered by a user interaction,
+     *            {@code false} otherwise
      */
-    void setNodeCollapsed(String rowKey, int rowIndex, boolean collapse);
+    void setNodeCollapsed(String rowKey, int rowIndex, boolean collapse,
+            boolean userOriginated);
 }

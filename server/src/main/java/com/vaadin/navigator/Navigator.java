@@ -17,9 +17,13 @@ package com.vaadin.navigator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -30,6 +34,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A navigator utility that allows switching of views in a part of an
@@ -52,6 +57,11 @@ import com.vaadin.ui.UI;
 public class Navigator implements Serializable {
 
     // TODO investigate relationship with TouchKit navigation support
+
+    private static final String DEFAULT_VIEW_SEPARATOR = "/";
+
+    private static final String DEFAULT_STATE_PARAMETER_SEPARATOR = "&";
+    private static final String DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR = "=";
 
     /**
      * Empty view component.
@@ -170,13 +180,8 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.removeAllComponents();
-                container.addComponent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.removeAllComponents();
+            container.addComponent(view.getViewComponent());
         }
     }
 
@@ -204,12 +209,7 @@ public class Navigator implements Serializable {
 
         @Override
         public void showView(View view) {
-            if (view instanceof Component) {
-                container.setContent((Component) view);
-            } else {
-                throw new IllegalArgumentException(
-                        "View is not a component: " + view);
-            }
+            container.setContent(view.getViewComponent());
         }
     }
 
@@ -316,15 +316,7 @@ public class Navigator implements Serializable {
         @Override
         public View getView(String viewName) {
             if (this.viewName.equals(viewName)) {
-                try {
-                    View view = viewClass.newInstance();
-                    return view;
-                } catch (InstantiationException | IllegalAccessException e) {
-                    // TODO error handling
-                    throw new RuntimeException(e);
-                }
-                // TODO error handling
-
+                return ReflectTools.createInstance(viewClass);
             }
             return null;
         }
@@ -350,23 +342,17 @@ public class Navigator implements Serializable {
 
     /**
      * The {@link UI} bound with the Navigator.
-     *
-     * @since 8.0.3
      */
     protected UI ui;
 
     /**
      * The {@link NavigationStateManager} that is used to get, listen to and
      * manipulate the navigation state used by the Navigator.
-     *
-     * @since 8.0.3
      */
     protected NavigationStateManager stateManager;
 
     /**
      * The {@link ViewDisplay} used by the Navigator.
-     *
-     * @since 8.0.3
      */
     protected ViewDisplay display;
 
@@ -510,6 +496,10 @@ public class Navigator implements Serializable {
         if (stateManager == null) {
             stateManager = new UriFragmentManager(ui.getPage());
         }
+        if (stateManager != null && this.stateManager != null
+                && stateManager != this.stateManager) {
+            this.stateManager.setNavigator(null);
+        }
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
@@ -597,6 +587,67 @@ public class Navigator implements Serializable {
      *            parameters passed in the navigation state to the view
      */
     protected void navigateTo(View view, String viewName, String parameters) {
+        runAfterLeaveConfirmation(() -> {
+            performNavigateTo(view, viewName, parameters);
+        });
+
+    }
+
+    /**
+     * Triggers {@link View#beforeLeave(ViewBeforeLeaveEvent)} for the current
+     * view with the given action.
+     * <p>
+     * This method is typically called by
+     * {@link #navigateTo(View, String, String)} but can be called from
+     * application code when you want to e.g. show a confirmation dialog before
+     * perfoming an action which is not a navigation but which would cause the
+     * view to be hidden, e.g. logging out.
+     * <p>
+     * Note that this method will not trigger any {@link ViewChangeListener}s as
+     * it does not navigate to a new view. Use {@link #navigateTo(String)} to
+     * change views and trigger all listeners.
+     *
+     * @param action
+     *            the action to execute when the view confirms it is ok to leave
+     * @since 8.1
+     */
+    public void runAfterLeaveConfirmation(ViewLeaveAction action) {
+        View currentView = getCurrentView();
+        if (currentView == null) {
+            action.run();
+        } else {
+            ViewBeforeLeaveEvent beforeLeaveEvent = new ViewBeforeLeaveEvent(
+                    this, action);
+            currentView.beforeLeave(beforeLeaveEvent);
+            if (!beforeLeaveEvent.isNavigateRun()) {
+                // The event handler prevented navigation
+                // Revert URL to previous state in case the navigation was
+                // caused by the back-button
+                revertNavigation();
+            }
+        }
+    }
+
+    /**
+     * Internal method for activating a view, setting its parameters and calling
+     * listeners.
+     * <p>
+     * Invoked after the current view has confirmed that leaving is ok.
+     * <p>
+     * This method also verifies that the user is allowed to perform the
+     * navigation operation.
+     *
+     * @param view
+     *            view to activate
+     * @param viewName
+     *            (optional) name of the view or null not to change the
+     *            navigation state
+     * @param parameters
+     *            parameters passed in the navigation state to the view
+     * @since 8.1
+     */
+    protected void performNavigateTo(View view, String viewName,
+            String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
         boolean navigationAllowed = beforeViewChange(event);
@@ -745,6 +796,97 @@ public class Navigator implements Serializable {
      */
     public String getState() {
         return getStateManager().getState();
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state.
+     *
+     * Uses {@literal &} as parameter separator. If the state contains
+     * {@literal #!view/foo&bar=baz} then this method will return a map
+     * containing {@literal foo => ""} and {@literal bar => baz}.
+     *
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap(String)
+     * @since 8.1
+     */
+    public Map<String, String> getStateParameterMap() {
+        return getStateParameterMap(DEFAULT_STATE_PARAMETER_SEPARATOR);
+    }
+
+    /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager} as Map<String, String> where each key
+     * represents a parameter in the state. The state parameter separator
+     * character needs to be specified with the separator.
+     *
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The parameters from the navigation state as a map
+     * @see #getStateParameterMap()
+     * @since 8.1
+     */
+    public Map<String, String> getStateParameterMap(String separator) {
+        return parseStateParameterMap(Objects.requireNonNull(separator));
+    }
+
+    /**
+     * Parses the state parameter to a map using the given separator string.
+     *
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The navigation state as Map<String, String>.
+     * @since 8.1
+     */
+    protected Map<String, String> parseStateParameterMap(String separator) {
+        if (getState() == null || getState().isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        String state = getState();
+        int viewSeparatorLocation = state.indexOf(DEFAULT_VIEW_SEPARATOR);
+
+        String parameterString;
+        if (viewSeparatorLocation == -1) {
+            parameterString = "";
+        } else {
+            parameterString = state.substring(viewSeparatorLocation + 1,
+                    state.length());
+        }
+        return parseParameterStringToMap(parameterString, separator);
+    }
+
+    /**
+     * Parses the given parameter string to a map using the given separator
+     * string.
+     *
+     * @param parameterString
+     *            the parameter string to parse
+     * @param separator
+     *            the string (typically one character) used to separate values
+     *            from each other
+     * @return The navigation state as Map<String, String>.
+     * @since 8.1
+     */
+    protected Map<String, String> parseParameterStringToMap(
+            String parameterString, String separator) {
+        if (parameterString.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, String> parameterMap = new HashMap<>();
+        String[] parameters = parameterString.split(separator);
+        for (int i = 0; i < parameters.length; i++) {
+            String[] keyAndValue = parameters[i]
+                    .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
+            parameterMap.put(keyAndValue[0],
+                    keyAndValue.length > 1 ? keyAndValue[1] : "");
+        }
+
+        return parameterMap;
     }
 
     /**
@@ -912,11 +1054,7 @@ public class Navigator implements Serializable {
         setErrorProvider(new ViewProvider() {
             @Override
             public View getView(String viewName) {
-                try {
-                    return viewClass.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                return ReflectTools.createInstance(viewClass);
             }
 
             @Override
@@ -999,8 +1137,6 @@ public class Navigator implements Serializable {
      * @param state
      *            state string
      * @return suitable provider
-     *
-     * @since 8.0.3
      */
     protected ViewProvider getViewProvider(String state) {
         String longestViewName = null;
@@ -1026,4 +1162,5 @@ public class Navigator implements Serializable {
         stateManager.setNavigator(null);
         ui.setNavigator(null);
     }
+
 }

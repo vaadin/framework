@@ -22,7 +22,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.customelements.DateTimeFieldElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 

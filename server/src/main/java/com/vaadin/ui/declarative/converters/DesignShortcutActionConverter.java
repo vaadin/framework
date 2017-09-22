@@ -123,7 +123,7 @@ public class DesignShortcutActionConverter
     @Override
     public Result<ShortcutAction> convertToModel(String value,
             ValueContext context) {
-        if (value.length() == 0) {
+        if (value.isEmpty()) {
             return Result.ok(null);
         }
 

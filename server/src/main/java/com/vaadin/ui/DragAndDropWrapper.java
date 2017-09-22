@@ -33,8 +33,6 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
-import com.vaadin.event.dnd.DragSourceExtension;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.StreamVariable;
@@ -45,6 +43,8 @@ import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperState;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.ui.dnd.DragSourceExtension;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  * @author Vaadin Ltd
@@ -459,10 +459,6 @@ public class DragAndDropWrapper extends CustomComponent
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
             }
 
             @Override

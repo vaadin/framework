@@ -17,6 +17,7 @@ package com.vaadin.tests.tb3;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 @RunWith(ParameterizedTB3Runner.class)
 public abstract class MultiBrowserThemeTest extends MultiBrowserTest {
 
+    public static final List<String> themesToTest = Collections
+            .unmodifiableList(Arrays.asList(new String[] { "valo", "reindeer",
+                    "runo", "chameleon", "base" }));
+
     private String theme;
 
     public void setTheme(String theme) {
@@ -39,8 +44,7 @@ public abstract class MultiBrowserThemeTest extends MultiBrowserTest {
 
     @Parameters
     public static Collection<String> getThemes() {
-        return Arrays.asList(new String[] { "valo", "reindeer", "runo",
-                "chameleon", "base" });
+        return themesToTest;
     }
 
     @Override

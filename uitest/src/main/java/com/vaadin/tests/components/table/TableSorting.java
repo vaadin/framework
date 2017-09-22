@@ -28,7 +28,7 @@ public class TableSorting extends TestBase {
         testTable.setImmediate(true);
         testTable.setSelectable(true);
         testTable.setMultiSelect(false);
-        testTable.setVisibleColumns(new Object[] { "testName" });
+        testTable.setVisibleColumns("testName");
 
         // Handle selection change.
         testTable.addListener(new Property.ValueChangeListener() {

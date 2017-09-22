@@ -57,8 +57,8 @@ public class TreeDragStart extends TestBase {
         getLayout().addComponent(tree);
 
         // Expand all items
-        for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
-            tree.expandItemsRecursively(it.next());
+        for (Object id : tree.rootItemIds()) {
+            tree.expandItemsRecursively(id);
         }
 
         // Set the tree in drag source mode
@@ -139,7 +139,7 @@ public class TreeDragStart extends TestBase {
         final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<>(
                 collection);
         table.setContainerDataSource(tableContainer);
-        table.setVisibleColumns(new String[] { "name", "weight" });
+        table.setVisibleColumns("name", "weight");
         table.removeAllItems();
 
         // Allow the table to receive drops and handle them

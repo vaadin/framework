@@ -48,6 +48,8 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.extensions.DragSourceExtensionConnector;
+import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
@@ -328,7 +330,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * interface.
      *
      * @since 7.6
-     * @param event
+     * @param details
+     * @param eventTarget
      */
     protected void sendContextClickEvent(MouseEventDetails details,
             EventTarget eventTarget) {
@@ -768,14 +771,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
-        if (state.description != null && !state.description.equals("")) {
+        if (state.description != null && !state.description.isEmpty()) {
             return true;
-        } else if (state.errorMessage != null
-                && !state.errorMessage.equals("")) {
-            return true;
-        } else {
-            return false;
         }
+        return state.errorMessage != null && !state.errorMessage.isEmpty();
     }
 
     /**
@@ -810,5 +809,67 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public boolean isErrorIndicatorVisible() {
         return getState().errorMessage != null;
+    }
+
+    /**
+     * Invoked when a {@link DragSourceExtensionConnector} has been attached to
+     * this component.
+     * <p>
+     * By default, does nothing. If you need to apply some changes to the
+     * widget, override this method.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDragSourceDetached()
+     */
+    public void onDragSourceAttached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DragSourceExtensionConnector} has been removed from
+     * this component.
+     * <p>
+     * By default, does nothing.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDragSourceAttached()
+     */
+    public void onDragSourceDetached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DropTargetExtensionConnector} has been attached to
+     * this component.
+     * <p>
+     * By default, does nothing. If you need to apply some changes to the
+     * widget, override this method.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDropTargetDetached()
+     */
+    public void onDropTargetAttached() {
+
+    }
+
+    /**
+     * Invoked when a {@link DropTargetExtensionConnector} has been removed from
+     * this component.
+     * <p>
+     * By default, does nothing.
+     * <p>
+     * This is a framework internal method, and should not be invoked manually.
+     *
+     * @since 8.1
+     * @see #onDropTargetAttached()
+     */
+    public void onDropTargetDetached() {
+
     }
 }

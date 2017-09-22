@@ -108,7 +108,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Construct new date for this datefield (only if not null)
         if (year > -1) {
-            getWidget().setCurrentDate(new Date((long) getWidget().getTime(year,
+            getWidget().setCurrentDate(new Date((long) VDateField.getTime(year,
                     month, day, hour, min, sec, 0)));
         } else {
             getWidget().setCurrentDate(null);

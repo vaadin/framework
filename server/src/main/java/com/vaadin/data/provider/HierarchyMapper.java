@@ -15,17 +15,26 @@
  */
 package com.vaadin.data.provider;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
-import java.util.logging.Logger;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.vaadin.shared.Range;
+import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
+import com.vaadin.ui.ItemCollapseAllowedProvider;
+
+import elemental.json.Json;
+import elemental.json.JsonObject;
 
 /**
  * Mapper for hierarchical data.
@@ -38,408 +47,467 @@ import java.util.stream.Stream;
  * anything.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.1
+ * 
+ * @param <T>
+ *            the data type
+ * @param <F>
+ *            the filter type
  */
-class HierarchyMapper implements Serializable {
+public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
-    private static final Logger LOGGER = Logger
-            .getLogger(HierarchyMapper.class.getName());
+    // childMap is only used for finding parents of items and clean up on
+    // removing children of expanded nodes.
+    private Map<T, Set<T>> childMap = new HashMap<>();
+    private Map<Object, T> parentIdMap = new HashMap<>();
+
+    private final HierarchicalDataProvider<T, F> provider;
+    private F filter;
+    private List<QuerySortOrder> backEndSorting;
+    private Comparator<T> inMemorySorting;
+    private ItemCollapseAllowedProvider<T> itemCollapseAllowedProvider = t -> true;
+
+    private Set<Object> expandedItemIds = new HashSet<>();
 
     /**
-     * A POJO that represents a query data for a certain tree level.
+     * Constructs a new HierarchyMapper.
+     * 
+     * @param provider
+     *            the hierarchical data provider for this mapper
      */
-    static class TreeLevelQuery { // not serializable since not stored
-        /**
-         * The tree node that the query is for. Only used for fetching parent
-         * key.
-         */
-        final TreeNode node;
-        /** The start index of the query, from 0 to level's size - 1. */
-        final int startIndex;
-        /** The number of rows to fetch. s */
-        final int size;
-        /** The depth of this node. */
-        final int depth;
-        /** The first row index in grid, including all the nodes. */
-        final int firstRowIndex;
-        /** The direct subtrees for the node that effect the indexing. */
-        final List<TreeNode> subTrees;
-
-        TreeLevelQuery(TreeNode node, int startIndex, int size, int depth,
-                int firstRowIndex, List<TreeNode> subTrees) {
-            this.node = node;
-            this.startIndex = startIndex;
-            this.size = size;
-            this.depth = depth;
-            this.firstRowIndex = firstRowIndex;
-            this.subTrees = subTrees;
-        }
+    public HierarchyMapper(HierarchicalDataProvider<T, F> provider) {
+        this.provider = provider;
     }
 
     /**
-     * A level in the tree, either the root level or an expanded subtree level.
-     * <p>
-     * Comparable based on the {@link #startIndex}, which is flat from 0 to data
-     * size - 1.
-     */
-    static class TreeNode implements Serializable, Comparable<TreeNode> {
-
-        /** The key for the expanded item that this is a subtree of. */
-        private final String parentKey;
-        /** The first index on this level. */
-        private int startIndex;
-        /** The last index on this level, INCLUDING subtrees. */
-        private int endIndex;
-
-        TreeNode(String parentKey, int startIndex, int size) {
-            this.parentKey = parentKey;
-            this.startIndex = startIndex;
-            endIndex = startIndex + size - 1;
-        }
-
-        TreeNode(int startIndex) {
-            parentKey = "INVALID";
-            this.startIndex = startIndex;
-        }
-
-        int getStartIndex() {
-            return startIndex;
-        }
-
-        int getEndIndex() {
-            return endIndex;
-        }
-
-        String getParentKey() {
-            return parentKey;
-        }
-
-        private void push(int offset) {
-            startIndex += offset;
-            endIndex += offset;
-        }
-
-        private void pushEnd(int offset) {
-            endIndex += offset;
-        }
-
-        @Override
-        public int compareTo(TreeNode other) {
-            return Integer.valueOf(startIndex).compareTo(other.startIndex);
-        }
-
-        @Override
-        public String toString() {
-            return "TreeNode [parent=" + parentKey + ", start=" + startIndex
-                    + ", end=" + getEndIndex() + "]";
-        }
-
-    }
-
-    /** The expanded nodes in the tree. */
-    private final TreeSet<TreeNode> nodes = new TreeSet<>();
-
-    /**
-     * Resets the tree, sets given the root level size.
-     *
-     * @param rootLevelSize
-     *            the number of items in the root level
-     */
-    public void reset(int rootLevelSize) {
-        nodes.clear();
-        nodes.add(new TreeNode(null, 0, rootLevelSize));
-    }
-
-    /**
-     * Returns the complete size of the tree, including all expanded subtrees.
-     *
-     * @return the size of the tree
+     * Returns the size of the currently expanded hierarchy.
+     * 
+     * @return the amount of available data
      */
     public int getTreeSize() {
-        TreeNode rootNode = getNodeForKey(null)
-                .orElse(new TreeNode(null, 0, 0));
-        return rootNode.endIndex + 1;
+        return (int) getHierarchy(null).count();
     }
 
     /**
-     * Returns whether the node with the given is collapsed or not.
-     *
-     * @param itemKey
-     *            the key of node to check
-     * @return {@code true} if collapsed, {@code false} if expanded
+     * Finds the index of the parent of the item in given target index.
+     * 
+     * @param item
+     *            the item to get the parent of
+     * @return the parent index or a negative value if the parent is not found
+     * 
      */
-    public boolean isCollapsed(String itemKey) {
-        return !getNodeForKey(itemKey).isPresent();
+    public Integer getParentIndex(T item) {
+        // TODO: This can be optimized.
+        List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
+        return flatHierarchy.indexOf(getParentOfItem(item));
     }
 
     /**
-     * Return the depth of expanded node's subtree.
-     * <p>
-     * The root node depth is 0.
-     *
-     * @param expandedNodeKey
-     *            the item key of the expanded node
-     * @return the depth of the expanded node
-     * @throws IllegalArgumentException
-     *             if the node was not expanded
+     * Returns whether the given item is expanded.
+     * 
+     * @param item
+     *            the item to test
+     * @return {@code true} if item is expanded; {@code false} if not
      */
-    protected int getDepth(String expandedNodeKey) {
-        Optional<TreeNode> node = getNodeForKey(expandedNodeKey);
-        if (!node.isPresent()) {
-            throw new IllegalArgumentException("No node with given key "
-                    + expandedNodeKey + " was expanded.");
+    public boolean isExpanded(T item) {
+        if (item == null) {
+            // Root nodes are always visible.
+            return true;
         }
-        TreeNode treeNode = node.get();
-        AtomicInteger start = new AtomicInteger(treeNode.startIndex);
-        AtomicInteger end = new AtomicInteger(treeNode.getEndIndex());
-        AtomicInteger depth = new AtomicInteger();
-        nodes.headSet(treeNode, false).descendingSet().forEach(higherNode -> {
-            if (higherNode.startIndex < start.get()
-                    && higherNode.getEndIndex() >= end.get()) {
-                start.set(higherNode.startIndex);
-                depth.incrementAndGet();
+        return expandedItemIds.contains(getDataProvider().getId(item));
+    }
+
+    /**
+     * Expands the given item.
+     * 
+     * @param item
+     *            the item to expand
+     * @param position
+     *            the index of item
+     * @return range of rows added by expanding the item
+     */
+    public Range doExpand(T item, Optional<Integer> position) {
+        Range rows = Range.withLength(0, 0);
+        if (!isExpanded(item) && hasChildren(item)) {
+            Object id = getDataProvider().getId(item);
+            expandedItemIds.add(id);
+            if (position.isPresent()) {
+                rows = Range.withLength(position.get() + 1,
+                        (int) getHierarchy(item, false).count());
             }
+        }
+        return rows;
+    }
+
+    /**
+     * Collapses the given item.
+     * 
+     * @param item
+     *            the item to expand
+     * @param position
+     *            the index of item
+     * 
+     * @return range of rows removed by collapsing the item
+     */
+    public Range doCollapse(T item, Optional<Integer> position) {
+        Range removedRows = Range.withLength(0, 0);
+        if (isExpanded(item)) {
+            Object id = getDataProvider().getId(item);
+            if (position.isPresent()) {
+                long childCount = getHierarchy(item, false).count();
+                removedRows = Range.withLength(position.get() + 1,
+                        (int) childCount);
+            }
+            expandedItemIds.remove(id);
+        }
+        return removedRows;
+    }
+
+    @Override
+    public void generateData(T item, JsonObject jsonObject) {
+        JsonObject hierarchyData = Json.createObject();
+
+        int depth = getDepth(item);
+        if (depth >= 0) {
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_DEPTH,
+                    depth);
+        }
+
+        boolean isLeaf = !getDataProvider().hasChildren(item);
+        if (isLeaf) {
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF,
+                    true);
+        } else {
+            hierarchyData.put(
+                    HierarchicalDataCommunicatorConstants.ROW_COLLAPSED,
+                    !isExpanded(item));
+            hierarchyData.put(HierarchicalDataCommunicatorConstants.ROW_LEAF,
+                    false);
+            hierarchyData.put(
+                    HierarchicalDataCommunicatorConstants.ROW_COLLAPSE_ALLOWED,
+                    getItemCollapseAllowedProvider().test(item));
+        }
+
+        // add hierarchy information to row as metadata
+        jsonObject.put(
+                HierarchicalDataCommunicatorConstants.ROW_HIERARCHY_DESCRIPTION,
+                hierarchyData);
+    }
+
+    /**
+     * Gets the current item collapse allowed provider.
+     * 
+     * @return the item collapse allowed provider
+     */
+    public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
+        return itemCollapseAllowedProvider;
+    }
+
+    /**
+     * Sets the current item collapse allowed provider.
+     * 
+     * @param itemCollapseAllowedProvider
+     *            the item collapse allowed provider
+     */
+    public void setItemCollapseAllowedProvider(
+            ItemCollapseAllowedProvider<T> itemCollapseAllowedProvider) {
+        this.itemCollapseAllowedProvider = itemCollapseAllowedProvider;
+    }
+
+    /**
+     * Gets the current in-memory sorting.
+     * 
+     * @return the in-memory sorting
+     */
+    public Comparator<T> getInMemorySorting() {
+        return inMemorySorting;
+    }
+
+    /**
+     * Sets the current in-memory sorting. This will cause the hierarchy to be
+     * constructed again.
+     * 
+     * @param inMemorySorting
+     *            the in-memory sorting
+     */
+    public void setInMemorySorting(Comparator<T> inMemorySorting) {
+        this.inMemorySorting = inMemorySorting;
+    }
+
+    /**
+     * Gets the current back-end sorting.
+     * 
+     * @return the back-end sorting
+     */
+    public List<QuerySortOrder> getBackEndSorting() {
+        return backEndSorting;
+    }
+
+    /**
+     * Sets the current back-end sorting. This will cause the hierarchy to be
+     * constructed again.
+     * 
+     * @param backEndSorting
+     *            the back-end sorting
+     */
+    public void setBackEndSorting(List<QuerySortOrder> backEndSorting) {
+        this.backEndSorting = backEndSorting;
+    }
+
+    /**
+     * Gets the current filter.
+     * 
+     * @return the filter
+     */
+    public F getFilter() {
+        return filter;
+    }
+
+    /**
+     * Sets the current filter. This will cause the hierarchy to be constructed
+     * again.
+     * 
+     * @param filter
+     *            the filter
+     */
+    public void setFilter(Object filter) {
+        this.filter = (F) filter;
+    }
+
+    /**
+     * Gets the {@code HierarchicalDataProvider} for this
+     * {@code HierarchyMapper}.
+     * 
+     * @return the hierarchical data provider
+     */
+    public HierarchicalDataProvider<T, F> getDataProvider() {
+        return provider;
+    }
+
+    /**
+     * Returns whether given item has children.
+     * 
+     * @param item
+     *            the node to test
+     * @return {@code true} if node has children; {@code false} if not
+     */
+    public boolean hasChildren(T item) {
+        return getDataProvider().hasChildren(item);
+    }
+
+    /* Fetch methods. These are used to calculate what to request. */
+
+    /**
+     * Gets a stream of items in the form of a flattened hierarchy from the
+     * back-end and filter the wanted results from the list.
+     * 
+     * @param range
+     *            the requested item range
+     * @return the stream of items
+     */
+    public Stream<T> fetchItems(Range range) {
+        return getHierarchy(null).skip(range.getStart()).limit(range.length());
+    }
+
+    /**
+     * Gets a stream of children for the given item in the form of a flattened
+     * hierarchy from the back-end and filter the wanted results from the list.
+     * 
+     * @param parent
+     *            the parent item for the fetch
+     * @param range
+     *            the requested item range
+     * @return the stream of items
+     */
+    public Stream<T> fetchItems(T parent, Range range) {
+        return getHierarchy(parent, false).skip(range.getStart())
+                .limit(range.length());
+    }
+
+    /* Methods for providing information on the hierarchy. */
+
+    /**
+     * Generic method for finding direct children of a given parent, limited by
+     * given range.
+     * 
+     * @param parent
+     *            the parent
+     * @param range
+     *            the range of direct children to return
+     * @return the requested children of the given parent
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private Stream<T> doFetchDirectChildren(T parent, Range range) {
+        return getDataProvider().fetchChildren(new HierarchicalQuery(
+                range.getStart(), range.length(), getBackEndSorting(),
+                getInMemorySorting(), getFilter(), parent));
+    }
+
+    private int getDepth(T item) {
+        int depth = -1;
+        while (item != null) {
+            item = getParentOfItem(item);
+            ++depth;
+        }
+        return depth;
+    }
+
+    private T getParentOfItem(T item) {
+        Objects.requireNonNull(item, "Can not find the parent of null");
+        return parentIdMap.get(getDataProvider().getId(item));
+    }
+
+    /**
+     * Removes all children of an item identified by a given id. Items removed
+     * by this method as well as the original item are all marked to be
+     * collapsed.
+     * 
+     * @param id
+     *            the item id
+     */
+    private void removeChildren(Object id) {
+        // Clean up removed nodes from child map
+        Iterator<Entry<T, Set<T>>> iterator = childMap.entrySet().iterator();
+        Set<T> invalidatedChildren = new HashSet<>();
+        while (iterator.hasNext()) {
+            Entry<T, Set<T>> entry = iterator.next();
+            T key = entry.getKey();
+            if (key != null && getDataProvider().getId(key).equals(id)) {
+                invalidatedChildren.addAll(entry.getValue());
+                iterator.remove();
+            }
+        }
+        expandedItemIds.remove(id);
+        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
+            removeChildren(x);
+            parentIdMap.remove(x);
         });
-
-        return depth.get();
     }
 
     /**
-     * Returns the tree node for the given expanded item key, or an empty
-     * optional if the item was not expanded.
-     *
-     * @param expandedNodeKey
-     *            the key of the item
-     * @return the tree node for the expanded item, or an empty optional if not
-     *         expanded
+     * Finds the current index of given object. This is based on a search in
+     * flattened version of the hierarchy.
+     * 
+     * @param target
+     *            the target object to find
+     * @return optional index of given object
      */
-    protected Optional<TreeNode> getNodeForKey(String expandedNodeKey) {
-        return nodes.stream()
-                .filter(node -> Objects.equals(node.parentKey, expandedNodeKey))
-                .findAny();
-    }
-
-    /**
-     * Expands the node in the given index and with the given key.
-     *
-     * @param expanedRowKey
-     *            the key of the expanded item
-     * @param expandedRowIndex
-     *            the index of the expanded item
-     * @param expandedNodeSize
-     *            the size of the subtree of the expanded node
-     * @throws IllegalStateException
-     *             if the node was expanded already
-     */
-    protected void expand(String expanedRowKey, int expandedRowIndex,
-            int expandedNodeSize) {
-        if (expandedNodeSize < 1) {
-            throw new IllegalArgumentException(
-                    "The expanded node's size cannot be less than 1, was "
-                            + expandedNodeSize);
-        }
-        TreeNode newNode = new TreeNode(expanedRowKey, expandedRowIndex + 1,
-                expandedNodeSize);
-
-        boolean added = nodes.add(newNode);
-        if (!added) {
-            throw new IllegalStateException("Node in index " + expandedRowIndex
-                    + " was expanded already.");
+    public Optional<Integer> getIndexOf(T target) {
+        if (target == null) {
+            return Optional.empty();
         }
 
-        // push end indexes for parent nodes
-        List<TreeNode> updated = nodes.headSet(newNode, false).stream()
-                .filter(node -> node.getEndIndex() >= expandedRowIndex)
+        final List<Object> collect = getHierarchy(null).map(provider::getId)
                 .collect(Collectors.toList());
-        nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.pushEnd(expandedNodeSize));
-        nodes.addAll(updated);
-
-        // push start and end indexes for later nodes
-        updated = nodes.tailSet(newNode, false).stream()
-                .collect(Collectors.toList());
-        nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.push(expandedNodeSize));
-        nodes.addAll(updated);
+        int index = collect.indexOf(getDataProvider().getId(target));
+        return Optional.ofNullable(index < 0 ? null : index);
     }
 
     /**
-     * Collapses the node in the given index.
-     *
-     * @param key
-     *            the key of the collapsed item
-     * @param collapsedRowIndex
-     *            the index of the collapsed item
-     * @return the size of the complete subtree that was collapsed
-     * @throws IllegalStateException
-     *             if the node was not collapsed, or if the given key is not the
-     *             same as it was when the node has been expanded
+     * Gets the full hierarchy tree starting from given node.
+     * 
+     * @param parent
+     *            the parent node to start from
+     * @return the flattened hierarchy as a stream
      */
-    protected int collapse(String key, int collapsedRowIndex) {
-        Objects.requireNonNull(key,
-                "The key for the item to collapse cannot be null.");
-        TreeNode collapsedNode = nodes
-                .ceiling(new TreeNode(collapsedRowIndex + 1));
-        if (collapsedNode == null
-                || collapsedNode.startIndex != collapsedRowIndex + 1) {
-            throw new IllegalStateException(
-                    "Could not find expanded node for index "
-                            + collapsedRowIndex + ", node was not collapsed");
-        }
-        if (!Objects.equals(key, collapsedNode.parentKey)) {
-            throw new IllegalStateException("The expected parent key " + key
-                    + " is different for the collapsed node " + collapsedNode);
-        }
-
-        // remove complete subtree
-        AtomicInteger removedSubTreeSize = new AtomicInteger(
-                collapsedNode.getEndIndex() - collapsedNode.startIndex + 1);
-        nodes.tailSet(collapsedNode, false).removeIf(
-                node -> node.startIndex <= collapsedNode.getEndIndex());
-
-        final int offset = -1 * removedSubTreeSize.get();
-        // adjust parent end indexes
-        List<TreeNode> updated = nodes.headSet(collapsedNode, false).stream()
-                .filter(node -> node.getEndIndex() >= collapsedRowIndex)
-                .collect(Collectors.toList());
-        nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.pushEnd(offset));
-        nodes.addAll(updated);
-
-        // adjust start and end indexes for latter nodes
-        updated = nodes.tailSet(collapsedNode, false).stream()
-                .collect(Collectors.toList());
-        nodes.removeAll(updated);
-        updated.stream().forEach(node -> node.push(offset));
-        nodes.addAll(updated);
-
-        nodes.remove(collapsedNode);
-
-        return removedSubTreeSize.get();
+    private Stream<T> getHierarchy(T parent) {
+        return getHierarchy(parent, true);
     }
 
     /**
-     * Splits the given range into queries per tree level.
-     *
-     * @param firstRow
-     *            the first row to fetch
-     * @param lastRow
-     *            the last row to fetch
-     * @return a stream of query data per level
-     * @see #reorderLevelQueryResultsToFlatOrdering(BiConsumer, TreeLevelQuery,
-     *      List)
+     * Getst hte full hierarchy tree starting from given node. The starting node
+     * can be omitted.
+     * 
+     * @param parent
+     *            the parent node to start from
+     * @param includeParent
+     *            {@code true} to include the parent; {@code false} if not
+     * @return the flattened hierarchy as a stream
      */
-    protected Stream<TreeLevelQuery> splitRangeToLevelQueries(
-            final int firstRow, final int lastRow) {
-        return nodes.stream()
-                // filter to parts intersecting with the range
-                .filter(node -> node.startIndex <= lastRow
-                        && firstRow <= node.getEndIndex())
-                // split into queries per level with level based indexing
-                .map(node -> {
-
-                    // calculate how subtrees effect indexing and size
-                    int depth = getDepth(node.parentKey);
-                    List<TreeNode> directSubTrees = nodes.tailSet(node, false)
-                            .stream()
-                            // find subtrees
-                            .filter(subTree -> node.startIndex < subTree
-                                    .getEndIndex()
-                                    && subTree.startIndex < node.getEndIndex())
-                            // filter to direct subtrees
-                            .filter(subTree -> getDepth(
-                                    subTree.parentKey) == (depth + 1))
-                            .collect(Collectors.toList());
-                    // first intersecting index in flat order
-                    AtomicInteger firstIntersectingRowIndex = new AtomicInteger(
-                            Math.max(node.startIndex, firstRow));
-                    // last intersecting index in flat order
-                    final int lastIntersectingRowIndex = Math
-                            .min(node.getEndIndex(), lastRow);
-                    // start index for this level
-                    AtomicInteger start = new AtomicInteger(
-                            firstIntersectingRowIndex.get() - node.startIndex);
-                    // how many nodes should be fetched for this level
-                    AtomicInteger size = new AtomicInteger(
-                            lastIntersectingRowIndex
-                                    - firstIntersectingRowIndex.get() + 1);
-
-                    // reduce subtrees before requested index
-                    directSubTrees.stream().filter(subtree -> subtree
-                            .getEndIndex() < firstIntersectingRowIndex.get())
-                            .forEachOrdered(subtree -> {
-                                start.addAndGet(-1 * (subtree.getEndIndex()
-                                        - subtree.startIndex + 1));
-                            });
-                    // if requested start index is in the middle of a
-                    // subtree, start is after that
-                    List<TreeNode> intersectingSubTrees = new ArrayList<>();
-                    directSubTrees.stream()
-                            .filter(subtree -> subtree.startIndex <= firstIntersectingRowIndex
-                                    .get() && firstIntersectingRowIndex
-                                            .get() <= subtree.getEndIndex())
-                            .findFirst().ifPresent(subtree -> {
-                                int previous = firstIntersectingRowIndex
-                                        .getAndSet(subtree.getEndIndex() + 1);
-                                int delta = previous
-                                        - firstIntersectingRowIndex.get();
-                                start.addAndGet(subtree.startIndex - previous);
-                                size.addAndGet(delta);
-                                intersectingSubTrees.add(subtree);
-                            });
-                    // reduce size of subtrees after first row that intersect
-                    // with requested range
-                    directSubTrees.stream()
-                            .filter(subtree -> firstIntersectingRowIndex
-                                    .get() < subtree.startIndex
-                                    && subtree.endIndex <= lastIntersectingRowIndex)
-                            .forEachOrdered(subtree -> {
-                                // reduce subtree size that is part of the
-                                // requested range from query size
-                                size.addAndGet(
-                                        -1 * (Math.min(subtree.getEndIndex(),
-                                                lastIntersectingRowIndex)
-                                                - subtree.startIndex + 1));
-                                intersectingSubTrees.add(subtree);
-                            });
-                    return new TreeLevelQuery(node, start.get(), size.get(),
-                            depth, firstIntersectingRowIndex.get(),
-                            intersectingSubTrees);
-
-                }).filter(query -> query.size > 0);
-
+    private Stream<T> getHierarchy(T parent, boolean includeParent) {
+        return Stream.of(parent)
+                .flatMap(node -> getChildrenStream(node, includeParent));
     }
 
     /**
-     * Merges the tree level query results into flat grid ordering.
-     *
-     * @param rangePositionCallback
-     *            the callback to place the results into
-     * @param query
-     *            the query data for the results
-     * @param results
-     *            the results to reorder
-     * @param <T>
-     *            the type of the results
+     * Gets the stream of direct children for given node.
+     * 
+     * @param parent
+     *            the parent node
+     * @return the stream of direct children
      */
-    protected <T> void reorderLevelQueryResultsToFlatOrdering(
-            BiConsumer<T, Integer> rangePositionCallback, TreeLevelQuery query,
-            List<T> results) {
-        AtomicInteger nextPossibleIndex = new AtomicInteger(
-                query.firstRowIndex);
-        for (T item : results) {
-            // search for any intersecting subtrees and push index if necessary
-            query.subTrees.stream().filter(
-                    subTree -> subTree.startIndex <= nextPossibleIndex.get()
-                            && nextPossibleIndex.get() <= subTree.getEndIndex())
-                    .findAny().ifPresent(intersecting -> {
-                        nextPossibleIndex.addAndGet(intersecting.getEndIndex()
-                                - intersecting.startIndex + 1);
-                        query.subTrees.remove(intersecting);
-                    });
-            rangePositionCallback.accept(item,
-                    nextPossibleIndex.getAndIncrement());
-        }
+    private Stream<T> getDirectChildren(T parent) {
+        return doFetchDirectChildren(parent, Range.between(0, getDataProvider()
+                .getChildCount(new HierarchicalQuery<>(filter, parent))));
     }
 
+    /**
+     * The method to recursively fetch the children of given parent. Used with
+     * {@link Stream#flatMap} to expand a stream of parent nodes into a
+     * flattened hierarchy.
+     * 
+     * @param parent
+     *            the parent node
+     * @return the stream of all children under the parent, includes the parent
+     */
+    private Stream<T> getChildrenStream(T parent) {
+        return getChildrenStream(parent, true);
+    }
+
+    /**
+     * The method to recursively fetch the children of given parent. Used with
+     * {@link Stream#flatMap} to expand a stream of parent nodes into a
+     * flattened hierarchy.
+     * 
+     * @param parent
+     *            the parent node
+     * @param includeParent
+     *            {@code true} to include the parent in the stream;
+     *            {@code false} if not
+     * @return the stream of all children under the parent
+     */
+    private Stream<T> getChildrenStream(T parent, boolean includeParent) {
+        List<T> childList = Collections.emptyList();
+        if (isExpanded(parent)) {
+            childList = getDirectChildren(parent).collect(Collectors.toList());
+            if (childList.isEmpty()) {
+                removeChildren(parent == null ? null
+                        : getDataProvider().getId(parent));
+            } else {
+                childMap.put(parent, new HashSet<>(childList));
+                childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
+            }
+        }
+        return combineParentAndChildStreams(parent,
+                childList.stream().flatMap(this::getChildrenStream),
+                includeParent);
+    }
+
+    /**
+     * Helper method for combining parent and a stream of children into one
+     * stream. {@code null} item is never included, and parent can be skipped by
+     * providing the correct value for {@code includeParent}.
+     * 
+     * @param parent
+     *            the parent node
+     * @param children
+     *            the stream of children
+     * @param includeParent
+     *            {@code true} to include the parent in the stream;
+     *            {@code false} if not
+     * @return the combined stream of parent and its children
+     */
+    private Stream<T> combineParentAndChildStreams(T parent, Stream<T> children,
+            boolean includeParent) {
+        boolean parentIncluded = includeParent && parent != null;
+        Stream<T> parentStream = parentIncluded ? Stream.of(parent)
+                : Stream.empty();
+        return Stream.concat(parentStream, children);
+    }
+
+    @Override
+    public void destroyAllData() {
+        childMap.clear();
+        parentIdMap.clear();
+    }
 }

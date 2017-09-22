@@ -17,6 +17,8 @@ import org.mockito.Mockito;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentRootSetter;
+import com.vaadin.ui.Composite;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -75,7 +77,16 @@ public class StateGetDoesNotMarkDirtyTest {
                         }
                         // just to make sure we can invoke it
                         method.setAccessible(true);
-                        method.invoke(newInstance);
+                        try {
+                            method.invoke(newInstance);
+                        } catch (InvocationTargetException e) {
+                            if (e.getCause() instanceof UnsupportedOperationException) {
+                                // Overridden getter which is not supposed to be
+                                // called
+                            } else {
+                                throw e;
+                            }
+                        }
                     }
                 } catch (Exception e) {
                     System.err.println("problem with method " + clazz.getName()
@@ -115,6 +126,10 @@ public class StateGetDoesNotMarkDirtyTest {
 
             if (component instanceof UI) {
                 return component;
+            }
+            if (component.getClass().equals(Composite.class)) {
+                // Plain Composite needs a root.
+                ComponentRootSetter.setRoot(component, new Label());
             }
             emulateAttach(component);
             return component;

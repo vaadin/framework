@@ -27,12 +27,16 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface DragSourceRpc extends ServerRpc {
 
     /**
-     * Called when dragsource event happens on client side.
+     * Called when dragstart event happens on client side.
      */
     public void dragStart();
 
     /**
      * Called when dragend event happens on client side.
+     *
+     * @param dropEffect
+     *         Drop effect of the dragend event, extracted from {@code
+     *         DataTransfer.dropEffect} parameter.
      */
-    public void dragEnd();
+    public void dragEnd(DropEffect dropEffect);
 }

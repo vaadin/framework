@@ -5,14 +5,13 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test</artifactId>
-        <version>8.0-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
     <artifactId>vaadin-test-generic-integration</artifactId>
     <name>vaadin-test-generic-integration</name>
     <packaging>war</packaging>
     <properties>
-        <osgi.bundle.version>8.0.0</osgi.bundle.version>
         <jetty.skip>true</jetty.skip>
     </properties>
 
@@ -83,11 +82,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
-                </configuration>
                 <!-- This execution builds an additional .war file with JBoss 
                     6 specific descriptor -->
                 <executions>
@@ -105,33 +99,6 @@
                                 </resource>
                             </webResources>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>3.0.1</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-Name>${project.name}</Bundle-Name>
-                        <Bundle-Version>${osgi.bundle.version}</Bundle-Version>
-                        <Import-Package>javax.servlet,javax.servlet.http,javax.websocket,javax.websocket.server,!com.vaadin.*,*</Import-Package>
-                        <Web-ContextPath>run</Web-ContextPath>
-                    </instructions>
-                    <supportedProjectTypes>
-                        <supportedProjectType>war</supportedProjectType>
-                    </supportedProjectTypes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-manifest</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

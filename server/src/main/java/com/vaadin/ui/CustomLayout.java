@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -205,7 +206,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      */
     @Override
     public Iterator<Component> iterator() {
-        return slots.values().iterator();
+        return Collections.unmodifiableCollection(slots.values()).iterator();
     }
 
     /**
@@ -306,7 +307,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
         String templateName = getState(false).templateName;
-        if (templateName != null && templateName.length() != 0) {
+        if (templateName != null && !templateName.isEmpty()) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();
             String resourceName = "layouts/" + templateName + ".html";

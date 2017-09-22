@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -94,6 +95,21 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         }
     }
 
+    /**
+     * Returns the JsonObject used to populate the CheckBox widget that contains
+     * given Element.
+     *
+     * @since 8.2
+     * @param element
+     *            the element to search for
+     * @return the related JsonObject; {@code null} if not found
+     */
+    public JsonObject getItem(Element element) {
+        return optionsToItems.entrySet().stream()
+                .filter(e -> e.getKey().getElement().isOrHasChild(element))
+                .map(e -> e.getValue()).findFirst().orElse(null);
+    }
+
     private void remove(Widget widget) {
         getWidget().remove(widget);
         optionsToItems.remove(widget);
@@ -108,7 +124,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         }
 
         String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-        if (iconUrl != null && iconUrl.length() != 0) {
+        if (iconUrl != null && !iconUrl.isEmpty()) {
             Icon icon = client.getIcon(iconUrl);
             itemHtml = icon.getElement().getString() + itemHtml;
         }

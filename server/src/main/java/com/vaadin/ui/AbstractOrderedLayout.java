@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -184,7 +185,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
      */
     @Override
     public Iterator<Component> iterator() {
-        return components.iterator();
+        return Collections.unmodifiableCollection(components).iterator();
     }
 
     /**
@@ -475,7 +476,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
             // handle expand ratio
             if (attr.hasKey(":expand")) {
                 String value = attr.get(":expand");
-                if (value.length() > 0) {
+                if (!value.isEmpty()) {
                     try {
                         float ratio = Float.valueOf(value);
                         setExpandRatio(newChild, ratio);

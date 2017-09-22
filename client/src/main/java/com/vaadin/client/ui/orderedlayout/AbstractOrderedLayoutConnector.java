@@ -320,6 +320,24 @@ public abstract class AbstractOrderedLayoutConnector
         Profiler.leave(
                 "AOLC.onConnectorHierarchyChange temporarily remove spacing");
 
+        // first remove extra components to avoid extra detaches and attaches
+        for (ComponentConnector child : previousChildren) {
+            Profiler.enter("AOLC.onConnectorHierarchyChange remove children");
+            if (child.getParent() != this) {
+                Slot slot = layout.getSlot(child.getWidget());
+                slot.setWidgetResizeListener(null);
+                if (slot.hasCaption()) {
+                    slot.setCaptionResizeListener(null);
+                }
+                slot.setSpacingResizeListener(null);
+                child.removeStateChangeHandler(childStateChangeHandler);
+                layout.removeWidget(child.getWidget());
+            }
+            Profiler.leave("AOLC.onConnectorHierarchyChange remove children");
+        }
+        Profiler.leave("AOLC.onConnectorHierarchyChange");
+
+        // reorder remaining components and add any new components
         for (ComponentConnector child : getChildComponents()) {
             Profiler.enter("AOLC.onConnectorHierarchyChange add children");
             Slot slot = layout.getSlot(child.getWidget());
@@ -344,22 +362,6 @@ public abstract class AbstractOrderedLayoutConnector
             layout.setSpacing(true);
         }
         Profiler.leave("AOLC.onConnectorHierarchyChange setSpacing");
-
-        for (ComponentConnector child : previousChildren) {
-            Profiler.enter("AOLC.onConnectorHierarchyChange remove children");
-            if (child.getParent() != this) {
-                Slot slot = layout.getSlot(child.getWidget());
-                slot.setWidgetResizeListener(null);
-                if (slot.hasCaption()) {
-                    slot.setCaptionResizeListener(null);
-                }
-                slot.setSpacingResizeListener(null);
-                child.removeStateChangeHandler(childStateChangeHandler);
-                layout.removeWidget(child.getWidget());
-            }
-            Profiler.leave("AOLC.onConnectorHierarchyChange remove children");
-        }
-        Profiler.leave("AOLC.onConnectorHierarchyChange");
 
         updateInternalState();
     }
@@ -539,14 +541,10 @@ public abstract class AbstractOrderedLayoutConnector
         if (isVertical) {
             // Doesn't need height fix for vertical layouts
             return false;
-        }
-
-        else if (!isUndefinedHeight()) {
+        } else if (!isUndefinedHeight()) {
             // Fix not needed unless the height is undefined
             return false;
-        }
-
-        else if (!hasChildrenWithRelativeHeight
+        } else if (!hasChildrenWithRelativeHeight
                 && !hasChildrenWithMiddleAlignment) {
             // Already works if there are no relative heights or middle aligned
             // children

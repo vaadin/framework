@@ -22,9 +22,9 @@ public class GridRendererSwitch extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         Grid<Integer> grid = new Grid<>();
         Column<Integer, String> column = grid.addColumn(i -> "Foo " + i)
-                .setCaption("Foo");
+                .setCaption("Foo").setHidable(true);
         Column<Integer, String> secondColumn = grid.addColumn(i -> "Bar " + i)
-                .setCaption("Bar");
+                .setCaption("Bar").setHidable(true);
 
         addComponent(grid);
         addComponent(new Button("Switch", e -> {

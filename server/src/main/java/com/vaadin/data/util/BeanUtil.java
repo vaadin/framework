@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.validator.BeanValidator;
@@ -236,10 +237,11 @@ public final class BeanUtil implements Serializable {
                 return true;
             } catch (ClassNotFoundException | NoSuchMethodException
                     | InvocationTargetException e) {
-                Logger.getLogger(BeanValidator.class.getName())
-                        .fine("A JSR-303 bean validation implementation not found on the classpath. "
+                Logger.getLogger(BeanValidator.class.getName()).log(Level.INFO,
+                        "A JSR-303 bean validation implementation not found on the classpath or could not be initialized. "
                                 + BeanValidator.class.getSimpleName()
-                                + " cannot be used.");
+                                + " cannot be used.",
+                        e);
                 return false;
             } catch (IllegalAccessException | IllegalArgumentException e) {
                 throw new RuntimeException(

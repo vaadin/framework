@@ -18,6 +18,8 @@ package com.vaadin.v7.data.util;
 import static com.vaadin.util.ReflectTools.convertPrimitiveType;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -68,7 +70,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private Class<? extends T> type;
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         out.defaultWriteObject();
         // getMethods and setMethod are reconstructed on read based on
@@ -76,7 +78,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
 
@@ -144,7 +146,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
         }
         for (int i = 0; i < simplePropertyNames.length; i++) {
             String simplePropertyName = simplePropertyNames[i].trim();
-            if (simplePropertyName.length() > 0) {
+            if (!simplePropertyName.isEmpty()) {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;
                 try {
@@ -152,7 +154,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
                             simplePropertyName, propertyClass);
                     propertyClass = getter.getReturnType();
                     getMethods.add(getter);
-                } catch (final java.lang.NoSuchMethodException e) {
+                } catch (final NoSuchMethodException e) {
                     throw new IllegalArgumentException("Bean property '"
                             + simplePropertyName + "' not found", e);
                 }

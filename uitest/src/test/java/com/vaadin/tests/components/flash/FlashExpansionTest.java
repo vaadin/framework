@@ -29,17 +29,16 @@ public class FlashExpansionTest extends MultiBrowserTest {
         waitForElementPresent(locator);
         WebElement embed = $(FlashElement.class).first().findElement(locator);
         String width = embed.getAttribute("width");
-        Assert.assertTrue("Width is not 400.0px initially",
-                "400.0px".equals(width));
+        Assert.assertEquals("Width is not 400.0px initially", "400", width);
         $(ButtonElement.class).first().click();
+        embed = $(FlashElement.class).first().findElement(locator);
         String widthAfterExpansion = embed.getAttribute("width");
-        Assert.assertFalse("Width is still 400.0px after expansion",
-                "400.0px".equals(widthAfterExpansion));
+        Assert.assertNotEquals("Width is still 400.0px after expansion", "400",
+                widthAfterExpansion);
     }
 
     private List<DesiredCapabilities> getBrowsersSupportingFlash() {
         // No Flash support in Chrome, FF, PhantomJS
-        return getBrowserCapabilities(Browser.IE8, Browser.IE9, Browser.IE10,
-                Browser.IE11);
+        return getBrowserCapabilities(Browser.IE11);
     }
 }

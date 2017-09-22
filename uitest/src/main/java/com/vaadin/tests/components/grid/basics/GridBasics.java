@@ -48,8 +48,8 @@ import com.vaadin.ui.components.grid.FooterRow;
 import com.vaadin.ui.components.grid.HeaderCell;
 import com.vaadin.ui.components.grid.HeaderRow;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
+import com.vaadin.ui.components.grid.MultiSelectionModel.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
-import com.vaadin.ui.components.grid.MultiSelectionModelImpl.SelectAllCheckBoxVisibility;
 import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
 import com.vaadin.ui.renderers.DateRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
@@ -382,6 +382,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         MenuItem heightMenu = sizeMenu.addItem("Height", null);
         Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
                 i -> addGridMethodMenu(heightMenu, i, i, grid::setHeight));
+
+        MenuItem rowHeightMenu = sizeMenu.addItem("Row Height", null);
+        Stream.of(-1, 20, 40, 100).forEach(i -> addGridMethodMenu(rowHeightMenu,
+                String.valueOf(i), (double) i, grid::setRowHeight));
     }
 
     private void createStateMenu(MenuItem stateMenu) {
@@ -535,6 +539,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         rowMenu.addItem("Deselect all", menuItem -> {
             grid.getSelectionModel().deselectAll();
         });
+
+        MenuItem rowHeight = rowMenu.addItem("Body Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setBodyRowHeight(i)));
     }
 
     private void createSelectionMenu(MenuItem stateItem) {
@@ -599,6 +607,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createHeaderMenu(MenuItem headerMenu) {
+        headerMenu.addItem("Toggle header visibility",
+                menuitem -> grid.setHeaderVisible(!grid.isHeaderVisible()));
+
         headerMenu.addItem("Append header row", menuItem -> {
             HeaderRow row = grid.appendHeaderRow();
 
@@ -633,6 +644,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
             mergeHeaderСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = headerMenu.addItem("Header Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setHeaderRowHeight(i)));
     }
 
     private void mergeHeaderСells(int rowIndex, String jointCellText,
@@ -658,6 +673,9 @@ public class GridBasics extends AbstractTestUIWithLog {
     }
 
     private void createFooterMenu(MenuItem footerMenu) {
+        footerMenu.addItem("Toggle footer visibility",
+                menuitem -> grid.setFooterVisible(!grid.isFooterVisible()));
+
         footerMenu.addItem("Add default footer row", menuItem -> {
             FooterRow defaultFooter = grid.appendFooterRow();
             grid.getColumns().forEach(
@@ -693,6 +711,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
             mergeFooterСells(0, "6+7", 6, 7);
         });
+
+        MenuItem rowHeight = footerMenu.addItem("Footer Row Height", null);
+        Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
+                menuItem -> grid.setFooterRowHeight(i)));
     }
 
     /* DetailsGenerator related things */

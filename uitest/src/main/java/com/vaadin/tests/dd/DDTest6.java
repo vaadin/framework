@@ -175,9 +175,9 @@ public class DDTest6 extends TestBase {
 
     }
 
-    private final static ThemeResource FOLDER = new ThemeResource(
+    private static final ThemeResource FOLDER = new ThemeResource(
             "../runo/icons/64/folder.png");
-    private final static ThemeResource DOC = new ThemeResource(
+    private static final ThemeResource DOC = new ThemeResource(
             "../runo/icons/64/document.png");
 
     public static class File {

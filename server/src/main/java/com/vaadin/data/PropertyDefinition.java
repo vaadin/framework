@@ -55,6 +55,15 @@ public interface PropertyDefinition<T, V> extends Serializable {
     public Class<V> getType();
 
     /**
+     * Gets the type of the class containing this property.
+     *
+     * @since 8.1
+     *
+     * @return the property type. not <code>null</code>
+     */
+    public Class<?> getPropertyHolderType();
+
+    /**
      * Gets the name of this property.
      *
      * @return the property name, not <code>null</code>

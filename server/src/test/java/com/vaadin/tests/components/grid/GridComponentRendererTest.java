@@ -15,7 +15,6 @@ import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.tests.util.MockUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.renderers.ComponentRenderer;
 
 /**
  * Test to validate clean detaching in Grid with ComponentRenderer.
@@ -37,11 +36,11 @@ public class GridComponentRendererTest {
         dataProvider = DataProvider.ofCollection(backend);
         grid = new Grid<>();
         grid.setDataProvider(dataProvider);
-        grid.addColumn(p -> {
+        grid.addComponentColumn(p -> {
             oldComponent = testComponent;
             testComponent = new Label();
             return testComponent;
-        }, new ComponentRenderer());
+        });
         new MockUI() {
             @Override
             public Future<Void> access(Runnable runnable) {

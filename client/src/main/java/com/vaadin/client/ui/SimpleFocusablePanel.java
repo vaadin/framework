@@ -30,9 +30,9 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.vaadin.client.Focusable;
 
 /**
  * Compared to FocusPanel in GWT this panel does not support eg. accesskeys, but
@@ -40,7 +40,7 @@ import com.vaadin.client.Focusable;
  */
 public class SimpleFocusablePanel extends SimplePanel
         implements HasFocusHandlers, HasBlurHandlers, HasKeyDownHandlers,
-        HasKeyPressHandlers, Focusable {
+        HasKeyPressHandlers, Focusable, com.vaadin.client.Focusable {
 
     public SimpleFocusablePanel() {
         // make focusable, as we don't need access key magic we don't need to
@@ -72,6 +72,7 @@ public class SimpleFocusablePanel extends SimplePanel
         return addDomHandler(handler, KeyUpEvent.getType());
     }
 
+    @Override
     public void setFocus(boolean focus) {
         if (focus) {
             FocusImpl.getFocusImplForPanel().focus(getElement());
@@ -85,7 +86,18 @@ public class SimpleFocusablePanel extends SimplePanel
         setFocus(true);
     }
 
+    @Override
     public void setTabIndex(int tabIndex) {
         getElement().setTabIndex(tabIndex);
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getElement().getTabIndex();
+    }
+
+    @Override
+    public void setAccessKey(char key) {
+        FocusUtil.setAccessKey(this, key);
     }
 }

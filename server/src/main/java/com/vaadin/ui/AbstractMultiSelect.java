@@ -89,7 +89,7 @@ public abstract class AbstractMultiSelect<T> extends AbstractListing<T>
 
     }
 
-    private class MultiSelectDataGenerator implements DataGenerator<T> {
+    private final class MultiSelectDataGenerator implements DataGenerator<T> {
         @Override
         public void generateData(T data, JsonObject jsonObject) {
             String caption = getItemCaptionGenerator().apply(data);

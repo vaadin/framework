@@ -476,7 +476,7 @@ public final class UIDL extends JavaScriptObject {
      * @deprecated should not be used anymore
      */
     @Deprecated
-    public final static class XML extends JavaScriptObject {
+    public static final class XML extends JavaScriptObject {
         protected XML() {
         }
 

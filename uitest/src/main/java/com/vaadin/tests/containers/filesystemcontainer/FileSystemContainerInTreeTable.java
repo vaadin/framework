@@ -47,7 +47,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             treeTable.setHeight("550px");
             treeTable.setContainerDataSource(fsc);
             treeTable.setItemIconPropertyId(FilesystemContainer.PROPERTY_ICON);
-            treeTable.setVisibleColumns(new String[] { "Name" });
+            treeTable.setVisibleColumns("Name");
             treeTable.setColumnWidth("Name", 400);
             treeTable.addListener(new ExpandListener() {
 

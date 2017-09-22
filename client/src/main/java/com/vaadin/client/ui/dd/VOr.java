@@ -17,8 +17,8 @@ package com.vaadin.client.ui.dd;
 
 import com.vaadin.client.UIDL;
 import com.vaadin.event.dd.acceptcriteria.Or;
-import com.vaadin.event.dnd.DropTargetExtension;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
+import com.vaadin.ui.dnd.DropTargetExtension;
 
 /**
  *
@@ -39,7 +39,7 @@ public final class VOr extends VAcceptCriterion implements VAcceptCallback {
         for (int i = 0; i < childCount; i++) {
             VAcceptCriterion crit = VAnd.getCriteria(drag, configuration, i);
             crit.accept(drag, configuration.getChildUIDL(i), this);
-            if (accepted == true) {
+            if (accepted) {
                 callback.accepted(drag);
                 return;
             }

@@ -802,11 +802,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
             // Property mapping
             Assert.assertEquals(expectedColumn.getId(), column.getId());
-            // Not tested because of
-            // https://github.com/vaadin/framework/issues/8752
             // Header caption
-            // Assert.assertEquals(expectedColumn.getCaption(),
-            // column.getCaption());
+            Assert.assertEquals(expectedColumn.getCaption(),
+                    column.getCaption());
 
             // Value providers are not stored in the declarative file
             // so this only works for bean properties

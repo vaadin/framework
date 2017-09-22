@@ -153,7 +153,7 @@ public class CommonParts extends VerticalLayout implements View {
                 title.setPlaceholder("Title for the notification");
                 title.addValueChangeListener(event -> {
                     if (title.getValue() == null
-                            || title.getValue().length() == 0) {
+                            || title.getValue().isEmpty()) {
                         notification.setCaption(null);
                     } else {
                         notification.setCaption(title.getValue());
@@ -167,7 +167,7 @@ public class CommonParts extends VerticalLayout implements View {
                 description.addStyleName(ValoTheme.TEXTAREA_SMALL);
                 description.addValueChangeListener(listener -> {
                     if (description.getValue() == null
-                            || description.getValue().length() == 0) {
+                            || description.getValue().isEmpty()) {
                         notification.setDescription(null);
                     } else {
                         notification.setDescription(description.getValue());
@@ -218,11 +218,11 @@ public class CommonParts extends VerticalLayout implements View {
                                         + item.getText().toLowerCase();
                             }
                         }
-                        if (styleString.trim().length() > 0) {
+                        if (!styleString.trim().isEmpty()) {
                             notification.setStyleName(
                                     (typeString + " " + styleString.trim())
                                             .trim());
-                        } else if (typeString.length() > 0) {
+                        } else if (!typeString.isEmpty()) {
                             notification.setStyleName(typeString.trim());
                         } else {
                             notification.setStyleName(null);
@@ -261,7 +261,7 @@ public class CommonParts extends VerticalLayout implements View {
                 delay.setValue("1000");
                 group.addComponent(delay);
 
-                Button clear = new Button(null, new ClickListener() {
+                Button clear = new Button("", new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         delay.setValue("");

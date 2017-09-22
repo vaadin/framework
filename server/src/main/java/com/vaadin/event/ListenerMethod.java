@@ -18,7 +18,10 @@ package com.vaadin.event;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.EventListener;
@@ -83,7 +86,7 @@ public class ListenerMethod implements EventListener, Serializable {
     private int eventArgumentIndex;
 
     /* Special serialization to handle method references */
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         try {
             out.defaultWriteObject();
@@ -101,7 +104,7 @@ public class ListenerMethod implements EventListener, Serializable {
     }
 
     /* Special serialization to handle method references */
-    private void readObject(java.io.ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
             throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         try {
@@ -170,17 +173,17 @@ public class ListenerMethod implements EventListener, Serializable {
      *            eventArgumentIndex is negative, the triggering event object
      *            will not be passed to the trigger method, though it is still
      *            called.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
     public ListenerMethod(Class<?> eventType, Object target, Method method,
             Object[] arguments, int eventArgumentIndex)
-            throws java.lang.IllegalArgumentException {
+            throws IllegalArgumentException {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "The method " + method.getName()
                             + " cannot be used for the given target: "
                             + target.getClass().getName());
@@ -188,7 +191,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the event argument is null
         if (eventArgumentIndex >= 0 && arguments[eventArgumentIndex] != null) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "argument[" + eventArgumentIndex + "] must be null");
         }
 
@@ -196,7 +199,7 @@ public class ListenerMethod implements EventListener, Serializable {
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "The method " + method.getName()
                             + " does not accept the given eventType: "
                             + eventType.getName());
@@ -236,13 +239,13 @@ public class ListenerMethod implements EventListener, Serializable {
      *            eventArgumentIndex is negative, the triggering event object
      *            will not be passed to the trigger method, though it is still
      *            called.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
     public ListenerMethod(Class<?> eventType, Object target, String methodName,
             Object[] arguments, int eventArgumentIndex)
-            throws java.lang.IllegalArgumentException {
+            throws IllegalArgumentException {
 
         // Finds the correct method
         final Method[] methods = target.getClass().getMethods();
@@ -259,7 +262,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the event argument is null
         if (eventArgumentIndex >= 0 && arguments[eventArgumentIndex] != null) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "argument[" + eventArgumentIndex + "] must be null");
         }
 
@@ -267,7 +270,7 @@ public class ListenerMethod implements EventListener, Serializable {
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "The method " + method.getName()
                             + " does not accept the given eventType: "
                             + eventType.getName());
@@ -302,16 +305,16 @@ public class ListenerMethod implements EventListener, Serializable {
      *            the trigger method.
      * @param arguments
      *            the arguments to be passed to the trigger method.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             if <code>method</code> is not a member of <code>target</code>
      *             .
      */
     public ListenerMethod(Class<?> eventType, Object target, Method method,
-            Object[] arguments) throws java.lang.IllegalArgumentException {
+            Object[] arguments) throws IllegalArgumentException {
 
         // Check that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "The method " + method.getName()
                             + " cannot be used for the given target: "
                             + target.getClass().getName());
@@ -349,12 +352,12 @@ public class ListenerMethod implements EventListener, Serializable {
      *            <code>java.lang.IllegalArgumentException</code> is thrown.
      * @param arguments
      *            the arguments to be passed to the trigger method.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>object</code>.
      */
     public ListenerMethod(Class<?> eventType, Object target, String methodName,
-            Object[] arguments) throws java.lang.IllegalArgumentException {
+            Object[] arguments) throws IllegalArgumentException {
 
         // Find the correct method
         final Method[] methods = target.getClass().getMethods();
@@ -395,16 +398,16 @@ public class ListenerMethod implements EventListener, Serializable {
      *            the object instance that contains the trigger method.
      * @param method
      *            the trigger method.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             if <code>method</code> is not a member of <code>object</code>
      *             .
      */
     public ListenerMethod(Class<?> eventType, Object target, Method method)
-            throws java.lang.IllegalArgumentException {
+            throws IllegalArgumentException {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new java.lang.IllegalArgumentException(
+            throw new IllegalArgumentException(
                     "The method " + method.getName()
                             + " cannot be used for the given target: "
                             + target.getClass().getName());
@@ -451,12 +454,12 @@ public class ListenerMethod implements EventListener, Serializable {
      *            the name of the trigger method. If the object does not contain
      *            the method or it contains more than one matching methods
      *            <code>java.lang.IllegalArgumentException</code> is thrown.
-     * @throws java.lang.IllegalArgumentException
+     * @throws IllegalArgumentException
      *             unless exactly one match <code>methodName</code> is found in
      *             <code>target</code>.
      */
     public ListenerMethod(Class<?> eventType, Object target, String methodName)
-            throws java.lang.IllegalArgumentException {
+            throws IllegalArgumentException {
 
         // Finds the correct method
         final Method[] methods = target.getClass().getMethods();
@@ -518,11 +521,11 @@ public class ListenerMethod implements EventListener, Serializable {
                     method.invoke(target, arguments);
                 }
 
-            } catch (final java.lang.IllegalAccessException e) {
+            } catch (final IllegalAccessException e) {
                 // This should never happen
-                throw new java.lang.RuntimeException(
+                throw new RuntimeException(
                         "Internal error - please report", e);
-            } catch (final java.lang.reflect.InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 // An exception was thrown by the invocation target. Throw it
                 // forwards.
                 throw new MethodException(
