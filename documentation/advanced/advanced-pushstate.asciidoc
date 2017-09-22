@@ -7,11 +7,16 @@ layout: page
 [[advanced.pushstate]]
 = Mananipulating browser history
 
-A major issue in AJAX applications is that as they run in a single web page,
-bookmarking the application URL (or more generally the __URI__) can only
+A major issue in AJAX applications is that as they run in a single web page.
+Bookmarking the application URL (or more generally the __URI__) can only
 bookmark the application, not an application state. This is a problem for many
 applications, such as product catalogs and discussion forums, in which it would
-be good to provide links to specific products or messages. The solution is to modify the URI of the browser using https://developer.mozilla.org/en-US/docs/Web/API/History_API[History APIs] _pushState_ or _replaceState_ functions, whenever developer wants to simulate a logical page change. There is a server side API for those methods and a mechanism to listen client side URI changes (most often back/forward button clicks in browser) in [classname]#Page# object. 
+be good to provide links to specific products or messages. The solution is to 
+modify the URI of the browser using https://developer.mozilla.org/en-US/docs/Web/API/History_API[History APIs]
+[methodname]#pushState# or [methodname]#replaceState# functions, whenever developer
+wants to simulate a logical page change. There is a server side API for those 
+methods and a mechanism to listen to changes in the client side URI in the
+[classname]#Page# object. 
 
 Vaadin offers two ways to modify URIs: the high-level
 [classname]#Navigator# utility described in
@@ -46,7 +51,6 @@ method of a UI class:
 
 [source, java]
 ----
-@PushStateNavigation
 public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest request) {

@@ -139,16 +139,17 @@ the UI at that time, which is not the case in the constructor.
 [[advanced.navigator.pathparam]]
 == Handling Path Parameters
 
-By default the URLs managed through the [classname]#Navigator# have an URI fragment
+By default the URLs managed through the [classname]#Navigator# have a URI fragment
 that contains the identifier of the [interfacename]#View#. The URI fragment is 
 separated from the rest of the URL by a [literal]#++#++# character.
 
-If the [classname]#PushStateNavigation# is present on the [classname]#UI# the HTML5
-History API is used. When using the PushState, the identifier is separated from the
-root path by a [literal]#++/++# like a real URL.
+If the [classname]#PushStateNavigation# annotation is present on the [classname]#UI# 
+the HTML5 History API is used. When using the PushState, the identifier is separated 
+from the root path by a [literal]#++/++# like a real URL.
 
 In addition to the View identifier, URI can contain additional parameters to be 
-passed for views. The parameters are the part of the URI after the longest matched view identifier, separated by [literal]#++/++#. These parameters in together with the identifier form the __navigation state__.
+passed to views. The parameters are the part of the URI after the longest matching view identifier, separated by [literal]#++/++#. These parameters together with the identifier
+form the __navigation state__.
 
 The navigation state can be used with [classname]#Navigator# in two ways: for
 navigating to a view and to a state within a view. The navigation state accepted by
@@ -273,19 +274,3 @@ the URL would be [literal]#++http://localhost:8080/myapp/main/reindeer++#.
 [[figure.advanced.navigator.mainview]]
 .Navigator Main View
 image::img/navigator-mainview.png[]
-
-
-[[advanced.navigator.urifragment]]
-== Using URI Fragments
-
-Old browsers didn't support __pushState__ function to dynamically change the location in the browser. Thus Vaadin previously used URI Fragments and so called "hashbang" style URIs for deep linkin and to detect view changes in the browser. For backwards compatibility, the old mode can still be used by configuring the Navigator as follows:
-
-[source, java]
-----
-    UriFragmentManager manager = new UriFragmentManager(Page.getCurrent());
-    Navigator navigator = new Navigator(ui, manager , viewDisplay);
-    ui.setNavigator(navigator);
-----
-
-The suggested method to fallback support old hashbang style URLs is to read the fragment with [methodname]#getUriFragment# method from [classname]#Page# object in the [methodname]#init# method of [classname]#UI# and assigning the fragment value to basic URL with [methodname]#pushState# method.
-
