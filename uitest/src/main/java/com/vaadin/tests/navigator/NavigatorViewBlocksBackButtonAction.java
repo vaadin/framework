@@ -1,6 +1,7 @@
 package com.vaadin.tests.navigator;
 
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -13,6 +14,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+@PushStateNavigation
 public class NavigatorViewBlocksBackButtonAction
         extends AbstractReindeerTestUI {
 

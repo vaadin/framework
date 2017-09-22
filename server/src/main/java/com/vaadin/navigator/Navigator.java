@@ -129,16 +129,24 @@ public class Navigator implements Serializable {
 
         @Override
         public String getState() {
+            // Get the current URL
             URI location = ui.getPage().getLocation();
             String path = location.getPath();
-            if (ui.getUiPathInfo() != null) {
+            if (ui.getUiPathInfo() != null
+                    && path.contains(ui.getUiPathInfo())) {
+                // Split the path from after the UI PathInfo
                 path = path.substring(path.indexOf(ui.getUiPathInfo())
                         + ui.getUiPathInfo().length());
-            } else {
+            } else if (path.startsWith(ui.getUiRootPath())) {
+                // Use the whole path after UI RootPath
                 String uiRootPath = ui.getUiRootPath();
                 path = path.substring(uiRootPath.length());
+            } else {
+                // TODO: Fallback?
             }
+
             if (path.startsWith("/")) {
+                // Strip leading '/'
                 path = path.substring(1);
             }
             return path;
@@ -148,11 +156,17 @@ public class Navigator implements Serializable {
         public void setState(String state) {
             StringBuilder sb = new StringBuilder(ui.getUiRootPath());
             if (!ui.getUiRootPath().endsWith("/")) {
+                // make sure there is a '/' between the root path and the
+                // navigation state.
                 sb.append("/");
             }
             sb.append(state);
-            ui.getPage().pushState(
-                    ui.getPage().getLocation().resolve(sb.toString()));
+            URI location = ui.getPage().getLocation();
+            if (location != null) {
+                ui.getPage().pushState(location.resolve(sb.toString()));
+            } else {
+                // TODO: Fallback?
+            }
         }
     }
 
