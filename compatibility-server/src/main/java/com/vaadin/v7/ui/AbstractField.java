@@ -1774,8 +1774,4 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
                 super.isReadOnly(), def.isReadOnly(), Boolean.class,
                 designContext);
     }
-
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractField.class.getName());
-    }
 }

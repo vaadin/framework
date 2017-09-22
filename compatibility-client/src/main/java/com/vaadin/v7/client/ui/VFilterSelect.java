@@ -659,20 +659,6 @@ public class VFilterSelect extends Composite
             }
         }
 
-        private void scroll(double deltaY) {
-            boolean scrollActive = menu.isScrollActive();
-
-            debug("VFS.SP: scroll() scrollActive: " + scrollActive);
-
-            if (!scrollActive) {
-                if (deltaY > 0d) {
-                    lazyPageScroller.scrollDown();
-                } else {
-                    lazyPageScroller.scrollUp();
-                }
-            }
-        }
-
         @Override
         public void onBrowserEvent(Event event) {
             debug("VFS.SP: onBrowserEvent()");
