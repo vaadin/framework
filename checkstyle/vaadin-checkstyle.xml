@@ -62,12 +62,6 @@
     <module name="NewlineAtEndOfFile">
         <property name="severity" value="warning" />
     </module>
-    <module name="NewlineAtEndOfFile">
-        <property name="message"
-            value="File contains carriage return" />
-        <property name="lineSeparator" value="system" />
-    </module>
-
 
     <!-- Checks that property files contain the same keys. -->
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
