@@ -1,5 +1,12 @@
 package com.vaadin.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,8 +25,6 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
-
-import static org.junit.Assert.*;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -834,7 +839,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.withValidator(p -> !p.getFirstName().equals(p.getLastName()),
                 "First name and last name can't be the same");
     }
-  
+
     static class MyBindingHandler implements BindingValidationStatusHandler {
 
         boolean expectingError = false;
@@ -893,15 +898,15 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         // Assert that the handler was called.
         Assert.assertEquals(
-                "Unexpected callCount to binding validation status handler", 4,
+                "Unexpected callCount to binding validation status handler", 6,
                 bindingHandler.callCount);
     }
-      
+
     @Test
     public void removed_binding_not_updates_value() {
         Binding<Person, Integer> binding = binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter("Can't convert"))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .bind(Person::getAge, Person::setAge);
 
         binder.setBean(item);
 
@@ -913,6 +918,6 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ageField.setValue(modifiedAge);
 
         Assert.assertEquals("Binding still affects bean even after unbind",
-            ageBeforeUnbind, String.valueOf(item.getAge()));
+                ageBeforeUnbind, String.valueOf(item.getAge()));
     }
 }
