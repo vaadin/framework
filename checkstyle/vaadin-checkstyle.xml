@@ -62,10 +62,10 @@
     <module name="NewlineAtEndOfFile">
         <property name="severity" value="warning" />
     </module>
-    <module name="RegexpMultiline">
+    <module name="NewlineAtEndOfFile">
         <property name="message"
             value="File contains carriage return" />
-        <property name="format" value="system" />
+        <property name="lineSeparator" value="system" />
     </module>
 
 
