@@ -52,7 +52,7 @@ public class NotificationState extends SharedState {
      * The {@link Position} of the {@link com.vaadin.ui.Notification},
      *            can not be {@code null}.
      */
-    public Position position = Position.TOP_LEFT;
+    public Position position = Position.MIDDLE_CENTER;
 
     /**
      * The delay in milliseconds before disappearing, {@code -1} for forever.
