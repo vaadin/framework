@@ -723,10 +723,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (!iteratorStack.isEmpty()) {
                     target.endTag("node");
                 }
-            }
-
-            // Adds the item on current level
-            else {
+            } else {
+                // Adds the item on current level
                 final Object itemId = i.next();
 
                 // Starts the item / node
@@ -1309,10 +1307,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Removes used iterator from the stack
                 iteratorStack.pop();
-            }
-
-            // Adds the item on current level
-            else {
+            } else {
+                // Adds the item on current level
                 final Object itemId = i.next();
 
                 visible.add(itemId);
