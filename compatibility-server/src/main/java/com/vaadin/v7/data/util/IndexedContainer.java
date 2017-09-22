@@ -39,7 +39,7 @@ import com.vaadin.v7.data.util.filter.UnsupportedFilterException;
 /**
  * An implementation of the <code>{@link Container.Indexed}</code> interface
  * with all important features.
- * </p>
+ * <p>
  *
  * Features:
  * <ul>
@@ -146,7 +146,7 @@ public class IndexedContainer
     /**
      * Gets the type of a Property stored in the list.
      *
-     * @param id
+     * @param propertyId
      *            the ID of the Property.
      * @return Type of the requested Property
      */
@@ -415,7 +415,7 @@ public class IndexedContainer
         }
 
         /**
-         * Iff one item is added, gives its index.
+         * If and only if one item is added, gives its index.
          *
          * @return -1 if either multiple items are changed or some other change
          *         than add is done.

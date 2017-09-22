@@ -1,0 +1,17 @@
+# The default behavior
+* text=auto
+
+*.java text
+*.xml text
+*.htm text
+*.html text
+*.js text
+*.bnd text
+*.svg text
+*.md text
+*.txt text
+*.css text
+*.scss text
+
+# To be verified
+*.graffle binary

@@ -1729,13 +1729,11 @@ public class VTree extends FocusElementPanel
             if (!focusedNode.isLeaf() && focusedNode.getState()
                     && focusedNode.getChildren().size() > 0) {
                 node = focusedNode.getChildren().get(0);
-            }
-
-            // Else move down to the next sibling
-            else {
+            } else {
+                // Move down to the next sibling
                 node = getNextSibling(focusedNode);
                 if (node == null) {
-                    // Else jump to the parent and try to select the next
+                    // Jump to the parent and try to select the next
                     // sibling there
                     TreeNode current = focusedNode;
                     while (node == null && current.getParentNode() != null) {

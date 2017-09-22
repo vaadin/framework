@@ -429,7 +429,7 @@ public class VAbsoluteLayout extends ComplexPanel {
             if (css == null || !css.equals(position)) {
                 css = position;
                 top = right = bottom = left = zIndex = null;
-                if (!css.equals("")) {
+                if (!css.isEmpty()) {
                     String[] properties = css.split(";");
                     for (int i = 0; i < properties.length; i++) {
                         String[] keyValue = properties[i].split(":");

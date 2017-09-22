@@ -178,6 +178,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         }
     }
 
+    @SuppressWarnings("unused")
     private Component toggleError() {
         CheckBox errorToggle = new CheckBox();
         errorToggle.setCaption("Error");

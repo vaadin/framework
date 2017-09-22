@@ -350,7 +350,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         // Loop through breakpoints and see which one applies to this width
         currentWidthRanges = resolveBreakpoint("width", width);
 
-        if (!"".equals(currentWidthRanges)) {
+        if (!currentWidthRanges.isEmpty()) {
             element.setAttribute("width-range", currentWidthRanges);
         } else {
             element.removeAttribute("width-range");
@@ -359,7 +359,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         // Loop through breakpoints and see which one applies to this height
         currentHeightRanges = resolveBreakpoint("height", height);
 
-        if (!"".equals(currentHeightRanges)) {
+        if (!currentHeightRanges.isEmpty()) {
             element.setAttribute("height-range", currentHeightRanges);
         } else {
             element.removeAttribute("height-range");

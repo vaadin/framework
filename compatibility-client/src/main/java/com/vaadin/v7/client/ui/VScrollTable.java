@@ -4031,9 +4031,8 @@ public class VScrollTable extends FlowPanel
                 for (i = 0; i < visibleColOrder.length; i++) {
                     cols[i] = visibleColOrder[i];
                 }
-                for (final Iterator<String> it = collapsedColumns.iterator(); it
-                        .hasNext();) {
-                    cols[i++] = it.next();
+                for (final String column : collapsedColumns) {
+                    cols[i++] = column;
                 }
             }
             List<Action> actions = new ArrayList<Action>(cols.length);
@@ -4401,11 +4400,11 @@ public class VScrollTable extends FlowPanel
                         .getOffsetWidth() + getHeaderPadding();
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Iterator<Widget> it = tHead.iterator(); it
-                            .hasNext(); columnIndex++) {
-                        if (it.next() == this) {
+                    for (Widget widget : tHead) {
+                        if (widget == this) {
                             break;
                         }
+                        columnIndex++;
                     }
                 }
                 final int cw = scrollBody.getColWidth(columnIndex);
@@ -5351,8 +5350,8 @@ public class VScrollTable extends FlowPanel
          * To get this work properly crossplatform, we will also set the width
          * of td.
          *
-         * @param colIndex
-         * @param w
+         * @param colIndex The column Index
+         * @param w The content width
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
@@ -5374,8 +5373,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Returns the maximum indent of the hierarcyColumn, if applicable.
          *
          * @see VScrollTable#getHierarchyColumnIndex()
@@ -5388,8 +5387,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Calculates the maximum indent of the hierarcyColumn, if applicable.
          */
         protected void calculateMaxIndent() {
@@ -6441,14 +6440,10 @@ public class VScrollTable extends FlowPanel
                     // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
                     int i = 0;
-                    for (Iterator<Widget> iterator = scrollBody
-                            .iterator(); iterator.hasNext();) {
-                        VScrollTableRow next = (VScrollTableRow) iterator
-                                .next();
-
+                    for (Widget next : scrollBody) {
                         Element child = (Element) dragImage.getChild(i++);
 
-                        if (!rowKeyIsSelected(next.rowKey)) {
+                        if (!rowKeyIsSelected(((VScrollTableRow) next).rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }
@@ -6651,18 +6646,6 @@ public class VScrollTable extends FlowPanel
             @Override
             public String getPaintableId() {
                 return paintableId;
-            }
-
-            private int getColIndexOf(Widget child) {
-                com.google.gwt.dom.client.Element widgetCell = child
-                        .getElement().getParentElement().getParentElement();
-                NodeList<TableCellElement> cells = rowElement.getCells();
-                for (int i = 0; i < cells.getLength(); i++) {
-                    if (cells.getItem(i) == widgetCell) {
-                        return i;
-                    }
-                }
-                return -1;
             }
 
             public Widget getWidgetForPaintable() {
@@ -7261,8 +7244,8 @@ public class VScrollTable extends FlowPanel
 
     @Override
     public void setHeight(String height) {
-        if (height.length() == 0
-                && getElement().getStyle().getHeight().length() != 0) {
+        if (height.isEmpty()
+                && !getElement().getStyle().getHeight().isEmpty()) {
             /*
              * Changing from defined to undefined size -> should do a size init
              * to take page length into account again
@@ -7504,10 +7487,15 @@ public class VScrollTable extends FlowPanel
             return false;
         }
 
-        //
-        // public int hashCode() {
-        // return overkey;
-        // }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((dropLocation == null) ? 0 : dropLocation.hashCode());
+            result = prime * result + overkey;
+            result = prime * result + ((colkey == null) ? 0 : colkey.hashCode());
+            return result;
+        }
     }
 
     public class VScrollTableDropHandler extends VAbstractDropHandler {
@@ -7725,9 +7713,13 @@ public class VScrollTable extends FlowPanel
     /**
      * Handles the keyboard events handled by the table
      *
-     * @param event
-     *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
+     * @return true if the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl,
             boolean shift) {

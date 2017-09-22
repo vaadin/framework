@@ -56,7 +56,7 @@ public class ApplicationConnectionURLGenerationTest {
                     SharedUtil.addGetParameters(URIS[i], "a=b&c=d"));
 
             // Fragments
-            if (URIS_WITH_ABCD_PARAM_AND_FRAGMENT[i].length() > 0) {
+            if (!URIS_WITH_ABCD_PARAM_AND_FRAGMENT[i].isEmpty()) {
                 assertEquals(URIS_WITH_ABCD_PARAM_AND_FRAGMENT[i], SharedUtil
                         .addGetParameters(URIS[i] + "#fragment", "a=b&c=d"));
 

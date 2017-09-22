@@ -152,7 +152,7 @@ public class LocaleService implements Serializable {
         /*
          * First day of week (0 = sunday, 1 = monday)
          */
-        final java.util.Calendar cal = new GregorianCalendar(locale);
+        final Calendar cal = new GregorianCalendar(locale);
         localeData.firstDayOfWeek = cal.getFirstDayOfWeek() - 1;
 
         /*

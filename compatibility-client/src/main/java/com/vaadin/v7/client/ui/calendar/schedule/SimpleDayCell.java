@@ -283,7 +283,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
             eventDiv.setTimeSpecificEvent(false);
             Date from = e.getStart();
             Date to = e.getEnd();
-            if (e.getStyleName().length() > 0) {
+            if (!e.getStyleName().isEmpty()) {
                 eventDiv.addStyleName("month-event " + e.getStyleName());
             } else {
                 eventDiv.addStyleName("month-event");

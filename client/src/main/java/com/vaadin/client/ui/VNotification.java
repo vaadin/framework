@@ -247,7 +247,7 @@ public class VNotification extends VOverlay {
             removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
-        if (style != null && style.length() > 0) {
+        if (style != null && !style.isEmpty()) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
@@ -426,11 +426,7 @@ public class VNotification extends VOverlay {
                 hide();
                 return false;
             }
-            if (temporaryStyle == STYLE_SYSTEM) {
-                return true;
-            } else {
-                return false;
-            }
+            return temporaryStyle == STYLE_SYSTEM;
         }
         // default
         switch (type) {
@@ -470,17 +466,14 @@ public class VNotification extends VOverlay {
     }
 
     public void removeEventListener(EventListener listener) {
-        if (listeners == null) {
-            return;
+        if (listeners != null) {
+            listeners.remove(listener);
         }
-        listeners.remove(listener);
     }
 
     private void fireEvent(HideEvent event) {
         if (listeners != null) {
-            for (Iterator<EventListener> it = listeners.iterator(); it
-                    .hasNext();) {
-                EventListener l = it.next();
+            for (EventListener l : listeners) {
                 l.notificationHidden(event);
             }
         }
@@ -642,7 +635,7 @@ public class VNotification extends VOverlay {
             html.append("</p>");
         }
 
-        if (html.length() > 0) {
+        if (html.length() != 0) {
 
             // Add error description
             if (details != null) {

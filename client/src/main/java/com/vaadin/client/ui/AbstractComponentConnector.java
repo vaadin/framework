@@ -771,14 +771,10 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
-        if (state.description != null && !state.description.equals("")) {
+        if (state.description != null && !state.description.isEmpty()) {
             return true;
-        } else if (state.errorMessage != null
-                && !state.errorMessage.equals("")) {
-            return true;
-        } else {
-            return false;
         }
+        return state.errorMessage != null && !state.errorMessage.isEmpty();
     }
 
     /**

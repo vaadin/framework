@@ -59,7 +59,6 @@ import com.vaadin.util.ReflectTools;
  * A component that represents a floating popup window that can be added to a
  * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}.
- * </p>
  * <p>
  * The contents of a window is set using {@link #setContent(Component)} or by
  * using the {@link #Window(String, Component)} constructor.
@@ -367,9 +366,9 @@ public class Window extends Panel
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
                     .getDeclaredMethod("windowClose", CloseEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window close method not found");
         }
     }
@@ -663,9 +662,9 @@ public class Window extends Panel
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
                     .getDeclaredMethod("windowResized", ResizeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window resized method not found");
         }
     }

@@ -26,7 +26,6 @@ import com.vaadin.server.VaadinSession;
 /**
  * Default implementation of {@link ConverterFactory}. Provides converters for
  * standard types like {@link String}, {@link Double} and {@link Date}.
- * </p>
  * <p>
  * Custom converters can be provided by extending this class and using
  * {@link VaadinSession#setConverterFactory(ConverterFactory)}.
@@ -40,7 +39,7 @@ import com.vaadin.server.VaadinSession;
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private final static Logger log = Logger
+    private static final Logger log = Logger
             .getLogger(DefaultConverterFactory.class.getName());
 
     @Override

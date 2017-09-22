@@ -34,9 +34,6 @@ public class WeekGridMinuteTimeRange {
      *            Start time of the range
      * @param end
      *            End time of the range
-     * @param clearSeconds
-     *            Boolean Indicates, if seconds should be dropped from the range
-     *            start and end
      */
     public WeekGridMinuteTimeRange(Date start, Date end) {
         this.start = new Date(start.getTime());

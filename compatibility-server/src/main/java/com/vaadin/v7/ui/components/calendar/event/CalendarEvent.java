@@ -69,13 +69,13 @@ public interface CalendarEvent extends Serializable {
      * Gets style name of event. In the client, style name will be set to the
      * event's element class name and can be styled by CSS
      * </p>
-     * Styling example:</br>
-     * <code>Java code: </br>
+     * Styling example:<br>
+     * <code>Java code: <br>
      * event.setStyleName("color1");
-     * </br></br>
-     * CSS:</br>
-     * .v-calendar-event-color1 {</br>
-     * &nbsp;&nbsp;&nbsp;background-color: #9effae;</br>}</code>
+     * <br><br>
+     * CSS:<br>
+     * .v-calendar-event-color1 {<br>
+     * &nbsp;&nbsp;&nbsp;background-color: #9effae;<br>}</code>
      *
      * @return Style name.
      */

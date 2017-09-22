@@ -69,7 +69,7 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
         jobContainer.addAll(getBeanList());
         try {
             table.setContainerDataSource(jobContainer);
-            table.setVisibleColumns(new String[] { "jobId" });
+            table.setVisibleColumns("jobId");
             label.setValue("no Exception");
         } catch (CacheUpdateException e) {
             ArrayList<String> propertyIds = new ArrayList<>();

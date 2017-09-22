@@ -220,7 +220,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
                 comp.setIcon(ICONS[i]);
             }
             if (ErrorMessage != null) {
-                if (ErrorMessage.length() == 0) {
+                if (ErrorMessage.isEmpty()) {
                     comp.setComponentError(new UserError(null));
                 } else {
                     comp.setComponentError(new UserError(ErrorMessage));

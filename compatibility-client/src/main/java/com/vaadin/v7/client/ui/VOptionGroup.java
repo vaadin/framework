@@ -143,7 +143,7 @@ public class VOptionGroup extends VOptionGroupBase
             }
 
             String iconUrl = opUidl.getStringAttribute("icon");
-            if (iconUrl != null && iconUrl.length() != 0) {
+            if (iconUrl != null && !iconUrl.isEmpty()) {
                 Icon icon = client.getIcon(iconUrl);
                 itemHtml = icon.getElement().getString() + itemHtml;
             }
@@ -162,7 +162,7 @@ public class VOptionGroup extends VOptionGroupBase
                     op = new RadioButton(paintableId);
                     op.setStyleName("v-radiobutton");
                 }
-                if (iconUrl != null && iconUrl.length() != 0) {
+                if (iconUrl != null && !iconUrl.isEmpty()) {
                     WidgetUtil.sinkOnloadForImages(op.getElement());
                     op.addHandler(iconLoadHandler, LoadEvent.getType());
                 }

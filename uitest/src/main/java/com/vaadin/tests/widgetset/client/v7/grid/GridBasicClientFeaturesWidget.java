@@ -211,7 +211,7 @@ public class GridBasicClientFeaturesWidget
     /**
      * Our basic data object
      */
-    public final static class Data {
+    public static final class Data {
         Object value;
     }
 

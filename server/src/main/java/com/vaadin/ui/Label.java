@@ -141,7 +141,7 @@ public class Label extends AbstractComponent {
         } else {
             setContentMode(ContentMode.HTML);
         }
-        if (innerHtml != null && !"".equals(innerHtml)) {
+        if (innerHtml != null && !innerHtml.isEmpty()) {
             if (plainText) {
                 innerHtml = DesignFormatter.decodeFromTextNode(innerHtml);
             }

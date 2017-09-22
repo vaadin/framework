@@ -236,16 +236,12 @@ public class RpcDataProviderExtension extends AbstractExtension {
                 int firstIndex = addEvent.getFirstIndex();
                 int count = addEvent.getAddedItemsCount();
                 insertRowData(firstIndex, count);
-            }
-
-            else if (event instanceof ItemRemoveEvent) {
+            } else if (event instanceof ItemRemoveEvent) {
                 ItemRemoveEvent removeEvent = (ItemRemoveEvent) event;
                 int firstIndex = removeEvent.getFirstIndex();
                 int count = removeEvent.getRemovedItemsCount();
                 removeRowData(firstIndex, count);
-            }
-
-            else {
+            } else {
                 // Remove obsolete value change listeners.
                 Set<Object> keySet = new HashSet<Object>(
                         activeItemHandler.activeItemMap.keySet());
@@ -416,8 +412,6 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *
      * @param component
      *            the remote data grid component to extend
-     * @param columnKeys
-     *            the key mapper for columns
      */
     public void extend(Grid component) {
         super.extend(component);

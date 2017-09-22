@@ -67,7 +67,7 @@ public abstract class AbstractClientConnector
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
-     * sends ourgoing RPC calls for that interface.
+     * sends outgoing RPC calls for that interface.
      */
     private final Map<Class<?>, ClientRpc> rpcProxyMap = new HashMap<>();
 
@@ -82,18 +82,18 @@ public abstract class AbstractClientConnector
     /**
      * Pending RPC method invocations to be sent.
      */
-    private ArrayList<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
+    private List<ClientMethodInvocation> pendingInvocations = new ArrayList<>();
 
     private String connectorId;
 
-    private final ArrayList<Extension> extensions = new ArrayList<>();
+    private final List<Extension> extensions = new ArrayList<>();
 
     /**
      * The EventRouter used for the event model.
      */
-    private EventRouter eventRouter = null;
+    private EventRouter eventRouter;
 
-    private ErrorHandler errorHandler = null;
+    private ErrorHandler errorHandler;
 
     /**
      * Static cache mapping AbstractClientConnector classes to their respective
@@ -483,10 +483,6 @@ public abstract class AbstractClientConnector
             connector = connector.getParent();
         }
         return null;
-    }
-
-    private static Logger getLogger() {
-        return Logger.getLogger(AbstractClientConnector.class.getName());
     }
 
     /**

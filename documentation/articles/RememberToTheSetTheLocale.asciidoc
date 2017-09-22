@@ -1,3 +1,9 @@
+---
+title: Remember To The Set The Locale
+order: 23
+layout: page
+---
+
 [[remember-to-the-set-the-locale]]
 Remember to the set the locale
 ------------------------------

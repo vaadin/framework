@@ -31,7 +31,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  */
 @Deprecated
 @AcceptCriterion(SourceIs.class)
-final public class VDragSourceIs extends VAcceptCriterion {
+public final class VDragSourceIs extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

@@ -123,8 +123,6 @@ public class VTooltip extends VOverlay {
     /**
      * Initialize the tooltip overlay for assistive devices.
      *
-     * @param info
-     *            with the content of the tooltip
      * @since 7.2.4
      */
     public void initializeAssistiveTooltips() {
@@ -617,7 +615,7 @@ public class VTooltip extends VOverlay {
             Element element = Element.as(event.getEventTarget());
 
             // We can ignore move event if it's handled by move or over already
-            if (currentElement == element && handledByFocus == true) {
+            if (currentElement == element && handledByFocus) {
                 return;
             }
 

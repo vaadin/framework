@@ -1,3 +1,9 @@
+---
+title: Scalable Web Applications
+order: 22
+layout: page
+---
+
 [[scalable-web-applications]]
 Scalable web applications
 -------------------------

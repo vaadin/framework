@@ -347,7 +347,7 @@ public class Color implements Serializable {
             red = green = blue = (int) (value * 255.0f + 0.5f);
         } else {
             float h = (hue - (float) Math.floor(hue)) * 6.0f;
-            float f = h - (float) java.lang.Math.floor(h);
+            float f = h - (float) Math.floor(h);
             float p = value * (1.0f - saturation);
             float q = value * (1.0f - saturation * f);
             float t = value * (1.0f - (saturation * (1.0f - f)));

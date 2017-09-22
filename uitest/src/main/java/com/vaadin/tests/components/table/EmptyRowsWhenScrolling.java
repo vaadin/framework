@@ -90,8 +90,8 @@ public class EmptyRowsWhenScrolling extends UI {
             table.setContainerDataSource(container);
             table.setEditable(true);
             table.setColumnReorderingAllowed(true);
-            table.setVisibleColumns(new String[] { "image", "id", "col1",
-                    "col2", "col3", "col4" });
+            table.setVisibleColumns("image", "id", "col1",
+                    "col2", "col3", "col4");
             table.addGeneratedColumn("image", new ColumnGenerator() {
                 @Override
                 public Object generateCell(Table source, Object itemId,

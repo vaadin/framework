@@ -43,22 +43,12 @@ import com.vaadin.data.provider.TreeDataProvider;
 public class TreeData<T> implements Serializable {
 
     private static class HierarchyWrapper<T> implements Serializable {
-        private T item;
         private T parent;
         private List<T> children;
 
-        public HierarchyWrapper(T item, T parent) {
-            this.item = item;
+        public HierarchyWrapper(T parent) {
             this.parent = parent;
             children = new ArrayList<>();
-        }
-
-        public T getItem() {
-            return item;
-        }
-
-        public void setItem(T item) {
-            this.item = item;
         }
 
         public T getParent() {
@@ -71,10 +61,6 @@ public class TreeData<T> implements Serializable {
 
         public List<T> getChildren() {
             return children;
-        }
-
-        public void setChildren(List<T> children) {
-            this.children = children;
         }
 
         public void addChild(T child) {
@@ -94,7 +80,7 @@ public class TreeData<T> implements Serializable {
      */
     public TreeData() {
         itemToWrapperMap = new LinkedHashMap<>();
-        itemToWrapperMap.put(null, new HierarchyWrapper<>(null, null));
+        itemToWrapperMap.put(null, new HierarchyWrapper<>(null));
     }
 
     /**
@@ -491,7 +477,7 @@ public class TreeData<T> implements Serializable {
     }
 
     private void putItem(T item, T parent) {
-        HierarchyWrapper<T> wrappedItem = new HierarchyWrapper<>(item, parent);
+        HierarchyWrapper<T> wrappedItem = new HierarchyWrapper<>(parent);
         if (itemToWrapperMap.containsKey(parent)) {
             itemToWrapperMap.get(parent).addChild(item);
         }

@@ -145,9 +145,7 @@ public class DefaultEditorEventHandler<T> implements Editor.EventHandler<T> {
             editRow(event, cell.getRowIndex(), cell.getColumnIndexDOM());
 
             return true;
-        }
-
-        else if (e.getTypeInt() == Event.ONKEYDOWN) {
+        } else if (e.getTypeInt() == Event.ONKEYDOWN) {
 
             int rowDelta = 0;
             int colDelta = 0;

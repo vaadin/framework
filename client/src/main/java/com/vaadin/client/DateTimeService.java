@@ -177,7 +177,7 @@ public class DateTimeService {
 
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
-        if (month == 1 && true == isLeapYear(date)) {
+        if (month == 1 && isLeapYear(date)) {
             return 29;
         }
         return maxDaysInMonth[month];
@@ -302,8 +302,6 @@ public class DateTimeService {
      *            The date to convert
      * @param formatStr
      *            The format string that might contain MMM or MMMM
-     * @param dateTimeService
-     *            Reference to the Vaadin DateTimeService
      * @return
      */
     public String formatDate(Date date, String formatStr) {

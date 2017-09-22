@@ -21,8 +21,9 @@ import com.vaadin.ui.AbstractComponent;
 /**
  * Handler for {@link BinderValidationStatus} changes.
  * <p>
- * {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler) Register} an
- * instance of this class to be able to customize validation status handling.
+ * {@link Binder#setValidationStatusHandler(BinderValidationStatusHandler)
+ * Register} an instance of this class to be able to customize validation status
+ * handling.
  * <p>
  * The default handler will show
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
@@ -53,5 +54,4 @@ public interface BinderValidationStatusHandler<BEAN>
      *            the changed status
      */
     void statusChange(BinderValidationStatus<BEAN> statusChange);
-
 }

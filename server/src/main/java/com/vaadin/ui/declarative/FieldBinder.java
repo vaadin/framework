@@ -176,7 +176,7 @@ public class FieldBinder implements Serializable {
         try {
             // create and validate field name
             String fieldName = asFieldName(identifier);
-            if (fieldName.length() == 0) {
+            if (fieldName.isEmpty()) {
                 return false;
             }
             // validate that the field can be found
@@ -231,7 +231,7 @@ public class FieldBinder implements Serializable {
             }
         }
         // lowercase first letter
-        if (result.length() > 0 && Character.isLetter(result.charAt(0))) {
+        if (result.length() != 0 && Character.isLetter(result.charAt(0))) {
             result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
         }
         return result.toString();

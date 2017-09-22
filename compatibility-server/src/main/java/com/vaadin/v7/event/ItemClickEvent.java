@@ -87,9 +87,9 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
         try {
             ITEM_CLICK_METHOD = ItemClickListener.class.getDeclaredMethod(
                     "itemClick", new Class[] { ItemClickEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException();
+            throw new RuntimeException();
         }
     }
 

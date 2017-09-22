@@ -127,6 +127,23 @@ public class Binder<BEAN> implements Serializable {
          */
         public BindingValidationStatus<TARGET> validate();
 
+        /**
+         * Gets the validation status handler for this Binding.
+         * 
+         * @return the validation status handler for this binding
+         * 
+         * @since 8.2
+         */
+        public BindingValidationStatusHandler getValidationStatusHandler();
+
+        /**
+         * Unbinds the binding from its respective {@code Binder}
+         * Removes any {@code ValueChangeListener} {@code Registration} from
+         * associated {@code HasValue}
+         *
+         * @since 8.2
+         */
+        public void unbind();
     }
 
     /**
@@ -542,7 +559,7 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingBuilderImpl<BEAN, FIELDVALUE, TARGET>
             implements BindingBuilder<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
         private final HasValue<FIELDVALUE> field;
         private BindingValidationStatusHandler statusHandler;
@@ -767,9 +784,9 @@ public class Binder<BEAN> implements Serializable {
     protected static class BindingImpl<BEAN, FIELDVALUE, TARGET>
             implements Binding<BEAN, TARGET> {
 
-        private final Binder<BEAN> binder;
+        private Binder<BEAN> binder;
 
-        private final HasValue<FIELDVALUE> field;
+        private HasValue<FIELDVALUE> field;
         private final BindingValidationStatusHandler statusHandler;
 
         private final SerializableFunction<BEAN, TARGET> getter;
@@ -825,12 +842,30 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
+            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
                             Arrays.asList(status), Collections.emptyList()));
             getBinder().fireStatusChangeEvent(status.isError());
             return status;
+        }
+
+        /**
+         * Removes this binding from its binder and unregisters the
+         * {@code ValueChangeListener} from any bound {@code HasValue}
+         *
+         * @since 8.2
+         */
+        @Override
+        public void unbind() {
+            if (onValueChange != null) {
+                onValueChange.remove();
+                onValueChange = null;
+            }
+            binder.removeBindingInternal(this);
+            binder = null;
+            field = null;
         }
 
         /**
@@ -942,8 +977,9 @@ public class Binder<BEAN> implements Serializable {
             return binder;
         }
 
-        private void notifyStatusHandler(BindingValidationStatus<?> status) {
-            statusHandler.statusChange(status);
+        @Override
+        public BindingValidationStatusHandler getValidationStatusHandler() {
+            return statusHandler;
         }
     }
 
@@ -1995,9 +2031,7 @@ public class Binder<BEAN> implements Serializable {
     protected void handleBinderValidationStatus(
             BinderValidationStatus<BEAN> binderStatus) {
         // let field events go to binding status handlers
-        binderStatus.getFieldValidationStatuses()
-                .forEach(status -> ((BindingImpl<?, ?, ?>) status.getBinding())
-                        .notifyStatusHandler(status));
+        binderStatus.notifyBindingValidationStatusHandlers();
 
         // show first possible error or OK status in the label if set
         if (getStatusLabel().isPresent()) {
@@ -2464,7 +2498,7 @@ public class Binder<BEAN> implements Serializable {
         Set<BindingImpl<BEAN, ?, ?>> toRemove = getBindings().stream()
                 .filter(binding -> field.equals(binding.getField()))
                 .collect(Collectors.toSet());
-        toRemove.forEach(this::removeBinding);
+        toRemove.forEach(Binding::unbind);
     }
 
     /**
@@ -2477,6 +2511,25 @@ public class Binder<BEAN> implements Serializable {
      */
     public void removeBinding(Binding<BEAN, ?> binding) {
         Objects.requireNonNull(binding, "Binding can not be null");
+        binding.unbind();
+    }
+
+    /**
+     * Removes (internally) the {@code Binding} from the bound properties map
+     * (if present) and from the list of {@code Binding}s. Note that this DOES
+     * NOT remove the {@code ValueChangeListener} that the {@code Binding} might
+     * have registered with any {@code HasValue}s or decouple the {@code Binder}
+     * from within the {@code Binding}. To do that, use
+     *
+     * {@link Binding#unbind()}
+     *
+     * This method should just be used for internal cleanup.
+     *
+     * @param binding The {@code Binding} to remove from the binding map
+     *
+     * @since 8.2
+     */
+    protected void removeBindingInternal(Binding<BEAN, ?> binding) {
         if (bindings.remove(binding)) {
             boundProperties.entrySet()
                     .removeIf(entry -> entry.getValue().equals(binding));
@@ -2494,6 +2547,6 @@ public class Binder<BEAN> implements Serializable {
     public void removeBinding(String propertyName) {
         Objects.requireNonNull(propertyName, "Property name can not be null");
         Optional.ofNullable(boundProperties.get(propertyName))
-                .ifPresent(this::removeBinding);
+                .ifPresent(Binding::unbind);
     }
 }

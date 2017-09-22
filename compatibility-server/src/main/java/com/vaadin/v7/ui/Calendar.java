@@ -783,7 +783,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code></br>
+     * Example: <code>setTimeFormat(TimeFormat.Format12H);</code><br>
      * Set to null, if you want the format being defined by the locale.
      *
      * @param format
@@ -1825,7 +1825,7 @@ public class Calendar extends AbstractLegacyComponent
 
         @Override
         public void weekClick(String event) {
-            if (event.length() > 0 && event.contains("w")) {
+            if (!event.isEmpty() && event.contains("w")) {
                 String[] splitted = event.split("w");
                 if (splitted.length == 2) {
                     try {
@@ -1932,9 +1932,9 @@ public class Calendar extends AbstractLegacyComponent
      * <p>
      * The default is false, i.e. to render that caption as plain text.
      *
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param eventCaptionAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
         getState().eventCaptionAsHtml = eventCaptionAsHtml;

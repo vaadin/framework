@@ -75,13 +75,13 @@ public class FilesystemContainer implements Container.Hierarchical {
      */
     public static Collection<String> FILE_PROPERTIES;
 
-    private final static Method FILEITEM_LASTMODIFIED;
+    private static final Method FILEITEM_LASTMODIFIED;
 
-    private final static Method FILEITEM_NAME;
+    private static final Method FILEITEM_NAME;
 
-    private final static Method FILEITEM_ICON;
+    private static final Method FILEITEM_ICON;
 
-    private final static Method FILEITEM_SIZE;
+    private static final Method FILEITEM_SIZE;
 
     static {
 
