@@ -64,9 +64,9 @@ public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
     }
 
     public void createExampleTasks() {
-        final String[] assignedTo = new String[] { "John", "Mary", "Joe",
+        final String[] assignedTo = { "John", "Mary", "Joe",
                 "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
-        final String[] type = new String[] { "Enhancement", "Bugfix", "Testing",
+        final String[] type = { "Enhancement", "Bugfix", "Testing",
                 "Task" };
         for (int j = 0; j < 100; j++) {
             final Task task = new Task(

@@ -786,12 +786,12 @@ public final class VDebugWindow extends VOverlay {
     protected class Menu extends VOverlay {
         FlowPanel content = new FlowPanel();
 
-        DebugButton[] sizes = new DebugButton[] {
+        DebugButton[] sizes = {
                 new DebugButton(null, "Small", "A"),
                 new DebugButton(null, "Medium", "A"),
                 new DebugButton(null, "Large", "A") };
 
-        DebugButton[] modes = new DebugButton[] {
+        DebugButton[] modes = {
                 new DebugButton(Icon.DEVMODE_OFF,
                         "Debug only (causes page reload)"),
                 new DebugButton(Icon.DEVMODE_ON,

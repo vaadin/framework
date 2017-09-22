@@ -56,7 +56,8 @@ public class PushErrorHandling extends AbstractReindeerTestUI {
 
             @Override
             public void itemClick(ItemClickEvent event) {
-                BeanContainer<String, AbstractInMemoryContainer> metaContainer = new BeanContainer<String, AbstractInMemoryContainer>(
+                BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>> metaContainer
+                        = new BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>>(
                         AbstractInMemoryContainer.class) {
                     @Override
                     public Collection<String> getContainerPropertyIds() {

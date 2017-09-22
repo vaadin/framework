@@ -2751,7 +2751,7 @@ public class Escalator extends Widget
                  *
                  * If more rows were added than the new escalator rows can
                  * account for, we need to start to spin the escalator to update
-                 * the remaining rows aswell.
+                 * the remaining rows as well.
                  */
                 final int rowsStillNeeded = numberOfRows - addedRows.size();
 

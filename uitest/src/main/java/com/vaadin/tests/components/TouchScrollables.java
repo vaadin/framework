@@ -189,7 +189,7 @@ public class TouchScrollables extends TestBase {
 
         table.addActionHandler(new Handler() {
 
-            Action[] actions = new Action[] { new Action("FOO"),
+            Action[] actions = { new Action("FOO"),
                     new Action("BAR"), new Action("CAR") };
 
             @Override

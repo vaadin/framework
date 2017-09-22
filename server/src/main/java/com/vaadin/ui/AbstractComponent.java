@@ -1258,7 +1258,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] customAttributes = new String[] { "width",
+    private static final String[] customAttributes = { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
             "width-full", "height-full", "size-auto", "size-full", "immediate",
             "locale", "read-only", "_id" };

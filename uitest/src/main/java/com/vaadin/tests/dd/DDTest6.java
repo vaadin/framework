@@ -53,7 +53,7 @@ public class DDTest6 extends TestBase {
 
     java.util.Random r = new java.util.Random(1);
 
-    File[] files = new File[] { new Folder("Docs"), new Folder("Music"),
+    File[] files = { new Folder("Docs"), new Folder("Music"),
             new Folder("Images"), new File("document.doc"),
             new File("song.mp3"), new File("photo.jpg") };
 
@@ -130,7 +130,7 @@ public class DDTest6 extends TestBase {
 
         Handler actionHandler = new Handler() {
 
-            private Action[] actions = new Action[] { new Action("Remove") };
+            private Action[] actions = { new Action("Remove") };
 
             @Override
             public void handleAction(Action action, Object sender,
@@ -515,7 +515,7 @@ public class DDTest6 extends TestBase {
 
                 }
 
-                String[] knownTypes = new String[] { "image/png", "text/csv" };
+                String[] knownTypes = { "image/png", "text/csv" };
 
                 private boolean canDisplay(String type) {
                     if (type != null) {

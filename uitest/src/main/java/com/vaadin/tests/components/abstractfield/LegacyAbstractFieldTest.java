@@ -18,7 +18,7 @@ import com.vaadin.v7.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.AbstractField;
 
-public abstract class LegacyAbstractFieldTest<T extends AbstractField>
+public abstract class LegacyAbstractFieldTest<T extends AbstractField<Object>>
         extends AbstractComponentTest<T>
         implements ValueChangeListener, ReadOnlyStatusChangeListener {
 

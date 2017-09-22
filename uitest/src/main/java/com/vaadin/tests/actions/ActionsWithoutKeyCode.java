@@ -18,10 +18,7 @@ public class ActionsWithoutKeyCode extends AbstractTestUIWithLog {
 
         addActionHandler(new Action.Handler() {
 
-            private Action[] actions;
-            {
-                actions = new Action[] { new Action("test1") };
-            }
+            private Action[] actions = { new Action("test1") };
 
             @Override
             public Action[] getActions(Object target, Object sender) {
