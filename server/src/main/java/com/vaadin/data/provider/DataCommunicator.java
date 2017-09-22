@@ -595,7 +595,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @since 8.1
      *
      */
-    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
+    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T, Object> identifierGetter) {
         return new KeyMapper<T>(identifierGetter);
     }
 

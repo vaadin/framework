@@ -139,7 +139,7 @@ public class MenuBar extends AbstractComponent
             }
 
             String description = item.getDescription();
-            if (description != null && description.length() > 0) {
+            if (description != null && !description.isEmpty()) {
                 target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION,
                         description);
             }
@@ -199,8 +199,8 @@ public class MenuBar extends AbstractComponent
                     tmpItem.getCommand().menuSelected(tmpItem);
                 }
             }
-        } // if
-    }// changeVariables
+        }
+    }
 
     /**
      * Constructs an empty, horizontal menu
@@ -941,7 +941,7 @@ public class MenuBar extends AbstractComponent
             this.checked = checked;
             markAsDirty();
         }
-    }// class MenuItem
+    }
 
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
@@ -1091,4 +1091,4 @@ public class MenuBar extends AbstractComponent
         result.add("html-content-allowed");
         return result;
     }
-}// class MenuBar
+}

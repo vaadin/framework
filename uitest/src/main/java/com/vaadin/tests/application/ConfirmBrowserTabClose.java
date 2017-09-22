@@ -19,6 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.JavaScript;
 
 public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
 
@@ -38,7 +39,7 @@ public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
             }
         });
         addComponent(b);
-        getPage().getJavaScript()
+        JavaScript
                 .eval("window.addEventListener('beforeunload', function (e) {"
                         + "var confirmationMessage = 'Please stay!';"
                         + "e.returnValue = confirmationMessage;"

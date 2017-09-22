@@ -234,7 +234,7 @@ public class StateChangeEvent
      *            the JavaScript object to check
      * @return true if the property is defined
      */
-    private static native final boolean isInJson(String property,
+    private static final native boolean isInJson(String property,
             JavaScriptObject target)
     /*-{
         var segments = property.split('.');

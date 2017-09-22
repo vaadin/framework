@@ -38,7 +38,7 @@ public class ConnectorMap {
     /**
      * Returns a {@link ServerConnector} by its id
      *
-     * @param id
+     * @param connectorId
      *            The connector id
      * @return A connector or null if a connector with the given id has not been
      *         registered
@@ -139,7 +139,7 @@ public class ConnectorMap {
      *            element of the connector whose id is desired
      * @return the id of the element's connector, if it's a connector
      */
-    native static final String getConnectorId(Element el)
+    static final native String getConnectorId(Element el)
     /*-{
         return el.tkPid;
     }-*/;
@@ -284,8 +284,8 @@ public class ConnectorMap {
      * @return true if the widget is the root widget of a
      *         {@link ComponentConnector}, false otherwise
      */
-    public boolean isConnector(Widget w) {
-        return getConnectorId(w.getElement()) != null;
+    public boolean isConnector(Widget widget) {
+        return getConnectorId(widget.getElement()) != null;
     }
 
     private static Logger getLogger() {

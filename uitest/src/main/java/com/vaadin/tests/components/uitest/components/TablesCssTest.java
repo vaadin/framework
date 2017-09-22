@@ -68,7 +68,7 @@ public class TablesCssTest extends GridLayout {
         t.setColumnCollapsingAllowed(true);
         // t.setColumnHeaders(new String[] { "Country", "Code", "Icon file" });
         t.setColumnIcon(TestUtils.iso3166_PROPERTY_NAME,
-                new ThemeResource(parent.ICON_URL));
+                new ThemeResource(TestSampler.ICON_URL));
 
         // Actions (a.k.a context menu)
         t.addActionHandler(new Action.Handler() {

@@ -49,7 +49,7 @@ public class FocusUtil {
      *
      * @param focusable
      *            the widget to focus/unfocus
-     * @param focused
+     * @param focus
      *            whether this widget should take focus or release it
      */
     public static void setFocus(Widget focusable, boolean focus) {

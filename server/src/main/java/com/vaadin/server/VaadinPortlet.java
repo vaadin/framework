@@ -63,7 +63,7 @@ public class VaadinPortlet extends GenericPortlet
      * Base class for portlet requests that need access to HTTP servlet
      * requests.
      */
-    public static abstract class VaadinHttpAndPortletRequest
+    public abstract static class VaadinHttpAndPortletRequest
             extends VaadinPortletRequest {
 
         /**

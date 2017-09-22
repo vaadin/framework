@@ -308,7 +308,7 @@ public class FileUploadHandler implements RequestHandler {
                         "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
-            if(bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
+            if (bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
                 throw new IOException(
                         "The multipart stream does not contain boundary");
             }
@@ -564,7 +564,7 @@ public class FileUploadHandler implements RequestHandler {
                 throw new NoInputStreamException();
             }
 
-            final byte buffer[] = new byte[MAX_UPLOAD_BUFFER_SIZE];
+            final byte[] buffer = new byte[MAX_UPLOAD_BUFFER_SIZE];
             long lastStreamingEvent = 0;
             int bytesReadToBuffer = 0;
             do {

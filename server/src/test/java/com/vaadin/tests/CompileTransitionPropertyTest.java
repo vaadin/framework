@@ -69,6 +69,6 @@ public class CompileTransitionPropertyTest {
         // Only whitespace should remain after removing the style rules
         modifiedStyle = modifiedStyle.replaceAll("(\\s)", "");
         assertTrue("Unexpected style rules for .my-label: " + modifiedStyle,
-                modifiedStyle.length() == 0);
+                modifiedStyle.isEmpty());
     }
 }

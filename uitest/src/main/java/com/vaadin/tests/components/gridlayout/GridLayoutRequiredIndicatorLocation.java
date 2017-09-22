@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
@@ -31,13 +32,13 @@ public class GridLayoutRequiredIndicatorLocation
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().getCurrent().getStyles()
+        Page.getCurrent().getStyles()
                 .add(".allow-overflow { overflow: visible; }");
-        getPage().getCurrent().getStyles()
+        Page.getCurrent().getStyles()
                 .add(".colored { background: lime; overflow: visible; }");
-        getPage().getCurrent().getStyles()
+        Page.getCurrent().getStyles()
                 .add(".pink { background: pink; overflow: visible; }");
-        getPage().getCurrent().getStyles()
+        Page.getCurrent().getStyles()
                 .add(".v-gridlayout-slot { border: 1px solid red; }");
 
         GridLayout rootLayout = new GridLayout(2, 2);

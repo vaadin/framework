@@ -112,7 +112,7 @@ public class ClasspathHelper {
         }
     }
 
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         List<String> locations = new ArrayList<>();
 
         String pathSep = System.getProperty("path.separator");

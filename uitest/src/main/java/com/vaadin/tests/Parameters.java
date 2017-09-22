@@ -119,7 +119,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication
             final String[] values = entry.getValue();
             String v = "";
             for (int j = 0; j < values.length; j++) {
-                if (v.length() > 0) {
+                if (!v.isEmpty()) {
                     v += ", ";
                 }
                 v += "'" + values[j] + "'";

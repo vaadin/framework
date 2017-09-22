@@ -247,7 +247,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
         void contextMenu(ContextMenuEvent event, Widget widget);
     }
 
-    private static abstract class AbstractEventComparator
+    private abstract static class AbstractEventComparator
             implements Comparator<CalendarEvent> {
 
         @Override
@@ -365,13 +365,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
      */
     private native void blockSelect(Element e)
     /*-{
-    	e.onselectstart = function() {
-    		return false;
-    	}
+        e.onselectstart = function() {
+            return false;
+        }
 
-    	e.ondragstart = function() {
-    		return false;
-    	}
+        e.ondragstart = function() {
+            return false;
+        }
     }-*/;
 
     private void updateEventsToWeekGrid(CalendarEvent[] events) {
@@ -1108,17 +1108,17 @@ public class VCalendar extends Composite implements VHasDropHandler {
     }
 
     /**
-     * Get the number when a week ends
+     * Get the number when a week ends.
      */
     public int getLastDayNumber() {
         return lastDay;
     }
 
     /**
-     * Set the number when a week starts
+     * Set the first hour of the day.
      *
-     * @param dayNumber
-     *            The number of the day
+     * @param hour
+     *            The first hour of the day
      */
     public void setFirstHourOfTheDay(int hour) {
         assert (hour >= 0 && hour <= 23);
@@ -1126,17 +1126,19 @@ public class VCalendar extends Composite implements VHasDropHandler {
     }
 
     /**
-     * Get the number when a week starts
+     * Get the first hour of the day.
+     * 
+     * @return The first hour of the day
      */
     public int getFirstHourOfTheDay() {
         return firstHour;
     }
 
     /**
-     * Set the number when a week ends
+     * Set the last hour of the day.
      *
-     * @param dayNumber
-     *            The number of the day
+     * @param hour
+     *            The last hour of the day
      */
     public void setLastHourOfTheDay(int hour) {
         assert (hour >= 0 && hour <= 23);
@@ -1144,7 +1146,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
     }
 
     /**
-     * Get the number when a week ends
+     * Get the last hour of the day.
+     *
+     * @return The last hour of the day
      */
     public int getLastHourOfTheDay() {
         return lastHour;
@@ -1589,9 +1593,9 @@ public class VCalendar extends Composite implements VHasDropHandler {
      * <p>
      * The default is false, i.e. to render that caption as plain text.
      *
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param eventCaptionAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setEventCaptionAsHtml(boolean eventCaptionAsHtml) {
         this.eventCaptionAsHtml = eventCaptionAsHtml;

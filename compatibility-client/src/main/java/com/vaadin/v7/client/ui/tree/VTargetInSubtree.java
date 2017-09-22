@@ -26,7 +26,7 @@ import com.vaadin.v7.client.ui.VTree.TreeNode;
 import com.vaadin.v7.ui.Tree;
 
 @AcceptCriterion(Tree.TargetInSubtree.class)
-final public class VTargetInSubtree extends VAcceptCriterion {
+public final class VTargetInSubtree extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

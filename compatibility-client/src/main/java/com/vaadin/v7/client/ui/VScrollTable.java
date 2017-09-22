@@ -5350,8 +5350,8 @@ public class VScrollTable extends FlowPanel
          * To get this work properly crossplatform, we will also set the width
          * of td.
          *
-         * @param colIndex
-         * @param w
+         * @param colIndex The column Index
+         * @param w The content width
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
@@ -6648,18 +6648,6 @@ public class VScrollTable extends FlowPanel
                 return paintableId;
             }
 
-            private int getColIndexOf(Widget child) {
-                com.google.gwt.dom.client.Element widgetCell = child
-                        .getElement().getParentElement().getParentElement();
-                NodeList<TableCellElement> cells = rowElement.getCells();
-                for (int i = 0; i < cells.getLength(); i++) {
-                    if (cells.getItem(i) == widgetCell) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-
             public Widget getWidgetForPaintable() {
                 return this;
             }
@@ -7256,8 +7244,8 @@ public class VScrollTable extends FlowPanel
 
     @Override
     public void setHeight(String height) {
-        if (height.length() == 0
-                && getElement().getStyle().getHeight().length() != 0) {
+        if (height.isEmpty()
+                && !getElement().getStyle().getHeight().isEmpty()) {
             /*
              * Changing from defined to undefined size -> should do a size init
              * to take page length into account again
@@ -7725,9 +7713,13 @@ public class VScrollTable extends FlowPanel
     /**
      * Handles the keyboard events handled by the table
      *
-     * @param event
-     *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
+     * @return true if the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl,
             boolean shift) {

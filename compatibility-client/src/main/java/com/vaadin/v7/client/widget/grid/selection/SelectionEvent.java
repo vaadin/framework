@@ -169,7 +169,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
      * Checks if this selection change event is fired during a batched
      * selection/deselection operation.
      *
-     * @return <code>true</code> iff this event is fired during a batched
+     * @return <code>true</code> if this event is fired during a batched
      *         selection/deselection operation
      */
     public boolean isBatchedSelection() {

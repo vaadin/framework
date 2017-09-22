@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 
 import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class ReflectToolsGetFieldValueByTypeTest {
     @Test
     public void getFieldValue() {

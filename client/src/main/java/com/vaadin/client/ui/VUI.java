@@ -343,7 +343,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         connection.flushActiveConnector();
     }
 
-    private native static void loadAppIdListFromDOM(List<String> list)
+    private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
          var j;
          for(j in $wnd.vaadin.vaadinConfigurations) {
@@ -421,8 +421,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
      *
      * Current use case is to restore the focus when a Window is closed. Does
      * currently handle only a single value. Needs to be extended for #12158
-     *
-     * @return the lastFocusElementBeforeDialogOpened
      */
     public void focusStoredElement() {
         if (storedFocus != null) {

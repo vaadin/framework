@@ -33,7 +33,7 @@ public interface CacheStrategy {
      * This simple approach rules out more advanced heuristics that would take
      * the current scrolling direction or past scrolling behavior into account.
      */
-    public static abstract class AbstractBasicSymmetricalCacheStrategy
+    public abstract static class AbstractBasicSymmetricalCacheStrategy
             implements CacheStrategy {
 
         @Override

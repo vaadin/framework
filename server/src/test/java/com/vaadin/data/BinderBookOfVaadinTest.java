@@ -46,6 +46,7 @@ import com.vaadin.ui.TextField;
  * @author Vaadin Ltd
  *
  */
+@SuppressWarnings("unused")
 public class BinderBookOfVaadinTest {
 
     private static class BookPerson {

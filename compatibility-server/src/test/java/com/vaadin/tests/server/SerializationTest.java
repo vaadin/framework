@@ -54,5 +54,4 @@ public class SerializationTest {
 
         return s2;
     }
-
 }

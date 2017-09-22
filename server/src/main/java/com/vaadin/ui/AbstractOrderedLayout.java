@@ -476,7 +476,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout
             // handle expand ratio
             if (attr.hasKey(":expand")) {
                 String value = attr.get(":expand");
-                if (value.length() > 0) {
+                if (!value.isEmpty()) {
                     try {
                         float ratio = Float.valueOf(value);
                         setExpandRatio(newChild, ratio);

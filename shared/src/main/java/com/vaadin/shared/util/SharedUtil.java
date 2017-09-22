@@ -235,7 +235,7 @@ public class SharedUtil implements Serializable {
      * @return The modified URI with the get parameters in extraParams added.
      */
     public static String addGetParameters(String uri, String extraParams) {
-        if (extraParams == null || extraParams.length() == 0) {
+        if (extraParams == null || extraParams.isEmpty()) {
             return uri;
         }
         // RFC 3986: The query component is indicated by the first question

@@ -1779,7 +1779,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * Used internally for communication tracking.
      *
-     * @param lastProcessedServerMessageId
+     * @param lastProcessedClientToServerId
      *            the id of the last processed server message
      * @since 7.6
      */

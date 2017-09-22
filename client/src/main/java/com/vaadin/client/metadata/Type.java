@@ -133,7 +133,7 @@ public class Type {
 
     public Object createProxy(InvokationHandler invokationHandler)
             throws NoDataException {
-        return TypeDataStore.get().getProxyHandler(this)
+        return TypeDataStore.getProxyHandler(this)
                 .createProxy(invokationHandler);
     }
 

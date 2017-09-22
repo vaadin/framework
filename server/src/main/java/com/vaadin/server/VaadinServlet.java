@@ -1019,7 +1019,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void streamContent(HttpServletResponse response, InputStream is)
             throws IOException {
         final OutputStream os = response.getOutputStream();
-        final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
+        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int bytes;
         while ((bytes = is.read(buffer)) >= 0) {
             os.write(buffer, 0, bytes);
@@ -1412,7 +1412,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             servletPath = request.getContextPath() + request.getServletPath();
         }
 
-        if (servletPath.length() == 0
+        if (servletPath.isEmpty()
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath += "/";
         }

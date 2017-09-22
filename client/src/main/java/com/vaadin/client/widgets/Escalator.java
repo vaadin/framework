@@ -324,7 +324,7 @@ public class Escalator extends Widget
              * {@link com.google.gwt.dom.client.NativeEvent NativeEvent} isn't
              * properly populated with the correct values.
              */
-            private final static class CustomTouchEvent
+            private static final class CustomTouchEvent
                     extends JavaScriptObject {
                 protected CustomTouchEvent() {
                 }
@@ -1380,7 +1380,6 @@ public class Escalator extends Widget
          *            the DOM index to add rows into
          * @param numberOfRows
          *            the number of rows to insert
-         * @return a list of the added row elements
          */
         protected abstract void paintInsertRows(final int visualIndex,
                 final int numberOfRows);
@@ -1495,7 +1494,7 @@ public class Escalator extends Widget
             return elem;
         }
 
-        abstract protected void recalculateSectionHeight();
+        protected abstract void recalculateSectionHeight();
 
         /**
          * Returns the height of all rows in the row container.
@@ -1740,12 +1739,12 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check for if it is or has elements that
-         *            can be frozen
-         * @return <code>true</code> iff this the given element, or any of its
+         *            the row element to check whether it,
+         *            or any of its its descendants can be frozen
+         * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
-        abstract protected boolean rowCanBeFrozen(TableRowElement tr);
+        protected abstract boolean rowCanBeFrozen(TableRowElement tr);
 
         /**
          * Iterates through all the cells in a column and returns the width of
@@ -2581,9 +2580,7 @@ public class Escalator extends Widget
                 setTopRowLogicalIndex(logicalRowIndex);
 
                 rowsWereMoved = true;
-            }
-
-            else if (viewportOffset + nextRowBottomOffset <= 0) {
+            } else if (viewportOffset + nextRowBottomOffset <= 0) {
                 /*
                  * the viewport has been scrolled more than the topmost visual
                  * row.
@@ -2756,14 +2753,10 @@ public class Escalator extends Widget
                 final double yDelta = numberOfRows * getDefaultRowHeight();
                 moveViewportAndContent(yDelta);
                 updateTopRowLogicalIndex(numberOfRows);
-            }
-
-            else if (addedRowsBelowCurrentViewport) {
+            } else if (addedRowsBelowCurrentViewport) {
                 // NOOP, we already recalculated scrollbars.
-            }
-
-            else { // some rows were added inside the current viewport
-
+            } else {
+                // some rows were added inside the current viewport
                 final int unupdatedLogicalStart = index + addedRows.size();
                 final int visualOffset = getLogicalRowIndex(
                         visualRowOrder.getFirst());
@@ -2774,7 +2767,7 @@ public class Escalator extends Widget
                  *
                  * If more rows were added than the new escalator rows can
                  * account for, we need to start to spin the escalator to update
-                 * the remaining rows aswell.
+                 * the remaining rows as well.
                  */
                 final int rowsStillNeeded = numberOfRows - addedRows.size();
 
@@ -3181,9 +3174,7 @@ public class Escalator extends Widget
 
                     fireRowVisibilityChangeEvent();
                     return;
-                }
-
-                else {
+                } else {
                     // No escalator rows need to be removed.
 
                     /*
@@ -3215,9 +3206,7 @@ public class Escalator extends Widget
                          */
                         paintRemoveRowsAtMiddle(removedLogicalInside,
                                 removedVisualInside, 0);
-                    }
-
-                    else if (removedVisualInside.contains(0)
+                    } else if (removedVisualInside.contains(0)
                             && numberOfRows >= visualRowOrder.size()) {
                         /*
                          * We're removing so many rows that the viewport is
@@ -3257,9 +3246,7 @@ public class Escalator extends Widget
                          * TODO [[optimize]]: This might lead to a double body
                          * refresh. Needs investigation.
                          */
-                    }
-
-                    else if (contentBottom
+                    } else if (contentBottom
                             + (numberOfRows * getDefaultRowHeight())
                             - viewportBottom < getDefaultRowHeight()) {
                         /*
@@ -3277,9 +3264,7 @@ public class Escalator extends Widget
                                 removedVisualInside);
                         updateTopRowLogicalIndex(
                                 -removedLogicalInside.length());
-                    }
-
-                    else {
+                    } else {
                         /*
                          * We're in a combination, where we need to both scroll
                          * up AND show new rows at the bottom.
@@ -3715,9 +3700,7 @@ public class Escalator extends Widget
                     setScrollTop(oldScrollTop);
                     scroller.onScroll();
                 }
-            }
-
-            else if (neededEscalatorRowsDiff < 0) {
+            } else if (neededEscalatorRowsDiff < 0) {
                 // needs less
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
@@ -5172,9 +5155,7 @@ public class Escalator extends Widget
                     continue;
                 } else if (topIsBelowRange) {
                     return heights;
-                }
-
-                else if (topIsAboveRange && bottomIsInRange) {
+                } else if (topIsAboveRange && bottomIsInRange) {
                     switch (topInclusion) {
                     case PARTIAL:
                         heights += bottom - rangeTop;
@@ -5185,9 +5166,7 @@ public class Escalator extends Widget
                     default:
                         break;
                     }
-                }
-
-                else if (topIsAboveRange && bottomIsBelowRange) {
+                } else if (topIsAboveRange && bottomIsBelowRange) {
 
                     /*
                      * Here we arbitrarily decide that the top inclusion will
@@ -5208,9 +5187,7 @@ public class Escalator extends Widget
 
                 } else if (topIsInRange && bottomIsInRange) {
                     heights += height;
-                }
-
-                else if (topIsInRange && bottomIsBelowRange) {
+                } else if (topIsInRange && bottomIsBelowRange) {
                     switch (bottomInclusion) {
                     case PARTIAL:
                         heights += rangeBottom - top;
@@ -5223,9 +5200,7 @@ public class Escalator extends Widget
                     }
 
                     return heights;
-                }
-
-                else {
+                } else {
                     assert false : "Unnaccounted-for situation";
                 }
             }
@@ -5933,7 +5908,7 @@ public class Escalator extends Widget
      * Check whether there are both columns and any row data (for either
      * headers, body or footer).
      *
-     * @return <code>true</code> iff header, body or footer has rows && there
+     * @return <code>true</code> if header, body or footer has rows and there
      *         are columns
      */
     private boolean hasColumnAndRowData() {
@@ -5945,7 +5920,7 @@ public class Escalator extends Widget
     /**
      * Check whether there are any cells in the DOM.
      *
-     * @return <code>true</code> iff header, body or footer has any child
+     * @return <code>true</code> if header, body or footer has any child
      *         elements
      */
     private boolean hasSomethingInDom() {
@@ -6655,7 +6630,7 @@ public class Escalator extends Widget
      *
      * @param direction
      *            the direction of the scroll of which to check the lock status
-     * @return <code>true</code> iff the direction is locked
+     * @return <code>true</code> if the direction is locked
      */
     public boolean isScrollLocked(ScrollbarBundle.Direction direction) {
         switch (direction) {

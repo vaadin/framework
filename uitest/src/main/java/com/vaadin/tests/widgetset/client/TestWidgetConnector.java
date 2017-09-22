@@ -71,7 +71,7 @@ public class TestWidgetConnector extends AbstractComponentConnector {
     private final TestWidgetRegistry registry = GWT
             .create(TestWidgetRegistry.class);
 
-    public static abstract class TestWidgetRegistry {
+    public abstract static class TestWidgetRegistry {
         private Map<String, Invoker> creators = new HashMap<>();
 
         // Called by generated sub class

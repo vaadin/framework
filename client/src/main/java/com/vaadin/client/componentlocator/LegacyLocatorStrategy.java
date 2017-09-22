@@ -206,7 +206,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
          * Path is of type "targetWidgetPath#componentPart" or
          * "targetWidgetPath".
          */
-        String parts[] = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
+        String[] parts = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
 
         // Note that this only works if baseElement can be mapped to a
@@ -328,7 +328,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      *         if the element could not be found.
      */
     private Element getElementByDOMPath(Element baseElement, String path) {
-        String parts[] = path.split(PARENTCHILD_SEPARATOR);
+        String[] parts = path.split(PARENTCHILD_SEPARATOR);
         Element element = baseElement;
 
         for (int i = 0, l = parts.length; i < l; ++i) {
@@ -501,7 +501,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     @SuppressWarnings("unchecked")
     private Widget getWidgetFromPath(String path, Widget baseWidget) {
         Widget w = baseWidget;
-        String parts[] = path.split(PARENTCHILD_SEPARATOR);
+        String[] parts = path.split(PARENTCHILD_SEPARATOR);
 
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];

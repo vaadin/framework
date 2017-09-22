@@ -232,7 +232,7 @@ public class VCustomLayout extends ComplexPanel {
     public static native void eval(String script)
     /*-{
       try {
-     	 if (script != null)
+          if (script != null)
       eval("{ var document = $doc; var window = $wnd; "+ script + "}");
       } catch (e) {
       }
@@ -397,21 +397,21 @@ public class VCustomLayout extends ComplexPanel {
 
     private native void detachResizedFunction(Element element)
     /*-{
-    	element.notifyChildrenOfSizeChange = null;
+        element.notifyChildrenOfSizeChange = null;
     }-*/;
 
     private native void publishResizedFunction(Element element)
     /*-{
-    	var self = this;
-    	element.notifyChildrenOfSizeChange = $entry(function() {
-    		self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
-    	});
+        var self = this;
+        element.notifyChildrenOfSizeChange = $entry(function() {
+            self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
+        });
     }-*/;
 
     /**
      * In custom layout one may want to run layout functions made with
      * JavaScript. This function tests if one exists (with name "iLayoutJS" in
-     * layouts first DOM node) and runs et. Return value is used to determine if
+     * layouts first DOM node) and runs it. Return value is used to determine if
      * children needs to be notified of size changes.
      * <p>
      * Note! When implementing a JS layout function you most likely want to call
@@ -421,22 +421,22 @@ public class VCustomLayout extends ComplexPanel {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param el
+     * @param el The first element of the layout
      * @return true if layout function exists and was run successfully, else
      *         false.
      */
     public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
-    	if(el && el.iLayoutJS) {
-    		try {
-    			el.iLayoutJS();
-    			return true;
-    		} catch (e) {
-    			return false;
-    		}
-    	} else {
-    		return false;
-    	}
+        if(el && el.iLayoutJS) {
+            try {
+                el.iLayoutJS();
+                return true;
+            } catch (e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }-*/;
 
     @Override
