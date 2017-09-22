@@ -340,7 +340,8 @@ public class VTabsheet extends VTabsheetBase
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.descriptionContentMode,
-                        tabState.componentError, this));
+                        tabState.componentError, this,
+                        tabState.componentErrorLevel));
             } else {
                 setTooltipInfo(null);
             }
