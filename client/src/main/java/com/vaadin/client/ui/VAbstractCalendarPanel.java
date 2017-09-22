@@ -1260,24 +1260,16 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Ctrl and Shift selection not supported
         if (ctrl || shift) {
             return false;
-        }
-
-        else if (keycode == getPreviousKey()) {
+        } else if (keycode == getPreviousKey()) {
             focusNextYear(10); // Add 10 years
             return true;
-        }
-
-        else if (keycode == getForwardKey()) {
+        } else if (keycode == getForwardKey()) {
             focusNextYear(1); // Add 1 year
             return true;
-        }
-
-        else if (keycode == getNextKey()) {
+        } else if (keycode == getNextKey()) {
             focusPreviousYear(10); // Subtract 10 years
             return true;
-        }
-
-        else if (keycode == getBackwardKey()) {
+        } else if (keycode == getBackwardKey()) {
             focusPreviousYear(1); // Subtract 1 year
             return true;
 
@@ -1479,21 +1471,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
-        }
-
-        else if (isYear(getResolution())) {
+        } else if (isYear(getResolution())) {
             return handleNavigationYearMode(keycode, ctrl, shift);
-        }
-
-        else if (isMonth(getResolution())) {
+        } else if (isMonth(getResolution())) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
-        }
-
-        else if (isDay(getResolution())) {
+        } else if (isDay(getResolution())) {
             return handleNavigationDayMode(keycode, ctrl, shift);
-        }
-
-        else {
+        } else {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
 

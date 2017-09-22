@@ -128,10 +128,8 @@ public class ColorPickerSelect extends CustomComponent
 
                     colors[row][col] = new Color(
                             Color.HSVtoRGB(hue, saturation, value));
-                }
-
-                // The last row should have the black&white gradient
-                else {
+                } else {
+                    // The last row should have the black&white gradient
                     float hue = 0f;
                     float saturation = 0f;
                     float value = 1f - ((float) col / (float) columns);

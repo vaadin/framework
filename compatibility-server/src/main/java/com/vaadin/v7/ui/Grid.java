@@ -3723,9 +3723,7 @@ public class Grid extends AbstractComponent
                                     + getRenderer().getPresentationType()
                                     + " (in " + toString() + ")");
                 }
-            }
-
-            else {
+            } else {
                 /*
                  * Since the converter is null (i.e. will be removed), we need
                  * to know that the renderer and model are compatible. If not,
