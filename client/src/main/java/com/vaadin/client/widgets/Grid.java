@@ -2422,8 +2422,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Element targetElement = Element.as(target);
-            if (grid.isElementInChildWidget(targetElement)) {
-                // Target is some widget inside of Grid
+            if (ignoreEventFromTarget(grid, targetElement)) {
+                // Event on this target should be ignored
                 return;
             }
 
@@ -2442,6 +2442,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             doDispatch(handler, section);
+        }
+
+        /**
+         * Returns whether the mouse event on the target element should be
+         * ignored.
+         *
+         * @param grid
+         *         the {@code Grid} instance from which the event originated
+         * @param targetElement
+         *         the element from which the event originated
+         * @return {@code true} if the event should be ignored, {@code false} if
+         * it should be handled
+         * @since
+         */
+        protected boolean ignoreEventFromTarget(Grid<?> grid,
+                Element targetElement) {
+            // Target is some widget inside of Grid
+            return grid.isElementInChildWidget(targetElement);
         }
 
         protected abstract void doDispatch(HANDLER handler, Section section);
