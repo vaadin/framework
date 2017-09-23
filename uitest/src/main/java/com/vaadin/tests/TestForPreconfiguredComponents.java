@@ -37,10 +37,10 @@ import com.vaadin.v7.ui.TwinColSelect;
  */
 public class TestForPreconfiguredComponents extends CustomComponent {
 
-    private static final String[] firstnames = new String[] { "John", "Mary",
+    private static final String[] firstnames = { "John", "Mary",
             "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = new String[] { "Torvalds",
+    private static final String[] lastnames = { "Torvalds",
             "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
             "Einstein" };
 

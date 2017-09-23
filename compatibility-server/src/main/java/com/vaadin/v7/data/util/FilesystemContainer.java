@@ -103,7 +103,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         }
     }
 
-    private File[] roots = new File[] {};
+    private File[] roots = {};
 
     private FilenameFilter filter = null;
 

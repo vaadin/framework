@@ -141,7 +141,7 @@ public class DragAndDropUploadAndInteractions extends AbstractTestUIWithLog {
     protected String formatSize(double contentLength) {
         double d = contentLength;
         int suffix = 0;
-        String[] suffixes = new String[] { "B", "KB", "MB", "GB", "TB" };
+        String[] suffixes = { "B", "KB", "MB", "GB", "TB" };
         while (d > 1024) {
             suffix++;
             d /= 1024.0;

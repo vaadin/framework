@@ -14,7 +14,7 @@ public class PersonContainer extends BeanItemContainer<Person>
     /**
      * Natural property order for Person bean. Used in tables and forms.
      */
-    public static final Object[] NATURAL_COL_ORDER = new Object[] { "firstName",
+    public static final Object[] NATURAL_COL_ORDER = { "firstName",
             "lastName", "email", "phoneNumber", "address.streetAddress",
             "address.postalCode", "address.city" };
 
@@ -22,7 +22,7 @@ public class PersonContainer extends BeanItemContainer<Person>
      * "Human readable" captions for properties in same order as in
      * NATURAL_COL_ORDER.
      */
-    public static final String[] COL_HEADERS_ENGLISH = new String[] {
+    public static final String[] COL_HEADERS_ENGLISH = {
             "First name", "Last name", "Email", "Phone number",
             "Street Address", "Postal Code", "City" };
 

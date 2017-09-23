@@ -12,7 +12,7 @@ import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
 
-    private static final String[] value = new String[] { "Foo", "Bar", "Baz",
+    private static final String[] value = { "Foo", "Bar", "Baz",
             "Spam", "Eggs" };
 
     @Test

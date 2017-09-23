@@ -569,7 +569,7 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            String[] keys = new String[] { "navigationStart",
+            String[] keys = { "navigationStart",
                     "unloadEventStart", "unloadEventEnd", "redirectStart",
                     "redirectEnd", "fetchStart", "domainLookupStart",
                     "domainLookupEnd", "connectStart", "connectEnd",

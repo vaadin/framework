@@ -517,7 +517,7 @@ public class EscalatorSpacerTest extends EscalatorBasicClientFeaturesTest {
             return getTranslateValues(transform);
         }
 
-        double[] result = new double[] { -1, -1 };
+        double[] result = { -1, -1 };
         String left = getLeftFromStyle(style);
         if (left != null) {
             result[0] = getPixelValue(left);
