@@ -16,7 +16,6 @@
 package com.vaadin.tests.contextclick;
 
 import com.vaadin.data.TreeData;
-import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;

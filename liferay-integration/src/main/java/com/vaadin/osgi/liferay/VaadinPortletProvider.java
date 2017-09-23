@@ -15,8 +15,6 @@
  */
 package com.vaadin.osgi.liferay;
 
-import java.util.Optional;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceObjects;
 import org.osgi.service.component.ComponentContext;

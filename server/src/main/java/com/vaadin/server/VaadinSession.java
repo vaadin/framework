@@ -678,8 +678,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * Gets the currently used session. The current session is automatically
      * defined when processing requests related to the session (see
-     * {@link ThreadLocal}) and in {@link VaadinSession#access(Command)} and
-     * {@link UI#access(Command)}. In other cases, (e.g. from background
+     * {@link ThreadLocal}) and in {@link VaadinSession#access(Runnable)} and
+     * {@link UI#access(Runnable)}. In other cases, (e.g. from background
      * threads, the current session is not automatically defined.
      * <p>
      * The session is stored using a weak reference to avoid leaking memory in

@@ -12,7 +12,6 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.ui.Button;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

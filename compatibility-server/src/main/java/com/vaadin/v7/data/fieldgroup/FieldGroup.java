@@ -40,7 +40,7 @@ import com.vaadin.v7.ui.Field;
  * FieldGroup provides an easy way of binding fields to data and handling
  * commits of these fields.
  * <p>
- * The functionality of FieldGroup is similar to {@link Form} but
+ * The functionality of FieldGroup is similar to {@link com.vaadin.v7.ui.Form Form} but
  * {@link FieldGroup} does not handle layouts in any way. The typical use case
  * is to create a layout outside the FieldGroup and then use FieldGroup to bind
  * the fields to a data source.

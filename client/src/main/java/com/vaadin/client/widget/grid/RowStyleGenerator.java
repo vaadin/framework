@@ -23,7 +23,8 @@ import java.io.Serializable;
  * @author Vaadin Ltd
  * @param <T>
  *            the row type of the target grid
- * @see Grid#setRowStyleGenerator(RowStyleGenerator)
+ * @see com.vaadin.client.widgets.Grid#setRowStyleGenerator(RowStyleGenerator)
+ *      Grid#setRowStyleGenerator(RowStyleGenerator)
  * @since 7.4
  */
 public interface RowStyleGenerator<T> extends Serializable {
