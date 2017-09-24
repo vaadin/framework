@@ -35,10 +35,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.customelements.AbstractDateFieldElement;
+import com.vaadin.testbench.elements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
@@ -50,7 +50,7 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
         defaultTimeZone = TimeZone.getDefault();
         TimeZone.setDefault(TimeZone.getTimeZone("Brazil/Acre"));
     }
-    
+
     @AfterClass
     public static void cleanup() {
         TimeZone.setDefault(defaultTimeZone);
@@ -178,7 +178,8 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
     }
 
     private void selectDay(int day) {
-        for (WebElement e : findElements(By.className("v-datefield-calendarpanel-day"))) {
+        for (WebElement e : findElements(
+                By.className("v-datefield-calendarpanel-day"))) {
             if (e.getText().equals(String.valueOf(day))) {
                 e.click();
                 break;
@@ -190,7 +191,7 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
         dateField.findElement(By.tagName("button")).click();
     }
 
-    private void assertEndsWith(DateFieldElement id, String suffix) {
+    private void assertEndsWith(AbstractElement id, String suffix) {
         String text = id.findElement(By.xpath("./input")).getAttribute("value");
         assertTrue(text + " should end with " + suffix, text.endsWith(suffix));
     }
@@ -207,37 +208,39 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
     }
 
     /**
-     * Returns the timezone name formatted as returned by {@link com.google.gwt.i18n.client.DateTimeFormat},
-     * which supports only standard GMT and RFC format.
+     * Returns the timezone name formatted as returned by
+     * {@link com.google.gwt.i18n.client.DateTimeFormat}, which supports only
+     * standard GMT and RFC format.
      *
      * The {@link ZoneId} used is the operating system default
      */
     private static String getUTCString(LocalDate localDate) {
-        Instant instant = localDate.atStartOfDay().atZone(defaultTimeZone.toZoneId()).toInstant();
-        Duration duration = Duration.ofMillis(defaultTimeZone.getOffset(instant.toEpochMilli()));
+        Instant instant = localDate.atStartOfDay()
+                .atZone(defaultTimeZone.toZoneId()).toInstant();
+        Duration duration = Duration
+                .ofMillis(defaultTimeZone.getOffset(instant.toEpochMilli()));
 
         String suffix;
         if (duration.toMinutes() == 0) {
             suffix = "";
-        }
-        else {
-            long minutes = duration.toMinutes() % Duration.ofHours(1).toMinutes();
+        } else {
+            long minutes = duration.toMinutes()
+                    % Duration.ofHours(1).toMinutes();
             long hours = duration.toHours();
-            suffix = (hours >= 0 ? "+" : "") + hours + (minutes != 0 ? ":" + minutes : "");
+            suffix = (hours >= 0 ? "+" : "") + hours
+                    + (minutes != 0 ? ":" + minutes : "");
         }
 
         return "UTC" + suffix;
     }
 
     private void setZoneId(String zoneId) {
-        ComboBoxElement zoneIdComboBox =
-                $(ComboBoxElement.class).id(ZONE_ID);
+        ComboBoxElement zoneIdComboBox = $(ComboBoxElement.class).id(ZONE_ID);
         zoneIdComboBox.selectByText(zoneId);
     }
 
     private void setLocale(String locale) {
-        ComboBoxElement zoneIdComboBox =
-                $(ComboBoxElement.class).id(LOCALE_ID);
+        ComboBoxElement zoneIdComboBox = $(ComboBoxElement.class).id(LOCALE_ID);
         zoneIdComboBox.selectByText(locale);
     }
 }

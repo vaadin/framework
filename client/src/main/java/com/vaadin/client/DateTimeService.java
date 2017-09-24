@@ -52,7 +52,7 @@ public class DateTimeService {
      * Creates a new date time service with a given locale.
      *
      * @param locale
-     *            e.g. fi, en etc.
+     *            e.g. {@code fi}, {@code en}, etc.
      * @throws LocaleNotLoadedException
      */
     public DateTimeService(String locale) throws LocaleNotLoadedException {
@@ -320,7 +320,8 @@ public class DateTimeService {
      * name. '' are added around the name to avoid that DateTimeFormat parses
      * the month name as a pattern.
      *
-     * z is converted into the time zone name, using the specified {@code timeZoneJSON}
+     * z is converted into the time zone name, using the specified
+     * {@code timeZoneJSON}
      *
      * @param date
      *            The date to convert
@@ -435,31 +436,37 @@ public class DateTimeService {
         return formatStr;
     }
 
-    private String formatTimeZone(Date date, String formatStr, String timeZoneJSON) {
+    private String formatTimeZone(Date date, String formatStr,
+            String timeZoneJSON) {
         // should we check if it is inside single quotes?
         if (formatStr.indexOf('z') == -1 || timeZoneJSON == null) {
             return formatStr;
         }
-        TimeZoneInfo timeZoneInfo = TimeZoneInfo.buildTimeZoneData(timeZoneJSON);
+        TimeZoneInfo timeZoneInfo = TimeZoneInfo
+                .buildTimeZoneData(timeZoneJSON);
         TimeZone timeZone = TimeZone.createTimeZone(timeZoneInfo);
 
         return replaceTimeZone(formatStr, timeZone.getShortName(date));
     }
 
-    private static String replaceTimeZone(String formatStr, String timeZoneName) {
+    private static String replaceTimeZone(String formatStr,
+            String timeZoneName) {
         int start = getIndexOf(formatStr, 'z');
         if (start == -1) {
             return formatStr;
         }
         int end = start;
-        while (end + 1 < formatStr.length() && formatStr.charAt(end + 1) == 'z') {
+        while (end + 1 < formatStr.length()
+                && formatStr.charAt(end + 1) == 'z') {
             end++;
         }
-        return formatStr.substring(0, start) + "'" + timeZoneName + "'" + formatStr.substring(end + 1);
+        return formatStr.substring(0, start) + "'" + timeZoneName + "'"
+                + formatStr.substring(end + 1);
     }
 
     /**
-     * Returns the first index of the specified {@code ch}, which is outside the quotes.
+     * Returns the first index of the specified {@code ch}, which is outside the
+     * quotes.
      */
     private static int getIndexOf(String str, char ch) {
         boolean inQuote = false;
@@ -468,12 +475,10 @@ public class DateTimeService {
             if (c == '\'') {
                 if (i + 1 < str.length() && str.charAt(i + 1) == '\'') {
                     i++;
-                }
-                else {
+                } else {
                     inQuote ^= true;
                 }
-            }
-            else if (c == ch && !inQuote) {
+            } else if (c == ch && !inQuote) {
                 return i;
             }
         }
