@@ -1432,7 +1432,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         public abstract String getStyle(Tree source, Object itemId);
     }
 
-    // Overriden so javadoc comes from Container.Hierarchical
+    // Overridden so javadoc comes from Container.Hierarchical
     @Override
     public boolean removeItem(Object itemId)
             throws UnsupportedOperationException {
