@@ -108,6 +108,8 @@ public interface Editor<T> extends Serializable {
      *
      * @param rowNumber
      *          the row to edit
+     *
+     * @since 8.2
      */
     public void editRow(int rowNumber);
 

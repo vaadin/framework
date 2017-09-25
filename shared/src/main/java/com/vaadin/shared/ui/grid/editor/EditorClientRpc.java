@@ -35,6 +35,8 @@ public interface EditorClientRpc extends ClientRpc {
      * @param fromServer
      *            whether the request was server-originated
      *
+     * @since 8.2
+     *
      */
     void bind(int rowIndex, boolean fromServer);
 
