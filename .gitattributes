@@ -14,7 +14,6 @@
 *.scss text
 *.md text
 
-
 # To be verified
 *.graffle binary
 
@@ -24,4 +23,4 @@
 
 .classpath text
 .project text
-*.settings text
+*.prefs text
