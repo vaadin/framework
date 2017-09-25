@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -122,7 +123,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Item icons alt texts.
      */
-    private final HashMap<Object, String> itemIconAlts = new HashMap<Object, String>();
+    private final Map<Object, String> itemIconAlts = new HashMap<Object, String>();
 
     /**
      * Set of expanded nodes.
@@ -691,7 +692,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
          * by right clicking on the Tree body
          */
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<String>();
+            final List<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
 
                 // Getting action for the null item, which in this case
@@ -778,7 +779,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Actions
                 if (actionHandlers != null) {
-                    final ArrayList<String> keys = new ArrayList<String>();
+                    final List<String> keys = new ArrayList<String>();
                     final Iterator<Action.Handler> ahi = actionHandlers
                             .iterator();
                     while (ahi.hasNext()) {

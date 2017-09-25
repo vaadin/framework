@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -94,7 +95,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private int deltaScrollPos;
     private boolean transitionOn = false;
     private int finalScrollTop;
-    private ArrayList<Element> layers;
+    private List<Element> layers;
     private boolean moved;
     private ScrollHandler scrollHandler;
 
@@ -417,9 +418,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         return false;
     }
 
-    public static ArrayList<Element> getElements(Element scrolledElement2) {
+    public static List<Element> getElements(Element scrolledElement2) {
         NodeList<Node> childNodes = scrolledElement2.getChildNodes();
-        ArrayList<Element> l = new ArrayList<>();
+        List<Element> l = new ArrayList<>();
         for (int i = 0; i < childNodes.getLength(); i++) {
             Node item = childNodes.getItem(i);
             if (item.getNodeType() == Node.ELEMENT_NODE) {

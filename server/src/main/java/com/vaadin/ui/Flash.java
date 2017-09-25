@@ -18,6 +18,7 @@ package com.vaadin.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.nodes.Element;
@@ -216,7 +217,8 @@ public class Flash extends AbstractEmbedded {
      */
     public String getParameter(String name) {
         return getState(false).embedParams != null
-                ? getState(false).embedParams.get(name) : null;
+                ? getState(false).embedParams.get(name)
+                : null;
     }
 
     /**
@@ -238,7 +240,7 @@ public class Flash extends AbstractEmbedded {
         super.writeDesign(design, designContext);
 
         // Parameters, in alphabetic order
-        ArrayList<String> paramNames = new ArrayList<>();
+        List<String> paramNames = new ArrayList<>();
         for (String param : getParameterNames()) {
             paramNames.add(param);
         }

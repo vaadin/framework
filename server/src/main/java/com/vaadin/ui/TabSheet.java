@@ -110,7 +110,7 @@ public class TabSheet extends AbstractComponentContainer
     /**
      * Map containing information related to the tabs (caption, icon etc).
      */
-    private final HashMap<Component, Tab> tabs = new HashMap<>();
+    private final Map<Component, Tab> tabs = new HashMap<>();
 
     /**
      * Selected tab content component.
@@ -1315,7 +1315,8 @@ public class TabSheet extends AbstractComponentContainer
             this.componentError = componentError;
 
             String formattedHtmlMessage = componentError != null
-                    ? componentError.getFormattedHtmlMessage() : null;
+                    ? componentError.getFormattedHtmlMessage()
+                    : null;
             tabState.componentError = formattedHtmlMessage;
 
             markAsDirty();

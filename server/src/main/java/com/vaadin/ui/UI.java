@@ -261,8 +261,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     private WindowOrderRpc windowOrderRpc = new WindowOrderRpc() {
 
         @Override
-        public void windowOrderChanged(
-                Map<Integer, Connector> windowOrders) {
+        public void windowOrderChanged(Map<Integer, Connector> windowOrders) {
             Map<Integer, Window> orders = new LinkedHashMap<>();
             for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
                 if (entry.getValue() instanceof Window) {
@@ -458,7 +457,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
-        ArrayList<Component> components = new ArrayList<>();
+        List<Component> components = new ArrayList<>();
 
         if (getContent() != null) {
             components.add(getContent());

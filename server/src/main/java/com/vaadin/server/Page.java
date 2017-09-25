@@ -1465,7 +1465,7 @@ public class Page implements Serializable {
      * @since 8.1
      */
     public Collection<Dependency> getPendingDependencies() {
-        ArrayList<Dependency> copy = new ArrayList<>();
+        List<Dependency> copy = new ArrayList<>();
         if (pendingDependencies != null) {
             copy.addAll(pendingDependencies);
         }

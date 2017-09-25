@@ -136,9 +136,9 @@ public class Binder<BEAN> implements Serializable {
         public BindingValidationStatusHandler getValidationStatusHandler();
 
         /**
-         * Unbinds the binding from its respective {@code Binder}
-         * Removes any {@code ValueChangeListener} {@code Registration} from
-         * associated {@code HasValue}
+         * Unbinds the binding from its respective {@code Binder} Removes any
+         * {@code ValueChangeListener} {@code Registration} from associated
+         * {@code HasValue}
          *
          * @since 8.2
          */
@@ -422,9 +422,11 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null : fieldValue,
+                            ? null
+                            : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation : modelValue);
+                            ? nullRepresentation
+                            : modelValue);
         }
 
         /**
@@ -841,7 +843,8 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
-            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder");
+            Objects.requireNonNull(binder,
+                    "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
@@ -2094,7 +2097,8 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue() : modelValue,
+                                ? field.getEmptyValue()
+                                : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);
@@ -2319,7 +2323,7 @@ public class Binder<BEAN> implements Serializable {
      * @return list of all fields in the class considering hierarchy
      */
     private List<Field> getFieldsInDeclareOrder(Class<?> searchClass) {
-        ArrayList<Field> memberFieldInOrder = new ArrayList<>();
+        List<Field> memberFieldInOrder = new ArrayList<>();
 
         while (searchClass != null) {
             memberFieldInOrder
@@ -2462,7 +2466,8 @@ public class Binder<BEAN> implements Serializable {
      *
      * This method should just be used for internal cleanup.
      *
-     * @param binding The {@code Binding} to remove from the binding map
+     * @param binding
+     *            The {@code Binding} to remove from the binding map
      *
      * @since 8.2
      */

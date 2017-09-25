@@ -621,7 +621,7 @@ public class LayoutManager {
         int pendingOverflowCount = pendingOverflowConnectorsIds.length();
         ConnectorMap connectorMap = ConnectorMap.get(connection);
         if (pendingOverflowCount > 0) {
-            HashMap<Element, String> originalOverflows = new HashMap<>();
+            Map<Element, String> originalOverflows = new HashMap<>();
 
             FastStringSet delayedOverflowFixes = FastStringSet.create();
 
@@ -1646,8 +1646,9 @@ public class LayoutManager {
             int assignedHeight) {
         assert component.isRelativeHeight();
 
-        float percentSize = parsePercent(component.getState().height == null
-                ? "" : component.getState().height);
+        float percentSize = parsePercent(
+                component.getState().height == null ? ""
+                        : component.getState().height);
         int effectiveHeight = Math.round(assignedHeight * (percentSize / 100));
 
         reportOuterHeight(component, effectiveHeight);

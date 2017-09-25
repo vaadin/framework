@@ -74,7 +74,7 @@ public class IndexedContainer
     /**
      * Linked list of ordered Property IDs.
      */
-    private ArrayList<Object> propertyIds = new ArrayList<Object>();
+    private List<Object> propertyIds = new ArrayList<Object>();
 
     /**
      * Property ID to type mapping.
@@ -104,9 +104,9 @@ public class IndexedContainer
      * hashtable that maps Item IDs to a linked list of listeners listening
      * Property identified by given Property ID and Item ID.
      */
-    private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners = null;
+    private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners;
 
-    private HashMap<Object, Object> defaultPropertyValues;
+    private Map<Object, Object> defaultPropertyValues;
 
     private int nextGeneratedItemId = 1;
 
@@ -991,7 +991,8 @@ public class IndexedContainer
                         getItemSetChangeListeners())
                 : null);
         nc.propertyIds = propertyIds != null
-                ? (ArrayList<Object>) propertyIds.clone() : null;
+                ? (ArrayList<Object>) ((ArrayList<Object>) propertyIds).clone()
+                : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
                 ? new LinkedList<Container.PropertySetChangeListener>(
                         getPropertySetChangeListeners())
@@ -1001,7 +1002,8 @@ public class IndexedContainer
                         .clone()
                 : null;
         nc.readOnlyProperties = readOnlyProperties != null
-                ? (HashSet<Property<?>>) readOnlyProperties.clone() : null;
+                ? (HashSet<Property<?>>) readOnlyProperties.clone()
+                : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null
                 ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
                         .clone()

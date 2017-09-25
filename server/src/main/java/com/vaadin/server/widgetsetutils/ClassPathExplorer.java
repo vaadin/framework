@@ -58,8 +58,8 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private static final FileFilter DIRECTORIES_ONLY = (File f) ->
-            f.exists() && f.isDirectory();
+    private static final FileFilter DIRECTORIES_ONLY = (File f) -> f.exists()
+            && f.isDirectory();
 
     /**
      * Contains information about widgetsets and themes found on the classpath
@@ -525,7 +525,7 @@ public class ClassPathExplorer {
     public static URL getWidgetsetSourceDirectory(String widgetsetFileName) {
         if (debug) {
             debug("classpathLocations values:");
-            ArrayList<String> locations = new ArrayList<>(
+            List<String> locations = new ArrayList<>(
                     classpathLocations.keySet());
             for (String location : locations) {
                 debug(String.valueOf(classpathLocations.get(location)));

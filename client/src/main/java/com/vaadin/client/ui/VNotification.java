@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.List;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
@@ -80,7 +81,7 @@ public class VNotification extends VOverlay {
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
 
-    private static final ArrayList<VNotification> notifications = new ArrayList<>();
+    private static final List<VNotification> notifications = new ArrayList<>();
 
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
@@ -92,7 +93,7 @@ public class VNotification extends VOverlay {
 
     private String temporaryStyle;
 
-    private ArrayList<EventListener> listeners;
+    private List<EventListener> listeners;
     private static final int TOUCH_DEVICE_IDLE_DELAY = 1000;
 
     /**

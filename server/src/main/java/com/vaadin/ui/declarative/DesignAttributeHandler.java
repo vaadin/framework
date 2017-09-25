@@ -449,7 +449,7 @@ public class DesignAttributeHandler implements Serializable {
         }
 
         private Collection<String> getAttributes() {
-            ArrayList<String> attributes = new ArrayList<>();
+            List<String> attributes = new ArrayList<>();
             attributes.addAll(accessMethods.keySet());
             return attributes;
         }

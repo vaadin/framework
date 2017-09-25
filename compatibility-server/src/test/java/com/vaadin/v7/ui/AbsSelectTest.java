@@ -17,6 +17,7 @@ package com.vaadin.v7.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class AbsSelectTest {
 
     @Test
     public void addItemsStringList() {
-        ArrayList<String> itemIds = new ArrayList<String>();
+        List<String> itemIds = new ArrayList<String>();
         itemIds.add("foo");
         itemIds.add("bar");
         itemIds.add("baz");
@@ -65,7 +66,7 @@ public class AbsSelectTest {
         Object o1 = new Object();
         Object o2 = new Object();
         Object o3 = new Object();
-        ArrayList<Object> itemIds = new ArrayList<Object>();
+        List<Object> itemIds = new ArrayList<Object>();
         itemIds.add(o1);
         itemIds.add(o2);
         itemIds.add(o3);

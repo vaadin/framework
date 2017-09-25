@@ -559,9 +559,11 @@ public class TableQuery extends AbstractTransactionalQuery
                         null);
                 if (!tables.next()) {
                     String catalog = (catalogName != null)
-                            ? catalogName.toUpperCase() : null;
+                            ? catalogName.toUpperCase()
+                            : null;
                     String schema = (schemaName != null)
-                            ? schemaName.toUpperCase() : null;
+                            ? schemaName.toUpperCase()
+                            : null;
                     tables = dbmd.getTables(catalog, schema,
                             tableName.toUpperCase(), null);
                     if (!tables.next()) {
@@ -680,7 +682,7 @@ public class TableQuery extends AbstractTransactionalQuery
 
     @Override
     public boolean containsRowWithKey(Object... keys) throws SQLException {
-        ArrayList<Filter> filtersAndKeys = new ArrayList<Filter>();
+        List<Filter> filtersAndKeys = new ArrayList<Filter>();
         if (filters != null) {
             filtersAndKeys.addAll(filters);
         }

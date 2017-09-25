@@ -114,12 +114,12 @@ public class Form extends AbstractField<Object>
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
+    private final Map<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
+    private final Map<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -695,8 +695,9 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null
-                ? newDataSource.getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**

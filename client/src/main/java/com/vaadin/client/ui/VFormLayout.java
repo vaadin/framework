@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -88,8 +89,8 @@ public class VFormLayout extends SimplePanel {
         private static final int COLUMN_ERRORFLAG = 1;
         public static final int COLUMN_WIDGET = 2;
 
-        private HashMap<Widget, Caption> widgetToCaption = new HashMap<>();
-        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<>();
+        private Map<Widget, Caption> widgetToCaption = new HashMap<>();
+        private Map<Widget, ErrorFlag> widgetToError = new HashMap<>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
