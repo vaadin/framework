@@ -24,7 +24,6 @@ import java.io.IOException;
  * is called and unlocked after it has completed.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.1
  */
 public abstract class SynchronizedRequestHandler implements RequestHandler {
