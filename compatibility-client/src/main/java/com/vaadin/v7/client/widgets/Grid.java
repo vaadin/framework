@@ -1525,7 +1525,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            // Focus the last focused column in the editor iff grid or its child
+            // Focus the last focused column in the editor if grid or its child
             // was focused before the edit request
             Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
             Element focusedElement = WidgetUtil.getFocusedElement();
@@ -2295,7 +2295,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
-    public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
+    public abstract static class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyEvent<HANDLER> {
 
         /**
@@ -2360,7 +2360,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         protected abstract void doDispatch(HANDLER handler, Section section);
     }
 
-    public static abstract class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
+    public abstract static class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
             extends MouseEvent<HANDLER> {
 
         /**
@@ -4330,10 +4330,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && rightBoundaryForDrag < dropMarkerLeft
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
-            }
-
-            // Check if the drop marker shouldn't be shown at all
-            else if (dropMarkerLeft < frozenColumnsWidth
+            } else if (
+                    // Check if the drop marker shouldn't be shown at all
+                    dropMarkerLeft < frozenColumnsWidth
                     || dropMarkerLeft > Math.min(rightBoundaryForDrag,
                             escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
@@ -4609,9 +4608,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             rightBound = cellColumnRightIndex;
                         }
                         cellColumnIndex = cellColumnRightIndex - 1;
-                    }
-
-                    else { // can't drop inside a spanned cell, or this is the
+                    } else { // can't drop inside a spanned cell, or this is the
                            // dragged cell
                         while (colspan > 1) {
                             cellColumnIndex++;
@@ -4702,7 +4699,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param <T>
      *            the row type
      */
-    public static abstract class Column<C, T> {
+    public abstract static class Column<C, T> {
 
         /**
          * Default renderer for GridColumns. Renders everything into text
@@ -5299,11 +5296,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @param pixels
          *            the maximum width
-         * @param immediately
-         *            <code>true</code> if the widths should be executed
-         *            immediately (ignoring lazy loading completely), or
-         *            <code>false</code> if the command should be run after a
-         *            while (duplicate non-immediately invocations are ignored).
          * @return this column
          */
         public Column<C, T> setMaximumWidth(double pixels) {
@@ -5345,7 +5337,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * returns. This is done to reduce overhead of unintentionally always
          * recalculate all columns, when modifying several columns at once.
          *
-         * @param expandRatio
+         * @param ratio
          *            the expand ratio of this column. {@code 0} to not have it
          *            expand at all. A negative number to clear the expand
          *            value.
@@ -6703,8 +6695,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the header section.
      *
-     * @param index
-     *            the position of the row
+     * @param rowIndex
+     *            the index of the row
      *
      * @throws IllegalArgumentException
      *             if no row exists at given index
@@ -6852,7 +6844,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Removes the row at the given position from the footer section.
      *
-     * @param index
+     * @param rowIndex
      *            the position of the row
      *
      * @throws IllegalArgumentException
@@ -7946,7 +7938,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -7971,7 +7963,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -7990,7 +7982,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Deselect all rows using the current selection model.
      *
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -8723,7 +8715,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the handler responsible for binding data and editor widgets to the
      * editor.
      *
-     * @param rowHandler
+     * @param handler
      *            the new editor handler
      *
      * @throws IllegalStateException
@@ -8955,17 +8947,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param parent
      *            The parent to set
      */
-    private static native final void setParent(Widget widget, Grid<?> parent)
+    private static final native void setParent(Widget widget, Grid<?> parent)
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
 
-    private static native final void onAttach(Widget widget)
+    private static final native void onAttach(Widget widget)
     /*-{
         widget.@Widget::onAttach()();
     }-*/;
 
-    private static native final void onDetach(Widget widget)
+    private static final native void onDetach(Widget widget)
     /*-{
         widget.@Widget::onDetach()();
     }-*/;
@@ -9088,9 +9080,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
-        }
-
-        else if (!visible && isVisible) {
+        } else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }
@@ -9102,7 +9092,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
-     * @return <code>true</code> iff the details for the given row is visible
+     * @return <code>true</code> if the details for the given row is visible
      * @see #setDetailsVisible(int, boolean)
      */
     public boolean isDetailsVisible(int rowIndex) {
@@ -9210,9 +9200,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Sets the buffered editor mode.
      *
      * @since 7.6
-     * @param editorUnbuffered
-     *            <code>true</code> to enable buffered editor,
-     *            <code>false</code> to disable it
+     * @param editorBuffered
+     *            {@code true} to enable buffered editor,
+     *            {@code false} to disable it
      */
     public void setEditorBuffered(boolean editorBuffered) {
         editor.setBuffered(editorBuffered);

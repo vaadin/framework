@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -193,7 +194,7 @@ public class Upload extends AbstractLegacyComponent
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }
@@ -242,9 +243,9 @@ public class Upload extends AbstractLegacyComponent
                     "uploadStarted", new Class[] { StartedEvent.class });
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class.getDeclaredMethod(
                     "uploadSucceeded", new Class[] { SucceededEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }
@@ -1201,7 +1202,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     @Override
-    public java.util.Collection<?> getListeners(java.lang.Class<?> eventType) {
+    public Collection<?> getListeners(Class<?> eventType) {
         if (StreamingProgressEvent.class.isAssignableFrom(eventType)) {
             if (progressListeners == null) {
                 return Collections.EMPTY_LIST;

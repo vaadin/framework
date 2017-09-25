@@ -136,7 +136,7 @@ public interface Validator extends Serializable {
          */
         public boolean isInvisible() {
             String msg = getMessage();
-            if (msg != null && msg.length() > 0) {
+            if (msg != null && !msg.isEmpty()) {
                 return false;
             }
             if (causes != null) {

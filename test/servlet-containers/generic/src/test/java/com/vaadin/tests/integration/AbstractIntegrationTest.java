@@ -87,7 +87,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
 
     private String getDeploymentURL() {
         String deploymentUrl = System.getProperty("deployment.url");
-        if (deploymentUrl == null || deploymentUrl.equals("")) {
+        if (deploymentUrl == null || deploymentUrl.isEmpty()) {
             throw new RuntimeException(
                     "Deployment url must be given as deployment.url");
         }

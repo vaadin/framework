@@ -898,7 +898,7 @@ public class NavigatorTest {
 
         };
 
-        final int[] count = new int[] { 0 };
+        final int[] count = { 0 };
         Navigator navigator = new Navigator(createMockUI(), manager,
                 EasyMock.createMock(ViewDisplay.class)) {
             @Override

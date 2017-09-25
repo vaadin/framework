@@ -148,16 +148,6 @@ public class SharedUtil implements Serializable {
         return join(parts, " ");
     }
 
-    private static boolean isAllUpperCase(String string) {
-        for (int i = 0; i < string.length(); i++) {
-            char c = string.charAt(i);
-            if (!Character.isUpperCase(c) && !Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Joins the words in the input array together into a single string by
      * inserting the separator string between each word.
@@ -245,7 +235,7 @@ public class SharedUtil implements Serializable {
      * @return The modified URI with the get parameters in extraParams added.
      */
     public static String addGetParameters(String uri, String extraParams) {
-        if (extraParams == null || extraParams.length() == 0) {
+        if (extraParams == null || extraParams.isEmpty()) {
             return uri;
         }
         // RFC 3986: The query component is indicated by the first question

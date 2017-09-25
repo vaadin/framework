@@ -151,7 +151,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private static abstract class BaseItemAddOrRemoveEvent extends EventObject
+    private abstract static class BaseItemAddOrRemoveEvent extends EventObject
             implements Serializable {
         protected Object itemId;
         protected int index;

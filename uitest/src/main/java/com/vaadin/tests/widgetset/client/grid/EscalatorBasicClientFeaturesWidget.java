@@ -434,7 +434,7 @@ public class EscalatorBasicClientFeaturesWidget
     }
 
     private void createSizeMenu() {
-        String[] menupath = new String[] { "General", "Size" };
+        String[] menupath = { "General", "Size" };
 
         addSizeMenuItem(null, "height", menupath);
         addSizeMenuItem("200px", "height", menupath);

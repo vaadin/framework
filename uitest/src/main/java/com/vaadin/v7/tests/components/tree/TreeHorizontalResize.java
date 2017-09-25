@@ -1,7 +1,5 @@
 package com.vaadin.v7.tests.components.tree;
 
-import java.util.Iterator;
-
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Panel;
@@ -35,8 +33,8 @@ public class TreeHorizontalResize extends TestBase {
         Tree tree = new Tree();
         tree.setContainerDataSource(getHardwareContainer());
         tree.setItemCaptionPropertyId(hw_PROPERTY_NAME);
-        for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
-            tree.expandItemsRecursively(it.next());
+        for (Object id : tree.rootItemIds()) {
+            tree.expandItemsRecursively(id);
         }
         treeLayout.addComponent(tree);
     }

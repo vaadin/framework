@@ -177,9 +177,9 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
      * The default is false, i.e. render tab captions as plain text
      *
      * @since 7.4
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param tabCaptionsAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setTabCaptionsAsHtml(boolean tabCaptionsAsHtml) {
         this.tabCaptionsAsHtml = tabCaptionsAsHtml;

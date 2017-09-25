@@ -28,7 +28,7 @@ public class SimpleTree extends TestBase implements Action.Handler {
     // Actions for the context menu
     private static final Action ACTION_ADD = new Action("Add child item");
     private static final Action ACTION_DELETE = new Action("Delete");
-    private static final Action[] ACTIONS = new Action[] { ACTION_ADD,
+    private static final Action[] ACTIONS = { ACTION_ADD,
             ACTION_DELETE };
 
     private Tree tree;

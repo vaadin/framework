@@ -31,7 +31,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  */
 @Deprecated
 @AcceptCriterion(AcceptAll.class)
-final public class VAcceptAll extends VAcceptCriterion {
+public final class VAcceptAll extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

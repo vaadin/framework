@@ -1183,38 +1183,27 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // Ctrl and Shift selection not supported
         if (ctrl || shift) {
             return false;
-        }
-
-        else if (keycode == getPreviousKey()) {
+        } else if (keycode == getPreviousKey()) {
             focusNextYear(10); // Add 10 years
             return true;
-        }
-
-        else if (keycode == getForwardKey()) {
+        } else if (keycode == getForwardKey()) {
             focusNextYear(1); // Add 1 year
             return true;
-        }
-
-        else if (keycode == getNextKey()) {
+        } else if (keycode == getNextKey()) {
             focusPreviousYear(10); // Subtract 10 years
             return true;
-        }
-
-        else if (keycode == getBackwardKey()) {
+        } else if (keycode == getBackwardKey()) {
             focusPreviousYear(1); // Subtract 1 year
             return true;
-
         } else if (keycode == getSelectKey()) {
             value = (Date) focusedDate.clone();
             onSubmit();
             return true;
-
         } else if (keycode == getResetKey()) {
             // Restore showing value the selected value
             focusedDate.setTime(value.getTime());
             renderCalendar();
             return true;
-
         } else if (keycode == getCloseKey()) {
             // TODO fire listener, on users responsibility??
 
@@ -1402,29 +1391,20 @@ public class VCalendarPanel extends FocusableFlexTable implements
             boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
-        }
-
-        else if (resolution == Resolution.YEAR) {
+        } else if (resolution == Resolution.YEAR) {
             return handleNavigationYearMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.MONTH) {
+        } else if (resolution == Resolution.MONTH) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.DAY) {
+        } else if (resolution == Resolution.DAY) {
+            return handleNavigationDayMode(keycode, ctrl, shift);
+        } else {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
-
-        else {
-            return handleNavigationDayMode(keycode, ctrl, shift);
-        }
-
     }
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overriden to change
+     * selection. By default this is backspace but it can be overridden to change
      * the key to whatever you want.
      *
      * @return
@@ -2236,7 +2216,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param newRangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date newRangeStart) {
@@ -2255,7 +2235,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param newRangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date newRangeEnd) {

@@ -592,7 +592,7 @@ public class WeekGrid extends SimplePanel {
             } else {
                 // FIXME Use dts.getAmPmStrings(); and make sure that
                 // DateTimeService has a some Locale set.
-                String[] ampm = new String[] { "AM", "PM" };
+                String[] ampm = { "AM", "PM" };
 
                 int amStop = (lastHour < 11) ? lastHour : 11;
                 int pmStart = (firstHour > 11) ? firstHour % 11 : 0;

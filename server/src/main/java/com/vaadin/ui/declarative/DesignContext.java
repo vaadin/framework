@@ -530,7 +530,7 @@ public class DesignContext implements Serializable {
         // global id: only update the mapping, the id has already been set for
         // the component
         String id = component.getId();
-        if (id != null && id.length() > 0) {
+        if (id != null && !id.isEmpty()) {
             boolean mappingExists = mapId(id, component);
             if (mappingExists) {
                 throw new DesignException(

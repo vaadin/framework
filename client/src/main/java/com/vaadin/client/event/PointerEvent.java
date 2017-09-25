@@ -126,37 +126,37 @@ public abstract class PointerEvent<H extends EventHandler>
         return isPrimary(getNativeEvent());
     }
 
-    private static native final int getPointerId(NativeEvent e)
+    private static final native int getPointerId(NativeEvent e)
     /*-{
       return e.pointerId;
     }-*/;
 
-    private static native final int getWidth(NativeEvent e)
+    private static final native int getWidth(NativeEvent e)
     /*-{
       return e.width;
     }-*/;
 
-    private static native final int getHeight(NativeEvent e)
+    private static final native int getHeight(NativeEvent e)
     /*-{
       return e.height;
     }-*/;
 
-    private static native final double getPressure(NativeEvent e)
+    private static final native double getPressure(NativeEvent e)
     /*-{
       return e.pressure;
     }-*/;
 
-    private static native final double getTiltX(NativeEvent e)
+    private static final native double getTiltX(NativeEvent e)
     /*-{
       return e.tiltX;
     }-*/;
 
-    private static native final double getTiltY(NativeEvent e)
+    private static final native double getTiltY(NativeEvent e)
     /*-{
       return e.tiltY;
     }-*/;
 
-    private static native final String getPointerType(NativeEvent e)
+    private static final native String getPointerType(NativeEvent e)
     /*-{
       var pointerType = e.pointerType;
       if (typeof pointerType === "number") {
@@ -165,7 +165,7 @@ public abstract class PointerEvent<H extends EventHandler>
       return pointerType || "";
     }-*/;
 
-    private static native final boolean isPrimary(NativeEvent e)
+    private static final native boolean isPrimary(NativeEvent e)
     /*-{
       return e.isPrimary;
     }-*/;

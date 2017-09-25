@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -195,7 +194,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setStyleName(String style) {
-        if (style == null || "".equals(style)) {
+        if (style == null || style.isEmpty()) {
             getState().styles = null;
             return;
         }
@@ -222,7 +221,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
 
     @Override
     public void addStyleName(String style) {
-        if (style == null || "".equals(style)) {
+        if (style == null || style.isEmpty()) {
             return;
         }
         if (style.contains(" ")) {
@@ -1258,7 +1257,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] customAttributes = new String[] { "width",
+    private static final String[] customAttributes = { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
             "width-full", "height-full", "size-auto", "size-full", "immediate",
             "locale", "read-only", "_id" };
@@ -1455,7 +1454,4 @@ public abstract class AbstractComponent extends AbstractClientConnector
                         + AbstractFieldState.class.getSimpleName());
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractComponent.class.getName());
-    }
 }

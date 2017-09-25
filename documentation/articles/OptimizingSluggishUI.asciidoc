@@ -1,3 +1,9 @@
+---
+title: Optimizing Sluggish UI
+order: 13
+layout: page
+---
+
 [[optimizing-sluggish-ui]]
 Optimizing sluggish UI
 ----------------------

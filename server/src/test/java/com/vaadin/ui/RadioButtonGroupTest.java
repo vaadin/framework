@@ -15,15 +15,12 @@
  */
 package com.vaadin.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.SelectionModel.Multi;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.shared.data.selection.SelectionServerRpc;
@@ -81,9 +78,4 @@ public class RadioButtonGroupTest {
                 .key(dataObject);
     }
 
-    private static void assertSelectionOrder(Multi<String> selectionModel,
-            String... selectionOrder) {
-        Assert.assertEquals(Arrays.asList(selectionOrder),
-                new ArrayList<>(selectionModel.getSelectedItems()));
-    }
 }

@@ -211,7 +211,7 @@ public class GridBasicClientFeaturesWidget
     /**
      * Our basic data object
      */
-    public final static class Data {
+    public static final class Data {
         Object value;
     }
 
@@ -821,7 +821,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createScrollToRowMenu() {
-        String[] menupath = new String[] { "Component", "State", "Scroll to...",
+        String[] menupath = { "Component", "State", "Scroll to...",
                 null };
 
         for (int i = 0; i < ROWS; i += 100) {
@@ -1450,7 +1450,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createDetailsMenu() {
-        String[] menupath = new String[] { "Component", "Row details" };
+        String[] menupath = { "Component", "Row details" };
         addMenuCommand("Set generator", new ScheduledCommand() {
             @Override
             public void execute() {
@@ -1509,7 +1509,7 @@ public class GridBasicClientFeaturesWidget
             }
         }, menupath);
 
-        String[] togglemenupath = new String[] { menupath[0], menupath[1],
+        String[] togglemenupath = { menupath[0], menupath[1],
                 "Toggle details for..." };
         for (int i : new int[] { 0, 1, 100, 200, 300, 400, 500, 600, 700, 800,
                 900, 999 }) {
@@ -1532,7 +1532,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createSidebarMenu() {
-        String[] menupath = new String[] { "Component", "Sidebar" };
+        String[] menupath = { "Component", "Sidebar" };
 
         final List<MenuItem> customMenuItems = new ArrayList<>();
         final List<MenuItemSeparator> separators = new ArrayList<>();

@@ -23,7 +23,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
  * @since
  * @author Vaadin Ltd
  */
-abstract public class BaseAlignment extends BaseLayoutTestUI {
+public abstract class BaseAlignment extends BaseLayoutTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {

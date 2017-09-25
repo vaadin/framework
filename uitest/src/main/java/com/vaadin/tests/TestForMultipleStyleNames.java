@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -77,6 +76,7 @@ public class TestForMultipleStyleNames extends CustomComponent
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void valueChange(ValueChangeEvent event) {
 
@@ -89,11 +89,9 @@ public class TestForMultipleStyleNames extends CustomComponent
             }
         }
 
-        final Collection<?> styles = (Collection<?>) s.getValue();
+        final Collection<String> styles = (Collection<String>) s.getValue();
 
-        for (final Iterator<?> iterator = styles.iterator(); iterator
-                .hasNext();) {
-            final String styleName = (String) iterator.next();
+        for (final String styleName : styles) {
             if (curStyles.contains(styleName)) {
                 // already added
                 curStyles.remove(styleName);
@@ -101,9 +99,7 @@ public class TestForMultipleStyleNames extends CustomComponent
                 l.addStyleName(styleName);
             }
         }
-        for (final Iterator<String> iterator2 = curStyles.iterator(); iterator2
-                .hasNext();) {
-            final String object = iterator2.next();
+        for (final String object : curStyles) {
             l.removeStyleName(object);
         }
     }

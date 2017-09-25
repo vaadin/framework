@@ -338,8 +338,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // Creates the options container and add given options to it
         final Container c = new IndexedContainer();
         if (options != null) {
-            for (final Iterator<?> i = options.iterator(); i.hasNext();) {
-                c.addItem(i.next());
+            for (final Object item : options) {
+                c.addItem(item);
             }
         }
 
@@ -465,7 +465,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // New option entered (and it is allowed)
         if (isNewItemsAllowed()) {
             final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
+            if (newitem != null && !newitem.isEmpty()) {
                 getNewItemHandler().addNewItem(newitem);
             }
         }
@@ -628,7 +628,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Gets the visible item ids. In Select, this returns list of all item ids,
-     * but can be overriden in subclasses if they paint only part of the items
+     * but can be overridden in subclasses if they paint only part of the items
      * to the terminal or null if no items is visible.
      */
     public Collection<?> getVisibleItemIds() {
@@ -718,7 +718,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * </p>
      *
      * @since 7.5.7
-     * @param newValue
+     * @param newFieldValue
      *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded
      *            True if caller is sure that repaint is not needed.
@@ -2046,7 +2046,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @since 6.3
      *
      */
-    private static abstract class AbstractItemSetCriterion
+    private abstract static class AbstractItemSetCriterion
             extends ClientSideCriterion {
         protected final Collection<Object> itemIds = new HashSet<Object>();
         protected AbstractSelect select;

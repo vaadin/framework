@@ -45,7 +45,7 @@ public class ThemeResource implements Resource {
         if (resourceId == null) {
             throw new NullPointerException("Resource ID must not be null");
         }
-        if (resourceId.length() == 0) {
+        if (resourceId.isEmpty()) {
             throw new IllegalArgumentException("Resource ID can not be empty");
         }
         if (resourceId.charAt(0) == '/') {

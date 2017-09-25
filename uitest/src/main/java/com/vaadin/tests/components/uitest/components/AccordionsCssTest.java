@@ -43,9 +43,9 @@ public class AccordionsCssTest {
         Label l2 = new Label("There are no saved notes.");
         Label l3 = new Label("There are currently no issues.");
 
-        acc.addTab(l1, "Actions", new ThemeResource(parent.ICON_URL));
-        acc.addTab(l2, "Notes", new ThemeResource(parent.ICON_URL));
-        acc.addTab(l3, "Issues", new ThemeResource(parent.ICON_URL));
+        acc.addTab(l1, "Actions", new ThemeResource(TestSampler.ICON_URL));
+        acc.addTab(l2, "Notes", new ThemeResource(TestSampler.ICON_URL));
+        acc.addTab(l3, "Issues", new ThemeResource(TestSampler.ICON_URL));
 
         acc.getTab(l2).setEnabled(false);
 

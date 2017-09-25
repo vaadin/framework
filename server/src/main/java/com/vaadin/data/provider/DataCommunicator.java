@@ -595,7 +595,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @since 8.1
      *
      */
-    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T,Object> identifierGetter) {
+    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T, Object> identifierGetter) {
         return new KeyMapper<T>(identifierGetter);
     }
 
@@ -735,7 +735,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @return the size of data provider with current filter
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected int getDataProviderSize() {
+    public int getDataProviderSize() {
         return getDataProvider().size(new Query(getFilter()));
     }
 

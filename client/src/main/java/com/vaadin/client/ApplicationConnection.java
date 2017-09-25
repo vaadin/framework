@@ -42,7 +42,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.communication.ConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.MessageHandler;
@@ -195,7 +194,7 @@ public class ApplicationConnection implements HasHandlers {
         }
     }
 
-    public static abstract class ApplicationConnectionEvent
+    public abstract static class ApplicationConnectionEvent
             extends GwtEvent<CommunicationHandler> {
 
         private ApplicationConnection connection;
@@ -236,7 +235,7 @@ public class ApplicationConnection implements HasHandlers {
      *
      * To listen for the event add a {@link ApplicationStoppedHandler} by
      * invoking
-     * {@link ApplicationConnection#addHandler(ApplicationConnection.ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * {@link ApplicationConnection#addHandler(GwtEvent.Type, ApplicationStoppedHandler)}
      * to the {@link ApplicationConnection}
      *
      * @since 7.1.8
@@ -279,7 +278,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * A listener for listening to application stopped events. The listener can
      * be added to a {@link ApplicationConnection} by invoking
-     * {@link ApplicationConnection#addHandler(ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * {@link ApplicationConnection#addHandler(GwtEvent.Type, ApplicationStoppedHandler)}
      *
      * @since 7.1.8
      * @author Vaadin Ltd
@@ -1226,8 +1225,8 @@ public class ApplicationConnection implements HasHandlers {
      * Use to notify that the given component's caption has changed; layouts may
      * have to be recalculated.
      *
-     * @param component
-     *            the Paintable whose caption has changed
+     * @param widget
+     *            The Widget whose caption has changed
      * @deprecated As of 7.0.2, has not had any effect for a long time
      */
     @Deprecated

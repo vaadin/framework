@@ -280,7 +280,7 @@ public class WidgetUtil {
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
-        if (height.equals("")) {
+        if (height.isEmpty()) {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
@@ -307,7 +307,7 @@ public class WidgetUtil {
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
@@ -828,7 +828,7 @@ public class WidgetUtil {
      * DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
      * {@code C}, this method will not find {@code W} but returns {@code C}.
      * This may also be the case with other Composite-like classes that hijack
      * the event handling of their child widget(s).
@@ -847,7 +847,7 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
      * {@code C}, this method will not find {@code W}. It returns either
      * {@code C} or null, depending on whether the class parameter matches. This
      * may also be the case with other Composite-like classes that hijack the
@@ -871,7 +871,7 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
      * {@code C}, this method will not find {@code W}. It returns either
      * {@code C} or null, depending on whether the class parameter matches. This
      * may also be the case with other Composite-like classes that hijack the
@@ -934,7 +934,7 @@ public class WidgetUtil {
     public static void forceWebkitRedraw(Element element) {
         Style style = element.getStyle();
         String s = style.getProperty("webkitTransform");
-        if (s == null || s.length() == 0) {
+        if (s == null || s.isEmpty()) {
             style.setProperty("webkitTransform", "scale(1)");
         } else {
             style.setProperty("webkitTransform", "");
@@ -1167,7 +1167,7 @@ public class WidgetUtil {
      *
      * @return The active element or null if no active element could be found.
      */
-    public native static Element getFocusedElement()
+    public static native Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
@@ -1315,7 +1315,7 @@ public class WidgetUtil {
      *
      * @since 7.3
      */
-    public native static void setSelectionRange(Element elem, int pos,
+    public static native void setSelectionRange(Element elem, int pos,
             int length, String direction)
     /*-{
        try {
@@ -1335,7 +1335,7 @@ public class WidgetUtil {
      *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
-    public native static void setTextSelectionEnabled(Element e, boolean enable)
+    public static native void setTextSelectionEnabled(Element e, boolean enable)
     /*-{
         if (!enable) {
             e.ondrag = function () { return false; };
@@ -1353,7 +1353,7 @@ public class WidgetUtil {
      *
      * @since 7.6
      */
-    public native static void clearTextSelection()
+    public static native void clearTextSelection()
     /*-{
         if ($wnd.getSelection) {
             $wnd.getSelection().removeAllRanges();
@@ -1477,7 +1477,7 @@ public class WidgetUtil {
             }
 
             s = s.trim();
-            if ("".equals(s)) {
+            if (s.isEmpty()) {
                 return null;
             }
 
@@ -1563,6 +1563,15 @@ public class WidgetUtil {
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (int) value;
+            result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+            return result;
         }
 
         /**

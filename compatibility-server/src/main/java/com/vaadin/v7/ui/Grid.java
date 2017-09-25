@@ -239,7 +239,7 @@ public class Grid extends AbstractComponent
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid source, Column column,
@@ -327,7 +327,7 @@ public class Grid extends AbstractComponent
      * @since 7.6.1
      */
     @Deprecated
-    public final static class DetailComponentManager
+    public static final class DetailComponentManager
             extends AbstractGridExtension implements DataGenerator {
 
         /**
@@ -534,7 +534,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the id of the item for which to check details visibility
-         * @return <code>true</code> iff the details are visible
+         * @return <code>true</code> if the details are visible
          */
         public boolean isDetailsVisible(Object itemId) {
             return openDetails.contains(itemId);
@@ -982,7 +982,7 @@ public class Grid extends AbstractComponent
      * Base class for editor related events
      */
     @Deprecated
-    public static abstract class EditorEvent extends Component.Event {
+    public abstract static class EditorEvent extends Component.Event {
 
         private Object itemID;
 
@@ -1080,18 +1080,6 @@ public class Grid extends AbstractComponent
                         new ConnectorErrorEvent(Grid.this, event.getCause()));
             }
         }
-
-        private Object getFirstPropertyId(FieldGroup fieldGroup,
-                Set<Field<?>> keySet) {
-            for (Column c : getColumns()) {
-                Object propertyId = c.getPropertyId();
-                Field<?> f = fieldGroup.getField(propertyId);
-                if (keySet.contains(f)) {
-                    return propertyId;
-                }
-            }
-            return null;
-        }
     }
 
     /**
@@ -1177,7 +1165,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the item id to check for
-         * @return <code>true</code> iff the item is selected
+         * @return <code>true</code> if the item is selected
          */
         boolean isSelected(Object itemId);
 
@@ -1294,7 +1282,7 @@ public class Grid extends AbstractComponent
             /**
              * Marks all the items in the current Container as selected
              *
-             * @return <code>true</code> iff some items were previously not
+             * @return <code>true</code> if some items were previously not
              *         selected
              * @see #deselectAll()
              */
@@ -1303,7 +1291,7 @@ public class Grid extends AbstractComponent
             /**
              * Marks all the items in the current Container as deselected
              *
-             * @return <code>true</code> iff some items were previously selected
+             * @return <code>true</code> if some items were previously selected
              * @see #selectAll()
              */
             boolean deselectAll();
@@ -1437,7 +1425,7 @@ public class Grid extends AbstractComponent
      * reusable.
      */
     @Deprecated
-    public static abstract class AbstractSelectionModel extends
+    public abstract static class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
         protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
 
@@ -1532,7 +1520,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Single}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}.
      */
     @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
@@ -1658,7 +1647,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation for a {@link SelectionModel.None}
+     * A default implementation for a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.None SelectionModel.None}.
      */
     @Deprecated
     public static class NoSelectionModel extends AbstractSelectionModel
@@ -1686,7 +1676,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Multi}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}.
      */
     @Deprecated
     public static class MultiSelectionModel extends AbstractSelectionModel
@@ -2646,7 +2637,7 @@ public class Grid extends AbstractComponent
                 }
             }
 
-            abstract protected String getCellTagName();
+            protected abstract String getCellTagName();
 
             void detach() {
                 for (CELLTYPE cell : cells.values()) {
@@ -3266,10 +3257,6 @@ public class Grid extends AbstractComponent
             getRowState().defaultRow = value;
         }
 
-        private boolean isDefaultRow() {
-            return getRowState().defaultRow;
-        }
-
         @Override
         protected HeaderCell createCell() {
             return new HeaderCell(this);
@@ -3727,9 +3714,7 @@ public class Grid extends AbstractComponent
                                     + getRenderer().getPresentationType()
                                     + " (in " + toString() + ")");
                 }
-            }
-
-            else {
+            } else {
                 /*
                  * Since the converter is null (i.e. will be removed), we need
                  * to know that the renderer and model are compatible. If not,
@@ -4139,7 +4124,7 @@ public class Grid extends AbstractComponent
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
+         *            <code>true</code> if the column may be hidable by the
          *            user via UI interaction
          * @return this column
          */
@@ -4318,7 +4303,7 @@ public class Grid extends AbstractComponent
      *            the type this renderer knows how to present
      */
     @Deprecated
-    public static abstract class AbstractRenderer<T>
+    public abstract static class AbstractRenderer<T>
             extends AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
@@ -4477,7 +4462,7 @@ public class Grid extends AbstractComponent
      * @since 7.5
      */
     @Deprecated
-    public static abstract class AbstractGridExtension
+    public abstract static class AbstractGridExtension
             extends AbstractExtension {
 
         /**
@@ -5876,7 +5861,7 @@ public class Grid extends AbstractComponent
      *
      * @param itemId
      *            the item id to check for
-     * @return <code>true</code> iff the item is selected
+     * @return <code>true</code> if the item is selected
      */
     // keep this javadoc in sync with SelectionModel.isSelected
     public boolean isSelected(Object itemId) {
@@ -5901,7 +5886,7 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} is supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single} is supported.
      *
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
@@ -5938,8 +5923,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @param itemId
      *            the itemId to mark as selected
@@ -5984,8 +5970,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @param itemId
      *            the itemId to remove from being selected
@@ -6031,8 +6018,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
+     * are supported.
      *
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId was already selected
@@ -6967,7 +6955,7 @@ public class Grid extends AbstractComponent
     /**
      * Checks whether the item editor UI is enabled for this grid.
      *
-     * @return <code>true</code> iff the editor is enabled for this grid
+     * @return <code>true</code> if the editor is enabled for this grid
      *
      * @see #setEditorEnabled(boolean)
      * @see #getEditedItemId()
@@ -7016,7 +7004,7 @@ public class Grid extends AbstractComponent
     /**
      * Returns whether an item is currently being edited in the editor.
      *
-     * @return true iff the editor is open
+     * @return true if the editor is open
      */
     public boolean isEditorActive() {
         return editorActive;
@@ -7484,7 +7472,7 @@ public class Grid extends AbstractComponent
      * @since 7.5.0
      * @param itemId
      *            the id of the item for which to check details visibility
-     * @return <code>true</code> iff the details are visible
+     * @return <code>true</code> if the details are visible
      */
     public boolean isDetailsVisible(Object itemId) {
         return detailComponentManager.isDetailsVisible(itemId);

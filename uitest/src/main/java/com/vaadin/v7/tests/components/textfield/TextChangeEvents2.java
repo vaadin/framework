@@ -122,7 +122,7 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField[] tfs = new TextField[] { new TextField(),
+            final TextField[] tfs = { new TextField(),
                     new TextField(), new TextField(), new TextField() };
             HorizontalLayout hl = new HorizontalLayout();
             hl.setCaption("Blää");

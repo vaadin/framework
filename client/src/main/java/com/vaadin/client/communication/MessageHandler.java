@@ -229,7 +229,7 @@ public class MessageHandler {
      * Handles a received UIDL JSON text, parsing it, and passing it on to the
      * appropriate handlers, while logging timing information.
      *
-     * @param jsonText
+     * @param json
      *            The JSON to handle
      */
     public void handleMessage(final ValueMap json) {
@@ -1613,7 +1613,7 @@ public class MessageHandler {
         }
     }
 
-    private static native final int calculateBootstrapTime()
+    private static final native int calculateBootstrapTime()
     /*-{
         if ($wnd.performance && $wnd.performance.timing) {
             return (new Date).getTime() - $wnd.performance.timing.responseStart;

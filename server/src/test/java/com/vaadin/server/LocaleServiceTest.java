@@ -997,9 +997,9 @@ public class LocaleServiceTest {
     private static void generateData(Locale locale) {
         System.out.println();
         String id = locale.getLanguage();
-        if (!locale.getCountry().equals("")) {
+        if (!locale.getCountry().isEmpty()) {
             id += "_" + locale.getCountry();
-            if (!locale.getVariant().equals("")) {
+            if (!locale.getVariant().isEmpty()) {
                 id += "_" + locale.getVariant();
             }
         }

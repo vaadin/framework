@@ -23,7 +23,6 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -63,7 +62,7 @@ public final class UIDL extends JavaScriptObject {
      * Gets the name of this UIDL section, as created with
      * {@link PaintTarget#startTag(String) PaintTarget.startTag()} in the
      * server-side {@link Component#paint(PaintTarget) Component.paint()} or
-     * (usually) {@link AbstractComponent#paintContent(PaintTarget)
+     * (usually) {@link com.vaadin.ui.AbstractComponent#paintContent(PaintTarget)
      * AbstractComponent.paintContent()}. Note that if the UIDL corresponds to a
      * Paintable, a component identifier will be returned instead - this is used
      * internally and is not needed within
@@ -476,7 +475,7 @@ public final class UIDL extends JavaScriptObject {
      * @deprecated should not be used anymore
      */
     @Deprecated
-    public final static class XML extends JavaScriptObject {
+    public static final class XML extends JavaScriptObject {
         protected XML() {
         }
 

@@ -122,7 +122,7 @@ public class SuperDevMode {
                 + ".nocache.js";
     }
 
-    private native static String getRecompileParameters(String moduleName)
+    private static native String getRecompileParameters(String moduleName)
     /*-{
         var prop_map = $wnd.__gwt_activeModules[moduleName].bindings();
     
@@ -184,7 +184,7 @@ public class SuperDevMode {
      *         SuperDevMode
      */
     protected static boolean recompileIfNeeded(String serverUrl) {
-        if (serverUrl == null || "".equals(serverUrl)) {
+        if (serverUrl == null || serverUrl.isEmpty()) {
             serverUrl = "http://localhost:9876/";
         } else {
             if (serverUrl.contains(":")) {
@@ -217,7 +217,7 @@ public class SuperDevMode {
         return isSuperDevModeEnabledInModule(moduleName);
     }
 
-    protected native static boolean isSuperDevModeEnabledInModule(
+    protected static native boolean isSuperDevModeEnabledInModule(
             String moduleName)
     /*-{
         if (!$wnd.__gwt_activeModules)

@@ -475,7 +475,7 @@ public interface PaintTarget extends Serializable {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public void addUIDL(java.lang.String uidl) throws PaintException;
+    public void addUIDL(String uidl) throws PaintException;
 
     /**
      * Adds text node. All the contents of the text are XML-escaped.

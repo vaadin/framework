@@ -58,7 +58,7 @@ public class StringToByteConverterTest {
 
     @Test
     public void testValueOutOfRange() {
-        Double[] values = new Double[] { Byte.MAX_VALUE * 2.0,
+        Double[] values = { Byte.MAX_VALUE * 2.0,
                 Byte.MIN_VALUE * 2.0, Long.MAX_VALUE * 2.0,
                 Long.MIN_VALUE * 2.0 };
 

@@ -45,7 +45,7 @@ import com.vaadin.shared.ui.MarginInfo;
  */
 public class VFormLayout extends SimplePanel {
 
-    private final static String CLASSNAME = "v-formlayout";
+    private static final String CLASSNAME = "v-formlayout";
 
     /** For internal use only. May be removed or replaced in the future. */
     public VFormLayoutTable table;

@@ -627,7 +627,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OverlapsException extends java.lang.RuntimeException {
+    public class OverlapsException extends RuntimeException {
 
         private final Area existingArea;
 
@@ -683,7 +683,7 @@ public class GridLayout extends AbstractLayout
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class OutOfBoundsException extends java.lang.RuntimeException {
+    public class OutOfBoundsException extends RuntimeException {
 
         private final Area areaOutOfBounds;
 

@@ -73,7 +73,7 @@ public class RowId implements Serializable {
             builder.append(id);
             builder.append('/');
         }
-        if (builder.length() > 0) {
+        if (builder.length() != 0) {
             return builder.substring(0, builder.length() - 1);
         }
         return builder.toString();

@@ -92,7 +92,7 @@ public class FileDownloader extends AbstractExtension {
     }
 
     /**
-     * Sets whether the content type of served resources should be overriden to
+     * Sets whether the content type of served resources should be overridden to
      * <code>application/octet-stream</code> to reduce the risk of a browser
      * plugin choosing to display the resource instead of downloading it. This
      * is by default set to <code>true</code>.

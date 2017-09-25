@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
@@ -247,7 +246,7 @@ public class VNotification extends VOverlay {
             removeStyleDependentName(temporaryStyle);
             temporaryStyle = null;
         }
-        if (style != null && style.length() > 0) {
+        if (style != null && !style.isEmpty()) {
             temporaryStyle = style;
             addStyleName(style);
             addStyleDependentName(style);
@@ -466,17 +465,14 @@ public class VNotification extends VOverlay {
     }
 
     public void removeEventListener(EventListener listener) {
-        if (listeners == null) {
-            return;
+        if (listeners != null) {
+            listeners.remove(listener);
         }
-        listeners.remove(listener);
     }
 
     private void fireEvent(HideEvent event) {
         if (listeners != null) {
-            for (Iterator<EventListener> it = listeners.iterator(); it
-                    .hasNext();) {
-                EventListener l = it.next();
+            for (EventListener l : listeners) {
                 l.notificationHidden(event);
             }
         }
@@ -638,7 +634,7 @@ public class VNotification extends VOverlay {
             html.append("</p>");
         }
 
-        if (html.length() > 0) {
+        if (html.length() != 0) {
 
             // Add error description
             if (details != null) {

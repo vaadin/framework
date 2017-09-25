@@ -56,7 +56,7 @@ public class RowReference<T> {
      *            the index of the row
      * @param row
      *            the row object
-     * @param elemenet
+     * @param element
      *            the element of the row
      */
     public void set(int rowIndex, T row, TableRowElement element) {

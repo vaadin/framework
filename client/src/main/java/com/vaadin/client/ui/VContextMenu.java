@@ -76,9 +76,6 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     /**
      * This method should be used only by Client object as only one per client
      * should exists. Request an instance via client.getContextMenu();
-     *
-     * @param cli
-     *            to be set as an owner of menu
      */
     public VContextMenu() {
         super(true, false);

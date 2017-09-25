@@ -59,9 +59,9 @@ public class ColorPickerPopup extends Window
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
@@ -479,20 +479,15 @@ public class ColorPickerPopup extends Window
             }
 
             resize.setData(new Boolean(!state));
-        }
-
-        // Ok button was clicked
-        else if (event.getButton() == ok) {
+        }  else if (event.getButton() == ok) {
+            // Ok button was clicked
             history.setColor(getColor());
             fireColorChanged();
             close();
-        }
-
-        // Cancel button was clicked
-        else if (event.getButton() == cancel) {
+        } else if (event.getButton() == cancel) {
+            // Cancel button was clicked
             close();
         }
-
     }
 
     /**

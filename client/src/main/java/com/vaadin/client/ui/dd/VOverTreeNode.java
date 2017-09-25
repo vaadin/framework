@@ -25,7 +25,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  *             and extending classes
  */
 @Deprecated
-final public class VOverTreeNode extends VAcceptCriterion {
+public final class VOverTreeNode extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

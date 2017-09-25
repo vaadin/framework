@@ -100,7 +100,7 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
      *
      */
     private class VaadinDeveloperNameField extends TextField {
-        private String[] names = new String[] { "Matti Tahvonen",
+        private String[] names = { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 
@@ -138,7 +138,7 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
         }
 
         private String findMatch(String currentTextContent) {
-            if (currentTextContent.length() > 0) {
+            if (!currentTextContent.isEmpty()) {
                 for (int i = 0; i < names.length; i++) {
                     if (names[i].startsWith(currentTextContent)) {
                         return names[i];
