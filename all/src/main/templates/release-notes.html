@@ -106,6 +106,7 @@
         <li><tt>DataCommunicator</tt> methods <tt>getDataProviderSize</tt> and <tt>fetchItemsWithRange</tt> are now <tt>public</tt>, not <tt>protected</tt>.</li>
         <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
         <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
+        <li><tt>EditorClientRpc</tt> method <tt>bind</tt> now takes an extra <tt>boolean</tt> parameter <tt>fromServer</tt>, which flags whether the edit request came from the server-side.</li>
 
         <h2>For incompatible or behaviour-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
