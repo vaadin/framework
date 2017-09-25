@@ -20,27 +20,27 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.renderers.HierarchyRenderer;
-import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridClickHandler;
-import com.vaadin.client.widget.grid.events.GridClickEvent;
+import com.vaadin.client.widget.grid.events.AbstractGridMouseEventHandler.GridDoubleClickHandler;
+import com.vaadin.client.widget.grid.events.GridDoubleClickEvent;
 import com.vaadin.client.widget.treegrid.TreeGrid;
 import com.vaadin.client.widgets.Grid;
 
 /**
- * Represents native mouse click event in TreeGrid.
+ * Represents native mouse double click event in TreeGrid.
  * <p>
- * Differs from {@link GridClickEvent} only in allowing events to originate form
- * hierarchy widget.
+ * Differs from {@link GridDoubleClickEvent} only in allowing events to
+ * originate form hierarchy widget.
  *
- * @since 8.1
  * @author Vaadin Ltd
+ * @since
  */
-public class TreeGridClickEvent extends GridClickEvent {
+public class TreeGridDoubleClickEvent extends GridDoubleClickEvent {
 
-    public static final Type<GridClickHandler> TYPE = new Type<GridClickHandler>(
-            BrowserEvents.CLICK, new TreeGridClickEvent());
+    public static final Type<GridDoubleClickHandler> TYPE = new Type<>(
+            BrowserEvents.DBLCLICK, new TreeGridDoubleClickEvent());
 
     @Override
-    public Type<GridClickHandler> getAssociatedType() {
+    public Type<GridDoubleClickHandler> getAssociatedType() {
         return TYPE;
     }
 
