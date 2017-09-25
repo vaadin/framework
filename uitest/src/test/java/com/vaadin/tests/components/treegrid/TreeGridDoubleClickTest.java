@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.ElementQuery;
+import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -22,6 +24,13 @@ public class TreeGridDoubleClickTest extends SingleBrowserTest {
         new Actions(getDriver()).doubleClick(hierarchyCell).perform();
 
         assertTrue("Double click is not handled",
-                isElementPresent(By.className("v-Notification")));
+                isDoubleClickNotificationPresent());
+    }
+
+    private boolean isDoubleClickNotificationPresent() {
+        ElementQuery<NotificationElement> notification = $(
+                NotificationElement.class);
+        return notification.exists() && "Double click"
+                .equals(notification.first().getCaption());
     }
 }
