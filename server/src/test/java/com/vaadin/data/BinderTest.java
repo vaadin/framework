@@ -1,5 +1,12 @@
 package com.vaadin.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,8 +25,6 @@ import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
-
-import static org.junit.Assert.*;
 
 public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
@@ -484,9 +489,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ErrorMessage errorMessage = textField.getErrorMessage();
         Assert.assertNotNull(errorMessage);
         Assert.assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
-        // validation is run twice, once for the field, then for all the fields
-        // for cross field validation...
-        Assert.assertEquals(2, invokes.get());
+        // validation is done for the whole bean at once.
+        Assert.assertEquals(1, invokes.get());
 
         textField.setValue("value");
         Assert.assertNull(textField.getErrorMessage());
@@ -749,6 +753,93 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 String.valueOf(item.getAge()), ageField.getValue());
     }
 
+    @Test
+    public void beanvalidation_two_fields_not_equal() {
+        TextField lastNameField = new TextField();
+        setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
+
+        item.setLastName("Valid");
+        binder.setBean(item);
+
+        Assert.assertFalse("Should not have changes initially",
+                binder.hasChanges());
+        Assert.assertTrue("Should be ok initially", binder.validate().isOk());
+        Assert.assertNotEquals(
+                "First name and last name are not same initially",
+                item.getFirstName(), item.getLastName());
+
+        nameField.setValue("Invalid");
+
+        Assert.assertFalse("First name change not handled",
+                binder.hasChanges());
+        Assert.assertTrue(
+                "Changing first name to something else than last name should be ok",
+                binder.validate().isOk());
+
+        lastNameField.setValue("Invalid");
+
+        Assert.assertTrue("Last name should not be saved yet",
+                binder.hasChanges());
+        Assert.assertFalse(
+                "Binder validation should fail with pending illegal value",
+                binder.validate().isOk());
+        Assert.assertNotEquals("Illegal last name should not be stored to bean",
+                item.getFirstName(), item.getLastName());
+
+        nameField.setValue("Valid");
+
+        Assert.assertFalse("With new first name both changes should be saved",
+                binder.hasChanges());
+        Assert.assertTrue("Everything should be ok for 'Valid Invalid'",
+                binder.validate().isOk());
+        Assert.assertNotEquals("First name and last name should never match.",
+                item.getFirstName(), item.getLastName());
+    }
+
+    @Test
+    public void beanvalidation_initially_broken_bean() {
+        TextField lastNameField = new TextField();
+        setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
+
+        item.setLastName(item.getFirstName());
+        binder.setBean(item);
+
+        Assert.assertFalse(binder.isValid());
+        Assert.assertFalse(binder.validate().isOk());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void beanvalidation_isValid_throws_with_readBean() {
+        TextField lastNameField = new TextField();
+        setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
+
+        binder.readBean(item);
+
+        Assert.assertTrue(binder.isValid());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void beanvalidation_validate_throws_with_readBean() {
+        TextField lastNameField = new TextField();
+        setBeanValidationFirstNameNotEqualsLastName(nameField, lastNameField);
+
+        binder.readBean(item);
+
+        Assert.assertTrue(binder.validate().isOk());
+    }
+
+    protected void setBeanValidationFirstNameNotEqualsLastName(
+            TextField firstNameField, TextField lastNameField) {
+        binder.bind(firstNameField, Person::getFirstName, Person::setFirstName);
+        binder.forField(lastNameField)
+                .withValidator(t -> !"foo".equals(t),
+                        "Last name cannot be 'foo'")
+                .bind(Person::getLastName, Person::setLastName);
+
+        binder.withValidator(p -> !p.getFirstName().equals(p.getLastName()),
+                "First name and last name can't be the same");
+    }
+
     static class MyBindingHandler implements BindingValidationStatusHandler {
 
         boolean expectingError = false;
@@ -807,15 +898,15 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         // Assert that the handler was called.
         Assert.assertEquals(
-                "Unexpected callCount to binding validation status handler", 4,
+                "Unexpected callCount to binding validation status handler", 6,
                 bindingHandler.callCount);
     }
-      
+
     @Test
     public void removed_binding_not_updates_value() {
         Binding<Person, Integer> binding = binder.forField(ageField)
-            .withConverter(new StringToIntegerConverter("Can't convert"))
-            .bind(Person::getAge, Person::setAge);
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .bind(Person::getAge, Person::setAge);
 
         binder.setBean(item);
 
@@ -827,6 +918,6 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ageField.setValue(modifiedAge);
 
         Assert.assertEquals("Binding still affects bean even after unbind",
-            ageBeforeUnbind, String.valueOf(item.getAge()));
+                ageBeforeUnbind, String.valueOf(item.getAge()));
     }
 }
