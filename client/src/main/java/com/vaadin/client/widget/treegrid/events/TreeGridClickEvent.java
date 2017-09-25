@@ -27,7 +27,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Represents native mouse click event in TreeGrid.
- * <br/>
+ * <p>
  * Differs from {@link GridClickEvent} only in allowing events to originate form
  * hierarchy widget.
  *

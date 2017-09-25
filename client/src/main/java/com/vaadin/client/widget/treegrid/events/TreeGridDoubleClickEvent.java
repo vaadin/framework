@@ -27,7 +27,7 @@ import com.vaadin.client.widgets.Grid;
 
 /**
  * Represents native mouse double click event in TreeGrid.
- * <br/>
+ * <p>
  * Differs from {@link GridDoubleClickEvent} only in allowing events to
  * originate form hierarchy widget.
  *
