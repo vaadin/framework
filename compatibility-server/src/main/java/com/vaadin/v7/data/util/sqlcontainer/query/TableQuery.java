@@ -732,7 +732,7 @@ public class TableQuery extends AbstractTransactionalQuery
      * Simple RowIdChangeEvent implementation.
      */
     @Deprecated
-    public static class RowIdChangeEvent extends EventObject
+    public static final class RowIdChangeEvent extends EventObject
             implements QueryDelegate.RowIdChangeEvent {
         private final RowId oldId;
         private final RowId newId;

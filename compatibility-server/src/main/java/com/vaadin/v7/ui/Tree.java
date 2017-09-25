@@ -1705,7 +1705,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      * @since 6.3
      */
     @Deprecated
-    public static class TargetItemAllowsChildren extends TargetDetailIs {
+    public static final class TargetItemAllowsChildren extends TargetDetailIs {
 
         private static TargetItemAllowsChildren instance = new TargetItemAllowsChildren();
 

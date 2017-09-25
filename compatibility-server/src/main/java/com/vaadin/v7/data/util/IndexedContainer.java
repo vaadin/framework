@@ -404,7 +404,7 @@ public class IndexedContainer
      * @since 3.0
      */
     @Deprecated
-    public static class ItemSetChangeEvent extends BaseItemSetChangeEvent {
+    public static final class ItemSetChangeEvent extends BaseItemSetChangeEvent {
 
         private final int addedItemIndex;
 
@@ -433,7 +433,7 @@ public class IndexedContainer
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    private static class PropertyValueChangeEvent extends EventObject
+    private static final class PropertyValueChangeEvent extends EventObject
             implements Property.ValueChangeEvent, Serializable {
 
         private PropertyValueChangeEvent(Property source) {
@@ -658,6 +658,7 @@ public class IndexedContainer
      * @since 3.0
      */
     @Deprecated
+    final
     class IndexedContainerItem implements Item {
 
         /**
@@ -788,7 +789,7 @@ public class IndexedContainer
      *
      * @since 3.0
      */
-    private class IndexedContainerProperty<T>
+    private final class IndexedContainerProperty<T>
             implements Property<T>, Property.ValueChangeNotifier {
 
         /**

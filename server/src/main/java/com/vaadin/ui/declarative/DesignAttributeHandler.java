@@ -52,7 +52,7 @@ import com.vaadin.ui.Alignment;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class DesignAttributeHandler implements Serializable {
+public final class DesignAttributeHandler implements Serializable {
 
     private static Logger getLogger() {
         return Logger.getLogger(DesignAttributeHandler.class.getName());

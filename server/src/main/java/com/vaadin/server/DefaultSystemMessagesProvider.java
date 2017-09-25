@@ -23,7 +23,7 @@ package com.vaadin.server;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class DefaultSystemMessagesProvider implements SystemMessagesProvider {
+public final class DefaultSystemMessagesProvider implements SystemMessagesProvider {
 
     private static final DefaultSystemMessagesProvider instance = new DefaultSystemMessagesProvider();
 

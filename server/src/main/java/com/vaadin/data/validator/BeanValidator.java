@@ -183,7 +183,7 @@ public class BeanValidator implements Validator<Object> {
         return new ContextImpl(violation);
     }
 
-    private static class LazyFactoryInitializer implements Serializable {
+    private static final class LazyFactoryInitializer implements Serializable {
         private static final ValidatorFactory FACTORY = getFactory();
 
         private static ValidatorFactory getFactory() {

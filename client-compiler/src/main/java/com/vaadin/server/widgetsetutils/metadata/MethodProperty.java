@@ -29,7 +29,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.SourceWriter;
 
-public class MethodProperty extends Property {
+public final class MethodProperty extends Property {
 
     private final JMethod setter;
 

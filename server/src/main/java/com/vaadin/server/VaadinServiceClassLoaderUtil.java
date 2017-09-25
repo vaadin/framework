@@ -24,7 +24,7 @@ import java.security.PrivilegedAction;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class VaadinServiceClassLoaderUtil {
+public final class VaadinServiceClassLoaderUtil {
 
     private static class GetClassLoaderPrivilegedAction
             implements PrivilegedAction<ClassLoader> {

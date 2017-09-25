@@ -620,7 +620,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @since 3.0
      */
     @Deprecated
-    public class FileItem implements Item {
+    public final class FileItem implements Item {
 
         /**
          * The wrapped file.

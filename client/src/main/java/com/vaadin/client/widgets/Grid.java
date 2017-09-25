@@ -3780,7 +3780,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @since 7.5.0
      */
-    private static class Sidebar extends Composite implements HasEnabled {
+    private static final class Sidebar extends Composite implements HasEnabled {
 
         private final ClickHandler openCloseButtonHandler = new ClickHandler() {
 

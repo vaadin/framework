@@ -32,7 +32,7 @@ import com.vaadin.ui.Component;
  * @since 6.3
  *
  */
-public class SourceIsTarget extends ClientSideCriterion {
+public final class SourceIsTarget extends ClientSideCriterion {
 
     private static final long serialVersionUID = -451399314705532584L;
     private static final SourceIsTarget instance = new SourceIsTarget();

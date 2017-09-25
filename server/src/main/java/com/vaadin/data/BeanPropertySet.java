@@ -45,7 +45,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type of the bean
  */
-public class BeanPropertySet<T> implements PropertySet<T> {
+public final class BeanPropertySet<T> implements PropertySet<T> {
 
     /**
      * Serialized form of a property set. When deserialized, the property set
@@ -55,7 +55,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @see #readResolve()
      * @see BeanPropertyDefinition#writeReplace()
      */
-    private static class SerializedPropertySet implements Serializable {
+    private static final class SerializedPropertySet implements Serializable {
         private final Class<?> beanType;
 
         private SerializedPropertySet(Class<?> beanType) {
@@ -80,7 +80,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @see #readResolve()
      * @see BeanPropertySet#writeReplace()
      */
-    private static class SerializedPropertyDefinition implements Serializable {
+    private static final class SerializedPropertyDefinition implements Serializable {
         private final Class<?> beanType;
         private final String propertyName;
 

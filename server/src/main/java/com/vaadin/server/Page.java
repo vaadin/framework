@@ -115,7 +115,7 @@ public class Page implements Serializable {
     /**
      * Private class for storing properties related to opening resources.
      */
-    private class OpenResource implements Serializable {
+    private final class OpenResource implements Serializable {
 
         /**
          * The resource to open
@@ -469,7 +469,7 @@ public class Page implements Serializable {
      *
      * @since 7.1
      */
-    public static class Styles implements Serializable {
+    public static final class Styles implements Serializable {
 
         private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<>();
 

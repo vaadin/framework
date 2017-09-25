@@ -1029,7 +1029,7 @@ public class Binder<BEAN> implements Serializable {
      * called. Once the method is called the class changes its behavior to the
      * same as {@link Converter#identity()} behavior.
      */
-    private static class ConverterDelegate<FIELDVALUE>
+    private static final class ConverterDelegate<FIELDVALUE>
             implements Converter<FIELDVALUE, FIELDVALUE> {
 
         private Converter<FIELDVALUE, FIELDVALUE> delegate;

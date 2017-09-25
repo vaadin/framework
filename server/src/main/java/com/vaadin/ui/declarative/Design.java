@@ -65,7 +65,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Design implements Serializable {
+public final class Design implements Serializable {
 
     private static final String UTF8 = "UTF-8";
 

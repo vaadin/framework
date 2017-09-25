@@ -153,7 +153,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         void visibilityChanged(VisibilityChangeEvent event);
     }
 
-    public static class VisibilityChangeEvent
+    public static final class VisibilityChangeEvent
             extends GwtEvent<VisibilityHandler> {
         public static final Type<VisibilityHandler> TYPE = new Type<ScrollbarBundle.VisibilityHandler>() {
             @Override

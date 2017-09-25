@@ -1750,7 +1750,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Implementation of item set change event.
      */
-    private static class ItemSetChangeEvent extends EventObject
+    private static final class ItemSetChangeEvent extends EventObject
             implements Serializable, Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(Container source) {
@@ -1772,7 +1772,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Implementation of property set change event.
      */
-    private static class PropertySetChangeEvent extends EventObject
+    private static final class PropertySetChangeEvent extends EventObject
             implements Container.PropertySetChangeEvent, Serializable {
 
         private PropertySetChangeEvent(Container source) {
@@ -2175,7 +2175,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * implementations.
      */
     @Deprecated
-    public static class VerticalLocationIs extends TargetDetailIs {
+    public static final class VerticalLocationIs extends TargetDetailIs {
         public static VerticalLocationIs TOP = new VerticalLocationIs(
                 VerticalDropLocation.TOP);
         public static VerticalLocationIs BOTTOM = new VerticalLocationIs(

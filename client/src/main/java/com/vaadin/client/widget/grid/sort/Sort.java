@@ -27,7 +27,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @since 7.4
  * @author Vaadin Ltd
  */
-public class Sort {
+public final class Sort {
 
     private final Sort previous;
     private final SortOrder order;

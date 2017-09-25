@@ -23,7 +23,7 @@ import com.google.gwt.dom.client.Element;
 public class MeasuredSize {
     private static final boolean debugSizeChanges = false;
 
-    public static class MeasureResult {
+    public static final class MeasureResult {
         private final boolean widthChanged;
         private final boolean heightChanged;
 

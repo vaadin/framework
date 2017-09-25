@@ -34,7 +34,7 @@ import com.google.gwt.dom.client.TableRowElement;
  */
 public class FlyweightRow implements Row {
 
-    static class CellIterator implements Iterator<FlyweightCell> {
+    static final class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
         private final ArrayList<FlyweightCell> cells;
         private final boolean cellsAttached;

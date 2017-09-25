@@ -27,7 +27,7 @@ import com.vaadin.ui.Component;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class ConnectorHelper {
+public final class ConnectorHelper {
 
     /**
      * Creates a string containing debug info for the connector

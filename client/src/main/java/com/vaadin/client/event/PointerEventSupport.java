@@ -25,7 +25,7 @@ import com.vaadin.client.event.PointerEvent.EventType;
  * @since 7.2
  * @author Vaadin Ltd
  */
-public class PointerEventSupport {
+public final class PointerEventSupport {
 
     private static final PointerEventSupportImpl impl = GWT
             .create(PointerEventSupportImpl.class);

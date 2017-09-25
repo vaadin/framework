@@ -51,7 +51,7 @@ import java.util.jar.Manifest;
  * idea when dropping Java 1.5 support (integrated to javac in 6).
  *
  */
-public class ClassPathExplorer {
+public final class ClassPathExplorer {
 
     private static final String VAADIN_ADDON_VERSION_ATTRIBUTE = "Vaadin-Package-Version";
 

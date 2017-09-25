@@ -29,7 +29,7 @@ import com.vaadin.shared.data.sort.SortDirection;
  * @author Vaadin Ltd
  */
 @Deprecated
-public class Sort implements Serializable {
+public final class Sort implements Serializable {
 
     private final Sort previous;
     private final SortOrder order;

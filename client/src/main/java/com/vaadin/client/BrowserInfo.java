@@ -26,7 +26,7 @@ import com.vaadin.shared.VBrowserDetails;
  * class.
  *
  */
-public class BrowserInfo {
+public final class BrowserInfo {
 
     private static final String BROWSER_OPERA = "op";
     private static final String BROWSER_IE = "ie";

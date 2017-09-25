@@ -1475,7 +1475,7 @@ public class SQLContainer implements Container, Container.Filterable,
      */
     @SuppressWarnings("serial")
     @Deprecated
-    public static class ItemSetChangeEvent extends EventObject
+    public static final class ItemSetChangeEvent extends EventObject
             implements Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(SQLContainer source) {

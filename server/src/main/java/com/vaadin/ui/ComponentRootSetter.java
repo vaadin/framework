@@ -23,7 +23,7 @@ import java.io.Serializable;
  * @since 8.1
  * @author Vaadin Ltd
  */
-public class ComponentRootSetter implements Serializable {
+public final class ComponentRootSetter implements Serializable {
 
     private ComponentRootSetter() {
         // Util methods only

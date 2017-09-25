@@ -56,7 +56,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
     /**
      * Event sent when the login form is submitted.
      */
-    public static class LoginEvent extends Component.Event {
+    public static final class LoginEvent extends Component.Event {
 
         private final Map<String, String> params;
 

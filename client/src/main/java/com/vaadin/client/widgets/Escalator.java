@@ -5492,7 +5492,7 @@ public class Escalator extends Widget
      *
      * @since 7.5.0
      */
-    public static class SubPartArguments {
+    public static final class SubPartArguments {
         private String type;
         private int[] indices;
 

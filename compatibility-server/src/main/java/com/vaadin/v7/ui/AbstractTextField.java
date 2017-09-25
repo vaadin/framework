@@ -595,7 +595,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     }
 
     @Deprecated
-    public static class TextChangeEventImpl extends TextChangeEvent {
+    public static final class TextChangeEventImpl extends TextChangeEvent {
         private String curText;
         private int cursorPosition;
 

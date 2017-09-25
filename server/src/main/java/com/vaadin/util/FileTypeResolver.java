@@ -37,7 +37,7 @@ import com.vaadin.server.ThemeResource;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class FileTypeResolver implements Serializable {
+public final class FileTypeResolver implements Serializable {
 
     /**
      * Default icon given if no icon is specified for a mime-type.
