@@ -23,7 +23,6 @@ import com.vaadin.shared.AbstractComponentState;
  * {@link com.vaadin.v7.shared.ui.label.LabelState} to test #8683
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class LabelState extends AbstractComponentState {

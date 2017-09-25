@@ -19,7 +19,6 @@ package com.vaadin.shared.ui;
  * Constants for border styles used on HTML elements.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0
  *
  */

@@ -38,7 +38,6 @@ import com.vaadin.util.CurrentInstance;
  * should not be served by the connector.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class GlobalResourceHandler implements RequestHandler {

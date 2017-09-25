@@ -22,7 +22,6 @@ package com.vaadin.server;
  * @see AbstractClientConnector#setResource(String, Resource)
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface ConnectorResource extends Resource {

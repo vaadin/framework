@@ -28,7 +28,6 @@ import com.vaadin.ui.declarative.DesignContext;
  * Abstract base for embedding components.
  *
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
