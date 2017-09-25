@@ -552,7 +552,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Returns true if we should add a shim iframe below the overlay to deal
-     * with zindex issues with PDFs and applets. Can be overriden to disable
+     * with zindex issues with PDFs and applets. Can be overridden to disable
      * shim iframes if they are not needed.
      *
      * @return true if a shim iframe should be added, false otherwise

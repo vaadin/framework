@@ -1404,7 +1404,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overriden to change
+     * selection. By default this is backspace but it can be overridden to change
      * the key to whatever you want.
      *
      * @return

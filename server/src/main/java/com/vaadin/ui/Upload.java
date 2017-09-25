@@ -193,7 +193,7 @@ public class Upload extends AbstractComponent
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }
@@ -1026,10 +1026,11 @@ public class Upload extends AbstractComponent
 
     /**
      * In addition to the actual file chooser, upload components have button
-     * that starts actual upload progress. This method is used to set a stylename
-     * to that button.
+     * that starts actual upload progress. This method is used to set a
+     * stylename to that button.
      *
-     * @param buttonStyleName styleName for upload components button.
+     * @param buttonStyleName
+     *            styleName for upload components button.
      * @see #setButtonCaption(String) about when the button is shown / hidden.
      * @since 8.2
      */

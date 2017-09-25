@@ -137,7 +137,7 @@ public class FreeformQueryTest {
     public void getCount_moreComplexQuery_returnsThree() throws SQLException {
         FreeformQuery query = new FreeformQuery(
                 "SELECT * FROM people WHERE \"NAME\" LIKE '%lle'",
-                connectionPool, new String[] { "ID" });
+                connectionPool, "ID");
         Assert.assertEquals(3, query.getCount());
     }
 
