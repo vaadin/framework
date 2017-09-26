@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.TimeZone;
-import com.google.gwt.i18n.client.TimeZoneInfo;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
@@ -326,21 +325,23 @@ public class DateTimeService {
      * @param date
      *            The date to convert
      * @param formatStr
-     *            The format string that might contain MMM or MMMM
-     * @param timeZoneJSON
-     *            The JSON string that is used to construct {@link TimeZoneInfo}
+     *            The format string that might contain {@code MMM} or
+     *            {@code MMMM}
+     * @param timeZone
+     *            The {@link TimeZone} used to replace {@code z}, can be
+     *            {@code null}
      *
      * @return the formatted date string
      * @since
      */
-    public String formatDate(Date date, String formatStr, String timeZoneJSON) {
+    public String formatDate(Date date, String formatStr, TimeZone timeZone) {
         /*
          * Format month and day names separately when locale for the
          * DateTimeService is not the same as the browser locale
          */
+        formatStr = formatTimeZone(date, formatStr, timeZone);
         formatStr = formatMonthNames(date, formatStr);
         formatStr = formatDayNames(date, formatStr);
-        formatStr = formatTimeZone(date, formatStr, timeZoneJSON);
 
         // Format uses the browser locale
         DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
@@ -437,24 +438,35 @@ public class DateTimeService {
     }
 
     private String formatTimeZone(Date date, String formatStr,
-            String timeZoneJSON) {
-        // should we check if it is inside single quotes?
-        if (formatStr.indexOf('z') == -1 || timeZoneJSON == null) {
-            return formatStr;
+            TimeZone timeZone) {
+        // if 'z' is found outside quotes and timeZone is used
+        if (getIndexOf(formatStr, 'z') != -1 && timeZone != null) {
+            return replaceTimeZone(formatStr, timeZone.getShortName(date));
         }
-        TimeZoneInfo timeZoneInfo = TimeZoneInfo
-                .buildTimeZoneData(timeZoneJSON);
-        TimeZone timeZone = TimeZone.createTimeZone(timeZoneInfo);
-
-        return replaceTimeZone(formatStr, timeZone.getShortName(date));
+        return formatStr;
     }
 
+    /**
+     * Replaces the {@code z} characters of the specified {@code formatStr} with
+     * the given {@code timeZoneName}.
+     * 
+     * @param formatStr
+     *            The format string, which is the pattern describing the date
+     *            and time format
+     * @param timeZoneName
+     *            the time zone name
+     * @return the format string, with {@code z} replaced (if found)
+     */
     private static String replaceTimeZone(String formatStr,
             String timeZoneName) {
+
+        // search for 'z' outside the quotes (inside quotes is escaped)
         int start = getIndexOf(formatStr, 'z');
         if (start == -1) {
             return formatStr;
         }
+
+        // if there are multiple consecutive 'z', treat them as one
         int end = start;
         while (end + 1 < formatStr.length()
                 && formatStr.charAt(end + 1) == 'z') {

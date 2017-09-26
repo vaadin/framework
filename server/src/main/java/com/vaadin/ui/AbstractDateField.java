@@ -181,13 +181,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             target.addAttribute("format", getDateFormat());
         }
 
-        if (getZoneId() != null) {
-            String timeZoneJSON = TimeZoneUtil.toJSON(getZoneId(), getLocale());
-            if (timeZoneJSON != null) {
-                target.addAttribute("timeZoneJSON", timeZoneJSON);
-            }
-        }
-
         if (!isLenient()) {
             target.addAttribute("strict", true);
         }
@@ -214,6 +207,19 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 target.addVariable(this, "default-" + variableName, -1);
             }
         }
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        String timeZoneJSON;
+        if (getZoneId() != null) {
+            timeZoneJSON = TimeZoneUtil.toJSON(getZoneId(), getLocale());
+        } else {
+            timeZoneJSON = null;
+        }
+        getState().timeZoneJSON = timeZoneJSON;
     }
 
     /*
@@ -456,8 +462,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Sets the {@link ZoneId}, which is used when {@code z} is included inside the
-     * {@link #setDateFormat(String)}.
+     * Sets the {@link ZoneId}, which is used when {@code z} is included inside
+     * the {@link #setDateFormat(String)}.
      *
      * @param zoneId
      *            the zone id
@@ -469,8 +475,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Returns the {@link ZoneId}, which is used when {@code z} is included inside the
-     * {@link #setDateFormat(String)}.
+     * Returns the {@link ZoneId}, which is used when {@code z} is included
+     * inside the {@link #setDateFormat(String)}.
      *
      * @return the zoneId
      * @since

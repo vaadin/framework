@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
@@ -71,7 +72,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     private String formatStr;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String timeZoneJSON;
+    private TimeZone timeZone;
 
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
@@ -180,7 +181,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         String formatString = getFormatString();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    formatString, timeZoneJSON);
+                    formatString, timeZone);
         } else {
             dateText = "";
         }
@@ -198,7 +199,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Roles.getTextboxRole()
                     .removeAriaReadonlyProperty(text.getElement());
         }
+    }
 
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override
@@ -223,7 +227,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                     // FIXME: Add a description/example here of when this is
                     // needed
                     text.setValue(getDateTimeService().formatDate(getDate(),
-                            getFormatString(), timeZoneJSON), false);
+                            getFormatString(), timeZone), false);
                 }
 
                 // remove possibly added invalid value indication

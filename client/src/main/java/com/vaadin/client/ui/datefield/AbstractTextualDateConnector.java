@@ -16,8 +16,11 @@
 
 package com.vaadin.client.ui.datefield;
 
+import com.google.gwt.i18n.client.TimeZone;
+import com.google.gwt.i18n.client.TimeZoneInfo;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.VAbstractTextualDate;
 import com.vaadin.shared.ui.datefield.AbstractTextualDateFieldState;
 
@@ -46,9 +49,6 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
         if (uidl.hasAttribute("format")) {
             getWidget().setFormatString(uidl.getStringAttribute("format"));
         }
-        if (uidl.hasAttribute("timeZoneJSON")) {
-            getWidget().timeZoneJSON = uidl.getStringAttribute("timeZoneJSON");
-        }
 
         getWidget().lenient = !uidl.getBooleanAttribute("strict");
 
@@ -72,6 +72,20 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
     @Override
     public AbstractTextualDateFieldState getState() {
         return (AbstractTextualDateFieldState) super.getState();
+    }
+
+    @OnStateChange("timeZoneJSON")
+    private void onTimeZoneJSONChange() {
+        TimeZone timeZone;
+        String timeZoneJSON = getState().timeZoneJSON;
+        if (timeZoneJSON != null) {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo
+                    .buildTimeZoneData(timeZoneJSON);
+            timeZone = TimeZone.createTimeZone(timeZoneInfo);
+        } else {
+            timeZone = null;
+        }
+        getWidget().setTimeZone(timeZone);
     }
 
 }
