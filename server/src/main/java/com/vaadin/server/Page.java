@@ -1036,7 +1036,9 @@ public class Page implements Serializable {
      *
      * @return The browser location URI.
      * @throws IllegalStateException
-     *             if URL is not sent as a parameter in deployment configuration
+     *             if the
+     *             {@link DeploymentConfiguration#isSendUrlsAsParameters()} is
+     *             set to {@code false}
      */
     public URI getLocation() throws IllegalStateException {
         if (location == null && !uI.getSession().getConfiguration()
