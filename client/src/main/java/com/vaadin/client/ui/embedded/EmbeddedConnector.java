@@ -124,7 +124,8 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                     getWidget().setHTML(
                             "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
                                     + " allowTransparency=\"true\" src=\"\""
-                                    + " name=\"" + state.id + "\"></iframe>");
+                                    + " name=\"" + getConnectorId()
+                                    + "\"></iframe>");
                     getWidget().browserElement = DOM
                             .getFirstChild(getWidget().getElement());
                 }
