@@ -51,7 +51,7 @@ public class VErrorMessage extends FlowPanel {
 
     public void updateMessage(String htmlErrorMessage) {
         clear();
-        if (htmlErrorMessage == null || htmlErrorMessage.length() == 0) {
+        if (htmlErrorMessage == null || htmlErrorMessage.isEmpty()) {
             add(new HTML(" "));
         } else {
             // pre-formatted on the server as div per child

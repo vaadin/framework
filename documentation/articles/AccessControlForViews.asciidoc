@@ -1,3 +1,9 @@
+---
+title: Access Control For Views
+order: 2
+layout: page
+---
+
 [[access-control-for-views]]
 Access control for views
 ------------------------

@@ -659,7 +659,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainDiv.addClass(context.getThemeName());
         mainDiv.addClass(context.getUIClass().getSimpleName()
                 .toLowerCase(Locale.ENGLISH));
-        if (style != null && style.length() != 0) {
+        if (style != null && !style.isEmpty()) {
             mainDiv.attr("style", style);
         }
         mainDiv.appendElement("div").addClass("v-app-loading");

@@ -513,7 +513,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid<?> source, Column<?, ?> column,
@@ -1726,7 +1726,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
+         *            <code>true</code> if the column may be hidable by the
          *            user via UI interaction
          * @return this column
          */
@@ -3623,13 +3623,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::removeColumn);
     }
 
-    private String getIdentifier(Column<T, ?> column) {
-        return columnKeys.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(column))
-                .map(entry -> entry.getKey()).findFirst()
-                .orElse(getGeneratedIdentifier());
-    }
-
     private String getGeneratedIdentifier() {
         String columnId = "" + counter;
         counter++;
@@ -3996,7 +3989,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *             if the provided id is not recognized by the data source.
+     *            if the provided row is outside the item range
      */
     public void scrollTo(int row) throws IllegalArgumentException {
         scrollTo(row, ScrollDestination.ANY);
@@ -4020,7 +4013,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Objects.requireNonNull(destination,
                 "ScrollDestination can not be null");
 
-        if (row > getDataProvider().size(new Query())) {
+        if (row > getDataCommunicator().getDataProviderSize()) {
             throw new IllegalArgumentException("Row outside dataProvider size");
         }
 

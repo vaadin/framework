@@ -21,7 +21,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
+import com.vaadin.client.widget.treegrid.events.TreeGridDoubleClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 
@@ -107,6 +109,12 @@ public class TreeGrid extends Grid<JsonObject> {
     @Override
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
         return addHandler(handler, TreeGridClickEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addBodyDoubleClickHandler(
+            BodyDoubleClickHandler handler) {
+        return addHandler(handler, TreeGridDoubleClickEvent.TYPE);
     }
 
     @Override

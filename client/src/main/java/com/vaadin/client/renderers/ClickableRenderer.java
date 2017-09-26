@@ -160,7 +160,7 @@ public abstract class ClickableRenderer<T, W extends Widget>
             return cellReference;
         }
 
-        private native static Escalator getEscalator(Grid<?> grid)
+        private static native Escalator getEscalator(Grid<?> grid)
         /*-{
           return grid.@com.vaadin.client.widgets.Grid::escalator;
         }-*/;

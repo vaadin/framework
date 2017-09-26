@@ -52,7 +52,7 @@ public class OrderedLayoutCases extends AbstractReindeerTestUI {
                         public void valueChange(ValueChangeEvent event) {
                             String value = event.getProperty().getValue()
                                     .toString();
-                            if (value.length() == 0) {
+                            if (value.isEmpty()) {
                                 setCaption(null);
                             } else if (value.equals("Long")) {
                                 setCaption(

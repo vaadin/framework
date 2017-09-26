@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
@@ -252,10 +251,6 @@ public class EventRouter implements MethodEventSource {
             }
         }
         return listeners;
-    }
-
-    private Logger getLogger() {
-        return Logger.getLogger(EventRouter.class.getName());
     }
 
 }

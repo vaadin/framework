@@ -26,7 +26,8 @@ import com.vaadin.v7.client.widgets.Escalator;
  * The updater is responsible for internally handling all remote communication,
  * should the displayed data need to be fetched remotely.
  * <p>
- * This has a similar function to {@link Grid Grid's} {@link Renderer Renderers}
+ * This has a similar function to {@link com.vaadin.v7.client.widgets.Grid Grid's}
+ * {@link com.vaadin.v7.client.renderers.Renderer Renderers}
  * , although they operate on different abstraction levels.
  *
  * @since 7.4
@@ -132,7 +133,7 @@ public interface EscalatorUpdater {
      *            Information about the row from which the cells will be
      *            removed. <em>Note:</em> You should not store nor reuse this
      *            reference.
-     * @param cellsToAttach
+     * @param cellsToDetach
      *            A collection of cells that are about to be detached.
      *            <em>Note:</em> You should neither store nor reuse the
      *            reference to the iterable, nor to the individual cells.
@@ -146,7 +147,7 @@ public interface EscalatorUpdater {
      * @param row
      *            Information about the row from which the cells were removed.
      *            <em>Note:</em> You should not store nor reuse this reference.
-     * @param attachedCells
+     * @param detachedCells
      *            A collection of cells that were detached. <em>Note:</em> You
      *            should neither store nor reuse the reference to the iterable,
      *            nor to the individual cells.

@@ -165,7 +165,7 @@ public interface FieldEvents {
         public void blur(BlurEvent event);
     }
 
-    public static abstract class FocusAndBlurServerRpcImpl
+    public abstract static class FocusAndBlurServerRpcImpl
             implements FocusAndBlurServerRpc {
 
         private final Component component;

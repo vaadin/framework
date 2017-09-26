@@ -24,7 +24,7 @@ import com.vaadin.v7.ui.ListSelect;
 
 public class OrderedLayoutBasics extends TestBase {
 
-    String valignName[] = new String[] { "top", "middle", "bottom" };
+    String valignName[] = { "top", "middle", "bottom" };
 
     Set<AbstractOrderedLayout> layouts = new HashSet<>();
     private AbstractOrderedLayout layoutContainer;

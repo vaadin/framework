@@ -312,7 +312,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         fireOrderEvent(list);
     }
 
-    private static void fireOrderEvent(ArrayList<VWindow> windows) {
+    private static void fireOrderEvent(List<VWindow> windows) {
         WINDOW_ORDER_HANDLER
                 .fireEvent(new WindowOrderEvent(new ArrayList<>(windows)));
     }
@@ -1204,7 +1204,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the width to the contents
         getElement().getStyle().setProperty("width", width);
         // Update v-has-width in case undefined window is resized
-        setStyleName("v-has-width", width != null && width.length() > 0);
+        setStyleName("v-has-width", width != null && !width.isEmpty());
     }
 
     @Override
@@ -1212,7 +1212,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the height to the contents
         getElement().getStyle().setProperty("height", height);
         // Update v-has-height in case undefined window is resized
-        setStyleName("v-has-height", height != null && height.length() > 0);
+        setStyleName("v-has-height", height != null && !height.isEmpty());
     }
 
     private void onDragEvent(Event event) {

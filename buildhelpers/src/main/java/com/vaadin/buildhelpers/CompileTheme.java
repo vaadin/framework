@@ -147,7 +147,7 @@ public class CompileTheme {
             return;
         }
 
-        String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
+        String[] parameters = { "--sprite-png-depth", "AUTO",
                 "--css-file-suffix", "-sprite", "--css-file-encoding", "UTF-8",
                 "--root-dir-path", themeFolder + File.separator + themeName,
                 "--log-level", "WARN" };

@@ -99,7 +99,7 @@ public class TextFileProperty extends AbstractProperty<String> {
                     : new InputStreamReader(fis, charset);
             BufferedReader r = new BufferedReader(isr);
             StringBuilder b = new StringBuilder();
-            char buf[] = new char[8 * 1024];
+            char[] buf = new char[8 * 1024];
             int len;
             while ((len = r.read(buf)) != -1) {
                 b.append(buf, 0, len);

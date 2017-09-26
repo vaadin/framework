@@ -45,16 +45,16 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
     protected static final String CALENDAR_32_PNG = "../runo/icons/16/calendar.png";
     protected static final String LOCK_16_PNG = "../runo/icons/16/lock.png";
     protected static final String GLOBE_16_PNG = "../runo/icons/16/globe.png";
-    public Alignment[] alignments = new Alignment[] { Alignment.TOP_CENTER,
+    public Alignment[] alignments = { Alignment.TOP_CENTER,
             Alignment.TOP_LEFT, Alignment.TOP_RIGHT, Alignment.BOTTOM_CENTER,
             Alignment.BOTTOM_LEFT, Alignment.BOTTOM_RIGHT,
             Alignment.MIDDLE_CENTER, Alignment.MIDDLE_LEFT,
             Alignment.MIDDLE_RIGHT };
 
-    public final String[] CAPTIONS = new String[] { "",
+    public final String[] CAPTIONS = { "",
             "VeryLongOneWordCaption",
             "Very long caption of 50 approximately symbols aaaaaaaaaaaa aaaaaa aaa " };
-    Resource[] ICONS = new Resource[] { new ThemeResource(CALENDAR_32_PNG),
+    Resource[] ICONS = { new ThemeResource(CALENDAR_32_PNG),
             new ThemeResource(LOCK_16_PNG), new ThemeResource(GLOBE_16_PNG) };
     public AbstractComponent[] components = new AbstractComponent[alignments.length];
 
@@ -220,7 +220,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
                 comp.setIcon(ICONS[i]);
             }
             if (ErrorMessage != null) {
-                if (ErrorMessage.length() == 0) {
+                if (ErrorMessage.isEmpty()) {
                     comp.setComponentError(new UserError(null));
                 } else {
                     comp.setComponentError(new UserError(ErrorMessage));

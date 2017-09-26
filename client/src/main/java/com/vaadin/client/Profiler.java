@@ -197,18 +197,6 @@ public class Profiler {
             return Collections.unmodifiableCollection(children.values());
         }
 
-        private void buildRecursiveString(StringBuilder builder,
-                String prefix) {
-            if (getName() != null) {
-                String msg = getStringRepresentation(prefix);
-                builder.append(msg + '\n');
-            }
-            String childPrefix = prefix + "*";
-            for (Node node : children.values()) {
-                node.buildRecursiveString(builder, childPrefix);
-            }
-        }
-
         @Override
         public String toString() {
             return getStringRepresentation("");
@@ -396,7 +384,7 @@ public class Profiler {
         return RELATIVE_TIME_SUPPLIER.getRelativeTime();
     }
 
-    private static native final void logGwtEvent(String name, String type)
+    private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
             evtGroup: @com.vaadin.client.Profiler::evtGroup,
@@ -581,7 +569,7 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            String[] keys = new String[] { "navigationStart",
+            String[] keys = { "navigationStart",
                     "unloadEventStart", "unloadEventEnd", "redirectStart",
                     "redirectEnd", "fetchStart", "domainLookupStart",
                     "domainLookupEnd", "connectStart", "connectEnd",

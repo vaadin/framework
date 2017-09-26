@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -263,7 +262,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         @Override
         public void windowOrderChanged(
-                HashMap<Integer, Connector> windowOrders) {
+                Map<Integer, Connector> windowOrders) {
             Map<Integer, Window> orders = new LinkedHashMap<>();
             for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
                 if (entry.getValue() instanceof Window) {
@@ -1779,7 +1778,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * Used internally for communication tracking.
      *
-     * @param lastProcessedServerMessageId
+     * @param lastProcessedClientToServerId
      *            the id of the last processed server message
      * @since 7.6
      */

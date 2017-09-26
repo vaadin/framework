@@ -53,8 +53,8 @@ public class HiddenColumnsExpandRatios extends TestBase {
 
     private String genValue() {
         Random rnd = new Random();
-        StringBuffer str = new StringBuffer("");
-        String[] strings = new String[] { "foo", "bar", "baz" };
+        StringBuffer str = new StringBuffer();
+        String[] strings = { "foo", "bar", "baz" };
         for (int i = 0; i < 5; i++) {
             str.append(strings[Math.abs(rnd.nextInt() % strings.length)])
                     .append(" ");

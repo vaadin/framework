@@ -1524,7 +1524,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            // Focus the last focused column in the editor iff grid or its child
+            // Focus the last focused column in the editor if grid or its child
             // was focused before the edit request
             Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
             Element focusedElement = WidgetUtil.getFocusedElement();
@@ -2292,7 +2292,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
-    public static abstract class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
+    public abstract static class AbstractGridKeyEvent<HANDLER extends AbstractGridKeyEventHandler>
             extends KeyEvent<HANDLER> {
 
         /**
@@ -2358,7 +2358,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         protected abstract void doDispatch(HANDLER handler, Section section);
     }
 
-    public static abstract class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
+    public abstract static class AbstractGridMouseEvent<HANDLER extends AbstractGridMouseEventHandler>
             extends MouseEvent<HANDLER> {
 
         /**
@@ -2422,8 +2422,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Element targetElement = Element.as(target);
-            if (grid.isElementInChildWidget(targetElement)) {
-                // Target is some widget inside of Grid
+            if (ignoreEventFromTarget(grid, targetElement)) {
+                // Event on this target should be ignored
                 return;
             }
 
@@ -2442,6 +2442,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             doDispatch(handler, section);
+        }
+
+        /**
+         * Returns whether the mouse event on the target element should be
+         * ignored.
+         *
+         * @param grid
+         *         the {@code Grid} instance from which the event originated
+         * @param targetElement
+         *         the element from which the event originated
+         * @return {@code true} if the event should be ignored, {@code false} if
+         * it should be handled
+         * @since
+         */
+        protected boolean ignoreEventFromTarget(Grid<?> grid,
+                Element targetElement) {
+            // Target is some widget inside of Grid
+            return grid.isElementInChildWidget(targetElement);
         }
 
         protected abstract void doDispatch(HANDLER handler, Section section);
@@ -4356,10 +4374,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && rightBoundaryForDrag < dropMarkerLeft
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
-            }
-
-            // Check if the drop marker shouldn't be shown at all
-            else if (dropMarkerLeft < frozenColumnsWidth
+            } else if (
+                    // Check if the drop marker shouldn't be shown at all
+                    dropMarkerLeft < frozenColumnsWidth
                     || dropMarkerLeft > Math.min(rightBoundaryForDrag,
                             escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
@@ -4641,9 +4658,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             rightBound = cellColumnRightIndex;
                         }
                         cellColumnIndex = cellColumnRightIndex - 1;
-                    }
-
-                    else {
+                    } else {
                         // can't drop inside a spanned cell, or this is the
                         // dragged cell
                         while (colspan > 1) {
@@ -5998,6 +6013,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (sortable) {
                 cellElement.addClassName("sortable");
+                cellElement.setAttribute("aria-sort", "none");
             }
 
             if (!sortable || sortingOrder == null) {
@@ -6007,16 +6023,18 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (SortDirection.ASCENDING == sortingOrder.getDirection()) {
                 cellElement.addClassName("sort-asc");
+                cellElement.setAttribute("aria-sort", "ascending");
             } else {
                 cellElement.addClassName("sort-desc");
+                cellElement.setAttribute("aria-sort", "descending");
             }
 
             int sortIndex = Grid.this.getSortOrder().indexOf(sortingOrder);
             if (sortIndex > -1 && Grid.this.getSortOrder().size() > 1) {
                 // Show sort order indicator if column is
                 // sorted and other sorted columns also exists.
-                cellElement.setAttribute("sort-order",
-                        String.valueOf(sortIndex + 1));
+                cellElement.setAttribute("sort-order", String.valueOf(sortIndex + 1));
+                cellElement.setAttribute("aria-sort", "other");
             }
 
             if (!sortedBefore) {
@@ -6058,6 +6076,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private void cleanup(FlyweightCell cell) {
             Element cellElement = cell.getElement();
             cellElement.removeAttribute("sort-order");
+            cellElement.removeAttribute("aria-sort");
             cellElement.removeClassName("sort-desc");
             cellElement.removeClassName("sort-asc");
             cellElement.removeClassName("sortable");
@@ -8968,17 +8987,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param parent
      *            The parent to set
      */
-    private static native final void setParent(Widget widget, Grid<?> parent)
+    private static final native void setParent(Widget widget, Grid<?> parent)
     /*-{
         widget.@com.google.gwt.user.client.ui.Widget::setParent(Lcom/google/gwt/user/client/ui/Widget;)(parent);
     }-*/;
 
-    private static native final void onAttach(Widget widget)
+    private static final native void onAttach(Widget widget)
     /*-{
         widget.@Widget::onAttach()();
     }-*/;
 
-    private static native final void onDetach(Widget widget)
+    private static final native void onDetach(Widget widget)
     /*-{
         widget.@Widget::onDetach()();
     }-*/;
@@ -9113,7 +9132,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
-     * @return <code>true</code> iff the details for the given row is visible
+     * @return <code>true</code> if the details for the given row is visible
      * @see #setDetailsVisible(int, boolean)
      */
     public boolean isDetailsVisible(int rowIndex) {

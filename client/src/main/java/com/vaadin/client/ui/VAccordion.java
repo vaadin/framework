@@ -378,13 +378,13 @@ public class VAccordion extends VTabsheetBase {
          * Updates a tabs stylename from the child UIDL
          *
          * @param uidl
-         *            The child uidl of the tab
+         *            The child UIDL of the tab
          */
         private void updateTabStyleName(String newStyleName) {
-            if (newStyleName != null && newStyleName.length() != 0) {
+            if (newStyleName != null && !newStyleName.isEmpty()) {
                 if (!newStyleName.equals(styleName)) {
                     // If we have a new style name
-                    if (styleName != null && styleName.length() != 0) {
+                    if (styleName != null && !styleName.isEmpty()) {
                         // Remove old style name if present
                         removeStyleDependentName(styleName);
                     }

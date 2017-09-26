@@ -23,7 +23,7 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
     private PersonContainer container;
     private Grid grid;
 
-    private boolean styles[] = new boolean[] { false, false, false };
+    private boolean styles[] = { false, false, false };
 
     @Override
     protected void setup(VaadinRequest request) {

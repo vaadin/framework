@@ -30,7 +30,6 @@ import com.vaadin.ui.declarative.DesignContext;
  * A component for displaying Adobe® Flash® content.
  *
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")
@@ -216,7 +215,8 @@ public class Flash extends AbstractEmbedded {
      */
     public String getParameter(String name) {
         return getState(false).embedParams != null
-                ? getState(false).embedParams.get(name) : null;
+                ? getState(false).embedParams.get(name)
+                : null;
     }
 
     /**

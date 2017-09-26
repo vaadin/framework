@@ -46,7 +46,7 @@ import com.vaadin.ui.Window;
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
 
-    private final static int LAYERS_SHOWN = 4;
+    private static final int LAYERS_SHOWN = 4;
 
     /**
      * Recursively checks given component and its subtree for invalid layout
@@ -92,9 +92,7 @@ public class ComponentSizeValidator implements Serializable {
             }
         } else if (isForm(component)) {
             HasComponents form = (HasComponents) component;
-            for (Iterator<Component> iterator = form.iterator(); iterator
-                    .hasNext();) {
-                Component child = iterator.next();
+            for (Component child : form) {
                 errors = validateComponentRelativeSizes(child, errors, parent);
             }
         }
@@ -129,7 +127,7 @@ public class ComponentSizeValidator implements Serializable {
         StringBuffer err = new StringBuffer();
         err.append("Vaadin DEBUG\n");
 
-        StringBuilder indent = new StringBuilder("");
+        StringBuilder indent = new StringBuilder();
         ComponentInfo ci;
         if (attributes != null) {
             while (attributes.size() > LAYERS_SHOWN) {

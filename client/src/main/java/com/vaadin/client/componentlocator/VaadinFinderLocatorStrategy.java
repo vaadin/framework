@@ -424,7 +424,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             ComponentConnector root, Element actualRoot) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
-        if (pathComponents[0].length() > 0) {
+        if (!pathComponents[0].isEmpty()) {
             connectors = findConnectorsByPath(pathComponents[0],
                     Arrays.asList(root));
         } else {

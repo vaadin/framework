@@ -91,7 +91,7 @@ public class DateCellDayEvent extends FocusableHTML
         weekGrid = parent;
 
         Style s = getElement().getStyle();
-        if (event.getStyleName().length() > 0) {
+        if (!event.getStyleName().isEmpty()) {
             addStyleDependentName(event.getStyleName());
         }
         s.setPosition(Position.ABSOLUTE);
@@ -563,27 +563,6 @@ public class DateCellDayEvent extends FocusableHTML
      */
     private long getMinTimeRange() {
         return DateConstants.MINUTEINMILLIS * 30;
-    }
-
-    /**
-     * Build the string for sending resize events to server
-     *
-     * @param event
-     * @return
-     */
-    private String buildResizeString(CalendarEvent event) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(event.getIndex());
-        buffer.append(",");
-        buffer.append(DateUtil.formatClientSideDate(event.getStart()));
-        buffer.append("-");
-        buffer.append(DateUtil.formatClientSideTime(event.getStartTime()));
-        buffer.append(",");
-        buffer.append(DateUtil.formatClientSideDate(event.getEnd()));
-        buffer.append("-");
-        buffer.append(DateUtil.formatClientSideTime(event.getEndTime()));
-
-        return buffer.toString();
     }
 
     private Date getTargetDateByCurrentPosition(int left) {

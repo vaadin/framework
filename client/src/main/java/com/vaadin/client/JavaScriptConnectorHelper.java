@@ -19,6 +19,7 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -170,7 +171,7 @@ public class JavaScriptConnectorHelper {
         return false;
     }
 
-    protected void showInitProblem(ArrayList<String> attemptedNames) {
+    protected void showInitProblem(List<String> attemptedNames) {
         // Default does nothing
     }
 
@@ -330,7 +331,7 @@ public class JavaScriptConnectorHelper {
     }
 
     private ServerConnector getConnector(String connectorId) {
-        if (connectorId == null || connectorId.length() == 0) {
+        if (connectorId == null || connectorId.isEmpty()) {
             return connector;
         }
 
@@ -363,7 +364,7 @@ public class JavaScriptConnectorHelper {
             // TODO Resolve conflicts using argument count and types
             String interfaceList = "";
             for (String iface : interfaces) {
-                if (interfaceList.length() != 0) {
+                if (!interfaceList.isEmpty()) {
                     interfaceList += ", ";
                 }
                 interfaceList += getJsInterfaceName(iface);

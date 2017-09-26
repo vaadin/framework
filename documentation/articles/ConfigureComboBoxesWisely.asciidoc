@@ -1,3 +1,9 @@
+---
+title: Configure Combo Boxes Wisely
+order: 5
+layout: page
+---
+
 [[configure-comboboxes-wisely]]
 Configure ComboBoxes wisely
 ---------------------------

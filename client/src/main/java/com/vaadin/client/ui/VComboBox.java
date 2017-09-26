@@ -229,6 +229,18 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
             return true;
         }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + VComboBox.this.hashCode();
+            result = prime * result + ((key == null) ? 0 : key.hashCode());
+            result = prime * result + ((caption == null) ? 0 : caption.hashCode());
+            result = prime * result + ((untranslatedIconUri == null) ? 0 : untranslatedIconUri.hashCode());
+            result = prime * result + ((style == null) ? 0 : style.hashCode());
+            return result;
+        }
     }
 
     /** An inner class that handles all logic related to mouse wheel. */
@@ -1141,7 +1153,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                         // stays selected
                         if (!"".equals(enteredItemValue)
                                 || selectedOptionKey != null
-                                        && !"".equals(selectedOptionKey)) {
+                                        && !selectedOptionKey.isEmpty()) {
                             doItemAction(potentialExactMatch, true);
                         }
                         suggestionPopup.hide();
@@ -1165,7 +1177,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else {
                 // currentSuggestion has key="" for nullselection
                 if (currentSuggestion != null
-                        && !currentSuggestion.key.equals("")) {
+                        && !currentSuggestion.key.isEmpty()) {
                     // An item (not null) selected
                     String text = currentSuggestion.getReplacementString();
                     setText(text);
@@ -1275,7 +1287,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             String height = getElement().getStyle().getHeight();
             String preferredHeight = getPreferredHeight(pageLength);
 
-            return !(height == null || height.length() == 0
+            return !(height == null || height.isEmpty()
                     || height.equals(preferredHeight));
         }
 
@@ -1867,7 +1879,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // when filtering, let the server decide the page unless we've
             // set the filter to empty and explicitly said that we want to see
             // the results starting from page 0.
-            if ("".equals(filter) && page != 0) {
+            if (filter.isEmpty() && page != 0) {
                 // let server decide
                 page = -1;
             } else {
@@ -1964,7 +1976,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     + suggestion.key + ")");
         }
         // special handling of null selection
-        if (suggestion.key.equals("")) {
+        if (suggestion.key.isEmpty()) {
             onNullSelected();
             return;
         }
@@ -2026,7 +2038,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         if (selectedItemIcon != null) {
             panel.remove(selectedItemIcon);
         }
-        if (iconUri == null || iconUri.length() == 0) {
+        if (iconUri == null || iconUri.isEmpty()) {
             if (selectedItemIcon != null) {
                 selectedItemIcon = null;
                 afterSelectedItemIconChange();
@@ -2074,7 +2086,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      */
     private void performSelection(String selectedKey, boolean forceUpdateText,
             boolean updatePromptAndSelectionIfMatchFound) {
-        if (selectedKey == null || "".equals(selectedKey)) {
+        if (selectedKey == null || selectedKey.isEmpty()) {
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             setText(getEmptySelectionCaption());
@@ -2357,7 +2369,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         setText(text == null ? getEmptySelectionCaption() : text);
         setSelectedItemIcon(connector.getState().selectedItemIcon);
         selectedOptionKey = (connector.getState().selectedItemKey);
-        if (selectedOptionKey == null || "".equals(selectedOptionKey)) {
+        if (selectedOptionKey == null || selectedOptionKey.isEmpty()) {
             currentSuggestion = null; // #13217
             selectedOptionKey = null;
             updatePlaceholder();
@@ -2410,7 +2422,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         for (ComboBoxSuggestion suggestion : currentSuggestions) {
             // Collect captions so we can calculate minimum width for
             // textarea
-            if (captions.length() > 0) {
+            if (!captions.isEmpty()) {
                 captions += "|";
             }
             captions += WidgetUtil
@@ -2646,7 +2658,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     @Override
     public void setWidth(String width) {
         super.setWidth(width);
-        if (width.length() != 0) {
+        if (!width.isEmpty()) {
             tb.setWidth("100%");
         }
     }

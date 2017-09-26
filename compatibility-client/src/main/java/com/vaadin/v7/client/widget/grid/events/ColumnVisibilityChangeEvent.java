@@ -31,7 +31,7 @@ import com.vaadin.v7.client.widgets.Grid.Column;
 public class ColumnVisibilityChangeEvent<T>
         extends GwtEvent<ColumnVisibilityChangeHandler<T>> {
 
-    private final static Type<ColumnVisibilityChangeHandler<?>> TYPE = new Type<ColumnVisibilityChangeHandler<?>>();
+    private static final Type<ColumnVisibilityChangeHandler<?>> TYPE = new Type<ColumnVisibilityChangeHandler<?>>();
 
     public static final Type<ColumnVisibilityChangeHandler<?>> getType() {
         return TYPE;

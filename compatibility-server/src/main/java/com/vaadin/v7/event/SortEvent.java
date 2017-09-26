@@ -23,8 +23,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.v7.data.sort.SortOrder;
 
 /**
- * Event describing a change in sorting of a {@link Container}. Fired by
- * {@link SortNotifier SortNotifiers}.
+ * Event describing a change in sorting of a {@link com.vaadin.v7.data.Container Container}.
+ * Fired by {@link SortNotifier SortNotifiers}.
  *
  * @see SortListener
  *

@@ -18,7 +18,7 @@ package com.vaadin.tests.themes.valo;
 import com.vaadin.shared.util.SharedUtil;
 
 public class StringGenerator {
-    static String[] strings = new String[] { "lorem", "ipsum", "dolor", "sit",
+    static String[] strings = { "lorem", "ipsum", "dolor", "sit",
             "amet", "consectetur", "quid", "securi", "etiam", "tamquam", "eu",
             "fugiat", "nulla", "pariatur" };
     int stringCount = -1;

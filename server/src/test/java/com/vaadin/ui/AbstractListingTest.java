@@ -73,7 +73,7 @@ public class AbstractListingTest {
         }
     }
 
-    private static final String[] ITEM_ARRAY = new String[] { "Foo", "Bar",
+    private static final String[] ITEM_ARRAY = { "Foo", "Bar",
             "Baz" };
 
     private TestListing listing;

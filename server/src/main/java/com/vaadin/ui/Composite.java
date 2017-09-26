@@ -183,7 +183,7 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     private Component getRootOrThrow() {
         Component root = getCompositionRoot();
-        if(root == null) throw new IllegalStateException("Composition root has not been set");
+        if (root == null) throw new IllegalStateException("Composition root has not been set");
         return root;
     }
 
@@ -202,7 +202,7 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     private <T> T getRootAbstractComponentPropertyOrNull(SerializableFunction<AbstractComponent, T> getter) {
         Component root = getCompositionRoot();
-        if(root instanceof AbstractComponent) {
+        if (root instanceof AbstractComponent) {
             return getter.apply((AbstractComponent) root);
         }
         return null;

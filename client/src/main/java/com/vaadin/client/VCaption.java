@@ -210,7 +210,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
             String c = owner.getState().caption;
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
-            if (c == null || c.trim().equals("")) {
+            if (c == null || c.trim().isEmpty()) {
                 // Not sure if c even can be null. Should not.
 
                 // This is required to ensure that the caption uses space in all
@@ -383,7 +383,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
             // Update caption text
             // A text forces the caption to be above the component.
             placedAfterComponent = false;
-            if (caption.trim().equals("")) {
+            if (caption.trim().isEmpty()) {
                 // This is required to ensure that the caption uses space in all
                 // browsers when it is set to the empty string. If there is an
                 // icon, error indicator or required indicator they will ensure
@@ -431,7 +431,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
                 setMaxWidth(maxWidth);
             } else {
                 String width = getElement().getStyle().getProperty("width");
-                if (width != null && !width.equals("")) {
+                if (width != null && !width.isEmpty()) {
                     setWidth(getRequiredWidth() + "px");
                 }
             }
@@ -689,12 +689,12 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
         return getOwnerPid(e);
     }
 
-    private native static void setOwnerPid(Element el, String pid)
+    private static native void setOwnerPid(Element el, String pid)
     /*-{
         el.vOwnerPid = pid;
     }-*/;
 
-    public native static String getOwnerPid(Element el)
+    public static native String getOwnerPid(Element el)
     /*-{
         return el.vOwnerPid;
     }-*/;

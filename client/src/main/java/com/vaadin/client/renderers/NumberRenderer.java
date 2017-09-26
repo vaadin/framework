@@ -25,8 +25,6 @@ import com.vaadin.client.widget.grid.RendererCellReference;
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @param <T>
- *            The number type to render.
  */
 public class NumberRenderer implements Renderer<Number> {
 

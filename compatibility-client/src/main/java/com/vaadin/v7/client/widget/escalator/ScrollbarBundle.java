@@ -205,7 +205,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see VerticalScrollbarBundle#getElement()
      */
-    public final static class VerticalScrollbarBundle extends ScrollbarBundle {
+    public static final class VerticalScrollbarBundle extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -275,7 +275,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle
+    public static final class HorizontalScrollbarBundle
             extends ScrollbarBundle {
 
         @Override
@@ -780,7 +780,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * In other words, this method checks whether the contents is larger than
      * can visually fit in the element.
      *
-     * @return <code>true</code> iff the scrollbar's handle is visible
+     * @return <code>true</code> if the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
         return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
@@ -878,7 +878,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Checks whether the scrollbar bundle is locked or not.
      *
-     * @return <code>true</code> iff the scrollbar bundle is locked
+     * @return <code>true</code> if the scrollbar bundle is locked
      */
     public boolean isLocked() {
         return isLocked;

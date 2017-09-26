@@ -116,9 +116,10 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends Field> T createDateField(Class<?> type,
             Class<T> fieldType) {
-        AbstractField field;
+        AbstractField<?> field;
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
             field = new InlineDateField();

@@ -461,10 +461,6 @@ public class DragAndDropWrapper extends CustomComponent
                 return file.getFileSize();
             }
 
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
-            }
-
             @Override
             public Exception getException() {
                 if (wrappedEvent instanceof StreamingErrorEvent) {

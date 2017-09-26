@@ -72,11 +72,6 @@ public class SelectionAndCursorPositionTest extends SingleBrowserTest {
                 getSelection(textField));
     }
 
-    private void clearSelection() {
-        setSelectionRange(0, 0);
-
-    }
-
     private WebElement getSelectAll() {
         return findElement(By.id(SelectionAndCursorPosition.SELECT_ALL_ID));
     }

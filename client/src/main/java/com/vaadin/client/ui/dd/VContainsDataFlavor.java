@@ -28,7 +28,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  */
 @Deprecated
 @AcceptCriterion(ContainsDataFlavor.class)
-final public class VContainsDataFlavor extends VAcceptCriterion {
+public final class VContainsDataFlavor extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

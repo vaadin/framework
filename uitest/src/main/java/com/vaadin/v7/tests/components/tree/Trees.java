@@ -1,7 +1,6 @@
 package com.vaadin.v7.tests.components.tree;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -57,8 +56,7 @@ public class Trees extends AbstractSelectTestCase<Tree>
                     .getContainerDataSource();
             int idx = 0;
 
-            for (Iterator<?> i = c.getItemIds().iterator(); i.hasNext();) {
-                Object id = i.next();
+            for (Object id : c.getItemIds()) {
                 if (id == itemId) {
                     if (idx % 2 == 1) {
                         return "bold";

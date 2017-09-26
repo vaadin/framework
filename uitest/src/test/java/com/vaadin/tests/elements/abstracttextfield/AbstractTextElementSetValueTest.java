@@ -33,7 +33,7 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  */
 public class AbstractTextElementSetValueTest extends MultiBrowserTest {
-    private final static String TYPED_STRING = "this is typed string";
+    private static final String TYPED_STRING = "this is typed string";
 
     @Before
     public void init() {

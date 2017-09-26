@@ -129,8 +129,6 @@ public class LocalDateTimeRenderer
      *            the format pattern to format the date with, not {@code null}
      * @param locale
      *            the locale to use, not {@code null}
-     * @param nullRepresentation
-     *            the textual representation of the {@code null} value
      *
      * @throws IllegalArgumentException
      *             if format pattern is null

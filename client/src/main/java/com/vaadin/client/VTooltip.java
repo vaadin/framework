@@ -123,8 +123,6 @@ public class VTooltip extends VOverlay {
     /**
      * Initialize the tooltip overlay for assistive devices.
      *
-     * @param info
-     *            with the content of the tooltip
      * @since 7.2.4
      */
     public void initializeAssistiveTooltips() {
