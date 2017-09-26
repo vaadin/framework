@@ -209,19 +209,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         }
     }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-
-        String timeZoneJSON;
-        if (getZoneId() != null) {
-            timeZoneJSON = TimeZoneUtil.toJSON(getZoneId(), getLocale());
-        } else {
-            timeZoneJSON = null;
-        }
-        getState().timeZoneJSON = timeZoneJSON;
-    }
-
     /*
      * Invoked when a variable of the component changes. Don't add a JavaDoc
      * comment here, we use the default documentation from implemented
@@ -470,8 +457,18 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @since
      */
     public void setZoneId(ZoneId zoneId) {
+        if (zoneId != this.zoneId
+                || (zoneId != null && !zoneId.equals(this.zoneId))) {
+            String timeZoneJSON;
+            if (getZoneId() != null) {
+                timeZoneJSON = TimeZoneUtil.toJSON(zoneId, getLocale());
+            } else {
+                timeZoneJSON = null;
+            }
+            getState().timeZoneJSON = timeZoneJSON;
+            markAsDirty();
+        }
         this.zoneId = zoneId;
-        markAsDirty();
     }
 
     /**

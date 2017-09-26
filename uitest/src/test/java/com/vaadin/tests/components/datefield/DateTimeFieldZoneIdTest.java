@@ -25,25 +25,24 @@ import static org.junit.Assert.assertTrue;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.AbstractDateFieldElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
+import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
-import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
 
     private static TimeZone defaultTimeZone;
+    private static LocalDateTime THIRTY_OF_JULY = INITIAL_DATE_TIME
+            .plus(6, MONTHS).withDayOfMonth(30);
 
     @BeforeClass
     public static void init() {
@@ -60,36 +59,30 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
     public void defaultDisplayName() {
         openTestURL();
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
-        openDatePicker(dateField);
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
+        dateField.openPopup();
 
         LocalDate initialDate = INITIAL_DATE_TIME.toLocalDate();
         assertEndsWith(dateField, getUTCString(initialDate));
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
-        LocalDate thirtyOfJuly = initialDate.plus(6, MONTHS).withDayOfMonth(30);
-
-        assertEndsWith(dateField, getUTCString(thirtyOfJuly));
+        assertEndsWith(dateField, getUTCString(THIRTY_OF_JULY.toLocalDate()));
     }
 
     @Test
     public void zoneIdTokyo() {
         openTestURL();
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
 
         setZoneId("Asia/Tokyo");
 
-        openDatePicker(dateField);
+        dateField.openPopup();
 
         assertEndsWith(dateField, "JST");
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
         assertEndsWith(dateField, "JST");
     }
@@ -98,17 +91,15 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
     public void zoneIdBerlin() {
         openTestURL();
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
 
         setZoneId("Europe/Berlin");
 
-        openDatePicker(dateField);
+        dateField.openPopup();
 
         assertEndsWith(dateField, "CET");
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
         assertEndsWith(dateField, "CEST");
     }
@@ -119,37 +110,31 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
 
         setLocale("de");
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
-        openDatePicker(dateField);
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
+        dateField.openPopup();
 
-        LocalDate initialDate = INITIAL_DATE_TIME.toLocalDate();
-        assertEndsWith(dateField, getUTCString(initialDate));
+        assertEndsWith(dateField,
+                getUTCString(INITIAL_DATE_TIME.toLocalDate()));
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
-        LocalDate thirtyOfJuly = initialDate.plus(6, MONTHS).withDayOfMonth(30);
-
-        assertEndsWith(dateField, getUTCString(thirtyOfJuly));
+        assertEndsWith(dateField, getUTCString(THIRTY_OF_JULY.toLocalDate()));
     }
 
     @Test
     public void zoneIdBeirutLocaleGerman() {
         openTestURL();
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
 
         setZoneId("Asia/Beirut");
         setLocale("de");
 
-        openDatePicker(dateField);
+        dateField.openPopup();
 
         assertEndsWith(dateField, "OEZ");
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
         assertEndsWith(dateField, "OESZ");
     }
@@ -158,8 +143,7 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
     public void zInQuotes() {
         openTestURL();
 
-        AbstractDateFieldElement dateField = $(AbstractDateFieldElement.class)
-                .first();
+        DateTimeFieldElement dateField = $(DateTimeFieldElement.class).first();
 
         setZoneId("Asia/Tokyo");
 
@@ -167,44 +151,18 @@ public class DateTimeFieldZoneIdTest extends MultiBrowserTest {
                 .id(PATTERN_ID);
         patternField.setValue("dd MMM yyyy - hh:mm:ss a 'z' z");
 
-        openDatePicker(dateField);
+        dateField.openPopup();
 
         assertEndsWith(dateField, "z JST");
 
-        goToNextMonth(6);
-        selectDay(30);
+        dateField.setDateTime(THIRTY_OF_JULY);
 
         assertEndsWith(dateField, "z JST");
     }
 
-    private void selectDay(int day) {
-        for (WebElement e : findElements(
-                By.className("v-datefield-calendarpanel-day"))) {
-            if (e.getText().equals(String.valueOf(day))) {
-                e.click();
-                break;
-            }
-        }
-    }
-
-    private void openDatePicker(AbstractDateFieldElement dateField) {
-        dateField.findElement(By.tagName("button")).click();
-    }
-
-    private void assertEndsWith(AbstractElement id, String suffix) {
-        String text = id.findElement(By.xpath("./input")).getAttribute("value");
+    private void assertEndsWith(DateTimeFieldElement element, String suffix) {
+        String text = element.getValue();
         assertTrue(text + " should end with " + suffix, text.endsWith(suffix));
-    }
-
-    private void goToNextMonth(int monthCount) {
-        WebElement nextMonthButton = driver
-                .findElement(By.className("v-button-nextmonth"));
-
-        Actions actions = new Actions(driver);
-        for (int i = 0; i < monthCount; i++) {
-            actions.click(nextMonthButton);
-        }
-        actions.perform();
     }
 
     /**

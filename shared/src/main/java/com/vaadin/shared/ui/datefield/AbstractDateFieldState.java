@@ -50,6 +50,8 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * The JSON used to construct a TimeZone on the client side, can be
      * {@code null}.
+     * 
+     * @since
      */
     public String timeZoneJSON;
 }

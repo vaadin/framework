@@ -41,19 +41,30 @@ import elemental.json.impl.JsonUtil;
  */
 public final class TimeZoneUtil implements Serializable {
 
+    /**
+     * The start year used to send the time zone transition dates.
+     */
+    private static final int STARTING_YEAR = 1980;
+
+    /**
+     * Till how many years from now, should we send the time zone transition
+     * dates.
+     */
+    private static final int YEARS_FROM_NOW = 20;
+
     private TimeZoneUtil() {
         // Static utils only
     }
 
     /**
      * Returns a JSON string of the specified {@code zoneId} and {@link Locale},
-     * which is used in 
+     * which is used in
      * {@link com.google.gwt.i18n.client.TimeZone#createTimeZone(String)}.
      *
      * @param zoneId
      *            the {@link ZoneId} to get the daylight transitions from
      * @param locale
-     *            the locale the locale to translate the name
+     *            the locale used to determine the short name of the time zone
      *
      * @return the encoded string
      */
@@ -64,35 +75,39 @@ public final class TimeZoneUtil implements Serializable {
         ZoneRules rules = zoneId.getRules();
         TimeZone timeZone = TimeZone.getTimeZone(zoneId);
         List<Long> transtionsList = new ArrayList<>();
-        
+
         TimeZoneInfo info = new TimeZoneInfo();
-        
-        int endYear = LocalDate.now().getYear() + 20;
+
+        int endYear = LocalDate.now().getYear() + YEARS_FROM_NOW;
         if (timeZone.useDaylightTime()) {
-            for (int year = 1980; year <= endYear; year++) {
-                ZonedDateTime i = LocalDateTime.of(year, 1, 1, 0, 0).atZone(zoneId);
+            for (int year = STARTING_YEAR; year <= endYear; year++) {
+                ZonedDateTime i = LocalDateTime.of(year, 1, 1, 0, 0)
+                        .atZone(zoneId);
                 while (true) {
-                    ZoneOffsetTransition t = rules.nextTransition(i.toInstant());
+                    ZoneOffsetTransition t = rules
+                            .nextTransition(i.toInstant());
                     i = t.getInstant().atZone(zoneId);
                     if (i.toLocalDate().getYear() != year) {
                         break;
                     }
-                    long epocHours = Duration.ofSeconds(t.getInstant().getEpochSecond()).toHours();
+                    long epocHours = Duration
+                            .ofSeconds(t.getInstant().getEpochSecond())
+                            .toHours();
                     long duration = Math.max(t.getDuration().toMinutes(), 0);
                     transtionsList.add(epocHours);
                     transtionsList.add(duration);
-                };
+                }
             }
         }
         info.id = zoneId.getId();
         info.transitions = transtionsList.stream().mapToLong(l -> l).toArray();
-        info.std_offset = (int) Duration.ofMillis(timeZone.getRawOffset()).toMinutes();
+        info.std_offset = (int) Duration.ofMillis(timeZone.getRawOffset())
+                .toMinutes();
         info.names = new String[] {
                 timeZone.getDisplayName(false, TimeZone.SHORT, locale),
                 timeZone.getDisplayName(false, TimeZone.LONG, locale),
                 timeZone.getDisplayName(true, TimeZone.SHORT, locale),
-                timeZone.getDisplayName(true, TimeZone.LONG, locale)
-        };
+                timeZone.getDisplayName(true, TimeZone.LONG, locale) };
 
         return stringify(info);
     }

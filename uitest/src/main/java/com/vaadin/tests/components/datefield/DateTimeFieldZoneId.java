@@ -20,7 +20,8 @@ public class DateTimeFieldZoneId extends AbstractTestUI {
     static final String LOCALE_ID = "localeId";
     static final String PATTERN_ID = "patternId";
 
-    static final LocalDateTime INITIAL_DATE_TIME = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 0);
+    static final LocalDateTime INITIAL_DATE_TIME = LocalDateTime.of(2017,
+            Month.JANUARY, 1, 0, 0);
     private static final String FORMAT_PATTERN = "dd MMM yyyy - hh:mm:ss a z";
 
     @Override
@@ -40,10 +41,11 @@ public class DateTimeFieldZoneId extends AbstractTestUI {
         Set<String> zoneIdSet = new TreeSet<>(ZoneId.getAvailableZoneIds());
         zoneIdComboBox.setItems(zoneIdSet);
         addComponent(zoneIdComboBox);
-    
+
         final ComboBox<Locale> localeIdComboBox = new ComboBox<>();
         localeIdComboBox.setId(LOCALE_ID);
-        Stream<Locale> localeStream = Stream.of(Locale.getAvailableLocales()).sorted((l1, l2) -> l1.toString().compareTo(l2.toString()));
+        Stream<Locale> localeStream = Stream.of(Locale.getAvailableLocales())
+                .sorted((l1, l2) -> l1.toString().compareTo(l2.toString()));
         localeIdComboBox.setItems(localeStream);
         addComponent(localeIdComboBox);
 
@@ -57,21 +59,20 @@ public class DateTimeFieldZoneId extends AbstractTestUI {
         dateTimeField.setDateFormat(FORMAT_PATTERN);
         addComponent(dateTimeField);
 
-        zoneIdComboBox.addValueChangeListener(event -> { 
+        zoneIdComboBox.addValueChangeListener(event -> {
             String value = event.getValue();
             if (value == null) {
                 dateTimeField.setZoneId(null);
-            }
-            else {
+            } else {
                 dateTimeField.setZoneId(ZoneId.of(value));
             }
         });
-        
-        localeIdComboBox.addValueChangeListener(event ->
-            dateTimeField.setLocale(event.getValue()));
-        
-        patternTextField.addValueChangeListener(event ->
-            dateTimeField.setDateFormat(event.getValue()));
+
+        localeIdComboBox.addValueChangeListener(
+                event -> dateTimeField.setLocale(event.getValue()));
+
+        patternTextField.addValueChangeListener(
+                event -> dateTimeField.setDateFormat(event.getValue()));
     }
 
 }
