@@ -43,7 +43,6 @@ class itself, which is a [interfacename]#SingleComponentContainer#.
 
 [source, java]
 ----
-@PushStateNavigation
 public class NavigatorUI extends UI {
     Navigator navigator;
     protected static final String MAINVIEW = "main";
@@ -64,7 +63,7 @@ public class NavigatorUI extends UI {
 
 The [classname]#Navigator# automatically parses the URI to identify and show the [interfacename]#View#. The browser navigation back and forward are also handled by it.
 
-If the old URI fragment based navigation should be used, the [classname]#PushStateNavigation# annotation can be removed from the [classname]#UI#. This will use the default navigation.
+Starting from [literal]#++8.2.0.alpha2++# there is also PushState based navigation. This new way for the Navigator to manage URLs is described here as well. It is still under development so changes are expected. To enable this feature, add the [classname]#PushStateNavigation# annotation to your UI.
 
 [[advanced.navigator.navigating.viewprovider]]
 === View Providers
