@@ -137,9 +137,9 @@ public class Binder<BEAN> implements Serializable {
         public BindingValidationStatusHandler getValidationStatusHandler();
 
         /**
-         * Unbinds the binding from its respective {@code Binder}
-         * Removes any {@code ValueChangeListener} {@code Registration} from
-         * associated {@code HasValue}
+         * Unbinds the binding from its respective {@code Binder} Removes any
+         * {@code ValueChangeListener} {@code Registration} from associated
+         * {@code HasValue}
          *
          * @since 8.2
          */
@@ -571,7 +571,7 @@ public class Binder<BEAN> implements Serializable {
          * Contains all converters and validators chained together in the
          * correct order.
          */
-        private Converter<FIELDVALUE, TARGET> converterValidatorChain;
+        private Converter<FIELDVALUE, ?> converterValidatorChain;
 
         /**
          * Creates a new binding builder associated with the given field.
@@ -667,7 +667,7 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(validator, "validator cannot be null");
 
-            converterValidatorChain = converterValidatorChain
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) converterValidatorChain)
                     .chain(new ValidatorAsConverter<>(validator));
             return this;
         }
@@ -729,15 +729,14 @@ public class Binder<BEAN> implements Serializable {
             checkUnbound();
             Objects.requireNonNull(converter, "converter cannot be null");
 
-            // Mark this step to be bound to prevent modifying multiple times.
-            bound = true;
-
             if (resetNullRepresentation) {
                 getBinder().initialConverters.get(field).setIdentity();
             }
 
-            return getBinder().createBinding(field,
-                    converterValidatorChain.chain(converter), statusHandler);
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) converterValidatorChain)
+                    .chain(converter);
+
+            return (BindingBuilder<BEAN, NEWTARGET>) this;
         }
 
         /**
@@ -807,7 +806,7 @@ public class Binder<BEAN> implements Serializable {
             this.binder = builder.getBinder();
             this.field = builder.field;
             this.statusHandler = builder.statusHandler;
-            converterValidatorChain = builder.converterValidatorChain;
+            converterValidatorChain = ((Converter<FIELDVALUE, TARGET>) builder.converterValidatorChain);
 
             onValueChange = getField()
                     .addValueChangeListener(this::handleFieldValueChange);
@@ -842,7 +841,8 @@ public class Binder<BEAN> implements Serializable {
 
         @Override
         public BindingValidationStatus<TARGET> validate() {
-            Objects.requireNonNull(binder, "This Binding is no longer attached to a Binder");
+            Objects.requireNonNull(binder,
+                    "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
             getBinder().getValidationStatusHandler()
                     .statusChange(new BinderValidationStatus<>(getBinder(),
@@ -2525,7 +2525,8 @@ public class Binder<BEAN> implements Serializable {
      *
      * This method should just be used for internal cleanup.
      *
-     * @param binding The {@code Binding} to remove from the binding map
+     * @param binding
+     *            The {@code Binding} to remove from the binding map
      *
      * @since 8.2
      */

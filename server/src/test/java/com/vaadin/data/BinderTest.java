@@ -18,9 +18,10 @@ import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.Binder.BindingBuilder;
-import com.vaadin.data.converter.StringToDoubleConverter;
 import com.vaadin.data.converter.StringToIntegerConverter;
+import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NotEmptyValidator;
+import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
@@ -672,15 +673,41 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertArrayEquals(s1.toArray(), s2.toArray());
     }
 
-    /**
-     * Access to old step in binding chain that already has a converter applied
-     * to it is expected to prevent modifications.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void multiple_calls_to_same_binder_throws() {
-        BindingBuilder<Person, String> forField = binder.forField(nameField);
-        forField.withConverter(new StringToDoubleConverter("Failed"));
-        forField.bind(Person::getFirstName, Person::setFirstName);
+    @Test
+    public void multiple_calls_to_same_binding_builder() {
+        String stringLength = "String length failure";
+        String conversion = "Conversion failed";
+        String ageLimit = "Age not in valid range";
+        BindingValidationStatus validation;
+
+        binder = new Binder<>(Person.class);
+        BindingBuilder builder = binder.forField(ageField);
+        builder.withValidator(new StringLengthValidator(stringLength, 0, 3));
+        builder.withConverter(new StringToIntegerConverter(conversion));
+        builder.withValidator(new IntegerRangeValidator(ageLimit, 3, 150));
+        Binding<Person, ?> bind = builder.bind("age");
+
+        binder.setBean(item);
+
+        ageField.setValue("123123");
+        validation = bind.validate();
+        Assert.assertTrue(validation.isError());
+        Assert.assertEquals(stringLength, validation.getMessage().get());
+
+        ageField.setValue("age");
+        validation = bind.validate();
+        Assert.assertTrue(validation.isError());
+        Assert.assertEquals(conversion, validation.getMessage().get());
+
+        ageField.setValue("256");
+        validation = bind.validate();
+        Assert.assertTrue(validation.isError());
+        Assert.assertEquals(ageLimit, validation.getMessage().get());
+
+        ageField.setValue("30");
+        validation = bind.validate();
+        Assert.assertFalse(validation.isError());
+        Assert.assertEquals(30, item.getAge());
     }
 
     @Test
