@@ -371,4 +371,4 @@ navigator.addView(MAINVIEW, new MainView());
 
 See
 <<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator.pathparam,"Handling
-URI Fragment Path">> for a complete example.
+Path Parameters">> for a complete example.
