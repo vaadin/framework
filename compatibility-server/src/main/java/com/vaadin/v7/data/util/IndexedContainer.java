@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container;
@@ -79,24 +80,24 @@ public class IndexedContainer
     /**
      * Property ID to type mapping.
      */
-    private Hashtable<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
+    private Map<Object, Class<?>> types = new Hashtable<Object, Class<?>>();
 
     /**
      * Hash of Items, where each Item is implemented as a mapping from Property
      * ID to Property value.
      */
-    private Hashtable<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
+    private Map<Object, Map<Object, Object>> items = new Hashtable<Object, Map<Object, Object>>();
 
     /**
      * Set of properties that are read-only.
      */
-    private HashSet<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
+    private Set<Property<?>> readOnlyProperties = new HashSet<Property<?>>();
 
     /**
      * List of all Property value change event listeners listening all the
      * properties.
      */
-    private LinkedList<Property.ValueChangeListener> propertyValueChangeListeners = null;
+    private List<Property.ValueChangeListener> propertyValueChangeListeners = null;
 
     /**
      * Data structure containing all listeners interested in changes to single
@@ -104,7 +105,7 @@ public class IndexedContainer
      * hashtable that maps Item IDs to a linked list of listeners listening
      * Property identified by given Property ID and Item ID.
      */
-    private Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners;
+    private Map<Object, Map<Object, List<Property.ValueChangeListener>>> singlePropertyValueChangeListeners;
 
     private Map<Object, Object> defaultPropertyValues;
 
@@ -266,7 +267,7 @@ public class IndexedContainer
      * @param t
      *            data table of added item
      */
-    private void addDefaultValues(Hashtable<Object, Object> t) {
+    private void addDefaultValues(Map<Object, Object> t) {
         if (defaultPropertyValues != null) {
             for (Object key : defaultPropertyValues.keySet()) {
                 t.put(key, defaultPropertyValues.get(key));
@@ -389,7 +390,7 @@ public class IndexedContainer
 
     @Override
     protected void registerNewItem(int index, Object newItemId, Item item) {
-        Hashtable<Object, Object> t = new Hashtable<Object, Object>();
+        Map<Object, Object> t = new Hashtable<Object, Object>();
         items.put(newItemId, t);
         addDefaultValues(t);
     }
@@ -983,41 +984,39 @@ public class IndexedContainer
         final IndexedContainer nc = new IndexedContainer();
 
         // Clone the shallow properties
-        nc.setAllItemIds(getAllItemIds() != null
-                ? (ListSet<Object>) ((ListSet<Object>) getAllItemIds()).clone()
-                : null);
+        nc.setAllItemIds(
+                getAllItemIds() != null ? new ListSet<Object>(getAllItemIds())
+                        : null);
         nc.setItemSetChangeListeners(getItemSetChangeListeners() != null
                 ? new LinkedList<Container.ItemSetChangeListener>(
                         getItemSetChangeListeners())
                 : null);
         nc.propertyIds = propertyIds != null
-                ? (ArrayList<Object>) ((ArrayList<Object>) propertyIds).clone()
+                ? new ArrayList<Object>(propertyIds)
                 : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
                 ? new LinkedList<Container.PropertySetChangeListener>(
                         getPropertySetChangeListeners())
                 : null);
         nc.propertyValueChangeListeners = propertyValueChangeListeners != null
-                ? (LinkedList<Property.ValueChangeListener>) propertyValueChangeListeners
-                        .clone()
+                ? new LinkedList<Property.ValueChangeListener>(
+                        propertyValueChangeListeners)
                 : null;
         nc.readOnlyProperties = readOnlyProperties != null
-                ? (HashSet<Property<?>>) readOnlyProperties.clone()
+                ? new HashSet<Property<?>>(readOnlyProperties)
                 : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null
-                ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
-                        .clone()
+                ? new Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>(
+                        singlePropertyValueChangeListeners)
                 : null;
 
-        nc.types = types != null ? (Hashtable<Object, Class<?>>) types.clone()
+        nc.types = types != null ? new Hashtable<Object, Class<?>>(types)
                 : null;
 
-        nc.setFilters(
-                (HashSet<Filter>) ((HashSet<Filter>) getFilters()).clone());
+        nc.setFilters(new HashSet<Filter>(getFilters()));
 
         nc.setFilteredItemIds(getFilteredItemIds() == null ? null
-                : (ListSet<Object>) ((ListSet<Object>) getFilteredItemIds())
-                        .clone());
+                : new ListSet<Object>(getFilteredItemIds()));
 
         // Clone property-values
         if (items == null) {
