@@ -16,7 +16,6 @@
 package com.vaadin.ui.dnd.event;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;

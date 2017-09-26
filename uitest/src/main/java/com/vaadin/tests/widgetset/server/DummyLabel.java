@@ -23,7 +23,6 @@ import com.vaadin.ui.AbstractComponent;
  * Dummy component to cause {@link LabelState} to be used to test #8683
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class DummyLabel extends AbstractComponent {

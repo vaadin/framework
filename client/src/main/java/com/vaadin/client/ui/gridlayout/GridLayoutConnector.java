@@ -41,6 +41,8 @@ import com.vaadin.ui.GridLayout;
 public class GridLayoutConnector extends AbstractComponentContainerConnector
         implements DirectionalManagedLayout {
 
+    private static boolean fontLoadingCallbackRegistered = false;
+
     private LayoutClickEventHandler clickEventHandler = new LayoutClickEventHandler(
             this) {
 
@@ -64,7 +66,25 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
+
+        if (!fontLoadingCallbackRegistered) {
+            fontLoadingCallbackRegistered = true;
+            registerFontLoadedCallback();
+        }
     }
+
+    private static native void registerFontLoadedCallback()
+    /*-{
+        try {
+            if ($doc.fonts && $doc.fonts.status == 'loading') {
+                $doc.fonts.ready.then(function () {
+                    $wnd.vaadin.forceLayout();
+                });
+            }
+        } catch(err) {
+            // fonts ready promise not supported by the browser
+        }
+    }-*/;
 
     @Override
     public void onUnregister() {
@@ -151,7 +171,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
             cell.setComponent(componentConnector, getChildComponents());
         }
-
     }
 
     private void initSize() {

@@ -16,7 +16,6 @@
 package com.vaadin.data;
 
 import com.vaadin.event.SerializableEventListener;
-import com.vaadin.ui.AbstractComponent;
 
 /**
  * Handler for {@link BinderValidationStatus} changes.
@@ -26,7 +25,7 @@ import com.vaadin.ui.AbstractComponent;
  * handling.
  * <p>
  * The default handler will show
- * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
+ * {@link com.vaadin.ui.AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage) an
  * error message} for failed field validations. For bean level validation errors
  * it will display the first error message in
  * {@link Binder#setStatusLabel(com.vaadin.ui.Label) status label}, if one has

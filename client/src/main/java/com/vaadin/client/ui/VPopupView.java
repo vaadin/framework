@@ -433,7 +433,7 @@ public class VPopupView extends HTML
      * Checks whether there are operations pending for this widget that must be
      * executed before reaching a steady state.
      *
-     * @returns <code>true</code> iff there are operations pending which must be
+     * @returns <code>true</code> if there are operations pending which must be
      *          executed before reaching a steady state
      * @since 7.3.4
      */

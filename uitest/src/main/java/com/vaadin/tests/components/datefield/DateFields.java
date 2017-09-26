@@ -13,7 +13,7 @@ import com.vaadin.ui.DateField;
 @SuppressWarnings("serial")
 public class DateFields extends ComponentTestCase<DateField> {
 
-    private static final Locale[] LOCALES = new Locale[] { Locale.US,
+    private static final Locale[] LOCALES = { Locale.US,
             Locale.TAIWAN, new Locale("fi", "FI") };
 
     @Override

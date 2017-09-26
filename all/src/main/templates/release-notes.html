@@ -101,10 +101,12 @@
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
 
-        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>        
+        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>
         <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
         <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
         <li><tt>DataCommunicator</tt> method <tt>getDataProviderSize</tt> is now <tt>public</tt>, not <tt>protected</tt>.</li>
+        <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
+        <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
         <li><tt>Notification</tt> method <tt>show</tt> returns <tt>Notification</tt>, instead of <tt>void</tt>.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>

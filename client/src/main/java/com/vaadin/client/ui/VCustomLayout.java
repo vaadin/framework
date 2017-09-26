@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -232,7 +231,7 @@ public class VCustomLayout extends ComplexPanel {
     public static native void eval(String script)
     /*-{
       try {
-     	 if (script != null)
+          if (script != null)
       eval("{ var document = $doc; var window = $wnd; "+ script + "}");
       } catch (e) {
       }
@@ -397,15 +396,15 @@ public class VCustomLayout extends ComplexPanel {
 
     private native void detachResizedFunction(Element element)
     /*-{
-    	element.notifyChildrenOfSizeChange = null;
+        element.notifyChildrenOfSizeChange = null;
     }-*/;
 
     private native void publishResizedFunction(Element element)
     /*-{
-    	var self = this;
-    	element.notifyChildrenOfSizeChange = $entry(function() {
-    		self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
-    	});
+        var self = this;
+        element.notifyChildrenOfSizeChange = $entry(function() {
+            self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
+        });
     }-*/;
 
     /**
@@ -427,16 +426,16 @@ public class VCustomLayout extends ComplexPanel {
      */
     public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
-    	if(el && el.iLayoutJS) {
-    		try {
-    			el.iLayoutJS();
-    			return true;
-    		} catch (e) {
-    			return false;
-    		}
-    	} else {
-    		return false;
-    	}
+        if(el && el.iLayoutJS) {
+            try {
+                el.iLayoutJS();
+                return true;
+            } catch (e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }-*/;
 
     @Override

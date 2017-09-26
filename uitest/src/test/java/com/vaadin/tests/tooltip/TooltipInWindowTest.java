@@ -45,10 +45,6 @@ public class TooltipInWindowTest extends TooltipTest {
         clearTooltip();
     }
 
-    private WebElement getTooltipContainerElement() {
-        return getDriver().findElement(By.className("v-tooltip"));
-    }
-
     private void ensureVisibleTooltipPositionedCorrectly(WebElement textfield)
             throws InterruptedException {
         int tooltipX = getTooltip().getLocation().getX();

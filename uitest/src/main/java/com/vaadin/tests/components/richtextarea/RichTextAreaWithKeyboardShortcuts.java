@@ -19,7 +19,7 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
     private Handler actionHandler = new Handler() {
 
         ShortcutAction save = new ShortcutAction("^Save");
-        private Action[] actions = new Action[] { save };
+        private Action[] actions = { save };
 
         @Override
         public void handleAction(Action action, Object sender, Object target) {

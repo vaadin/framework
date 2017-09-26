@@ -150,10 +150,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 parent = new Hashtable<Object, Object>();
                 children = new Hashtable<Object, LinkedList<Object>>();
                 roots = new LinkedHashSet<Object>(container.getItemIds());
-            }
-
-            // Check that the hierarchy is up-to-date
-            else {
+            } else {
+                // Check that the hierarchy is up-to-date
 
                 // ensure order of root and child lists is same as in wrapped
                 // container

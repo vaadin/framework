@@ -23,7 +23,6 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
@@ -329,8 +328,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      *         key of the payload to be transferred
      * @param value
      *         value of the payload to be transferred
-     * @see DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
      * int)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, int)
      */
     public void setPayload(String key, int value) {
         setPayload(key, String.valueOf(value), Payload.ValueType.INTEGER);
@@ -350,8 +350,9 @@ public class DragSourceExtension<T extends AbstractComponent>
      *         key of the payload to be transferred
      * @param value
      *         value of the payload to be transferred
-     * @see DropTargetExtension#setDropCriterion(String, ComparisonOperator,
+     * @see DropTargetExtension#setDropCriterion(String, com.vaadin.shared.ui.dnd.criteria.ComparisonOperator,
      * double)
+     *      DropTargetExtension#setDropCriterion(String, ComparisonOperator, double)
      */
     public void setPayload(String key, double value) {
         setPayload(key, String.valueOf(value), Payload.ValueType.DOUBLE);

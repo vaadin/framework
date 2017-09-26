@@ -45,10 +45,10 @@ public class BeanItemContainerSortTest {
         }
     }
 
-    String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko",
+    String[] names = { "Antti", "Ville", "Sirkka", "Jaakko",
             "Pekka", "John" };
-    int[] ages = new int[] { 10, 20, 50, 12, 64, 67 };
-    String[] sortedByAge = new String[] { names[0], names[3], names[1],
+    int[] ages = { 10, 20, 50, 12, 64, 67 };
+    String[] sortedByAge = { names[0], names[3], names[1],
             names[2], names[4], names[5] };
 
     public BeanItemContainer<Person> getContainer() {

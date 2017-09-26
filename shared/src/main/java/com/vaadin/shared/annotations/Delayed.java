@@ -30,7 +30,6 @@ import com.vaadin.shared.communication.ServerRpc;
  * as @Delayed has been invoked.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Target(ElementType.METHOD)

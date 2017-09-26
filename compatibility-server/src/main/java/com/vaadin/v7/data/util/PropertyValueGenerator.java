@@ -16,7 +16,6 @@
 package com.vaadin.v7.data.util;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.DataProvider;

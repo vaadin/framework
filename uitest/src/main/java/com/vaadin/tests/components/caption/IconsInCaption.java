@@ -16,7 +16,7 @@ public class IconsInCaption extends TestBase {
     private static final String TYPE_EMBEDDED = "Embedded";
     private static final String TYPE_CAPTION = "In caption";
 
-    private static final String[] icons = new String[] { "arrow-down.png",
+    private static final String[] icons = { "arrow-down.png",
             "arrow-left.png", "arrow-right.png", "arrow-up.png",
             "attention.png", "calendar.png", "cancel.png", "document.png",
             "document-add.png", "document-delete.png", "document-doc.png",
@@ -27,7 +27,7 @@ public class IconsInCaption extends TestBase {
             "lock.png", "note.png", "ok.png", "reload.png", "settings.png",
             "trash.png", "trash-full.png", "user.png", "users.png" };
 
-    private static final String[] sizes = new String[] { "16", "32", "64" };
+    private static final String[] sizes = { "16", "32", "64" };
 
     private ComponentContainer container = new VerticalLayout();
 

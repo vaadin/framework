@@ -448,7 +448,7 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     }
 
-    protected String[] acceptedTypes = new String[] { "Text", "Url",
+    protected String[] acceptedTypes = { "Text", "Url",
             "text/html", "text/plain", "text/rtf" };
 
     private boolean isAcceptedType(String type) {

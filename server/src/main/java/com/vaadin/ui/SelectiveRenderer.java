@@ -21,7 +21,6 @@ package com.vaadin.ui;
  * client side.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0
  *
  */

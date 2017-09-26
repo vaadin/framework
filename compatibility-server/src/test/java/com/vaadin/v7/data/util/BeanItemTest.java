@@ -373,7 +373,7 @@ public class BeanItemTest {
     }
 
     @Test
-    public void testOverridenGenericMethods() {
+    public void testOverriddenGenericMethods() {
         BeanItem<SubClass> item = new BeanItem<SubClass>(new SubClass());
 
         Property<?> property = item.getItemProperty("property");

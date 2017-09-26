@@ -257,10 +257,6 @@ public final class ColumnProperty implements Property {
 
     // LegacyPropertyHelper has been removed in Vaadin 8
 
-    private static Logger getLogger() {
-        return Logger.getLogger(ColumnProperty.class.getName());
-    }
-
     public void setOwner(RowItem owner) {
         if (owner == null) {
             throw new IllegalArgumentException("Owner can not be set to null.");

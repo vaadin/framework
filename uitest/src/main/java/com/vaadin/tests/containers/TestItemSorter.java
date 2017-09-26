@@ -54,7 +54,7 @@ public class TestItemSorter extends TestBase {
 
     private static void populateContainer(IndexedContainer container) {
         container.removeAllItems();
-        String[] strings = new String[] { "Text 1", "Text 2", "true", "false",
+        String[] strings = { "Text 1", "Text 2", "true", "false",
                 "Caption 1", "Caption 2" };
         for (String s : strings) {
             Object id = container.addItem();

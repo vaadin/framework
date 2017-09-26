@@ -94,9 +94,9 @@ public class ComponentElementGetValue extends AbstractTestUI {
     private void addMultiSelectComponents() {
 
         List<MultiSelect<String>> components = new ArrayList<>();
-        components.add(new ListSelect("", createData()));
-        components.add(new CheckBoxGroup("", createData()));
-        components.add(new TwinColSelect("", createData()));
+        components.add(new ListSelect<>("", createData()));
+        components.add(new CheckBoxGroup<>("", createData()));
+        components.add(new TwinColSelect<>("", createData()));
         components.forEach(c -> {
             c.select(TEST_STRING_VALUE);
             c.addValueChangeListener(event -> {

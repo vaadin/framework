@@ -406,10 +406,10 @@ public class LayoutDependencyTree {
     private final FastStringMap<LayoutDependency>[] dependenciesInDirection = new FastStringMap[] {
             FastStringMap.create(), FastStringMap.create() };
 
-    private final FastStringSet[] measureQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] measureQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
-    private final FastStringSet[] layoutQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] layoutQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
     private final ApplicationConnection connection;

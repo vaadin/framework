@@ -436,7 +436,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -452,9 +452,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
-     *            True iff if the read-only check should be ignored
+     *            True if the read-only check should be ignored
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -996,7 +996,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
      *
-     * @return true iff the invalid values are allowed.
+     * @return true if invalid values are allowed.
      * @see Validatable#isInvalidAllowed()
      */
     @Override
@@ -1766,16 +1766,12 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = (AbstractField) designContext
+        AbstractField<?> def = designContext
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,
                 super.isReadOnly(), def.isReadOnly(), Boolean.class,
                 designContext);
-    }
-
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractField.class.getName());
     }
 }

@@ -434,8 +434,8 @@ public class VButton extends FocusWidget implements ClickHandler {
     /*-{
         // THIS METHOD IS ONLY USED FOR INTERNET EXPLORER, IT DOESN'T WORK WITH OTHERS
 
-    	var convertToPixel = function(elem, value) {
-    	    // From the awesome hack by Dean Edwards
+        var convertToPixel = function(elem, value) {
+            // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
 
             // Remember the original values
@@ -451,9 +451,9 @@ public class VButton extends FocusWidget implements ClickHandler {
             elem.runtimeStyle.left = rsLeft;
 
             return ret;
-    	}
+        }
 
-     	var ret = 0;
+         var ret = 0;
 
         var sides = ["Right","Left"];
         for(var i=0; i<2; i++) {
@@ -478,7 +478,7 @@ public class VButton extends FocusWidget implements ClickHandler {
             }
         }
 
-    	return ret;
+        return ret;
     }-*/;
 
 }

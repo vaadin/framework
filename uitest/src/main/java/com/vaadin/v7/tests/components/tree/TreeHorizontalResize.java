@@ -1,7 +1,5 @@
 package com.vaadin.v7.tests.components.tree;
 
-import java.util.Iterator;
-
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Panel;

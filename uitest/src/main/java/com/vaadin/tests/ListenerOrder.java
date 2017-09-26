@@ -1,7 +1,6 @@
 package com.vaadin.tests;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

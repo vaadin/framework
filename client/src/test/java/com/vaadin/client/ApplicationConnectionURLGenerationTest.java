@@ -8,7 +8,7 @@ import com.vaadin.shared.util.SharedUtil;
 
 public class ApplicationConnectionURLGenerationTest {
 
-    private static final String[] URIS = new String[] {
+    private static final String[] URIS = {
             "http://demo.vaadin.com/", //
             "https://demo.vaadin.com/", "http://demo.vaadin.com/foo",
             "http://demo.vaadin.com/foo?f", "http://demo.vaadin.com/foo?f=1",
@@ -20,7 +20,7 @@ public class ApplicationConnectionURLGenerationTest {
             "http://vaadin.com/directory?p_p_id=Directory_WAR_Directory&p_p_lifecycle=2&p_p_state=normal&p_p_mode=view&p_p_resource_id=UIDL&p_p_cacheability=cacheLevelPage&p_p_col_id=row-1&p_p_col_count=1",
 
     };
-    private static final String[] URIS_WITH_ABCD_PARAM = new String[] {
+    private static final String[] URIS_WITH_ABCD_PARAM = {
             "http://demo.vaadin.com/?a=b&c=d",
             "https://demo.vaadin.com/?a=b&c=d",
             "http://demo.vaadin.com/foo?a=b&c=d",
@@ -33,7 +33,7 @@ public class ApplicationConnectionURLGenerationTest {
 
     };
 
-    private static final String[] URIS_WITH_ABCD_PARAM_AND_FRAGMENT = new String[] {
+    private static final String[] URIS_WITH_ABCD_PARAM_AND_FRAGMENT = {
             "http://demo.vaadin.com/?a=b&c=d#fragment",
             "https://demo.vaadin.com/?a=b&c=d#fragment",
             "http://demo.vaadin.com/foo?a=b&c=d#fragment",
