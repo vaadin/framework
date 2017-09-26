@@ -33,7 +33,8 @@ class SimpleResult<R> implements Result<R> {
 
     private final R value;
     private final String message;
-
+    private final Severity severity;
+    
     /**
      * Creates a new {@link Result} instance using {@code value} for a non error
      * {@link Result} and {@code message} for an error {@link Result}.
@@ -48,10 +49,30 @@ class SimpleResult<R> implements Result<R> {
      */
     SimpleResult(R value, String message) {
         // value != null => message == null
+        this(value, message, message == null ? Severity.OK :Severity.ERROR);
+    }
+
+    /**
+     * Creates a new {@link Result} instance using {@code value} for a non error
+     * {@link Result} and {@code message} for an error {@link Result}.
+     * <p>
+     * If {@code message} is null then {@code value} is ignored and result is an
+     * error.
+     *
+     * @param value
+     *            the value of the result, may be {@code null}
+     * @param message
+     *            the error message of the result, may be {@code null}
+     * @param severity
+     *            the severity of the error message of the result
+     */
+    SimpleResult(R value, String message, Severity severity) {
+        // value != null => message == null
         assert value == null
                 || message == null : "Message must be null if value is provided";
         this.value = value;
         this.message = message;
+        this.severity = severity;
     }
 
     @Override
@@ -83,10 +104,25 @@ class SimpleResult<R> implements Result<R> {
     public Optional<String> getMessage() {
         return Optional.ofNullable(message);
     }
+    
+    @Override
+    public boolean isInfo() {
+        return Severity.INFO.equals(severity);
+    }
+    
+    @Override
+    public boolean isWarn() {
+        return Severity.WARN.equals(severity);
+    }
 
     @Override
     public boolean isError() {
         return message != null;
+    }
+    
+    @Override
+    public Severity getSeverity() {
+        return severity;
     }
 
     @Override

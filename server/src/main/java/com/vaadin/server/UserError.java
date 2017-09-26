@@ -13,12 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package com.vaadin.server;
 
 /**
- * <code>UserError</code> is a controlled error occurred in application. User
- * errors are occur in normal usage of the application and guide the user.
+ * <code>UserError</code> is a controlled error occurred in application. User errors are occur in normal usage of the application and guide the user.
  *
  * @author Vaadin Ltd.
  * @since 3.0
@@ -27,51 +25,57 @@ package com.vaadin.server;
 public class UserError extends AbstractErrorMessage {
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead Â  Â 
      */
     @Deprecated
-    public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
+    public static final AbstractErrorMessage.ContentMode CONTENT_TEXT = AbstractErrorMessage.ContentMode.TEXT;
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#PREFORMATTED} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#PREFORMATTED} instead Â  Â 
      */
     @Deprecated
-    public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
+    public static final AbstractErrorMessage.ContentMode CONTENT_PREFORMATTED = AbstractErrorMessage.ContentMode.PREFORMATTED;
 
     /**
-     * @deprecated As of 7.0, use {@link ContentMode#HTML} instead    
+     * @deprecated As of 7.0, use {@link ContentMode#HTML} instead Â  Â 
      */
     @Deprecated
-    public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
+    public static final AbstractErrorMessage.ContentMode CONTENT_XHTML = AbstractErrorMessage.ContentMode.HTML;
 
     /**
      * Creates a textual error message of level ERROR.
      *
-     * @param textErrorMessage
-     *            the text of the error message.
+     * @param textErrorMessage the text of the error message.
      */
     public UserError(String textErrorMessage) {
         super(textErrorMessage);
     }
 
     /**
+     * Creates an error message with level.
+     *
+     * @param message the error message.
+     * @param errorLevel the level of error.
+     */
+    public UserError(String message, ErrorMessage.ErrorLevel errorLevel) {
+        this(message, null, errorLevel);
+    }
+
+    /**
      * Creates an error message with level and content mode.
      *
-     * @param message
-     *            the error message.
-     * @param contentMode
-     *            the content Mode.
-     * @param errorLevel
-     *            the level of error.
+     * @param message the error message.
+     * @param contentMode the content Mode.
+     * @param errorLevel the level of error.
      */
-    public UserError(String message, ContentMode contentMode,
-            ErrorLevel errorLevel) {
+    public UserError(String message, AbstractErrorMessage.ContentMode contentMode,
+            ErrorMessage.ErrorLevel errorLevel) {
         super(message);
         if (contentMode == null) {
-            contentMode = ContentMode.TEXT;
+            contentMode = AbstractErrorMessage.ContentMode.TEXT;
         }
         if (errorLevel == null) {
-            errorLevel = ErrorLevel.ERROR;
+            errorLevel = ErrorMessage.ErrorLevel.ERROR;
         }
         setMode(contentMode);
         setErrorLevel(errorLevel);

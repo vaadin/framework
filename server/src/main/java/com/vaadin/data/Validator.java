@@ -107,6 +107,39 @@ public interface Validator<T>
     }
 
     /**
+     * Builds a validator out of a conditional function and an error message. If
+     * the function returns true, the validator returns {@code Result.ok()}; if
+     * it returns false or throws an exception,
+     * {@link ValidationResult#error(String)} is returned with the given
+     * message.
+     * <p>
+     * For instance, the following validator checks if a number is between 0 and
+     * 10, inclusive:
+     *
+     * <pre>
+     * Validator&lt;Integer&gt; v = Validator.from(num -&gt; num &gt;= 0 && num &lt;= 10,
+     *         "number must be between 0 and 10");
+     * </pre>
+     *
+     * @param <T>
+     *            the value type
+     * @param guard
+     *            the function used to validate, not null
+     * @param errorMessage
+     *            the message returned if validation fails, not null
+     * @param severity
+     *            the severity of the failed validation.
+     * @return the new validator using the function
+     * @since 8.2
+     */
+    public static <T> Validator<T> from(SerializablePredicate<T> guard,
+            String errorMessage, Severity severity) {
+        Objects.requireNonNull(guard, "guard cannot be null");
+        Objects.requireNonNull(errorMessage, "errorMessage cannot be null");
+        return from(guard, ctx -> errorMessage, severity);
+    }
+
+    /**
      * Builds a validator out of a conditional function and an error message
      * provider. If the function returns true, the validator returns
      * {@code Result.ok()}; if it returns false or throws an exception,
@@ -119,9 +152,31 @@ public interface Validator<T>
      * @param errorMessageProvider
      *            the provider to generate error messages, not null
      * @return the new validator using the function
+     */    
+    public static <T> Validator<T> from(SerializablePredicate<T> guard, 
+            ErrorMessageProvider errorMessageProvider) {
+        return from(guard, errorMessageProvider, Severity.ERROR);
+    }
+    
+    /**
+     * Builds a validator out of a conditional function and an error message
+     * provider. If the function returns true, the validator returns
+     * {@code Result.ok()}; if it returns false or throws an exception,
+     * {@code Result.error()} is returned with the message from the provider.
+     *
+     * @param <T>
+     *            the value type
+     * @param guard
+     *            the function used to validate, not null
+     * @param errorMessageProvider
+     *            the provider to generate error messages, not null
+     * @param severity
+     *            the severity of the failed validation.
+     * @return the new validator using the function
+     * @since 8.2
      */
     public static <T> Validator<T> from(SerializablePredicate<T> guard,
-            ErrorMessageProvider errorMessageProvider) {
+            ErrorMessageProvider errorMessageProvider, Severity severity) {
         Objects.requireNonNull(guard, "guard cannot be null");
         Objects.requireNonNull(errorMessageProvider,
                 "errorMessageProvider cannot be null");
