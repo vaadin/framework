@@ -1870,6 +1870,8 @@ public class WidgetUtil {
 
     /**
      * Utility methods for displaying error message on components.
+     *
+     * @since 8.2
      */
     public static class ErrorUtil {
 

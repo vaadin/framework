@@ -105,6 +105,7 @@ public class TooltipInfo {
      *
      * @deprecated use {@link #TooltipInfo(String, ContentMode, String, Object,
      *             ErrorLevel)} instead
+     * @since 8.2
      */
     @Deprecated
     public TooltipInfo(String tooltip, String errorMessage, Object identifier,

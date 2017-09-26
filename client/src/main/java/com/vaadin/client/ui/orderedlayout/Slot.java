@@ -522,6 +522,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
      * @param captionAsHtml
      *            true if the caption should be rendered as HTML, false
      *            otherwise
+     * @since 8.2
      */
     public void setCaption(String captionText, Icon icon, List<String> styles,
             String error, ErrorLevel errorLevel, boolean showError,
