@@ -15,10 +15,41 @@
  */
 package com.vaadin.shared.ui.embedded;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 
 public class EmbeddedState extends AbstractEmbeddedState {
     {
         primaryStyleName = "v-embedded";
     }
+
+    public int type;
+
+    /**
+     * The MIME type of the Embedded component.
+     */
+    public String mimeType;
+
+    /**
+     * Applet or other client side runnable properties.
+     */
+    public String codebase;
+
+    public String codetype;
+
+    public String classId;
+
+    public String archive;
+
+    public String altText;
+
+    public String standby;
+
+    /**
+     * Object parameters.
+     */
+    public final Map<String, String> parameters = new HashMap<>();
+
 }
