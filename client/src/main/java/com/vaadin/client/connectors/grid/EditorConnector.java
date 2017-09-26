@@ -27,9 +27,11 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
+import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.editor.EditorClientRpc;
@@ -55,6 +57,9 @@ public class EditorConnector extends AbstractExtensionConnector {
         private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
         private EditorRequest<JsonObject> currentRequest = null;
         private boolean serverInitiated = false;
+        private DataAvailableHandler dataAvailableListener = null;
+        private Integer currentEditedRow = null;
+        private boolean waitingForAvailableData = false;
 
         public CustomEditorHandler() {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
@@ -66,7 +71,31 @@ public class EditorConnector extends AbstractExtensionConnector {
                         @Override
                         public void execute() {
                             serverInitiated = fromServer;
-                            getParent().getWidget().editRow(rowIndex);
+                            boolean canEdit = true;
+                            if (fromServer) {
+                                currentEditedRow = rowIndex;
+                                if (getParent().getDataSource().getRow(rowIndex) != null) { // already have data
+                                    canEdit = true;
+                                } else {
+                                    // will need to wait for available data, register listener if necessary on first try
+                                    if (dataAvailableListener == null) {
+                                        dataAvailableListener = (event) -> {
+                                            Range range = event.getAvailableRows();
+                                            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
+                                                getParent().getWidget().editRow(currentEditedRow);
+                                                waitingForAvailableData = false;
+                                            }
+                                        };
+                                        getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
+                                    }
+                                    getParent().getDataSource().ensureAvailability(rowIndex, 1);
+                                    waitingForAvailableData = true;
+                                    canEdit = false;
+                                }
+                            }
+                            if (canEdit) {
+                                getParent().getWidget().editRow(rowIndex);
+                            }
                         }
                     });
                 }
@@ -79,7 +108,10 @@ public class EditorConnector extends AbstractExtensionConnector {
 
                 @Override
                 public void confirmBind(final boolean bindSucceeded) {
-                    endRequest(bindSucceeded);
+                    if (currentRequest != null) {   // this might be a ping-pong after a delayed
+                                                    // client-side callback to a server-side edit request
+                        endRequest(bindSucceeded);
+                    }
                 }
 
                 @Override
@@ -109,18 +141,8 @@ public class EditorConnector extends AbstractExtensionConnector {
         public void bind(EditorRequest<JsonObject> request) {
             if (!handleServerInitiated(request)) {
                 startRequest(request);
-                rpc.bind(getRowKey(request.getRow()));
-            } else {
-                if (getParent().rowHasDetails(request.getRowIndex())) {
-                    rpc.bind(getRowKey(request.getRow()));
-                } else {
-                    getParent().addDetailsRefreshCallback(() -> {
-                        if (getParent().rowHasDetails(request.getRowIndex())) {
-                            rpc.bind(getRowKey(request.getRow()));
-                        }
-                    });
-                }
             }
+            rpc.bind(getRowKey(request.getRow()));
         }
 
         @Override
@@ -137,6 +159,7 @@ public class EditorConnector extends AbstractExtensionConnector {
                 // a confirmation from the server
                 rpc.cancel(afterBeingSaved);
             }
+            currentEditedRow = null;
         }
 
         @Override
