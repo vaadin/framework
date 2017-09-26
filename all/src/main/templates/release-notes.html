@@ -106,6 +106,8 @@
         <li><tt>DataCommunicator</tt> method <tt>getDataProviderSize</tt> is now <tt>public</tt>, not <tt>protected</tt>.</li>
         <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
         <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
+        <li><tt>ErrorLevel</tt> is removed from <tt>ErrorMessage</tt> and now <tt>com.vaadin.shared.ui.ErrorLevel</tt> should be used.</li>
+        <li>Error indicator elements are now <tt>&lt;span class="v-errorindicator"&gt;&lt;/span&gt;</tt> elements.</li>
 
         <h2>For incompatible or behaviour-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
