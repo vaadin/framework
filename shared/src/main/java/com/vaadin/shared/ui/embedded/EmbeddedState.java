@@ -25,30 +25,71 @@ public class EmbeddedState extends AbstractEmbeddedState {
         primaryStyleName = "v-embedded";
     }
 
+    /**
+     * The object type.
+     *
+     * @since
+     */
     public int type;
 
     /**
-     * The MIME type of the Embedded component.
+     * The MIME-type of the object.
+     *
+     * @since
      */
     public String mimeType;
 
     /**
-     * Applet or other client side runnable properties.
+     * Specifies the base path used to resolve relative URIs specified by the
+     * classid, data, and archive attributes.
+     *
+     * @since
      */
     public String codebase;
 
+    /**
+     * The MIME-Type of the code.
+     * 
+     * @since
+     */
     public String codetype;
 
+    /**
+     * May be used to specify the location of an object's implementation via a
+     * URI.
+     * 
+     * @since
+     */
     public String classId;
 
+    /**
+     * May be used to specify a space-separated list of URIs for archives
+     * containing resources relevant to the object.
+     * 
+     * @since
+     */
     public String archive;
 
+    /**
+     * The component's "alt-text".
+     * 
+     * @since
+     */
     public String altText;
 
+    /**
+     * Specifies a message that a user agent may render while loading the
+     * object's implementation and data.
+     * 
+     * @since
+     */
     public String standby;
 
     /**
-     * Object parameters.
+     * Object parameters. Parameters are optional information, and they are
+     * passed to the instantiated object.
+     * 
+     * @since
      */
     public final Map<String, String> parameters = new HashMap<>();
 

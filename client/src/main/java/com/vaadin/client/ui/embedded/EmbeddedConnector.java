@@ -53,7 +53,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         updateResourceIfNecessary();
 
         // Save details
-        getWidget().client = stateChangeEvent.getConnector().getConnection();
+        getWidget().client = getConnection();
 
         boolean clearBrowserElement = true;
 

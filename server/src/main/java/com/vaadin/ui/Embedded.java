@@ -103,11 +103,6 @@ public class Embedded extends AbstractComponent {
         setSource(source);
     }
 
-    @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-    }
-
     /**
      * Sets this component's "alt-text", that is, an alternate text that can be
      * presented instead of this component's normal content, for accessibility
@@ -124,7 +119,6 @@ public class Embedded extends AbstractComponent {
         if (altText != oldAltText
                 || (altText != null && !altText.equals(oldAltText))) {
             getState().altText = altText;
-            markAsDirty();
         }
     }
 
@@ -150,7 +144,6 @@ public class Embedded extends AbstractComponent {
      */
     public void setParameter(String name, String value) {
         getState().parameters.put(name, value);
-        markAsDirty();
     }
 
     /**
@@ -172,7 +165,6 @@ public class Embedded extends AbstractComponent {
      */
     public void removeParameter(String name) {
         getState().parameters.remove(name);
-        markAsDirty();
     }
 
     /**
@@ -236,7 +228,6 @@ public class Embedded extends AbstractComponent {
         if (codebase != oldCodebase
                 || (codebase != null && !codebase.equals(oldCodebase))) {
             getState().codebase = codebase;
-            markAsDirty();
         }
     }
 
@@ -255,7 +246,6 @@ public class Embedded extends AbstractComponent {
         if (codetype != oldCodetype
                 || (codetype != null && !codetype.equals(oldCodetype))) {
             getState().codetype = codetype;
-            markAsDirty();
         }
     }
 
@@ -281,7 +271,6 @@ public class Embedded extends AbstractComponent {
                     setParameter("wmode", "transparent");
                 }
             }
-            markAsDirty();
         }
     }
 
@@ -297,7 +286,6 @@ public class Embedded extends AbstractComponent {
         if (standby != oldStandby
                 || (standby != null && !standby.equals(oldStandby))) {
             getState().standby = standby;
-            markAsDirty();
         }
     }
 
@@ -323,7 +311,6 @@ public class Embedded extends AbstractComponent {
         if (classId != oldClassId
                 || (classId != null && !classId.equals(oldClassId))) {
             getState().classId = classId;
-            markAsDirty();
         }
     }
 
@@ -376,7 +363,6 @@ public class Embedded extends AbstractComponent {
             } else {
                 // Keep previous type
             }
-            markAsDirty();
         }
     }
 
@@ -400,7 +386,6 @@ public class Embedded extends AbstractComponent {
         }
         if (type != getType()) {
             getState().type = type;
-            markAsDirty();
         }
     }
 
@@ -436,7 +421,6 @@ public class Embedded extends AbstractComponent {
         if (archive != oldArchive
                 || (archive != null && !archive.equals(oldArchive))) {
             getState().archive = archive;
-            markAsDirty();
         }
     }
 
