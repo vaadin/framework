@@ -466,7 +466,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 timeZoneJSON = null;
             }
             getState().timeZoneJSON = timeZoneJSON;
-            markAsDirty();
         }
         this.zoneId = zoneId;
     }
