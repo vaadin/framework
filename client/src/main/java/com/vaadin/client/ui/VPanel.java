@@ -80,7 +80,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
 
         /*
          * Make contentNode focusable only by using the setFocus() method. This
-         * behaviour can be changed by invoking setTabIndex() in the serverside
+         * behavior can be changed by invoking setTabIndex() in the serverside
          * implementation
          */
         contentNode.setTabIndex(-1);

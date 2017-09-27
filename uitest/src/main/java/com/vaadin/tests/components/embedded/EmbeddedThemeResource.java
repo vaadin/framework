@@ -27,7 +27,7 @@ import com.vaadin.v7.ui.themes.Reindeer;
 /**
  * Tests that {@link Embedded} uses correct theme when the theme is set with
  * {@link #setTheme(String)}, and also updates correctly if theme is changed
- * later. {@link Image} is used as the baseline for correct behaviour.
+ * later. {@link Image} is used as the baseline for correct behavior.
  *
  * @author Vaadin Ltd
  */

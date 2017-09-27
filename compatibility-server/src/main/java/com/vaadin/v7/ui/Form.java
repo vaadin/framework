@@ -286,7 +286,7 @@ public class Form extends AbstractField<Object>
      * Controls the making validation visible implicitly on commit.
      *
      * Having commit() call setValidationVisible(true) implicitly is the default
-     * behaviour. You can disable the implicit setting by setting this property
+     * behavior. You can disable the implicit setting by setting this property
      * as false.
      *
      * It is useful, because you usually want to start with the form free of
@@ -695,8 +695,9 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null
-                ? newDataSource.getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**

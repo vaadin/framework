@@ -730,8 +730,9 @@ public class VTree extends FocusElementPanel
             }
 
             final boolean inCaption = isCaptionElement(target);
-            if (inCaption && client.hasEventListeners(VTree.this,
-                    TreeConstants.ITEM_CLICK_EVENT_ID)
+            if (inCaption
+                    && client.hasEventListeners(VTree.this,
+                            TreeConstants.ITEM_CLICK_EVENT_ID)
 
                     && (type == Event.ONDBLCLICK || type == Event.ONMOUSEUP)) {
                 fireClick(event);
@@ -1592,8 +1593,8 @@ public class VTree extends FocusElementPanel
              * problem, that the newly selected item is announced too often with
              * a screen reader.
              *
-             * Behaviour is different when using the Tree with and without
-             * screen reader.
+             * Behavior is different when using the Tree with and without screen
+             * reader.
              */
             if (node.key.equals(lastNodeKey)) {
                 Roles.getTreeRole().setAriaActivedescendantProperty(

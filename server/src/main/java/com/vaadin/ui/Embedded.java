@@ -356,7 +356,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
                  * Automatically add wmode transparent as we use lots of
                  * floating layers in Vaadin. If developers need better flash
                  * performance, they can override this value programmatically
-                 * back to "window" (the defautl).
+                 * back to "window" (the default).
                  */
                 if (getParameter("wmode") == null) {
                     setParameter("wmode", "transparent");
