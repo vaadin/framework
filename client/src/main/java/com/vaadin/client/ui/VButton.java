@@ -30,8 +30,10 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 
-public class VButton extends FocusWidget implements ClickHandler {
+public class VButton extends FocusWidget implements ClickHandler,
+        HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -48,7 +50,7 @@ public class VButton extends FocusWidget implements ClickHandler {
     public final Element wrapper = DOM.createSpan();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Element captionElement = DOM.createSpan();
@@ -481,4 +483,21 @@ public class VButton extends FocusWidget implements ClickHandler {
         return ret;
     }-*/;
 
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                wrapper.insertFirst(errorIndicatorElement);
+            }
+        } else if (errorIndicatorElement != null) {
+            wrapper.removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+    }
 }

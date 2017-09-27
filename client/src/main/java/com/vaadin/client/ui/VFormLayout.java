@@ -34,10 +34,12 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -201,10 +203,10 @@ public class VFormLayout extends SimplePanel {
         }
 
         public void updateError(Widget widget, String errorMessage,
-                boolean hideErrors) {
+                ErrorLevel errorLevel, boolean hideErrors) {
             final ErrorFlag e = widgetToError.get(widget);
             if (e != null) {
-                e.updateError(errorMessage, hideErrors);
+                e.updateError(errorMessage, errorLevel, hideErrors);
             }
 
         }
@@ -340,7 +342,7 @@ public class VFormLayout extends SimplePanel {
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public class ErrorFlag extends HTML {
+    public class ErrorFlag extends HTML implements HasErrorIndicatorElement {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;
@@ -361,7 +363,8 @@ public class VFormLayout extends SimplePanel {
             return owner;
         }
 
-        public void updateError(String errorMessage, boolean hideErrors) {
+        public void updateError(String errorMessage, ErrorLevel errorLevel,
+                boolean hideErrors) {
             boolean showError = null != errorMessage;
             if (hideErrors) {
                 showError = false;
@@ -370,24 +373,37 @@ public class VFormLayout extends SimplePanel {
             AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
             if (showError) {
-                if (errorIndicatorElement == null) {
-                    errorIndicatorElement = DOM.createDiv();
-                    DOM.setInnerHTML(errorIndicatorElement, "&nbsp;");
-                    DOM.setElementProperty(errorIndicatorElement, "className",
-                            "v-errorindicator");
-                    DOM.appendChild(getElement(), errorIndicatorElement);
+                setErrorIndicatorElementVisible(true);
 
-                    // Hide the error indicator from screen reader, as this
-                    // information is set directly at the input field
-                    Roles.getFormRole()
-                            .setAriaHiddenState(errorIndicatorElement, true);
-                }
+                // Hide the error indicator from screen reader, as this
+                // information is set directly at the input field
+                Roles.getFormRole()
+                        .setAriaHiddenState(errorIndicatorElement, true);
 
-            } else if (errorIndicatorElement != null) {
-                DOM.removeChild(getElement(), errorIndicatorElement);
-                errorIndicatorElement = null;
+                ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);
+            } else {
+                setErrorIndicatorElementVisible(false);
             }
         }
 
+        @Override
+        public Element getErrorIndicatorElement() {
+            return errorIndicatorElement;
+        }
+
+        @Override
+        public void setErrorIndicatorElementVisible(boolean visible) {
+            if (visible) {
+                if (errorIndicatorElement == null) {
+                    errorIndicatorElement = ErrorUtil
+                            .createErrorIndicatorElement();
+                    getElement().appendChild(errorIndicatorElement);
+                }
+            } else if (errorIndicatorElement != null) {
+                getElement().removeChild(errorIndicatorElement);
+                errorIndicatorElement = null;
+            }
+        }
     }
 }
