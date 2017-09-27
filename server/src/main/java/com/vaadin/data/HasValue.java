@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import com.vaadin.event.HasUserOriginated;
 import com.vaadin.event.SerializableEventListener;
-import com.vaadin.server.Setter;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
@@ -210,7 +209,8 @@ public interface HasValue<V> extends Serializable {
      * values. Specific implementations might not support this.
      *
      * @return empty value
-     * @see Binder#bind(HasValue, ValueProvider, Setter)
+     * @see Binder#bind(HasValue, ValueProvider, com.vaadin.server.Setter)
+     *      Binder#bind(HasValue, ValueProvider, Setter)
      */
     public default V getEmptyValue() {
         return null;

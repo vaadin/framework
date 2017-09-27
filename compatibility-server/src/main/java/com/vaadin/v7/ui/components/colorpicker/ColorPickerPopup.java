@@ -479,20 +479,15 @@ public class ColorPickerPopup extends Window
             }
 
             resize.setData(new Boolean(!state));
-        }
-
-        // Ok button was clicked
-        else if (event.getButton() == ok) {
+        }  else if (event.getButton() == ok) {
+            // Ok button was clicked
             history.setColor(getColor());
             fireColorChanged();
             close();
-        }
-
-        // Cancel button was clicked
-        else if (event.getButton() == cancel) {
+        } else if (event.getButton() == cancel) {
+            // Cancel button was clicked
             close();
         }
-
     }
 
     /**

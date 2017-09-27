@@ -1524,7 +1524,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            // Focus the last focused column in the editor iff grid or its child
+            // Focus the last focused column in the editor if grid or its child
             // was focused before the edit request
             Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
             Element focusedElement = WidgetUtil.getFocusedElement();
@@ -2422,8 +2422,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             Element targetElement = Element.as(target);
-            if (grid.isElementInChildWidget(targetElement)) {
-                // Target is some widget inside of Grid
+            if (ignoreEventFromTarget(grid, targetElement)) {
+                // Event on this target should be ignored
                 return;
             }
 
@@ -2442,6 +2442,24 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             doDispatch(handler, section);
+        }
+
+        /**
+         * Returns whether the mouse event on the target element should be
+         * ignored.
+         *
+         * @param grid
+         *         the {@code Grid} instance from which the event originated
+         * @param targetElement
+         *         the element from which the event originated
+         * @return {@code true} if the event should be ignored, {@code false} if
+         * it should be handled
+         * @since
+         */
+        protected boolean ignoreEventFromTarget(Grid<?> grid,
+                Element targetElement) {
+            // Target is some widget inside of Grid
+            return grid.isElementInChildWidget(targetElement);
         }
 
         protected abstract void doDispatch(HANDLER handler, Section section);
@@ -4356,10 +4374,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && rightBoundaryForDrag < dropMarkerLeft
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
-            }
-
-            // Check if the drop marker shouldn't be shown at all
-            else if (dropMarkerLeft < frozenColumnsWidth
+            } else if (
+                    // Check if the drop marker shouldn't be shown at all
+                    dropMarkerLeft < frozenColumnsWidth
                     || dropMarkerLeft > Math.min(rightBoundaryForDrag,
                             escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
@@ -4641,9 +4658,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             rightBound = cellColumnRightIndex;
                         }
                         cellColumnIndex = cellColumnRightIndex - 1;
-                    }
-
-                    else {
+                    } else {
                         // can't drop inside a spanned cell, or this is the
                         // dragged cell
                         while (colspan > 1) {
@@ -9117,7 +9132,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
-     * @return <code>true</code> iff the details for the given row is visible
+     * @return <code>true</code> if the details for the given row is visible
      * @see #setDetailsVisible(int, boolean)
      */
     public boolean isDetailsVisible(int rowIndex) {

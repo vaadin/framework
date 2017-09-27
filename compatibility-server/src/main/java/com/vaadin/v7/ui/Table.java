@@ -2928,13 +2928,12 @@ public class Table extends AbstractSelect implements Action.Container,
             // TODO could be optimized.
             variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
-        }
-
-        /*
-         * The AbstractSelect cannot handle the multiselection properly, instead
-         * we handle it ourself
-         */
-        else if (isSelectable() && isMultiSelect()
+        } else if (
+                /*
+                 * The AbstractSelect cannot handle the multiselection properly, instead
+                 * we handle it ourself
+                 */
+                isSelectable() && isMultiSelect()
                 && variables.containsKey("selected")
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
@@ -3128,10 +3127,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 fireEvent(new ItemClickEvent(this, item, itemId, propertyId,
                         evt));
             }
-        }
-
-        // Header click event
-        else if (variables.containsKey("headerClickEvent")) {
+        } else if (
+                // Header click event
+                variables.containsKey("headerClickEvent")) {
 
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("headerClickEvent"));
@@ -3142,10 +3140,9 @@ public class Table extends AbstractSelect implements Action.Container,
                 propertyId = columnIdMap.get(cid.toString());
             }
             fireEvent(new HeaderClickEvent(this, propertyId, details));
-        }
-
-        // Footer click event
-        else if (variables.containsKey("footerClickEvent")) {
+        } else if (
+                // Footer click event
+                variables.containsKey("footerClickEvent")) {
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("footerClickEvent"));
 
@@ -4943,10 +4940,10 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Is sorting disabled altogether.
      *
-     * True iff no sortable columns are given even in the case where data source
+     * True if no sortable columns are given even in the case where data source
      * would support this.
      *
-     * @return True iff sorting is disabled.
+     * @return True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #isSortEnabled()} instead
      */
     @Deprecated
@@ -4967,7 +4964,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Disables the sorting by the user altogether.
      *
      * @param sortDisabled
-     *            True iff sorting is disabled.
+     *            True if sorting is disabled.
      * @deprecated As of 7.0, use {@link #setSortEnabled(boolean)} instead
      */
     @Deprecated

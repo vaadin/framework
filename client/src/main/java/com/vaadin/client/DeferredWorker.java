@@ -29,7 +29,7 @@ public interface DeferredWorker {
      * Checks whether there are operations pending for this widget or connector
      * that must be executed before reaching a steady state.
      *
-     * @returns <code>true</code> iff there are operations pending which must be
+     * @returns <code>true</code> if there are operations pending which must be
      *          executed before reaching a steady state
      */
     public boolean isWorkPending();

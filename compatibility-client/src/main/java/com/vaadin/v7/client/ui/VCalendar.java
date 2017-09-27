@@ -365,13 +365,13 @@ public class VCalendar extends Composite implements VHasDropHandler {
      */
     private native void blockSelect(Element e)
     /*-{
-    	e.onselectstart = function() {
-    		return false;
-    	}
+        e.onselectstart = function() {
+            return false;
+        }
 
-    	e.ondragstart = function() {
-    		return false;
-    	}
+        e.ondragstart = function() {
+            return false;
+        }
     }-*/;
 
     private void updateEventsToWeekGrid(CalendarEvent[] events) {

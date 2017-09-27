@@ -186,10 +186,8 @@ public abstract class UIProvider implements Serializable {
         // Third case: we have a generated class called APP_WIDGETSET_NAME
         if (info != null) {
             return info;
-        }
-
-        // Fourth case: we have an AppWidgetset.gwt.xml file
-        else {
+        } else {
+            // Fourth case: we have an AppWidgetset.gwt.xml file
             InputStream resource = event.getUIClass()
                     .getResourceAsStream("/" + APP_WIDGETSET_NAME + ".gwt.xml");
             if (resource != null) {

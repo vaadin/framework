@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Attributes;
@@ -46,7 +45,6 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.Extension;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
@@ -63,6 +61,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -724,8 +723,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         ErrorMessage error = getErrorMessage();
         if (null != error) {
             getState().errorMessage = error.getFormattedHtmlMessage();
+            getState().errorLevel = error.getErrorLevel();
         } else {
             getState().errorMessage = null;
+            getState().errorLevel = null;
         }
     }
 
@@ -1258,7 +1259,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] customAttributes = new String[] { "width",
+    private static final String[] customAttributes = { "width",
             "height", "debug-id", "error", "width-auto", "height-auto",
             "width-full", "height-full", "size-auto", "size-full", "immediate",
             "locale", "read-only", "_id" };

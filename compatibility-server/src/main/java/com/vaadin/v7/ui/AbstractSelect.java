@@ -628,7 +628,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Gets the visible item ids. In Select, this returns list of all item ids,
-     * but can be overriden in subclasses if they paint only part of the items
+     * but can be overridden in subclasses if they paint only part of the items
      * to the terminal or null if no items is visible.
      */
     public Collection<?> getVisibleItemIds() {

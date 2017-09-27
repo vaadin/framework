@@ -2,10 +2,8 @@ package com.vaadin.tests.components.datefield;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
-import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;

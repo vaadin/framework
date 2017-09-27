@@ -11,7 +11,7 @@ public class TestUtils {
     public static final Object iso3166_PROPERTY_NAME = "name";
     public static final Object iso3166_PROPERTY_SHORT = "short";
 
-    private static final String[] iso3166 = new String[] { "AFGHANISTAN", "AF",
+    private static final String[] iso3166 = { "AFGHANISTAN", "AF",
             "ÅLAND ISLANDS", "AX", "ALBANIA", "AL", "ALGERIA", "DZ",
             "AMERICAN SAMOA", "AS", "ANDORRA", "AD", "ANGOLA", "AO", "ANGUILLA",
             "AI", "ANTARCTICA", "AQ", "ANTIGUA AND BARBUDA", "AG", "ARGENTINA",

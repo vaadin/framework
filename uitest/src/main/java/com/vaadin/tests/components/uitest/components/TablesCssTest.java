@@ -19,9 +19,9 @@ public class TablesCssTest extends GridLayout {
     private final Action ACTION_MARK = new Action("Mark");
     private final Action ACTION_UNMARK = new Action("Unmark");
     private final Action ACTION_LOG = new Action("Save");
-    private final Action[] ACTIONS_UNMARKED = new Action[] { ACTION_MARK,
+    private final Action[] ACTIONS_UNMARKED = { ACTION_MARK,
             ACTION_LOG };
-    private final Action[] ACTIONS_MARKED = new Action[] { ACTION_UNMARK,
+    private final Action[] ACTIONS_MARKED = { ACTION_UNMARK,
             ACTION_LOG };
 
     public TablesCssTest(TestSampler parent) {

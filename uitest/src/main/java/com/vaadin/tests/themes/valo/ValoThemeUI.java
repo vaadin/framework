@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -373,7 +372,7 @@ public class ValoThemeUI extends UI {
         private final Action ACTION_ONE = new Action("Action One");
         private final Action ACTION_TWO = new Action("Action Two");
         private final Action ACTION_THREE = new Action("Action Three");
-        private final Action[] ACTIONS = new Action[] { ACTION_ONE, ACTION_TWO,
+        private final Action[] ACTIONS = { ACTION_ONE, ACTION_TWO,
                 ACTION_THREE };
 
         @Override

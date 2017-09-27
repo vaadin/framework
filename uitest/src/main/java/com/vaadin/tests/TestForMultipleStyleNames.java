@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;

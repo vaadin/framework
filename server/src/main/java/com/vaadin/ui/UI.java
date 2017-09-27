@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -45,6 +44,7 @@ import com.vaadin.event.UIEvents.PollEvent;
 import com.vaadin.event.UIEvents.PollListener;
 import com.vaadin.event.UIEvents.PollNotifier;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
@@ -197,7 +197,6 @@ public abstract class UI extends AbstractSingleComponentContainer
         @Override
         public void popstate(String uri) {
             getPage().updateLocation(uri, true, true);
-
         }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -262,8 +261,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     private WindowOrderRpc windowOrderRpc = new WindowOrderRpc() {
 
         @Override
-        public void windowOrderChanged(
-                Map<Integer, Connector> windowOrders) {
+        public void windowOrderChanged(Map<Integer, Connector> windowOrders) {
             Map<Integer, Window> orders = new LinkedHashMap<>();
             for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
                 if (entry.getValue() instanceof Window) {
@@ -662,6 +660,10 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     private String embedId;
 
+    private String uiPathInfo;
+
+    private String uiRootPath;
+
     private boolean mobileHtml5DndPolyfillLoaded;
 
     /**
@@ -741,6 +743,36 @@ public abstract class UI extends AbstractSingleComponentContainer
 
         getPage().init(request);
 
+        String uiPathInfo = (String) request
+                .getAttribute(ApplicationConstants.UI_ROOT_PATH);
+        if (uiPathInfo != null) {
+            setUiPathInfo(uiPathInfo);
+        }
+
+        if (getSession() != null && getSession().getConfiguration() != null
+                && getSession().getConfiguration().isSendUrlsAsParameters()
+                && getPage().getLocation() != null) {
+            // By default the root is the URL from client
+            String uiRootPath = getPage().getLocation().getPath();
+
+            if (uiPathInfo != null && uiRootPath.contains(uiPathInfo)) {
+                // String everything from the URL after uiPathInfo
+                // This will remove the navigation state from the URL
+                uiRootPath = uiRootPath.substring(0,
+                        uiRootPath.indexOf(uiPathInfo) + uiPathInfo.length());
+            } else if (request.getPathInfo() != null) {
+                // uiRootPath does not match the uiPathInfo
+                // This can happen for example when embedding a Vaadin UI
+                String pathInfo = request.getPathInfo();
+                if (uiRootPath.endsWith(pathInfo)) {
+                    uiRootPath = uiRootPath.substring(0,
+                            uiRootPath.length() - pathInfo.length());
+                }
+            }
+            // Store the URL as the UI Root Path
+            setUiRootPath(uiRootPath);
+        }
+
         // Call the init overridden by the application developer
         init(request);
 
@@ -749,6 +781,48 @@ public abstract class UI extends AbstractSingleComponentContainer
             // Kickstart navigation if a navigator was attached in init()
             navigator.navigateTo(navigator.getState());
         }
+    }
+
+    private void setUiRootPath(String uiRootPath) {
+        this.uiRootPath = uiRootPath;
+    }
+
+    /**
+     * Gets the part of path (from browser's URL) that points to this UI.
+     * Basically the same as the value from {@link Page#getLocation()}, but
+     * without possible view identifiers or path parameters.
+     *
+     * @return the part of path (from browser's URL) that points to this UI,
+     *         without possible view identifiers or path parameters
+     * 
+     * @since 8.2
+     */
+    public String getUiRootPath() {
+        return uiRootPath;
+    }
+
+    private void setUiPathInfo(String uiPathInfo) {
+        this.uiPathInfo = uiPathInfo;
+    }
+
+    /**
+     * Gets the path info part of the request that is used to detect the UI.
+     * This is defined during UI init by certain {@link UIProvider UIProviders}
+     * that map different UIs to different URIs, like Vaadin Spring. This
+     * information is used by the {@link Navigator} when the {@link UI} is
+     * annotated with {@link PushStateNavigation}.
+     * <p>
+     * For example if the UI is accessed through
+     * {@code http://example.com/MyUI/mainview/parameter=1} the path info would
+     * be {@code /MyUI}.
+     *
+     * @return the path info part of the request; {@code null} if no request
+     *         from client has been processed
+     * 
+     * @since 8.2
+     */
+    public String getUiPathInfo() {
+        return uiPathInfo;
     }
 
     /**

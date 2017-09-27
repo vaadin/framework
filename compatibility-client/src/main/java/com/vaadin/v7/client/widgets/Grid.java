@@ -1525,7 +1525,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * @see #editRow(int, int)
          */
         public void editRow(int rowIndex) {
-            // Focus the last focused column in the editor iff grid or its child
+            // Focus the last focused column in the editor if grid or its child
             // was focused before the edit request
             Cell focusedCell = grid.cellFocusHandler.getFocusedCell();
             Element focusedElement = WidgetUtil.getFocusedElement();
@@ -4330,10 +4330,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && rightBoundaryForDrag < dropMarkerLeft
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
-            }
-
-            // Check if the drop marker shouldn't be shown at all
-            else if (dropMarkerLeft < frozenColumnsWidth
+            } else if (
+                    // Check if the drop marker shouldn't be shown at all
+                    dropMarkerLeft < frozenColumnsWidth
                     || dropMarkerLeft > Math.min(rightBoundaryForDrag,
                             escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
@@ -4609,9 +4608,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             rightBound = cellColumnRightIndex;
                         }
                         cellColumnIndex = cellColumnRightIndex - 1;
-                    }
-
-                    else { // can't drop inside a spanned cell, or this is the
+                    } else { // can't drop inside a spanned cell, or this is the
                            // dragged cell
                         while (colspan > 1) {
                             cellColumnIndex++;
@@ -7941,7 +7938,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -7966,7 +7963,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *
      * @param row
      *            a row object
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -7985,7 +7982,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Deselect all rows using the current selection model.
      *
-     * @return <code>true</code> iff the current selection changed
+     * @return <code>true</code> if the current selection changed
      * @throws IllegalStateException
      *             if the current selection model is not an instance of
      *             {@link SelectionModel.Single} or {@link SelectionModel.Multi}
@@ -9083,9 +9080,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         if (visible && !isVisible) {
             escalator.getBody().setSpacer(rowIndex, DETAILS_ROW_INITIAL_HEIGHT);
             visibleDetails.add(rowIndexInteger);
-        }
-
-        else if (!visible && isVisible) {
+        } else if (!visible && isVisible) {
             escalator.getBody().setSpacer(rowIndex, -1);
             visibleDetails.remove(rowIndexInteger);
         }
@@ -9097,7 +9092,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @since 7.5.0
      * @param rowIndex
      *            the index of the row for which to check details
-     * @return <code>true</code> iff the details for the given row is visible
+     * @return <code>true</code> if the details for the given row is visible
      * @see #setDetailsVisible(int, boolean)
      */
     public boolean isDetailsVisible(int rowIndex) {

@@ -369,14 +369,10 @@ public class MultiSelectionRenderer<T>
             if (pointerPageY < topBound) {
                 final double distance = pointerPageY - topBound;
                 ratio = Math.max(-1, distance / gradientArea);
-            }
-
-            else if (pointerPageY > bottomBound) {
+            } else if (pointerPageY > bottomBound) {
                 final double distance = pointerPageY - bottomBound;
                 ratio = Math.min(1, distance / gradientArea);
-            }
-
-            else {
+            } else {
                 ratio = 0;
             }
 
@@ -436,13 +432,11 @@ public class MultiSelectionRenderer<T>
             if (topBound == -1) {
                 topBound = Math.min(finalTopBound, pageY);
                 bottomBound = Math.max(finalBottomBound, pageY);
-            }
-
-            /*
-             * Subsequent runs make sure that the scroll area grows (but doesn't
-             * shrink) with the finger, but no further than the final bound.
-             */
-            else {
+            } else {
+                /*
+                 * Subsequent runs make sure that the scroll area grows (but doesn't
+                 * shrink) with the finger, but no further than the final bound.
+                 */
                 int oldTopBound = topBound;
                 if (topBound < finalTopBound) {
                     topBound = Math.max(topBound,

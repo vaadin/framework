@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.contextclick;
 
-import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TreeElement;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;

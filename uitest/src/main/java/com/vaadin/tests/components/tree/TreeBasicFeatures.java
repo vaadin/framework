@@ -29,7 +29,7 @@ import com.vaadin.ui.VerticalLayout;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
-    public static final double[] ROW_HEIGHTS = new double[] { 35.5d, 72.78d };
+    public static final double[] ROW_HEIGHTS = { 35.5d, 72.78d };
 
     private Tree<HierarchicalTestBean> tree;
     private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;

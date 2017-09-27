@@ -13,7 +13,7 @@ public class TreeCssTest {
         // Actions for the context menu
         final Action ACTION_ADD = new Action("Add child item");
         final Action ACTION_DELETE = new Action("Delete");
-        final Action[] ACTIONS = new Action[] { ACTION_ADD, ACTION_DELETE };
+        final Action[] ACTIONS = { ACTION_ADD, ACTION_DELETE };
 
         final Tree tree = new Tree();
         tree.setId("tree" + debugIdCounter++);
@@ -48,7 +48,7 @@ public class TreeCssTest {
     }
 
     private HierarchicalContainer createHierarchicalContainer() {
-        String[] itemNames = new String[] { "Foo", "Baar" };
+        String[] itemNames = { "Foo", "Baar" };
 
         HierarchicalContainer hc = new HierarchicalContainer();
         hc.addContainerProperty("NAME", String.class, null);

@@ -112,10 +112,10 @@ public class BrowserInfo {
 
     private native int getIEDocumentMode()
     /*-{
-    	var mode = $wnd.document.documentMode;
-    	if (!mode)
-    		 return -1;
-    	return mode;
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+             return -1;
+        return mode;
     }-*/;
 
     /**
@@ -353,17 +353,17 @@ public class BrowserInfo {
 
     public static native String getBrowserString()
     /*-{
-    	return $wnd.navigator.userAgent;
+        return $wnd.navigator.userAgent;
     }-*/;
 
     public native int getScreenWidth()
     /*-{
-    	return $wnd.screen.width;
+        return $wnd.screen.width;
     }-*/;
 
     public native int getScreenHeight()
     /*-{
-    	return $wnd.screen.height;
+        return $wnd.screen.height;
     }-*/;
 
     /**

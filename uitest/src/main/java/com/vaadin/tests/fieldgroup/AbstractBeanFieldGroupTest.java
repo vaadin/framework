@@ -9,14 +9,14 @@ import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 
-public abstract class AbstractBeanFieldGroupTest extends TestBase {
+public abstract class AbstractBeanFieldGroupTest<T> extends TestBase {
 
     private Button commitButton;
     protected Log log = new Log(5);
 
     private Button discardButton;
     private Button showBeanButton;
-    private BeanFieldGroup fieldBinder;
+    private BeanFieldGroup<T> fieldBinder;
 
     @Override
     protected void setup() {
@@ -76,11 +76,11 @@ public abstract class AbstractBeanFieldGroupTest extends TestBase {
         return commitButton;
     }
 
-    protected BeanFieldGroup getFieldBinder() {
+    protected BeanFieldGroup<T> getFieldBinder() {
         return fieldBinder;
     }
 
-    protected void setFieldBinder(BeanFieldGroup beanFieldBinder) {
+    protected void setFieldBinder(BeanFieldGroup<T> beanFieldBinder) {
         fieldBinder = beanFieldBinder;
     }
 

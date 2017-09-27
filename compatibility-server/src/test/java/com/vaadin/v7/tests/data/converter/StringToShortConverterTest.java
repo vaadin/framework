@@ -58,7 +58,7 @@ public class StringToShortConverterTest {
 
     @Test
     public void testValueOutOfRange() {
-        Double[] values = new Double[] { Integer.MAX_VALUE * 2.0,
+        Double[] values = { Integer.MAX_VALUE * 2.0,
                 Integer.MIN_VALUE * 2.0, Long.MAX_VALUE * 2.0,
                 Long.MIN_VALUE * 2.0 };
 

@@ -100,7 +100,7 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
      *
      */
     private class VaadinDeveloperNameField extends TextField {
-        private String[] names = new String[] { "Matti Tahvonen",
+        private String[] names = { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 

@@ -27,7 +27,7 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
     }
 
     private static final String TABLE_NAME = "JOBS";
-    private static final String[] PK_COLUMN_NAMES = new String[] { "JOB_ID" };
+    private static final String[] PK_COLUMN_NAMES = { "JOB_ID" };
     private static final String SEQUENCE_NAME = "";
     private static final String VERSION_COLUMN_NAME = "";
 

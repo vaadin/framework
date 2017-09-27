@@ -25,6 +25,7 @@ import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("unused")
 public class BeanBinderTest
         extends BinderTestBase<Binder<BeanToValidate>, BeanToValidate> {
 

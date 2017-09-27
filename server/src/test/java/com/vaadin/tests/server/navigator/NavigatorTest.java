@@ -36,6 +36,7 @@ import org.junit.Test;
 
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewBeforeLeaveEvent;
 import com.vaadin.navigator.ViewChangeListener;
@@ -121,6 +122,31 @@ public class NavigatorTest {
 
         public TestNavigator(UI ui) {
             super(ui, EasyMock.createMock(ViewDisplay.class));
+        }
+
+        public View getView(String viewAndParameters) {
+            try {
+                navigateTo(viewAndParameters);
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
+            return ((TestDisplay) getDisplay()).getCurrentView();
+        }
+
+        @Override
+        protected NavigationStateManager getStateManager() {
+            return super.getStateManager();
+        }
+    }
+
+    public static class TestNavigatorWithFragments extends Navigator {
+        public TestNavigatorWithFragments() {
+            super(createMockUI(), new NullFragmentManager(), new TestDisplay());
+        }
+
+        public TestNavigatorWithFragments(UI ui) {
+            super(ui, new UriFragmentManager(ui.getPage()),
+                    EasyMock.createMock(ViewDisplay.class));
         }
 
         public View getView(String viewAndParameters) {
@@ -244,9 +270,42 @@ public class NavigatorTest {
         private final Page page;
     }
 
+    @PushStateNavigation
+    private static class TestPushStateUI extends TestUI {
+
+        TestPushStateUI(Page page) {
+            super(page);
+        }
+    }
+
     private static class TestPage extends Page {
 
         public TestPage() {
+            super(null, null);
+        }
+
+        @Override
+        public Registration addPopStateListener(PopStateListener listener) {
+            addPopstateCalled = true;
+            return () -> removePopstateCalled = true;
+        }
+
+        boolean addPopstateCalled() {
+            return addPopstateCalled;
+        }
+
+        boolean removePopstateCalled() {
+            return removePopstateCalled;
+        }
+
+        private boolean addPopstateCalled;
+
+        private boolean removePopstateCalled;
+    }
+
+    private static class TestPageWithUriFragments extends Page {
+
+        public TestPageWithUriFragments() {
             super(null, null);
         }
 
@@ -304,12 +363,13 @@ public class NavigatorTest {
         return new Navigator(createMockUI(), manager, display);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testDestroy_unsetNavigatorInUIAndUriFragmentManager() {
-        TestPage page = new TestPage();
+        TestPageWithUriFragments page = new TestPageWithUriFragments();
         UI ui = new TestUI(page);
 
-        TestNavigator navigator = new TestNavigator(ui);
+        TestNavigatorWithFragments navigator = new TestNavigatorWithFragments(
+                ui);
         Assert.assertTrue("Add URI fragment Page method has not been called",
                 page.addUriFragmentCalled());
         Assert.assertFalse("Unexpected remove URI fragment Page method call",
@@ -323,11 +383,44 @@ public class NavigatorTest {
         Assert.assertNull("Navigator is not null in UI after destroy",
                 ui.getNavigator());
 
-        page.setUriFragment("foobar", true);
+        try {
+            page.setUriFragment("foobar", true); // This should throw
+            Assert.fail(
+                    "Expected null pointer exception after call uriFragmentChanged "
+                            + "for destroyed navigator");
+        } catch (NullPointerException e) {
+            // All ok.
+        }
+    }
 
-        Assert.fail(
-                "Expected null pointer exception after call uriFragmentChanged "
-                        + "for destroyed navigator");
+    @Test
+    public void testDestroy_unsetNavigatorInUIAndPopstateManager() {
+        TestPage page = new TestPage();
+        UI ui = new TestPushStateUI(page);
+
+        TestNavigator navigator = new TestNavigator(ui);
+        Assert.assertTrue("Add URI fragment Page method has not been called",
+                page.addPopstateCalled());
+        Assert.assertFalse("Unexpected remove URI fragment Page method call",
+                page.removePopstateCalled());
+        Assert.assertNotNull("Navigator is null in UI", ui.getNavigator());
+
+        navigator.destroy();
+        Assert.assertTrue(
+                "Remove URI fragment Page method has not been called after destroy",
+                page.removePopstateCalled());
+        Assert.assertNull("Navigator is not null in UI after destroy",
+                ui.getNavigator());
+
+        try {
+            page.updateLocation("http://server/path/info", true, true);
+
+            Assert.fail(
+                    "Expected null pointer exception after call uriFragmentChanged "
+                            + "for destroyed navigator");
+        } catch (NullPointerException e) {
+            // All ok.
+        }
     }
 
     @Test
@@ -898,7 +991,7 @@ public class NavigatorTest {
 
         };
 
-        final int[] count = new int[] { 0 };
+        final int[] count = { 0 };
         Navigator navigator = new Navigator(createMockUI(), manager,
                 EasyMock.createMock(ViewDisplay.class)) {
             @Override

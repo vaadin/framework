@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.WeakHashMap;
-import java.util.logging.Logger;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;

@@ -15,8 +15,6 @@
  */
 package com.vaadin.event;
 
-import java.util.logging.Logger;
-
 import com.vaadin.event.Action.Container;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VariableOwner;

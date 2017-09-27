@@ -513,7 +513,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid<?> source, Column<?, ?> column,
@@ -1726,7 +1726,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
+         *            <code>true</code> if the column may be hidable by the
          *            user via UI interaction
          * @return this column
          */
@@ -2277,7 +2277,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @since 8.0.7
      */
     protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
-        this(BeanPropertySet.get(beanType));
+        this(BeanPropertySet.get(beanType), dataCommunicator);
         this.beanType = beanType;
     }
 

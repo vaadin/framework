@@ -64,7 +64,7 @@ public class StressComponentsInTable extends CustomComponent {
         return t;
     }
 
-    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
+    static String[] testString = { "Jacob", "Michael", "Joshua",
             "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
             "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
             "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",

@@ -990,8 +990,12 @@ public class Page implements Serializable {
      * deployed in due to potential proxies, redirections and similar.
      *
      * @return The browser location URI.
+     * @throws IllegalStateException
+     *             if the
+     *             {@link DeploymentConfiguration#isSendUrlsAsParameters()} is
+     *             set to {@code false}
      */
-    public URI getLocation() {
+    public URI getLocation() throws IllegalStateException {
         if (location == null && !uI.getSession().getConfiguration()
                 .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "

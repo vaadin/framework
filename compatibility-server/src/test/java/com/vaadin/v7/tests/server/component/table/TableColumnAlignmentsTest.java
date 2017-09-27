@@ -28,7 +28,7 @@ public class TableColumnAlignmentsTest {
         int properties = 5;
         Table t = TableGeneratorTest.createTableWithDefaultContainer(properties,
                 10);
-        Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
+        Align[] explicitAlignments = { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 
         t.setColumnAlignments(explicitAlignments);
@@ -40,7 +40,7 @@ public class TableColumnAlignmentsTest {
     @Test
     public void invalidColumnAlignmentStrings() {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(3, 7);
-        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+        Align[] defaultAlignments = { Align.LEFT, Align.LEFT,
                 Align.LEFT };
         try {
             t.setColumnAlignments(new Align[] { Align.RIGHT, Align.RIGHT });
@@ -58,7 +58,7 @@ public class TableColumnAlignmentsTest {
     @Test
     public void columnAlignmentForPropertyNotInContainer() {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(3, 7);
-        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+        Align[] defaultAlignments = { Align.LEFT, Align.LEFT,
                 Align.LEFT };
         try {
             t.setColumnAlignment("Property 1200", Align.LEFT);
@@ -82,7 +82,7 @@ public class TableColumnAlignmentsTest {
     @Test
     public void invalidColumnAlignmentsLength() {
         Table t = TableGeneratorTest.createTableWithDefaultContainer(7, 7);
-        Align[] defaultAlignments = new Align[] { Align.LEFT, Align.LEFT,
+        Align[] defaultAlignments = { Align.LEFT, Align.LEFT,
                 Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT, Align.LEFT };
 
         try {
@@ -124,10 +124,10 @@ public class TableColumnAlignmentsTest {
         int properties = 5;
         Table t = TableGeneratorTest.createTableWithDefaultContainer(properties,
                 10);
-        Align[] explicitAlignments = new Align[] { Align.CENTER, Align.LEFT,
+        Align[] explicitAlignments = { Align.CENTER, Align.LEFT,
                 Align.RIGHT, Align.RIGHT, Align.LEFT };
 
-        Align[] currentAlignments = new Align[] { Align.LEFT, Align.LEFT,
+        Align[] currentAlignments = { Align.LEFT, Align.LEFT,
                 Align.LEFT, Align.LEFT, Align.LEFT };
 
         for (int i = 0; i < properties; i++) {
