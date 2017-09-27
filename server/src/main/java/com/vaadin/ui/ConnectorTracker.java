@@ -399,10 +399,9 @@ public class ConnectorTracker implements Serializable {
     }
 
     private static boolean hasVisibleChild(ClientConnector parent) {
-        Iterator<? extends ClientConnector> iterator = AbstractClientConnector
-                .getAllChildrenIterable(parent).iterator();
-        while (iterator.hasNext()) {
-            ClientConnector child = iterator.next();
+        Iterable<? extends ClientConnector> iterable = AbstractClientConnector
+                .getAllChildrenIterable(parent);
+        for (ClientConnector child : iterable) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(child)) {
                 return true;
             }
@@ -729,8 +728,7 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // Convert JsonObjects in diff state to String representation as
         // JsonObject is not serializable

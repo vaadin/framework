@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
@@ -166,8 +165,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 s.addAll(roots);
 
                 // Remove unnecessary items
-                for (final Iterator<Object> i = s.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : s) {
                     if (!container.containsId(id)) {
                         removeFromHierarchyWrapper(id);
                     }
@@ -175,8 +173,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 // Add all the missing items
                 final Collection<?> ids = container.getItemIds();
-                for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : ids) {
                     if (!s.contains(id)) {
                         addToHierarchyWrapper(id);
                         s.add(id);

@@ -19,7 +19,6 @@ package com.vaadin.v7.data.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -225,16 +224,14 @@ public class ContainerOrderedWrapper implements Container.Ordered,
 
             // Filter out all the missing items
             final LinkedList<?> l = new LinkedList<Object>(next.keySet());
-            for (final Iterator<?> i = l.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            for (final Object id : l) {
                 if (!container.containsId(id)) {
                     removeFromOrderWrapper(id);
                 }
             }
 
             // Adds missing items
-            for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                final Object id = i.next();
+            for (final Object id : ids) {
                 if (!next.containsKey(id) && last != id) {
                     addToOrderWrapper(id);
                 }

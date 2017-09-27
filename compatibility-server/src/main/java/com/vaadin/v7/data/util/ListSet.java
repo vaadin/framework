@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List
@@ -105,9 +104,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }
@@ -125,9 +122,7 @@ public class ListSet<E> extends ArrayList<E> {
         ensureCapacity(size() + c.size());
 
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }

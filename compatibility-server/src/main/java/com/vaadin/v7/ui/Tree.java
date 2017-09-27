@@ -779,10 +779,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 // Actions
                 if (actionHandlers != null) {
                     final ArrayList<String> keys = new ArrayList<String>();
-                    final Iterator<Action.Handler> ahi = actionHandlers
-                            .iterator();
-                    while (ahi.hasNext()) {
-                        final Action[] aa = ahi.next().getActions(itemId, this);
+                    for (Action.Handler ah : actionHandlers) {
+                        final Action[] aa = ah.getActions(itemId, this);
                         if (aa != null) {
                             for (int ai = 0; ai < aa.length; ai++) {
                                 final String akey = actionMapper.key(aa[ai]);

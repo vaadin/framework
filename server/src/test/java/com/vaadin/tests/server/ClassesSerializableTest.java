@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.jar.JarEntry;
@@ -101,9 +100,8 @@ public class ClassesSerializableTest {
             "com\\.vaadin\\.themes\\.valoutil\\.BodyStyleName", //
             "com\\.vaadin\\.server\\.communication\\.JSR356WebsocketInitializer.*", //
             "com\\.vaadin\\.screenshotbrowser\\.ScreenshotBrowser.*", //
-            "com\\.vaadin\\.osgi.*",//
-            "com\\.vaadin\\.server\\.osgi.*"
-    };
+            "com\\.vaadin\\.osgi.*", //
+            "com\\.vaadin\\.server\\.osgi.*" };
 
     /**
      * Tests that all the relevant classes and interfaces under
@@ -120,9 +118,9 @@ public class ClassesSerializableTest {
             classes.addAll(findServerClasses(location));
         }
 
-        ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
+        List<Field> nonSerializableFunctionFields = new ArrayList<>();
 
-        ArrayList<Class<?>> nonSerializableClasses = new ArrayList<>();
+        List<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
             Class<?> cls = Class.forName(className);
             // Don't add classes that have a @Ignore annotation on the class
@@ -209,7 +207,7 @@ public class ClassesSerializableTest {
     }
 
     private void failSerializableFields(
-            ArrayList<Field> nonSerializableFunctionFields) {
+            List<Field> nonSerializableFunctionFields) {
         String nonSerializableString = nonSerializableFunctionFields.stream()
                 .map(field -> String.format("%s.%s",
                         field.getDeclaringClass().getName(), field.getName()))
@@ -220,11 +218,9 @@ public class ClassesSerializableTest {
     }
 
     private void failSerializableClasses(
-            ArrayList<Class<?>> nonSerializableClasses) {
+            List<Class<?>> nonSerializableClasses) {
         String nonSerializableString = "";
-        Iterator<Class<?>> it = nonSerializableClasses.iterator();
-        while (it.hasNext()) {
-            Class<?> c = it.next();
+        for (Class<?> c : nonSerializableClasses) {
             nonSerializableString += ", " + c.getName();
             if (c.isAnonymousClass()) {
                 nonSerializableString += "(super: ";

@@ -24,7 +24,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +57,8 @@ public class ClassPathExplorer {
     /**
      * File filter that only accepts directories.
      */
-    private static final FileFilter DIRECTORIES_ONLY = (File f) ->
-            f.exists() && f.isDirectory();
+    private static final FileFilter DIRECTORIES_ONLY = (File f) -> f.exists()
+            && f.isDirectory();
 
     /**
      * Contains information about widgetsets and themes found on the classpath
@@ -533,9 +532,7 @@ public class ClassPathExplorer {
         }
 
         URL firstDirectory = null;
-        Iterator<String> it = rawClasspathEntries.iterator();
-        while (it.hasNext()) {
-            String entry = it.next();
+        for (String entry : rawClasspathEntries) {
 
             File directory = new File(entry);
             if (directory.exists() && !directory.isHidden()

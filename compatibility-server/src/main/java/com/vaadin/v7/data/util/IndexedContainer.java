@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container;
@@ -119,8 +120,7 @@ public class IndexedContainer
     public IndexedContainer(Collection<?> itemIds) {
         this();
         if (items != null) {
-            for (final Iterator<?> i = itemIds.iterator(); i.hasNext();) {
-                Object itemId = i.next();
+            for (final Object itemId : itemIds) {
                 internalAddItemAtEnd(itemId, new IndexedContainerItem(itemId),
                         false);
             }
@@ -188,10 +188,8 @@ public class IndexedContainer
         // If default value is given, set it
         if (defaultValue != null) {
             // for existing rows
-            for (final Iterator<?> i = getAllItemIds().iterator(); i
-                    .hasNext();) {
-                getItem(i.next()).getItemProperty(propertyId)
-                        .setValue(defaultValue);
+            for (final Object id : getAllItemIds()) {
+                getItem(id).getItemProperty(propertyId).setValue(defaultValue);
             }
             // store for next rows
             if (defaultPropertyValues == null) {
@@ -310,9 +308,8 @@ public class IndexedContainer
         }
 
         // If remove the Property from all Items
-        for (final Iterator<Object> i = getAllItemIds().iterator(); i
-                .hasNext();) {
-            items.get(i.next()).remove(propertyId);
+        for (final Object id : getAllItemIds()) {
+            items.get(id).remove(propertyId);
         }
 
         // Sends a change event
@@ -991,7 +988,8 @@ public class IndexedContainer
                         getItemSetChangeListeners())
                 : null);
         nc.propertyIds = propertyIds != null
-                ? (ArrayList<Object>) propertyIds.clone() : null;
+                ? (ArrayList<Object>) propertyIds.clone()
+                : null;
         nc.setPropertySetChangeListeners(getPropertySetChangeListeners() != null
                 ? new LinkedList<Container.PropertySetChangeListener>(
                         getPropertySetChangeListeners())
@@ -1001,7 +999,8 @@ public class IndexedContainer
                         .clone()
                 : null;
         nc.readOnlyProperties = readOnlyProperties != null
-                ? (HashSet<Property<?>>) readOnlyProperties.clone() : null;
+                ? (HashSet<Property<?>>) readOnlyProperties.clone()
+                : null;
         nc.singlePropertyValueChangeListeners = singlePropertyValueChangeListeners != null
                 ? (Hashtable<Object, Map<Object, List<Property.ValueChangeListener>>>) singlePropertyValueChangeListeners
                         .clone()
@@ -1022,12 +1021,10 @@ public class IndexedContainer
             nc.items = null;
         } else {
             nc.items = new Hashtable<Object, Map<Object, Object>>();
-            for (final Iterator<?> i = items.keySet().iterator(); i
-                    .hasNext();) {
-                final Object id = i.next();
-                final Hashtable<Object, Object> it = (Hashtable<Object, Object>) items
-                        .get(id);
-                nc.items.put(id, (Map<Object, Object>) it.clone());
+            for (final Entry<Object, Map<Object, Object>> entry : items
+                    .entrySet()) {
+                nc.items.put(entry.getKey(),
+                        new HashMap<Object, Object>(entry.getValue()));
             }
         }
 

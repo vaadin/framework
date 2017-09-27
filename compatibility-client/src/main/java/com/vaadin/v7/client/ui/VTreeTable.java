@@ -196,7 +196,8 @@ public class VTreeTable extends VScrollTable {
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth")
-                            ? rowUidl.getIntAttribute("depth") : 0;
+                            ? rowUidl.getIntAttribute("depth")
+                            : 0;
                     setIndent();
                     isTreeCellAdded = true;
                     return true;
@@ -427,9 +428,8 @@ public class VTreeTable extends VScrollTable {
         @Override
         protected void calculateMaxIndent() {
             int maxIndent = 0;
-            Iterator<Widget> iterator = iterator();
-            while (iterator.hasNext()) {
-                VTreeTableRow next = (VTreeTableRow) iterator.next();
+            for (Widget w : this) {
+                VTreeTableRow next = (VTreeTableRow) w;
                 maxIndent = Math.max(maxIndent, next.getIndent());
             }
             this.maxIndent = maxIndent;
@@ -441,10 +441,8 @@ public class VTreeTable extends VScrollTable {
                 indentWidth = -1;
                 return;
             }
-            Iterator<Widget> iterator = iterator();
-            while (iterator.hasNext()) {
-                VTreeTableRow next = (VTreeTableRow) iterator.next();
-                next.setIndent();
+            for (Widget w : this) {
+                ((VTreeTableRow) w).setIndent();
             }
             calculateMaxIndent();
         }

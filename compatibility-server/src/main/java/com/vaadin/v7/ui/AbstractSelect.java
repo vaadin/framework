@@ -22,14 +22,12 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -46,6 +44,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -404,11 +403,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             target.endTag("so");
         }
 
-        final Iterator<?> i = getItemIds().iterator();
         // Paints the available selection options from data source
-        while (i.hasNext()) {
+        for (final Object id : getItemIds()) {
             // Gets the option attribute values
-            final Object id = i.next();
             if (!isNullSelectionAllowed() && id != null
                     && id.equals(getNullSelectionItemId())) {
                 // Remove item if it's the null selection item but null
@@ -1941,8 +1938,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 }
                 Collection<?> pids = i.getItemPropertyIds();
                 if (pids != null) {
-                    for (Iterator<?> it = pids.iterator(); it.hasNext();) {
-                        Property<?> p = i.getItemProperty(it.next());
+                    for (Object id : pids) {
+                        Property<?> p = i.getItemProperty(id);
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
@@ -1977,9 +1974,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         public void clear() {
-            for (Iterator<Object> it = captionChangeNotifiers.iterator(); it
-                    .hasNext();) {
-                Object notifier = it.next();
+            for (Object notifier : captionChangeNotifiers) {
                 if (notifier instanceof Item.PropertySetChangeNotifier) {
                     ((Item.PropertySetChangeNotifier) notifier)
                             .removePropertySetChangeListener(
