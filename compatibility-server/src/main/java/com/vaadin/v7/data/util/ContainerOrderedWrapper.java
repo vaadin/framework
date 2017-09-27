@@ -57,7 +57,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private final Container container;
 
     /**
-     * Ordering information, ie. the mapping from Item ID to the next item ID.
+     * Ordering information, i.e. the mapping from Item ID to the next item ID.
      * The last item id should not be present
      */
     private Hashtable<Object, Object> next;
@@ -79,7 +79,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private Object last;
 
     /**
-     * Is the wrapped container ordered by itself, ie. does it implement the
+     * Is the wrapped container ordered by itself, i.e. does it implement the
      * Container.Ordered interface by itself? If it does, this class will use
      * the methods of the underlying container directly.
      */

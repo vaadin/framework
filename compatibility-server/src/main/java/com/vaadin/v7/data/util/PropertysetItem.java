@@ -38,9 +38,11 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no direct replacement available. You can use {@link Map} directly as an item for {@link Binder}
- * or {@link DataProvider} and access item properties with lambdas like {@code binder.forField(component).bind(...)} or
- * {@code new Grid<Map<...>>(dataProvider).addColumn(map->map.get(...))}.
+ * @deprecated As of 8.0, no direct replacement available. You can use
+ *             {@link Map} directly as an item for {@link Binder} or
+ *             {@link DataProvider} and access item properties with lambdas like
+ *             {@code binder.forField(component).bind(...)} or
+ *             {@code new Grid<Map<...>>(dataProvider).addColumn(map->map.get(...))}.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -106,7 +108,7 @@ public class PropertysetItem
     @Override
     public boolean removeItemProperty(Object id) {
 
-        // Cant remove missing properties
+        // Can't remove missing properties
         if (map.remove(id) == null) {
             return false;
         }
@@ -136,7 +138,7 @@ public class PropertysetItem
             throw new NullPointerException("Item property id can not be null");
         }
 
-        // Cant add a property twice
+        // Can't add a property twice
         if (map.containsKey(id)) {
             return false;
         }

@@ -1433,9 +1433,11 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible")
-                ? uidl.getIntVariable("firstvisible") : 0;
+                ? uidl.getIntVariable("firstvisible")
+                : 0;
         firstvisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage")
-                ? uidl.getIntVariable("firstvisibleonlastpage") : -1;
+                ? uidl.getIntVariable("firstvisibleonlastpage")
+                : -1;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
 
             // Update lastRequestedFirstvisible right away here
@@ -1477,7 +1479,8 @@ public class VScrollTable extends FlowPanel
                 : MULTISELECT_MODE_DEFAULT);
 
         nullSelectionAllowed = uidl.hasAttribute("nsa")
-                ? uidl.getBooleanAttribute("nsa") : true;
+                ? uidl.getBooleanAttribute("nsa")
+                : true;
 
         if (uidl.hasAttribute("selectmode")) {
             if (readOnly) {
@@ -1495,7 +1498,8 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void updateDragMode(UIDL uidl) {
         dragmode = uidl.hasAttribute("dragmode")
-                ? uidl.getIntAttribute("dragmode") : 0;
+                ? uidl.getIntAttribute("dragmode")
+                : 0;
         if (BrowserInfo.get().isIE()) {
             if (dragmode > 0) {
                 getElement().setPropertyJSO("onselectstart",
@@ -2218,7 +2222,8 @@ public class VScrollTable extends FlowPanel
         tFoot.enableBrowserIntelligence();
 
         int hierarchyColumnIndent = scrollBody != null
-                ? scrollBody.getMaxIndent() : 0;
+                ? scrollBody.getMaxIndent()
+                : 0;
         HeaderCell hierarchyHeaderWithExpandRatio = null;
 
         // first loop: collect natural widths
@@ -3472,7 +3477,8 @@ public class VScrollTable extends FlowPanel
          */
         public int getNaturalColumnWidth(int columnIndex) {
             final int iw = columnIndex == getHierarchyColumnIndex()
-                    ? scrollBody.getMaxIndent() : 0;
+                    ? scrollBody.getMaxIndent()
+                    : 0;
             saveNaturalColumnWidthIfNotSaved(columnIndex);
             if (isDefinedWidth()) {
                 if (iw > width) {
@@ -4424,7 +4430,8 @@ public class VScrollTable extends FlowPanel
          */
         public int getNaturalColumnWidth(int columnIndex) {
             final int iw = columnIndex == getHierarchyColumnIndex()
-                    ? scrollBody.getMaxIndent() : 0;
+                    ? scrollBody.getMaxIndent()
+                    : 0;
             saveNaturalColumnWidthIfNotSaved(columnIndex);
             if (isDefinedWidth()) {
                 if (iw > width) {
@@ -4587,7 +4594,8 @@ public class VScrollTable extends FlowPanel
                 updated.add(cid);
 
                 String caption = col.hasAttribute("fcaption")
-                        ? col.getStringAttribute("fcaption") : "";
+                        ? col.getStringAttribute("fcaption")
+                        : "";
                 FooterCell c = getFooterCell(cid);
                 if (c == null) {
                     c = new FooterCell(cid, caption);
@@ -5350,8 +5358,10 @@ public class VScrollTable extends FlowPanel
          * To get this work properly crossplatform, we will also set the width
          * of td.
          *
-         * @param colIndex The column Index
-         * @param w The content width
+         * @param colIndex
+         *            The column Index
+         * @param w
+         *            The content width
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
@@ -5415,7 +5425,8 @@ public class VScrollTable extends FlowPanel
                     noCells = true;
                     VScrollTableRow next = (VScrollTableRow) iterator().next();
                     boolean sorted = tHead.getHeaderCell(0) != null
-                            ? tHead.getHeaderCell(0).isSorted() : false;
+                            ? tHead.getHeaderCell(0).isSorted()
+                            : false;
                     next.addCell(null, "", ALIGN_LEFT, "", true, sorted);
                     firstTD = item.getCells().getItem(0);
                 }
@@ -6443,7 +6454,8 @@ public class VScrollTable extends FlowPanel
                     for (Widget next : scrollBody) {
                         Element child = (Element) dragImage.getChild(i++);
 
-                        if (!rowKeyIsSelected(((VScrollTableRow) next).rowKey)) {
+                        if (!rowKeyIsSelected(
+                                ((VScrollTableRow) next).rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }
@@ -7307,7 +7319,8 @@ public class VScrollTable extends FlowPanel
      */
     protected String buildCaptionHtmlSnippet(UIDL uidl) {
         String s = uidl.hasAttribute("caption")
-                ? uidl.getStringAttribute("caption") : "";
+                ? uidl.getStringAttribute("caption")
+                : "";
         if (uidl.hasAttribute("icon")) {
             Icon icon = client.getIcon(uidl.getStringAttribute("icon"));
             icon.setAlternateText("icon");
@@ -7364,7 +7377,8 @@ public class VScrollTable extends FlowPanel
 
         rowRequestHandler.cancel();
 
-        if (BrowserInfo.get().isSafariOrIOS() && event != null && scrollTop == 0) {
+        if (BrowserInfo.get().isSafariOrIOS() && event != null
+                && scrollTop == 0) {
             // due to the webkitoverflowworkaround, top may sometimes report 0
             // for webkit, although it really is not. Expecting to have the
             // correct value available soon.
@@ -7491,9 +7505,11 @@ public class VScrollTable extends FlowPanel
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((dropLocation == null) ? 0 : dropLocation.hashCode());
+            result = prime * result
+                    + ((dropLocation == null) ? 0 : dropLocation.hashCode());
             result = prime * result + overkey;
-            result = prime * result + ((colkey == null) ? 0 : colkey.hashCode());
+            result = prime * result
+                    + ((colkey == null) ? 0 : colkey.hashCode());
             return result;
         }
     }
@@ -7534,8 +7550,10 @@ public class VScrollTable extends FlowPanel
             }
 
             drag.getDropDetails().put("itemIdOver", dropDetails.overkey + "");
-            drag.getDropDetails().put("detail", dropDetails.dropLocation != null
-                    ? dropDetails.dropLocation.toString() : null);
+            drag.getDropDetails().put("detail",
+                    dropDetails.dropLocation != null
+                            ? dropDetails.dropLocation.toString()
+                            : null);
 
         }
 
@@ -7793,7 +7811,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageDownKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.
@@ -7847,7 +7865,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageUpKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.

@@ -117,7 +117,7 @@ public class VFilterSelect extends Composite
          * Constructor
          *
          * @param uidl
-         *            The UIDL recieved from the server
+         *            The UIDL received from the server
          */
         public FilterSelectSuggestion(UIDL uidl) {
             key = uidl.getStringAttribute("key");
@@ -234,8 +234,10 @@ public class VFilterSelect extends Composite
             int result = 1;
             result = prime * result + VFilterSelect.this.hashCode();
             result = prime * result + ((key == null) ? 0 : key.hashCode());
-            result = prime * result + ((caption == null) ? 0 : caption.hashCode());
-            result = prime * result + ((untranslatedIconUri == null) ? 0 : untranslatedIconUri.hashCode());
+            result = prime * result
+                    + ((caption == null) ? 0 : caption.hashCode());
+            result = prime * result + ((untranslatedIconUri == null) ? 0
+                    : untranslatedIconUri.hashCode());
             result = prime * result + ((style == null) ? 0 : style.hashCode());
             return result;
         }
@@ -675,7 +677,7 @@ public class VFilterSelect extends Composite
 
             /*
              * Prevent the keyboard focus from leaving the textfield by
-             * preventing the default behaviour of the browser. Fixes #4285.
+             * preventing the default behavior of the browser. Fixes #4285.
              */
             handleMouseDownEvent(event);
         }
@@ -1300,7 +1302,8 @@ public class VFilterSelect extends Composite
         int getItemOffsetHeight() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetHeight() : 0;
+                    ? items.get(0).getOffsetHeight()
+                    : 0;
         }
 
         /*
@@ -1309,7 +1312,8 @@ public class VFilterSelect extends Composite
         int getItemOffsetWidth() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetWidth() : 0;
+                    ? items.get(0).getOffsetWidth()
+                    : 0;
         }
 
         /**
@@ -1382,7 +1386,7 @@ public class VFilterSelect extends Composite
             } else {
                 /*
                  * Setting the selectionrange for an uneditable textbox leads to
-                 * unwanted behaviour when the width of the textbox is narrower
+                 * unwanted behavior when the width of the textbox is narrower
                  * than the width of the entry: the end of the entry is shown
                  * instead of the beginning. (see #13477)
                  *
@@ -1441,7 +1445,7 @@ public class VFilterSelect extends Composite
 
             /*
              * Prevent the keyboard focus from leaving the textfield by
-             * preventing the default behaviour of the browser. Fixes #4285.
+             * preventing the default behavior of the browser. Fixes #4285.
              */
             handleMouseDownEvent(event);
         }
@@ -2548,7 +2552,7 @@ public class VFilterSelect extends Composite
     private void handleMouseDownEvent(Event event) {
         /*
          * Prevent the keyboard focus from leaving the textfield by preventing
-         * the default behaviour of the browser. Fixes #4285.
+         * the default behavior of the browser. Fixes #4285.
          */
         if (event.getTypeInt() == Event.ONMOUSEDOWN) {
             event.preventDefault();

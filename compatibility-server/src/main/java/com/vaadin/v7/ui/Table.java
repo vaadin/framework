@@ -151,7 +151,7 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public enum Align {
         /**
-         * Left column alignment. <b>This is the default behaviour. </b>
+         * Left column alignment. <b>This is the default behavior. </b>
          */
         LEFT("b"),
 
@@ -2282,7 +2282,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         GeneratedRow generatedRow = rowGenerator != null
-                ? rowGenerator.generateRow(this, id) : null;
+                ? rowGenerator.generateRow(this, id)
+                : null;
         cells[CELL_GENERATED_ROW][i] = generatedRow;
 
         for (int j = 0; j < cols; j++) {
@@ -2929,12 +2930,11 @@ public class Table extends AbstractSelect implements Action.Container,
             variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         } else if (
-                /*
-                 * The AbstractSelect cannot handle the multiselection properly, instead
-                 * we handle it ourself
-                 */
-                isSelectable() && isMultiSelect()
-                && variables.containsKey("selected")
+        /*
+         * The AbstractSelect cannot handle the multiselection properly, instead
+         * we handle it ourself
+         */
+        isSelectable() && isMultiSelect() && variables.containsKey("selected")
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
             variables = new HashMap<String, Object>(variables);
@@ -3128,8 +3128,8 @@ public class Table extends AbstractSelect implements Action.Container,
                         evt));
             }
         } else if (
-                // Header click event
-                variables.containsKey("headerClickEvent")) {
+        // Header click event
+        variables.containsKey("headerClickEvent")) {
 
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("headerClickEvent"));
@@ -3141,8 +3141,8 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             fireEvent(new HeaderClickEvent(this, propertyId, details));
         } else if (
-                // Footer click event
-                variables.containsKey("footerClickEvent")) {
+        // Footer click event
+        variables.containsKey("footerClickEvent")) {
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("footerClickEvent"));
 
@@ -3516,8 +3516,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("cols", getVisibleColumns().length);
         target.addAttribute("rows", rows);
 
-        target.addAttribute("firstrow", (reqFirstRowToPaint >= 0
-                ? reqFirstRowToPaint : firstToBeRenderedInClient));
+        target.addAttribute("firstrow",
+                (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
+                        : firstToBeRenderedInClient));
         target.addAttribute("totalrows", total);
         if (getPageLength() != 0) {
             target.addAttribute("pagelength", getPageLength());
