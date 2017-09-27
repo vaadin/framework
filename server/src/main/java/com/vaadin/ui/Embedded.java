@@ -16,19 +16,13 @@
 
 package com.vaadin.ui;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.shared.ui.embedded.EmbeddedState;
 
@@ -52,7 +46,7 @@ import com.vaadin.shared.ui.embedded.EmbeddedState;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Embedded extends AbstractComponent implements LegacyComponent {
+public class Embedded extends AbstractComponent {
 
     /**
      * General object type.
@@ -75,39 +69,8 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     @Deprecated
     public static final int TYPE_BROWSER = 2;
 
-    /**
-     * Type of the object.
-     */
-    private int type = TYPE_OBJECT;
-
-    /**
-     * Generic object attributes.
-     */
-    private String mimeType = null;
-
-    private String standby = null;
-
-    /**
-     * Hash of object parameters.
-     */
-    private final Map<String, String> parameters = new HashMap<>();
-
-    /**
-     * Applet or other client side runnable properties.
-     */
-    private String codebase = null;
-
-    private String codetype = null;
-
-    private String classId = null;
-
-    private String archive = null;
-
-    private String altText;
-
-    private EmbeddedServerRpc rpc = (MouseEventDetails mouseDetails) -> {
-        fireEvent(new ClickEvent(Embedded.this, mouseDetails));
-    };
+    private EmbeddedServerRpc rpc = mouseDetails -> fireEvent(
+            new ClickEvent(Embedded.this, mouseDetails));
 
     /**
      * Creates a new empty Embedded object.
@@ -141,59 +104,6 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     }
 
     /**
-     * Invoked when the component state should be painted.
-     */
-    @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-
-        switch (type) {
-        case TYPE_IMAGE:
-            target.addAttribute("type", "image");
-            break;
-        case TYPE_BROWSER:
-            target.addAttribute("type", "browser");
-            break;
-        default:
-            break;
-        }
-
-        if (getSource() != null) {
-            target.addAttribute("src", getSource());
-        }
-
-        if (mimeType != null && !mimeType.isEmpty()) {
-            target.addAttribute("mimetype", mimeType);
-        }
-        if (classId != null && !classId.isEmpty()) {
-            target.addAttribute("classid", classId);
-        }
-        if (codebase != null && !codebase.isEmpty()) {
-            target.addAttribute("codebase", codebase);
-        }
-        if (codetype != null && !codetype.isEmpty()) {
-            target.addAttribute("codetype", codetype);
-        }
-        if (standby != null && !standby.isEmpty()) {
-            target.addAttribute("standby", standby);
-        }
-        if (archive != null && !archive.isEmpty()) {
-            target.addAttribute("archive", archive);
-        }
-        if (altText != null && !altText.isEmpty()) {
-            target.addAttribute(EmbeddedConstants.ALTERNATE_TEXT, altText);
-        }
-
-        // Params
-        for (final Iterator<String> i = getParameterNames(); i.hasNext();) {
-            target.startTag("embeddedparam");
-            final String key = i.next();
-            target.addAttribute("name", key);
-            target.addAttribute("value", getParameter(key));
-            target.endTag("embeddedparam");
-        }
-    }
-
-    /**
      * Sets this component's "alt-text", that is, an alternate text that can be
      * presented instead of this component's normal content, for accessibility
      * purposes. Does not work when {@link #setType(int)} has been called with
@@ -205,10 +115,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @since 6.8
      */
     public void setAlternateText(String altText) {
-        if (altText != this.altText
-                || (altText != null && !altText.equals(this.altText))) {
-            this.altText = altText;
-            markAsDirty();
+        String oldAltText = getAlternateText();
+        if (altText != oldAltText
+                || (altText != null && !altText.equals(oldAltText))) {
+            getState().altText = altText;
         }
     }
 
@@ -218,7 +128,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @see #setAlternateText(String)
      */
     public String getAlternateText() {
-        return altText;
+        return getState(false).altText;
     }
 
     /**
@@ -233,8 +143,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the value of the parameter.
      */
     public void setParameter(String name, String value) {
-        parameters.put(name, value);
-        markAsDirty();
+        getState().parameters.put(name, value);
     }
 
     /**
@@ -245,7 +154,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the Value of parameter or null if not found.
      */
     public String getParameter(String name) {
-        return parameters.get(name);
+        return getState(false).parameters.get(name);
     }
 
     /**
@@ -255,8 +164,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the name of the parameter to remove.
      */
     public void removeParameter(String name) {
-        parameters.remove(name);
-        markAsDirty();
+        getState().parameters.remove(name);
     }
 
     /**
@@ -265,7 +173,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the Iterator of parameters names.
      */
     public Iterator<String> getParameterNames() {
-        return parameters.keySet().iterator();
+        return getState(false).parameters.keySet().iterator();
     }
 
     /**
@@ -276,7 +184,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the code base.
      */
     public String getCodebase() {
-        return codebase;
+        return getState(false).codebase;
     }
 
     /**
@@ -285,7 +193,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the MIME-Type of the code.
      */
     public String getCodetype() {
-        return codetype;
+        return getState(false).codetype;
     }
 
     /**
@@ -294,7 +202,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the MIME-Type of the object.
      */
     public String getMimeType() {
-        return mimeType;
+        return getState(false).mimeType;
     }
 
     /**
@@ -304,7 +212,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return The text displayed when loading
      */
     public String getStandby() {
-        return standby;
+        return getState(false).standby;
     }
 
     /**
@@ -316,10 +224,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            The base path
      */
     public void setCodebase(String codebase) {
-        if (codebase != this.codebase
-                || (codebase != null && !codebase.equals(this.codebase))) {
-            this.codebase = codebase;
-            markAsDirty();
+        String oldCodebase = getCodebase();
+        if (codebase != oldCodebase
+                || (codebase != null && !codebase.equals(oldCodebase))) {
+            getState().codebase = codebase;
         }
     }
 
@@ -334,10 +242,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the codetype to set.
      */
     public void setCodetype(String codetype) {
-        if (codetype != this.codetype
-                || (codetype != null && !codetype.equals(this.codetype))) {
-            this.codetype = codetype;
-            markAsDirty();
+        String oldCodetype = getCodetype();
+        if (codetype != oldCodetype
+                || (codetype != null && !codetype.equals(oldCodetype))) {
+            getState().codetype = codetype;
         }
     }
 
@@ -348,9 +256,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the mimeType to set.
      */
     public void setMimeType(String mimeType) {
-        if (mimeType != this.mimeType
-                || (mimeType != null && !mimeType.equals(this.mimeType))) {
-            this.mimeType = mimeType;
+        String oldMimeType = getMimeType();
+        if (mimeType != oldMimeType
+                || (mimeType != null && !mimeType.equals(oldMimeType))) {
+            getState().mimeType = mimeType;
             if ("application/x-shockwave-flash".equals(mimeType)) {
                 /*
                  * Automatically add wmode transparent as we use lots of
@@ -362,7 +271,6 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
                     setParameter("wmode", "transparent");
                 }
             }
-            markAsDirty();
         }
     }
 
@@ -374,10 +282,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            The text to display while loading
      */
     public void setStandby(String standby) {
-        if (standby != this.standby
-                || (standby != null && !standby.equals(this.standby))) {
-            this.standby = standby;
-            markAsDirty();
+        String oldStandby = getStandby();
+        if (standby != oldStandby
+                || (standby != null && !standby.equals(oldStandby))) {
+            getState().standby = standby;
         }
     }
 
@@ -388,7 +296,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the classid.
      */
     public String getClassId() {
-        return classId;
+        return getState(false).classId;
     }
 
     /**
@@ -399,10 +307,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            the classId to set.
      */
     public void setClassId(String classId) {
-        if (classId != this.classId
-                || (classId != null && !classId.equals(this.classId))) {
-            this.classId = classId;
-            markAsDirty();
+        String oldClassId = getClassId();
+        if (classId != oldClassId
+                || (classId != null && !classId.equals(oldClassId))) {
+            getState().classId = classId;
         }
     }
 
@@ -428,7 +336,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      * @return the type.
      */
     public int getType() {
-        return type;
+        return getState(false).type;
     }
 
     /**
@@ -443,19 +351,18 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
             setResource("src", source);
             final String mt = source.getMIMEType();
 
-            if (mimeType == null) {
-                mimeType = mt;
+            if (getMimeType() == null) {
+                getState().mimeType = mt;
             }
 
             if (mt.equals("image/svg+xml")) {
-                type = TYPE_OBJECT;
+                getState().type = TYPE_OBJECT;
             } else if ((mt.substring(0, mt.indexOf('/'))
                     .equalsIgnoreCase("image"))) {
-                type = TYPE_IMAGE;
+                getState().type = TYPE_IMAGE;
             } else {
                 // Keep previous type
             }
-            markAsDirty();
         }
     }
 
@@ -477,9 +384,8 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
         if (type != TYPE_OBJECT && type != TYPE_IMAGE && type != TYPE_BROWSER) {
             throw new IllegalArgumentException("Unsupported type");
         }
-        if (type != this.type) {
-            this.type = type;
-            markAsDirty();
+        if (type != getType()) {
+            getState().type = type;
         }
     }
 
@@ -495,7 +401,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *         object
      */
     public String getArchive() {
-        return archive;
+        return getState(false).archive;
     }
 
     /**
@@ -511,10 +417,10 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
      *            object
      */
     public void setArchive(String archive) {
-        if (archive != this.archive
-                || (archive != null && !archive.equals(this.archive))) {
-            this.archive = archive;
-            markAsDirty();
+        String oldArchive = getArchive();
+        if (archive != oldArchive
+                || (archive != null && !archive.equals(oldArchive))) {
+            getState().archive = archive;
         }
     }
 
@@ -550,11 +456,6 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
-    }
-
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once LegacyComponent is no longer implemented
     }
 
     @Override

@@ -27,9 +27,6 @@ import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -38,14 +35,12 @@ import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.VEmbedded;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 import com.vaadin.shared.ui.embedded.EmbeddedState;
 import com.vaadin.ui.Embedded;
 
 @Connect(Embedded.class)
-public class EmbeddedConnector extends AbstractComponentConnector
-        implements Paintable {
+public class EmbeddedConnector extends AbstractComponentConnector {
 
     private Element resourceElement;
     private ObjectElement objectElement;
@@ -56,44 +51,16 @@ public class EmbeddedConnector extends AbstractComponentConnector
         super.onStateChanged(stateChangeEvent);
         // if theme has changed the resourceUrl may need to be updated
         updateResourceIfNecessary();
-    }
-
-    private void updateResourceIfNecessary() {
-        if (resourceElement != null || objectElement != null) {
-            String src = getResourceUrl("src");
-            if (src != null && !src.isEmpty()) {
-                if (!src.equals(resourceUrl)) {
-                    setResourceUrl(src);
-                }
-            } else if (resourceUrl != null && !resourceUrl.isEmpty()) {
-                setResourceUrl("");
-            }
-        }
-    }
-
-    private void setResourceUrl(String src) {
-        resourceUrl = src;
-        if (resourceElement != null) {
-            resourceElement.setAttribute("src", src);
-        } else if (objectElement != null) {
-            objectElement.setData(src);
-        }
-    }
-
-    @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
 
         // Save details
-        getWidget().client = client;
+        getWidget().client = getConnection();
 
         boolean clearBrowserElement = true;
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        if (uidl.hasAttribute("type")) {
+        final EmbeddedState state = getState();
+        if (state.type != Embedded.TYPE_OBJECT) {
             // remove old style name related to type
             if (getWidget().type != null) {
                 getWidget().removeStyleName(
@@ -104,7 +71,8 @@ public class EmbeddedConnector extends AbstractComponentConnector
                 getWidget().removeStyleName(
                         VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
             }
-            getWidget().type = uidl.getStringAttribute("type");
+            getWidget().type = state.type == Embedded.TYPE_IMAGE ? "image"
+                    : "browser";
             if (getWidget().type.equals("image")) {
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
                 Element el = null;
@@ -128,17 +96,15 @@ public class EmbeddedConnector extends AbstractComponentConnector
 
                 // Set attributes
                 Style style = el.getStyle();
-                style.setProperty("width", getState().width);
-                style.setProperty("height", getState().height);
+                style.setProperty("width", state.width);
+                style.setProperty("height", state.height);
 
                 resourceElement = el;
                 objectElement = null;
                 setResourceUrl(getResourceUrl("src"));
 
-                if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
-                    el.setPropertyString(EmbeddedConstants.ALTERNATE_TEXT,
-                            uidl.getStringAttribute(
-                                    EmbeddedConstants.ALTERNATE_TEXT));
+                if (state.altText != null) {
+                    el.setPropertyString("alt", state.altText);
                 }
 
                 if (created) {
@@ -158,7 +124,7 @@ public class EmbeddedConnector extends AbstractComponentConnector
                     getWidget().setHTML(
                             "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
                                     + " allowTransparency=\"true\" src=\"\""
-                                    + " name=\"" + uidl.getId()
+                                    + " name=\"" + getConnectorId()
                                     + "\"></iframe>");
                     getWidget().browserElement = DOM
                             .getFirstChild(getWidget().getElement());
@@ -171,7 +137,7 @@ public class EmbeddedConnector extends AbstractComponentConnector
                 VConsole.error(
                         "Unknown Embedded type '" + getWidget().type + "'");
             }
-        } else if (uidl.hasAttribute("mimetype")) {
+        } else if (state.mimeType != null) {
             // remove old style name related to type
             if (getWidget().type != null) {
                 getWidget().removeStyleName(
@@ -182,18 +148,19 @@ public class EmbeddedConnector extends AbstractComponentConnector
                 getWidget().removeStyleName(
                         VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
             }
-            final String mime = uidl.getStringAttribute("mimetype");
+            final String mime = state.mimeType;
             if (mime.equals("application/x-shockwave-flash")) {
                 getWidget().mimetype = "flash";
                 // Handle embedding of Flash
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-flash");
-                getWidget().setHTML(getWidget().createFlashEmbed(uidl));
+                getWidget().setHTML(getWidget().createFlashEmbed(state,
+                        getResourceUrl("src")));
 
             } else if (mime.equals("image/svg+xml")) {
                 getWidget().mimetype = "svg";
                 getWidget().addStyleName(VEmbedded.CLASSNAME + "-svg");
                 String data;
-                Map<String, String> parameters = VEmbedded.getParameters(uidl);
+                Map<String, String> parameters = state.parameters;
                 ObjectElement obj = Document.get().createObjectElement();
                 resourceElement = null;
                 if (parameters.get("data") == null) {
@@ -213,30 +180,24 @@ public class EmbeddedConnector extends AbstractComponentConnector
                 if (!isUndefinedHeight()) {
                     obj.getStyle().setProperty("height", "100%");
                 }
-                if (uidl.hasAttribute("classid")) {
-                    obj.setAttribute("classid",
-                            uidl.getStringAttribute("classid"));
+                if (state.classId != null) {
+                    obj.setAttribute("classid", state.classId);
                 }
-                if (uidl.hasAttribute("codebase")) {
-                    obj.setAttribute("codebase",
-                            uidl.getStringAttribute("codebase"));
+                if (state.codebase != null) {
+                    obj.setAttribute("codebase", state.codebase);
                 }
-                if (uidl.hasAttribute("codetype")) {
-                    obj.setAttribute("codetype",
-                            uidl.getStringAttribute("codetype"));
+                if (state.codetype != null) {
+                    obj.setAttribute("codetype", state.codetype);
                 }
-                if (uidl.hasAttribute("archive")) {
-                    obj.setAttribute("archive",
-                            uidl.getStringAttribute("archive"));
+                if (state.archive != null) {
+                    obj.setAttribute("archive", state.archive);
                 }
-                if (uidl.hasAttribute("standby")) {
-                    obj.setAttribute("standby",
-                            uidl.getStringAttribute("standby"));
+                if (state.standby != null) {
+                    obj.setAttribute("standby", state.standby);
                 }
                 getWidget().getElement().appendChild(obj);
-                if (uidl.hasAttribute(EmbeddedConstants.ALTERNATE_TEXT)) {
-                    obj.setInnerText(uidl.getStringAttribute(
-                            EmbeddedConstants.ALTERNATE_TEXT));
+                if (state.altText != null) {
+                    obj.setInnerText(state.altText);
                 }
             } else {
                 VConsole.error("Unknown Embedded mimetype '" + mime + "'");
@@ -247,6 +208,28 @@ public class EmbeddedConnector extends AbstractComponentConnector
 
         if (clearBrowserElement) {
             getWidget().browserElement = null;
+        }
+    }
+
+    private void updateResourceIfNecessary() {
+        if (resourceElement != null || objectElement != null) {
+            String src = getResourceUrl("src");
+            if (src != null && !src.isEmpty()) {
+                if (!src.equals(resourceUrl)) {
+                    setResourceUrl(src);
+                }
+            } else if (resourceUrl != null && !resourceUrl.isEmpty()) {
+                setResourceUrl("");
+            }
+        }
+    }
+
+    private void setResourceUrl(String src) {
+        resourceUrl = src;
+        if (resourceElement != null) {
+            resourceElement.setAttribute("src", src);
+        } else if (objectElement != null) {
+            objectElement.setData(src);
         }
     }
 
