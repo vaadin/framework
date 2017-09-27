@@ -17,6 +17,9 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
+
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Represents the result of a validation. A result may be either successful or
@@ -35,24 +38,36 @@ public interface ValidationResult extends Serializable {
     class SimpleValidationResult implements ValidationResult {
 
         private final String error;
+        private final ErrorLevel errorLevel;
 
-        SimpleValidationResult(String error) {
+        SimpleValidationResult(String error, ErrorLevel errorLevel) {
+            if (error != null && errorLevel == null) {
+                throw new IllegalStateException("ValidationResult has an "
+                        + "error message, but no ErrorLevel is provided.");
+            }
             this.error = error;
+            this.errorLevel = errorLevel;
         }
 
         @Override
         public String getErrorMessage() {
-            if (error == null) {
+            if (!getErrorLevel().isPresent()) {
                 throw new IllegalStateException("The result is not an error. "
                         + "It cannot contain error message");
             } else {
-                return error;
+                return error != null ? error : "";
             }
+        }
+
+        public Optional<ErrorLevel> getErrorLevel() {
+            return Optional.ofNullable(errorLevel);
         }
 
         @Override
         public boolean isError() {
-            return error != null;
+            // Info and Warning are not error by default.
+            return errorLevel != null && errorLevel != ErrorLevel.INFO
+                    && errorLevel != ErrorLevel.WARNING;
         }
 
     }
@@ -69,6 +84,15 @@ public interface ValidationResult extends Serializable {
     String getErrorMessage();
 
     /**
+     * Returns optional error level for this validation result.
+     *
+     * @return the error level if present
+     * @throws IllegalStateException
+     *             if the result represents success
+     */
+    Optional<ErrorLevel> getErrorLevel();
+
+    /**
      * Checks if the result denotes an error.
      *
      * @return <code>true</code> if the result denotes an error,
@@ -82,7 +106,7 @@ public interface ValidationResult extends Serializable {
      * @return the successful result
      */
     public static ValidationResult ok() {
-        return new SimpleValidationResult(null);
+        return new SimpleValidationResult(null, null);
     }
 
     /**
@@ -98,6 +122,28 @@ public interface ValidationResult extends Serializable {
      */
     public static ValidationResult error(String errorMessage) {
         Objects.requireNonNull(errorMessage);
-        return new SimpleValidationResult(errorMessage);
+        return failure(errorMessage, ErrorLevel.ERROR);
+    }
+
+    /**
+     * Creates the validation result which represent a failure with the given
+     * {@code errorMessage} and {@code errorLevel}. Failures with
+     * {@link ErrorLevel} of {@code INFO} or {@code WARNING} are not considered
+     * blocking failures.
+     *
+     * @param errorMessage
+     *            error message, not {@code null}
+     * @param errorLevel
+     *            error level, not {@code null}
+     * @return validation result which represent a failure with the given
+     *         {@code errorMessage} and {@code errorLevel}
+     * @throws NullPointerException
+     *             if {@code errorMessage} is null
+     */
+    public static ValidationResult failure(String errorMessage,
+            ErrorLevel errorLevel) {
+        Objects.requireNonNull(errorMessage);
+        Objects.requireNonNull(errorLevel);
+        return new SimpleValidationResult(errorMessage, errorLevel);
     }
 }
