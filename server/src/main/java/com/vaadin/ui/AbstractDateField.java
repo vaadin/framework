@@ -459,15 +459,29 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     public void setZoneId(ZoneId zoneId) {
         if (zoneId != this.zoneId
                 || (zoneId != null && !zoneId.equals(this.zoneId))) {
-            String timeZoneJSON;
-            if (zoneId != null) {
-                timeZoneJSON = TimeZoneUtil.toJSON(zoneId, getLocale());
-            } else {
-                timeZoneJSON = null;
-            }
-            getState().timeZoneJSON = timeZoneJSON;
+            updateTimeZoneJSON(zoneId, getLocale());
         }
         this.zoneId = zoneId;
+    }
+
+    private void updateTimeZoneJSON(ZoneId zoneId, Locale locale) {
+        String timeZoneJSON;
+        if (zoneId != null && locale != null) {
+            timeZoneJSON = TimeZoneUtil.toJSON(zoneId, locale);
+        } else {
+            timeZoneJSON = null;
+        }
+        getState().timeZoneJSON = timeZoneJSON;
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        Locale oldLocale = getLocale();
+        if (locale != oldLocale
+                || (locale != null && !locale.equals(oldLocale))) {
+            updateTimeZoneJSON(getZoneId(), locale);
+        }
+        super.setLocale(locale);
     }
 
     /**
