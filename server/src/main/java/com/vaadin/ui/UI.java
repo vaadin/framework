@@ -794,6 +794,8 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the part of path (from browser's URL) that points to this UI,
      *         without possible view identifiers or path parameters
+     * 
+     * @since 8.2
      */
     public String getUiRootPath() {
         return uiRootPath;
@@ -816,6 +818,8 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the path info part of the request; {@code null} if no request
      *         from client has been processed
+     * 
+     * @since 8.2
      */
     public String getUiPathInfo() {
         return uiPathInfo;
