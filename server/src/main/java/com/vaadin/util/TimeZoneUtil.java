@@ -74,7 +74,7 @@ public final class TimeZoneUtil implements Serializable {
         }
         ZoneRules rules = zoneId.getRules();
         TimeZone timeZone = TimeZone.getTimeZone(zoneId);
-        List<Long> transtionsList = new ArrayList<>();
+        List<Long> transitionsList = new ArrayList<>();
 
         TimeZoneInfo info = new TimeZoneInfo();
 
@@ -86,6 +86,9 @@ public final class TimeZoneUtil implements Serializable {
                 while (true) {
                     ZoneOffsetTransition t = rules
                             .nextTransition(i.toInstant());
+                    if (t == null) {
+                        break;
+                    }
                     i = t.getInstant().atZone(zoneId);
                     if (i.toLocalDate().getYear() != year) {
                         break;
@@ -94,13 +97,13 @@ public final class TimeZoneUtil implements Serializable {
                             .ofSeconds(t.getInstant().getEpochSecond())
                             .toHours();
                     long duration = Math.max(t.getDuration().toMinutes(), 0);
-                    transtionsList.add(epocHours);
-                    transtionsList.add(duration);
+                    transitionsList.add(epocHours);
+                    transitionsList.add(duration);
                 }
             }
         }
         info.id = zoneId.getId();
-        info.transitions = transtionsList.stream().mapToLong(l -> l).toArray();
+        info.transitions = transitionsList.stream().mapToLong(l -> l).toArray();
         info.std_offset = (int) Duration.ofMillis(timeZone.getRawOffset())
                 .toMinutes();
         info.names = new String[] {
