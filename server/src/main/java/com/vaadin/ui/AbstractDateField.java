@@ -460,7 +460,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         if (zoneId != this.zoneId
                 || (zoneId != null && !zoneId.equals(this.zoneId))) {
             String timeZoneJSON;
-            if (getZoneId() != null) {
+            if (zoneId != null) {
                 timeZoneJSON = TimeZoneUtil.toJSON(zoneId, getLocale());
             } else {
                 timeZoneJSON = null;
