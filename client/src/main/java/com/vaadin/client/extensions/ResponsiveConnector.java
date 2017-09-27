@@ -104,17 +104,17 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     protected String constructSelectorsForTarget() {
         String primaryStyle = target.getState().primaryStyleName;
         StringBuilder selectors = new StringBuilder();
-        selectors.append(".").append(primaryStyle);
+        selectors.append('.').append(primaryStyle);
 
         if (target.getState().styles != null
                 && target.getState().styles.size() > 0) {
             for (String style : target.getState().styles) {
                 selectors.append(",.").append(style);
-                selectors.append(",.").append(primaryStyle).append(".")
+                selectors.append(",.").append(primaryStyle).append('.')
                         .append(style);
-                selectors.append(",.").append(style).append(".")
+                selectors.append(",.").append(style).append('.')
                         .append(primaryStyle);
-                selectors.append(",.").append(primaryStyle).append("-")
+                selectors.append(",.").append(primaryStyle).append('-')
                         .append(style);
             }
         }

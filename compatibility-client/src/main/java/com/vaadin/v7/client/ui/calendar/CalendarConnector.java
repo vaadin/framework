@@ -185,7 +185,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                 if (hasEventListener(CalendarEventId.EVENTMOVE)) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(DateUtil.formatClientSideDate(event.getStart()));
-                    sb.append("-");
+                    sb.append('-');
                     sb.append(DateUtil
                             .formatClientSideTime(event.getStartTime()));
                     rpc.eventMove(event.getIndex(), sb.toString());
@@ -200,7 +200,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
                     buffer.append(
                             DateUtil.formatClientSideDate(event.getStart()));
-                    buffer.append("-");
+                    buffer.append('-');
                     buffer.append(DateUtil
                             .formatClientSideTime(event.getStartTime()));
 
@@ -209,7 +209,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                     buffer = new StringBuilder();
                     buffer.append(
                             DateUtil.formatClientSideDate(event.getEnd()));
-                    buffer.append("-");
+                    buffer.append('-');
                     buffer.append(
                             DateUtil.formatClientSideTime(event.getEndTime()));
 

@@ -246,15 +246,15 @@ public class TestSizeableIncomponents extends LegacyApplication {
         public String getTestableName() {
             StringBuffer sb = new StringBuffer();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
-            sb.append("[");
+            sb.append('[');
             for (Iterator<Configuration> i = configurations.iterator(); i
                     .hasNext();) {
                 sb.append((i.next()).getDescription());
                 if (i.hasNext()) {
-                    sb.append(",");
+                    sb.append(',');
                 }
             }
-            sb.append("]");
+            sb.append(']');
 
             return sb.toString();
         }

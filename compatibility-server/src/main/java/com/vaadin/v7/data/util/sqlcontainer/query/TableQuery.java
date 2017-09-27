@@ -439,10 +439,10 @@ public class TableQuery extends AbstractTransactionalQuery
         if (fullTableName == null) {
             StringBuilder sb = new StringBuilder();
             if (catalogName != null) {
-                sb.append(catalogName).append(".");
+                sb.append(catalogName).append('.');
             }
             if (schemaName != null) {
-                sb.append(schemaName).append(".");
+                sb.append(schemaName).append('.');
             }
             sb.append(tableName);
             fullTableName = sb.toString();

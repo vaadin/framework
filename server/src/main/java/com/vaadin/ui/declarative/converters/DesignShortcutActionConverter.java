@@ -166,13 +166,13 @@ public class DesignShortcutActionConverter
         // handle modifiers
         if (value.getModifiers() != null) {
             for (int modifier : value.getModifiers()) {
-                sb.append(getStringForKeycode(modifier)).append("-");
+                sb.append(getStringForKeycode(modifier)).append('-');
             }
         }
         // handle keycode
         sb.append(getStringForKeycode(value.getKeyCode()));
         if (value.getCaption() != null) {
-            sb.append(" ").append(value.getCaption());
+            sb.append(' ').append(value.getCaption());
         }
         return sb.toString();
     }

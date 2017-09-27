@@ -163,7 +163,7 @@ public class AttachDetachListenersTest {
             buffer.append("expected ")
                     .append(expected.getClass().getSimpleName())
                     .append(" with connector ").append(expected.getConnector());
-            buffer.append(")");
+            buffer.append(')');
         }
 
         @Override
