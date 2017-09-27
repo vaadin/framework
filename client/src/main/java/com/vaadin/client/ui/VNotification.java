@@ -37,12 +37,10 @@ import com.vaadin.client.AnimationUtil;
 import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ui.NotificationRole;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.NotificationTypeConfiguration;
 
 public class VNotification extends VOverlay {
@@ -198,8 +196,8 @@ public class VNotification extends VOverlay {
                 && !styleSetup.prefix.isEmpty();
     }
 
-    public void show(String html, Position position, String style) {
-        NotificationTypeConfiguration styleSetup = getUiState(style);
+    public void show(String html, Position position, String styleName) {
+        NotificationTypeConfiguration styleSetup = getUiState(styleName);
         String assistiveDeviceOnlyStyle = AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE;
 
         setWaiAriaRole(styleSetup);
@@ -218,7 +216,7 @@ public class VNotification extends VOverlay {
         }
 
         setWidget(new HTML(type + html + usage));
-        show(position, style);
+        show(position, styleName);
     }
 
     private NotificationTypeConfiguration getUiState(String style) {
@@ -479,54 +477,58 @@ public class VNotification extends VOverlay {
         }
     }
 
-    public static void showNotification(ApplicationConnection client,
-            final UIDL notification) {
-        boolean onlyPlainText = notification.hasAttribute(
-                UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED);
+    /**
+     * Creates and shows a {@code Notification} with the specified parameters.
+     *
+     * @param client
+     *            The client connection, cannot be {@code null}.
+     * @param caption
+     *            The Notification caption, can be {@code null}.
+     * @param description
+     *            The Notification description, can be {@code null}.
+     * @param htmlContentAllowed
+     *            Whether {@code caption} and {@code description}
+     *            are interpreted as HTML or not.
+     * @param iconUri
+     *            The icon URI, can be {@code null}.
+     * @param styleName
+     *            The Notification style name, can be {@code null}.
+     * @param position
+     *            The desired {@link Position}, can not be {@code null}.
+     * @param delayMsec
+     *            The delay in milliseconds before disappearing, -1 for forever.
+     *
+     * @since
+     */
+    public static VNotification showNotification(ApplicationConnection client,
+            String caption, String description, boolean htmlContentAllowed,
+            String iconUri, String styleName, Position position, int delayMsec) {
         String html = "";
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON)) {
-            String iconUri = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_ICON);
+        if (iconUri != null) {
             html += client.getIcon(iconUri).getElement().getString();
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
-            String caption = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION);
-            if (onlyPlainText) {
+        if (caption != null) {
+            if (!htmlContentAllowed) {
                 caption = WidgetUtil.escapeHTML(caption);
                 caption = caption.replaceAll("\\n", "<br />");
             }
             html += "<h1 class='" + getDependentStyle(client, CAPTION) + "'>"
                     + caption + "</h1>";
         }
-        if (notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE)) {
-            String message = notification.getStringAttribute(
-                    UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE);
-            if (onlyPlainText) {
-                message = WidgetUtil.escapeHTML(message);
-                message = message.replaceAll("\\n", "<br />");
+        if (description != null) {
+            if (!htmlContentAllowed) {
+                description = WidgetUtil.escapeHTML(description);
+                description = description.replaceAll("\\n", "<br />");
             }
             html += "<p class='" + getDependentStyle(client, DESCRIPTION) + "'>"
-                    + message + "</p>";
+                    + description + "</p>";
         }
 
-        final String style = notification
-                .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        ? notification.getStringAttribute(
-                                UIConstants.ATTRIBUTE_NOTIFICATION_STYLE)
-                        : null;
+        VNotification vNotification = createNotification(delayMsec,
+                client.getUIConnector().getWidget());
 
-        final int pos = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION);
-        Position position = Position.values()[pos];
-
-        final int delay = notification
-                .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
-        createNotification(delay, client.getUIConnector().getWidget())
-                .show(html, position, style);
+        vNotification.show(html, position, styleName);
+        return vNotification;
     }
 
     /**

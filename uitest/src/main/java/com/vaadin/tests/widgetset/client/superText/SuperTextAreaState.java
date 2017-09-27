@@ -4,7 +4,6 @@ import com.vaadin.shared.ui.textarea.TextAreaState;
 
 /**
  * @author artamonov
- * @version $Id$
  */
 public class SuperTextAreaState extends TextAreaState {
 

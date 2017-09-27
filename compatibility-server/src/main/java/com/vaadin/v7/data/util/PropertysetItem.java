@@ -109,7 +109,7 @@ public class PropertysetItem
     @Override
     public boolean removeItemProperty(Object id) {
 
-        // Cant remove missing properties
+        // Can't remove missing properties
         if (map.remove(id) == null) {
             return false;
         }
@@ -139,7 +139,7 @@ public class PropertysetItem
             throw new NullPointerException("Item property id can not be null");
         }
 
-        // Cant add a property twice
+        // Can't add a property twice
         if (map.containsKey(id)) {
             return false;
         }

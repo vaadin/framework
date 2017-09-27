@@ -25,9 +25,11 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.Util;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.shared.ui.BorderStyle;
 
-public class VLink extends HTML implements ClickHandler, HasEnabled {
+public class VLink extends HTML implements ClickHandler, HasEnabled,
+        HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-link";
 
@@ -59,7 +61,7 @@ public class VLink extends HTML implements ClickHandler, HasEnabled {
     public int targetHeight;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Element anchor = DOM.createAnchor();
@@ -145,4 +147,21 @@ public class VLink extends HTML implements ClickHandler, HasEnabled {
         this.enabled = enabled;
     }
 
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                getElement().insertFirst(errorIndicatorElement);
+            }
+        } else if (errorIndicatorElement != null) {
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+    }
 }

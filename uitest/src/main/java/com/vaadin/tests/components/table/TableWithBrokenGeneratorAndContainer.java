@@ -45,7 +45,6 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
      * {@link #getContainerProperty(Object, Object)}.
      *
      * @author Vaadin Ltd
-     * @version @VERSION@
      * @since 7.0
      *
      */

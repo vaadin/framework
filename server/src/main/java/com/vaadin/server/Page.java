@@ -311,12 +311,6 @@ public class Page implements Serializable {
     private final LinkedList<OpenResource> openList = new LinkedList<>();
 
     /**
-     * A list of notifications that are waiting to be sent to the client.
-     * Cleared (set to null) when the notifications have been sent.
-     */
-    private List<Notification> notifications;
-
-    /**
      * Event fired when the URI fragment of a <code>Page</code> changes.
      *
      * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
@@ -937,45 +931,6 @@ public class Page implements Serializable {
             openList.clear();
         }
 
-        // Paint notifications
-        if (notifications != null) {
-            target.startTag("notifications");
-            for (final Notification n : notifications) {
-                target.startTag("notification");
-                if (n.getCaption() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION,
-                            n.getCaption());
-                }
-                if (n.getDescription() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_MESSAGE,
-                            n.getDescription());
-                }
-                if (n.getIcon() != null) {
-                    target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON,
-                            n.getIcon());
-                }
-                if (!n.isHtmlContentAllowed()) {
-                    target.addAttribute(
-                            UIConstants.NOTIFICATION_HTML_CONTENT_NOT_ALLOWED,
-                            true);
-                }
-                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_POSITION,
-                        n.getPosition().ordinal());
-                target.addAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY,
-                        n.getDelayMsec());
-                if (n.getStyleName() != null) {
-                    target.addAttribute(
-                            UIConstants.ATTRIBUTE_NOTIFICATION_STYLE,
-                            n.getStyleName());
-                }
-                target.endTag("notification");
-            }
-            target.endTag("notifications");
-            notifications = null;
-        }
-
         if (newPushState != null) {
             target.addAttribute(UIConstants.ATTRIBUTE_PUSH_STATE, newPushState);
             newPushState = null;
@@ -1035,8 +990,12 @@ public class Page implements Serializable {
      * deployed in due to potential proxies, redirections and similar.
      *
      * @return The browser location URI.
+     * @throws IllegalStateException
+     *             if the
+     *             {@link DeploymentConfiguration#isSendUrlsAsParameters()} is
+     *             set to {@code false}
      */
-    public URI getLocation() {
+    public URI getLocation() throws IllegalStateException {
         if (location == null && !uI.getSession().getConfiguration()
                 .isSendUrlsAsParameters()) {
             throw new IllegalStateException("Location is not available as the "
@@ -1338,20 +1297,6 @@ public class Page implements Serializable {
     }
 
     /**
-     * Internal helper method to actually add a notification.
-     *
-     * @param notification
-     *            the notification to add
-     */
-    private void addNotification(Notification notification) {
-        if (notifications == null) {
-            notifications = new LinkedList<>();
-        }
-        notifications.add(notification);
-        uI.markAsDirty();
-    }
-
-    /**
      * Shows a notification message.
      *
      * @see Notification
@@ -1363,7 +1308,7 @@ public class Page implements Serializable {
      */
     @Deprecated
     public void showNotification(Notification notification) {
-        addNotification(notification);
+        notification.show(this);
     }
 
     /**
@@ -1471,5 +1416,16 @@ public class Page implements Serializable {
         }
         pendingDependencies = null;
         return copy;
+    }
+
+    /**
+     * Returns the {@link UI} of this {@link Page}.
+     *
+     * @return the {@link UI} of this {@link Page}.
+     *
+     * @since
+     */
+    public UI getUI() {
+        return uI;
     }
 }

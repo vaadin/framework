@@ -1594,8 +1594,8 @@ public class VTree extends FocusElementPanel
              * problem, that the newly selected item is announced too often with
              * a screen reader.
              *
-             * Behaviour is different when using the Tree with and without
-             * screen reader.
+             * Behavior is different when using the Tree with and without screen
+             * reader.
              */
             if (node.key.equals(lastNodeKey)) {
                 Roles.getTreeRole().setAriaActivedescendantProperty(

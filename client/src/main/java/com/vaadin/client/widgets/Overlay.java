@@ -509,7 +509,7 @@ public class Overlay extends PopupPanel {
         // Calculate proper z-index
         int zIndex = -1;
         try {
-            // Odd behaviour with Windows Hosted Mode forces us to use
+            // Odd behavior with Windows Hosted Mode forces us to use
             // this redundant try/catch block (See dev.vaadin.com #2011)
             zIndex = Integer.parseInt(getElement().getStyle().getZIndex());
         } catch (Exception ignore) {

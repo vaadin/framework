@@ -23,7 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
  * {@link Focusable}.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.3
  *
  */

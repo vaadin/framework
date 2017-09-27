@@ -2277,7 +2277,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @since 8.0.7
      */
     protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
-        this(BeanPropertySet.get(beanType));
+        this(BeanPropertySet.get(beanType), dataCommunicator);
         this.beanType = beanType;
     }
 

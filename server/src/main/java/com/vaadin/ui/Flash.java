@@ -31,7 +31,6 @@ import com.vaadin.ui.declarative.DesignContext;
  * A component for displaying Adobe® Flash® content.
  *
  * @author Vaadin Ltd.
- * @version @VERSION@
  * @since 7.0
  */
 @SuppressWarnings("serial")

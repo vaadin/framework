@@ -25,26 +25,10 @@ public class UIConstants implements Serializable {
     public static final String RESIZE_LAZY = "rL";
 
     @Deprecated
-    public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
-
-    @Deprecated
     public static final String ATTRIBUTE_PUSH_STATE = "ps";
 
     @Deprecated
     public static final String ATTRIBUTE_REPLACE_STATE = "rs";
-
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_CAPTION = "caption";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_MESSAGE = "message";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_ICON = "icon";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_POSITION = "position";
-    @Deprecated
-    public static final String ATTRIBUTE_NOTIFICATION_DELAY = "delay";
 
     /**
      * Name of the parameter used to transmit UI ids back and forth

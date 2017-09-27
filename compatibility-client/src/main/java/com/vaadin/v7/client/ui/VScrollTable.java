@@ -7811,7 +7811,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageDownKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.
@@ -7865,7 +7865,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageUpKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.

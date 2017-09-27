@@ -76,7 +76,6 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -377,12 +376,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -440,12 +433,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-            Browser.getWindow().getHistory().pushState(null, "",
+            Browser.getWindow().getHistory().pushState(null,
+                    getState().pageState.title,
                     uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-            Browser.getWindow().getHistory().replaceState(null, "", uidl
-                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+            Browser.getWindow().getHistory().replaceState(null,
+                    getState().pageState.title, uidl.getStringAttribute(
+                            UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {

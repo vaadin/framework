@@ -151,7 +151,7 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public enum Align {
         /**
-         * Left column alignment. <b>This is the default behaviour. </b>
+         * Left column alignment. <b>This is the default behavior. </b>
          */
         LEFT("b"),
 

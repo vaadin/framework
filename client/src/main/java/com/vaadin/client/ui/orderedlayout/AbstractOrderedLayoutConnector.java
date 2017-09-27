@@ -275,8 +275,9 @@ public abstract class AbstractOrderedLayoutConnector
             slot.setCaptionResizeListener(null);
         }
 
-        slot.setCaption(caption, icon, styles, error, showError, required,
-                enabled, child.getState().captionAsHtml);
+        slot.setCaption(caption, icon, styles, error,
+                child.getState().errorLevel, showError, required, enabled,
+                child.getState().captionAsHtml);
 
         AriaHelper.handleInputRequired(child.getWidget(), required);
         AriaHelper.handleInputInvalid(child.getWidget(), showError);

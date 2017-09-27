@@ -58,6 +58,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -396,10 +397,10 @@ public class Grid extends AbstractComponent
             if (details != null) {
                 if (details.getParent() != null) {
                     String name = detailsGenerator.getClass().getName();
-                    throw new IllegalStateException(
-                            name + " generated a details component that already "
-                                    + "was attached. (itemId: " + itemId
-                                    + ", component: " + details + ")");
+                    throw new IllegalStateException(name
+                            + " generated a details component that already "
+                            + "was attached. (itemId: " + itemId
+                            + ", component: " + details + ")");
                 }
 
                 itemIdToDetailsComponent.put(itemId, details);
@@ -485,7 +486,8 @@ public class Grid extends AbstractComponent
                         .get(itemId);
                 rowData.put(GridState.JSONKEY_DETAILS_VISIBLE,
                         (detailsComponent != null
-                                ? detailsComponent.getConnectorId() : ""));
+                                ? detailsComponent.getConnectorId()
+                                : ""));
             }
         }
 
@@ -1521,7 +1523,8 @@ public class Grid extends AbstractComponent
 
     /**
      * A default implementation of a
-     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single
+     * SelectionModel.Single}.
      */
     @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
@@ -3833,10 +3836,10 @@ public class Grid extends AbstractComponent
                 } else if (!((Sortable) grid.datasource)
                         .getSortableContainerPropertyIds()
                         .contains(propertyId)) {
-                    throw new IllegalStateException(
-                            "Can't set column " + toString()
-                                    + " sortable. Container doesn't support sorting by property "
-                                    + propertyId);
+                    throw new IllegalStateException("Can't set column "
+                            + toString()
+                            + " sortable. Container doesn't support sorting by property "
+                            + propertyId);
                 }
             }
 
@@ -4124,8 +4127,8 @@ public class Grid extends AbstractComponent
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> if the column may be hidable by the
-         *            user via UI interaction
+         *            <code>true</code> if the column may be hidable by the user
+         *            via UI interaction
          * @return this column
          */
         public Column setHidable(boolean hidable) {
@@ -5062,7 +5065,7 @@ public class Grid extends AbstractComponent
      * reinitialized automatically if the container is changed, and if the same
      * properties are present after container change, the columns are reused.
      * Properties with same names, but different data types will lead to
-     * unpredictable behaviour.
+     * unpredictable behavior.
      *
      * @param container
      *            The container data source. Cannot be null.
@@ -5886,7 +5889,8 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single} is supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * is supported.
      *
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
@@ -5924,8 +5928,8 @@ public class Grid extends AbstractComponent
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
      * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
-     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
-     * are supported.
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @param itemId
      *            the itemId to mark as selected
@@ -5971,8 +5975,8 @@ public class Grid extends AbstractComponent
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
      * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
-     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
-     * are supported.
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @param itemId
      *            the itemId to remove from being selected
@@ -6019,8 +6023,8 @@ public class Grid extends AbstractComponent
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
      * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
-     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}
-     * are supported.
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId was already selected
@@ -7621,8 +7625,10 @@ public class Grid extends AbstractComponent
                     Object value = datasource.getItem(itemId)
                             .getItemProperty(c.getPropertyId()).getValue();
                     tableRow.appendElement("td")
-                            .append((value != null ? DesignFormatter
-                                    .encodeForTextNode(value.toString()) : ""));
+                            .append((value != null
+                                    ? DesignFormatter
+                                            .encodeForTextNode(value.toString())
+                                    : ""));
                 }
             }
         }

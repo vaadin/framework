@@ -236,8 +236,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             int result = 1;
             result = prime * result + VComboBox.this.hashCode();
             result = prime * result + ((key == null) ? 0 : key.hashCode());
-            result = prime * result + ((caption == null) ? 0 : caption.hashCode());
-            result = prime * result + ((untranslatedIconUri == null) ? 0 : untranslatedIconUri.hashCode());
+            result = prime * result
+                    + ((caption == null) ? 0 : caption.hashCode());
+            result = prime * result + ((untranslatedIconUri == null) ? 0
+                    : untranslatedIconUri.hashCode());
             result = prime * result + ((style == null) ? 0 : style.hashCode());
             return result;
         }
@@ -678,7 +680,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             /*
              * Prevent the keyboard focus from leaving the textfield by
-             * preventing the default behaviour of the browser. Fixes #4285.
+             * preventing the default behavior of the browser. Fixes #4285.
              */
             handleMouseDownEvent(event);
         }
@@ -1262,7 +1264,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         int getItemOffsetHeight() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetHeight() : 0;
+                    ? items.get(0).getOffsetHeight()
+                    : 0;
         }
 
         /*
@@ -1271,7 +1274,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         int getItemOffsetWidth() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetWidth() : 0;
+                    ? items.get(0).getOffsetWidth()
+                    : 0;
         }
 
         /**
@@ -1300,7 +1304,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // first check if there is a key match to handle items with
             // identical captions
             String currentKey = currentSuggestion != null
-                    ? currentSuggestion.getOptionKey() : "";
+                    ? currentSuggestion.getOptionKey()
+                    : "";
             for (int i = 0; i < p; i++) {
                 final MenuItem potentialExactMatch = getItems().get(i);
                 if (currentKey.equals(getSuggestionKey(potentialExactMatch))
@@ -1381,7 +1386,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else {
                 /*
                  * Setting the selectionrange for an uneditable textbox leads to
-                 * unwanted behaviour when the width of the textbox is narrower
+                 * unwanted behavior when the width of the textbox is narrower
                  * than the width of the entry: the end of the entry is shown
                  * instead of the beginning. (see #13477)
                  *
@@ -2671,7 +2676,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private void handleMouseDownEvent(Event event) {
         /*
          * Prevent the keyboard focus from leaving the textfield by preventing
-         * the default behaviour of the browser. Fixes #4285.
+         * the default behavior of the browser. Fixes #4285.
          */
         if (event.getTypeInt() == Event.ONMOUSEDOWN) {
             debug("VComboBox: blocking mouseDown event to avoid blur");

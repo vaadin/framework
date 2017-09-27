@@ -30,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  *
  * This Component contains some simple test to see that component updates its
- * contents propertly.
+ * contents properly.
  *
  * @author Vaadin Ltd.
  */

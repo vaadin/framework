@@ -12,6 +12,15 @@
 *.txt text
 *.css text
 *.scss text
+*.md text
 
 # To be verified
 *.graffle binary
+
+.gitattributes text
+.gitignore text
+.gitmodules text
+
+.classpath text
+.project text
+*.prefs text
