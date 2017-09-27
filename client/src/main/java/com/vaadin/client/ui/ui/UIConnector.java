@@ -439,12 +439,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-            Browser.getWindow().getHistory().pushState(null, "",
+            Browser.getWindow().getHistory().pushState(null,
+                    getState().pageState.title,
                     uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-            Browser.getWindow().getHistory().replaceState(null, "", uidl
-                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+            Browser.getWindow().getHistory().replaceState(null,
+                    getState().pageState.title, uidl.getStringAttribute(
+                            UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {
