@@ -607,6 +607,8 @@ public class Navigator implements Serializable {
      * @param ui
      *            the ui
      * @return the navigation state manager
+     * 
+     * @since 8.2
      */
     protected NavigationStateManager createNavigationStateManager(UI ui) {
         if (ui.getClass().getAnnotation(PushStateNavigation.class) != null) {

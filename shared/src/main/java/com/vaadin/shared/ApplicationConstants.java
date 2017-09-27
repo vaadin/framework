@@ -209,6 +209,8 @@ public class ApplicationConstants implements Serializable {
      * A request attribute name to store the part of pathInfo that was used to
      * select the UI. Will be used by default Navigator to separate view
      * identifiers from UI. This can be set by custom UI providers.
+     * 
+     * @since 8.2
      **/
     public static final String UI_ROOT_PATH = "com.vaadin.server.UI_ROOT_PATH";
 
