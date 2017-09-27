@@ -42,7 +42,7 @@ import com.vaadin.ui.Component;
  * but will be skipped by the methods mentioned above.
  * </p>
  */
-public final class UIDL extends JavaScriptObject {
+public final class UIDL extends JavaScriptObject implements Iterable<Object> {
 
     protected UIDL() {
     }
@@ -62,7 +62,8 @@ public final class UIDL extends JavaScriptObject {
      * Gets the name of this UIDL section, as created with
      * {@link PaintTarget#startTag(String) PaintTarget.startTag()} in the
      * server-side {@link Component#paint(PaintTarget) Component.paint()} or
-     * (usually) {@link com.vaadin.ui.AbstractComponent#paintContent(PaintTarget)
+     * (usually)
+     * {@link com.vaadin.ui.AbstractComponent#paintContent(PaintTarget)
      * AbstractComponent.paintContent()}. Note that if the UIDL corresponds to a
      * Paintable, a component identifier will be returned instead - this is used
      * internally and is not needed within
@@ -287,8 +288,33 @@ public final class UIDL extends JavaScriptObject {
      * </p>
      *
      * @return an iterator for iterating over UIDL children
+     * @deprecated As of 8.2, please use {@link #iterator()} instead
      */
+    @Deprecated
     public Iterator<Object> getChildIterator() {
+        return iterator();
+    }
+
+    /**
+     * Gets an iterator that can be used to iterate trough the children of this
+     * UIDL.
+     * <p>
+     * The Object returned by <code>next()</code> will be appropriately typed -
+     * if it's UIDL, {@link #getTag()} can be used to check which section is in
+     * question.
+     * </p>
+     * <p>
+     * The basic use case is to iterate over the children of an UIDL update, and
+     * update the appropriate part of the widget for each child encountered, e.g
+     * if <code>getTag()</code> returns "color", one would update the widgets
+     * color to reflect the value of the "color" section.
+     * </p>
+     *
+     * @return an iterator for iterating over UIDL children
+     * @since
+     */
+    @Override
+    public Iterator<Object> iterator() {
 
         return new Iterator<Object>() {
 
