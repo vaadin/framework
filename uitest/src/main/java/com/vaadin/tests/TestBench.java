@@ -175,7 +175,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 }
                             }
 
-                            // just partly mach lowercase
+                            // just partly match lowercase
                             for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;

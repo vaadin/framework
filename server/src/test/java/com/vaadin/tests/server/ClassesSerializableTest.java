@@ -129,7 +129,7 @@ public class ClassesSerializableTest {
             }
 
             // report fields that use lambda types that won't be serializable
-            // (also in syntehtic classes)
+            // (also in synthetic classes)
             Stream.of(cls.getDeclaredFields())
                     .filter(field -> isFunctionalType(field.getGenericType()))
                     .forEach(nonSerializableFunctionFields::add);
