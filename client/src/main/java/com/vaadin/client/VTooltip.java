@@ -138,6 +138,7 @@ public class VTooltip extends VOverlay {
                 && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
             em.updateMessage(info.getErrorMessage());
+            em.updateErrorLevel(info.getErrorLevel());
         } else {
             em.setVisible(false);
         }
@@ -459,6 +460,7 @@ public class VTooltip extends VOverlay {
     @Override
     public void hide() {
         em.updateMessage("");
+        em.updateErrorLevel(null);
         description.setHTML("");
 
         updatePosition(null, true);
