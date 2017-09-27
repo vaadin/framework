@@ -19,7 +19,6 @@ package com.vaadin.v7.ui;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -286,12 +285,9 @@ public class ComboBox extends AbstractSelect
                 target.endTag("so");
             }
 
-            final Iterator<?> i = options.iterator();
             // Paints the available selection options from data source
 
-            while (i.hasNext()) {
-
-                final Object id = i.next();
+            for (final Object id : options) {
 
                 if (!isNullSelectionAllowed() && id != null
                         && id.equals(getNullSelectionItemId())
@@ -690,8 +686,7 @@ public class ComboBox extends AbstractSelect
         prevfilterstring = filterstring;
 
         filteredOptions = new LinkedList<Object>();
-        for (final Iterator<?> it = items.iterator(); it.hasNext();) {
-            final Object itemId = it.next();
+        for (final Object itemId : items) {
             String caption = getItemCaption(itemId);
             if (caption == null || caption.equals("")) {
                 continue;

@@ -20,8 +20,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+<<<<<<< Upstream, based on up/master
 import java.util.Iterator;
 import java.util.Map;
+=======
+>>>>>>> ef83d61 Use enhanced for loop instead of Iterator.
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List
@@ -106,9 +109,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }
@@ -126,9 +127,7 @@ public class ListSet<E> extends ArrayList<E> {
         ensureCapacity(size() + c.size());
 
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }

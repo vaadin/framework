@@ -18,7 +18,6 @@ package com.vaadin.ui.components.colorpicker;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -761,10 +760,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
                     .setRequiredIndicatorVisible(isRequiredIndicatorVisible());
         }
         if (component instanceof HasComponents) {
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            while (iterator.hasNext()) {
-                updateColorComponents(iterator.next());
+            for (Component c : (HasComponents) component) {
+                updateColorComponents(c);
             }
         }
     }

@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -138,9 +137,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             // try to find a proper test class
 
                             // exact match
-                            Iterator<?> iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getName();
@@ -153,9 +150,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
 
                             // simple name match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -167,9 +162,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 }
                             }
                             // ticket match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -183,9 +176,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
 
                             // just partly mach lowercase
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -200,9 +191,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
                             getMainWindow().showNotification(
                                     "No potential matc for #" + fragment);
-
                         }
-
                     }
                 });
 

@@ -54,10 +54,7 @@ public class GridDetailsTest {
 
     @Test
     public void testGridComponentIteratorContainsDetailsComponents() {
-        Iterator<Component> i = grid.iterator();
-
-        while (i.hasNext()) {
-            Component c = i.next();
+        for (Component c : grid) {
             if (c instanceof Label) {
                 String value = ((Label) c).getValue();
                 Assert.assertTrue(

@@ -102,17 +102,15 @@ public class ShortcutActionHandler {
 
     public void handleKeyboardEvent(final Event event,
             ComponentConnector target) {
-        final int modifiers = KeyboardListenerCollection
-                .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
         if (keyCode == 0) {
             return;
         }
+        final int modifiers = KeyboardListenerCollection
+                .getKeyboardModifiers(event);
         final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
-        final Iterator<ShortcutAction> it = actions.iterator();
-        while (it.hasNext()) {
-            final ShortcutAction a = it.next();
+        for (final ShortcutAction a : actions) {
             if (a.getShortcutCombination().equals(kc)) {
                 fireAction(event, a, target);
                 break;

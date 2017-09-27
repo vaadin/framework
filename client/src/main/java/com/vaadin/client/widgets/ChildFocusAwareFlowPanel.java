@@ -16,7 +16,6 @@
 package com.vaadin.client.widgets;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.core.client.Scheduler;
@@ -144,12 +143,11 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = iterator();
-        if (iterator.hasNext()) {
-            Widget widget = iterator.next();
+        for (Widget widget : this) {
             if (widget instanceof Focusable) {
                 ((Focusable) widget).setFocus(true);
             }
+            break;
         }
     }
 

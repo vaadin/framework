@@ -1792,10 +1792,11 @@ public class Grid extends AbstractComponent
                         selection);
                 if (selection.size() + itemIds.size() >= selectionLimit) {
                     // Add one at a time if there's a risk of overflow
-                    Iterator<?> iterator = itemIds.iterator();
-                    while (iterator.hasNext()
-                            && selection.size() < selectionLimit) {
-                        selection.add(iterator.next());
+                    for (Object id : itemIds) {
+                        if (selection.size() >= selectionLimit) {
+                            break;
+                        }
+                        selection.add(id);
                     }
                 } else {
                     selection.addAll(itemIds);

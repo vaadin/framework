@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -428,8 +427,7 @@ public class FilesystemContainer implements Container.Hierarchical {
         final List<File> ll = Arrays.asList(l);
         Collections.sort(ll);
 
-        for (final Iterator<File> i = ll.iterator(); i.hasNext();) {
-            final File lf = i.next();
+        for (final File lf : ll) {
             col.add(lf);
             if (lf.isDirectory()) {
                 addItemIds(col, lf);

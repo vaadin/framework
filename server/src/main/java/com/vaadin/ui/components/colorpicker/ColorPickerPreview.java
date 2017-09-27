@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 import com.vaadin.data.HasValue;
@@ -220,10 +219,8 @@ public class ColorPickerPreview extends CssLayout implements HasValue<Color> {
             ((HasValue<?>) component).setReadOnly(isReadOnly());
         }
         if (component instanceof HasComponents) {
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            while (iterator.hasNext()) {
-                updateColorComponents(iterator.next());
+            for (Component c : (HasComponents) component) {
+                updateColorComponents(c);
             }
         }
     }
