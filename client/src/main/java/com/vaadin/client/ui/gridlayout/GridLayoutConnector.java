@@ -76,13 +76,18 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
     private static native void registerFontLoadedCallback()
     /*-{
         try {
-            if ($doc.fonts && $doc.fonts.status == 'loading') {
+            if (!$doc.fonts) {
+                // perform delayed forced refresh
+                setTimeout(function() {
+                    $wnd.vaadin.forceLayout();
+                }, 300);
+            } else if ($doc.fonts.status == 'loading') {
                 $doc.fonts.ready.then(function () {
                     $wnd.vaadin.forceLayout();
                 });
             }
         } catch(err) {
-            // fonts ready promise not supported by the browser
+            // just rely on the normal rendering being close to correct
         }
     }-*/;
 
