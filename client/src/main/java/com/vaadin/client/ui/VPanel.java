@@ -24,11 +24,12 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
-public class VPanel extends SimplePanel
-        implements ShortcutActionHandlerOwner, Focusable {
+public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
+        Focusable, HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-panel";
 
@@ -134,23 +135,6 @@ public class VPanel extends SimplePanel
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public void setErrorIndicatorVisible(boolean showError) {
-        if (showError) {
-            if (errorIndicatorElement == null) {
-                errorIndicatorElement = DOM.createSpan();
-                DOM.setElementProperty(errorIndicatorElement, "className",
-                        "v-errorindicator");
-                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
-                sinkEvents(Event.MOUSEEVENTS);
-            }
-            DOM.insertBefore(captionNode, errorIndicatorElement, captionText);
-        } else if (errorIndicatorElement != null) {
-            DOM.removeChild(captionNode, errorIndicatorElement);
-            errorIndicatorElement = null;
-        }
-    }
-
-    /** For internal use only. May be removed or replaced in the future. */
     public void setIconUri(String iconUri, ApplicationConnection client) {
         if (icon != null) {
             captionNode.removeChild(icon.getElement());
@@ -200,5 +184,25 @@ public class VPanel extends SimplePanel
             touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
         }
         touchScrollHandler.addElement(contentNode);
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                DOM.sinkEvents(errorIndicatorElement, Event.MOUSEEVENTS);
+                sinkEvents(Event.MOUSEEVENTS);
+                captionNode.insertBefore(errorIndicatorElement, captionText);
+            }
+        } else if (errorIndicatorElement != null){
+            captionNode.removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
     }
 }

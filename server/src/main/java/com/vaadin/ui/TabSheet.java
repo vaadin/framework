@@ -1314,9 +1314,15 @@ public class TabSheet extends AbstractComponentContainer
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
 
-            String formattedHtmlMessage = componentError != null
-                    ? componentError.getFormattedHtmlMessage() : null;
-            tabState.componentError = formattedHtmlMessage;
+            if (componentError != null) {
+                tabState.componentError = componentError
+                        .getFormattedHtmlMessage();
+                tabState.componentErrorLevel = componentError.getErrorLevel();
+            } else {
+                tabState.componentError = null;
+                tabState.componentErrorLevel = null;
+            }
+
 
             markAsDirty();
         }

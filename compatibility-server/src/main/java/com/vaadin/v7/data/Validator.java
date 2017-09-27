@@ -22,10 +22,10 @@ import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
