@@ -1,0 +1,69 @@
+---
+title: Mananipulating browser history
+order: 11
+layout: page
+---
+
+[[advanced.pushstate]]
+= Mananipulating browser history
+
+A major issue in AJAX applications is that as they run in a single web page.
+Bookmarking the application URL (or more generally the __URI__) can only
+bookmark the application, not an application state. This is a problem for many
+applications, such as product catalogs and discussion forums, in which it would
+be good to provide links to specific products or messages. The solution is to 
+modify the URI of the browser using https://developer.mozilla.org/en-US/docs/Web/API/History_API[History APIs]
+[methodname]#pushState# or [methodname]#replaceState# functions, whenever developer
+wants to simulate a logical page change. There is a server side API for those 
+methods and a mechanism to listen to changes in the client side URI in the
+[classname]#Page# object. 
+
+Vaadin offers two ways to modify URIs: the high-level
+[classname]#Navigator# utility described in
+<<dummy/../../../framework/advanced/advanced-navigator#advanced.navigator,"Navigating
+in an Application">> and the low-level API described here.
+
+[[advanced.urifu.setting]]
+== Setting the URL displayed in the browser
+
+You can set the current fragment identifier with the
+[methodname]#pushState()# method in the [classname]#Page# object.
+
+
+[source, java]
+----
+Page.getCurrent().pushState("mars");
+----
+
+The parameter (both String and URI are supported) is resolved on the current URL. Both relative and absolute URIs are supported, but note that browsers accept only URLs of the same origin as the current URL. 
+
+A call to _pushState_ creates a new entry to browsers history. If you wish to avoid this, and just replace the current URL in the browser, use the related [methodname]#replaceState# method.
+
+
+[[advanced.pushstate.popstate]]
+== Listening for "in-page" URI Changes
+
+If your application uses pushState to update the location and after that the user uses browsers back/forward button, a full page reload does not happen and the UIs init method is not called like when entering the page for the first time. To detect these change you can use [interfacename]#PopChangeListener#.
+
+For example, we could define the listener as follows in the [methodname]#init()#
+method of a UI class:
+
+
+[source, java]
+----
+public class MyUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        getPage().addPopStateListener( e -> enter() );
+        
+        // Read the initial URI fragment
+        enter();
+    }
+
+    void enter() {
+        URI location = getPage().getLocation();
+        ... initialize the UI ...
+    }
+}
+----
+
