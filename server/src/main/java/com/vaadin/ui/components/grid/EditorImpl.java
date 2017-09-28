@@ -298,7 +298,6 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     + edited);
             } else {
                 rpc.bind(rowNumber, true);
-                doEdit(beanToEdit);
             }
         }
 
