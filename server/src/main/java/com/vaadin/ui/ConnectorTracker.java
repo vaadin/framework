@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -650,9 +649,9 @@ public class ConnectorTracker implements Serializable {
      *
      * @return A list of dirty and visible connectors.
      */
-    public List<ClientConnector> getDirtyVisibleConnectors() {
+    public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
         Collection<ClientConnector> dirtyConnectors = getDirtyConnectors();
-        List<ClientConnector> dirtyVisibleConnectors = new ArrayList<>(
+        ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<>(
                 dirtyConnectors.size());
         for (ClientConnector c : dirtyConnectors) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(c)) {

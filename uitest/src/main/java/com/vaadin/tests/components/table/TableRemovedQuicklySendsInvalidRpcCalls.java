@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.components.table;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.server.ClientConnector;
@@ -126,7 +126,7 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
         }
 
         @Override
-        public List<ClientConnector> getDirtyVisibleConnectors() {
+        public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
             return tracker.getDirtyVisibleConnectors();
         }
 

@@ -17,7 +17,6 @@ package com.vaadin.shared.ui.orderedlayout;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
@@ -26,7 +25,7 @@ import com.vaadin.shared.ui.AlignmentInfo;
 public class AbstractOrderedLayoutState extends AbstractLayoutState {
     public boolean spacing = false;
 
-    public Map<Connector, ChildComponentData> childData = new HashMap<>();
+    public HashMap<Connector, ChildComponentData> childData = new HashMap<>();
 
     public int marginsBitmask = 0;
 
