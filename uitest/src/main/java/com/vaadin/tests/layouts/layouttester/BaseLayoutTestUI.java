@@ -76,7 +76,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
             l1.setSpacing(false);
             l2.setMargin(false);
             l2.setSpacing(false);
-        } catch (InstantiationException | IllegalAccessExceptione1) {
+        } catch (InstantiationException | IllegalAccessException e1) {
             e1.printStackTrace();
         }
         if (layoutClass.equals(HorizontalLayout.class)) {
