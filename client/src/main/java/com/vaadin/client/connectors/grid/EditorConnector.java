@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
@@ -67,34 +66,26 @@ public class EditorConnector extends AbstractExtensionConnector {
                 @Override
                 public void bind(final int rowIndex, boolean fromServer) {
                     // call this deferred to avoid issues with editing on init
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            boolean canEdit = true;
-                            if (fromServer) {
-                                currentEditedRow = rowIndex;
-                                if (getParent().getDataSource().getRow(rowIndex) != null) { // already have data
-                                    canEdit = true;
-                                } else {
-                                    // will need to wait for available data, register listener if necessary on first try
-                                    if (dataAvailableListener == null) {
-                                        dataAvailableListener = (event) -> {
-                                            Range range = event.getAvailableRows();
-                                            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
-                                                getParent().getWidget().editRow(currentEditedRow);
-                                                waitingForAvailableData = false;
-                                            }
-                                        };
-                                        getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
+                    Scheduler.get().scheduleDeferred(() -> {
+                        if (fromServer) {
+                            currentEditedRow = rowIndex;
+                            // might need to wait for available data, register listener if necessary on first try
+                            // if data is available, ensureAvailability will immediately trigger the handler anyway,
+                            // so no need for alternative "immediately available" logic
+                            if (dataAvailableListener == null) {
+                                dataAvailableListener = (event) -> {
+                                    Range range = event.getAvailableRows();
+                                    if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
+                                        getParent().getWidget().editRow(currentEditedRow);
+                                        waitingForAvailableData = false;
                                     }
-                                    getParent().getDataSource().ensureAvailability(rowIndex, 1);
-                                    waitingForAvailableData = true;
-                                    canEdit = false;
-                                }
+                                };
+                                getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
                             }
-                            if (canEdit) {
-                                getParent().getWidget().editRow(rowIndex);
-                            }
+                            waitingForAvailableData = true;
+                            getParent().getDataSource().ensureAvailability(rowIndex, 1);
+                        } else {
+                            getParent().getWidget().editRow(rowIndex);
                         }
                     });
                 }
