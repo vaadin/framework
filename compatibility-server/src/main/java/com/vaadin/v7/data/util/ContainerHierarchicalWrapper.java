@@ -26,6 +26,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -63,10 +64,10 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     private HashSet<Object> noChildrenAllowed = null;
 
     /** Mapping from Item ID to parent Item ID */
-    private Hashtable<Object, Object> parent = null;
+    private Map<Object, Object> parent = null;
 
     /** Mapping from Item ID to a list of child IDs */
-    private Hashtable<Object, LinkedList<Object>> children = null;
+    private Map<Object, LinkedList<Object>> children = null;
 
     /** List that contains all root elements of the container. */
     private LinkedHashSet<Object> roots = null;

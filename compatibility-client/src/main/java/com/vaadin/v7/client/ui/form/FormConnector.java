@@ -126,6 +126,7 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         if (null != getState().errorMessage) {
             getWidget().errorMessage.updateMessage(getState().errorMessage);
+            getWidget().errorMessage.updateErrorLevel(getState().errorLevel);
             getWidget().errorMessage.setVisible(true);
         } else {
             getWidget().errorMessage.setVisible(false);

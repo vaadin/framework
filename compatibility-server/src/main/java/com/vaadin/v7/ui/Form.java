@@ -114,12 +114,12 @@ public class Form extends AbstractField<Object>
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
+    private final Map<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
+    private final Map<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -286,7 +286,7 @@ public class Form extends AbstractField<Object>
      * Controls the making validation visible implicitly on commit.
      *
      * Having commit() call setValidationVisible(true) implicitly is the default
-     * behaviour. You can disable the implicit setting by setting this property
+     * behavior. You can disable the implicit setting by setting this property
      * as false.
      *
      * It is useful, because you usually want to start with the form free of
@@ -695,8 +695,9 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null
-                ? newDataSource.getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**

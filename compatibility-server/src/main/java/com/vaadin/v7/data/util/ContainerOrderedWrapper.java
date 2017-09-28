@@ -22,6 +22,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.v7.data.Container;
@@ -57,16 +58,16 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private final Container container;
 
     /**
-     * Ordering information, ie. the mapping from Item ID to the next item ID.
+     * Ordering information, i.e. the mapping from Item ID to the next item ID.
      * The last item id should not be present
      */
-    private Hashtable<Object, Object> next;
+    private Map<Object, Object> next;
 
     /**
      * Reverse ordering information for convenience and performance reasons. The
      * first item id should not be present
      */
-    private Hashtable<Object, Object> prev;
+    private Map<Object, Object> prev;
 
     /**
      * ID of the first Item in the container.
@@ -79,7 +80,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     private Object last;
 
     /**
-     * Is the wrapped container ordered by itself, ie. does it implement the
+     * Is the wrapped container ordered by itself, i.e. does it implement the
      * Container.Ordered interface by itself? If it does, this class will use
      * the methods of the underlying container directly.
      */

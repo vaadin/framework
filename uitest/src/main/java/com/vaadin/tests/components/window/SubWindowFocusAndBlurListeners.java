@@ -55,7 +55,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         window.addActionHandler(new Handler() {
 
-            private Action[] s = new Action[] { new ShortcutAction("^Save") };
+            private Action[] s = { new ShortcutAction("^Save") };
 
             @Override
             public Action[] getActions(Object target, Object sender) {

@@ -3,7 +3,8 @@ package com.vaadin.tests.dd;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -134,7 +135,7 @@ public class TreeDragStart extends TestBase {
         table.setDragMode(TableDragMode.ROW);
 
         // Initialize the table container
-        ArrayList<InventoryObject> collection = new ArrayList<>();
+        List<InventoryObject> collection = new ArrayList<>();
         collection.add(new InventoryObject("Dummy Item", 0.0, false));
         final BeanItemContainer<InventoryObject> tableContainer = new BeanItemContainer<>(
                 collection);
@@ -239,11 +240,10 @@ public class TreeDragStart extends TestBase {
         }
     }
 
-    HashMap<String, InventoryObject> inventoryStore = new HashMap<>();
+    Map<String, InventoryObject> inventoryStore = new HashMap<>();
 
     public HierarchicalContainer createTreeContent() {
-        final Object[] inventory = new Object[] {
-                new InventoryObject("root", 0.0, true),
+        final Object[] inventory = { new InventoryObject("root", 0.0, true),
                 new InventoryObject("+5 Quarterstaff (blessed)", 3.5, false),
                 new InventoryObject("+3 Elven Dagger (blessed)", 0.2, false),
                 new InventoryObject("+5 Helmet (greased)", 1.5, false),

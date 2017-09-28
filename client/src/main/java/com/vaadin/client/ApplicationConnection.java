@@ -42,7 +42,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.communication.ConnectionStateHandler;
 import com.vaadin.client.communication.Heartbeat;
 import com.vaadin.client.communication.MessageHandler;
@@ -116,7 +115,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final HashMap<String, String> resourcesMap = new HashMap<>();
+    private final Map<String, String> resourcesMap = new HashMap<>();
 
     private WidgetSet widgetSet;
 
@@ -236,7 +235,7 @@ public class ApplicationConnection implements HasHandlers {
      *
      * To listen for the event add a {@link ApplicationStoppedHandler} by
      * invoking
-     * {@link ApplicationConnection#addHandler(ApplicationConnection.ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * {@link ApplicationConnection#addHandler(GwtEvent.Type, ApplicationStoppedHandler)}
      * to the {@link ApplicationConnection}
      *
      * @since 7.1.8
@@ -279,7 +278,7 @@ public class ApplicationConnection implements HasHandlers {
     /**
      * A listener for listening to application stopped events. The listener can
      * be added to a {@link ApplicationConnection} by invoking
-     * {@link ApplicationConnection#addHandler(ApplicationStoppedEvent.Type, ApplicationStoppedHandler)}
+     * {@link ApplicationConnection#addHandler(GwtEvent.Type, ApplicationStoppedHandler)}
      *
      * @since 7.1.8
      * @author Vaadin Ltd
@@ -384,8 +383,8 @@ public class ApplicationConnection implements HasHandlers {
                 + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
-            getLogger()
-                    .severe("Warning: your widget set seems to be built with a different "
+            getLogger().severe(
+                    "Warning: your widget set seems to be built with a different "
                             + "version than the one used on server. Unexpected "
                             + "behavior may occur.");
         }
@@ -495,7 +494,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-
+    
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -510,7 +509,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-
+    
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -527,7 +526,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-
+    
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 

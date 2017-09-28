@@ -9,7 +9,7 @@ import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCombinedWithEnterShortcut extends TestBase {
-    final String[] cities = new String[] { "Berlin", "Brussels", "Helsinki",
+    final String[] cities = { "Berlin", "Brussels", "Helsinki",
             "Madrid", "Oslo", "Paris", "Stockholm" };
 
     private Log log = new Log(5);

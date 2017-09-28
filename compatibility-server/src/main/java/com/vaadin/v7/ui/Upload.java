@@ -194,7 +194,7 @@ public class Upload extends AbstractLegacyComponent
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }

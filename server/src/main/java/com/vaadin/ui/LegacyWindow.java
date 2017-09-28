@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
@@ -321,7 +320,8 @@ public class LegacyWindow extends UI {
      * @param resizeListener
      *            the listener to add
      *
-     * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
+     * @see BrowserWindowResizeListener#browserWindowResized(com.vaadin.server.Page.BrowserWindowResizeEvent)
+     *      BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
      * @see #setResizeLazy(boolean)
      *
      * @deprecated As of 7.0, use the similarly named api in Page instead

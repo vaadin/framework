@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
@@ -233,7 +234,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
     class Testable {
 
         private Class<?> classToTest;
-        private ArrayList<Configuration> configurations = new ArrayList<>();
+        private List<Configuration> configurations = new ArrayList<>();
 
         Testable(Class<?> c) {
             classToTest = c;
@@ -246,15 +247,15 @@ public class TestSizeableIncomponents extends LegacyApplication {
         public String getTestableName() {
             StringBuffer sb = new StringBuffer();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
-            sb.append("[");
+            sb.append('[');
             for (Iterator<Configuration> i = configurations.iterator(); i
                     .hasNext();) {
                 sb.append((i.next()).getDescription());
                 if (i.hasNext()) {
-                    sb.append(",");
+                    sb.append(',');
                 }
             }
-            sb.append("]");
+            sb.append(']');
 
             return sb.toString();
         }

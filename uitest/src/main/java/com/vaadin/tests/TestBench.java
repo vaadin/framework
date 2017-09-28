@@ -276,7 +276,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
      */
     public static List<Class<?>> getTestableClassesForPackage(
             String packageName) throws Exception {
-        final ArrayList<File> directories = new ArrayList<>();
+        final List<File> directories = new ArrayList<>();
         try {
             final ClassLoader cld = Thread.currentThread()
                     .getContextClassLoader();
@@ -295,7 +295,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                     packageName + " does not appear to be a valid package.");
         }
 
-        final ArrayList<Class<?>> classes = new ArrayList<>();
+        final List<Class<?>> classes = new ArrayList<>();
         // For every directory identified capture all the .class files
         for (final File directory : directories) {
             if (directory.exists()) {

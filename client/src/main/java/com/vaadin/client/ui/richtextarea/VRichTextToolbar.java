@@ -275,7 +275,7 @@ public class VRichTextToolbar extends Composite {
         }
     }
 
-    private static final RichTextArea.FontSize[] fontSizesConstants = new RichTextArea.FontSize[] {
+    private static final RichTextArea.FontSize[] fontSizesConstants = {
             RichTextArea.FontSize.XX_SMALL, RichTextArea.FontSize.X_SMALL,
             RichTextArea.FontSize.SMALL, RichTextArea.FontSize.MEDIUM,
             RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,

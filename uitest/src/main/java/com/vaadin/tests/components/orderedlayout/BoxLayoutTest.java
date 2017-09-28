@@ -213,7 +213,7 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         controls.addComponent(cell);
         cell.addComponent(new Label("Cell"));
 
-        ArrayList<Alignment> alignments = new ArrayList<>();
+        List<Alignment> alignments = new ArrayList<>();
         alignments.addAll(Arrays.asList(Alignment.TOP_LEFT,
                 Alignment.MIDDLE_LEFT, Alignment.BOTTOM_LEFT,
                 Alignment.TOP_CENTER, Alignment.MIDDLE_CENTER,
@@ -342,7 +342,8 @@ public class BoxLayoutTest extends AbstractReindeerTestUI {
         componentError.addValueChangeListener(event -> {
             if (target != null) {
                 target.setComponentError(componentError.getValue()
-                        ? new UserError("Error message") : null);
+                        ? new UserError("Error message")
+                        : null);
             }
         });
         component.addComponent(componentError);

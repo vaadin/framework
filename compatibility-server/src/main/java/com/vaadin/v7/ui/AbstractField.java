@@ -1766,7 +1766,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = (AbstractField) designContext
+        AbstractField<?> def = designContext
                 .getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly

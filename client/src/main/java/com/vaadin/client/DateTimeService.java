@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
@@ -50,7 +51,7 @@ public class DateTimeService {
      * Creates a new date time service with a given locale.
      *
      * @param locale
-     *            e.g. fi, en etc.
+     *            e.g. {@code fi}, {@code en}, etc.
      * @throws LocaleNotLoadedException
      */
     public DateTimeService(String locale) throws LocaleNotLoadedException {
@@ -305,10 +306,40 @@ public class DateTimeService {
      * @return
      */
     public String formatDate(Date date, String formatStr) {
+        return formatDate(date, formatStr, null);
+    }
+
+    /**
+     * Check if format contains the month name. If it does we manually convert
+     * it to the month name since DateTimeFormat.format always uses the current
+     * locale and will replace the month name wrong if current locale is
+     * different from the locale set for the DateField.
+     *
+     * MMMM is converted into long month name, MMM is converted into short month
+     * name. '' are added around the name to avoid that DateTimeFormat parses
+     * the month name as a pattern.
+     *
+     * z is converted into the time zone name, using the specified
+     * {@code timeZoneJSON}
+     *
+     * @param date
+     *            The date to convert
+     * @param formatStr
+     *            The format string that might contain {@code MMM} or
+     *            {@code MMMM}
+     * @param timeZone
+     *            The {@link TimeZone} used to replace {@code z}, can be
+     *            {@code null}
+     *
+     * @return the formatted date string
+     * @since 8.2
+     */
+    public String formatDate(Date date, String formatStr, TimeZone timeZone) {
         /*
          * Format month and day names separately when locale for the
          * DateTimeService is not the same as the browser locale
          */
+        formatStr = formatTimeZone(date, formatStr, timeZone);
         formatStr = formatMonthNames(date, formatStr);
         formatStr = formatDayNames(date, formatStr);
 
@@ -404,6 +435,66 @@ public class DateTimeService {
         }
 
         return formatStr;
+    }
+
+    private String formatTimeZone(Date date, String formatStr,
+            TimeZone timeZone) {
+        // if 'z' is found outside quotes and timeZone is used
+        if (getIndexOf(formatStr, 'z') != -1 && timeZone != null) {
+            return replaceTimeZone(formatStr, timeZone.getShortName(date));
+        }
+        return formatStr;
+    }
+
+    /**
+     * Replaces the {@code z} characters of the specified {@code formatStr} with
+     * the given {@code timeZoneName}.
+     * 
+     * @param formatStr
+     *            The format string, which is the pattern describing the date
+     *            and time format
+     * @param timeZoneName
+     *            the time zone name
+     * @return the format string, with {@code z} replaced (if found)
+     */
+    private static String replaceTimeZone(String formatStr,
+            String timeZoneName) {
+
+        // search for 'z' outside the quotes (inside quotes is escaped)
+        int start = getIndexOf(formatStr, 'z');
+        if (start == -1) {
+            return formatStr;
+        }
+
+        // if there are multiple consecutive 'z', treat them as one
+        int end = start;
+        while (end + 1 < formatStr.length()
+                && formatStr.charAt(end + 1) == 'z') {
+            end++;
+        }
+        return formatStr.substring(0, start) + "'" + timeZoneName + "'"
+                + formatStr.substring(end + 1);
+    }
+
+    /**
+     * Returns the first index of the specified {@code ch}, which is outside the
+     * quotes.
+     */
+    private static int getIndexOf(String str, char ch) {
+        boolean inQuote = false;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '\'') {
+                if (i + 1 < str.length() && str.charAt(i + 1) == '\'') {
+                    i++;
+                } else {
+                    inQuote ^= true;
+                }
+            } else if (c == ch && !inQuote) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**

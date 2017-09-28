@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.vaadin.data.provider.DataCommunicator;
 import org.easymock.Capture;
 import org.junit.Assert;
 import org.junit.Before;
@@ -68,6 +69,15 @@ public class GridTest {
         objectColumn = grid.addColumn(string -> new Object());
         randomColumn = grid.addColumn(ValueProvider.identity())
                 .setId("randomColumnId");
+    }
+
+    @Test
+    public void testCreateGridWithDataCommunicator() {
+        DataCommunicator specificDataCommunicator = new DataCommunicator<>();
+
+        TestGrid<String> grid = new TestGrid(String.class, specificDataCommunicator);
+
+        assertEquals(specificDataCommunicator, grid.getDataCommunicator());
     }
 
     @Test

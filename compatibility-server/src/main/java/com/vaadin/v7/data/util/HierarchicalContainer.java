@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,23 +54,23 @@ public class HierarchicalContainer extends IndexedContainer
     /**
      * Mapping from Item ID to parent Item ID.
      */
-    private final HashMap<Object, Object> parent = new HashMap<Object, Object>();
+    private final Map<Object, Object> parent = new HashMap<Object, Object>();
 
     /**
      * Mapping from Item ID to parent Item ID for items included in the filtered
      * container.
      */
-    private HashMap<Object, Object> filteredParent = null;
+    private Map<Object, Object> filteredParent = null;
 
     /**
      * Mapping from Item ID to a list of child IDs.
      */
-    private final HashMap<Object, LinkedList<Object>> children = new HashMap<Object, LinkedList<Object>>();
+    private final Map<Object, LinkedList<Object>> children = new HashMap<Object, LinkedList<Object>>();
 
     /**
      * Mapping from Item ID to a list of child IDs when filtered
      */
-    private HashMap<Object, LinkedList<Object>> filteredChildren = null;
+    private Map<Object, LinkedList<Object>> filteredChildren = null;
 
     /**
      * List that contains all root elements of the container.

@@ -80,7 +80,7 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     protected List<DesiredCapabilities> getBrowsersSupportingTooltip() {
         // With IEDriver, the cursor seems to jump to default position after the
-        // mouse move, so we are not able to test the tooltip behaviour properly
+        // mouse move, so we are not able to test the tooltip behavior properly
         // unless using requireWindowFocusForIE() { return true; } .
         // See #13854.
         // On Firefox, the driver causes additional mouseOut events causing the

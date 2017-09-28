@@ -22,6 +22,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.data.Binder;
@@ -38,9 +39,11 @@ import com.vaadin.v7.data.Property;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no direct replacement available. You can use {@link Map} directly as an item for {@link Binder}
- * or {@link DataProvider} and access item properties with lambdas like {@code binder.forField(component).bind(...)} or
- * {@code new Grid<Map<...>>(dataProvider).addColumn(map->map.get(...))}.
+ * @deprecated As of 8.0, no direct replacement available. You can use
+ *             {@link Map} directly as an item for {@link Binder} or
+ *             {@link DataProvider} and access item properties with lambdas like
+ *             {@code binder.forField(component).bind(...)} or
+ *             {@code new Grid<Map<...>>(dataProvider).addColumn(map->map.get(...))}.
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -52,17 +55,17 @@ public class PropertysetItem
     /**
      * Mapping from property id to property.
      */
-    private HashMap<Object, Property<?>> map = new HashMap<Object, Property<?>>();
+    private Map<Object, Property<?>> map = new HashMap<Object, Property<?>>();
 
     /**
      * List of all property ids to maintain the order.
      */
-    private LinkedList<Object> list = new LinkedList<Object>();
+    private List<Object> list = new LinkedList<Object>();
 
     /**
      * List of property set modification listeners.
      */
-    private LinkedList<Item.PropertySetChangeListener> propertySetChangeListeners = null;
+    private List<Item.PropertySetChangeListener> propertySetChangeListeners = null;
 
     /* Item methods */
 
@@ -106,7 +109,7 @@ public class PropertysetItem
     @Override
     public boolean removeItemProperty(Object id) {
 
-        // Cant remove missing properties
+        // Can't remove missing properties
         if (map.remove(id) == null) {
             return false;
         }
@@ -136,7 +139,7 @@ public class PropertysetItem
             throw new NullPointerException("Item property id can not be null");
         }
 
-        // Cant add a property twice
+        // Can't add a property twice
         if (map.containsKey(id)) {
             return false;
         }
@@ -305,12 +308,12 @@ public class PropertysetItem
 
         final PropertysetItem npsi = new PropertysetItem();
 
-        npsi.list = list != null ? (LinkedList<Object>) list.clone() : null;
+        npsi.list = list != null ? new LinkedList<Object>(list) : null;
         npsi.propertySetChangeListeners = propertySetChangeListeners != null
-                ? (LinkedList<PropertySetChangeListener>) propertySetChangeListeners
-                        .clone()
+                ? new LinkedList<PropertySetChangeListener>(
+                        propertySetChangeListeners)
                 : null;
-        npsi.map = (HashMap<Object, Property<?>>) map.clone();
+        npsi.map = new HashMap<Object, Property<?>>(map);
 
         return npsi;
     }

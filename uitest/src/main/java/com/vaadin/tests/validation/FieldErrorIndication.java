@@ -89,7 +89,7 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends Field> fieldClass : textFields) {
+        for (Class<? extends AbstractField> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
@@ -100,10 +100,9 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
      * @param fieldClass
      * @return
      */
-    private Component getField(Class<? extends Field> fieldClass) {
-        AbstractField f;
+    private Component getField(Class<? extends AbstractField> fieldClass) {
         try {
-            f = (AbstractField) fieldClass.newInstance();
+            AbstractField<?> f = fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

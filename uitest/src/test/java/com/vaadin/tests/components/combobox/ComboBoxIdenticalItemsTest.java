@@ -42,7 +42,7 @@ public class ComboBoxIdenticalItemsTest extends MultiBrowserTest {
         combobox.sendKeys(delay, Keys.ARROW_DOWN, getReturn());
         waitUntilLogText("1. Item one-1 selected");
 
-        Keys[] downDownEnter = new Keys[] { Keys.ARROW_DOWN, Keys.ARROW_DOWN,
+        Keys[] downDownEnter = { Keys.ARROW_DOWN, Keys.ARROW_DOWN,
                 getReturn() };
 
         combobox.sendKeys(delay, downDownEnter);

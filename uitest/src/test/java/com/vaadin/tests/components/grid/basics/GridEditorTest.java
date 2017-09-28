@@ -37,7 +37,7 @@ public abstract class GridEditorTest extends GridBasicsTest {
             .className("v-grid-editor-cancel");
     protected static final org.openqa.selenium.By BY_EDITOR_SAVE = By
             .className("v-grid-editor-save");
-    protected static final String[] TOGGLE_EDIT_ENABLED = new String[] {
+    protected static final String[] TOGGLE_EDIT_ENABLED = {
             "Component", "Editor", "Enabled" };
 
     @Override

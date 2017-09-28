@@ -69,7 +69,7 @@ public class TextChangeEvents extends AbstractTestUIWithLog {
      */
     private class VaadinDeveloperNameField extends TextField
             implements HasValue.ValueChangeListener<String> {
-        private String[] names = new String[] { "Matti Tahvonen",
+        private String[] names = { "Matti Tahvonen",
                 "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
                 "Marko Grönroos", "Artur Signell" };
 

@@ -31,9 +31,9 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
 
-    private static final String[] TOGGLE_EDITOR_BUFFERED = new String[] {
+    private static final String[] TOGGLE_EDITOR_BUFFERED = {
             "Component", "Editor", "Buffered mode" };
-    private static final String[] CANCEL_EDIT = new String[] { "Component",
+    private static final String[] CANCEL_EDIT = { "Component",
             "Editor", "Cancel edit" };
 
     @Override

@@ -17,7 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ImageElement;
@@ -50,13 +50,13 @@ public class VCustomLayout extends ComplexPanel {
     public static final String CLASSNAME = "v-customlayout";
 
     /** Location-name to containing element in DOM map */
-    private final HashMap<String, Element> locationToElement = new HashMap<>();
+    private final Map<String, Element> locationToElement = new HashMap<>();
 
     /** Location-name to contained widget map */
-    final HashMap<String, Widget> locationToWidget = new HashMap<>();
+    final Map<String, Widget> locationToWidget = new HashMap<>();
 
     /** Widget to captionwrapper map */
-    private final HashMap<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<>();
+    private final Map<Widget, VCaptionWrapper> childWidgetToCaptionWrapper = new HashMap<>();
 
     /**
      * Unexecuted scripts loaded from the template.
@@ -421,7 +421,8 @@ public class VCustomLayout extends ComplexPanel {
      * <p>
      * For internal use only. May be removed or replaced in the future.
      *
-     * @param el The first element of the layout
+     * @param el
+     *            The first element of the layout
      * @return true if layout function exists and was run successfully, else
      *         false.
      */

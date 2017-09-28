@@ -24,7 +24,5 @@ public class SpecialCharactersEncodingUI extends AbstractReindeerTestUI {
         TextField f = new TextField("Textfield", textWithZwnj);
         f.setId("textfield");
         addComponent(f);
-
     }
-
 }

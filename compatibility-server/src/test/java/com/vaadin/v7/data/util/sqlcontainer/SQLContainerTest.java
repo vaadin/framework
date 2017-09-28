@@ -211,7 +211,7 @@ public class SQLContainerTest {
         RowId two = new RowId(new Object[] { 2 + offset });
         RowId three = new RowId(new Object[] { 3 + offset });
         if (SQLTestsConstants.db == DB.ORACLE) {
-            String[] correct = new String[] { "1", "2", "3", "4" };
+            String[] correct = { "1", "2", "3", "4" };
             List<String> oracle = new ArrayList<String>();
             for (Object o : itemIds) {
                 oracle.add(o.toString());
@@ -1649,7 +1649,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        final ArrayList<OrderBy> orderBys = new ArrayList<OrderBy>();
+        final List<OrderBy> orderBys = new ArrayList<OrderBy>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
@@ -1767,7 +1767,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        final ArrayList<OrderBy> orderBys = new ArrayList<OrderBy>();
+        final List<OrderBy> orderBys = new ArrayList<OrderBy>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));
@@ -1878,7 +1878,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -1949,7 +1949,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(null);
@@ -2019,7 +2019,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -2090,7 +2090,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -2167,7 +2167,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -2244,7 +2244,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -2353,7 +2353,7 @@ public class SQLContainerTest {
                 connectionPool, "ID");
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        final ArrayList<OrderBy> orderBys = new ArrayList<OrderBy>();
+        final List<OrderBy> orderBys = new ArrayList<OrderBy>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setFilters(EasyMock.isA(List.class));

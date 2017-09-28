@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
@@ -75,7 +76,6 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -138,7 +138,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         @Override
         public void onWindowOrderChange(WindowOrderEvent event) {
             VWindow[] windows = event.getWindows();
-            HashMap<Integer, Connector> orders = new HashMap<>();
+            Map<Integer, Connector> orders = new HashMap<>();
             boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
             for (VWindow window : windows) {
                 Connector connector = Util.findConnectorFor(window);
@@ -376,12 +376,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -413,8 +407,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        getLogger()
-                                .severe("Server is trying to set focus to the widget of connector "
+                        getLogger().severe(
+                                "Server is trying to set focus to the widget of connector "
                                         + Util.getConnectorString(connector)
                                         + " but it is not focusable. The widget should implement either "
                                         + com.google.gwt.user.client.ui.Focusable.class
@@ -439,12 +433,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-            Browser.getWindow().getHistory().pushState(null, "",
+            Browser.getWindow().getHistory().pushState(null,
+                    getState().pageState.title,
                     uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-            Browser.getWindow().getHistory().replaceState(null, "", uidl
-                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+            Browser.getWindow().getHistory().replaceState(null,
+                    getState().pageState.title, uidl.getStringAttribute(
+                            UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {
@@ -676,7 +672,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<>();
+        List<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
@@ -1223,8 +1219,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
         }
 
-        ArrayList<VWindow> getWindows() {
-            ArrayList<VWindow> result = new ArrayList<>();
+        List<VWindow> getWindows() {
+            List<VWindow> result = new ArrayList<>();
             result.addAll(windows);
             Collections.sort(result, this);
             return result;

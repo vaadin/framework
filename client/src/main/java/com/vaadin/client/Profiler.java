@@ -537,7 +537,7 @@ public class Profiler {
         Map<String, Node> totals = new HashMap<>();
         rootNode.sumUpTotals(totals);
 
-        ArrayList<Node> totalList = new ArrayList<>(totals.values());
+        List<Node> totalList = new ArrayList<>(totals.values());
         Collections.sort(totalList, new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -569,14 +569,14 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            String[] keys = new String[] { "navigationStart",
-                    "unloadEventStart", "unloadEventEnd", "redirectStart",
-                    "redirectEnd", "fetchStart", "domainLookupStart",
-                    "domainLookupEnd", "connectStart", "connectEnd",
-                    "requestStart", "responseStart", "responseEnd",
-                    "domLoading", "domInteractive",
-                    "domContentLoadedEventStart", "domContentLoadedEventEnd",
-                    "domComplete", "loadEventStart", "loadEventEnd" };
+            String[] keys = { "navigationStart", "unloadEventStart",
+                    "unloadEventEnd", "redirectStart", "redirectEnd",
+                    "fetchStart", "domainLookupStart", "domainLookupEnd",
+                    "connectStart", "connectEnd", "requestStart",
+                    "responseStart", "responseEnd", "domLoading",
+                    "domInteractive", "domContentLoadedEventStart",
+                    "domContentLoadedEventEnd", "domComplete", "loadEventStart",
+                    "loadEventEnd" };
 
             LinkedHashMap<String, Double> timings = new LinkedHashMap<>();
 

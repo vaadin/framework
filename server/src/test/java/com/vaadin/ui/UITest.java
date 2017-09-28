@@ -8,7 +8,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.http.HttpSession;
 
+import org.easymock.EasyMock;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,6 +22,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.WrappedHttpSession;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.util.CurrentInstanceTest;
@@ -175,7 +178,21 @@ public class UITest {
         VaadinServletService service = new VaadinServletService(servlet,
                 deploymentConfiguration);
         MockVaadinSession session = new MockVaadinSession(service);
+        HttpSession mockHttpSession = EasyMock.createMock(HttpSession.class);
+        WrappedHttpSession mockWrappedSession = new WrappedHttpSession(
+                mockHttpSession) {
+            @Override
+            public Object getAttribute(String name) {
+                String lockAttribute = service.getServiceName() + ".lock";
+                if (lockAttribute.equals(name)) {
+                    return session.getLockInstance();
+                } else {
+                    return super.getAttribute(name);
+                }
+            }
+        };
         session.lock();
+        session.refreshTransients(mockWrappedSession, service);
         ui.setSession(session);
         ui.doInit(Mockito.mock(VaadinRequest.class), 1, "foo");
         session.addUI(ui);

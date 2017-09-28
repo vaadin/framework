@@ -158,7 +158,7 @@ public class TabSheetTest<T extends TabSheet> extends
         createCategory(captionCategory, category);
         createCategory(iconCategory, category);
 
-        String captionOptions[] = new String[] { "", "{id}", "Tab {id}",
+        String captionOptions[] = { "", "{id}", "Tab {id}",
                 "A long caption for tab {id}" };
         LinkedHashMap<String, Resource> iconOptions = new LinkedHashMap<>();
         iconOptions.put("-", null);

@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -35,7 +36,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     protected ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    protected final ArrayList<String> tabKeys = new ArrayList<>();
+    protected final List<String> tabKeys = new ArrayList<>();
     /** For internal use only. May be removed or replaced in the future. */
     protected Set<String> disabledTabKeys = new HashSet<>();
 

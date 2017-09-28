@@ -408,7 +408,7 @@ public class JsonPaintTarget implements PaintTarget {
         sb.append("\"");
         sb.append(name);
         sb.append("\":");
-        sb.append("{");
+        sb.append('{');
         for (Iterator<?> it = value.keySet().iterator(); it.hasNext();) {
             Object key = it.next();
             Object mapValue = value.get(key);
@@ -429,10 +429,10 @@ public class JsonPaintTarget implements PaintTarget {
                 sb.append("\"");
             }
             if (it.hasNext()) {
-                sb.append(",");
+                sb.append(',');
             }
         }
-        sb.append("}");
+        sb.append('}');
 
         tag.addAttribute(sb.toString());
     }
@@ -448,13 +448,13 @@ public class JsonPaintTarget implements PaintTarget {
         buf.append("\"").append(name).append("\":[");
         for (int i = 0; i < values.length; i++) {
             if (i > 0) {
-                buf.append(",");
+                buf.append(',');
             }
             buf.append("\"");
             buf.append(escapeJSON(values[i].toString()));
             buf.append("\"");
         }
-        buf.append("]");
+        buf.append(']');
         tag.addAttribute(buf.toString());
     }
 
@@ -753,7 +753,7 @@ public class JsonPaintTarget implements PaintTarget {
                 data.append(attributesAsJsonObject());
                 data.append(getData());
                 // Writes the end (closing) tag
-                data.append("]");
+                data.append(']');
                 tagClosed = true;
             }
         }
@@ -774,7 +774,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
 
         public void closeChildrenArray() {
-            // append("]");
+            // append(']');
             // firstField = false;
         }
 
@@ -821,17 +821,17 @@ public class JsonPaintTarget implements PaintTarget {
         private String attributesAsJsonObject() {
             final StringBuilder buf = new StringBuilder();
             buf.append(startField());
-            buf.append("{");
+            buf.append('{');
             for (final Iterator<Object> iter = attr.iterator(); iter
                     .hasNext();) {
                 final String element = (String) iter.next();
                 buf.append(element);
                 if (iter.hasNext()) {
-                    buf.append(",");
+                    buf.append(',');
                 }
             }
             buf.append(tag.variablesAsJsonObject());
-            buf.append("}");
+            buf.append('}');
             return buf.toString();
         }
 
@@ -851,10 +851,10 @@ public class JsonPaintTarget implements PaintTarget {
                 final Variable element = (Variable) iter.next();
                 buf.append(element.getJsonPresentation());
                 if (iter.hasNext()) {
-                    buf.append(",");
+                    buf.append(',');
                 }
             }
-            buf.append("}");
+            buf.append('}');
             return buf.toString();
         }
     }
@@ -972,10 +972,10 @@ public class JsonPaintTarget implements PaintTarget {
                 sb.append("\"");
                 i++;
                 if (i < value.length) {
-                    sb.append(",");
+                    sb.append(',');
                 }
             }
-            sb.append("]");
+            sb.append(']');
             return sb.toString();
         }
     }

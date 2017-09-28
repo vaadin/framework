@@ -112,7 +112,7 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
     private Layout buildButtons(boolean disabled, boolean icon, boolean error,
             boolean sized) {
 
-        String[] buttonStyles = new String[] { "Normal", "Primary", "Small",
+        String[] buttonStyles = { "Normal", "Primary", "Small",
                 "Link" };
 
         HorizontalLayout hl = new HorizontalLayout();

@@ -16,6 +16,7 @@
 package com.vaadin.client;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Abstract class mapping between {@link ComponentConnector} instances and their
@@ -26,7 +27,7 @@ import java.util.HashMap;
  */
 abstract class WidgetMap {
 
-    protected static HashMap<Class<? extends ServerConnector>, WidgetInstantiator> instmap = new HashMap<>();
+    protected static Map<Class<? extends ServerConnector>, WidgetInstantiator> instmap = new HashMap<>();
 
     /**
      * Create a new instance of a connector based on its type.

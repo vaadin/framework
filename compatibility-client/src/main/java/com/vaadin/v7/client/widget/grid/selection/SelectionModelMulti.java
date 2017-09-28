@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -264,8 +265,8 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
         return rowHandlesToRows(deselectionBatch);
     }
 
-    private ArrayList<T> rowHandlesToRows(Collection<RowHandle<T>> rowHandles) {
-        ArrayList<T> rows = new ArrayList<T>(rowHandles.size());
+    private List<T> rowHandlesToRows(Collection<RowHandle<T>> rowHandles) {
+        List<T> rows = new ArrayList<T>(rowHandles.size());
         for (RowHandle<T> handle : rowHandles) {
             rows.add(handle.getRow());
         }

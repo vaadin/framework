@@ -18,6 +18,7 @@ package com.vaadin.client.connectors.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.vaadin.client.ServerConnector;
@@ -63,7 +64,7 @@ public class DataCommunicatorConnector extends AbstractExtensionConnector {
 
                         @Override
                         public void setData(int firstIndex, JsonArray data) {
-                            ArrayList<JsonObject> rows = new ArrayList<>(
+                            List<JsonObject> rows = new ArrayList<>(
                                     data.length());
                             for (int i = 0; i < data.length(); i++) {
                                 JsonObject rowObject = data.getObject(i);

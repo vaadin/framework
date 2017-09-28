@@ -248,7 +248,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage sessionExpiredError;
     private int heartbeatInterval;
 
-    private HashMap<Integer, String> unknownComponents;
+    private Map<Integer, String> unknownComponents;
 
     private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<>();
 
@@ -256,11 +256,11 @@ public class ApplicationConfiguration implements EntryPoint {
     private static boolean moduleLoaded = false;
 
     static// TODO consider to make this hashmap per application
-    LinkedList<Command> callbacks = new LinkedList<>();
+    List<Command> callbacks = new LinkedList<>();
 
     private static int dependenciesLoading;
 
-    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<>();
+    private static List<ApplicationConnection> runningApplications = new ArrayList<>();
 
     private Map<Integer, Integer> componentInheritanceMap = new HashMap<>();
     private Map<Integer, String> tagToServerSideClassName = new HashMap<>();

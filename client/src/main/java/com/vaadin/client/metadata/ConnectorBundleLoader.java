@@ -248,7 +248,7 @@ public abstract class ConnectorBundleLoader {
      * @since 8.0.3
      */
     public List<String> getLoadedBundles() {
-        ArrayList<String> bundles = new ArrayList<>();
+        List<String> bundles = new ArrayList<>();
 
         JsArrayString keys = asyncBlockLoaders.getKeys();
         for (int i = 0; i < keys.length(); i++) {

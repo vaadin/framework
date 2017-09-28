@@ -330,7 +330,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         Profiler.leave("VUI.sendClientResized");
     }
 
-    public native static void goTo(String url)
+    public static native void goTo(String url)
     /*-{
        $wnd.location = url;
      }-*/;

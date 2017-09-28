@@ -903,7 +903,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Performs the rendering required by the {@link #renderCalendar(boolean)}.
      * Subclasses may override this method to provide a custom implementation
      * avoiding {@link #renderCalendar(boolean)} override. The latter method
-     * contains a common logic which should not be overriden.
+     * contains a common logic which should not be overridden.
      *
      * @param updateDate
      *            The value false prevents setting the selected date of the
@@ -1485,7 +1485,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overriden to change
+     * selection. By default this is backspace but it can be overridden to change
      * the key to whatever you want.
      *
      * @return

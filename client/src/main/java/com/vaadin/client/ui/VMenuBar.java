@@ -96,7 +96,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /** Widget fields **/
     protected boolean subMenu;
-    protected ArrayList<CustomMenuItem> items;
+    protected List<CustomMenuItem> items;
     protected Element containerElement;
     protected VOverlay popup;
     protected VMenuBar visibleChildMenu;
@@ -176,7 +176,8 @@ public class VMenuBar extends SimpleFocusablePanel
 
     protected void updateStyleNames() {
         String primaryStyleName = getParentMenu() != null
-                ? getParentMenu().getStylePrimaryName() : getStylePrimaryName();
+                ? getParentMenu().getStylePrimaryName()
+                : getStylePrimaryName();
 
         // Reset the style name for all the items
         for (CustomMenuItem item : items) {
@@ -583,7 +584,8 @@ public class VMenuBar extends SimpleFocusablePanel
          * prefix if needed
          */
         String primaryStyleName = parentMenu != null
-                ? parentMenu.getStylePrimaryName() : getStylePrimaryName();
+                ? parentMenu.getStylePrimaryName()
+                : getStylePrimaryName();
         if (subMenu) {
             primaryStyleName = primaryStyleName
                     .replace(SUBMENU_CLASSNAME_PREFIX, "");

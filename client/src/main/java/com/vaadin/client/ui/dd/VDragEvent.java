@@ -55,7 +55,7 @@ public class VDragEvent {
 
     private int id;
 
-    private HashMap<String, Object> dropDetails = new HashMap<>();
+    private Map<String, Object> dropDetails = new HashMap<>();
 
     private Element elementOver;
 

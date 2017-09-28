@@ -85,7 +85,7 @@ public class ResourceDownload extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Downloading with target _new should work, aswell as with target _blank and _top.";
+        return "Downloading with target _new should work, as well as with target _blank and _top.";
     }
 
     @Override

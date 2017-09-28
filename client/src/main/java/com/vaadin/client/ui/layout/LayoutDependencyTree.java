@@ -17,6 +17,7 @@ package com.vaadin.client.ui.layout;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
@@ -406,10 +407,10 @@ public class LayoutDependencyTree {
     private final FastStringMap<LayoutDependency>[] dependenciesInDirection = new FastStringMap[] {
             FastStringMap.create(), FastStringMap.create() };
 
-    private final FastStringSet[] measureQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] measureQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
-    private final FastStringSet[] layoutQueueInDirection = new FastStringSet[] {
+    private final FastStringSet[] layoutQueueInDirection = {
             FastStringSet.create(), FastStringSet.create() };
 
     private final ApplicationConnection connection;
@@ -703,7 +704,7 @@ public class LayoutDependencyTree {
     public Collection<ComponentConnector> getMeasureTargets() {
         JsArrayString targetIds = getMeasureTargetsJsArray();
         int length = targetIds.length();
-        ArrayList<ComponentConnector> targets = new ArrayList<>(length);
+        List<ComponentConnector> targets = new ArrayList<>(length);
         ConnectorMap connectorMap = ConnectorMap.get(connection);
 
         for (int i = 0; i < length; i++) {

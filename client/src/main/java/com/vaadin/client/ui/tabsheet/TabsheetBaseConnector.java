@@ -17,6 +17,7 @@ package com.vaadin.client.ui.tabsheet;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -56,7 +57,7 @@ public abstract class TabsheetBaseConnector
         getWidget().setEnabled(isEnabled());
 
         // Widgets in the TabSheet before update
-        ArrayList<Widget> oldWidgets = new ArrayList<>();
+        List<Widget> oldWidgets = new ArrayList<>();
         for (Iterator<Widget> iterator = getWidget()
                 .getWidgetIterator(); iterator.hasNext();) {
             oldWidgets.add(iterator.next());

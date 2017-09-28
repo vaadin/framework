@@ -13,7 +13,7 @@ import com.vaadin.v7.ui.Table;
 
 public class TableToggleVisibility extends AbstractTestCase {
 
-    private static final int[] LENGTHS = new int[] { 20, 22, 10 };
+    private static final int[] LENGTHS = { 20, 22, 10 };
 
     @Override
     public void init() {

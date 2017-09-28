@@ -154,7 +154,7 @@ public class JavaScriptConnectorHelper {
     }
 
     protected boolean initJavaScript() {
-        ArrayList<String> initFunctionNames = getPotentialInitFunctionNames();
+        List<String> initFunctionNames = getPotentialInitFunctionNames();
         for (String initFunctionName : initFunctionNames) {
             if (tryInitJs(initFunctionName, getConnectorWrapper())) {
                 getLogger().info("JavaScript connector initialized using "
@@ -488,10 +488,10 @@ public class JavaScriptConnectorHelper {
         return initFunctionName;
     }
 
-    private ArrayList<String> getPotentialInitFunctionNames() {
+    private List<String> getPotentialInitFunctionNames() {
         ApplicationConfiguration conf = connector.getConnection()
                 .getConfiguration();
-        ArrayList<String> initFunctionNames = new ArrayList<String>();
+        List<String> initFunctionNames = new ArrayList<String>();
         Integer tag = connector.getTag();
         while (tag != null) {
             String initFunctionName = conf.getServerSideClassNameForTag(tag);

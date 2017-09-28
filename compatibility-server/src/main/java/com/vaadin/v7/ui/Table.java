@@ -151,7 +151,7 @@ public class Table extends AbstractSelect implements Action.Container,
     @Deprecated
     public enum Align {
         /**
-         * Left column alignment. <b>This is the default behaviour. </b>
+         * Left column alignment. <b>This is the default behavior. </b>
          */
         LEFT("b"),
 
@@ -410,37 +410,37 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * Holds headers for visible columns (by propertyId).
      */
-    private final HashMap<Object, String> columnHeaders = new HashMap<Object, String>();
+    private final Map<Object, String> columnHeaders = new HashMap<Object, String>();
 
     /**
      * Holds footers for visible columns (by propertyId).
      */
-    private final HashMap<Object, String> columnFooters = new HashMap<Object, String>();
+    private final Map<Object, String> columnFooters = new HashMap<Object, String>();
 
     /**
      * Holds icons for visible columns (by propertyId).
      */
-    private final HashMap<Object, Resource> columnIcons = new HashMap<Object, Resource>();
+    private final Map<Object, Resource> columnIcons = new HashMap<Object, Resource>();
 
     /**
      * Holds alignments for visible columns (by propertyId).
      */
-    private HashMap<Object, Align> columnAlignments = new HashMap<Object, Align>();
+    private Map<Object, Align> columnAlignments = new HashMap<Object, Align>();
 
     /**
      * Holds column widths in pixels for visible columns (by propertyId).
      */
-    private final HashMap<Object, Integer> columnWidths = new HashMap<Object, Integer>();
+    private final Map<Object, Integer> columnWidths = new HashMap<Object, Integer>();
 
     /**
      * Holds column expand rations for visible columns (by propertyId).
      */
-    private final HashMap<Object, Float> columnExpandRatios = new HashMap<Object, Float>();
+    private final Map<Object, Float> columnExpandRatios = new HashMap<Object, Float>();
 
     /**
      * Holds column generators
      */
-    private final HashMap<Object, ColumnGenerator> columnGenerators = new LinkedHashMap<Object, ColumnGenerator>();
+    private final Map<Object, ColumnGenerator> columnGenerators = new LinkedHashMap<Object, ColumnGenerator>();
 
     /**
      * Holds value of property pageLength. 0 disables paging.
@@ -597,7 +597,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private boolean painted = false;
 
-    private HashMap<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
+    private Map<Object, Converter<String, Object>> propertyValueConverters = new HashMap<Object, Converter<String, Object>>();
 
     /**
      * Set to true if the client-side should be informed that the key mapper has
@@ -895,7 +895,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Resets the alignments
-        final HashMap<Object, Align> newCA = new HashMap<Object, Align>();
+        final Map<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
         for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
                 && i < columnAlignments.length; i++) {
@@ -2282,7 +2282,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         GeneratedRow generatedRow = rowGenerator != null
-                ? rowGenerator.generateRow(this, id) : null;
+                ? rowGenerator.generateRow(this, id)
+                : null;
         cells[CELL_GENERATED_ROW][i] = generatedRow;
 
         for (int j = 0; j < cols; j++) {
@@ -2929,12 +2930,11 @@ public class Table extends AbstractSelect implements Action.Container,
             variables = new HashMap<String, Object>(variables);
             variables.remove("selected");
         } else if (
-                /*
-                 * The AbstractSelect cannot handle the multiselection properly, instead
-                 * we handle it ourself
-                 */
-                isSelectable() && isMultiSelect()
-                && variables.containsKey("selected")
+        /*
+         * The AbstractSelect cannot handle the multiselection properly, instead
+         * we handle it ourself
+         */
+        isSelectable() && isMultiSelect() && variables.containsKey("selected")
                 && multiSelectMode == MultiSelectMode.DEFAULT) {
             handleSelectedItems(variables);
             variables = new HashMap<String, Object>(variables);
@@ -3128,8 +3128,8 @@ public class Table extends AbstractSelect implements Action.Container,
                         evt));
             }
         } else if (
-                // Header click event
-                variables.containsKey("headerClickEvent")) {
+        // Header click event
+        variables.containsKey("headerClickEvent")) {
 
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("headerClickEvent"));
@@ -3141,8 +3141,8 @@ public class Table extends AbstractSelect implements Action.Container,
             }
             fireEvent(new HeaderClickEvent(this, propertyId, details));
         } else if (
-                // Footer click event
-                variables.containsKey("footerClickEvent")) {
+        // Footer click event
+        variables.containsKey("footerClickEvent")) {
             MouseEventDetails details = MouseEventDetails
                     .deSerialize((String) variables.get("footerClickEvent"));
 
@@ -3516,8 +3516,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("cols", getVisibleColumns().length);
         target.addAttribute("rows", rows);
 
-        target.addAttribute("firstrow", (reqFirstRowToPaint >= 0
-                ? reqFirstRowToPaint : firstToBeRenderedInClient));
+        target.addAttribute("firstrow",
+                (reqFirstRowToPaint >= 0 ? reqFirstRowToPaint
+                        : firstToBeRenderedInClient));
         target.addAttribute("totalrows", total);
         if (getPageLength() != 0) {
             target.addAttribute("pagelength", getPageLength());
@@ -3724,7 +3725,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private void paintVisibleColumnOrder(PaintTarget target) {
         // Visible column order
-        final ArrayList<String> visibleColOrder = new ArrayList<String>();
+        final List<String> visibleColOrder = new ArrayList<String>();
         for (Object columnId : visibleColumns) {
             if (!isColumnCollapsed(columnId)) {
                 visibleColOrder.add(columnIdMap.key(columnId));
@@ -3736,7 +3737,7 @@ public class Table extends AbstractSelect implements Action.Container,
     private Set<Action> findAndPaintBodyActions(PaintTarget target) {
         Set<Action> actionSet = new LinkedHashSet<Action>();
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<String>();
+            final List<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
                 // Getting actions for the null item, which in this case means
                 // the body item
@@ -3954,7 +3955,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // Actions
         if (actionHandlers != null) {
-            final ArrayList<String> keys = new ArrayList<String>();
+            final List<String> keys = new ArrayList<String>();
             for (Handler ah : actionHandlers) {
                 final Action[] aa = ah.getActions(itemId, this);
                 if (aa != null) {
