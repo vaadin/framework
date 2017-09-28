@@ -20,11 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-<<<<<<< Upstream, based on up/master
-import java.util.Iterator;
 import java.util.Map;
-=======
->>>>>>> ef83d61 Use enhanced for loop instead of Iterator.
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List

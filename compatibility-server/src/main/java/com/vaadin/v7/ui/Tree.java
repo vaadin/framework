@@ -779,17 +779,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
                 // Actions
                 if (actionHandlers != null) {
-<<<<<<< Upstream, based on up/master
                     final List<String> keys = new ArrayList<String>();
-                    final Iterator<Action.Handler> ahi = actionHandlers
-                            .iterator();
-                    while (ahi.hasNext()) {
-                        final Action[] aa = ahi.next().getActions(itemId, this);
-=======
-                    final ArrayList<String> keys = new ArrayList<String>();
                     for (Action.Handler ah : actionHandlers) {
                         final Action[] aa = ah.getActions(itemId, this);
->>>>>>> ef83d61 Use enhanced for loop instead of Iterator.
                         if (aa != null) {
                             for (int ai = 0; ai < aa.length; ai++) {
                                 final String akey = actionMapper.key(aa[ai]);
