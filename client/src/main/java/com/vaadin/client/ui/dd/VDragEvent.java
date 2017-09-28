@@ -171,7 +171,7 @@ public class VDragEvent {
     }
 
     /**
-     * TODO consider using similar smaller (than map) api as in Transferable
+     * TODO consider using similar smaller (than map) api as in Transferable.
      *
      * TODO clean up when drop handler changes
      *

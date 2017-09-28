@@ -292,7 +292,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /* Expanding and collapsing */
 
     /**
-     * Check is an item is expanded
+     * Check is an item is expanded.
      *
      * @param itemId
      *            the item id.
@@ -481,7 +481,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Sets the behavior of the multiselect mode
+     * Sets the behavior of the multiselect mode.
      *
      * @param mode
      *            The mode to set
@@ -1031,7 +1031,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         private final Object expandedItemId;
 
         /**
-         * New instance of options change event
+         * New instance of options change event.
          *
          * @param source
          *            the Source of the event.
@@ -1125,7 +1125,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /* Collapse event */
 
     /**
-     * Collapse event
+     * Collapse event.
      *
      * @author Vaadin Ltd.
      * @since 3.0
@@ -1274,7 +1274,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         actionHandlers = null;
@@ -1760,7 +1760,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
         /**
          * Constructs a criteria that accepts the drag if the targeted Item is a
-         * descendant of Item identified by given id
+         * descendant of Item identified by given id.
          *
          * @param parentItemId
          *            the item identifier of the parent node
@@ -1819,7 +1819,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /**
      * Set the item description generator which generates tooltips for the tree
-     * items
+     * items.
      *
      * @param generator
      *            The generator to use or null to disable
@@ -1834,7 +1834,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /**
      * Get the item description generator which generates tooltips for tree
-     * items
+     * items.
      */
     public ItemDescriptionGenerator getItemDescriptionGenerator() {
         return itemDescriptionGenerator;

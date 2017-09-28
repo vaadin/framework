@@ -50,7 +50,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     protected enum State {
         /**
-         * Opening request has been sent, but still waiting for confirmation
+         * Opening request has been sent, but still waiting for confirmation.
          */
         CONNECT_PENDING,
 
@@ -381,7 +381,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Called if the transport mechanism cannot be used and the fallback will be
-     * tried
+     * tried.
      */
     protected void onTransportFailure() {
         getLogger().warning("Push connection using primary method ("
@@ -525,7 +525,7 @@ public class AtmospherePushConnection implements PushConnection {
             JavaScriptObject config)
     /*-{
         var self = this;
-
+    
         config.url = uri;
         config.onOpen = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onOpen(*)(response);
@@ -551,7 +551,7 @@ public class AtmospherePushConnection implements PushConnection {
         config.onClientTimeout = $entry(function(request) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onClientTimeout(*)(request);
         });
-
+    
         return $wnd.vaadinPush.atmosphere.subscribe(config);
     }-*/;
 

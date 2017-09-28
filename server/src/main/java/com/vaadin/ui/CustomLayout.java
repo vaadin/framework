@@ -263,12 +263,12 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
     }
 
-    /** Get the name of the template */
+    /** Get the name of the template. */
     public String getTemplateName() {
         return getState(false).templateName;
     }
 
-    /** Get the contents of the template */
+    /** Get the contents of the template. */
     public String getTemplateContents() {
         return getState(false).templateContents;
     }

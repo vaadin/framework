@@ -25,7 +25,7 @@ import com.vaadin.v7.client.ui.VCalendarPanel.SubmitListener;
 import com.vaadin.v7.shared.ui.datefield.Resolution;
 
 /**
- * A client side implementation for InlineDateField
+ * A client side implementation for InlineDateField.
  */
 public class VDateFieldCalendar extends VDateField {
 
@@ -105,8 +105,8 @@ public class VDateFieldCalendar extends VDateField {
                                 if (getCurrentResolution()
                                         .getCalendarField() > Resolution.SECOND
                                                 .getCalendarField()) {
-                                    getClient().updateVariable(getId(),
-                                            "msec", DateTimeService
+                                    getClient().updateVariable(
+                                            getId(), "msec", DateTimeService
                                                     .getMilliseconds(date2),
                                             false);
                                 }

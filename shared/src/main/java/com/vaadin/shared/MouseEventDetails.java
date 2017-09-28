@@ -54,7 +54,7 @@ public class MouseEventDetails implements Serializable {
         }
 
         /**
-         * Returns a human readable text representing the button
+         * Returns a human readable text representing the button.
          *
          * @return
          */

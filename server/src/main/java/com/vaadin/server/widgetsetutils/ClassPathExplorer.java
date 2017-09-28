@@ -62,7 +62,7 @@ public class ClassPathExplorer {
             && f.isDirectory();
 
     /**
-     * Contains information about widgetsets and themes found on the classpath
+     * Contains information about widgetsets and themes found on the classpath.
      *
      * @since 7.1
      */
@@ -566,7 +566,7 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Test method for helper tool
+     * Test method for helper tool.
      */
     public static void main(String[] args) {
         log("Searching for available widgetsets and stylesheets...");

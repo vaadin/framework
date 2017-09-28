@@ -80,7 +80,7 @@ public class VPopupView extends HTML
     private boolean enabled = true;
 
     /**
-     * loading constructor
+     * loading constructor.
      */
     public VPopupView() {
         super();

@@ -94,7 +94,7 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public static final Command emptyCommand = null;
 
-    /** Widget fields **/
+    /** Widget fields. **/
     protected boolean subMenu;
     protected List<CustomMenuItem> items;
     protected Element containerElement;
@@ -251,7 +251,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * This is called by the items in the menu and it communicates the
-     * information to the server
+     * information to the server.
      *
      * @param clickedItemId
      *            id of the item that was clicked
@@ -270,14 +270,14 @@ public class VMenuBar extends SimpleFocusablePanel
     /** Widget methods **/
 
     /**
-     * Returns a list of items in this menu
+     * Returns a list of items in this menu.
      */
     public List<CustomMenuItem> getItems() {
         return items;
     }
 
     /**
-     * Remove all the items in this menu
+     * Remove all the items in this menu.
      */
     public void clearItems() {
         Element e = getContainerElement();
@@ -288,7 +288,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Returns the containing element of the menu
+     * Returns the containing element of the menu.
      *
      * @return
      */
@@ -298,7 +298,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Add a new item to this menu
+     * Add a new item to this menu.
      *
      * @param html
      *            items text
@@ -315,7 +315,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Add a new item to this menu
+     * Add a new item to this menu.
      *
      * @param item
      */
@@ -340,7 +340,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Remove the given item from this menu
+     * Remove the given item from this menu.
      *
      * @param item
      */
@@ -437,7 +437,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When an item is clicked
+     * When an item is clicked.
      *
      * @param item
      */
@@ -468,7 +468,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When the user hovers the mouse over the item
+     * When the user hovers the mouse over the item.
      *
      * @param item
      */
@@ -495,7 +495,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When the mouse is moved away from an item
+     * When the mouse is moved away from an item.
      *
      * @param item
      */
@@ -693,7 +693,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Hides the submenu of an item
+     * Hides the submenu of an item.
      *
      * @param item
      */
@@ -717,7 +717,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Listener method, fired when this menu is closed
+     * Listener method, fired when this menu is closed.
      */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
@@ -731,7 +731,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Recursively hide all child menus
+     * Recursively hide all child menus.
      */
     public void hideChildren() {
         hideChildren(true, true);
@@ -739,7 +739,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      *
-     * Recursively hide all child menus
+     * Recursively hide all child menus.
      *
      * @param animateIn
      *            enable/disable animate-in animation when hide popup
@@ -755,7 +755,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Recursively hide all parent menus
+     * Recursively hide all parent menus.
      */
     public void hideParents(boolean autoClosed) {
         if (visibleChildMenu != null) {
@@ -771,7 +771,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Returns the parent menu of this menu, or null if this is the top-level
-     * menu
+     * menu.
      *
      * @return
      */
@@ -780,7 +780,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Set the parent menu of this menu
+     * Set the parent menu of this menu.
      *
      * @param parent
      */
@@ -790,7 +790,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Returns the currently selected item of this menu, or null if nothing is
-     * selected
+     * selected.
      *
      * @return
      */
@@ -799,7 +799,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Set the currently selected item of this menu
+     * Set the currently selected item of this menu.
      *
      * @param item
      */
@@ -818,7 +818,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      *
-     * A class to hold information on menu items
+     * A class to hold information on menu items.
      *
      */
     public static class CustomMenuItem extends Widget implements HasHTML {
@@ -1332,7 +1332,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Handles the keyboard events handled by the MenuBar
+     * Handles the keyboard events handled by the MenuBar.
      *
      * @param keycode
      *            The key code received
@@ -1692,7 +1692,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Get menu item with given DOM element
+     * Get menu item with given DOM element.
      *
      * @param element
      *            Element used in search
@@ -1721,7 +1721,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Get menu item with given DOM element
+     * Get menu item with given DOM element.
      *
      * @param element
      *            Element used in search

@@ -70,7 +70,7 @@ public class UIState extends AbstractSingleComponentContainerState {
      */
     public LocaleServiceState localeServiceState = new LocaleServiceState();
     /**
-     * Configuration for the push channel
+     * Configuration for the push channel.
      */
     public PushConfigurationState pushConfiguration = new PushConfigurationState();
     /**

@@ -25,7 +25,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class CheckBoxElement extends AbstractFieldElement {
 
     /**
-     * Return string representation of value of the checkbox Return either
+     * Return string representation of value of the checkbox Return either.
      * checked or unchecked
      */
     public String getValue() {

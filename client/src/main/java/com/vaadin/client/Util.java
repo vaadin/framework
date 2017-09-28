@@ -340,7 +340,7 @@ public class Util {
     }
 
     /**
-     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}.
      *
      * @deprecated As of 7.4.0, use
      *             {@link WidgetUtil#runWebkitOverflowAutoFixDeferred(Element)}
@@ -656,7 +656,7 @@ public class Util {
     }
 
     /**
-     * Force webkit to redraw an element
+     * Force webkit to redraw an element.
      *
      * @deprecated As of 7.4.0, use
      *             {@link WidgetUtil#forceWebkitRedraw(Element)} instead.
@@ -954,7 +954,7 @@ public class Util {
     }
 
     /**
-     * Gets currently focused element and checks if it's editable
+     * Gets currently focused element and checks if it's editable.
      *
      * @deprecated As of 7.4.0, use
      *             {@link WidgetUtil#isFocusedElementEditable()} instead.
@@ -1002,7 +1002,7 @@ public class Util {
 
     /**
      * Checks if the given event is either a touch event or caused by the left
-     * mouse button
+     * mouse button.
      *
      * @deprecated As of 7.4.0, use
      *             {@link WidgetUtil#isTouchEventOrLeftMouseButton(Event)}

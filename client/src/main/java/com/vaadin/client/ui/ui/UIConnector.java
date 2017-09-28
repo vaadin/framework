@@ -653,7 +653,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Checks if the given sub window is a child of this UI Connector
+     * Checks if the given sub window is a child of this UI Connector.
      *
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
@@ -875,7 +875,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Invokes the layout analyzer on the server
+     * Invokes the layout analyzer on the server.
      *
      * @since 7.1
      */
@@ -944,7 +944,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Loads the new theme and removes references to the old theme
+     * Loads the new theme and removes references to the old theme.
      *
      * @since 7.4.3
      * @param oldTheme
@@ -1154,7 +1154,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Returns the name of the theme currently in used by the UI
+     * Returns the name of the theme currently in used by the UI.
      *
      * @since 7.3
      * @return the theme name used by this UI

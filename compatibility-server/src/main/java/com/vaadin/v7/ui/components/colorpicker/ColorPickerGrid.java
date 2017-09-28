@@ -202,7 +202,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Adds a color change listener
+     * Adds a color change listener.
      *
      * @param listener
      *            The color change listener
@@ -218,7 +218,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Removes a color change listener
+     * Removes a color change listener.
      *
      * @param listener
      *            The listener
@@ -261,7 +261,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Notifies the listeners that a color change has occurred
+     * Notifies the listeners that a color change has occurred.
      *
      * @param color
      *            The color which it changed to

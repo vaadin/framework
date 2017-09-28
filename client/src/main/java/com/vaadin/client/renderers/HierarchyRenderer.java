@@ -73,13 +73,13 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
         private static native RowReference<Object> getRowReference(
                 RendererCellReference cell) /*-{
-            return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference()();
-        }-*/;
+                                            return cell.@com.vaadin.client.widget.grid.CellReference::getRowReference()();
+                                            }-*/;
 
         private static native FlyweightCell getFlyweightCell(
                 RendererCellReference cell) /*-{
-            return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
-        }-*/;
+                                            return cell.@com.vaadin.client.widget.grid.RendererCellReference::cell;
+                                            }-*/;
     }
 
     private String nodeStyleName;
@@ -222,8 +222,8 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
 
     private boolean isCollapsed(JsonObject rowDescription) {
         boolean collapsed;
-        collapsed = rowDescription
-                .getBoolean(HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
+        collapsed = rowDescription.getBoolean(
+                HierarchicalDataCommunicatorConstants.ROW_COLLAPSED);
         return collapsed;
     }
 
@@ -248,7 +248,7 @@ public class HierarchyRenderer extends ClickableRenderer<Object, Widget> {
     }
 
     /**
-     * Decides whether the element was rendered by {@link HierarchyRenderer}
+     * Decides whether the element was rendered by {@link HierarchyRenderer}.
      */
     public static boolean isElementInHierarchyWidget(Element element) {
         Widget w = WidgetUtil.findWidget(element);

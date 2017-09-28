@@ -18,7 +18,7 @@ package com.vaadin.client.ui.window;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event for window position updates
+ * Event for window position updates.
  *
  * @since 7.1.9
  * @author Vaadin Ltd
@@ -31,7 +31,7 @@ public class WindowMoveEvent extends GwtEvent<WindowMoveHandler> {
     private final int newY;
 
     /**
-     * Creates a new event with the given parameters
+     * Creates a new event with the given parameters.
      *
      * @param x
      *            The new x-position for the VWindow
@@ -44,7 +44,7 @@ public class WindowMoveEvent extends GwtEvent<WindowMoveHandler> {
     }
 
     /**
-     * Gets the new x position of the window
+     * Gets the new x position of the window.
      *
      * @return the new X position of the VWindow
      */
@@ -53,7 +53,7 @@ public class WindowMoveEvent extends GwtEvent<WindowMoveHandler> {
     }
 
     /**
-     * Gets the new y position of the window
+     * Gets the new y position of the window.
      *
      * @return the new Y position of the VWindow
      */
@@ -62,7 +62,7 @@ public class WindowMoveEvent extends GwtEvent<WindowMoveHandler> {
     }
 
     /**
-     * Gets the type of the event
+     * Gets the type of the event.
      *
      * @return the type of the event
      */

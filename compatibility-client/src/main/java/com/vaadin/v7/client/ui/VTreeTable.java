@@ -196,7 +196,8 @@ public class VTreeTable extends VScrollTable {
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth")
-                            ? rowUidl.getIntAttribute("depth") : 0;
+                            ? rowUidl.getIntAttribute("depth")
+                            : 0;
                     setIndent();
                     isTreeCellAdded = true;
                     return true;
@@ -768,7 +769,7 @@ public class VTreeTable extends VScrollTable {
 
     /**
      * Icons rendered into first actual column in TreeTable, not to row header
-     * cell
+     * cell.
      */
     @Override
     protected String buildCaptionHtmlSnippet(UIDL uidl) {

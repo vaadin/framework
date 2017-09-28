@@ -23,7 +23,7 @@ import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
 
 /**
- * Client-to-server RPC interface for the Grid component
+ * Client-to-server RPC interface for the Grid component.
  *
  * @since 7.4
  * @author Vaadin Ltd

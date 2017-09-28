@@ -99,7 +99,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     }
 
     /**
-     * Sets the keyboard focus on the Panel
+     * Sets the keyboard focus on the Panel.
      *
      * @param focus
      *            Should the panel have focus or not.
@@ -200,7 +200,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
                 sinkEvents(Event.MOUSEEVENTS);
                 captionNode.insertBefore(errorIndicatorElement, captionText);
             }
-        } else if (errorIndicatorElement != null){
+        } else if (errorIndicatorElement != null) {
             captionNode.removeChild(errorIndicatorElement);
             errorIndicatorElement = null;
         }

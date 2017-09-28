@@ -614,7 +614,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Listener for {@link ChangeEvent}
+     * Listener for {@link ChangeEvent}.
      *
      * @since 7.2
      */
@@ -757,7 +757,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Adds a filename change event listener
+     * Adds a filename change event listener.
      *
      * @param listener
      *            the Listener to add, not null
@@ -769,7 +769,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Removes a filename change event listener
+     * Removes a filename change event listener.
      *
      * @param listener
      *            the listener to be removed
@@ -968,7 +968,7 @@ public class Upload extends AbstractComponent
     @FunctionalInterface
     public interface ProgressListener extends Serializable {
         /**
-         * Updates progress to listener
+         * Updates progress to listener.
          *
          * @param readBytes
          *            bytes transferred

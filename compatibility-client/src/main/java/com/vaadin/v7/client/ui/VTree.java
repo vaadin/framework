@@ -521,7 +521,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Is a node selected in the tree
+     * Is a node selected in the tree.
      *
      * @param treeNode
      *            The node to check
@@ -1008,7 +1008,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Returns the children of the node
+         * Returns the children of the node.
          *
          * @return A set of tree nodes
          */
@@ -1069,7 +1069,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Travels up the hierarchy looking for this node
+         * Travels up the hierarchy looking for this node.
          *
          * @param child
          *            The child which grandparent this is or is not
@@ -1151,7 +1151,7 @@ public class VTree extends FocusElementPanel
         }
 
         /**
-         * Scrolls the caption into view
+         * Scrolls the caption into view.
          */
         public void scrollIntoView() {
             WidgetUtil.scrollIntoViewVertically(nodeCaptionDiv);
@@ -1191,7 +1191,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Deselects all items in the tree
+     * Deselects all items in the tree.
      */
     public void deselectAll() {
         for (String key : selectedIds) {
@@ -1514,7 +1514,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Returns the first common parent of two nodes
+     * Returns the first common parent of two nodes.
      *
      * @param node1
      *            The first node
@@ -1564,7 +1564,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Sets the node currently in focus
+     * Sets the node currently in focus.
      *
      * @param node
      *            The node to focus or null to remove the focus completely
@@ -1626,7 +1626,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Focuses a node and scrolls it into view
+     * Focuses a node and scrolls it into view.
      *
      * @param node
      *            The node to focus
@@ -1712,7 +1712,7 @@ public class VTree extends FocusElementPanel
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The keycode of the pressed key

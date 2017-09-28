@@ -1059,7 +1059,7 @@ public class GridLayout extends AbstractLayout
     }
 
     /**
-     * Returns the expand ratio of given column
+     * Returns the expand ratio of given column.
      *
      * @see #setColumnExpandRatio(int, float)
      *

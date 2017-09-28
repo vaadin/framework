@@ -190,7 +190,7 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     /**
-     * Adds a color change listener
+     * Adds a color change listener.
      *
      * @param listener
      *            The listener
@@ -201,7 +201,7 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     /**
-     * Removes a color change listener
+     * Removes a color change listener.
      *
      * @param listener
      *            The listener

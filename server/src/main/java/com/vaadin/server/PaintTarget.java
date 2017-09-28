@@ -145,8 +145,8 @@ public interface PaintTarget extends Serializable {
     public void endTag(String tagName) throws PaintException;
 
     /**
-     * Adds a boolean attribute to component. Attributes must be added before any
-     * content is written.
+     * Adds a boolean attribute to component. Attributes must be added before
+     * any content is written.
      *
      * @param name
      *            the Attribute name.
@@ -159,8 +159,8 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, boolean value) throws PaintException;
 
     /**
-     * Adds a integer attribute to component. Attributes must be added before any
-     * content is written.
+     * Adds a integer attribute to component. Attributes must be added before
+     * any content is written.
      *
      * @param name
      *            the Attribute name.
@@ -278,7 +278,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, String value) throws PaintException;
 
     /**
-     * TODO
+     * TODO.
      *
      * @param name
      * @param value

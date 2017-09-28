@@ -47,7 +47,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
 
 /**
- * TODO open for extension
+ * TODO open for extension.
  */
 public class VTooltip extends VOverlay {
     private static final String CLASSNAME = "v-tooltip";
@@ -366,8 +366,10 @@ public class VTooltip extends VOverlay {
                     if (roomBelow > heightNeeded) {
                         y = roomAbove;
                     } else {
-                        y = roomAbove - offsetHeight - (currentElement != null
-                                ? currentElement.getOffsetHeight() : 0);
+                        y = roomAbove - offsetHeight
+                                - (currentElement != null
+                                        ? currentElement.getOffsetHeight()
+                                        : 0);
                     }
 
                     if (y + offsetHeight - Window.getScrollTop() > Window
@@ -503,7 +505,7 @@ public class VTooltip extends VOverlay {
     }
 
     /**
-     * Replace current open tooltip with new content
+     * Replace current open tooltip with new content.
      */
     public void replaceCurrentTooltip() {
         if (closing) {

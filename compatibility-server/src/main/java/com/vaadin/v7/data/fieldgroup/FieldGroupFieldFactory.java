@@ -27,13 +27,14 @@ import com.vaadin.v7.ui.Field;
  *
  * @author Vaadin Ltd.
  * @since 7.0
- * @deprecated As of 8.0, no direct replacement available. {@link Binder#forMemberField(HasValue)} and
- * {@link Binder#bindInstanceFields(Object)} should be used instead.
+ * @deprecated As of 8.0, no direct replacement available.
+ *             {@link Binder#forMemberField(HasValue)} and
+ *             {@link Binder#bindInstanceFields(Object)} should be used instead.
  */
 @Deprecated
 public interface FieldGroupFieldFactory extends Serializable {
     /**
-     * Creates a field based on the data type that we want to edit
+     * Creates a field based on the data type that we want to edit.
      *
      * @param dataType
      *            The type that we want to edit using the field

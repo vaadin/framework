@@ -329,7 +329,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
     }
 
     /**
-     * Value change event
+     * Value change event.
      *
      * @author Vaadin Ltd.
      * @since 3.0
@@ -339,7 +339,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
             implements Property.ValueChangeEvent {
 
         /**
-         * New instance of text change event
+         * New instance of text change event.
          *
          * @param source
          *            the Source of the event.

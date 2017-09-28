@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.Focusable;
 
 /**
- * A Grid that can be focused
+ * A Grid that can be focused.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -43,7 +43,7 @@ public class FocusableGrid extends Grid implements HasFocusHandlers,
         HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers, Focusable {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public FocusableGrid() {
         super();
@@ -125,7 +125,7 @@ public class FocusableGrid extends Grid implements HasFocusHandlers,
     }
 
     /**
-     * Focus the panel
+     * Focus the panel.
      */
     @Override
     public void focus() {

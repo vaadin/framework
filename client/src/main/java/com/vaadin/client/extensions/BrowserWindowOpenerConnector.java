@@ -31,7 +31,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Client-side code for {@link BrowserWindowOpener}
+ * Client-side code for {@link BrowserWindowOpener}.
  *
  * @author Vaadin Ltd
  * @since 7.0.0

@@ -135,7 +135,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
     /**
      * Registers listeners on the calendar so server can be notified of the
-     * events
+     * events.
      */
     protected void registerListeners() {
         getWidget().setListener(new DateClickListener() {
@@ -411,7 +411,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Returns the ApplicationConnection used to connect to the server side
+     * Returns the ApplicationConnection used to connect to the server side.
      */
     @Override
     public ApplicationConnection getClient() {
@@ -585,7 +585,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the original action ID that was passed in from the shared state
+     * Get the original action ID that was passed in from the shared state.
      *
      * @since 7.1.2
      * @param actionKey
@@ -597,7 +597,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the text that is displayed for a context menu item
+     * Get the text that is displayed for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -608,7 +608,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the icon url for a context menu item
+     * Get the icon url for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -619,7 +619,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the start date for an action item
+     * Get the start date for an action item.
      *
      * @param actionKey
      *            The unique action key
@@ -634,7 +634,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the end date for an action item
+     * Get the end date for an action item.
      *
      * @param actionKey
      *            The unique action key

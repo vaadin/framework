@@ -44,7 +44,7 @@ public class Flash extends AbstractEmbedded {
     }
 
     /**
-     * Creates a new empty Flash component with the given caption
+     * Creates a new empty Flash component with the given caption.
      *
      * @param caption
      *            The caption for the component

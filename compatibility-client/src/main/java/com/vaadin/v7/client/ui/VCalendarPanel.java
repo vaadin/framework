@@ -81,7 +81,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Blur listener that listens to blur event from the panel
+     * Blur listener that listens to blur event from the panel.
      */
     public interface FocusOutListener {
         /**
@@ -99,7 +99,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Dispatches an event when the panel when time is changed
+     * Dispatches an event when the panel when time is changed.
      */
     public interface TimeChangeListener {
 
@@ -450,7 +450,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         updateControlButtonRangeStyles(needsMonth);
 
         final String monthName = needsMonth
-                ? getDateTimeService().getMonth(displayedMonth.getMonth()) : "";
+                ? getDateTimeService().getMonth(displayedMonth.getMonth())
+                : "";
         final int year = displayedMonth.getYear() + 1900;
 
         getFlexCellFormatter().setStyleName(0, 2,
@@ -1214,7 +1215,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handle the keyboard navigation when the resolution is set to MONTH
+     * Handle the keyboard navigation when the resolution is set to MONTH.
      *
      * @param keycode
      *            The keycode to handle
@@ -1270,7 +1271,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handle keyboard navigation what the resolution is set to DAY
+     * Handle keyboard navigation what the resolution is set to DAY.
      *
      * @param keycode
      *            The keycode to handle
@@ -1376,7 +1377,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The key code that was pressed
@@ -1404,8 +1405,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overridden to change
-     * the key to whatever you want.
+     * selection. By default this is backspace but it can be overridden to
+     * change the key to whatever you want.
      *
      * @return
      */
@@ -1647,7 +1648,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         private ListBox ampm;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public VTime() {
             super();
@@ -1799,7 +1800,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         /**
-         * Updates the valus to correspond to the values in value
+         * Updates the value to correspond to the values in value.
          */
         public void updateTimes() {
             if (value == null) {
@@ -1985,7 +1986,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Returns the submit listener that listens to selection made from the panel
+     * Returns the submit listener that listens to selection made from the
+     * panel.
      *
      * @return The listener or NULL if no listener has been set
      */

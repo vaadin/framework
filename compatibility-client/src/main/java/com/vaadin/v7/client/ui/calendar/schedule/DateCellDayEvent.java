@@ -45,7 +45,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */

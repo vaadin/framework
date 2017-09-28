@@ -77,7 +77,7 @@ public interface VDropHandler {
     public void dragOver(VDragEvent currentDrag);
 
     /**
-     * Returns the ComponentConnector with which this DropHandler is associated
+     * Returns the ComponentConnector with which this DropHandler is associated.
      */
     public ComponentConnector getConnector();
 

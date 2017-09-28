@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.Focusable;
 
 /**
- * A HTML widget that can be focused
+ * A HTML widget that can be focused.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -43,7 +43,7 @@ public class FocusableHTML extends HTML implements HasFocusHandlers,
         HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers, Focusable {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public FocusableHTML() {
         // make focusable, as we don't need access key magic we don't need to
@@ -115,7 +115,7 @@ public class FocusableHTML extends HTML implements HasFocusHandlers,
     }
 
     /**
-     * Focus the panel
+     * Focus the panel.
      */
     @Override
     public void focus() {

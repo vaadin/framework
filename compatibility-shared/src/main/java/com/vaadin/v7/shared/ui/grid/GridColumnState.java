@@ -20,7 +20,7 @@ import java.io.Serializable;
 import com.vaadin.shared.Connector;
 
 /**
- * Column state DTO for transferring column properties from the server to the
+ * Column state DTO for transferring column properties from the server to the.
  * client
  *
  * @since 7.4
@@ -30,7 +30,7 @@ public class GridColumnState implements Serializable {
 
     /**
      * Id used by grid connector to map server side column with client side
-     * column
+     * column.
      */
     public String id;
 
@@ -58,7 +58,7 @@ public class GridColumnState implements Serializable {
     public Connector editorConnector;
 
     /**
-     * Whether this column is sortable by the user
+     * Whether this column is sortable by the user.
      */
     public boolean sortable = false;
 
@@ -86,7 +86,7 @@ public class GridColumnState implements Serializable {
     /** The caption for the column hiding toggle. */
     public String hidingToggleCaption;
 
-    /** Column header caption */
+    /** Column header caption. */
     public String headerCaption;
 
     /** Whether this column is resizable by the user. */

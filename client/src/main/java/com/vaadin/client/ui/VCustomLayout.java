@@ -337,7 +337,7 @@ public class VCustomLayout extends ComplexPanel {
         }
     }
 
-    /** Get the location of an widget */
+    /** Get the location of an widget. */
     public String getLocation(Widget w) {
         for (final String location : locationToWidget.keySet()) {
             if (locationToWidget.get(location) == w) {
@@ -347,7 +347,7 @@ public class VCustomLayout extends ComplexPanel {
         return null;
     }
 
-    /** Removes given widget from the layout */
+    /** Removes given widget from the layout. */
     @Override
     public boolean remove(Widget w) {
         final String location = getLocation(w);
@@ -364,13 +364,13 @@ public class VCustomLayout extends ComplexPanel {
         return false;
     }
 
-    /** Adding widget without specifying location is not supported */
+    /** Adding widget without specifying location is not supported. */
     @Override
     public void add(Widget w) {
         throw new UnsupportedOperationException();
     }
 
-    /** Clear all widgets from the layout */
+    /** Clear all widgets from the layout. */
     @Override
     public void clear() {
         super.clear();

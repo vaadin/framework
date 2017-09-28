@@ -37,7 +37,7 @@ public class ConnectorMap {
             .create();
 
     /**
-     * Returns a {@link ServerConnector} by its id
+     * Returns a {@link ServerConnector} by its id.
      *
      * @param connectorId
      *            The connector id
@@ -104,7 +104,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Removes all registered connectors
+     * Removes all registered connectors.
      */
     public void clear() {
         idToComponentDetail.clear();
@@ -197,7 +197,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Gets all registered {@link ComponentConnector} instances
+     * Gets all registered {@link ComponentConnector} instances.
      *
      * @return An array of all registered {@link ComponentConnector} instances
      *

@@ -674,7 +674,7 @@ public class FileUploadHandler implements RequestHandler {
     }
 
     /**
-     * TODO document
+     * TODO document.
      *
      * @param request
      * @param response

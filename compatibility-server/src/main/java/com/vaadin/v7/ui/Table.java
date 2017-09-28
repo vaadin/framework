@@ -1013,7 +1013,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Gets the pixel width of column
+     * Gets the pixel width of column.
      *
      * @param propertyId
      * @return width of column or -1 when value not set
@@ -1268,7 +1268,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Sets the column header for the specified column;
+     * Sets the column header for the specified column.
      *
      * @param propertyId
      *            the propertyId identifying the column.
@@ -1812,7 +1812,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Returns the cause(s) for this exception
+         * Returns the cause(s) for this exception.
          *
          * @return the exception(s) which caused this exception
          */
@@ -4139,7 +4139,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /* Action container */
 
     /**
-     * Registers a new action handler for this container
+     * Registers a new action handler for this container.
      *
      * @see com.vaadin.event.Action.Container#addActionHandler(Action.Handler)
      */
@@ -4192,7 +4192,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         actionHandlers = null;
@@ -4252,7 +4252,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Notifies the component that it is detached from the application
+     * Notifies the component that it is detached from the application.
      *
      * @see Component#detach()
      */
@@ -5341,7 +5341,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Gets the property id of the column which header was pressed
+         * Gets the property id of the column which header was pressed.
          *
          * @return The column property id
          */
@@ -5376,7 +5376,7 @@ public class Table extends AbstractSelect implements Action.Container,
         private final Object columnPropertyId;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param source
          *            The source of the component
@@ -5392,7 +5392,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Gets the property id of the column which header was pressed
+         * Gets the property id of the column which header was pressed.
          *
          * @return The column property id
          */
@@ -5409,7 +5409,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public interface HeaderClickListener extends Serializable {
 
         /**
-         * Called when a user clicks a header column cell
+         * Called when a user clicks a header column cell.
          *
          * @param event
          *            The event which contains information about the column and
@@ -5426,7 +5426,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public interface FooterClickListener extends Serializable {
 
         /**
-         * Called when a user clicks a footer column cell
+         * Called when a user clicks a footer column cell.
          *
          * @param event
          *            The event which contains information about the column and
@@ -5462,7 +5462,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Removes a header click listener
+     * Removes a header click listener.
      *
      * @param listener
      *            The listener to remove.
@@ -5508,7 +5508,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Removes a footer click listener
+     * Removes a footer click listener.
      *
      * @param listener
      *            The listener to remove.
@@ -5528,7 +5528,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * Gets the footer caption beneath the rows
+     * Gets the footer caption beneath the rows.
      *
      * @param propertyId
      *            The propertyId of the column *
@@ -5609,7 +5609,7 @@ public class Table extends AbstractSelect implements Action.Container,
         private final Object columnPropertyId;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param source
          *            The source of the event
@@ -5638,7 +5638,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Get the width in pixels of the column before the resize event
+         * Get the width in pixels of the column before the resize event.
          *
          * @return Width in pixels
          */
@@ -5647,7 +5647,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Get the width in pixels of the column after the resize event
+         * Get the width in pixels of the column after the resize event.
          *
          * @return Width in pixels
          */
@@ -5663,7 +5663,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public interface ColumnResizeListener extends Serializable {
 
         /**
-         * This method is triggered when the column has been resized
+         * This method is triggered when the column has been resized.
          *
          * @param event
          *            The event which contains the column property id, the
@@ -5734,7 +5734,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param source
          *            The source of the event
@@ -5752,7 +5752,7 @@ public class Table extends AbstractSelect implements Action.Container,
     public interface ColumnReorderListener extends Serializable {
 
         /**
-         * This method is triggered when the column has been reordered
+         * This method is triggered when the column has been reordered.
          *
          * @param event
          */
@@ -5773,7 +5773,7 @@ public class Table extends AbstractSelect implements Action.Container,
         private Object propertyId;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param source
          *            The source of the event
@@ -5786,7 +5786,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /**
-         * Gets the id of the column whose collapse state changed
+         * Gets the id of the column whose collapse state changed.
          *
          * @return the property id of the column
          */
@@ -5805,7 +5805,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * This method is triggered when the collapse state for a column has
-         * changed
+         * changed.
          *
          * @param event
          */
@@ -5882,7 +5882,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
     /**
      * Set the item description generator which generates tooltips for cells and
-     * rows in the Table
+     * rows in the Table.
      *
      * @param generator
      *            The generator to use or null to disable
@@ -5967,7 +5967,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         /**
          * Pass one String if spanColumns is used, one String for each visible
-         * column otherwise
+         * column otherwise.
          */
         public void setText(String... text) {
             if (text == null || (text.length == 1 && text[0] == null)) {

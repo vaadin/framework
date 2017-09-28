@@ -145,7 +145,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Style name for the overlay container element (see
-     * {@link #getOverlayContainer()}
+     * {@link #getOverlayContainer()}.
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
@@ -579,7 +579,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Get owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @return Owner (creator) or null if not defined
      */
@@ -589,7 +589,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Set owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @param owner
      *            Owner (creator) of Overlay

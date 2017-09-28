@@ -73,7 +73,7 @@ public class Page implements Serializable {
         private final int height;
 
         /**
-         * Creates a new event
+         * Creates a new event.
          *
          * @param source
          *            the uI for which the browser window has been resized
@@ -94,7 +94,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the new browser window height
+         * Gets the new browser window height.
          *
          * @return an integer with the new pixel height of the browser window
          */
@@ -103,7 +103,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the new browser window width
+         * Gets the new browser window width.
          *
          * @return an integer with the new pixel width of the browser window
          */
@@ -345,7 +345,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Get the new URI fragment
+         * Get the new URI fragment.
          *
          * @return the new fragment
          */
@@ -392,7 +392,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Get the new URI
+         * Get the new URI.
          *
          * @return the new uri
          */
@@ -492,7 +492,7 @@ public class Page implements Serializable {
         }
 
         /**
-         * Injects a CSS resource into the page
+         * Injects a CSS resource into the page.
          *
          * @param resource
          *            The resource to inject.

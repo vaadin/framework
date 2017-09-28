@@ -100,7 +100,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AbstractComponentConnector() {
     }
@@ -490,7 +490,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
-    @OnStateChange({"errorMessage", "errorLevel"})
+    @OnStateChange({ "errorMessage", "errorLevel" })
     private void setErrorLevel() {
         // Add or remove the widget's error level style name
         ErrorUtil.setErrorLevelStyle(getWidget().getElement(),

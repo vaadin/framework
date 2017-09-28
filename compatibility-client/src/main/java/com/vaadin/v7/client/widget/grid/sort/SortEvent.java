@@ -60,7 +60,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Static access to the GWT event type identifier associated with this Event
-     * class
+     * class.
      *
      * @return a type object, uniquely describing this event type.
      */
@@ -69,7 +69,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get access to the Grid that fired this event
+     * Get access to the Grid that fired this event.
      *
      * @return the grid instance
      */
@@ -79,7 +79,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get access to the Grid that fired this event
+     * Get access to the Grid that fired this event.
      *
      * @return the grid instance
      */
@@ -88,7 +88,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get the sort ordering that is to be applied to the Grid
+     * Get the sort ordering that is to be applied to the Grid.
      *
      * @return a list of sort order objects
      */

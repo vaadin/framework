@@ -37,7 +37,7 @@ public class StringToIntegerConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Integer, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

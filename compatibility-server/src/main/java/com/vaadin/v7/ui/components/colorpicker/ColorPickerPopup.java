@@ -479,7 +479,7 @@ public class ColorPickerPopup extends Window
             }
 
             resize.setData(new Boolean(!state));
-        }  else if (event.getButton() == ok) {
+        } else if (event.getButton() == ok) {
             // Ok button was clicked
             history.setColor(getColor());
             fireColorChanged();
@@ -491,7 +491,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Notifies the listeners that the color changed
+     * Notifies the listeners that the color changed.
      */
     public void fireColorChanged() {
         fireEvent(new ColorChangeEvent(this, getColor()));
@@ -631,7 +631,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set RGB tab visibility
+     * Set RGB tab visibility.
      *
      * @param visible
      *            The visibility of the RGB tab
@@ -647,7 +647,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set HSV tab visibility
+     * Set HSV tab visibility.
      *
      * @param visible
      *            The visibility of the HSV tab
@@ -663,7 +663,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set Swatches tab visibility
+     * Set Swatches tab visibility.
      *
      * @param visible
      *            The visibility of the Swatches tab
@@ -679,7 +679,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set the History visibility
+     * Set the History visibility.
      *
      * @param visible
      */
@@ -689,7 +689,7 @@ public class ColorPickerPopup extends Window
     }
 
     /**
-     * Set the preview visibility
+     * Set the preview visibility.
      *
      * @param visible
      */
