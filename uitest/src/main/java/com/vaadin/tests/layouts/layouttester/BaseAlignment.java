@@ -46,11 +46,7 @@ public abstract class BaseAlignment extends BaseLayoutTestUI {
             AbstractOrderedLayout layout = null;
             try {
                 layout = (AbstractOrderedLayout) layoutClass.newInstance();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             layout.setMargin(false);

@@ -45,14 +45,12 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
     protected static final String CALENDAR_32_PNG = "../runo/icons/16/calendar.png";
     protected static final String LOCK_16_PNG = "../runo/icons/16/lock.png";
     protected static final String GLOBE_16_PNG = "../runo/icons/16/globe.png";
-    public Alignment[] alignments = { Alignment.TOP_CENTER,
-            Alignment.TOP_LEFT, Alignment.TOP_RIGHT, Alignment.BOTTOM_CENTER,
-            Alignment.BOTTOM_LEFT, Alignment.BOTTOM_RIGHT,
-            Alignment.MIDDLE_CENTER, Alignment.MIDDLE_LEFT,
-            Alignment.MIDDLE_RIGHT };
+    public Alignment[] alignments = { Alignment.TOP_CENTER, Alignment.TOP_LEFT,
+            Alignment.TOP_RIGHT, Alignment.BOTTOM_CENTER, Alignment.BOTTOM_LEFT,
+            Alignment.BOTTOM_RIGHT, Alignment.MIDDLE_CENTER,
+            Alignment.MIDDLE_LEFT, Alignment.MIDDLE_RIGHT };
 
-    public final String[] CAPTIONS = { "",
-            "VeryLongOneWordCaption",
+    public final String[] CAPTIONS = { "", "VeryLongOneWordCaption",
             "Very long caption of 50 approximately symbols aaaaaaaaaaaa aaaaaa aaa " };
     Resource[] ICONS = { new ThemeResource(CALENDAR_32_PNG),
             new ThemeResource(LOCK_16_PNG), new ThemeResource(GLOBE_16_PNG) };
@@ -78,11 +76,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
             l1.setSpacing(false);
             l2.setMargin(false);
             l2.setSpacing(false);
-        } catch (InstantiationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessExceptione1) {
             e1.printStackTrace();
         }
         if (layoutClass.equals(HorizontalLayout.class)) {
@@ -194,11 +188,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
                 ((AbstractOrderedLayout) curLayout).setMargin(false);
                 ((AbstractOrderedLayout) curLayout).setSpacing(false);
             }
-        } catch (InstantiationException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (IllegalAccessException e1) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e1) {
             e1.printStackTrace();
         }
         final Component[] components = new Component[CAPTIONS.length];
@@ -207,11 +197,7 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
             AbstractComponent comp = null;
             try {
                 comp = compType.newInstance();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             components[i] = comp;

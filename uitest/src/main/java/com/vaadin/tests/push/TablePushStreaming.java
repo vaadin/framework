@@ -57,7 +57,6 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     access(new Runnable() {
@@ -68,10 +67,8 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
                                     t.getVisibleColumns().length, t.size(),
                                     iteration++));
                         }
-
                     });
                 }
-
             }
         };
         Thread tr = new Thread(r);
@@ -97,9 +94,7 @@ public class TablePushStreaming extends AbstractReindeerTestUI {
                 item.getItemProperty("Property" + col).setValue(
                         "Row " + row + " col " + col + "(" + iter + ")");
             }
-
         }
-
         return ic;
     }
 

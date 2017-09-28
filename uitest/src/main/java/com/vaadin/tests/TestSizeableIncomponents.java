@@ -120,11 +120,8 @@ public class TestSizeableIncomponents extends LegacyApplication {
                         if (c != null) {
                             testPanelLayout.addComponent(c);
                         }
-                    } catch (InstantiationException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
+                    } catch (InstantiationException
+                            | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
@@ -216,14 +213,8 @@ public class TestSizeableIncomponents extends LegacyApplication {
                         cont.addItem(t);
                     }
 
-                } catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                } catch (InstantiationException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
+                } catch (ClassNotFoundException | InstantiationException
+                        | IllegalAccessException e) {
                     // e.printStackTrace();
                 }
             }
