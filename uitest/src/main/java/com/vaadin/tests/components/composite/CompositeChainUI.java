@@ -80,6 +80,7 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         String msg = component.getClass().getSimpleName();
         if (component instanceof HasComponents) {
 
+            // add the message of the first child
             for (Component content : (HasComponents) component) {
                 if (content != null) {
                     msg += " -> " + getHierarchy(content);
