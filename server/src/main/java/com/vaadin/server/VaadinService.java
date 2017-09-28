@@ -195,7 +195,7 @@ public abstract class VaadinService implements Serializable {
      * overridden (or otherwise intercepted) so it does not return
      * <code>null</code>.
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinService() {
         this.deploymentConfiguration = null;

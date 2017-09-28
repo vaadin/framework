@@ -2454,7 +2454,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         the element from which the event originated
          * @return {@code true} if the event should be ignored, {@code false} if
          * it should be handled
-         * @since
+         * @since 8.2
          */
         protected boolean ignoreEventFromTarget(Grid<?> grid,
                 Element targetElement) {

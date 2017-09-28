@@ -260,7 +260,7 @@ public class TooltipInfo {
      * Gets the error level.
      *
      * @return the error level
-     * @since
+     * @since 8.2
      */
     public ErrorLevel getErrorLevel() {
         return errorLevel;
@@ -271,7 +271,7 @@ public class TooltipInfo {
      *
      * @param errorLevel
      *         the error level to set
-     * @since
+     * @since 8.2
      */
     public void setErrorLevel(ErrorLevel errorLevel) {
         this.errorLevel = errorLevel;

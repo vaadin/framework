@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
  *
  * @author Vaadin Ltd.
  *
- * @since
+ * @since 8.2
  */
 public interface NotificationServerRpc extends ServerRpc {
 
