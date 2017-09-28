@@ -652,14 +652,14 @@ public class GridLayout extends AbstractLayout
                 sb.append(component.getCaption());
                 sb.append("\"");
             }
-            sb.append(")");
+            sb.append(')');
             sb.append(" is already added to ");
             sb.append(existingArea.childData.column1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.column1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.row1);
-            sb.append(",");
+            sb.append(',');
             sb.append(existingArea.childData.row2);
             sb.append("(column1, column2, row1, row2).");
 

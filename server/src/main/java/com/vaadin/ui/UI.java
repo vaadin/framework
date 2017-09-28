@@ -214,13 +214,13 @@ public abstract class UI extends AbstractSingleComponentContainer
                     .validateLayouts(UI.this);
             StringBuilder json = new StringBuilder();
             json.append("{\"invalidLayouts\":");
-            json.append("[");
+            json.append('[');
 
             if (invalidSizes != null) {
                 boolean first = true;
                 for (InvalidLayout invalidSize : invalidSizes) {
                     if (!first) {
-                        json.append(",");
+                        json.append(',');
                     } else {
                         first = false;
                     }

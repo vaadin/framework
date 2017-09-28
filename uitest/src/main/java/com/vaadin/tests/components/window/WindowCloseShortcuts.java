@@ -173,10 +173,10 @@ public class WindowCloseShortcuts extends AbstractTestUI {
 
         sb.append("<" + producedElem.tagName() + "");
         for (String attrName : names) {
-            sb.append(" ").append(attrName).append("=").append("\'")
+            sb.append(' ').append(attrName).append('=').append("\'")
                     .append(producedElem.attr(attrName)).append("\'");
         }
-        sb.append(">");
+        sb.append('>');
         for (Node child : producedElem.childNodes()) {
             if (child instanceof Element) {
                 elementToHtml((Element) child, sb);
@@ -185,7 +185,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
                 sb.append(text.trim());
             }
         }
-        sb.append("</").append(producedElem.tagName()).append(">");
+        sb.append("</").append(producedElem.tagName()).append('>');
         return sb.toString();
     }
 

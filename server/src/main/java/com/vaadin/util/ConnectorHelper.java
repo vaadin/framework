@@ -92,7 +92,7 @@ public class ConnectorHelper {
                 topClass = topClass.getEnclosingClass();
             }
             builder.append(connectorClass.getName());
-            builder.append("(");
+            builder.append('(');
             builder.append(topClass.getSimpleName());
             builder.append(".java:1)");
         }

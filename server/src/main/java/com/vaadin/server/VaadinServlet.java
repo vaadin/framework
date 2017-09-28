@@ -1510,7 +1510,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 safe.append("&#");
                 safe.append((int) c);
-                safe.append(";");
+                safe.append(';');
             }
         }
 

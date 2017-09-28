@@ -676,20 +676,20 @@ public class AbsoluteLayout extends AbstractLayout
             Component newChild = designContext.readDesign(childComponent);
             StringBuilder css = new StringBuilder();
             if (attr.hasKey(ATTR_TOP)) {
-                css.append("top:").append(attr.get(ATTR_TOP)).append(";");
+                css.append("top:").append(attr.get(ATTR_TOP)).append(';');
             }
             if (attr.hasKey(ATTR_RIGHT)) {
-                css.append("right:").append(attr.get(ATTR_RIGHT)).append(";");
+                css.append("right:").append(attr.get(ATTR_RIGHT)).append(';');
             }
             if (attr.hasKey(ATTR_BOTTOM)) {
-                css.append("bottom:").append(attr.get(ATTR_BOTTOM)).append(";");
+                css.append("bottom:").append(attr.get(ATTR_BOTTOM)).append(';');
             }
             if (attr.hasKey(ATTR_LEFT)) {
-                css.append("left:").append(attr.get(ATTR_LEFT)).append(";");
+                css.append("left:").append(attr.get(ATTR_LEFT)).append(';');
             }
             if (attr.hasKey(ATTR_Z_INDEX)) {
                 css.append("z-index:").append(attr.get(ATTR_Z_INDEX))
-                        .append(";");
+                        .append(';');
             }
             addComponent(newChild, css.toString());
         }

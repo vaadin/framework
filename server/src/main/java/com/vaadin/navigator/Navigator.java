@@ -159,7 +159,7 @@ public class Navigator implements Serializable {
             if (!ui.getUiRootPath().endsWith("/")) {
                 // make sure there is a '/' between the root path and the
                 // navigation state.
-                sb.append("/");
+                sb.append('/');
             }
             sb.append(state);
             URI location = ui.getPage().getLocation();

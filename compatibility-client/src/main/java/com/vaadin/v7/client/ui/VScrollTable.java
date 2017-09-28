@@ -3127,7 +3127,7 @@ public class VScrollTable extends FlowPanel
                     if (s.equals(stylePrimaryName)) {
                         sb.append("-header-drag ");
                     } else {
-                        sb.append(" ");
+                        sb.append(' ');
                     }
                 }
             }
