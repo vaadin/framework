@@ -17,7 +17,6 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
