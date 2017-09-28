@@ -70,7 +70,6 @@ public class EditorConnector extends AbstractExtensionConnector {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            serverInitiated = fromServer;
                             boolean canEdit = true;
                             if (fromServer) {
                                 currentEditedRow = rowIndex;
@@ -108,10 +107,7 @@ public class EditorConnector extends AbstractExtensionConnector {
 
                 @Override
                 public void confirmBind(final boolean bindSucceeded) {
-                    if (currentRequest != null) {   // this might be a ping-pong after a delayed
-                                                    // client-side callback to a server-side edit request
-                        endRequest(bindSucceeded);
-                    }
+                    endRequest(bindSucceeded);
                 }
 
                 @Override
