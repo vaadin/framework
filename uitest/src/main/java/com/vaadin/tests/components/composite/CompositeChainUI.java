@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.composite;
 
+import java.util.Iterator;
+
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -80,12 +82,12 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         String msg = component.getClass().getSimpleName();
         if (component instanceof HasComponents) {
 
-            // add the message of the first child
-            for (Component content : (HasComponents) component) {
+            Iterator<Component> it = ((HasComponents) component).iterator();
+            if (it.hasNext()) {
+                Component content = it.next();
                 if (content != null) {
                     msg += " -> " + getHierarchy(content);
                 }
-                break;
             }
         }
         return msg;
