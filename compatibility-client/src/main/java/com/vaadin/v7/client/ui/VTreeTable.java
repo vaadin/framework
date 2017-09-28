@@ -196,7 +196,8 @@ public class VTreeTable extends VScrollTable {
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth")
-                            ? rowUidl.getIntAttribute("depth") : 0;
+                            ? rowUidl.getIntAttribute("depth")
+                            : 0;
                     setIndent();
                     isTreeCellAdded = true;
                     return true;
@@ -341,11 +342,10 @@ public class VTreeTable extends VScrollTable {
                 htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
-                final Iterator<?> cells = uidl.getChildIterator();
                 if (spanColumns) {
                     int colCount = uidl.getChildCount();
-                    if (cells.hasNext()) {
-                        final Object cell = cells.next();
+                    // add only first cell
+                    for (final Object cell : uidl) {
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
                                     htmlContentAllowed, false, null, colCount);
@@ -353,6 +353,7 @@ public class VTreeTable extends VScrollTable {
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
                         }
+                        break;
                     }
                 } else {
                     super.addCellsFromUIDL(uidl, aligns, col,

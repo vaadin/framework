@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
@@ -393,9 +392,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Iterator<Object> childIterator = uidl.getChildIterator();
-        while (childIterator.hasNext()) {
-            UIDL child = (UIDL) childIterator.next();
+        for (Object c : uidl) {
+            UIDL child = (UIDL) c;
             if (DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG.equals(child.getTag())) {
                 if (getWidget().getDropHandler() == null) {
                     getWidget().setDropHandler(showingMonthView()

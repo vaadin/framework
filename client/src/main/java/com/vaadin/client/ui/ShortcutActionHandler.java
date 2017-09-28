@@ -82,9 +82,8 @@ public class ShortcutActionHandler {
      */
     public void updateActionMap(UIDL c) {
         actions.clear();
-        final Iterator<?> it = c.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : c) {
+            final UIDL action = (UIDL) child;
 
             int[] modifiers = null;
             if (action.hasAttribute("mk")) {

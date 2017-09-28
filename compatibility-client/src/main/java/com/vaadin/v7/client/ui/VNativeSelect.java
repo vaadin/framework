@@ -17,7 +17,6 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
@@ -57,8 +56,8 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
             select.addItem("", (String) null);
         }
         boolean selected = false;
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             select.addItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"));
             if (optionUidl.hasAttribute("selected")) {

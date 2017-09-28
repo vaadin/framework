@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -406,8 +405,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        getLogger()
-                                .severe("Server is trying to set focus to the widget of connector "
+                        getLogger().severe(
+                                "Server is trying to set focus to the widget of connector "
                                         + Util.getConnectorString(connector)
                                         + " but it is not focusable. The widget should implement either "
                                         + com.google.gwt.user.client.ui.Focusable.class
@@ -466,8 +465,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         /*
          * Search the UIDL stream for CSS resources and strings to be injected.
          */
-        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL cssInjectionsUidl = (UIDL) it.next();
+        for (Object child : uidl) {
+            UIDL cssInjectionsUidl = (UIDL) child;
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
@@ -481,9 +480,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getHead().appendChild(link);
                 // Check if we have CSS string to inject
             } else if (cssInjectionsUidl.getTag().equals("css-string")) {
-                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
-                        .hasNext();) {
-                    StyleInjector.injectAtEnd((String) it2.next());
+                for (Object c : cssInjectionsUidl) {
+                    StyleInjector.injectAtEnd((String) c);
                     StyleInjector.flush();
                 }
             }

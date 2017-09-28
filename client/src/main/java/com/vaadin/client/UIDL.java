@@ -32,8 +32,8 @@ import com.vaadin.ui.Component;
  * from the server.
  * <p>
  * UIDL is hierarchical, and there are a few methods to retrieve the children,
- * {@link #getChildCount()}, {@link #getChildIterator()}
- * {@link #getChildString(int)}, {@link #getChildUIDL(int)}.
+ * {@link #getChildCount()}, {@link #iterator()} {@link #getChildString(int)},
+ * {@link #getChildUIDL(int)}.
  * </p>
  * <p>
  * It can be helpful to keep in mind that UIDL was originally modeled in XML, so
@@ -571,9 +571,7 @@ public final class UIDL extends JavaScriptObject implements Iterable<Object> {
      * @return the child UIDL or null if child wit given name was not found
      */
     public UIDL getChildByTagName(String tagName) {
-        Iterator<Object> childIterator = getChildIterator();
-        while (childIterator.hasNext()) {
-            Object next = childIterator.next();
+        for (Object next : this) {
             if (next instanceof UIDL) {
                 UIDL childUIDL = (UIDL) next;
                 if (childUIDL.getTag().equals(tagName)) {

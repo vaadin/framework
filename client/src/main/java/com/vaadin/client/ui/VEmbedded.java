@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
@@ -195,10 +194,7 @@ public class VEmbedded extends HTML {
     public static Map<String, String> getParameters(UIDL uidl) {
         Map<String, String> parameters = new HashMap<>();
 
-        Iterator<Object> childIterator = uidl.getChildIterator();
-        while (childIterator.hasNext()) {
-
-            Object child = childIterator.next();
+        for (Object child : uidl) {
             if (child instanceof UIDL) {
 
                 UIDL childUIDL = (UIDL) child;
