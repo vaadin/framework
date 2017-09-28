@@ -64,7 +64,7 @@ public class VEmbedded extends HTML {
      * @param src
      *            The src attribute
      * @return Tags concatenated into a string
-     * @since
+     * @since 8.2
      */
     public String createFlashEmbed(EmbeddedState state, String src) {
         /*

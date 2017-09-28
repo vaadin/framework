@@ -1423,7 +1423,7 @@ public class Page implements Serializable {
      *
      * @return the {@link UI} of this {@link Page}.
      *
-     * @since
+     * @since 8.2
      */
     public UI getUI() {
         return uI;

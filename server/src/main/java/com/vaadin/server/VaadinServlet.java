@@ -309,7 +309,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *            if construction of the {@link Properties} for
      *            {@link #createDeploymentConfiguration(Properties)} fails
      *
-     * @since
+     * @since 8.2
      */
     protected DeploymentConfiguration createDeploymentConfiguration() throws ServletException {
         Properties initParameters = new Properties();
@@ -367,7 +367,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServiceException
      *            if creating the vaadin servlet service fails
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinServletService createServletService()
             throws ServletException, ServiceException {

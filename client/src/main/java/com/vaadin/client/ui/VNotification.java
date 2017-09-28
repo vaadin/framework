@@ -498,7 +498,7 @@ public class VNotification extends VOverlay {
      * @param delayMsec
      *            The delay in milliseconds before disappearing, -1 for forever.
      *
-     * @since
+     * @since 8.2
      */
     public static VNotification showNotification(ApplicationConnection client,
             String caption, String description, boolean htmlContentAllowed,
