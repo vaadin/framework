@@ -32,10 +32,10 @@ import com.vaadin.testbench.elements.GridElement.GridCellElement;
 
 public class GridEditorUnbufferedTest extends GridEditorTest {
 
-    private static final String[] TOGGLE_EDITOR_BUFFERED = {
-            "Component", "Editor", "Buffered mode" };
-    private static final String[] CANCEL_EDIT = { "Component",
-            "Editor", "Cancel edit" };
+    private static final String[] TOGGLE_EDITOR_BUFFERED = { "Component",
+            "Editor", "Buffered mode" };
+    private static final String[] CANCEL_EDIT = { "Component", "Editor",
+            "Cancel edit" };
 
     @Override
     @Before
@@ -63,7 +63,7 @@ public class GridEditorUnbufferedTest extends GridEditorTest {
         assertEditorOpen();
         selectMenuPath(TOGGLE_EDITOR_BUFFERED);
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException was not thrown", thrown);
     }
 

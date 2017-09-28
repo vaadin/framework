@@ -67,7 +67,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Component createMenu() {
         MenuBar menu = new MenuBar();
-        menu.setErrorHandler(error -> log("Exception occured, "
+        menu.setErrorHandler(error -> log("Exception occurred, "
                 + error.getThrowable().getClass().getName() + ": "
                 + error.getThrowable().getMessage()));
         MenuItem componentMenu = menu.addItem("Component", null);
@@ -111,7 +111,8 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         componentMenu
                 .addItem("Style Generator",
                         menuItem -> tree.setStyleGenerator(menuItem.isChecked()
-                                ? t -> "level" + t.getDepth() : t -> null))
+                                ? t -> "level" + t.getDepth()
+                                : t -> null))
                 .setCheckable(true);
 
         return menu;

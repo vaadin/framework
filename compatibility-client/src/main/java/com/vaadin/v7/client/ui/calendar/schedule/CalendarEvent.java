@@ -186,7 +186,7 @@ public class CalendarEvent {
 
     /**
      * Get the description of the event. The description is the text displayed
-     * when hoovering over the event with the mouse
+     * when hovering over the event with the mouse
      *
      * @return
      */
@@ -196,7 +196,7 @@ public class CalendarEvent {
 
     /**
      * Set the description of the event. The description is the text displayed
-     * when hoovering over the event with the mouse
+     * when hovering over the event with the mouse
      *
      * @param description
      */

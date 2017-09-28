@@ -614,10 +614,10 @@ public class Upload extends AbstractLegacyComponent
     public interface SucceededListener extends Serializable {
 
         /**
-         * Upload successfull..
+         * Upload successful.
          *
          * @param event
-         *            the Upload successfull event.
+         *            the Upload successful event.
          */
         public void uploadSucceeded(SucceededEvent event);
     }

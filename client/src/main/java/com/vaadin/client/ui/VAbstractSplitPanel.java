@@ -256,10 +256,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     private float convertToPixels(String pos) {
         float posAsFloat;
         if (pos.indexOf("%") > 0) {
-            posAsFloat = Math
-                    .round(Float.parseFloat(pos.substring(0, pos.length() - 1))
-                            / 100 * (orientation == Orientation.HORIZONTAL
-                                    ? getOffsetWidth() : getOffsetHeight()));
+            posAsFloat = Math.round(
+                    Float.parseFloat(pos.substring(0, pos.length() - 1)) / 100
+                            * (orientation == Orientation.HORIZONTAL
+                                    ? getOffsetWidth()
+                                    : getOffsetHeight()));
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
         }
@@ -278,7 +279,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             float pixelPosition = Float
                     .parseFloat(pos.substring(0, pos.length() - 2));
             int offsetLength = orientation == Orientation.HORIZONTAL
-                    ? getOffsetWidth() : getOffsetHeight();
+                    ? getOffsetWidth()
+                    : getOffsetHeight();
 
             // Take splitter size into account at the edge
             if (pixelPosition + getSplitterSize() >= offsetLength) {
@@ -577,7 +579,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         if (WidgetUtil.isTouchEvent(event) || !resized) {
             super.onBrowserEvent(event);
         } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
-            // Reset the resized flag after a mouseup has occured so the next
+            // Reset the resized flag after a mouseup has occurred so the next
             // mousedown/mouseup can be interpreted as a click.
             resized = false;
         }

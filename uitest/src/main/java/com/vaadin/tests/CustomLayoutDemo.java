@@ -153,7 +153,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
      */
     @Override
     public void componentEvent(Event event) {
-        // Check if event occured at fsTree component
+        // Check if event occurred at fsTree component
         if (event.getSource() == menu) {
             // Check if event is about changing value
             if (event.getClass() == Field.ValueChangeEvent.class) {
