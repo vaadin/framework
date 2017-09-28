@@ -51,7 +51,7 @@ public class VaadinServletService extends VaadinService {
      * injection frameworks etc. {@link #getServlet()} should be overridden (or otherwise intercepted)
      * so it does not return <code>null</code>.
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinServletService() {
         this.servlet = null;

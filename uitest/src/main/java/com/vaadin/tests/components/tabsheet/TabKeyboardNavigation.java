@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -31,7 +32,7 @@ import com.vaadin.v7.ui.TextField;
 public class TabKeyboardNavigation extends AbstractReindeerTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<>();
+    List<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
     Log focusblur = new Log(10);
 

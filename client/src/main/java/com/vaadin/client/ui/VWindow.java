@@ -80,7 +80,7 @@ import com.vaadin.shared.ui.window.WindowRole;
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
-    private static ArrayList<VWindow> windowOrder = new ArrayList<>();
+    private static List<VWindow> windowOrder = new ArrayList<>();
 
     private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
@@ -307,7 +307,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void doFireOrderEvent() {
-        ArrayList<VWindow> list = new ArrayList<>();
+        List<VWindow> list = new ArrayList<>();
         list.add(this);
         fireOrderEvent(list);
     }
@@ -701,7 +701,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // hanging.
         windowOrder.remove(curIndex);
         // Update the z-indices of any remaining windows
-        ArrayList<VWindow> update = new ArrayList<>(
+        List<VWindow> update = new ArrayList<>(
                 windowOrder.size() - curIndex + 1);
         update.add(this);
         while (curIndex < windowOrder.size()) {

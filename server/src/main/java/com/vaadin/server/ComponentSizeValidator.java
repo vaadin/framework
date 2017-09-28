@@ -210,7 +210,7 @@ public class ComponentSizeValidator implements Serializable {
 
         public void reportErrors(StringBuilder clientJSON,
                 PrintStream serverErrorStream) {
-            clientJSON.append("{");
+            clientJSON.append('{');
 
             Component parent = component.getParent();
             String paintableId = component.getConnectorId();
@@ -282,16 +282,16 @@ public class ComponentSizeValidator implements Serializable {
                 boolean first = true;
                 for (InvalidLayout subError : subErrors) {
                     if (!first) {
-                        clientJSON.append(",");
+                        clientJSON.append(',');
                     } else {
                         first = false;
                     }
                     subError.reportErrors(clientJSON, serverErrorStream);
                 }
-                clientJSON.append("]");
+                clientJSON.append(']');
                 serverErrorStream.println("<< Sub erros");
             }
-            clientJSON.append("}");
+            clientJSON.append('}');
         }
     }
 
@@ -385,7 +385,7 @@ public class ComponentSizeValidator implements Serializable {
         err.append("- ");
 
         err.append(component.getClass().getSimpleName());
-        err.append("/").append(Integer.toHexString(component.hashCode()));
+        err.append('/').append(Integer.toHexString(component.hashCode()));
 
         if (component.getCaption() != null) {
             err.append(" \"");
@@ -399,8 +399,8 @@ public class ComponentSizeValidator implements Serializable {
         }
 
         if (createLoc != null) {
-            err.append(", created at (").append(createLoc.file).append(":")
-                    .append(createLoc.lineNumber).append(")");
+            err.append(", created at (").append(createLoc.file).append(':')
+                    .append(createLoc.lineNumber).append(')');
 
         }
 
@@ -408,11 +408,11 @@ public class ComponentSizeValidator implements Serializable {
             err.append(" (");
             err.append(attribute);
             if (sizeLoc != null) {
-                err.append(", set at (").append(sizeLoc.file).append(":")
-                        .append(sizeLoc.lineNumber).append(")");
+                err.append(", set at (").append(sizeLoc.file).append(':')
+                        .append(sizeLoc.lineNumber).append(')');
             }
 
-            err.append(")");
+            err.append(')');
         }
         err.append("\n");
 
@@ -452,10 +452,9 @@ public class ComponentSizeValidator implements Serializable {
             } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
-                for (int row = componentArea.getRow1();
-                        row <= componentArea.getRow2(); row++) {
-                    for (int column = 0;
-                            column < gl.getColumns(); column++) {
+                for (int row = componentArea.getRow1(); row <= componentArea
+                        .getRow2(); row++) {
+                    for (int column = 0; column < gl.getColumns(); column++) {
                         Component c = gl.getComponent(column, row);
                         if (c != null) {
                             if (!hasRelativeHeight(c)) {
@@ -560,8 +559,8 @@ public class ComponentSizeValidator implements Serializable {
             } else if (parent instanceof GridLayout) {
                 GridLayout gl = (GridLayout) parent;
                 Area componentArea = gl.getComponentArea(component);
-                for (int col = componentArea.getColumn1();
-                        col <= componentArea.getColumn2(); col++) {
+                for (int col = componentArea.getColumn1(); col <= componentArea
+                        .getColumn2(); col++) {
                     for (int row = 0; row < gl.getRows(); row++) {
                         Component c = gl.getComponent(col, row);
                         if (c != null) {

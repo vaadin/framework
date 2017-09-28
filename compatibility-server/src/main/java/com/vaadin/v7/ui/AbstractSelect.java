@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -46,6 +45,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -245,12 +245,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Item icons.
      */
-    private final HashMap<Object, Resource> itemIcons = new HashMap<Object, Resource>();
+    private final Map<Object, Resource> itemIcons = new HashMap<Object, Resource>();
 
     /**
      * Item captions.
      */
-    private final HashMap<Object, String> itemCaptions = new HashMap<Object, String>();
+    private final Map<Object, String> itemCaptions = new HashMap<Object, String>();
 
     /**
      * Item caption mode.

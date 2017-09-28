@@ -72,7 +72,7 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
             table.setVisibleColumns("jobId");
             label.setValue("no Exception");
         } catch (CacheUpdateException e) {
-            ArrayList<String> propertyIds = new ArrayList<>();
+            List<String> propertyIds = new ArrayList<>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
             label.setValue("Exception caught");

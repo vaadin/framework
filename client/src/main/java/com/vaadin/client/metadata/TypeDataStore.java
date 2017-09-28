@@ -17,6 +17,7 @@ package com.vaadin.client.metadata;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
@@ -260,7 +261,7 @@ public class TypeDataStore {
             throws NoDataException {
         JsArrayObject<Property> propertiesArray = getPropertiesAsArray(type);
         int size = propertiesArray.size();
-        ArrayList<Property> properties = new ArrayList<>(size);
+        List<Property> properties = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             properties.add(propertiesArray.get(i));
         }

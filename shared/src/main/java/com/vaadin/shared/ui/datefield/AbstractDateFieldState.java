@@ -33,17 +33,25 @@ public class AbstractDateFieldState extends AbstractFieldState {
         primaryStyleName = "v-datefield";
     }
 
-    /*
+    /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field
+     * date field.
      */
     @NoLayout
-    public Date rangeStart = null;
+    public Date rangeStart;
 
-    /*
+    /**
      * End range that has been cleared, depending on the resolution of the date
-     * field
+     * field.
      */
     @NoLayout
-    public Date rangeEnd = null;
+    public Date rangeEnd;
+
+    /**
+     * The JSON used to construct a TimeZone on the client side, can be
+     * {@code null}.
+     * 
+     * @since 8.2
+     */
+    public String timeZoneJSON;
 }

@@ -278,12 +278,12 @@ public class TestForUpload extends CustomComponent
         if (up.isUploading()) {
             sb.append("Uploading...");
             sb.append(up.getBytesRead());
-            sb.append("/");
+            sb.append('/');
             sb.append(up.getUploadSize());
-            sb.append(" ");
+            sb.append(' ');
             sb.append(Math.round(
                     100 * up.getBytesRead() / (double) up.getUploadSize()));
-            sb.append("%");
+            sb.append('%');
         } else {
             sb.append("Idle");
         }

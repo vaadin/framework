@@ -115,7 +115,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final HashMap<String, String> resourcesMap = new HashMap<>();
+    private final Map<String, String> resourcesMap = new HashMap<>();
 
     private WidgetSet widgetSet;
 
@@ -383,8 +383,8 @@ public class ApplicationConnection implements HasHandlers {
                 + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
-            getLogger()
-                    .severe("Warning: your widget set seems to be built with a different "
+            getLogger().severe(
+                    "Warning: your widget set seems to be built with a different "
                             + "version than the one used on server. Unexpected "
                             + "behavior may occur.");
         }
@@ -494,7 +494,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-
+    
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -509,7 +509,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-
+    
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -526,7 +526,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-
+    
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 

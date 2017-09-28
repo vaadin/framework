@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
@@ -136,7 +137,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         @Override
         public void onWindowOrderChange(WindowOrderEvent event) {
             VWindow[] windows = event.getWindows();
-            HashMap<Integer, Connector> orders = new HashMap<>();
+            Map<Integer, Connector> orders = new HashMap<>();
             boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
             for (VWindow window : windows) {
                 Connector connector = Util.findConnectorFor(window);
@@ -669,7 +670,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<>();
+        List<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
@@ -1216,8 +1217,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
         }
 
-        ArrayList<VWindow> getWindows() {
-            ArrayList<VWindow> result = new ArrayList<>();
+        List<VWindow> getWindows() {
+            List<VWindow> result = new ArrayList<>();
             result.addAll(windows);
             Collections.sort(result, this);
             return result;

@@ -29,7 +29,8 @@ import com.vaadin.v7.data.Container.Indexed;
  *
  * @since 7.0
  *
- * @deprecated As of 8.0, no direct replacement available, see {@link DataProvider}
+ * @deprecated As of 8.0, no direct replacement available, see
+ *             {@link DataProvider}
  */
 @Deprecated
 public class ContainerHelpers implements Serializable {
@@ -87,16 +88,16 @@ public class ContainerHelpers implements Serializable {
             endIndex = container.size();
         }
 
-        ArrayList<Object> rangeOfIds = new ArrayList<Object>();
+        List<Object> rangeOfIds = new ArrayList<Object>();
         for (int i = startIndex; i < endIndex; i++) {
             Object idByIndex = container.getIdByIndex(i);
             if (idByIndex == null) {
-                throw new RuntimeException(
-                        "Unable to get item id for index: " + i
-                                + " from container using Container.Indexed#getIdByIndex() "
-                                + "even though container.size() > endIndex. "
-                                + "Returned item id was null. "
-                                + "Check your container implementation!");
+                throw new RuntimeException("Unable to get item id for index: "
+                        + i
+                        + " from container using Container.Indexed#getIdByIndex() "
+                        + "even though container.size() > endIndex. "
+                        + "Returned item id was null. "
+                        + "Check your container implementation!");
             }
             rangeOfIds.add(idByIndex);
         }

@@ -313,7 +313,7 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public Collection<?> getItemIds() {
         updateCount();
-        ArrayList<RowId> ids = new ArrayList<RowId>();
+        List<RowId> ids = new ArrayList<RowId>();
         ResultSet rs = null;
         try {
             // Load ALL rows :(
@@ -542,7 +542,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * {@inheritDoc}
      */
     public void removeContainerFilters(Object propertyId) {
-        ArrayList<Filter> toRemove = new ArrayList<Filter>();
+        List<Filter> toRemove = new ArrayList<Filter>();
         for (Filter f : filters) {
             if (f.appliesToProperty(propertyId)) {
                 toRemove.add(f);
@@ -1322,7 +1322,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     private List<RowItem> getFilteredAddedItems() {
-        ArrayList<RowItem> filtered = new ArrayList<RowItem>(addedItems);
+        List<RowItem> filtered = new ArrayList<RowItem>(addedItems);
         if (filters != null && !filters.isEmpty()) {
             for (RowItem item : addedItems) {
                 if (!itemPassesFilters(item)) {
@@ -1684,8 +1684,7 @@ public class SQLContainer implements Container, Container.Filterable,
         return refdCont.getItem(getReferencedItemId(itemId, refdCont));
     }
 
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
     }
 

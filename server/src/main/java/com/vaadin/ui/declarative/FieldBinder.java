@@ -248,7 +248,7 @@ public class FieldBinder implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFields(
             Class<?> searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFields = new ArrayList<>();
+        List<java.lang.reflect.Field> memberFields = new ArrayList<>();
 
         memberFields.addAll(Arrays.asList(searchClass.getDeclaredFields()));
         return memberFields;

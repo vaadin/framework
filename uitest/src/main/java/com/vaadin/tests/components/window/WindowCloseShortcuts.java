@@ -18,6 +18,7 @@ package com.vaadin.tests.components.window;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -165,7 +166,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
     }
 
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
         }
@@ -173,10 +174,10 @@ public class WindowCloseShortcuts extends AbstractTestUI {
 
         sb.append("<" + producedElem.tagName() + "");
         for (String attrName : names) {
-            sb.append(" ").append(attrName).append("=").append("\'")
+            sb.append(' ').append(attrName).append('=').append("\'")
                     .append(producedElem.attr(attrName)).append("\'");
         }
-        sb.append(">");
+        sb.append('>');
         for (Node child : producedElem.childNodes()) {
             if (child instanceof Element) {
                 elementToHtml((Element) child, sb);
@@ -185,7 +186,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
                 sb.append(text.trim());
             }
         }
-        sb.append("</").append(producedElem.tagName()).append(">");
+        sb.append("</").append(producedElem.tagName()).append('>');
         return sb.toString();
     }
 

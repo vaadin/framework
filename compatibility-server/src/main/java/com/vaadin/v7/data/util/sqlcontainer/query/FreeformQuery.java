@@ -471,7 +471,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             if (keys[ix] == null) {
                 where.append(" IS NULL");
             } else {
-                where.append(" = '").append(keys[ix]).append("'");
+                where.append(" = '").append(keys[ix]).append('\'');
             }
             if (ix < primaryKeyColumns.size() - 1) {
                 where.append(" AND ");

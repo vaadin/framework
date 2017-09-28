@@ -3,6 +3,7 @@ package com.vaadin.v7.data.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -113,7 +114,7 @@ public class PerformanceTestIndexedContainerTest {
     }
 
     private Long median(Collection<Long> times) {
-        ArrayList<Long> list = new ArrayList<Long>(times);
+        List<Long> list = new ArrayList<Long>(times);
         Collections.sort(list);
         // not exact median in some cases, but good enough
         return list.get(list.size() / 2);

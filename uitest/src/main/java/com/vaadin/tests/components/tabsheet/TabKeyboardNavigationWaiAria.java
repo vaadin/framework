@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
@@ -17,7 +18,7 @@ import com.vaadin.v7.ui.TextField;
 public class TabKeyboardNavigationWaiAria extends AbstractReindeerTestUI {
 
     int index = 1;
-    ArrayList<Component> tabs = new ArrayList<>();
+    List<Component> tabs = new ArrayList<>();
     TabSheet ts = new TabSheet();
 
     @Override

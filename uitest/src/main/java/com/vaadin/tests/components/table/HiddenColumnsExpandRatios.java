@@ -57,7 +57,7 @@ public class HiddenColumnsExpandRatios extends TestBase {
         String[] strings = { "foo", "bar", "baz" };
         for (int i = 0; i < 5; i++) {
             str.append(strings[Math.abs(rnd.nextInt() % strings.length)])
-                    .append(" ");
+                    .append(' ');
         }
         return str.toString();
     }

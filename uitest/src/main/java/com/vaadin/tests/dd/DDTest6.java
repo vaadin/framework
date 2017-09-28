@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.event.Action;
@@ -297,7 +298,7 @@ public class DDTest6 extends TestBase {
 
     static class FolderView extends DragAndDropWrapper implements DropHandler {
 
-        static final HashMap<Folder, FolderView> views = new HashMap<>();
+        static final Map<Folder, FolderView> views = new HashMap<>();
 
         public static FolderView get(Folder f) {
 

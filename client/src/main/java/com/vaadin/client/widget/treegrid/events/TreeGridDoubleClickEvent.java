@@ -32,7 +32,7 @@ import com.vaadin.client.widgets.Grid;
  * originate form hierarchy widget.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.2
  */
 public class TreeGridDoubleClickEvent extends GridDoubleClickEvent {
 

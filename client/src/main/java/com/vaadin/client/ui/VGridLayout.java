@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
@@ -52,7 +53,7 @@ public class VGridLayout extends ComplexPanel {
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public HashMap<Widget, Cell> widgetToCell = new HashMap<>();
+    public Map<Widget, Cell> widgetToCell = new HashMap<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public int[] columnWidths;

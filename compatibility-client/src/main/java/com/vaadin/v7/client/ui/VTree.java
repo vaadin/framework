@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.aria.client.ExpandedValue;
@@ -138,13 +139,13 @@ public class VTree extends FocusElementPanel
     /** For internal use only. May be removed or replaced in the future. */
     public MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
-    private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
+    private final Map<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
     /**
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap<String, String> actionMap = new HashMap<String, String>();
+    private final Map<String, String> actionMap = new HashMap<String, String>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
@@ -326,7 +327,7 @@ public class VTree extends FocusElementPanel
      * @return A list of all root {@link TreeNode}s.
      */
     protected List<TreeNode> getRootNodes() {
-        ArrayList<TreeNode> rootNodes = new ArrayList<TreeNode>();
+        List<TreeNode> rootNodes = new ArrayList<TreeNode>();
         for (int i = 0; i < body.getWidgetCount(); i++) {
             rootNodes.add((TreeNode) body.getWidget(i));
         }
@@ -2178,7 +2179,7 @@ public class VTree extends FocusElementPanel
             isExpandCollapse = true;
         }
 
-        ArrayList<Integer> positions = new ArrayList<Integer>();
+        List<Integer> positions = new ArrayList<Integer>();
         while (treeNode.getParentNode() != null) {
             positions.add(0,
                     treeNode.getParentNode().getChildren().indexOf(treeNode));

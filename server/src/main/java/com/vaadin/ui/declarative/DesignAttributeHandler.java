@@ -328,7 +328,7 @@ public class DesignAttributeHandler implements Serializable {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < words.length; i++) {
             if (builder.length() != 0) {
-                builder.append("-");
+                builder.append('-');
             }
             builder.append(words[i].toLowerCase());
         }
@@ -449,7 +449,7 @@ public class DesignAttributeHandler implements Serializable {
         }
 
         private Collection<String> getAttributes() {
-            ArrayList<String> attributes = new ArrayList<>();
+            List<String> attributes = new ArrayList<>();
             attributes.addAll(accessMethods.keySet());
             return attributes;
         }

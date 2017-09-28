@@ -18,6 +18,8 @@ package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.dom.client.Style.Overflow;
@@ -249,7 +251,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     @Override
     protected String[] getSelectedItems() {
-        final ArrayList<String> selectedItemKeys = new ArrayList<String>();
+        final List<String> selectedItemKeys = new ArrayList<String>();
         for (int i = 0; i < selections.getItemCount(); i++) {
             selectedItemKeys.add(selections.getValue(i));
         }

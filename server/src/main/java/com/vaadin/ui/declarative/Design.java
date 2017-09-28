@@ -302,7 +302,7 @@ public class Design implements Serializable {
                 Character c = className.charAt(i);
                 if (Character.isUpperCase(c)) {
                     if (i > 0) {
-                        result.append("-");
+                        result.append('-');
                     }
                     result.append(Character.toLowerCase(c));
                 } else {

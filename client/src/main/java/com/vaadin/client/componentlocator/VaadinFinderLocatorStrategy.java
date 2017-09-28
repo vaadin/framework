@@ -557,7 +557,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private List<ComponentConnector> collectPotentialMatches(
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
-        ArrayList<ComponentConnector> potentialMatches = new ArrayList<>();
+        List<ComponentConnector> potentialMatches = new ArrayList<>();
         String widgetName = getWidgetName(pathFragment);
         // Special case when searching for UIElement.
         if (LocatorUtil.isUIElement(pathFragment)) {

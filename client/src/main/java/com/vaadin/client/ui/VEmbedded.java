@@ -63,7 +63,7 @@ public class VEmbedded extends HTML {
      * @param src
      *            The src attribute
      * @return Tags concatenated into a string
-     * @since
+     * @since 8.2
      */
     public String createFlashEmbed(EmbeddedState state, String src) {
         /*
@@ -137,7 +137,7 @@ public class VEmbedded extends HTML {
         }
 
         // End object tag
-        html.append(">");
+        html.append('>');
 
         // Ensure we have an movie parameter
         Map<String, String> parameters = state.parameters;
@@ -165,7 +165,7 @@ public class VEmbedded extends HTML {
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
-            html.append("=");
+            html.append('=');
             html.append("\"" + WidgetUtil.escapeAttribute(parameters.get(name))
                     + "\"");
         }

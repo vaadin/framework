@@ -18,6 +18,7 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -43,7 +44,7 @@ public class TestForMultipleStyleNames extends CustomComponent
 
     private final TwinColSelect s = new TwinColSelect();
 
-    private ArrayList<String> styleNames2;
+    private List<String> styleNames2;
 
     public TestForMultipleStyleNames() {
         setCompositionRoot(main);
@@ -82,7 +83,7 @@ public class TestForMultipleStyleNames extends CustomComponent
 
         final String currentStyle = l.getStyleName();
         final String[] tmp = currentStyle.split(" ");
-        final ArrayList<String> curStyles = new ArrayList<>();
+        final List<String> curStyles = new ArrayList<>();
         for (int i = 0; i < tmp.length; i++) {
             if (tmp[i] != "") {
                 curStyles.add(tmp[i]);

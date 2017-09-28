@@ -40,7 +40,7 @@ public class DesignShortcutActionConverter
     private final Map<String, Integer> presentationMap;
 
     public DesignShortcutActionConverter() {
-        HashMap<Integer, String> codes = new HashMap<>();
+        Map<Integer, String> codes = new HashMap<>();
         // map modifiers
         codes.put(ModifierKey.ALT, "alt");
         codes.put(ModifierKey.CTRL, "ctrl");
@@ -112,7 +112,7 @@ public class DesignShortcutActionConverter
 
         keyCodeMap = Collections.unmodifiableMap(codes);
 
-        HashMap<String, Integer> presentations = new HashMap<>();
+        Map<String, Integer> presentations = new HashMap<>();
         for (Entry<Integer, String> entry : keyCodeMap.entrySet()) {
             presentations.put(entry.getValue(), entry.getKey());
         }
@@ -166,13 +166,13 @@ public class DesignShortcutActionConverter
         // handle modifiers
         if (value.getModifiers() != null) {
             for (int modifier : value.getModifiers()) {
-                sb.append(getStringForKeycode(modifier)).append("-");
+                sb.append(getStringForKeycode(modifier)).append('-');
             }
         }
         // handle keycode
         sb.append(getStringForKeycode(value.getKeyCode()));
         if (value.getCaption() != null) {
-            sb.append(" ").append(value.getCaption());
+            sb.append(' ').append(value.getCaption());
         }
         return sb.toString();
     }

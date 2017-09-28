@@ -1630,8 +1630,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         }
                     }
                 });
-                grid.scrollToRow(rowIndex, isBuffered()
-                        ? ScrollDestination.MIDDLE : ScrollDestination.ANY);
+                grid.scrollToRow(rowIndex,
+                        isBuffered() ? ScrollDestination.MIDDLE
+                                : ScrollDestination.ANY);
             }
         }
 
@@ -2454,7 +2455,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *         the element from which the event originated
          * @return {@code true} if the event should be ignored, {@code false} if
          * it should be handled
-         * @since
+         * @since 8.2
          */
         protected boolean ignoreEventFromTarget(Grid<?> grid,
                 Element targetElement) {
@@ -4041,7 +4042,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     private final class ColumnHider {
 
         /** Map from columns to their hiding toggles, component might change */
-        private HashMap<Column<?, T>, MenuItem> columnToHidingToggleMap = new HashMap<>();
+        private Map<Column<?, T>, MenuItem> columnToHidingToggleMap = new HashMap<>();
 
         /**
          * When column is being hidden with a toggle, do not refresh toggles for
@@ -4375,10 +4376,9 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     && dropMarkerLeft <= escalator.getInnerWidth()) {
                 dropMarkerLeft = rightBoundaryForDrag - dropMarkerWidthOffset;
             } else if (
-                    // Check if the drop marker shouldn't be shown at all
-                    dropMarkerLeft < frozenColumnsWidth
-                    || dropMarkerLeft > Math.min(rightBoundaryForDrag,
-                            escalator.getInnerWidth())
+            // Check if the drop marker shouldn't be shown at all
+            dropMarkerLeft < frozenColumnsWidth || dropMarkerLeft > Math
+                    .min(rightBoundaryForDrag, escalator.getInnerWidth())
                     || dropMarkerLeft < 0) {
                 dropMarkerLeft = -10000000;
             }
@@ -4533,7 +4533,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 if (focusedColumnIndex == draggedColumnIndex) {
                     // move with the dragged column
                     int adjustedDropIndex = latestColumnDropIndex > draggedColumnIndex
-                            ? latestColumnDropIndex - 1 : latestColumnDropIndex;
+                            ? latestColumnDropIndex - 1
+                            : latestColumnDropIndex;
                     // remove hidden columns from indexing
                     adjustedDropIndex = getVisibleColumns()
                             .indexOf(getColumn(adjustedDropIndex));
@@ -6033,7 +6034,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (sortIndex > -1 && Grid.this.getSortOrder().size() > 1) {
                 // Show sort order indicator if column is
                 // sorted and other sorted columns also exists.
-                cellElement.setAttribute("sort-order", String.valueOf(sortIndex + 1));
+                cellElement.setAttribute("sort-order",
+                        String.valueOf(sortIndex + 1));
                 cellElement.setAttribute("aria-sort", "other");
             }
 
@@ -6624,7 +6626,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @return A unmodifiable list of the currently visible columns in the grid
      */
     public List<Column<?, T>> getVisibleColumns() {
-        ArrayList<Column<?, T>> visible = new ArrayList<>();
+        List<Column<?, T>> visible = new ArrayList<>();
         for (Column<?, T> c : columns) {
             if (!c.isHidden()) {
                 visible.add(c);

@@ -477,7 +477,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *
      * @param listener
      *            the CloseListener to add, not {@code null}
-     * @since
+     * @since 8.2
      */
     public Registration addCloseListener(CloseListener listener) {
         return addListener(CloseEvent.class, listener, CLOSE_METHOD);

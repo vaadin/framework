@@ -538,7 +538,7 @@ public class ConnectorBundleLoaderFactory extends Generator {
                             + connector.getName());
 
             // Build map to speed up error checking
-            HashMap<String, Property> stateProperties = new HashMap<>();
+            Map<String, Property> stateProperties = new HashMap<>();
             JClassType stateType = ConnectorBundle
                     .findInheritedMethod(connector, "getState").getReturnType()
                     .isClassOrInterface();

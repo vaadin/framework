@@ -214,13 +214,13 @@ public abstract class UI extends AbstractSingleComponentContainer
                     .validateLayouts(UI.this);
             StringBuilder json = new StringBuilder();
             json.append("{\"invalidLayouts\":");
-            json.append("[");
+            json.append('[');
 
             if (invalidSizes != null) {
                 boolean first = true;
                 for (InvalidLayout invalidSize : invalidSizes) {
                     if (!first) {
-                        json.append(",");
+                        json.append(',');
                     } else {
                         first = false;
                     }
@@ -457,7 +457,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
-        ArrayList<Component> components = new ArrayList<>();
+        List<Component> components = new ArrayList<>();
 
         if (getContent() != null) {
             components.add(getContent());

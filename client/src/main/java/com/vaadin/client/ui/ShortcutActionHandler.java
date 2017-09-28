@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -58,7 +59,7 @@ public class ShortcutActionHandler {
         ShortcutActionHandler getShortcutActionHandler();
     }
 
-    private final ArrayList<ShortcutAction> actions = new ArrayList<>();
+    private final List<ShortcutAction> actions = new ArrayList<>();
     private ApplicationConnection client;
     private String paintableId;
 

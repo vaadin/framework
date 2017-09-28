@@ -94,7 +94,7 @@ public class QueryBuilder implements Serializable {
         StringBuilder result = new StringBuilder();
         for (Filter f : filters) {
             result.append(getWhereStringForFilter(f, sh));
-            result.append(" ").append(joinString).append(" ");
+            result.append(' ').append(joinString).append(' ');
         }
         // Remove the last instance of joinString
         result.delete(result.length() - joinString.length() - 2,

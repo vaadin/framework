@@ -56,7 +56,7 @@ public class TicketTest {
                 Arrays.asList("ID"), connectionPool);
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));

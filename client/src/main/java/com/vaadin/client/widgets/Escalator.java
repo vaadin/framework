@@ -1740,8 +1740,8 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check whether it,
-         *            or any of its its descendants can be frozen
+         *            the row element to check whether it, or any of its its
+         *            descendants can be frozen
          * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
@@ -3882,8 +3882,8 @@ public class Escalator extends Widget
                     insertFirst = true;
                 } else if (insertFirst) {
                     // remove row explicitly to work around an IE11 bug (#9850)
-                    if (BrowserInfo.get().isIE11() && tr
-                            .equals(root.getFirstChildElement())) {
+                    if (BrowserInfo.get().isIE11()
+                            && tr.equals(root.getFirstChildElement())) {
                         root.removeChild(tr);
                     }
                     root.insertFirst(tr);
@@ -4553,11 +4553,11 @@ public class Escalator extends Widget
             }
 
             if (index < 0 || index + numberOfColumns > getColumnCount()) {
-                throw new IndexOutOfBoundsException(
-                        "The given " + "column range (" + index + ".."
-                                + (index + numberOfColumns)
-                                + ") was outside of the current number of columns ("
-                                + getColumnCount() + ")");
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
             }
 
             header.refreshColumns(index, numberOfColumns);
@@ -5054,7 +5054,7 @@ public class Escalator extends Widget
         public Collection<SpacerImpl> getSpacersAfterPx(final double px,
                 final SpacerInclusionStrategy strategy) {
 
-            ArrayList<SpacerImpl> spacers = new ArrayList<>(
+            List<SpacerImpl> spacers = new ArrayList<>(
                     rowIndexToSpacer.values());
 
             for (int i = 0; i < spacers.size(); i++) {
@@ -6511,7 +6511,8 @@ public class Escalator extends Widget
         double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle()
-                ? horizontalScrollbar.getScrollbarThickness() : 0;
+                ? horizontalScrollbar.getScrollbarThickness()
+                : 0;
         double spacerHeight = 0; // ignored if HeightMode.ROW
         if (heightMode == HeightMode.UNDEFINED) {
             spacerHeight = body.spacerContainer.getSpacerHeightsSum();

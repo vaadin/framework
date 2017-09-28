@@ -30,14 +30,14 @@ import com.google.gwt.dom.client.TableRowElement;
  *
  * @since 7.4
  * @author Vaadin Ltd
- * @see com.vaadin.v7.client.widgets.Escalator.AbstractRowContainer#refreshRow(TableRowElement, int)
- *      Escalator.AbstractRowContainer#refreshRow(TableRowElement, int)
+ * @see com.vaadin.v7.client.widgets.Escalator.AbstractRowContainer#refreshRow(TableRowElement,
+ *      int) Escalator.AbstractRowContainer#refreshRow(TableRowElement, int)
  */
 public class FlyweightRow implements Row {
 
     static class CellIterator implements Iterator<FlyweightCell> {
         /** A defensive copy of the cells in the current row. */
-        private final ArrayList<FlyweightCell> cells;
+        private final List<FlyweightCell> cells;
         private final boolean cellsAttached;
         private int cursor = 0;
         private int skipNext = 0;
