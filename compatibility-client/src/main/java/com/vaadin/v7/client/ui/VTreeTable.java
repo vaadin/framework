@@ -344,7 +344,7 @@ public class VTreeTable extends VScrollTable {
 
                 if (spanColumns) {
                     int colCount = uidl.getChildCount();
-                    // add only first cell
+                    // add the first cell only
                     for (final Object cell : uidl) {
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
