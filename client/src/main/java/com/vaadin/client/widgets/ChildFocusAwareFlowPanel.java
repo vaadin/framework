@@ -143,6 +143,7 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
 
     @Override
     public void focus() {
+        // focus the first child
         for (Widget widget : this) {
             if (widget instanceof Focusable) {
                 ((Focusable) widget).setFocus(true);

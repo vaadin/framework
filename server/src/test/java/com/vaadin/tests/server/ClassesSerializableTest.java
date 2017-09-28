@@ -118,7 +118,7 @@ public class ClassesSerializableTest {
             classes.addAll(findServerClasses(location));
         }
 
-        List<Field> nonSerializableFunctionFields = new ArrayList<>();
+        ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
 
         List<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
