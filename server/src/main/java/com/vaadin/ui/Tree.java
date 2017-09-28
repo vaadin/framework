@@ -1153,7 +1153,8 @@ public class Tree<T> extends Composite
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *            if the provided row is outside the item range
+     *             if the provided row is outside the item range
+     * @since 8.2
      */
     public void scrollTo(int row) throws IllegalArgumentException {
         treeGrid.scrollTo(row, ScrollDestination.ANY);
@@ -1172,6 +1173,7 @@ public class Tree<T> extends Composite
      *            {@code null}
      * @throws IllegalArgumentException
      *             if the provided row is outside the item range
+     * @since 8.2
      */
     public void scrollTo(int row, ScrollDestination destination) {
         treeGrid.scrollTo(row, destination);
@@ -1179,6 +1181,8 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the beginning of the first data row.
+     * 
+     * @since 8.2
      */
     public void scrollToStart() {
         treeGrid.scrollToStart();
@@ -1186,6 +1190,8 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the end of the last data row.
+     * 
+     * @since 8.2
      */
     public void scrollToEnd() {
         treeGrid.scrollToEnd();

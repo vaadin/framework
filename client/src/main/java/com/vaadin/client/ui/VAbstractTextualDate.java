@@ -201,6 +201,13 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
     }
 
+    /**
+     * Sets the time zone for the field.
+     * 
+     * @param timeZone
+     *            the new time zone to use
+     * @since 8.2
+     */
     public void setTimeZone(TimeZone timeZone) {
         this.timeZone = timeZone;
     }

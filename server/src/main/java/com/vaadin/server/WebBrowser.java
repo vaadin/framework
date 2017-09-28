@@ -359,7 +359,9 @@ public class WebBrowser implements Serializable {
      * (if the browser supports this feature).
      *
      * @return the TimeZone Id if provided by the browser, null otherwise.
-     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/resolvedOptions">Intl.DateTimeFormat.prototype.resolvedOptions()</a>
+     * @see <a href=
+     *      "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/resolvedOptions">Intl.DateTimeFormat.prototype.resolvedOptions()</a>
+     * @since 8.2
      */
     public String getTimeZoneId() {
         return timeZoneId;
@@ -500,9 +502,9 @@ public class WebBrowser implements Serializable {
             this.dstInEffect = Boolean.parseBoolean(dstInEffect);
         }
         if (tzId == null || "undefined".equals(tzId)) {
-            this.timeZoneId = null;
+            timeZoneId = null;
         } else {
-            this.timeZoneId = tzId;
+            timeZoneId = tzId;
         }
         if (curDate != null) {
             try {
