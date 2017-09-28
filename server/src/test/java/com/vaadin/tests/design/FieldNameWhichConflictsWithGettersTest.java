@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -65,7 +67,7 @@ public class FieldNameWhichConflictsWithGettersTest {
         context.setRootComponent(v);
 
         Design.write(context, baos);
-        String str = baos.toString("UTF-8");
+        String str = baos.toString(UTF_8.toString());
 
         Document doc = Jsoup.parse(str);
         Element body = doc.body();

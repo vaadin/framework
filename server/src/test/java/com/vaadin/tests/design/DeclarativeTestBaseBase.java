@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,21 +60,13 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     protected T read(String design) {
-        try {
-            return (T) Design
-                    .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return (T) Design
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)));
     }
 
     protected DesignContext readAndReturnContext(String design) {
-        try {
-            return Design.read(
-                    new ByteArrayInputStream(design.getBytes("UTF-8")), null);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return Design.read(new ByteArrayInputStream(design.getBytes(UTF_8)),
+                null);
     }
 
     protected String write(T object, boolean writeData) {
@@ -90,7 +83,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             context.setRootComponent(object);
             Design.write(context, outputStream);
-            return outputStream.toString("UTF-8");
+            return outputStream.toString(UTF_8.toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

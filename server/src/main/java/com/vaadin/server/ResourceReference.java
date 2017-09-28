@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -102,7 +104,7 @@ public class ResourceReference extends URLReference {
 
     static String urlEncode(String filename) {
         try {
-            return URLEncoder.encode(filename, "UTF-8");
+            return URLEncoder.encode(filename, UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(
                     "UTF-8 charset not available (\"this should never happen\")",

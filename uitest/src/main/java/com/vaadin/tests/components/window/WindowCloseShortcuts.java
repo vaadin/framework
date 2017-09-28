@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.window;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -145,7 +147,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
             DesignContext dc = new DesignContext();
             dc.setRootComponent(window);
             Design.write(dc, outputStream);
-            design = outputStream.toString("UTF-8");
+            design = outputStream.toString(UTF_8.toString());
         } catch (Exception e) {
             return;
         }

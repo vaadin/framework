@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -110,7 +111,7 @@ public class ParseLayoutTest {
         String[] expectedPackageNames = { "com.addon.mypackage" };
         int index = 0;
 
-        Document doc = Jsoup.parse(out.toString("UTF-8"));
+        Document doc = Jsoup.parse(out.toString(UTF_8.toString()));
         Element head = doc.head();
         for (Node child : head.childNodes()) {
             if ("meta".equals(child.nodeName())) {

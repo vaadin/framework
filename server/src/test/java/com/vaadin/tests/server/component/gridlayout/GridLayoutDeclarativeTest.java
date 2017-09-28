@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component.gridlayout;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -330,7 +332,7 @@ public class GridLayoutDeclarativeTest
                 + "<row><column><vaadin-grid-layout _id=\"marginBottomComponent\" margin-bottom></vaadin-grid-layout></column></row>"
                 + "</vaadin-grid-layout>";
         DesignContext context = Design
-                .read(new ByteArrayInputStream(design.getBytes("UTF-8")), null);
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)), null);
         Assert.assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginComponent")));
         Assert.assertEquals(null, context.getCustomAttributes(
@@ -352,7 +354,7 @@ public class GridLayoutDeclarativeTest
                 + "<my-preconfigured-grid-layout></my-preconfigured-grid-layout>";
 
         PreconfiguredGridLayout myLayout = (PreconfiguredGridLayout) Design
-                .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)));
         Assert.assertEquals(2, myLayout.getRows());
         Assert.assertEquals(2, myLayout.getColumns());
     }

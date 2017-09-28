@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -44,11 +46,11 @@ public class DesignReadInConstructorTest {
         DesignReadInConstructor dric = new DesignReadInConstructor();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Design.write(dric, baos);
-        Document doc = Jsoup.parse(baos.toString("UTF-8"));
+        Document doc = Jsoup.parse(baos.toString(UTF_8.toString()));
 
         Document d = Jsoup.parse(
                 getClass().getResourceAsStream("DesignReadInConstructor.html"),
-                "UTF-8", "");
+                UTF_8.toString(), "");
         assertJsoupTreeEquals(d.body().child(0), doc.body().child(0));
     }
 

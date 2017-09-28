@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -249,7 +251,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                 Design.write((Component) connector, baos);
                 getLogger().info("Design for " + connector
                         + " requested from debug window:\n"
-                        + baos.toString("UTF-8"));
+                        + baos.toString(UTF_8.toString()));
             } catch (IOException e) {
                 getLogger().log(Level.WARNING,
                         "Error producing design for " + connector, e);

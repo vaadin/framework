@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.declarative;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -95,12 +97,11 @@ public class DeclarativeEditor extends UI {
         try {
             Design.write(treeHolder.getComponent(0), o);
             disableEvents = true;
-            editor.setValue(o.toString("UTF-8"));
+            editor.setValue(o.toString(UTF_8.toString()));
             disableEvents = false;
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-
     }
 
     private void addValueChangeListeners(Component component) {
