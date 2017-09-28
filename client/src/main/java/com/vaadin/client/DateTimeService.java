@@ -332,7 +332,7 @@ public class DateTimeService {
      *            {@code null}
      *
      * @return the formatted date string
-     * @since
+     * @since 8.2
      */
     public String formatDate(Date date, String formatStr, TimeZone timeZone) {
         /*

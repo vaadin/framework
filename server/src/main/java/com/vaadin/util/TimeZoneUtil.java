@@ -37,7 +37,7 @@ import elemental.json.impl.JsonUtil;
  * Utilities related to {@link com.google.gwt.i18n.client.TimeZone}.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.2
  */
 public final class TimeZoneUtil implements Serializable {
 
