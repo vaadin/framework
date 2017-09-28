@@ -473,7 +473,7 @@ public class VScrollTable extends FlowPanel
 
         public Collection<SelectionRange> split(VScrollTableRow row) {
             assert row.isAttached();
-            ArrayList<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
+            List<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
 
             int endOfFirstRange = row.getIndex() - 1;
             if (endOfFirstRange >= startRow.getIndex()) {
@@ -677,7 +677,7 @@ public class VScrollTable extends FlowPanel
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap<Object, String> actionMap = new HashMap<Object, String>();
+    private final Map<Object, String> actionMap = new HashMap<Object, String>();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
@@ -3541,9 +3541,9 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
+        List<Widget> visibleCells = new ArrayList<Widget>();
 
-        HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
+        Map<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -4100,7 +4100,7 @@ public class VScrollTable extends FlowPanel
             }
             // fire column resize events for all columns but the source of the
             // resize action, since an event will fire separately for this.
-            ArrayList<HeaderCell> columns = new ArrayList<HeaderCell>(
+            List<HeaderCell> columns = new ArrayList<HeaderCell>(
                     availableCells.values());
             columns.remove(source);
             sendColumnWidthUpdates(columns);
@@ -4477,8 +4477,8 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
-        HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
+        List<Widget> visibleCells = new ArrayList<Widget>();
+        Map<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -5486,7 +5486,7 @@ public class VScrollTable extends FlowPanel
 
             private static final int TOUCHSCROLL_TIMEOUT = 100;
             private static final int DRAGMODE_MULTIROW = 2;
-            protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
+            protected List<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
             protected final int rowKey;
 

@@ -259,7 +259,7 @@ public class FreeformQueryTest {
     public void setFilters_noDelegate_shouldFail() {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Like("name", "%lle"));
         query.setFilters(filters);
     }

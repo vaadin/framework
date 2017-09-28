@@ -501,8 +501,7 @@ public class ServerRpcHandler implements Serializable {
             ConnectorTracker connectorTracker, JsonArray invocationsJson,
             int lastSyncIdSeenByClient) {
         int invocationCount = invocationsJson.length();
-        ArrayList<MethodInvocation> invocations = new ArrayList<>(
-                invocationCount);
+        List<MethodInvocation> invocations = new ArrayList<>(invocationCount);
 
         MethodInvocation previousInvocation = null;
         // parse JSON to MethodInvocations

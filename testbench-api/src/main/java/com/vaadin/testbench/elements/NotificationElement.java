@@ -77,7 +77,7 @@ public class NotificationElement extends AbstractElement {
         // the notification
         // To get type we search for css rules which represent notification type
         // This map maps css style rule to type of a notification
-        HashMap<String, String> styleToTypeMap = initStyleToTypeMap();
+        Map<String, String> styleToTypeMap = initStyleToTypeMap();
         for (Map.Entry<String, String> entry : styleToTypeMap.entrySet()) {
             String notifType = entry.getKey();
             // Check notification has css style which describes notification
@@ -89,8 +89,8 @@ public class NotificationElement extends AbstractElement {
         return "";
     }
 
-    private HashMap<String, String> initStyleToTypeMap() {
-        HashMap<String, String> styleToType = new HashMap<String, String>();
+    private Map<String, String> initStyleToTypeMap() {
+        Map<String, String> styleToType = new HashMap<String, String>();
         styleToType.put("v-Notification-error", "error");
         styleToType.put("v-Notification-warning", "warning");
         styleToType.put("v-Notification-humanized", "humanized");

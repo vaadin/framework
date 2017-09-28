@@ -457,7 +457,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
-        ArrayList<Component> components = new ArrayList<>();
+        List<Component> components = new ArrayList<>();
 
         if (getContent() != null) {
             components.add(getContent());

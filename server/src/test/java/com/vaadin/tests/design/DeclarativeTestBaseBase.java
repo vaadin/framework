@@ -268,7 +268,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
      */
     private String elementToHtml(Element producedElem, StringBuilder sb) {
         HashSet<String> booleanAttributes = new HashSet<>();
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
             if (a instanceof BooleanAttribute) {

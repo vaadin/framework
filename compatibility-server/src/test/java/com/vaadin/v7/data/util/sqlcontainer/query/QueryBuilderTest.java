@@ -1,6 +1,7 @@
 package com.vaadin.v7.data.util.sqlcontainer.query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -200,7 +201,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_listOfFilters() {
         StatementHelper sh = mockedStatementHelper("%lle", 18);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Like("NAME", "%lle"));
         filters.add(new Greater("AGE", 18));
         Assert.assertEquals(" WHERE \"NAME\" LIKE ? AND \"AGE\" > ?",
@@ -211,7 +212,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_oneAndFilter() {
         StatementHelper sh = mockedStatementHelper("%lle", 18);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new And(new Like("NAME", "%lle"), new Greater("AGE", 18)));
         Assert.assertEquals(" WHERE (\"NAME\" LIKE ? AND \"AGE\" > ?)",
                 QueryBuilder.getWhereStringForFilters(filters, sh));
@@ -221,7 +222,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_oneOrFilter() {
         StatementHelper sh = mockedStatementHelper("%lle", 18);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Or(new Like("NAME", "%lle"), new Greater("AGE", 18)));
         Assert.assertEquals(" WHERE (\"NAME\" LIKE ? OR \"AGE\" > ?)",
                 QueryBuilder.getWhereStringForFilters(filters, sh));
@@ -231,7 +232,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_complexCompoundFilters() {
         StatementHelper sh = mockedStatementHelper("%lle", 18, 65, "Pelle");
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Or(
                 new And(new Like("NAME", "%lle"),
                         new Or(new Less("AGE", 18), new Greater("AGE", 65))),
@@ -246,7 +247,7 @@ public class QueryBuilderTest {
     public void getWhereStringForFilters_complexCompoundFiltersAndSingleFilter() {
         StatementHelper sh = mockedStatementHelper("%lle", 18, 65, "Pelle",
                 "Virtanen");
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Or(
                 new And(new Like("NAME", "%lle"),
                         new Or(new Less("AGE", 18), new Greater("AGE", 65))),
@@ -260,7 +261,7 @@ public class QueryBuilderTest {
 
     @Test
     public void getWhereStringForFilters_emptyList_shouldReturnEmptyString() {
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         Assert.assertEquals("", QueryBuilder.getWhereStringForFilters(filters,
                 new StatementHelper()));
     }
@@ -268,7 +269,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_NotFilter() {
         StatementHelper sh = mockedStatementHelper(18);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Not(new Equal("AGE", 18)));
         Assert.assertEquals(" WHERE NOT \"AGE\" = ?",
                 QueryBuilder.getWhereStringForFilters(filters, sh));
@@ -278,7 +279,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_complexNegatedFilter() {
         StatementHelper sh = mockedStatementHelper(65, 18);
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(
                 new Not(new Or(new Equal("AGE", 65), new Equal("AGE", 18))));
         Assert.assertEquals(" WHERE NOT (\"AGE\" = ? OR \"AGE\" = ?)",
@@ -288,7 +289,7 @@ public class QueryBuilderTest {
 
     @Test
     public void getWhereStringForFilters_isNull() {
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new IsNull("NAME"));
         Assert.assertEquals(" WHERE \"NAME\" IS NULL", QueryBuilder
                 .getWhereStringForFilters(filters, new StatementHelper()));
@@ -296,7 +297,7 @@ public class QueryBuilderTest {
 
     @Test
     public void getWhereStringForFilters_isNotNull() {
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Not(new IsNull("NAME")));
         Assert.assertEquals(" WHERE \"NAME\" IS NOT NULL", QueryBuilder
                 .getWhereStringForFilters(filters, new StatementHelper()));
@@ -305,7 +306,7 @@ public class QueryBuilderTest {
     @Test
     public void getWhereStringForFilters_customStringDecorator() {
         QueryBuilder.setStringDecorator(new StringDecorator("[", "]"));
-        ArrayList<Filter> filters = new ArrayList<Filter>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Not(new IsNull("NAME")));
         Assert.assertEquals(" WHERE [NAME] IS NOT NULL", QueryBuilder
                 .getWhereStringForFilters(filters, new StatementHelper()));

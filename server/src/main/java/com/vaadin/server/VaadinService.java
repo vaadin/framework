@@ -115,7 +115,8 @@ public abstract class VaadinService implements Serializable {
     private static final String REQUEST_START_TIME_ATTRIBUTE = "requestStartTime";
 
     /**
-     * Should never be used directly, always use {@link #getDeploymentConfiguration()}
+     * Should never be used directly, always use
+     * {@link #getDeploymentConfiguration()}
      */
     private final DeploymentConfiguration deploymentConfiguration;
 
@@ -265,7 +266,7 @@ public abstract class VaadinService implements Serializable {
      */
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
-        ArrayList<RequestHandler> handlers = new ArrayList<>();
+        List<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
@@ -375,8 +376,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Gets the deployment configuration. Should be overridden (or otherwise
-     * intercepted) if the no-arg constructor is used in order to prevent
-     * NPEs.
+     * intercepted) if the no-arg constructor is used in order to prevent NPEs.
      *
      * @return the deployment configuration
      */
@@ -530,7 +530,7 @@ public abstract class VaadinService implements Serializable {
             if (session.getState() == State.OPEN) {
                 closeSession(session);
             }
-            ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+            List<UI> uis = new ArrayList<>(session.getUIs());
             for (final UI ui : uis) {
                 ui.accessSynchronously(() -> {
                     /*
@@ -1126,8 +1126,7 @@ public abstract class VaadinService implements Serializable {
         // Stores all attributes (security key, reference to this context
         // instance) so they can be added to the new session
         Set<String> attributeNames = oldSession.getAttributeNames();
-        HashMap<String, Object> attrs = new HashMap<>(
-                attributeNames.size() * 2);
+        Map<String, Object> attrs = new HashMap<>(attributeNames.size() * 2);
         for (String name : attributeNames) {
             Object value = oldSession.getAttribute(name);
             if (value instanceof VaadinSession) {
@@ -1266,7 +1265,7 @@ public abstract class VaadinService implements Serializable {
      * @param session
      */
     private void removeClosedUIs(final VaadinSession session) {
-        ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+        List<UI> uis = new ArrayList<>(session.getUIs());
         for (final UI ui : uis) {
             if (ui.isClosing()) {
                 ui.accessSynchronously(() -> {

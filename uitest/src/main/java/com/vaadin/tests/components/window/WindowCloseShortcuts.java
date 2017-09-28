@@ -18,6 +18,7 @@ package com.vaadin.tests.components.window;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -165,7 +166,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
     }
 
     private String elementToHtml(Element producedElem, StringBuilder sb) {
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
         }

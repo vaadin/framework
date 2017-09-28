@@ -17,6 +17,7 @@ package com.vaadin.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -80,7 +81,7 @@ final class ComponentDetailMap extends JavaScriptObject {
     }-*/;
 
     final Collection<ComponentDetail> values() {
-        ArrayList<ComponentDetail> list = new ArrayList<>();
+        List<ComponentDetail> list = new ArrayList<>();
         fillWithValues(list);
         return list;
     }

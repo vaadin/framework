@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
@@ -90,8 +91,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     private CalendarServerRpc rpc = RpcProxy.create(CalendarServerRpc.class,
             this);
 
-    private final HashMap<String, String> actionMap = new HashMap<String, String>();
-    private HashMap<Object, String> tooltips = new HashMap<Object, String>();
+    private final Map<String, String> actionMap = new HashMap<String, String>();
+    private Map<Object, String> tooltips = new HashMap<Object, String>();
 
     private static final String DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG = "-ac";
 

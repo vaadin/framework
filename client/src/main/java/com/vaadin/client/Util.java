@@ -727,7 +727,7 @@ public class Util {
     }
 
     private static void printConnectorInvocations(
-            ArrayList<MethodInvocation> invocations, String id,
+            List<MethodInvocation> invocations, String id,
             ApplicationConnection c) {
         ServerConnector connector = ConnectorMap.get(c).getConnector(id);
         if (connector != null) {
@@ -777,7 +777,7 @@ public class Util {
         try {
             getLogger().info("RPC invocations to be sent to the server:");
             String curId = null;
-            ArrayList<MethodInvocation> invocations = new ArrayList<>();
+            List<MethodInvocation> invocations = new ArrayList<>();
             for (MethodInvocation methodInvocation : methodInvocations) {
                 String id = methodInvocation.getConnectorId();
 

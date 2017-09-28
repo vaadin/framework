@@ -21,6 +21,7 @@ package com.vaadin.tests.push;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ContentMode;
@@ -69,7 +70,7 @@ public class PushConfigurator extends VerticalLayout {
     private void refreshStatus() {
         PushConfiguration pc = ui.getPushConfiguration();
         String value = "";
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         names.addAll(pc.getParameterNames());
         Collections.sort(names);
         for (String param : names) {

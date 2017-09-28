@@ -427,7 +427,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
             return false;
         }
         return !(getParent() instanceof SelectiveRenderer)
-            || ((SelectiveRenderer) getParent()).isRendered(this);
+                || ((SelectiveRenderer) getParent()).isRendered(this);
     }
 
     /*
@@ -1251,7 +1251,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        ArrayList<String> l = new ArrayList<>(Arrays.asList(customAttributes));
+        List<String> l = new ArrayList<>(Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");
             l.add("tabindex");
@@ -1259,10 +1259,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] customAttributes = { "width",
-            "height", "debug-id", "error", "width-auto", "height-auto",
-            "width-full", "height-full", "size-auto", "size-full", "immediate",
-            "locale", "read-only", "_id" };
+    private static final String[] customAttributes = { "width", "height",
+            "debug-id", "error", "width-auto", "height-auto", "width-full",
+            "height-full", "size-auto", "size-full", "immediate", "locale",
+            "read-only", "_id" };
 
     /*
      * (non-Javadoc)
@@ -1288,9 +1288,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
         writeSize(attr, def);
         // handle component error
         String errorMsg = getComponentError() != null
-                ? getComponentError().getFormattedHtmlMessage() : null;
+                ? getComponentError().getFormattedHtmlMessage()
+                : null;
         String defErrorMsg = def.getComponentError() != null
-                ? def.getComponentError().getFormattedHtmlMessage() : null;
+                ? def.getComponentError().getFormattedHtmlMessage()
+                : null;
         if (!SharedUtil.equals(errorMsg, defErrorMsg)) {
             attr.put("error", errorMsg);
         }

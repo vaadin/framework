@@ -345,7 +345,7 @@ public class LoginForm extends AbstractSingleComponentContainer {
      * URL in the method or the password manager will not be triggered.
      */
     private void login() {
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("username", getUsernameField().getValue());
         params.put("password", getPasswordField().getValue());
         LoginEvent event = new LoginEvent(LoginForm.this, params);

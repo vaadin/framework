@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.listselect;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
@@ -21,7 +22,7 @@ public class ListSelectJump extends AbstractReindeerTestUI {
                         + "<li>Leave the Option #10 visible in the scroll window</li><li>Press the button</li></ol>"
                         + "You will see the <code>ListSelect</code> scroll window jump back to the top.",
                 ContentMode.HTML));
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         for (int i = 1; i <= 25; i++) {
             list.add("Option #" + i);
         }

@@ -163,7 +163,7 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void propertyIdsAreFetched() {
-        ArrayList<String> propertyIds = new ArrayList<String>(
+        List<String> propertyIds = new ArrayList<String>(
                 (Collection<? extends String>) container
                         .getContainerPropertyIds());
 

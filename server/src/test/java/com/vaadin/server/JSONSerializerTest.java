@@ -40,8 +40,8 @@ import elemental.json.JsonValue;
  *
  */
 public class JSONSerializerTest {
-    HashMap<String, AbstractSplitPanelState> stringToStateMap;
-    HashMap<AbstractSplitPanelState, String> stateToStringMap;
+    Map<String, AbstractSplitPanelState> stringToStateMap;
+    Map<AbstractSplitPanelState, String> stateToStringMap;
 
     @Test
     public void testStringToBeanMapSerialization() throws Exception {

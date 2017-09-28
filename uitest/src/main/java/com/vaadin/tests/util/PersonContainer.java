@@ -3,6 +3,7 @@ package com.vaadin.tests.util;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 import com.vaadin.v7.data.util.BeanItemContainer;
@@ -14,17 +15,17 @@ public class PersonContainer extends BeanItemContainer<Person>
     /**
      * Natural property order for Person bean. Used in tables and forms.
      */
-    public static final Object[] NATURAL_COL_ORDER = { "firstName",
-            "lastName", "email", "phoneNumber", "address.streetAddress",
+    public static final Object[] NATURAL_COL_ORDER = { "firstName", "lastName",
+            "email", "phoneNumber", "address.streetAddress",
             "address.postalCode", "address.city" };
 
     /**
      * "Human readable" captions for properties in same order as in
      * NATURAL_COL_ORDER.
      */
-    public static final String[] COL_HEADERS_ENGLISH = {
-            "First name", "Last name", "Email", "Phone number",
-            "Street Address", "Postal Code", "City" };
+    public static final String[] COL_HEADERS_ENGLISH = { "First name",
+            "Last name", "Email", "Phone number", "Street Address",
+            "Postal Code", "City" };
 
     public PersonContainer() {
         super(Person.class);
@@ -49,7 +50,7 @@ public class PersonContainer extends BeanItemContainer<Person>
 
     public static Collection<Person> createTestData(int size) {
         Random r = new Random(0);
-        ArrayList<Person> testData = new ArrayList<>();
+        List<Person> testData = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Person p = new Person();
             p.setFirstName(TestDataGenerator.getFirstName(r));
