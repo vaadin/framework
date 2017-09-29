@@ -189,8 +189,8 @@ public class TouchScrollables extends TestBase {
 
         table.addActionHandler(new Handler() {
 
-            Action[] actions = { new Action("FOO"),
-                    new Action("BAR"), new Action("CAR") };
+            Action[] actions = { new Action("FOO"), new Action("BAR"),
+                    new Action("CAR") };
 
             @Override
             public Action[] getActions(Object target, Object sender) {
@@ -276,12 +276,9 @@ public class TouchScrollables extends TestBase {
                                 item.getItemProperty(propId).getValue());
                     }
 
-                    // TODO Auto-generated method stub
                 } catch (CloneNotSupportedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
             }
         });
         return table;

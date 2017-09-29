@@ -100,17 +100,13 @@ public class BrowserFrameIsVisible extends TestBase {
                 sb.append("\n");
             }
 
-            ByteArrayInputStream istream;
             try {
-                istream = new ByteArrayInputStream(
+                return new ByteArrayInputStream(
                         sb.toString().getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return null;
             }
-            return istream; // new DownloadStream (istream,null,null);
-
         }
     }
 
