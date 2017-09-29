@@ -17,7 +17,7 @@
 package com.vaadin.client.ui;
 
 /**
- * This class is used for "row actions" in VTree and ITable.
+ * This class is used for "row actions" in VTree and VScrollTable.
  */
 public class TreeAction extends Action {
 

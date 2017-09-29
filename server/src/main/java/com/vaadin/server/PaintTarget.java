@@ -278,8 +278,11 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, String value) throws PaintException;
 
     /**
-     * TODO.
+     * Adds a {@link Map} attribute to the component. Attributes must be added
+     * before any content is written.
      *
+     * TODO: specify how the map is added
+     * 
      * @param name
      * @param value
      * @throws PaintException

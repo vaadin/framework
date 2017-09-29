@@ -20,8 +20,8 @@ import java.io.Serializable;
 import com.vaadin.shared.Connector;
 
 /**
- * Column state DTO for transferring column properties from the server to the.
- * client
+ * Column state DTO for transferring column properties from the server to the
+ * client.
  *
  * @since 7.4
  * @author Vaadin Ltd

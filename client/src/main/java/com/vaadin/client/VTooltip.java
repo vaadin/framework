@@ -47,7 +47,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
 
 /**
- * TODO open for extension.
+ * A tooltip used by components.
+ *
+ * TODO open for extension
  */
 public class VTooltip extends VOverlay {
     private static final String CLASSNAME = "v-tooltip";

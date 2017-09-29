@@ -93,17 +93,19 @@ public class TreeGrid extends Grid<JsonObject> {
      * Method for accessing the private {@link Grid#focusCell(int, int)} method
      * from this package.
      */
-    public native void focusCell(int rowIndex, int columnIndex)/*-{
-                                                               this.@com.vaadin.client.widgets.Grid::focusCell(II)(rowIndex, columnIndex);
-                                                               }-*/;
+    public native void focusCell(int rowIndex, int columnIndex)
+    /*-{
+        this.@com.vaadin.client.widgets.Grid::focusCell(II)(rowIndex, columnIndex);
+    }-*/;
 
     /**
      * Method for accessing the private
      * {@link Grid#isElementInChildWidget(Element)} method from this package.
      */
-    public native boolean isElementInChildWidget(Element e)/*-{
-                                                           return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
-                                                           }-*/;
+    public native boolean isElementInChildWidget(Element e)
+    /*-{
+        return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
+    }-*/;
 
     @Override
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {

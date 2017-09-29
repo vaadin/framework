@@ -44,7 +44,7 @@ public class AbstractComponentState extends SharedState {
     public String id = null;
     public String primaryStyleName = null;
 
-    /** HTML formatted error message for the. */
+    /** HTML formatted error message for the component. */
     public String errorMessage = null;
 
     /**

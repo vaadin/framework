@@ -748,7 +748,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * FIXME javadoc.
+     * The commit event.
      *
      */
     @Deprecated

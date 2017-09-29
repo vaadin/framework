@@ -94,7 +94,6 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public static final Command emptyCommand = null;
 
-    /** Widget fields. **/
     protected boolean subMenu;
     protected List<CustomMenuItem> items;
     protected Element containerElement;
