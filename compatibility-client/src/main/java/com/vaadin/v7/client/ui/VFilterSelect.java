@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -1092,10 +1091,8 @@ public class VFilterSelect extends Composite
             }
 
             clearItems();
-            final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
             boolean isFirstIteration = true;
-            while (it.hasNext()) {
-                final FilterSelectSuggestion s = it.next();
+            for (final FilterSelectSuggestion s : suggestions) {
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
                 String style = s.getStyle();
                 if (style != null) {

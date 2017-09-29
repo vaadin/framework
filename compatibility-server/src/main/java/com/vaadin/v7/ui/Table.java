@@ -738,9 +738,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         final String[] headers = new String[visibleColumns.size()];
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext(); i++) {
-            headers[i] = getColumnHeader(it.next());
+        for (final Object column : visibleColumns) {
+            headers[i++] = getColumnHeader(column);
         }
         return headers;
     }
@@ -770,9 +769,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnHeaders.clear();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
-                && i < columnHeaders.length; i++) {
-            this.columnHeaders.put(it.next(), columnHeaders[i]);
+        for (final Object column : visibleColumns) {
+            if (i >= columnHeaders.length) {
+                break;
+            }
+            this.columnHeaders.put(column, columnHeaders[i++]);
         }
 
         markAsDirty();
@@ -797,9 +798,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         final Resource[] icons = new Resource[visibleColumns.size()];
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext(); i++) {
-            icons[i] = columnIcons.get(it.next());
+        for (final Object column : visibleColumns) {
+            icons[i++] = columnIcons.get(column);
         }
 
         return icons;
@@ -829,9 +829,11 @@ public class Table extends AbstractSelect implements Action.Container,
 
         this.columnIcons.clear();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
-                && i < columnIcons.length; i++) {
-            this.columnIcons.put(it.next(), columnIcons[i]);
+        for (final Object column : visibleColumns) {
+            if (i >= columnIcons.length) {
+                break;
+            }
+            this.columnIcons.put(column, columnIcons[i++]);
         }
 
         markAsDirty();
@@ -861,9 +863,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         final Align[] alignments = new Align[visibleColumns.size()];
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext(); i++) {
-            alignments[i] = getColumnAlignment(it.next());
+        for (final Object column : visibleColumns) {
+            alignments[i++] = getColumnAlignment(column);
         }
 
         return alignments;
@@ -897,9 +898,11 @@ public class Table extends AbstractSelect implements Action.Container,
         // Resets the alignments
         final Map<Object, Align> newCA = new HashMap<Object, Align>();
         int i = 0;
-        for (final Iterator<Object> it = visibleColumns.iterator(); it.hasNext()
-                && i < columnAlignments.length; i++) {
-            newCA.put(it.next(), columnAlignments[i]);
+        for (final Object column : visibleColumns) {
+            if (i >= columnAlignments.length) {
+                break;
+            }
+            newCA.put(column, columnAlignments[i++]);
         }
         this.columnAlignments = newCA;
 
@@ -1480,9 +1483,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 newOrder.add(columnOrder[i]);
             }
         }
-        for (final Iterator<Object> it = visibleColumns.iterator(); it
-                .hasNext();) {
-            final Object columnId = it.next();
+        for (final Object columnId : visibleColumns) {
             if (!newOrder.contains(columnId)) {
                 newOrder.add(columnId);
             }
@@ -2476,9 +2477,7 @@ public class Table extends AbstractSelect implements Action.Container,
             HashSet<Property<?>> oldListenedProperties,
             HashSet<Component> oldVisibleComponents) {
         if (oldVisibleComponents != null) {
-            for (final Iterator<Component> i = oldVisibleComponents
-                    .iterator(); i.hasNext();) {
-                Component c = i.next();
+            for (final Component c : oldVisibleComponents) {
                 if (!visibleComponents.contains(c)) {
                     unregisterComponent(c);
                 }
@@ -2486,9 +2485,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         if (oldListenedProperties != null) {
-            for (final Iterator<Property<?>> i = oldListenedProperties
-                    .iterator(); i.hasNext();) {
-                Property.ValueChangeNotifier o = (ValueChangeNotifier) i.next();
+            for (final Property<?> p : oldListenedProperties) {
+                Property.ValueChangeNotifier o = (ValueChangeNotifier) p;
                 if (!listenedProperties.contains(o)) {
                     o.removeListener(this);
                 }
@@ -2601,8 +2599,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // remove generated columns from the list of columns being assigned
         final LinkedList<Object> availableCols = new LinkedList<Object>();
-        for (Iterator<Object> it = visibleColumns.iterator(); it.hasNext();) {
-            Object id = it.next();
+        for (Object id : visibleColumns) {
             if (!columnGenerators.containsKey(id)) {
                 availableCols.add(id);
             }
@@ -2776,8 +2773,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // don't add the same id twice
         Collection<Object> col = new LinkedList<Object>();
-        for (Iterator<?> it = visibleIds.iterator(); it.hasNext();) {
-            Object id = it.next();
+        for (Object id : visibleIds) {
             if (!col.contains(id)) {
                 col.add(id);
             }
@@ -3040,9 +3036,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     for (Object id : ids) {
                         idSet.add(columnIdMap.get(id.toString()));
                     }
-                    for (final Iterator<Object> it = visibleColumns
-                            .iterator(); it.hasNext();) {
-                        Object propertyId = it.next();
+                    for (final Object propertyId : visibleColumns) {
                         if (isColumnCollapsed(propertyId)) {
                             if (!idSet.contains(propertyId)) {
                                 setColumnCollapsed(propertyId, false);
@@ -3803,8 +3797,7 @@ public class Table extends AbstractSelect implements Action.Container,
         if (isMultiSelect()) {
             HashSet<?> sel = new HashSet<Object>((Set<?>) getValue());
             Collection<?> vids = getVisibleItemIds();
-            for (Iterator<?> it = vids.iterator(); it.hasNext();) {
-                Object id = it.next();
+            for (Object id : vids) {
                 if (sel.contains(id)) {
                     selectedKeys.add(itemIdMapper.key(id));
                 }

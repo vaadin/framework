@@ -19,7 +19,6 @@ package com.vaadin.v7.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1016,9 +1015,8 @@ public class VTree extends FocusElementPanel
             List<TreeNode> nodes = new LinkedList<TreeNode>();
 
             if (!isLeaf() && isChildrenLoaded()) {
-                Iterator<Widget> iter = childNodeContainer.iterator();
-                while (iter.hasNext()) {
-                    TreeNode node = (TreeNode) iter.next();
+                for (Widget w : childNodeContainer) {
+                    TreeNode node = (TreeNode) w;
                     nodes.add(node);
                 }
             }
@@ -1489,10 +1487,8 @@ public class VTree extends FocusElementPanel
             endNode = temp;
         }
 
-        Iterator<TreeNode> childIter = children.iterator();
         boolean startFound = false;
-        while (childIter.hasNext()) {
-            TreeNode node = childIter.next();
+        for (TreeNode node : children) {
             if (node == startNode) {
                 startFound = true;
             }

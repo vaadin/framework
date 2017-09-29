@@ -1315,13 +1315,12 @@ public class VScrollTable extends FlowPanel
             boolean updateFocus = rowsUnSelected || selectedRowKeys.size() == 0
                     || focusedRow == null;
             if (scrollBody != null) {
-                Iterator<Widget> iterator = scrollBody.iterator();
-                while (iterator.hasNext()) {
+                for (Widget w : scrollBody) {
                     /*
                      * Make the focus reflect to the server side state unless we
                      * are currently selecting multiple rows with keyboard.
                      */
-                    VScrollTableRow row = (VScrollTableRow) iterator.next();
+                    VScrollTableRow row = (VScrollTableRow) w;
                     boolean selected = selectedKeys.contains(row.getKey());
                     if (!selected && unSyncedselectionsBeforeRowFetch != null
                             && unSyncedselectionsBeforeRowFetch
@@ -2034,10 +2033,8 @@ public class VScrollTable extends FlowPanel
      */
     public VScrollTableRow getRenderedRowByKey(String key) {
         if (scrollBody != null) {
-            final Iterator<Widget> it = scrollBody.iterator();
-            VScrollTableRow r = null;
-            while (it.hasNext()) {
-                r = (VScrollTableRow) it.next();
+            for (Widget w : scrollBody) {
+                VScrollTableRow r = (VScrollTableRow) w;
                 if (r.getKey().equals(key)) {
                     return r;
                 }
@@ -2056,9 +2053,8 @@ public class VScrollTable extends FlowPanel
      */
     private VScrollTableRow getNextRow(VScrollTableRow row, int offset) {
         final Iterator<Widget> it = scrollBody.iterator();
-        VScrollTableRow r = null;
         while (it.hasNext()) {
-            r = (VScrollTableRow) it.next();
+            VScrollTableRow r = (VScrollTableRow) it.next();
             if (r == row) {
                 r = null;
                 while (offset >= 0 && it.hasNext()) {
@@ -2082,10 +2078,9 @@ public class VScrollTable extends FlowPanel
     private VScrollTableRow getPreviousRow(VScrollTableRow row, int offset) {
         final Iterator<Widget> it = scrollBody.iterator();
         final Iterator<Widget> offsetIt = scrollBody.iterator();
-        VScrollTableRow r = null;
         VScrollTableRow prev = null;
         while (it.hasNext()) {
-            r = (VScrollTableRow) it.next();
+            VScrollTableRow r = (VScrollTableRow) it.next();
             if (offset < 0) {
                 prev = (VScrollTableRow) offsetIt.next();
             }
@@ -3452,11 +3447,11 @@ public class VScrollTable extends FlowPanel
                 }
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Iterator<Widget> it = tHead.iterator(); it
-                            .hasNext(); columnIndex++) {
-                        if (it.next() == this) {
+                    for (Widget w : tHead) {
+                        if (w == this) {
                             break;
                         }
+                        columnIndex++;
                     }
                 }
                 final int cw = scrollBody.getColWidth(columnIndex);
@@ -4079,11 +4074,10 @@ public class VScrollTable extends FlowPanel
          * Returns column alignments for visible columns
          */
         public char[] getColumnAlignments() {
-            final Iterator<Widget> it = visibleCells.iterator();
             final char[] aligns = new char[visibleCells.size()];
             int colIndex = 0;
-            while (it.hasNext()) {
-                aligns[colIndex++] = ((HeaderCell) it.next()).getAlign();
+            for (Widget w : visibleCells) {
+                aligns[colIndex++] = ((HeaderCell) w).getAlign();
             }
             return aligns;
         }
@@ -5439,9 +5433,8 @@ public class VScrollTable extends FlowPanel
         public void moveCol(int oldIndex, int newIndex) {
 
             // loop all rows and move given index to its new place
-            final Iterator<?> rows = iterator();
-            while (rows.hasNext()) {
-                final VScrollTableRow row = (VScrollTableRow) rows.next();
+            for (Widget w : this) {
+                final VScrollTableRow row = (VScrollTableRow) w;
 
                 final Element td = DOM.getChild(row.getElement(), oldIndex);
                 if (td != null) {
@@ -6921,7 +6914,6 @@ public class VScrollTable extends FlowPanel
                 return;
             }
 
-            Iterator<Widget> headCells = tHead.iterator();
             int usedMinimumWidth = 0;
             int totalExplicitColumnsWidths = 0;
             float expandRatioDivider = 0;
@@ -6931,8 +6923,8 @@ public class VScrollTable extends FlowPanel
             int hierarchyColumnIndex = getHierarchyColumnIndex();
             HeaderCell hierarchyHeaderInNeedOfFurtherHandling = null;
 
-            while (headCells.hasNext()) {
-                final HeaderCell hCell = (HeaderCell) headCells.next();
+            for (Widget widget : tHead) {
+                final HeaderCell hCell = (HeaderCell) widget;
                 boolean hasIndent = hierarchyColumnIndent > 0
                         && hCell.isHierarchyColumn();
                 if (hCell.isDefinedWidth()) {
@@ -7049,12 +7041,10 @@ public class VScrollTable extends FlowPanel
             }
 
             // we have some space that can be divided optimally
-            HeaderCell hCell;
             colIndex = 0;
-            headCells = tHead.iterator();
             int checksum = 0;
-            while (headCells.hasNext()) {
-                hCell = (HeaderCell) headCells.next();
+            for (Widget widget : tHead) {
+                HeaderCell hCell = (HeaderCell) widget;
                 if (hCell.isResizing) {
                     continue;
                 }
@@ -7107,10 +7097,9 @@ public class VScrollTable extends FlowPanel
                  * extra space is divided so if there is one then we give the
                  * first undefined column 1 more pixel
                  */
-                headCells = tHead.iterator();
                 colIndex = 0;
-                while (headCells.hasNext()) {
-                    HeaderCell hc = (HeaderCell) headCells.next();
+                for (Widget widget : tHead) {
+                    HeaderCell hc = (HeaderCell) widget;
                     if (!hc.isResizing && !hc.isDefinedWidth()) {
                         setColWidth(colIndex,
                                 hc.getWidthWithIndent() + availW - checksum,
@@ -7554,12 +7543,11 @@ public class VScrollTable extends FlowPanel
         private Class<? extends Widget> getRowClass() {
             // get the row type this way to make dd work in derived
             // implementations
-            Iterator<Widget> iterator = scrollBody.iterator();
-            if (iterator.hasNext()) {
-                return iterator.next().getClass();
-            } else {
-                return null;
+            Iterator<Widget> it = scrollBody.iterator();
+            if (it.hasNext()) {
+                return it.next().getClass();
             }
+            return null;
         }
 
         @Override

@@ -217,16 +217,16 @@ public class GridLayout extends AbstractLayout
         // Inserts the component to right place at the list
         // Respect top-down, left-right ordering
         // component.setParent(this);
-        final Iterator<Component> i = components.iterator();
         final Map<Connector, ChildComponentData> childDataMap = getState().childData;
         int index = 0;
         boolean done = false;
-        while (!done && i.hasNext()) {
-            final ChildComponentData existingArea = childDataMap.get(i.next());
+        for (Component c : components) {
+            final ChildComponentData existingArea = childDataMap.get(c);
             if ((existingArea.row1 >= row1 && existingArea.column1 > column1)
                     || existingArea.row1 > row1) {
                 components.add(index, component);
                 done = true;
+                break;
             }
             index++;
         }

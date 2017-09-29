@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.jar.JarEntry;
@@ -119,7 +118,7 @@ public class ClassesSerializableTest {
             classes.addAll(findServerClasses(location));
         }
 
-        List<Field> nonSerializableFunctionFields = new ArrayList<>();
+        ArrayList<Field> nonSerializableFunctionFields = new ArrayList<>();
 
         List<Class<?>> nonSerializableClasses = new ArrayList<>();
         for (String className : classes) {
@@ -221,9 +220,7 @@ public class ClassesSerializableTest {
     private void failSerializableClasses(
             List<Class<?>> nonSerializableClasses) {
         String nonSerializableString = "";
-        Iterator<Class<?>> it = nonSerializableClasses.iterator();
-        while (it.hasNext()) {
-            Class<?> c = it.next();
+        for (Class<?> c : nonSerializableClasses) {
             nonSerializableString += ", " + c.getName();
             if (c.isAnonymousClass()) {
                 nonSerializableString += "(super: ";

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -1089,10 +1088,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             }
 
             clearItems();
-            final Iterator<ComboBoxSuggestion> it = suggestions.iterator();
             boolean isFirstIteration = true;
-            while (it.hasNext()) {
-                final ComboBoxSuggestion suggestion = it.next();
+            for (final ComboBoxSuggestion suggestion : suggestions) {
                 final MenuItem mi = new MenuItem(suggestion.getDisplayString(),
                         true, suggestion);
                 String style = suggestion.getStyle();

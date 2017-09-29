@@ -17,7 +17,6 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
-import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
@@ -450,7 +449,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         updateControlButtonRangeStyles(needsMonth);
 
         final String monthName = needsMonth
-                ? getDateTimeService().getMonth(displayedMonth.getMonth()) : "";
+                ? getDateTimeService().getMonth(displayedMonth.getMonth())
+                : "";
         final int year = displayedMonth.getYear() + 1900;
 
         getFlexCellFormatter().setStyleName(0, 2,
@@ -1404,8 +1404,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overridden to change
-     * the key to whatever you want.
+     * selection. By default this is backspace but it can be overridden to
+     * change the key to whatever you want.
      *
      * @return
      */
@@ -2138,9 +2138,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     .parseInt(subPart.substring(SUBPART_DAY.length()));
             Date date = new Date(displayedMonth.getYear(),
                     displayedMonth.getMonth(), dayOfMonth);
-            Iterator<Widget> iter = days.iterator();
-            while (iter.hasNext()) {
-                Widget w = iter.next();
+            for (Widget w : days) {
                 if (w instanceof Day) {
                     Day day = (Day) w;
                     if (day.getDate().equals(date)) {

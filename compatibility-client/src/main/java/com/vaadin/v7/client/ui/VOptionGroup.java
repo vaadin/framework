@@ -237,10 +237,8 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void setTabIndex(int tabIndex) {
-        for (Iterator<Widget> iterator = panel.iterator(); iterator
-                .hasNext();) {
-            FocusWidget widget = (FocusWidget) iterator.next();
-            widget.setTabIndex(tabIndex);
+        for (Widget widget : panel) {
+            ((FocusWidget) widget).setTabIndex(tabIndex);
         }
     }
 
@@ -269,9 +267,10 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = panel.iterator();
-        if (iterator.hasNext()) {
-            ((Focusable) iterator.next()).setFocus(true);
+        Iterator<Widget> it = panel.iterator();
+        if (it.hasNext()) {
+            ((Focusable) it.next()).setFocus(true);
+
         }
     }
 

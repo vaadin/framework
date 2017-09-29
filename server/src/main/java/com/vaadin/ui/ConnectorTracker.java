@@ -399,10 +399,9 @@ public class ConnectorTracker implements Serializable {
     }
 
     private static boolean hasVisibleChild(ClientConnector parent) {
-        Iterator<? extends ClientConnector> iterator = AbstractClientConnector
-                .getAllChildrenIterable(parent).iterator();
-        while (iterator.hasNext()) {
-            ClientConnector child = iterator.next();
+        Iterable<? extends ClientConnector> iterable = AbstractClientConnector
+                .getAllChildrenIterable(parent);
+        for (ClientConnector child : iterable) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(child)) {
                 return true;
             }

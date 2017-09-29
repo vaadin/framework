@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -479,7 +478,7 @@ public class ColorPickerPopup extends Window
             }
 
             resize.setData(new Boolean(!state));
-        }  else if (event.getButton() == ok) {
+        } else if (event.getButton() == ok) {
             // Ok button was clicked
             history.setColor(getColor());
             fireColorChanged();
@@ -599,9 +598,8 @@ public class ColorPickerPopup extends Window
      * @return true if tab is visible, false otherwise
      */
     private boolean tabIsVisible(Component tab) {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
-        while (tabIterator.hasNext()) {
-            if (tabIterator.next() == tab) {
+        for (Component comp : tabs) {
+            if (comp == tab) {
                 return true;
             }
         }
@@ -614,10 +612,8 @@ public class ColorPickerPopup extends Window
      * @return The number of tabs visible
      */
     private int tabsNumVisible() {
-        Iterator<Component> tabIterator = tabs.getComponentIterator();
         int tabCounter = 0;
-        while (tabIterator.hasNext()) {
-            tabIterator.next();
+        for (Component comp : tabs) {
             tabCounter++;
         }
         return tabCounter;
