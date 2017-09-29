@@ -326,7 +326,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             String encodedString = null;
             try {
                 encodedString = URLEncoder.encode(queryString,
-                        UTF_8.toString());
+                        UTF_8.name());
             } catch (UnsupportedEncodingException e) {
                 // should never happen
                 throw new RuntimeException("Could not find UTF-8", e);

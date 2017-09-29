@@ -58,7 +58,7 @@ public class NestedCustomLayoutsTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         Design.write(rootLayout, out);
-        Document doc = Jsoup.parse(out.toString(UTF_8.toString()));
+        Document doc = Jsoup.parse(out.toString(UTF_8.name()));
 
         assertThat(doc.head().child(0).attr("name"), is("package-mapping"));
         assertThat(doc.head().child(0).attr("content"), is(PACKAGE_MAPPING));

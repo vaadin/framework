@@ -83,7 +83,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             context.setRootComponent(object);
             Design.write(context, outputStream);
-            return outputStream.toString(UTF_8.toString());
+            return outputStream.toString(UTF_8.name());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

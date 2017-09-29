@@ -251,7 +251,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                 Design.write((Component) connector, baos);
                 getLogger().info("Design for " + connector
                         + " requested from debug window:\n"
-                        + baos.toString(UTF_8.toString()));
+                        + baos.toString(UTF_8.name()));
             } catch (IOException e) {
                 getLogger().log(Level.WARNING,
                         "Error producing design for " + connector, e);

@@ -392,7 +392,7 @@ public class Design implements Serializable {
      */
     private static Document parse(InputStream html) {
         try {
-            Document doc = Jsoup.parse(html, UTF_8.toString(), "",
+            Document doc = Jsoup.parse(html, UTF_8.name(), "",
                     Parser.htmlParser());
             return doc;
         } catch (IOException e) {

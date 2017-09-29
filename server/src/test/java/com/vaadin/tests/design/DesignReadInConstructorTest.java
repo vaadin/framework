@@ -46,11 +46,11 @@ public class DesignReadInConstructorTest {
         DesignReadInConstructor dric = new DesignReadInConstructor();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Design.write(dric, baos);
-        Document doc = Jsoup.parse(baos.toString(UTF_8.toString()));
+        Document doc = Jsoup.parse(baos.toString(UTF_8.name()));
 
         Document d = Jsoup.parse(
                 getClass().getResourceAsStream("DesignReadInConstructor.html"),
-                UTF_8.toString(), "");
+                UTF_8.name(), "");
         assertJsoupTreeEquals(d.body().child(0), doc.body().child(0));
     }
 

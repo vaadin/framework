@@ -104,7 +104,7 @@ public class ResourceReference extends URLReference {
 
     static String urlEncode(String filename) {
         try {
-            return URLEncoder.encode(filename, UTF_8.toString());
+            return URLEncoder.encode(filename, UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(
                     "UTF-8 charset not available (\"this should never happen\")",

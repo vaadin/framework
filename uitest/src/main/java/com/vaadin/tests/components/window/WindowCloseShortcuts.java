@@ -147,7 +147,7 @@ public class WindowCloseShortcuts extends AbstractTestUI {
             DesignContext dc = new DesignContext();
             dc.setRootComponent(window);
             Design.write(dc, outputStream);
-            design = outputStream.toString(UTF_8.toString());
+            design = outputStream.toString(UTF_8.name());
         } catch (Exception e) {
             return;
         }

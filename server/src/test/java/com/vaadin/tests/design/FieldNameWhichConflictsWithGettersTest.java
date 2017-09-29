@@ -67,7 +67,7 @@ public class FieldNameWhichConflictsWithGettersTest {
         context.setRootComponent(v);
 
         Design.write(context, baos);
-        String str = baos.toString(UTF_8.toString());
+        String str = baos.toString(UTF_8.name());
 
         Document doc = Jsoup.parse(str);
         Element body = doc.body();

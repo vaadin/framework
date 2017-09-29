@@ -97,7 +97,7 @@ public class DeclarativeEditor extends UI {
         try {
             Design.write(treeHolder.getComponent(0), o);
             disableEvents = true;
-            editor.setValue(o.toString(UTF_8.toString()));
+            editor.setValue(o.toString(UTF_8.name()));
             disableEvents = false;
         } catch (IOException e1) {
             e1.printStackTrace();

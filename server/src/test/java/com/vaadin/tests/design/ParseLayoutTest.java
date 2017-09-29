@@ -111,7 +111,7 @@ public class ParseLayoutTest {
         String[] expectedPackageNames = { "com.addon.mypackage" };
         int index = 0;
 
-        Document doc = Jsoup.parse(out.toString(UTF_8.toString()));
+        Document doc = Jsoup.parse(out.toString(UTF_8.name()));
         Element head = doc.head();
         for (Node child : head.childNodes()) {
             if ("meta".equals(child.nodeName())) {
