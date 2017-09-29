@@ -18,7 +18,6 @@ package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -231,8 +230,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setMultipleSelect(isMultiselect());
         options.clear();
         selections.clear();
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             if (optionUidl.hasAttribute("selected")) {
                 selections.addItem(optionUidl.getStringAttribute("caption"),
                         optionUidl.getStringAttribute("key"));

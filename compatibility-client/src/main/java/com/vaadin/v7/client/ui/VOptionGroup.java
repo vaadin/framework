@@ -134,8 +134,8 @@ public class VOptionGroup extends VOptionGroupBase
             Roles.getRadiogroupRole().set(getElement());
         }
 
-        for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL opUidl = (UIDL) it.next();
+        for (final Object child : uidl) {
+            final UIDL opUidl = (UIDL) child;
 
             String itemHtml = opUidl.getStringAttribute("caption");
             if (!htmlContentAllowed) {

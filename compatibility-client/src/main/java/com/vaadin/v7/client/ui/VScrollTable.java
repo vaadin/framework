@@ -1662,9 +1662,8 @@ public class VScrollTable extends FlowPanel
             return;
         }
 
-        final Iterator<?> it = actionsUidl.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : actionsUidl) {
+            final UIDL action = (UIDL) child;
             final String key = action.getStringAttribute("key");
             final String caption = action.getStringAttribute("caption");
             actionMap.put(key + "_c", caption);
@@ -3649,12 +3648,11 @@ public class VScrollTable extends FlowPanel
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
-            Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
             boolean refreshContentWidths = initializedAndAttached
                     && hadScrollBars != willHaveScrollbars();
-            while (it.hasNext()) {
-                final UIDL col = (UIDL) it.next();
+            for (Object child : uidl) {
+                final UIDL col = (UIDL) child;
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
 
@@ -4586,10 +4584,9 @@ public class VScrollTable extends FlowPanel
          *            The UIDL
          */
         public void updateCellsFromUIDL(UIDL uidl) {
-            Iterator<?> columnIterator = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            while (columnIterator.hasNext()) {
-                final UIDL col = (UIDL) columnIterator.next();
+            for (Object child : uidl) {
+                final UIDL col = (UIDL) child;
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
 
@@ -4870,10 +4867,9 @@ public class VScrollTable extends FlowPanel
         public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
             firstRendered = firstIndex;
             setLastRendered(firstIndex + rows - 1);
-            final Iterator<?> it = rowData.getChildIterator();
             aligns = tHead.getColumnAlignments();
-            while (it.hasNext()) {
-                final VScrollTableRow row = createRow((UIDL) it.next(), aligns);
+            for (final Object child : rowData) {
+                final VScrollTableRow row = createRow((UIDL) child, aligns);
                 addRow(row);
             }
             if (isAttached()) {
@@ -4884,7 +4880,7 @@ public class VScrollTable extends FlowPanel
         public void renderRows(UIDL rowData, int firstIndex, int rows) {
             // FIXME REVIEW
             aligns = tHead.getColumnAlignments();
-            final Iterator<?> it = rowData.getChildIterator();
+            final Iterator<?> it = rowData.iterator();
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
                     final VScrollTableRow row = prepareRow((UIDL) it.next());
@@ -5005,7 +5001,7 @@ public class VScrollTable extends FlowPanel
         protected List<VScrollTableRow> insertRows(UIDL rowData, int firstIndex,
                 int rows) {
             aligns = tHead.getColumnAlignments();
-            final Iterator<?> it = rowData.getChildIterator();
+            final Iterator<?> it = rowData.iterator();
             List<VScrollTableRow> insertedRows = new ArrayList<VScrollTableRow>();
 
             if (firstIndex == lastRendered + 1) {
@@ -5628,9 +5624,7 @@ public class VScrollTable extends FlowPanel
 
             protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
                     int visibleColumnIndex) {
-                final Iterator<?> cells = uidl.getChildIterator();
-                while (cells.hasNext()) {
-                    final Object cell = cells.next();
+                for (final Object cell : uidl) {
                     visibleColumnIndex++;
 
                     String columnId = visibleColOrder[visibleColumnIndex];
@@ -6718,11 +6712,10 @@ public class VScrollTable extends FlowPanel
                 htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
-                final Iterator<?> cells = uidl.getChildIterator();
                 if (spanColumns) {
                     int colCount = uidl.getChildCount();
-                    if (cells.hasNext()) {
-                        final Object cell = cells.next();
+                    // add the first cell only
+                    for (final Object cell : uidl) {
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
                                     htmlContentAllowed, false, null, colCount);
@@ -6730,6 +6723,7 @@ public class VScrollTable extends FlowPanel
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
                         }
+                        break;
                     }
                 } else {
                     super.addCellsFromUIDL(uidl, aligns, col,
