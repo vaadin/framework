@@ -267,9 +267,10 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void focus() {
-        for (Widget w : panel) {
-            ((Focusable) w).setFocus(true);
-            break;
+        Iterator<Widget> it = panel.iterator();
+        if (it.hasNext()) {
+            ((Focusable) it.next()).setFocus(true);
+
         }
     }
 

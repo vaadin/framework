@@ -109,13 +109,7 @@ public class ColorPickerHistory extends CustomField<Color> {
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
         // Check that the color does not already exist
-        boolean exists = false;
-        for (Color c : colorHistory) {
-            if (color.equals(c)) {
-                exists = true;
-                break;
-            }
-        }
+        boolean exists = colorHistory.contains(color);
 
         // If the color does not exist then add it
         if (!exists) {

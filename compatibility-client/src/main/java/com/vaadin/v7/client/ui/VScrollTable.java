@@ -7549,8 +7549,9 @@ public class VScrollTable extends FlowPanel
         private Class<? extends Widget> getRowClass() {
             // get the row type this way to make dd work in derived
             // implementations
-            for (Widget w : scrollBody) {
-                return w.getClass();
+            Iterator<Widget> it = scrollBody.iterator();
+            if (it.hasNext()) {
+                return it.next().getClass();
             }
             return null;
         }
