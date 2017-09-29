@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-test</artifactId>
+        <version>8.2-SNAPSHOT</version>
+        <relativePath>../..</relativePath>
+    </parent>
+    <artifactId>vaadin-test-jetty9-server</artifactId>
+    <name>Vaadin Jetty 9 Test</name>
+    <packaging>war</packaging>
+    <properties>
+        <jetty.skip>false</jetty.skip>
+        <server.name>jetty9</server.name>
+    </properties>
+
+    <dependencies>
+        <!-- War and tests -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>
+                        <dependency>${project.groupId}:vaadin-test-server-tests</dependency>
+                    </dependenciesToScan>
+                </configuration>
+            </plugin>
+
+            <!-- Server configuration -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <webApp>
+                        <contextPath>/demo</contextPath>
+                    </webApp>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
+</project>
