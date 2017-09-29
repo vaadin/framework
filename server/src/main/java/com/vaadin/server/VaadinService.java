@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -1664,7 +1666,7 @@ public abstract class VaadinService implements Serializable {
 
         final OutputStream out = response.getOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print(reponseString);
         }
     }

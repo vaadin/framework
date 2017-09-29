@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,7 +115,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
         BufferedReader reader = new BufferedReader(
-                new InputStreamReader(templateStream, "UTF-8"));
+                new InputStreamReader(templateStream, UTF_8));
         StringBuilder builder = new StringBuilder(BUFFER_SIZE);
         try {
             char[] cbuf = new char[BUFFER_SIZE];
