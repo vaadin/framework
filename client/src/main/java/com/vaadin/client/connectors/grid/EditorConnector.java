@@ -64,29 +64,25 @@ public class EditorConnector extends AbstractExtensionConnector {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
 
                 @Override
-                public void bind(final int rowIndex, boolean fromServer) {
+                public void bind(final int rowIndex) {
                     // call this deferred to avoid issues with editing on init
                     Scheduler.get().scheduleDeferred(() -> {
-                        if (fromServer) {
-                            currentEditedRow = rowIndex;
-                            // might need to wait for available data, register listener if necessary on first try
-                            // if data is available, ensureAvailability will immediately trigger the handler anyway,
-                            // so no need for alternative "immediately available" logic
-                            if (dataAvailableListener == null) {
-                                dataAvailableListener = (event) -> {
-                                    Range range = event.getAvailableRows();
-                                    if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
-                                        getParent().getWidget().editRow(currentEditedRow);
-                                        waitingForAvailableData = false;
-                                    }
-                                };
-                                getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
-                            }
-                            waitingForAvailableData = true;
-                            getParent().getDataSource().ensureAvailability(rowIndex, 1);
-                        } else {
-                            getParent().getWidget().editRow(rowIndex);
+                        currentEditedRow = rowIndex;
+                        // might need to wait for available data, register listener if necessary on first try
+                        // if data is available, ensureAvailability will immediately trigger the handler anyway,
+                        // so no need for alternative "immediately available" logic
+                        if (dataAvailableListener == null) {
+                            dataAvailableListener = (event) -> {
+                                Range range = event.getAvailableRows();
+                                if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
+                                    getParent().getWidget().editRow(currentEditedRow);
+                                    waitingForAvailableData = false;
+                                }
+                            };
+                            getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
                         }
+                        waitingForAvailableData = true;
+                        getParent().getDataSource().ensureAvailability(rowIndex, 1);
                     });
                 }
 

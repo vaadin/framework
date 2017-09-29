@@ -297,7 +297,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
                     + " failed. Item editor is already editing item "
                     + edited);
             } else {
-                rpc.bind(rowNumber, true);
+                rpc.bind(rowNumber);
             }
         }
 
