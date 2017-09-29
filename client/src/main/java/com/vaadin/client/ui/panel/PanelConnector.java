@@ -95,10 +95,9 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
             getWidget().bottomDecoration
                     .setClassName(VPanel.CLASSNAME + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
-            boolean hasCaption = false;
-            if (getState().caption != null && !getState().caption.isEmpty()) {
+            boolean hasCaption = hasCaption();
+            if (hasCaption) {
                 getWidget().setCaption(getState().caption);
-                hasCaption = true;
             } else {
                 getWidget().setCaption("");
                 getWidget().captionNode
@@ -172,6 +171,14 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
 
         // And apply tab index
         getWidget().contentNode.setTabIndex(getState().tabIndex);
+    }
+
+    /***
+     * Detects if caption div should be visible.
+     * @return true if caption div should be shown
+     */
+    protected boolean hasCaption() {
+        return getState().caption != null && !getState().caption.isEmpty();
     }
 
     @Override
