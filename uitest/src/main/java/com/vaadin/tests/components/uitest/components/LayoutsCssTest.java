@@ -110,7 +110,6 @@ public class LayoutsCssTest extends GridLayout {
 
             addComponent(custom);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

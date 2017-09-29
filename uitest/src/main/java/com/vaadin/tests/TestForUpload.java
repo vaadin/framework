@@ -369,10 +369,8 @@ public class TestForUpload extends CustomComponent
             try {
                 file = File.createTempFile(tempFileName, null);
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
 
         @Override
@@ -383,7 +381,6 @@ public class TestForUpload extends CustomComponent
             try {
                 return new FileInputStream(file);
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -409,7 +406,6 @@ public class TestForUpload extends CustomComponent
 
                 };
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -461,7 +457,6 @@ public class TestForUpload extends CustomComponent
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -472,6 +467,5 @@ public class TestForUpload extends CustomComponent
             throwExecption.setValue(false);
             throw new RuntimeException("Test execption in receiver.");
         }
-
     }
 }

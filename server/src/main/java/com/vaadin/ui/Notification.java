@@ -23,7 +23,6 @@ import com.vaadin.event.ConnectorEvent;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.Position;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.notification.NotificationServerRpc;
@@ -72,6 +71,8 @@ public class Notification extends AbstractExtension implements Serializable {
 
     /**
      * The server RPC.
+     *
+     * @since 8.2
      */
     protected NotificationServerRpc rpc = () -> {
         fireEvent(new CloseEvent(Notification.this));
@@ -287,8 +288,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * Sets the position of the notification message.
      *
      * @param position
-     *            The desired notification position,
-     *            not {@code null}
+     *            The desired notification position, not {@code null}
      */
     public void setPosition(Position position) {
         if (position == null) {
@@ -319,8 +319,8 @@ public class Notification extends AbstractExtension implements Serializable {
     /**
      * Gets the delay before the notification disappears.
      *
-     * @return the delay in milliseconds, {@value #DELAY_FOREVER}
-     *            indicates the message has to be clicked.
+     * @return the delay in milliseconds, {@value #DELAY_FOREVER} indicates the
+     *         message has to be clicked.
      */
     public int getDelayMsec() {
         return getState(false).delay;
@@ -330,8 +330,8 @@ public class Notification extends AbstractExtension implements Serializable {
      * Sets the delay before the notification disappears.
      *
      * @param delayMsec
-     *            the desired delay in milliseconds, {@value #DELAY_FOREVER}
-     *            to require the user to click the message
+     *            the desired delay in milliseconds, {@value #DELAY_FOREVER} to
+     *            require the user to click the message
      */
     public void setDelayMsec(int delayMsec) {
         getState().delay = delayMsec;
@@ -374,8 +374,8 @@ public class Notification extends AbstractExtension implements Serializable {
      * Checks whether caption and description are interpreted as HTML or plain
      * text.
      *
-     * @return {@code true} if the texts are used as HTML,
-     *         {@code false} if used as plain text
+     * @return {@code true} if the texts are used as HTML, {@code false} if used
+     *         as plain text
      * @see #setHtmlContentAllowed(boolean)
      */
     public boolean isHtmlContentAllowed() {
@@ -413,8 +413,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *
      * @param caption
      *            The message
-     * @return
-     *            The Notification
+     * @return The Notification
      */
     public static Notification show(String caption) {
         Notification notification = new Notification(caption);
@@ -437,8 +436,7 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The message
      * @param type
      *            The message type
-     * @return
-     *            The Notification
+     * @return The Notification
      */
     public static Notification show(String caption, Type type) {
         Notification notification = new Notification(caption, type);
@@ -463,11 +461,12 @@ public class Notification extends AbstractExtension implements Serializable {
      *            The message description
      * @param type
      *            The message type
-     * @return
-     *            The Notification
+     * @return The Notification
      */
-    public static Notification show(String caption, String description, Type type) {
-        Notification notification = new Notification(caption, description, type);
+    public static Notification show(String caption, String description,
+            Type type) {
+        Notification notification = new Notification(caption, description,
+                type);
         notification.extend(UI.getCurrent());
         return notification;
     }
@@ -495,6 +494,11 @@ public class Notification extends AbstractExtension implements Serializable {
         }
     }
 
+    /**
+     * Event fired when a notification is closed.
+     *
+     * @since 8.2
+     */
     public static class CloseEvent extends ConnectorEvent {
 
         /**
@@ -517,8 +521,10 @@ public class Notification extends AbstractExtension implements Serializable {
     /**
      * An interface used for listening to Notification close events. Add the
      * CloseListener to a Notification and
-     * {@link CloseListener#notificationClose(CloseEvent)} will be called whenever the
-     * Notification is closed.
+     * {@link CloseListener#notificationClose(CloseEvent)} will be called
+     * whenever the Notification is closed.
+     * 
+     * @since 8.2
      */
     @FunctionalInterface
     public interface CloseListener extends Serializable {

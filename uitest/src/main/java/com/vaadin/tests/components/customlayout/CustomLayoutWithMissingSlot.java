@@ -54,7 +54,6 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
 
             addComponent(cl);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
