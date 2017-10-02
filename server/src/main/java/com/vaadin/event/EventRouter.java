@@ -135,6 +135,7 @@ public class EventRouter implements MethodEventSource {
         for (Method m : methods) {
             if (m.getName().equals(methodName)) {
                 method = m;
+                break;
             }
         }
         if (method == null) {
@@ -152,7 +153,6 @@ public class EventRouter implements MethodEventSource {
                 }
             }
         }
-
     }
 
     /**
@@ -209,7 +209,6 @@ public class EventRouter implements MethodEventSource {
                     listenerMethod.receiveEvent(event);
                 }
             }
-
         }
     }
 
