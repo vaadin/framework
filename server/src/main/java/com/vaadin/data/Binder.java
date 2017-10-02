@@ -423,9 +423,11 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null : fieldValue,
+                            ? null
+                            : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation : modelValue);
+                            ? nullRepresentation
+                            : modelValue);
         }
 
         /**
@@ -1516,7 +1518,7 @@ public class Binder<BEAN> implements Serializable {
                 restoreBeanState(bean, oldValues);
             } else if (getBean() == null || bean.equals(getBean())) {
                 /*
-                 * Changes have been succesfully saved. The set is only cleared
+                 * Changes have been successfully saved. The set is only cleared
                  * if using readBean/writeBean or when the changes are stored in
                  * the currently set bean.
                  *
@@ -2158,7 +2160,8 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue() : modelValue,
+                                ? field.getEmptyValue()
+                                : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);

@@ -59,7 +59,7 @@ spared the trouble of attempting in vain to perform the action, and the
 nuisance of an error message.
 
 image:img/potus2.png[Save and Revert actions disabled when they cannot be
-succesfully
+successfully
 performed.]
 
 [[disablingenabling-actions-to-indicate-state]]

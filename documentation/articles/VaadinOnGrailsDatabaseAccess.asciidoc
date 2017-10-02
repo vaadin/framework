@@ -145,7 +145,7 @@ Database connection
 +++++++++++++++++++
 
 As we have covered big part of normal work when developing an
-application, created the persistance layer, maybe next questions are
+application, created the persistence layer, maybe next questions are
 coming. Where are the data stored? What database is used and how to
 change it?
 

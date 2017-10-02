@@ -94,8 +94,8 @@ http://uilder.virtuallypreinstalled.com/run/deepcomponenttrees/?restartApplicati
 layouts when possible
 * Do you need to extend CustomComponent in your server side composition
 or could you just extend some layout? This will result having one
-component less in the component tree. You might sometimes be argueing
-against this because of architectual reasons (CustomComponent has a
+component less in the component tree. You might sometimes be arguing
+against this because of architectural reasons (CustomComponent has a
 fewer methods than VerticalLayout), but on the other hand Java has
 interfaces to deal the issue in a cleaner manner.
 * Maybe you have an  extra layout inside your Panel or Window (see

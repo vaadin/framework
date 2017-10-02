@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class ButtonClick extends AbstractReindeerTestUI {
 
-    public static final String SUCCESS_TEXT = "Click received succesfully!";
+    public static final String SUCCESS_TEXT = "Click received successfully!";
     public static final String WRONG_BUTTON_TEXT = "Wrong button clicked.";
 
     @Override

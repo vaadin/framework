@@ -47,7 +47,7 @@ public void buttonClick(ClickEvent event) {
 }
 ....
 
-And finally similiarly for `Page`. For instance adding a browser window
+And finally similarly for `Page`. For instance adding a browser window
 resize listener can be added like this:
 
 [source,java]

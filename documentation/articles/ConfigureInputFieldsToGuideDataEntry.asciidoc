@@ -22,7 +22,7 @@ image:img/form1.png[Basic form]
 The shape, size and layout of these fields don’t really correspond to
 the kinds of values expected to be entered in them, or to the relations
 between different fields. For instance, while the homepage url is
-probably between 25 and 55 characters long, european postal codes are
+probably between 25 and 55 characters long, European postal codes are
 only about 6 digits long, and age maxes out at three digits. By setting
 the widths of these fields to be approximately proportional to the
 lengths of expected values, the fields become easier to identify, and

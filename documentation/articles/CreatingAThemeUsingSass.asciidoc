@@ -135,7 +135,7 @@ that the name matches your themename, or your styles will not be
 applied._
 
 Some of the nice features you get with Sass include variables, selector
-nesting, mixins (optionally with paramaters), selector inheritance. For
+nesting, mixins (optionally with parameters), selector inheritance. For
 more information of what you can do with Sass, you should refer to the
 official documentation at http://sass-lang.com
 

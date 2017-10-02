@@ -54,7 +54,7 @@ Making a custom set of icons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are many tools for making icons, and icon fonts. One of our
-favourite tools is http://icomoon.io/app[IcoMoon], which is an excellent
+favorite tools is http://icomoon.io/app[IcoMoon], which is an excellent
 online application where you can pick icons from a vast library of
 ready-made icon fonts, to compose your own set of icons. When you’re
 done, you can download a zip that contains your font files - just copy
@@ -67,7 +67,7 @@ automatically)
 4.  Mark the icons you want in your font
 5.  _Download_ the font
 
-In IcoMoon you can also produce a customised version of FontAwesome, if
+In IcoMoon you can also produce a customized version of FontAwesome, if
 you for instance want to remove unused icons, or swap individual icons.
 You can also re-upload your custom icon font, if you want to make
 changes or additions to it later. 
