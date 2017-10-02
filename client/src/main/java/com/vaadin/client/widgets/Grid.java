@@ -6153,7 +6153,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName(STYLE_NAME);
-        setRole("grid");
+        setAriaRole("grid");
 
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
@@ -6321,7 +6321,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * @param role the role param
      * @since 8.2
      */
-    protected void setRole(String role){
+    protected void setAriaRole(String role){
         escalator.getTable().setAttribute("role", role);
     }
 
