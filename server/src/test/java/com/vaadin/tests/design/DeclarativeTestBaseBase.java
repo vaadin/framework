@@ -35,6 +35,7 @@ import org.jsoup.nodes.BooleanAttribute;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.junit.Assert;
 
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -104,13 +105,14 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
 
         if (!(o1 instanceof Collection && o2 instanceof Collection)) {
-            assertEquals(o1.getClass(), o2.getClass());
+            Assert.assertEquals(o1.getClass(), o2.getClass());
         }
 
         if (o1 instanceof Object[]) {
             Object[] a1 = ((Object[]) o1);
             Object[] a2 = ((Object[]) o2);
-            assertEquals(message + ": array length", a1.length, a2.length);
+            Assert.assertEquals(message + ": array length", a1.length,
+                    a2.length);
             for (int i = 0; i < a1.length; i++) {
                 assertEquals(message + ": element " + i, a1[i], a2[i]);
             }
@@ -123,7 +125,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
                 ec.assertObjectEquals(o1, o2);
             }
         } else {
-            assertEquals(message, o1, o2);
+            Assert.assertEquals(message, o1, o2);
         }
     }
 
@@ -201,7 +203,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         TestLogHandler l = new TestLogHandler();
         T read = read(design);
         assertEquals(expected, read);
-        assertEquals("", l.getMessages());
+        Assert.assertEquals("", l.getMessages());
         return read;
     }
 
@@ -209,14 +211,14 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         TestLogHandler l = new TestLogHandler();
         DesignContext context = readAndReturnContext(design);
         assertEquals(expected, context.getRootComponent());
-        assertEquals("", l.getMessages());
+        Assert.assertEquals("", l.getMessages());
         return context;
     }
 
     public void testWrite(String expected, T component) {
         TestLogHandler l = new TestLogHandler();
         testWrite(expected, component, false);
-        assertEquals("", l.getMessages());
+        Assert.assertEquals("", l.getMessages());
     }
 
     public void testWrite(String expectedDesign, T component,
@@ -229,7 +231,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         String produced = elementToHtml(producedElem);
         String comparable = elementToHtml(comparableElem);
 
-        assertEquals(comparable, produced);
+        Assert.assertEquals(comparable, produced);
     }
 
     public void testWrite(T component, String expected, DesignContext context) {
@@ -241,7 +243,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         String produced = elementToHtml(producedElem);
         String comparable = elementToHtml(comparableElem);
 
-        assertEquals(comparable, produced);
+        Assert.assertEquals(comparable, produced);
     }
 
     protected Element createElement(Component c) {
