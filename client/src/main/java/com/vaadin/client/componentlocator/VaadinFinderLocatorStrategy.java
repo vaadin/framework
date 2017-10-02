@@ -424,7 +424,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             ComponentConnector root, Element actualRoot) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
-        if (pathComponents[0].length() > 0) {
+        if (!pathComponents[0].isEmpty()) {
             connectors = findConnectorsByPath(pathComponents[0],
                     Arrays.asList(root));
         } else {
@@ -557,7 +557,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private List<ComponentConnector> collectPotentialMatches(
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
-        ArrayList<ComponentConnector> potentialMatches = new ArrayList<>();
+        List<ComponentConnector> potentialMatches = new ArrayList<>();
         String widgetName = getWidgetName(pathFragment);
         // Special case when searching for UIElement.
         if (LocatorUtil.isUIElement(pathFragment)) {

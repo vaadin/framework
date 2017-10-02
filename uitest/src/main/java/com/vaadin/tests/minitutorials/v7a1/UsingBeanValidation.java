@@ -62,11 +62,6 @@ public class UsingBeanValidation extends UI {
         public int getAge() {
             return age;
         }
-
-        private void setN() {
-            // TODO Auto-generated method stub
-
-        }
     }
 
     @Override

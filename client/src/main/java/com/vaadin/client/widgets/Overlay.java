@@ -145,7 +145,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Style name for the overlay container element (see
-     * {@link #getOverlayContainer()}
+     * {@link #getOverlayContainer()}.
      */
     public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
@@ -352,7 +352,7 @@ public class Overlay extends PopupPanel {
         return topFix;
     }
 
-    private native static int detectRelativeBodyFixes(String axis)
+    private static native int detectRelativeBodyFixes(String axis)
     /*-{
         try {
             var b = $wnd.document.body;
@@ -509,7 +509,7 @@ public class Overlay extends PopupPanel {
         // Calculate proper z-index
         int zIndex = -1;
         try {
-            // Odd behaviour with Windows Hosted Mode forces us to use
+            // Odd behavior with Windows Hosted Mode forces us to use
             // this redundant try/catch block (See dev.vaadin.com #2011)
             zIndex = Integer.parseInt(getElement().getStyle().getZIndex());
         } catch (Exception ignore) {
@@ -552,7 +552,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Returns true if we should add a shim iframe below the overlay to deal
-     * with zindex issues with PDFs and applets. Can be overriden to disable
+     * with zindex issues with PDFs and applets. Can be overridden to disable
      * shim iframes if they are not needed.
      *
      * @return true if a shim iframe should be added, false otherwise
@@ -579,7 +579,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Get owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @return Owner (creator) or null if not defined
      */
@@ -589,7 +589,7 @@ public class Overlay extends PopupPanel {
 
     /**
      * Set owner (Widget that made this Overlay, not the layout parent) of
-     * Overlay
+     * Overlay.
      *
      * @param owner
      *            Owner (creator) of Overlay

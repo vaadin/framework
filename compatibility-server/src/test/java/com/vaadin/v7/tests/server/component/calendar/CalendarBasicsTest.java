@@ -160,7 +160,7 @@ public class CalendarBasicsTest {
         assertEquals(calendar.getInternalCalendar().getTimeZone(),
                 calendar.getTimeZone());
 
-        // One can override the default behaviour by specifying a timezone
+        // One can override the default behavior by specifying a timezone
         TimeZone customTimeZone = TimeZone.getTimeZone("Europe/Helsinki");
         calendar.setTimeZone(customTimeZone);
         assertEquals(customTimeZone, calendar.getTimeZone());

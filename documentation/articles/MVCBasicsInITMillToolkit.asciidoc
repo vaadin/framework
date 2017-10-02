@@ -1,3 +1,9 @@
+---
+title: MVC Basics In IT Mill Toolkit
+order: 24
+layout: page
+---
+
 [[mvc-basics-in-itmill-toolkit]]
 MVC Basics in IT Mill Toolkit
 -----------------------------

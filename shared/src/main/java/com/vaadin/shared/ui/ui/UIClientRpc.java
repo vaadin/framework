@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.ui;
 import com.vaadin.shared.communication.ClientRpc;
 
 /**
- * Server to Client RPC methods for UI
+ * Server to Client RPC methods for UI.
  *
  * @since 7.1
  * @author Vaadin Ltd
@@ -26,7 +26,7 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface UIClientRpc extends ClientRpc {
 
     /**
-     * Informs the client that the UI has been closed
+     * Informs the client that the UI has been closed.
      *
      * @param sessionExpired
      *            true if the ui was closed because the session expired, false

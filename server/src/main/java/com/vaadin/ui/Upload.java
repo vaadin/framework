@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -100,6 +99,8 @@ public class Upload extends AbstractComponent
     private int totalBytes;
 
     private String buttonCaption = "Upload";
+
+    private String buttonStyleName;
 
     /**
      * ProgressListeners to which information about progress is sent during
@@ -185,11 +186,14 @@ public class Upload extends AbstractComponent
 
         if (buttonCaption != null) {
             target.addAttribute("buttoncaption", buttonCaption);
+            if (buttonStyleName != null) {
+                target.addAttribute("buttonstylename", buttonStyleName);
+            }
         }
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }
@@ -237,9 +241,9 @@ public class Upload extends AbstractComponent
                     .getDeclaredMethod("uploadStarted", StartedEvent.class);
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class
                     .getDeclaredMethod("uploadSucceeded", SucceededEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }
@@ -610,7 +614,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Listener for {@link ChangeEvent}
+     * Listener for {@link ChangeEvent}.
      *
      * @since 7.2
      */
@@ -753,7 +757,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Adds a filename change event listener
+     * Adds a filename change event listener.
      *
      * @param listener
      *            the Listener to add, not null
@@ -765,7 +769,7 @@ public class Upload extends AbstractComponent
     }
 
     /**
-     * Removes a filename change event listener
+     * Removes a filename change event listener.
      *
      * @param listener
      *            the listener to be removed
@@ -841,9 +845,7 @@ public class Upload extends AbstractComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners
-                    .iterator(); it.hasNext();) {
-                ProgressListener l = it.next();
+            for (ProgressListener l : progressListeners) {
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -966,7 +968,7 @@ public class Upload extends AbstractComponent
     @FunctionalInterface
     public interface ProgressListener extends Serializable {
         /**
-         * Updates progress to listener
+         * Updates progress to listener.
          *
          * @param readBytes
          *            bytes transferred
@@ -977,10 +979,22 @@ public class Upload extends AbstractComponent
     }
 
     /**
+     * Returns the string rendered into button that fires uploading.
+     *
      * @return String to be rendered into button that fires uploading
      */
     public String getButtonCaption() {
         return buttonCaption;
+    }
+
+    /**
+     * Returns the stylename rendered into button that fires uploading.
+     *
+     * @return Stylename to be rendered into button that fires uploading
+     * @since 8.2
+     */
+    public String getButtonStyleName() {
+        return buttonStyleName;
     }
 
     /**
@@ -1007,6 +1021,21 @@ public class Upload extends AbstractComponent
      */
     public void setButtonCaption(String buttonCaption) {
         this.buttonCaption = buttonCaption;
+        markAsDirty();
+    }
+
+    /**
+     * In addition to the actual file chooser, upload components have button
+     * that starts actual upload progress. This method is used to set a
+     * stylename to that button.
+     *
+     * @param buttonStyleName
+     *            styleName for upload components button.
+     * @see #setButtonCaption(String) about when the button is shown / hidden.
+     * @since 8.2
+     */
+    public void setButtonStyleName(String buttonStyleName) {
+        this.buttonStyleName = buttonStyleName;
         markAsDirty();
     }
 

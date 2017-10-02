@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui.window;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.vaadin.client.ui.VWindow;
@@ -31,7 +31,7 @@ public class WindowOrderEvent extends GwtEvent<WindowOrderHandler> {
 
     private static final Type<WindowOrderHandler> TYPE = new Type<>();
 
-    private final ArrayList<VWindow> windows;
+    private final List<VWindow> windows;
 
     /**
      * Creates a new event with the given order.
@@ -39,7 +39,7 @@ public class WindowOrderEvent extends GwtEvent<WindowOrderHandler> {
      * @param windows
      *            The new order position for the VWindow
      */
-    public WindowOrderEvent(ArrayList<VWindow> windows) {
+    public WindowOrderEvent(List<VWindow> windows) {
         this.windows = windows;
     }
 

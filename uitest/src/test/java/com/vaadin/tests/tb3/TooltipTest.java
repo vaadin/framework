@@ -91,7 +91,7 @@ public abstract class TooltipTest extends MultiBrowserTest {
     protected void checkTooltipNotPresent() throws Exception {
         try {
             WebElement tooltip = getTooltip();
-            if (!"".equals(tooltip.getText())
+            if (!tooltip.getText().isEmpty()
                     || tooltip.getLocation().getX() > -999) {
                 Assert.fail("Found tooltip that shouldn't be visible: "
                         + tooltip.getText() + " at " + tooltip.getLocation());

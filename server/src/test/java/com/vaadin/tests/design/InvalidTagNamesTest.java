@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,11 +94,6 @@ public class InvalidTagNamesTest {
     }
 
     private Component readDesign(String string) {
-        try {
-            return Design
-                    .read(new ByteArrayInputStream(string.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return Design.read(new ByteArrayInputStream(string.getBytes(UTF_8)));
     }
 }

@@ -112,10 +112,10 @@ public class BrowserInfo {
 
     private native int getIEDocumentMode()
     /*-{
-    	var mode = $wnd.document.documentMode;
-    	if (!mode)
-    		 return -1;
-    	return mode;
+        var mode = $wnd.document.documentMode;
+        if (!mode)
+             return -1;
+        return mode;
     }-*/;
 
     /**
@@ -197,13 +197,13 @@ public class BrowserInfo {
             }
 
             cssClass = prefix + browserIdentifier;
-            if (!"".equals(majorVersionClass)) {
+            if (!majorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + majorVersionClass;
             }
-            if (!"".equals(minorVersionClass)) {
+            if (!minorVersionClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + minorVersionClass;
             }
-            if (!"".equals(browserEngineClass)) {
+            if (!browserEngineClass.isEmpty()) {
                 cssClass = cssClass + " " + prefix + browserEngineClass;
             }
             String osClass = getOperatingSystemClass();
@@ -351,19 +351,19 @@ public class BrowserInfo {
         return browserDetails.isOpera() && getBrowserMajorVersion() == 11;
     }
 
-    public native static String getBrowserString()
+    public static native String getBrowserString()
     /*-{
-    	return $wnd.navigator.userAgent;
+        return $wnd.navigator.userAgent;
     }-*/;
 
     public native int getScreenWidth()
     /*-{
-    	return $wnd.screen.width;
+        return $wnd.screen.width;
     }-*/;
 
     public native int getScreenHeight()
     /*-{
-    	return $wnd.screen.height;
+        return $wnd.screen.height;
     }-*/;
 
     /**
@@ -404,7 +404,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on iOS
+     * Checks if the browser is run on iOS.
      *
      * @return true if the browser is run on iOS, false otherwise
      */
@@ -423,7 +423,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on Android
+     * Checks if the browser is run on Android.
      *
      * @return true if the browser is run on Android, false otherwise
      */
@@ -461,7 +461,7 @@ public class BrowserInfo {
 
     /**
      * Tests if this is an Android devices with a broken scrollTop
-     * implementation
+     * implementation.
      *
      * @return true if scrollTop cannot be trusted on this device, false
      *         otherwise

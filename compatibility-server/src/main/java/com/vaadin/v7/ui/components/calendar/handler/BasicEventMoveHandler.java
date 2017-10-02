@@ -59,7 +59,7 @@ public class BasicEventMoveHandler implements EventMoveHandler {
     }
 
     /**
-     * Set the start and end dates for the event
+     * Set the start and end dates for the event.
      *
      * @param event
      *            The event that the start and end dates should be set

@@ -42,13 +42,13 @@ public class FileTypeResolver implements Serializable {
     /**
      * Default icon given if no icon is specified for a mime-type.
      */
-    static public Resource DEFAULT_ICON = new ThemeResource(
+    public static Resource DEFAULT_ICON = new ThemeResource(
             "../runo/icons/16/document.png");
 
     /**
      * Default mime-type.
      */
-    static public String DEFAULT_MIME_TYPE = "application/octet-stream";
+    public static String DEFAULT_MIME_TYPE = "application/octet-stream";
 
     /**
      * Initial file extension to mime-type mapping.

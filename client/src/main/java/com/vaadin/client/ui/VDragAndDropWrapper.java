@@ -60,8 +60,7 @@ import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 /**
- *
- * Must have features pending:
+ * A wrapper for Drag and Drop. Must have features pending:
  *
  * drop details: locations + sizes in document hierarchy up to wrapper
  *
@@ -170,11 +169,11 @@ public class VDragAndDropWrapper extends VCustomComponent
         return false;
     }
 
-    protected final static int NONE = 0;
-    protected final static int COMPONENT = 1;
-    protected final static int WRAPPER = 2;
-    protected final static int HTML5 = 3;
-    protected final static int COMPONENT_OTHER = 4;
+    protected static final int NONE = 0;
+    protected static final int COMPONENT = 1;
+    protected static final int WRAPPER = 2;
+    protected static final int HTML5 = 3;
+    protected static final int COMPONENT_OTHER = 4;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int dragStartMode;
@@ -448,8 +447,8 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     }
 
-    protected String[] acceptedTypes = new String[] { "Text", "Url",
-            "text/html", "text/plain", "text/rtf" };
+    protected String[] acceptedTypes = { "Text", "Url", "text/html",
+            "text/plain", "text/rtf" };
 
     private boolean isAcceptedType(String type) {
         for (String t : acceptedTypes) {
@@ -467,11 +466,11 @@ public class VDragAndDropWrapper extends VCustomComponent
 
         public final native void postFile(VHtml5File file)
         /*-{
-
+        
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-
+        
             this.send(file);
         }-*/;
 
@@ -627,19 +626,19 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-
+    
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-
+    
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);

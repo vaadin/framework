@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.util.Calendar;
@@ -56,6 +57,7 @@ import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import com.vaadin.util.TimeZoneUtil;
 
 /**
  * A date editor component with {@link LocalDate} as an input value.
@@ -94,6 +96,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * Overridden format string
      */
     private String dateFormat;
+
+    private ZoneId zoneId;
 
     private boolean lenient = false;
 
@@ -249,8 +253,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 if (newDateString == null || newDateString.isEmpty()) {
                     uiHasValidDateString = true;
                     currentParseErrorMessage = null;
-                    setValue(newDate, true);
                     setComponentError(null);
+                    setValue(newDate, true);
                 } else {
                     if (variables.get("lastInvalidDateString") != null) {
                         Result<T> parsedDate = handleUnparsableDateString(
@@ -442,6 +446,53 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     public String getDateFormat() {
         return dateFormat;
+    }
+
+    /**
+     * Sets the {@link ZoneId}, which is used when {@code z} is included inside
+     * the {@link #setDateFormat(String)}.
+     *
+     * @param zoneId
+     *            the zone id
+     * @since 8.2
+     */
+    public void setZoneId(ZoneId zoneId) {
+        if (zoneId != this.zoneId
+                || (zoneId != null && !zoneId.equals(this.zoneId))) {
+            updateTimeZoneJSON(zoneId, getLocale());
+        }
+        this.zoneId = zoneId;
+    }
+
+    private void updateTimeZoneJSON(ZoneId zoneId, Locale locale) {
+        String timeZoneJSON;
+        if (zoneId != null && locale != null) {
+            timeZoneJSON = TimeZoneUtil.toJSON(zoneId, locale);
+        } else {
+            timeZoneJSON = null;
+        }
+        getState().timeZoneJSON = timeZoneJSON;
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        Locale oldLocale = getLocale();
+        if (locale != oldLocale
+                || (locale != null && !locale.equals(oldLocale))) {
+            updateTimeZoneJSON(getZoneId(), locale);
+        }
+        super.setLocale(locale);
+    }
+
+    /**
+     * Returns the {@link ZoneId}, which is used when {@code z} is included
+     * inside the {@link #setDateFormat(String)}.
+     *
+     * @return the zoneId
+     * @since 8.2
+     */
+    public ZoneId getZoneId() {
+        return zoneId;
     }
 
     /**

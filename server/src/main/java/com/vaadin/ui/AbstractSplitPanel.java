@@ -359,7 +359,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * Returns the unit of position of the splitter
+     * Returns the unit of position of the splitter.
      *
      * @return unit of position of the splitter
      * @see #setSplitPosition(float, Unit)
@@ -441,7 +441,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * Returns the unit of the maximum position of the splitter
+     * Returns the unit of the maximum position of the splitter.
      *
      * @return the unit of the maximum position of the splitter
      */
@@ -520,7 +520,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
                 SplitterClickEvent.class);
 
         /**
-         * SplitPanel splitter has been clicked
+         * SplitPanel splitter has been clicked.
          *
          * @param event
          *            SplitterClickEvent event.

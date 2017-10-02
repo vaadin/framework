@@ -46,6 +46,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -99,7 +100,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AbstractComponentConnector() {
     }
@@ -141,11 +142,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * @since 7.6
      */
@@ -165,11 +166,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * Some Vaadin Components already handle the long tap as a context menu.
      * This method is unnecessary for those.
@@ -489,6 +490,27 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
+    @OnStateChange({ "errorMessage", "errorLevel" })
+    private void setErrorLevel() {
+        // Add or remove the widget's error level style name
+        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
+                getWidget().getStylePrimaryName() + StyleConstants.ERROR_EXT,
+                getState().errorLevel);
+
+        // Add or remove error indicator element
+        if (getWidget() instanceof HasErrorIndicatorElement) {
+            HasErrorIndicatorElement widget = (HasErrorIndicatorElement) getWidget();
+            if (getState().errorMessage != null) {
+                widget.setErrorIndicatorElementVisible(true);
+                ErrorUtil.setErrorLevelStyle(widget.getErrorIndicatorElement(),
+                        StyleConstants.STYLE_NAME_ERROR_INDICATOR,
+                        getState().errorLevel);
+            } else {
+                widget.setErrorIndicatorElementVisible(false);
+            }
+        }
+    }
+
     @Override
     public void setWidgetEnabled(boolean widgetEnabled) {
         // add or remove v-disabled style name from the widget
@@ -764,17 +786,18 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description,
-                getState().descriptionContentMode, getState().errorMessage);
+                getState().descriptionContentMode, getState().errorMessage,
+                null, getState().errorLevel);
     }
 
     @Override
     public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
-        if (state.description != null && !state.description.equals("")) {
+        if (state.description != null && !state.description.isEmpty()) {
             return true;
         }
-        return state.errorMessage != null && !state.errorMessage.equals("");
+        return state.errorMessage != null && !state.errorMessage.isEmpty();
     }
 
     /**

@@ -23,7 +23,7 @@ import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.v7.ui.AbstractSelect;
 
 @AcceptCriterion(AbstractSelect.AcceptItem.class)
-final public class VItemIdIs extends VAcceptCriterion {
+public final class VItemIdIs extends VAcceptCriterion {
 
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {

@@ -265,10 +265,6 @@ public class FileDropTarget<T extends AbstractComponent>
                 return file.getFileSize();
             }
 
-            public StreamVariable getReceiver() {
-                return FileReceiver.this;
-            }
-
             @Override
             public Exception getException() {
                 if (wrappedEvent instanceof StreamingErrorEvent) {

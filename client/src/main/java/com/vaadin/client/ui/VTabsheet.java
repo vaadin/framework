@@ -100,7 +100,7 @@ public class VTabsheet extends VTabsheetBase
     }
 
     /**
-     * Representation of a single "tab" shown in the TabBar
+     * Representation of a single "tab" shown in the TabBar.
      *
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
@@ -198,7 +198,7 @@ public class VTabsheet extends VTabsheetBase
         }
 
         /**
-         * Toggles the style names for the Tab
+         * Toggles the style names for the Tab.
          *
          * @param selected
          *            true if the Tab is selected
@@ -340,7 +340,8 @@ public class VTabsheet extends VTabsheetBase
                     || tabState.componentError != null) {
                 setTooltipInfo(new TooltipInfo(tabState.description,
                         tabState.descriptionContentMode,
-                        tabState.componentError, this));
+                        tabState.componentError, this,
+                        tabState.componentErrorLevel));
             } else {
                 setTooltipInfo(null);
             }
@@ -352,6 +353,7 @@ public class VTabsheet extends VTabsheetBase
             boolean ret = updateCaptionWithoutOwner(captionString,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     tab.getTabsheet().connector.getResourceUrl(
                             ComponentConstants.ICON_RESOURCE + tabState.key),
                     tabState.iconAltText);
@@ -809,8 +811,8 @@ public class VTabsheet extends VTabsheetBase
     /**
      * Load the content of a tab of the provided index.
      *
-     * @param index
-     *            of the tab to load
+     * @param tabIndex
+     *            The index of the tab to load
      *
      * @return true if the specified sheet gets loaded, otherwise false.
      */

@@ -55,11 +55,11 @@ public class BasicBackwardHandler implements BackwardHandler {
         // set new start and end times
         Calendar javaCalendar = event.getComponent().getInternalCalendar();
         javaCalendar.setTime(start);
-        javaCalendar.add(java.util.Calendar.DATE, durationInDays);
+        javaCalendar.add(Calendar.DATE, durationInDays);
         Date newStart = javaCalendar.getTime();
 
         javaCalendar.setTime(end);
-        javaCalendar.add(java.util.Calendar.DATE, durationInDays);
+        javaCalendar.add(Calendar.DATE, durationInDays);
         Date newEnd = javaCalendar.getTime();
 
         if (start.equals(end)) { // day view
@@ -69,7 +69,7 @@ public class BasicBackwardHandler implements BackwardHandler {
 
             // we suppose that 7 >= lastDay >= firstDay >= 1
             while (!(firstDay <= dayOfWeek && dayOfWeek <= lastDay)) {
-                javaCalendar.add(java.util.Calendar.DATE, -1);
+                javaCalendar.add(Calendar.DATE, -1);
                 dayOfWeek = javaCalendar.get(Calendar.DAY_OF_WEEK);
             }
 
@@ -81,7 +81,7 @@ public class BasicBackwardHandler implements BackwardHandler {
     }
 
     /**
-     * Set the start and end dates for the event
+     * Set the start and end dates for the event.
      *
      * @param event
      *            The event that the start and end dates should be set

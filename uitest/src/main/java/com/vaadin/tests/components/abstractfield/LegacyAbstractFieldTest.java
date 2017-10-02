@@ -154,8 +154,7 @@ public abstract class LegacyAbstractFieldTest<T extends AbstractField>
             // Sort collections to avoid problems with values printed in
             // different order
             try {
-                ArrayList<Comparable> c = new ArrayList<Comparable>(
-                        (Collection) o);
+                List<Comparable> c = new ArrayList<Comparable>((Collection) o);
                 Collections.sort(c);
                 o = c;
             } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.vaadin.v7.data.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -12,7 +13,7 @@ import org.junit.Test;
 public class PerformanceTestIndexedContainerTest {
 
     private static final int REPEATS = 10;
-    private final static int ITEMS = 50000;
+    private static final int ITEMS = 50000;
     private static final long ADD_ITEM_FAIL_THRESHOLD = 200;
     // TODO should improve performance of these methods
     private static final long ADD_ITEM_AT_FAIL_THRESHOLD = 5000;
@@ -113,7 +114,7 @@ public class PerformanceTestIndexedContainerTest {
     }
 
     private Long median(Collection<Long> times) {
-        ArrayList<Long> list = new ArrayList<Long>(times);
+        List<Long> list = new ArrayList<Long>(times);
         Collections.sort(list);
         // not exact median in some cases, but good enough
         return list.get(list.size() / 2);

@@ -78,7 +78,7 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             @Override
             public BigDecimal parse(String formattedValue) throws Exception {
                 if (formattedValue != null
-                        && formattedValue.trim().length() != 0) {
+                        && !formattedValue.trim().isEmpty()) {
                     BigDecimal value = (BigDecimal) df.parse(formattedValue);
                     value = value.setScale(2, BigDecimal.ROUND_HALF_UP);
                     return value;

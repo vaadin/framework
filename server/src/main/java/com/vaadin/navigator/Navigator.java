@@ -16,6 +16,7 @@
 package com.vaadin.navigator;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.Objects;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.PopStateEvent;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
@@ -82,6 +84,95 @@ public class Navigator implements Serializable {
     }
 
     /**
+     * A {@link NavigationStateManager} using path info, HTML5 push state and
+     * {@link PopStateEvent}s to track views and enable listening to view
+     * changes. This manager can be enabled with UI annotation
+     * {@link PushStateNavigation}.
+     * <p>
+     * The part of path after UI's "root path" (UI's path without view
+     * identifier) is used as {@link View}s identifier. The rest of the path
+     * after the view name can be used by the developer for extra parameters for
+     * the View.
+     * <p>
+     * This class is mostly for internal use by Navigator, and is only public
+     * and static to enable testing.
+     *
+     * @since 8.2
+     */
+    public static class PushStateManager implements NavigationStateManager {
+        private Registration popStateListenerRegistration;
+        private UI ui;
+
+        /**
+         * Creates a new PushStateManager.
+         *
+         * @param ui
+         *            the UI where the Navigator is attached to
+         */
+        public PushStateManager(UI ui) {
+            this.ui = ui;
+        }
+
+        @Override
+        public void setNavigator(Navigator navigator) {
+            if (popStateListenerRegistration != null) {
+                popStateListenerRegistration.remove();
+                popStateListenerRegistration = null;
+            }
+            if (navigator != null) {
+                popStateListenerRegistration = ui.getPage()
+                        .addPopStateListener(e -> {
+                            navigator.navigateTo(getState());
+                        });
+            }
+        }
+
+        @Override
+        public String getState() {
+            // Get the current URL
+            URI location = ui.getPage().getLocation();
+            String path = location.getPath();
+            if (ui.getUiPathInfo() != null
+                    && path.contains(ui.getUiPathInfo())) {
+                // Split the path from after the UI PathInfo
+                path = path.substring(path.indexOf(ui.getUiPathInfo())
+                        + ui.getUiPathInfo().length());
+            } else if (path.startsWith(ui.getUiRootPath())) {
+                // Use the whole path after UI RootPath
+                String uiRootPath = ui.getUiRootPath();
+                path = path.substring(uiRootPath.length());
+            } else {
+                throw new IllegalStateException(getClass().getSimpleName()
+                        + " is unable to determine the view path from the URL.");
+            }
+
+            if (path.startsWith("/")) {
+                // Strip leading '/'
+                path = path.substring(1);
+            }
+            return path;
+        }
+
+        @Override
+        public void setState(String state) {
+            StringBuilder sb = new StringBuilder(ui.getUiRootPath());
+            if (!ui.getUiRootPath().endsWith("/")) {
+                // make sure there is a '/' between the root path and the
+                // navigation state.
+                sb.append('/');
+            }
+            sb.append(state);
+            URI location = ui.getPage().getLocation();
+            if (location != null) {
+                ui.getPage().pushState(location.resolve(sb.toString()));
+            } else {
+                throw new IllegalStateException(
+                        "The Page of the UI does not have a location.");
+            }
+        }
+    }
+
+    /**
      * A {@link NavigationStateManager} using hashbang fragments in the Page
      * location URI to track views and enable listening to view changes.
      * <p>
@@ -92,6 +183,10 @@ public class Navigator implements Serializable {
      * <p>
      * This class is mostly for internal use by Navigator, and is only public
      * and static to enable testing.
+     * <p>
+     * <strong>Note:</strong> Since 8.2 you can use {@link PushStateManager},
+     * which is based on HTML5 History API. To use it, add
+     * {@link PushStateNavigation} annotation to the UI.
      */
     public static class UriFragmentManager implements NavigationStateManager {
         private final Page page;
@@ -426,7 +521,7 @@ public class Navigator implements Serializable {
      *            The ViewDisplay used to display the views.
      */
     public Navigator(UI ui, ViewDisplay display) {
-        this(ui, new UriFragmentManager(ui.getPage()), display);
+        this(ui, null, display);
     }
 
     /**
@@ -494,7 +589,7 @@ public class Navigator implements Serializable {
         this.ui = ui;
         this.ui.setNavigator(this);
         if (stateManager == null) {
-            stateManager = new UriFragmentManager(ui.getPage());
+            stateManager = createNavigationStateManager(ui);
         }
         if (stateManager != null && this.stateManager != null
                 && stateManager != this.stateManager) {
@@ -503,6 +598,24 @@ public class Navigator implements Serializable {
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
+    }
+
+    /**
+     * Creates a navigation state manager for given UI. This method should take
+     * into account any navigation related annotations.
+     * 
+     * @param ui
+     *            the ui
+     * @return the navigation state manager
+     * 
+     * @since 8.2
+     */
+    protected NavigationStateManager createNavigationStateManager(UI ui) {
+        if (ui.getClass().getAnnotation(PushStateNavigation.class) != null) {
+            return new PushStateManager(ui);
+        }
+        // Fall back to old default
+        return new UriFragmentManager(ui.getPage());
     }
 
     /**
@@ -879,8 +992,8 @@ public class Navigator implements Serializable {
 
         Map<String, String> parameterMap = new HashMap<>();
         String[] parameters = parameterString.split(separator);
-        for (int i = 0; i < parameters.length; i++) {
-            String[] keyAndValue = parameters[i]
+        for (String parameter : parameters) {
+            String[] keyAndValue = parameter
                     .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
             parameterMap.put(keyAndValue[0],
                     keyAndValue.length > 1 ? keyAndValue[1] : "");

@@ -18,7 +18,7 @@ package com.vaadin.shared.ui.loginform;
 import java.io.Serializable;
 
 /**
- * Constants for LoginForm
+ * Constants for LoginForm.
  *
  * @since 7.7
  * @author Vaadin Ltd

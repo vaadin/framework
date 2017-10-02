@@ -16,6 +16,7 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -175,7 +176,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream out)
             throws IOException {
         initialized = false;
         out.defaultWriteObject();

@@ -42,7 +42,7 @@ import com.vaadin.ui.ComboBox;
  * @author Vaadin Ltd
  */
 public class ComboBoxFilteringTest {
-    private static final String[] PERSON_NAMES = new String[] {
+    private static final String[] PERSON_NAMES = {
             "Enrique Iglesias", "Henry Dunant", "Erwin Engelbrecht" };
 
     private ComboBox<Person> comboBox;

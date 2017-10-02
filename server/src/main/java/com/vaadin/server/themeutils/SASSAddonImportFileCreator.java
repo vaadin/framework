@@ -64,7 +64,8 @@ public class SASSAddonImportFileCreator {
     }
 
     /**
-     * Updates a themes addons.scss with the addon themes found on the classpath
+     * Updates a themes addons.scss with the addon themes found on the
+     * classpath.
      *
      * @param themeDirectory
      *            The target theme directory
@@ -86,7 +87,7 @@ public class SASSAddonImportFileCreator {
                 .getAvailableWidgetSetsAndStylesheets();
 
         try (PrintStream printStream = new PrintStream(
-                    new FileOutputStream(addonImports))) {
+                new FileOutputStream(addonImports))) {
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 

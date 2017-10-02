@@ -313,7 +313,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Set correct tab index for disabled text field in IE as the value set in
      * setTextFieldEnabled(...) gets overridden in
-     * TextualDateConnection.updateFromUIDL(...)
+     * TextualDateConnection.updateFromUIDL(...).
      *
      * @since 7.3.1
      */
@@ -390,7 +390,7 @@ public class VPopupCalendar extends VTextualDate
     }
 
     /**
-     * Opens the calendar panel popup
+     * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
 
@@ -468,7 +468,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Sets the content of a special field for assistive devices, so that they
      * can recognize the change and inform the user (reading out in case of
-     * screen reader)
+     * screen reader).
      *
      * @param selectedDate
      *            Date that is currently selected
@@ -531,7 +531,7 @@ public class VPopupCalendar extends VTextualDate
     }
 
     /**
-     * Closes the open popup panel
+     * Closes the open popup panel.
      */
     public void closeCalendarPanel() {
         if (open) {

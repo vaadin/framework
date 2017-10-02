@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.junit.Assert;
@@ -301,7 +302,7 @@ public class ColumnPropertyTest {
         // Here we really don't care about the container management, but in
         // order to set the value for a column the owner (RowItem) must be set
         // and to create the owner we must have a container...
-        ArrayList<ColumnProperty> properties = new ArrayList<ColumnProperty>();
+        List<ColumnProperty> properties = new ArrayList<ColumnProperty>();
         properties.add(property);
 
         SQLContainer container = EasyMock.createNiceMock(SQLContainer.class);

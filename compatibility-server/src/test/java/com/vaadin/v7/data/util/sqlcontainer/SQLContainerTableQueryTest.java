@@ -163,7 +163,7 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void propertyIdsAreFetched() {
-        ArrayList<String> propertyIds = new ArrayList<String>(
+        List<String> propertyIds = new ArrayList<String>(
                 (Collection<? extends String>) container
                         .getContainerPropertyIds());
 
@@ -222,7 +222,7 @@ public class SQLContainerTableQueryTest {
         RowId two = new RowId(new Object[] { 2 + offset });
         RowId three = new RowId(new Object[] { 3 + offset });
         if (SQLTestsConstants.db == DB.ORACLE) {
-            String[] correct = new String[] { "1", "2", "3", "4" };
+            String[] correct = { "1", "2", "3", "4" };
             List<String> oracle = new ArrayList<String>();
             for (Object o : itemIds) {
                 oracle.add(o.toString());

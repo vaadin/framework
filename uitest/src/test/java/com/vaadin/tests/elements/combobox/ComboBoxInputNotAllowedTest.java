@@ -23,7 +23,7 @@ public class ComboBoxInputNotAllowedTest extends MultiBrowserTest {
         openTestURL();
         ComboBoxElement cb = $(ComboBoxElement.class).first();
 
-        String[] optionsToTest = new String[] {
+        String[] optionsToTest = {
                 ComboBoxInputNotAllowed.ITEM_ON_FIRST_PAGE,
                 ComboBoxInputNotAllowed.ITEM_ON_SECOND_PAGE,
                 ComboBoxInputNotAllowed.ITEM_ON_LAST_PAGE,

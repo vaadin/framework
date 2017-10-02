@@ -95,7 +95,7 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
         clickElement(comboBoxPopup.findElements(By.tagName("td")).get(2));
 
         // click the button of the first combobox. This would reveal the
-        // unwanted behaviour.
+        // unwanted behavior.
 
         clickElement(
                 comboBox.findElement(By.className("v-filterselect-button")));

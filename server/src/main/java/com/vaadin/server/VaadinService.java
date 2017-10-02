@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -115,7 +117,8 @@ public abstract class VaadinService implements Serializable {
     private static final String REQUEST_START_TIME_ATTRIBUTE = "requestStartTime";
 
     /**
-     * Should never be used directly, always use {@link #getDeploymentConfiguration()}
+     * Should never be used directly, always use
+     * {@link #getDeploymentConfiguration()}
      */
     private final DeploymentConfiguration deploymentConfiguration;
 
@@ -156,7 +159,7 @@ public abstract class VaadinService implements Serializable {
     private boolean initialized = false;
 
     /**
-     * Creates a new vaadin service based on a deployment configuration
+     * Creates a new vaadin service based on a deployment configuration.
      *
      * @param deploymentConfiguration
      *            the deployment configuration for the service
@@ -195,7 +198,7 @@ public abstract class VaadinService implements Serializable {
      * overridden (or otherwise intercepted) so it does not return
      * <code>null</code>.
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinService() {
         this.deploymentConfiguration = null;
@@ -265,7 +268,7 @@ public abstract class VaadinService implements Serializable {
      */
     protected List<RequestHandler> createRequestHandlers()
             throws ServiceException {
-        ArrayList<RequestHandler> handlers = new ArrayList<>();
+        List<RequestHandler> handlers = new ArrayList<>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
@@ -375,8 +378,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Gets the deployment configuration. Should be overridden (or otherwise
-     * intercepted) if the no-arg constructor is used in order to prevent
-     * NPEs.
+     * intercepted) if the no-arg constructor is used in order to prevent NPEs.
      *
      * @return the deployment configuration
      */
@@ -530,7 +532,7 @@ public abstract class VaadinService implements Serializable {
             if (session.getState() == State.OPEN) {
                 closeSession(session);
             }
-            ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+            List<UI> uis = new ArrayList<>(session.getUIs());
             for (final UI ui : uis) {
                 ui.accessSynchronously(() -> {
                     /*
@@ -871,7 +873,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Creates a new Vaadin session for this service and request
+     * Creates a new Vaadin session for this service and request.
      *
      * @param request
      *            The request for which to create a VaadinSession
@@ -1126,8 +1128,7 @@ public abstract class VaadinService implements Serializable {
         // Stores all attributes (security key, reference to this context
         // instance) so they can be added to the new session
         Set<String> attributeNames = oldSession.getAttributeNames();
-        HashMap<String, Object> attrs = new HashMap<>(
-                attributeNames.size() * 2);
+        Map<String, Object> attrs = new HashMap<>(attributeNames.size() * 2);
         for (String name : attributeNames) {
             Object value = oldSession.getAttribute(name);
             if (value instanceof VaadinSession) {
@@ -1170,7 +1171,7 @@ public abstract class VaadinService implements Serializable {
     /**
      *
      * Finds the given theme resource from the web content folder or using the
-     * class loader and returns a stream for it
+     * class loader and returns a stream for it.
      *
      * @param ui
      *            The ui for which to find the resource
@@ -1266,7 +1267,7 @@ public abstract class VaadinService implements Serializable {
      * @param session
      */
     private void removeClosedUIs(final VaadinSession session) {
-        ArrayList<UI> uis = new ArrayList<>(session.getUIs());
+        List<UI> uis = new ArrayList<>(session.getUIs());
         for (final UI ui : uis) {
             if (ui.isClosing()) {
                 ui.accessSynchronously(() -> {
@@ -1399,7 +1400,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Called before the framework starts handling a request
+     * Called before the framework starts handling a request.
      *
      * @param request
      *            The request
@@ -1665,7 +1666,7 @@ public abstract class VaadinService implements Serializable {
 
         final OutputStream out = response.getOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print(reponseString);
         }
     }
@@ -1832,7 +1833,7 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Checks whether Atmosphere is avilable for use
+     * Checks whether Atmosphere is available for use.
      *
      * @since 7.6
      * @return true if Atmosphere is available, false otherwise
@@ -2137,7 +2138,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Called when the VaadinSession should be loaded from the underlying HTTP
-     * session
+     * session.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2173,7 +2174,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Called when the VaadinSession should be removed from the underlying HTTP
-     * session
+     * session.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2186,7 +2187,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Performs the actual removal of the VaadinSession from the underlying HTTP
-     * session after sanity checks have been performed
+     * session after sanity checks have been performed.
      *
      * @since 7.6
      * @param wrappedSession
@@ -2199,7 +2200,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Returns the name used for storing the VaadinSession in the underlying
-     * HTTP session
+     * HTTP session.
      *
      * @since 7.6
      * @return the attribute name used for storing the VaadinSession

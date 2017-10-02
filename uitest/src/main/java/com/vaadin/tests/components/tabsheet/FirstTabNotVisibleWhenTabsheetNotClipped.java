@@ -71,7 +71,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped
 
         TabSheet tabsheet = new TabSheet();
         String[] letters = { "A", "B", "C", "D" };
-        HashMap<String, TabSheet.Tab> tabMap = new HashMap<>();
+        Map<String, TabSheet.Tab> tabMap = new HashMap<>();
 
         for (String letter : letters) {
             VerticalLayout vLayout = new VerticalLayout();
@@ -100,7 +100,7 @@ public class FirstTabNotVisibleWhenTabsheetNotClipped
     }
 
     private Button.ClickListener createTabListener(
-            final HashMap<String, TabSheet.Tab> map, final TabSheet tabsheet) {
+            final Map<String, TabSheet.Tab> map, final TabSheet tabsheet) {
 
         Button.ClickListener clickListener = new Button.ClickListener() {
 

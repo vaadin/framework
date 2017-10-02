@@ -243,7 +243,7 @@ public class Panel extends AbstractSingleComponentContainer
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         if (actionManager != null) {

@@ -114,12 +114,12 @@ public class VOptionGroup extends VOptionGroupBase
          * rebuilt (losing focus) if number of elements or their order is
          * changed.
          */
-        HashMap<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
+        Map<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
         for (Map.Entry<CheckBox, String> entry : optionsToKeys.entrySet()) {
             keysToOptions.put(entry.getValue(), entry.getKey());
         }
-        ArrayList<Widget> existingwidgets = new ArrayList<Widget>();
-        ArrayList<Widget> newwidgets = new ArrayList<Widget>();
+        List<Widget> existingwidgets = new ArrayList<Widget>();
+        List<Widget> newwidgets = new ArrayList<Widget>();
 
         // Get current order of elements
         for (Widget wid : panel) {
@@ -134,8 +134,8 @@ public class VOptionGroup extends VOptionGroupBase
             Roles.getRadiogroupRole().set(getElement());
         }
 
-        for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL opUidl = (UIDL) it.next();
+        for (final Object child : uidl) {
+            final UIDL opUidl = (UIDL) child;
 
             String itemHtml = opUidl.getStringAttribute("caption");
             if (!htmlContentAllowed) {
@@ -143,7 +143,7 @@ public class VOptionGroup extends VOptionGroupBase
             }
 
             String iconUrl = opUidl.getStringAttribute("icon");
-            if (iconUrl != null && iconUrl.length() != 0) {
+            if (iconUrl != null && !iconUrl.isEmpty()) {
                 Icon icon = client.getIcon(iconUrl);
                 itemHtml = icon.getElement().getString() + itemHtml;
             }
@@ -162,7 +162,7 @@ public class VOptionGroup extends VOptionGroupBase
                     op = new RadioButton(paintableId);
                     op.setStyleName("v-radiobutton");
                 }
-                if (iconUrl != null && iconUrl.length() != 0) {
+                if (iconUrl != null && !iconUrl.isEmpty()) {
                     WidgetUtil.sinkOnloadForImages(op.getElement());
                     op.addHandler(iconLoadHandler, LoadEvent.getType());
                 }
@@ -237,10 +237,8 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void setTabIndex(int tabIndex) {
-        for (Iterator<Widget> iterator = panel.iterator(); iterator
-                .hasNext();) {
-            FocusWidget widget = (FocusWidget) iterator.next();
-            widget.setTabIndex(tabIndex);
+        for (Widget widget : panel) {
+            ((FocusWidget) widget).setTabIndex(tabIndex);
         }
     }
 
@@ -269,9 +267,10 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = panel.iterator();
-        if (iterator.hasNext()) {
-            ((Focusable) iterator.next()).setFocus(true);
+        Iterator<Widget> it = panel.iterator();
+        if (it.hasNext()) {
+            ((Focusable) it.next()).setFocus(true);
+
         }
     }
 

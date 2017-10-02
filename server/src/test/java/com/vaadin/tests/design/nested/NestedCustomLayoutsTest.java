@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.design.nested;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -57,7 +58,7 @@ public class NestedCustomLayoutsTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
         Design.write(rootLayout, out);
-        Document doc = Jsoup.parse(out.toString("UTF-8"));
+        Document doc = Jsoup.parse(out.toString(UTF_8.name()));
 
         assertThat(doc.head().child(0).attr("name"), is("package-mapping"));
         assertThat(doc.head().child(0).attr("content"), is(PACKAGE_MAPPING));

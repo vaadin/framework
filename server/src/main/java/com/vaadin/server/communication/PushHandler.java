@@ -48,7 +48,7 @@ import elemental.json.JsonException;
 
 /**
  * Handles incoming push connections and messages and dispatches them to the
- * correct {@link UI}/ {@link AtmospherePushConnection}
+ * correct {@link UI}/ {@link AtmospherePushConnection}.
  *
  * @author Vaadin Ltd
  * @since 7.1
@@ -164,7 +164,7 @@ public class PushHandler {
     }
 
     /**
-     * Suspends the given resource
+     * Suspends the given resource.
      *
      * @since 7.6
      * @param resource
@@ -308,7 +308,7 @@ public class PushHandler {
         // We don't want to use callWithUi here, as it assumes there's a client
         // request active and does requestStart and requestEnd among other
         // things.
-        if(event == null){
+        if (event == null) {
             getLogger().log(Level.SEVERE,
                     "Could not get event. This should never happen.");
             return;
@@ -316,7 +316,7 @@ public class PushHandler {
 
         AtmosphereResource resource = event.getResource();
 
-        if(resource == null){
+        if (resource == null) {
             getLogger().log(Level.SEVERE,
                     "Could not get resource. This should never happen.");
             return;

@@ -32,9 +32,9 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeaturesTest;
 @TestCategory("grid")
 public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
 
-    private static final String[] TOGGLE_LISTENER = new String[] { "Component",
+    private static final String[] TOGGLE_LISTENER = { "Component",
             "State", "ColumnVisibilityChangeListener" };
-    private static final String[] TOGGLE_HIDE_COLUMN_0 = new String[] {
+    private static final String[] TOGGLE_HIDE_COLUMN_0 = {
             "Component", "Columns", "Column 0", "Hidden" };
 
     private static final String COLUMN_0_BECAME_HIDDEN_MSG = "Visibility "

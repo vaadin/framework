@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.Focusable;
 
 /**
- * A ComplexPanel that can be focused
+ * A ComplexPanel that can be focused.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -113,7 +113,7 @@ public class FocusableComplexPanel extends ComplexPanel
     }
 
     /**
-     * Focus the panel
+     * Focus the panel.
      */
     @Override
     public void focus() {

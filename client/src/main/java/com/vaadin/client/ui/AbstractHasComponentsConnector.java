@@ -31,7 +31,7 @@ public abstract class AbstractHasComponentsConnector
     List<ComponentConnector> childComponents;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AbstractHasComponentsConnector() {
         addConnectorHierarchyChangeHandler(this);

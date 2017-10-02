@@ -256,10 +256,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     private float convertToPixels(String pos) {
         float posAsFloat;
         if (pos.indexOf("%") > 0) {
-            posAsFloat = Math
-                    .round(Float.parseFloat(pos.substring(0, pos.length() - 1))
-                            / 100 * (orientation == Orientation.HORIZONTAL
-                                    ? getOffsetWidth() : getOffsetHeight()));
+            posAsFloat = Math.round(
+                    Float.parseFloat(pos.substring(0, pos.length() - 1)) / 100
+                            * (orientation == Orientation.HORIZONTAL
+                                    ? getOffsetWidth()
+                                    : getOffsetHeight()));
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
         }
@@ -278,7 +279,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             float pixelPosition = Float
                     .parseFloat(pos.substring(0, pos.length() - 2));
             int offsetLength = orientation == Orientation.HORIZONTAL
-                    ? getOffsetWidth() : getOffsetHeight();
+                    ? getOffsetWidth()
+                    : getOffsetHeight();
 
             // Take splitter size into account at the edge
             if (pixelPosition + getSplitterSize() >= offsetLength) {
@@ -602,21 +604,21 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Called when starting drag resize
+     * Called when starting drag resize.
      *
      * @since 7.5.1
      */
-    abstract protected void startResize();
+    protected abstract void startResize();
 
     /**
-     * Called when stopping drag resize
+     * Called when stopping drag resize.
      *
      * @since 7.5.1
      */
-    abstract protected void stopResize();
+    protected abstract void stopResize();
 
     /**
-     * Gets the first container
+     * Gets the first container.
      *
      * @since 7.5.1
      * @return the firstContainer
@@ -626,7 +628,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Gets the second container
+     * Gets the second container.
      *
      * @since 7.5.1
      * @return the secondContainer

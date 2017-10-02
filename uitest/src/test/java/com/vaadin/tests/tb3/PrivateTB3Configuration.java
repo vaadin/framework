@@ -211,7 +211,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     public static String getConfiguredDeploymentHostname() {
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
-        if (hostName == null || "".equals(hostName)) {
+        if (hostName == null || hostName.isEmpty()) {
             hostName = findAutoHostname();
         }
 
@@ -232,7 +232,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String portString = getProperty(PORT_PROPERTY);
 
         int port = 8888;
-        if (portString != null && !"".equals(portString)) {
+        if (portString != null && !portString.isEmpty()) {
             port = Integer.parseInt(portString);
         }
 

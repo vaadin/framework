@@ -2,7 +2,6 @@ package com.vaadin.test.osgi.myapplication;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.annotations.Theme;
 import org.osgi.service.component.annotations.Component;
 
 import com.vaadin.annotations.VaadinServletConfiguration;

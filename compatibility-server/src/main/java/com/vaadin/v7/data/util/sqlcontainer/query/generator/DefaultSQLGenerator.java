@@ -47,7 +47,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
 
     /**
      * Create a new DefaultSqlGenerator instance that uses the given
-     * implementation of {@link StatementHelper}
+     * implementation of {@link StatementHelper}.
      *
      * @param statementHelper
      */
@@ -213,12 +213,12 @@ public class DefaultSQLGenerator implements SQLGenerator {
             if (!first) {
                 query.append(", ");
             }
-            query.append("?");
+            query.append('?');
             sh.addParameterValue(columnToValueMap.get(column),
                     item.getItemProperty(column).getType());
             first = false;
         }
-        query.append(")");
+        query.append(')');
         sh.setQueryString(query.toString());
         return sh;
     }
@@ -285,7 +285,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
     }
 
     /**
-     * Generates sorting rules as an ORDER BY -clause
+     * Generates sorting rules as an ORDER BY -clause.
      *
      * @param sb
      *            StringBuffer to which the clause is appended.

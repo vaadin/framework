@@ -9,16 +9,16 @@ import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxCombinedWithEnterShortcut extends TestBase {
-    final String[] cities = new String[] { "Berlin", "Brussels", "Helsinki",
-            "Madrid", "Oslo", "Paris", "Stockholm" };
+    final String[] cities = { "Berlin", "Brussels", "Helsinki", "Madrid",
+            "Oslo", "Paris", "Stockholm" };
 
     private Log log = new Log(5);
 
     @Override
     protected void setup() {
         final ComboBox l = new ComboBox("Please select a city");
-        for (int i = 0; i < cities.length; i++) {
-            l.addItem(cities[i]);
+        for (String city : cities) {
+            l.addItem(city);
         }
 
         l.setFilteringMode(FilteringMode.OFF);

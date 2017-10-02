@@ -49,4 +49,9 @@ public class ComboBoxPopupPositionEmbeddedInDivTest extends MultiBrowserTest {
         Assert.assertTrue("Popup should be left aligned with the combobox",
                 popupLocation.getX() == comboboxLocation.getX());
     }
+
+    @Override
+    protected Class<?> getUIClass() {
+        return ComboBoxEmbeddedInDiv.class;
+    }
 }

@@ -41,11 +41,11 @@ import com.vaadin.v7.ui.Table.TableContextClickEvent;
  */
 public class ContextClickListenerTest extends AbstractComponent {
 
-    private final static ContextClickEvent contextClickEvent = EasyMock
+    private static final ContextClickEvent contextClickEvent = EasyMock
             .createMock(ContextClickEvent.class);
-    private final static GridContextClickEvent gridContextClickEvent = EasyMock
+    private static final GridContextClickEvent gridContextClickEvent = EasyMock
             .createMock(GridContextClickEvent.class);
-    private final static TableContextClickEvent tableContextClickEvent = EasyMock
+    private static final TableContextClickEvent tableContextClickEvent = EasyMock
             .createMock(TableContextClickEvent.class);
 
     private final AssertListener contextListener = new AssertListener();

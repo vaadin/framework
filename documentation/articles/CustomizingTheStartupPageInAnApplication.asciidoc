@@ -1,3 +1,9 @@
+---
+title: Customizing The Startup Page In An Application
+order: 25
+layout: page
+---
+
 [[customizing-the-startup-page-in-an-application]]
 Customizing the startup page in an application
 ----------------------------------------------

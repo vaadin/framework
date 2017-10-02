@@ -26,7 +26,7 @@ public class CacheUpdateExceptionCausesTest {
     @Test
     public void testSingleCauseException() {
         Table table = new Table();
-        Throwable[] causes = new Throwable[] {
+        Throwable[] causes = {
                 new RuntimeException("Broken in one way.") };
 
         CacheUpdateException exception = new CacheUpdateException(table,
@@ -40,7 +40,7 @@ public class CacheUpdateExceptionCausesTest {
     @Test
     public void testMultipleCauseException() {
         Table table = new Table();
-        Throwable[] causes = new Throwable[] {
+        Throwable[] causes = {
                 new RuntimeException("Broken in the first way."),
                 new RuntimeException("Broken in the second way.") };
 

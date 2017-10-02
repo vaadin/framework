@@ -15,6 +15,8 @@
  */
 package com.vaadin.server.communication;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -61,7 +63,7 @@ public class PortletDummyRequestHandler implements RequestHandler {
         final OutputStream out = ((ResourceResponse) response)
                 .getPortletOutputStream();
         try (PrintWriter outWriter = new PrintWriter(
-                new BufferedWriter(new OutputStreamWriter(out, "UTF-8")))) {
+                new BufferedWriter(new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print("<html><body>dummy page</body></html>");
         }
 

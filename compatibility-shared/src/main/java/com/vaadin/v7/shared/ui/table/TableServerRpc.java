@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 
 /**
- * Client-to-server RPC interface for the Table component
+ * Client-to-server RPC interface for the Table component.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -28,7 +28,7 @@ import com.vaadin.v7.shared.ui.table.TableConstants.Section;
 public interface TableServerRpc extends ServerRpc {
 
     /**
-     * Informs the server that a context click happened inside of Table
+     * Informs the server that a context click happened inside of Table.
      */
     public void contextClick(String rowKey, String colKey, Section section,
             MouseEventDetails details);

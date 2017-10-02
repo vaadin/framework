@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -35,7 +36,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     protected ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    protected final ArrayList<String> tabKeys = new ArrayList<>();
+    protected final List<String> tabKeys = new ArrayList<>();
     /** For internal use only. May be removed or replaced in the future. */
     protected Set<String> disabledTabKeys = new HashSet<>();
 
@@ -62,7 +63,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     public abstract Iterator<Widget> getWidgetIterator();
 
     /**
-     * Clears current tabs and contents
+     * Clears current tabs and contents.
      */
     protected abstract void clearPaintables();
 
@@ -177,9 +178,9 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
      * The default is false, i.e. render tab captions as plain text
      *
      * @since 7.4
-     * @param captionAsHtml
-     *            true if the captions are rendered as HTML, false if rendered
-     *            as plain text
+     * @param tabCaptionsAsHtml
+     *            {@code true} if the captions are rendered as HTML,
+     *            {@code false} if rendered as plain text
      */
     public void setTabCaptionsAsHtml(boolean tabCaptionsAsHtml) {
         this.tabCaptionsAsHtml = tabCaptionsAsHtml;

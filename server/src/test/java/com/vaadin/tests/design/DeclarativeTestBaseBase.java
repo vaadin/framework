@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,21 +60,13 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
     }
 
     protected T read(String design) {
-        try {
-            return (T) Design
-                    .read(new ByteArrayInputStream(design.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return (T) Design
+                .read(new ByteArrayInputStream(design.getBytes(UTF_8)));
     }
 
     protected DesignContext readAndReturnContext(String design) {
-        try {
-            return Design.read(
-                    new ByteArrayInputStream(design.getBytes("UTF-8")), null);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        return Design.read(new ByteArrayInputStream(design.getBytes(UTF_8)),
+                null);
     }
 
     protected String write(T object, boolean writeData) {
@@ -90,7 +83,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             context.setRootComponent(object);
             Design.write(context, outputStream);
-            return outputStream.toString("UTF-8");
+            return outputStream.toString(UTF_8.name());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -268,7 +261,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
      */
     private String elementToHtml(Element producedElem, StringBuilder sb) {
         HashSet<String> booleanAttributes = new HashSet<>();
-        ArrayList<String> names = new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for (Attribute a : producedElem.attributes().asList()) {
             names.add(a.getKey());
             if (a instanceof BooleanAttribute) {
@@ -277,15 +270,15 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
         }
         Collections.sort(names);
 
-        sb.append("<").append(producedElem.tagName()).append("");
+        sb.append('<').append(producedElem.tagName());
         for (String attrName : names) {
-            sb.append(" ").append(attrName);
+            sb.append(' ').append(attrName);
             if (!booleanAttributes.contains(attrName)) {
-                sb.append("=").append("\'").append(producedElem.attr(attrName))
+                sb.append('=').append("\'").append(producedElem.attr(attrName))
                         .append("\'");
             }
         }
-        sb.append(">");
+        sb.append('>');
         for (Node child : producedElem.childNodes()) {
             if (child instanceof Element) {
                 elementToHtml((Element) child, sb);
@@ -294,7 +287,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
                 sb.append(text.trim());
             }
         }
-        sb.append("</").append(producedElem.tagName()).append(">");
+        sb.append("</").append(producedElem.tagName()).append('>');
         return sb.toString();
     }
 

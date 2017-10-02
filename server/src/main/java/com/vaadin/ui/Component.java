@@ -628,7 +628,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setId(String id);
 
     /**
-     * Gets currently set debug identifier
+     * Gets currently set debug identifier.
      *
      * @return current id, null if not set
      */

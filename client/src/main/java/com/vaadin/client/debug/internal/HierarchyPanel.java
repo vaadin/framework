@@ -16,7 +16,6 @@
 package com.vaadin.client.debug.internal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -50,9 +49,8 @@ public class HierarchyPanel extends FlowPanel {
     public void update() {
         // Try to keep track of currently open nodes and reopen them
         FastStringSet openNodes = FastStringSet.create();
-        Iterator<Widget> it = iterator();
-        while (it.hasNext()) {
-            collectOpenNodes(it.next(), openNodes);
+        for (Widget widget : this) {
+            collectOpenNodes(widget, openNodes);
         }
 
         clear();
@@ -90,9 +88,8 @@ public class HierarchyPanel extends FlowPanel {
             }
         }
         if (widget instanceof HasWidgets) {
-            Iterator<Widget> it = ((HasWidgets) widget).iterator();
-            while (it.hasNext()) {
-                collectOpenNodes(it.next(), openNodes);
+            for (Widget child : (HasWidgets) widget) {
+                collectOpenNodes(child, openNodes);
             }
         }
     }

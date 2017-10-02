@@ -50,7 +50,7 @@ public abstract class AbstractColorPickerConnector
             refreshColor();
 
             if (getState().showDefaultCaption && (getState().caption == null
-                    || "".equals(getState().caption))) {
+                    || getState().caption.isEmpty())) {
 
                 setCaption(getState().color);
             }
@@ -79,7 +79,7 @@ public abstract class AbstractColorPickerConnector
      */
     protected String getCaption() {
         if (getState().showDefaultCaption && (getState().caption == null
-                || "".equals(getState().caption))) {
+                || getState().caption.isEmpty())) {
             return getState().color;
         }
         return getState().caption;

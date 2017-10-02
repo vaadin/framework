@@ -181,8 +181,8 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private Range cached = Range.between(0, 0);
 
-    private final HashMap<Integer, T> indexToRowMap = new HashMap<>();
-    private final HashMap<Object, Integer> keyToIndexMap = new HashMap<>();
+    private final Map<Integer, T> indexToRowMap = new HashMap<>();
+    private final Map<Object, Integer> keyToIndexMap = new HashMap<>();
 
     /**
      * Map used to temporarily store rows invalidated by
@@ -882,7 +882,7 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
      * @return a non-null object that uniquely and consistently represents the
      *         row object
      */
-    abstract public Object getRowKey(T row);
+    public abstract Object getRowKey(T row);
 
     @Override
     public int size() {

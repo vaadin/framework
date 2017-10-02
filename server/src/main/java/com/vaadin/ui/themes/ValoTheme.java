@@ -602,7 +602,7 @@ public class ValoTheme {
     public static final String TABLE_NO_STRIPES = "no-stripes";
 
     /**
-     * See {@link #TABLE_NO_STRIPES}
+     * See {@link #TABLE_NO_STRIPES}.
      */
     public static final String TREETABLE_NO_STRIPES = TABLE_NO_STRIPES;
 
@@ -613,7 +613,7 @@ public class ValoTheme {
     public static final String TABLE_NO_VERTICAL_LINES = "no-vertical-lines";
 
     /**
-     * See {@link #TABLE_NO_VERTICAL_LINES}
+     * See {@link #TABLE_NO_VERTICAL_LINES}.
      */
     public static final String TREETABLE_NO_VERTICAL_LINES = TABLE_NO_VERTICAL_LINES;
 
@@ -624,7 +624,7 @@ public class ValoTheme {
     public static final String TABLE_NO_HORIZONTAL_LINES = "no-horizontal-lines";
 
     /**
-     * See {@link #TABLE_NO_HORIZONTAL_LINES}
+     * See {@link #TABLE_NO_HORIZONTAL_LINES}.
      */
     public static final String TREETABLE_NO_HORIZONTAL_LINES = TABLE_NO_HORIZONTAL_LINES;
 
@@ -636,7 +636,7 @@ public class ValoTheme {
     public static final String TABLE_NO_HEADER = "no-header";
 
     /**
-     * See {@link #TABLE_NO_HEADER}
+     * See {@link #TABLE_NO_HEADER}.
      */
     public static final String TREETABLE_NO_HEADER = TABLE_NO_HEADER;
 
@@ -647,7 +647,7 @@ public class ValoTheme {
     public static final String TABLE_BORDERLESS = "borderless";
 
     /**
-     * See {@link #TABLE_BORDERLESS}
+     * See {@link #TABLE_BORDERLESS}.
      */
     public static final String TREETABLE_BORDERLESS = TABLE_BORDERLESS;
 
@@ -658,7 +658,7 @@ public class ValoTheme {
     public static final String TABLE_COMPACT = "compact";
 
     /**
-     * See {@link #TABLE_COMPACT}
+     * See {@link #TABLE_COMPACT}.
      */
     public static final String TREETABLE_COMPACT = TABLE_COMPACT;
 
@@ -669,7 +669,7 @@ public class ValoTheme {
     public static final String TABLE_SMALL = "small";
 
     /**
-     * See {@link #TABLE_SMALL}
+     * See {@link #TABLE_SMALL}.
      */
     public static final String TREETABLE_SMALL = TABLE_SMALL;
 
@@ -1041,9 +1041,9 @@ public class ValoTheme {
      *
      * <p>
      * The text content of the logo should be very short, since the logo area
-     * only shows approximately three letters. Using one of the
-     * Vaadin Icons is a good way to quickly create a logo for your
-     * application. Vaadin Icons are included in the Valo theme.
+     * only shows approximately three letters. Using one of the Vaadin Icons is
+     * a good way to quickly create a logo for your application. Vaadin Icons
+     * are included in the Valo theme.
      * <p>
      *
      * <h4>Example</h4>

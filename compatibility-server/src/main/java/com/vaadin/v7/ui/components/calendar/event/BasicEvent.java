@@ -43,14 +43,14 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
     private boolean isAllDay;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public BasicEvent() {
 
     }
 
     /**
-     * Constructor for creating an event with the same start and end date
+     * Constructor for creating an event with the same start and end date.
      *
      * @param caption
      *            The caption for the event

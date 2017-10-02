@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +59,8 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
         beanItemContainer.removeAllItems();
 
-        Iterator<ClassName> it = nameToBean.values().iterator();
-        while (it.hasNext()) {
-            beanItemContainer.addBean(it.next());
+        for (ClassName name : nameToBean.values()) {
+            beanItemContainer.addBean(name);
         }
     }
 

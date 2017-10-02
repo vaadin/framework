@@ -50,7 +50,7 @@ import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 /**
- * Base class for vertical and horizontal ordered layouts
+ * Base class for vertical and horizontal ordered layouts.
  */
 public abstract class AbstractOrderedLayoutConnector
         extends AbstractLayoutConnector {
@@ -275,8 +275,9 @@ public abstract class AbstractOrderedLayoutConnector
             slot.setCaptionResizeListener(null);
         }
 
-        slot.setCaption(caption, icon, styles, error, showError, required,
-                enabled, child.getState().captionAsHtml);
+        slot.setCaption(caption, icon, styles, error,
+                child.getState().errorLevel, showError, required, enabled,
+                child.getState().captionAsHtml);
 
         AriaHelper.handleInputRequired(child.getWidget(), required);
         AriaHelper.handleInputInvalid(child.getWidget(), showError);
@@ -541,14 +542,10 @@ public abstract class AbstractOrderedLayoutConnector
         if (isVertical) {
             // Doesn't need height fix for vertical layouts
             return false;
-        }
-
-        else if (!isUndefinedHeight()) {
+        } else if (!isUndefinedHeight()) {
             // Fix not needed unless the height is undefined
             return false;
-        }
-
-        else if (!hasChildrenWithRelativeHeight
+        } else if (!hasChildrenWithRelativeHeight
                 && !hasChildrenWithMiddleAlignment) {
             // Already works if there are no relative heights or middle aligned
             // children
