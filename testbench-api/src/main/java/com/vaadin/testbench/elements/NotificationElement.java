@@ -30,7 +30,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 @ServerClass("com.vaadin.ui.Notification")
 public class NotificationElement extends AbstractElement {
     /**
-     * Closes a notification
+     * Closes a notification.
      *
      * @throws TimeoutException
      *             If a notification can not be closed and the timeout expires.
@@ -45,7 +45,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns the caption of the Notification element
+     * Returns the caption of the Notification element.
      *
      * @since 8.0
      * @return the caption of the Notification element
@@ -57,7 +57,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns description of the Notification element
+     * Returns description of the Notification element.
      *
      * @return description of the Notification element
      */
@@ -68,7 +68,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns type of the Notification element
+     * Returns type of the Notification element.
      *
      * @return type of the Notification element
      */

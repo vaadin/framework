@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ui.VUpload;
 
 /**
- * IE does not have onload, detect onload via readystatechange
+ * IE does not have onload, detect onload via readystatechange.
  *
  */
 public class UploadIFrameOnloadStrategyIE extends UploadIFrameOnloadStrategy {

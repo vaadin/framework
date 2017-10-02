@@ -141,15 +141,16 @@ public class ShortcutAction extends Action {
      * Insert one or more modifier characters before the character to use as
      * keycode. E.g <code>"&Save"</code> will make a shortcut responding to
      * ALT-S, <code>"E^xit"</code> will respond to CTRL-X.<br/>
-     * Multiple modifiers can be used, e.g <code>"&amp;^Delete"</code> will respond
-     * to CTRL-ALT-D (the order of the modifier characters is not important).
+     * Multiple modifiers can be used, e.g <code>"&amp;^Delete"</code> will
+     * respond to CTRL-ALT-D (the order of the modifier characters is not
+     * important).
      * </p>
      * <p>
      * The modifier characters will be removed from the caption. The modifier
      * character is be escaped by itself: two consecutive characters are turned
      * into the original character w/o the special meaning. E.g
-     * <code>"Save&amp;&amp;&amp;close"</code> will respond to ALT-C, and the caption will
-     * say "Save&amp;close".
+     * <code>"Save&amp;&amp;&amp;close"</code> will respond to ALT-C, and the
+     * caption will say "Save&amp;close".
      * </p>
      *
      * @param shorthandCaption
@@ -255,7 +256,7 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Key codes that can be used for shortcuts
+     * Key codes that can be used for shortcuts.
      *
      */
     public interface KeyCode extends Serializable {
@@ -387,7 +388,7 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Modifier key constants
+     * Modifier key constants.
      *
      */
     public interface ModifierKey extends Serializable {

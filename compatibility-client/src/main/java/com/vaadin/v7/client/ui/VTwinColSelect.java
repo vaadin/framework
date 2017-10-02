@@ -73,7 +73,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
     private final Panel panel;
 
     /**
-     * A ListBox which catches double clicks
+     * A ListBox which catches double clicks.
      *
      */
     public class DoubleClickListBox extends ListBox

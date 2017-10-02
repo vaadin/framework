@@ -42,7 +42,7 @@ public class PointerEventSupportImpl {
     }
 
     /**
-     * Initializes event support
+     * Initializes event support.
      */
     protected void init() {
 

@@ -69,7 +69,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open windows containing the provided UI
-     * class
+     * class.
      *
      * @param uiClass
      *            the UI class that should be opened when the extended component
@@ -81,7 +81,7 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     /**
      * Creates a window opener that will open windows containing the provided UI
-     * using the provided path
+     * using the provided path.
      *
      * @param uiClass
      *            the UI class that should be opened when the extended component
@@ -97,7 +97,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     /**
-     * Creates a window opener that will open windows to the provided URL
+     * Creates a window opener that will open windows to the provided URL.
      *
      * @param url
      *            the URL to open in the window
@@ -107,7 +107,7 @@ public class BrowserWindowOpener extends AbstractExtension {
     }
 
     /**
-     * Creates a window opener that will open window to the provided resource
+     * Creates a window opener that will open window to the provided resource.
      *
      * @param resource
      *            the resource to open in the window

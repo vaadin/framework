@@ -63,7 +63,7 @@ public enum EffectAllowed {
     ALL("all"),
 
     /**
-     * Default state, equivalent to ALL
+     * Default state, equivalent to ALL.
      */
     UNINITIALIZED("uninitialized");
 

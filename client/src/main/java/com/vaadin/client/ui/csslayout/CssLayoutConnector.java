@@ -37,7 +37,7 @@ import com.vaadin.ui.CssLayout;
 
 /**
  * Connects the server side widget {@link CssLayout} with the client side
- * counterpart {@link VCssLayout}
+ * counterpart {@link VCssLayout}.
  */
 @Connect(CssLayout.class)
 public class CssLayoutConnector extends AbstractLayoutConnector {

@@ -39,7 +39,7 @@ public interface ComponentConnector extends ServerConnector {
     public AbstractComponentState getState();
 
     /**
-     * Returns the widget for this {@link ComponentConnector}
+     * Returns the widget for this {@link ComponentConnector}.
      */
     public Widget getWidget();
 

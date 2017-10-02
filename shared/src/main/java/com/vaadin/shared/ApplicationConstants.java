@@ -55,7 +55,7 @@ public class ApplicationConstants implements Serializable {
     public static final String FRONTEND_PROTOCOL_PREFIX = "frontend://";
 
     /**
-     * Prefix used for theme resource URLs
+     * Prefix used for theme resource URLs.
      *
      * @see com.vaadin.server.ThemeResource
      * @since 7.5.0
@@ -156,14 +156,14 @@ public class ApplicationConstants implements Serializable {
     public static final String PUSH_ID_PARAMETER = "v-pushId";
 
     /**
-     * The name of the parameter used to transmit RPC invocations
+     * The name of the parameter used to transmit RPC invocations.
      *
      * @since 7.2
      */
     public static final String RPC_INVOCATIONS = "rpc";
 
     /**
-     * The name of the parameter used to transmit the CSRF token
+     * The name of the parameter used to transmit the CSRF token.
      *
      * @since 7.2
      */
@@ -199,7 +199,7 @@ public class ApplicationConstants implements Serializable {
 
     /**
      * The name of the parameter used for sending the widget set version to the
-     * server
+     * server.
      *
      * @since 7.6
      */

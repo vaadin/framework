@@ -168,7 +168,7 @@ public class SelectorPath {
     }
 
     /**
-     * Returns the name of the component described by given query fragment
+     * Returns the name of the component described by given query fragment.
      *
      * @param fragment
      *            Query fragment

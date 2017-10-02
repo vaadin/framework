@@ -60,7 +60,7 @@ public class SessionInitEvent extends EventObject {
     }
 
     /**
-     * Gets the Vaadin service from which this event originates
+     * Gets the Vaadin service from which this event originates.
      *
      * @return the Vaadin service instance
      */

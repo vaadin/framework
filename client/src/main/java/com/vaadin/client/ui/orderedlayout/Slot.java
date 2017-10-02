@@ -222,7 +222,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Returns the alignment for the slot
+     * Returns the alignment for the slot.
      *
      */
     public AlignmentInfo getAlignment() {
@@ -230,7 +230,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Sets the style names for the slot containing the widget
+     * Sets the style names for the slot containing the widget.
      *
      * @param stylenames
      *            The style names for the slot
@@ -248,7 +248,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Sets how the widget is aligned inside the slot
+     * Sets how the widget is aligned inside the slot.
      *
      * @param alignment
      *            The alignment inside the slot
@@ -336,7 +336,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Get the element which is added to make the spacing
+     * Get the element which is added to make the spacing.
      *
      * @return
      */
@@ -345,14 +345,14 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Does the slot have spacing
+     * Does the slot have spacing.
      */
     public boolean hasSpacing() {
         return getSpacingElement() != null;
     }
 
     /**
-     * Get the vertical amount in pixels of the spacing
+     * Get the vertical amount in pixels of the spacing.
      */
     protected int getVerticalSpacing() {
         if (spacer == null) {
@@ -364,7 +364,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Get the horizontal amount of pixels of the spacing
+     * Get the horizontal amount of pixels of the spacing.
      *
      * @return
      */
@@ -378,7 +378,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Set the position of the caption relative to the slot
+     * Set the position of the caption relative to the slot.
      *
      * @param captionPosition
      *            The position of the caption
@@ -403,14 +403,14 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Get the position of the caption relative to the slot
+     * Get the position of the caption relative to the slot.
      */
     public CaptionPosition getCaptionPosition() {
         return captionPosition;
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot.
      *
      * @param captionText
      *            The text of the caption
@@ -448,7 +448,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Set the caption of the slot as text
+     * Set the caption of the slot as text.
      *
      * @param captionText
      *            The text of the caption
@@ -473,7 +473,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot.
      *
      * @param captionText
      *            The text of the caption
@@ -501,7 +501,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Set the caption of the slot
+     * Set the caption of the slot.
      *
      * @param captionText
      *            The text of the caption
@@ -684,14 +684,14 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     }
 
     /**
-     * Does the slot have a caption
+     * Does the slot have a caption.
      */
     public boolean hasCaption() {
         return caption != null;
     }
 
     /**
-     * Get the slots caption element
+     * Get the slots caption element.
      */
     public com.google.gwt.user.client.Element getCaptionElement() {
         return DOM.asOld(caption);
@@ -700,7 +700,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     private boolean relativeWidth = false;
 
     /**
-     * Set if the slot has a relative width
+     * Set if the slot has a relative width.
      *
      * @param relativeWidth
      *            True if slot uses relative width, false if the slot has a
@@ -718,7 +718,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
     private boolean relativeHeight = false;
 
     /**
-     * Set if the slot has a relative height
+     * Set if the slot has a relative height.
      *
      * @param relativeHeight
      *            True if the slot uses a relative height, false if the slot has

@@ -24,7 +24,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.testbench.By;
 
 /**
- * TestBench Element API for TreeGrid
+ * TestBench Element API for TreeGrid.
  *
  * @author Vaadin Ltd
  */

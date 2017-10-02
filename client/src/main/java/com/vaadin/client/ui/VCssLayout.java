@@ -22,15 +22,15 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.StyleConstants;
 
 /**
- * VCCSlayout is a layout which supports configuring it's children with CSS
- * selectors
+ * VCssLayout is a layout which supports configuring it's children with CSS
+ * selectors.
  */
 public class VCssLayout extends FlowPanel {
 
     public static final String CLASSNAME = "v-csslayout";
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VCssLayout() {
         super();

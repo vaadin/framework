@@ -44,7 +44,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
- * Two col Layout that places caption on left col and field on right col
+ * Two col Layout that places caption on left col and field on right col.
  */
 public class VFormLayout extends SimplePanel {
 
@@ -378,8 +378,8 @@ public class VFormLayout extends SimplePanel {
 
                 // Hide the error indicator from screen reader, as this
                 // information is set directly at the input field
-                Roles.getFormRole()
-                        .setAriaHiddenState(errorIndicatorElement, true);
+                Roles.getFormRole().setAriaHiddenState(errorIndicatorElement,
+                        true);
 
                 ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);

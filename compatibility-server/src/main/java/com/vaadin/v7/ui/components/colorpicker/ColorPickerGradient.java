@@ -29,8 +29,8 @@ import com.vaadin.v7.ui.AbstractColorPicker.Coordinates2Color;
  * @since 7.0.0
  */
 @Deprecated
-public class ColorPickerGradient extends AbstractComponent implements
-        ColorSelector {
+public class ColorPickerGradient extends AbstractComponent
+        implements ColorSelector {
 
     private static final Method COLOR_CHANGE_METHOD;
     static {
@@ -129,7 +129,7 @@ public class ColorPickerGradient extends AbstractComponent implements
     }
 
     /**
-     * Notifies the listeners that the color has changed
+     * Notifies the listeners that the color has changed.
      * 
      * @param color
      *            The color which it changed to

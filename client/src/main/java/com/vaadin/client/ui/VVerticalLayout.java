@@ -19,14 +19,14 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 
 /**
- * Represents a layout where the children is ordered vertically
+ * Represents a layout where the children is ordered vertically.
  */
 public class VVerticalLayout extends VAbstractOrderedLayout {
 
     public static final String CLASSNAME = "v-verticallayout";
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VVerticalLayout() {
         super(true);

@@ -113,7 +113,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the column widths measured in pixels
+     * Returns the column widths measured in pixels.
      *
      * @return
      */
@@ -122,7 +122,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the row heights measured in pixels
+     * Returns the row heights measured in pixels.
      *
      * @return
      */
@@ -131,7 +131,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the spacing between the cells horizontally in pixels
+     * Returns the spacing between the cells horizontally in pixels.
      *
      * @return
      */
@@ -140,7 +140,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the spacing between the cells vertically in pixels
+     * Returns the spacing between the cells vertically in pixels.
      *
      * @return
      */

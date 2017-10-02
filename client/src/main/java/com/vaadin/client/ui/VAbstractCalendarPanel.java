@@ -87,7 +87,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Blur listener that listens to blur event from the panel
+     * Blur listener that listens to blur event from the panel.
      */
     public interface FocusOutListener {
         /**
@@ -1294,7 +1294,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handle the keyboard navigation when the resolution is set to MONTH
+     * Handle the keyboard navigation when the resolution is set to MONTH.
      *
      * @param keycode
      *            The keycode to handle
@@ -1350,7 +1350,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handle keyboard navigation what the resolution is set to DAY
+     * Handle keyboard navigation what the resolution is set to DAY.
      *
      * @param keycode
      *            The keycode to handle
@@ -1456,7 +1456,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The key code that was pressed
@@ -1796,7 +1796,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Returns the submit listener that listens to selection made from the panel
+     * Returns the submit listener that listens to selection made from the
+     * panel.
      *
      * @return The listener or NULL if no listener has been set
      */

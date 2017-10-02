@@ -1021,7 +1021,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     }
 
     /**
-     * The menu where the suggestions are rendered
+     * The menu where the suggestions are rendered.
      */
     public class SuggestionMenu extends MenuBar
             implements SubPartAware, LoadHandler {
@@ -1361,7 +1361,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         }
 
         /**
-         * Overridden to avoid selecting text when text input is disabled
+         * Overridden to avoid selecting text when text input is disabled.
          */
         @Override
         public void setSelectionRange(int pos, int length) {

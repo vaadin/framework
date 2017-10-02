@@ -18,7 +18,7 @@ package com.vaadin.client.event;
 import com.vaadin.client.event.PointerEvent.EventType;
 
 /**
- * Pointer event support class for IE 10 ("ms" prefixed pointer events)
+ * Pointer event support class for IE 10 ("ms" prefixed pointer events).
  *
  * @since 7.2
  * @author Vaadin Ltd

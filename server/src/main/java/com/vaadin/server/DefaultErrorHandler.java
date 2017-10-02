@@ -98,7 +98,7 @@ public class DefaultErrorHandler implements ErrorHandler {
 
     /**
      * Returns the AbstractComponent associated with the given error if such can
-     * be found
+     * be found.
      *
      * @param event
      *            The error to investigate

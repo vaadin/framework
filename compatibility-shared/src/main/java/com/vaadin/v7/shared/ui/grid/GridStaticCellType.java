@@ -23,17 +23,17 @@ package com.vaadin.v7.shared.ui.grid;
  */
 public enum GridStaticCellType {
     /**
-     * Text content
+     * Text content.
      */
     TEXT,
 
     /**
-     * HTML content
+     * HTML content.
      */
     HTML,
 
     /**
-     * Widget content
+     * Widget content.
      */
     WIDGET;
 }

@@ -175,7 +175,7 @@ public class DragAndDropWrapper extends CustomComponent
 
     public enum DragStartMode {
         /**
-         * {@link DragAndDropWrapper} does not start drag events at all
+         * {@link DragAndDropWrapper} does not start drag events at all.
          */
         NONE,
         /**

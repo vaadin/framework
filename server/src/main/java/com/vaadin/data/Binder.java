@@ -139,7 +139,7 @@ public class Binder<BEAN> implements Serializable {
         /**
          * Unbinds the binding from its respective {@code Binder} Removes any
          * {@code ValueChangeListener} {@code Registration} from associated
-         * {@code HasValue}
+         * {@code HasValue}.
          *
          * @since 8.2
          */
@@ -853,7 +853,7 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Removes this binding from its binder and unregisters the
-         * {@code ValueChangeListener} from any bound {@code HasValue}
+         * {@code ValueChangeListener} from any bound {@code HasValue}.
          *
          * @since 8.2
          */

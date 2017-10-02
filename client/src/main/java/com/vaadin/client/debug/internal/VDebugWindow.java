@@ -748,7 +748,7 @@ public final class VDebugWindow extends VOverlay {
     }
 
     /**
-     * Called when a response is received
+     * Called when a response is received.
      *
      * @param ac
      * @param uidl

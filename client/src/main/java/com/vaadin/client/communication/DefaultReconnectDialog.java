@@ -32,7 +32,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 
 /**
- * The default implementation of the reconnect dialog
+ * The default implementation of the reconnect dialog.
  *
  * @since 7.6
  * @author Vaadin Ltd

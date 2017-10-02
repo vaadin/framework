@@ -299,7 +299,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Set correct tab index for disabled text field in IE as the value set in
      * setTextFieldEnabled(...) gets overridden in
-     * TextualDateConnection.updateFromUIDL(...)
+     * TextualDateConnection.updateFromUIDL(...).
      *
      * @since 7.3.1
      */
@@ -382,7 +382,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     }
 
     /**
-     * Opens the calendar panel popup
+     * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
 
@@ -476,7 +476,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Sets the content of a special field for assistive devices, so that they
      * can recognize the change and inform the user (reading out in case of
-     * screen reader)
+     * screen reader).
      *
      * @param selectedDate
      *            Date that is currently selected
@@ -545,7 +545,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     }
 
     /**
-     * Closes the open popup panel
+     * Closes the open popup panel.
      */
     public void closeCalendarPanel() {
         if (open) {

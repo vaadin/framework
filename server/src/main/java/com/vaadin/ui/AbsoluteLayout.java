@@ -433,7 +433,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the 'z-index' attribute; the visual stacking order
+         * Sets the 'z-index' attribute; the visual stacking order.
          *
          * @param zIndex
          *            The z-index for the component.
@@ -538,7 +538,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'top' attribute
+         * Gets the unit for the 'top' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -548,7 +548,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'top' attribute
+         * Sets the unit for the 'top' attribute.
          *
          * @param topUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -560,7 +560,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'right' attribute
+         * Gets the unit for the 'right' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -570,7 +570,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'right' attribute
+         * Sets the unit for the 'right' attribute.
          *
          * @param rightUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -582,7 +582,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'bottom' attribute
+         * Gets the unit for the 'bottom' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -592,7 +592,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'bottom' attribute
+         * Sets the unit for the 'bottom' attribute.
          *
          * @param bottomUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the
@@ -604,7 +604,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Gets the unit for the 'left' attribute
+         * Gets the unit for the 'left' attribute.
          *
          * @return See {@link Sizeable} UNIT_SYMBOLS for a description of the
          *         available units.
@@ -614,7 +614,7 @@ public class AbsoluteLayout extends AbstractLayout
         }
 
         /**
-         * Sets the unit for the 'left' attribute
+         * Sets the unit for the 'left' attribute.
          *
          * @param leftUnits
          *            See {@link Sizeable} UNIT_SYMBOLS for a description of the

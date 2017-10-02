@@ -2025,7 +2025,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Get a rendered row by its key
+     * Get a rendered row by its key.
      *
      * @param key
      *            The key to search with
@@ -4071,7 +4071,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns column alignments for visible columns
+         * Returns column alignments for visible columns.
          */
         public char[] getColumnAlignments() {
             final char[] aligns = new char[visibleCells.size()];
@@ -4101,7 +4101,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * A cell in the footer
+     * A cell in the footer.
      */
     public class FooterCell extends Widget {
         private final Element td = DOM.createTD();
@@ -4139,7 +4139,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the text of the footer
+         * Sets the text of the footer.
          *
          * @param footerText
          *            The text in the footer
@@ -4153,7 +4153,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Set alignment of the text in the cell
+         * Set alignment of the text in the cell.
          *
          * @param c
          *            The alignment which can be ALIGN_CENTER, ALIGN_LEFT,
@@ -4177,7 +4177,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Get the alignment of the text int the cell
+         * Get the alignment of the text int the cell.
          *
          * @return Returns either ALIGN_CENTER, ALIGN_LEFT or ALIGN_RIGHT
          */
@@ -4262,7 +4262,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the width to undefined
+         * Sets the width to undefined.
          */
         public void setUndefinedWidth() {
             definedWidth = false;
@@ -4289,7 +4289,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the expand ratio of the cell
+         * Sets the expand ratio of the cell.
          *
          * @param floatAttribute
          *            The expand ratio
@@ -4299,7 +4299,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns the expand ratio of the cell
+         * Returns the expand ratio of the cell.
          *
          * @return The expand ratio
          */
@@ -4317,7 +4317,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Handle column clicking
+         * Handle column clicking.
          */
 
         @Override
@@ -4344,7 +4344,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Handles a event on the captions
+         * Handles a event on the captions.
          *
          * @param event
          *            The event to handle
@@ -4375,7 +4375,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns the column key of the column
+         * Returns the column key of the column.
          *
          * @return The column key
          */
@@ -4545,7 +4545,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Gets a footer cell which represents the given columnId
+         * Gets a footer cell which represents the given columnId.
          *
          * @param cid
          *            The columnId
@@ -4557,7 +4557,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Gets a footer cell by using a column index
+         * Gets a footer cell by using a column index.
          *
          * @param index
          *            The index of the column
@@ -4572,7 +4572,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Updates the cells contents when updateUIDL request is received
+         * Updates the cells contents when updateUIDL request is received.
          *
          * @param uidl
          *            The UIDL
@@ -4643,7 +4643,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Set a footer cell for a specified column index
+         * Set a footer cell for a specified column index.
          *
          * @param index
          *            The index
@@ -4674,7 +4674,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Remove a cell by using the columnId
+         * Remove a cell by using the columnId.
          *
          * @param colKey
          *            The columnId to remove
@@ -4685,7 +4685,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Enable a column (Sets the footer cell)
+         * Enable a column (Sets the footer cell).
          *
          * @param cid
          *            The columnId
@@ -4703,14 +4703,14 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Disable browser measurement of the table width
+         * Disable browser measurement of the table width.
          */
         public void disableBrowserIntelligence() {
             hTableContainer.getStyle().setWidth(WRAPPER_WIDTH, Unit.PX);
         }
 
         /**
-         * Enable browser measurement of the table width
+         * Enable browser measurement of the table width.
          */
         public void enableBrowserIntelligence() {
             hTableContainer.getStyle().clearWidth();
@@ -4728,7 +4728,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Swap cells when the column are dragged
+         * Swap cells when the column are dragged.
          *
          * @param oldIndex
          *            The old index of the cell
@@ -6523,7 +6523,7 @@ public class VScrollTable extends FlowPanel
             }
 
             /**
-             * Toggle the selection of the row
+             * Toggle the selection of the row.
              */
             public void toggleSelection() {
                 selected = !selected;
@@ -6791,7 +6791,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Deselects all items
+     * Deselects all items.
      */
     public void deselectAll() {
         for (Widget w : scrollBody) {
@@ -7294,7 +7294,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Helper function to build html snippet for column or row headers
+     * Helper function to build html snippet for column or row headers.
      *
      * @param uidl
      *            possibly with values caption and icon
@@ -7328,7 +7328,7 @@ public class VScrollTable extends FlowPanel
 
     /**
      * This method has logic which rows needs to be requested from server when
-     * user scrolls
+     * user scrolls.
      */
 
     @Override
@@ -7650,7 +7650,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Moves the selection head to a specific row
+     * Moves the selection head to a specific row.
      *
      * @param row
      *            The row to where the selection head should move
@@ -7711,7 +7711,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Handles the keyboard events handled by the table
+     * Handles the keyboard events handled by the table.
      *
      * @param keycode
      *            The key code received

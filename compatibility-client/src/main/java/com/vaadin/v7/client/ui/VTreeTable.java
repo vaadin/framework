@@ -766,7 +766,7 @@ public class VTreeTable extends VScrollTable {
 
     /**
      * Icons rendered into first actual column in TreeTable, not to row header
-     * cell
+     * cell.
      */
     @Override
     protected String buildCaptionHtmlSnippet(UIDL uidl) {

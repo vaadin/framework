@@ -50,7 +50,7 @@ import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutServerRpc;
 import com.vaadin.shared.ui.orderedlayout.AbstractOrderedLayoutState;
 
 /**
- * Base class for vertical and horizontal ordered layouts
+ * Base class for vertical and horizontal ordered layouts.
  */
 public abstract class AbstractOrderedLayoutConnector
         extends AbstractLayoutConnector {

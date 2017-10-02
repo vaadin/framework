@@ -36,7 +36,7 @@ import com.vaadin.client.Util;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
- * Base class for ordered layouts
+ * Base class for ordered layouts.
  */
 public class VAbstractOrderedLayout extends FlowPanel {
 
@@ -206,7 +206,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Remove a slot from the layout
+     * Remove a slot from the layout.
      *
      * @param widget
      * @return
@@ -304,7 +304,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Set the layout manager for the layout
+     * Set the layout manager for the layout.
      *
      * @param manager
      *            The layout manager to use
@@ -314,7 +314,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Get the layout manager used by this layout
+     * Get the layout manager used by this layout.
      *
      */
     public LayoutManager getLayoutManager() {
@@ -451,7 +451,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Set the margin of the layout
+     * Set the margin of the layout.
      *
      * @param marginInfo
      *            The margin information
@@ -466,7 +466,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Turn on or off spacing in the layout
+     * Turn on or off spacing in the layout.
      *
      * @param spacing
      *            True if spacing should be used, false if not

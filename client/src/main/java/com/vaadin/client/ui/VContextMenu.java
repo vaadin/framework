@@ -104,7 +104,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Sets the element from which to build menu
+     * Sets the element from which to build menu.
      *
      * @param ao
      */

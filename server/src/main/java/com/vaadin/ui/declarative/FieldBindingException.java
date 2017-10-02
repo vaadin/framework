@@ -17,7 +17,7 @@ package com.vaadin.ui.declarative;
 
 /**
  * Exception that is thrown when an error occurs during field binding when
- * reading a design template
+ * reading a design template.
  *
  * @since 7.4
  * @author Vaadin Ltd
