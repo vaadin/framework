@@ -210,7 +210,7 @@ public class Design implements Serializable {
     }
 
     /**
-     * Default implementation of {@link ComponentMapper},
+     * Default implementation of {@link ComponentMapper}.
      *
      * @since 7.5.0
      */
@@ -741,7 +741,7 @@ public class Design implements Serializable {
     }
 
     /**
-     * Loads a design from the given input stream
+     * Loads a design from the given input stream.
      *
      * @param design
      *            The stream to read the design from

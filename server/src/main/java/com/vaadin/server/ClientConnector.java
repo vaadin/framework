@@ -32,7 +32,7 @@ import elemental.json.JsonObject;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
- * with the client side
+ * with the client side.
  *
  * @author Vaadin Ltd
  * @since 7.0.0
@@ -167,7 +167,7 @@ public interface ClientConnector extends Connector {
     public boolean isConnectorEnabled();
 
     /**
-     * Returns the type of the shared state for this connector
+     * Returns the type of the shared state for this connector.
      *
      * @return The type of the state. Must never return null.
      */
@@ -223,11 +223,11 @@ public interface ClientConnector extends Connector {
      * Notifies the connector that it is connected to a VaadinSession (and
      * therefore also to a UI).
      * <p>
-     * The caller of this method is {@link Connector#setParent(ClientConnector)} if the
-     * parent is itself already attached to the session. If not, the parent will
-     * call the {@link #attach()} for all its children when it is attached to
-     * the session. This method is always called before the connector's data is
-     * sent to the client-side for the first time.
+     * The caller of this method is {@link Connector#setParent(ClientConnector)}
+     * if the parent is itself already attached to the session. If not, the
+     * parent will call the {@link #attach()} for all its children when it is
+     * attached to the session. This method is always called before the
+     * connector's data is sent to the client-side for the first time.
      * </p>
      *
      * <p>
@@ -264,7 +264,7 @@ public interface ClientConnector extends Connector {
     public void removeExtension(Extension extension);
 
     /**
-     * Returns the UI this connector is attached to
+     * Returns the UI this connector is attached to.
      *
      * @return The UI this connector is attached to or null if it is not
      *         attached to any UI

@@ -31,7 +31,7 @@ import com.vaadin.v7.ui.Calendar;
 public class CalendarComponentEvent extends Component.Event {
 
     /**
-     * Set the source of the event
+     * Set the source of the event.
      *
      * @param source
      *            The source calendar

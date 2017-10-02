@@ -53,7 +53,7 @@ public class ShortcutActionHandler {
 
         /**
          * Returns the ShortCutActionHandler currently used or null if there is
-         * currently no shortcutactionhandler
+         * currently no shortcutactionhandler.
          */
         ShortcutActionHandler getShortcutActionHandler();
     }

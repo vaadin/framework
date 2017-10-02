@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */

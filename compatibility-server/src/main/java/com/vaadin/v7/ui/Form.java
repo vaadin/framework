@@ -1298,7 +1298,7 @@ public class Form extends AbstractField<Object>
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         if (ownActionManager != null) {

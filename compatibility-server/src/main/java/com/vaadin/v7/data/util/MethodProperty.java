@@ -64,7 +64,8 @@ import com.vaadin.v7.util.SerializerHelper;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -102,8 +103,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
@@ -752,7 +752,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
          */
         public MethodProperty getMethodProperty() {
             return (property instanceof MethodProperty)
-                    ? (MethodProperty) property : null;
+                    ? (MethodProperty) property
+                    : null;
         }
 
         /**
@@ -777,7 +778,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * The instance used by this property
+     * The instance used by this property.
      *
      * @return the instance used for fetching the property value
      * @since 7.7.7

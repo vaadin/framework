@@ -757,7 +757,7 @@ public class TableQuery extends AbstractTransactionalQuery
     }
 
     /**
-     * Adds RowIdChangeListener to this query
+     * Adds RowIdChangeListener to this query.
      */
     @Override
     public void addRowIdChangeListener(RowIdChangeListener listener) {
@@ -778,7 +778,7 @@ public class TableQuery extends AbstractTransactionalQuery
     }
 
     /**
-     * Removes the given RowIdChangeListener from this query
+     * Removes the given RowIdChangeListener from this query.
      */
     @Override
     public void removeRowIdChangeListener(RowIdChangeListener listener) {

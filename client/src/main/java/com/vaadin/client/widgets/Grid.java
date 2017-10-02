@@ -483,7 +483,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param columns
              *            the columns which header should be merged
@@ -521,7 +521,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param cells
              *            The cells to merge. Must be from the same row.
@@ -961,7 +961,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Returns the events consumed by the header
+         * Returns the events consumed by the header.
          *
          * @return a collection of BrowserEvents
          */
@@ -2450,11 +2450,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          * ignored.
          *
          * @param grid
-         *         the {@code Grid} instance from which the event originated
+         *            the {@code Grid} instance from which the event originated
          * @param targetElement
-         *         the element from which the event originated
+         *            the element from which the event originated
          * @return {@code true} if the event should be ignored, {@code false} if
-         * it should be handled
+         *         it should be handled
          * @since 8.2
          */
         protected boolean ignoreEventFromTarget(Grid<?> grid,
@@ -8523,7 +8523,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Adds a scroll handler to this grid
+     * Adds a scroll handler to this grid.
      *
      * @param handler
      *            the scroll handler to add

@@ -558,19 +558,21 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * TODO refine doc Setter for new item handler that is called when user adds
-     * new item in newItemAllowed mode.
+     * TODO refine doc Setter for new item handler, which is called when user
+     * adds new item in {@code newItemAllowed} mode.
      *
      * @param newItemHandler
+     *            The new item handler
      */
     public void setNewItemHandler(NewItemHandler newItemHandler) {
         this.newItemHandler = newItemHandler;
     }
 
     /**
-     * TODO refine doc
+     * Returns the new item handler, which is called when user adds new item in
+     * {@code newItemAllowed} mode.
      *
-     * @return
+     * @return NewItemHandler
      */
     public NewItemHandler getNewItemHandler() {
         if (newItemHandler == null) {
@@ -821,7 +823,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Gets the Property identified by the given itemId and propertyId from the
-     * Container
+     * Container.
      *
      * @see Container#getContainerProperty(Object, Object)
      */
@@ -2127,7 +2129,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         /**
          * Constructor that automatically converts itemIdOver key to
-         * corresponding item Id
+         * corresponding item Id.
          *
          */
         protected AbstractSelectTargetDetails(
@@ -2193,7 +2195,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         /**
          * Called by Table when a cell (and row) is painted or a item is painted
-         * in Tree
+         * in Tree.
          *
          * @param source
          *            The source of the generator, the Tree or Table the

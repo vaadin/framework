@@ -178,7 +178,7 @@ public class Action implements Serializable {
     public interface Container extends Serializable {
 
         /**
-         * Registers a new action handler for this container
+         * Registers a new action handler for this container.
          *
          * @param actionHandler
          *            the new handler to be added.

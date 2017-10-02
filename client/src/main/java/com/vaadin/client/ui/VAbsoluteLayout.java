@@ -28,10 +28,10 @@ import com.vaadin.client.VCaption;
 
 public class VAbsoluteLayout extends ComplexPanel {
 
-    /** Tag name for widget creation */
+    /** Tag name for widget creation. */
     public static final String TAGNAME = "absolutelayout";
 
-    /** Class name, prefix in styling */
+    /** Class name, prefix in styling. */
     public static final String CLASSNAME = "v-absolutelayout";
 
     private DivElement marginElement;
@@ -39,7 +39,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     protected final Element canvas = DOM.createDiv();
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
@@ -83,7 +83,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Does this layout contain a widget
+     * Does this layout contain a widget.
      *
      * @param widget
      *            The widget to check
@@ -152,7 +152,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Sets a caption for a contained widget
+     * Sets a caption for a contained widget.
      *
      * @param child
      *            The child widget to set the caption for
@@ -192,7 +192,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Get the caption for a widget
+     * Get the caption for a widget.
      *
      * @param child
      *            The child widget to get the caption of
@@ -206,7 +206,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Get the pixel width of an slot in the layout
+     * Get the pixel width of an slot in the layout.
      *
      * @param child
      *            The widget in the layout.
@@ -221,7 +221,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Get the pixel height of an slot in the layout
+     * Get the pixel height of an slot in the layout.
      *
      * @param child
      *            The widget in the layout
@@ -237,7 +237,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Get the wrapper for a widget
+     * Get the wrapper for a widget.
      *
      * @param child
      *            The child to get the wrapper for
@@ -281,7 +281,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Updates all style names contained in the layout
+     * Updates all style names contained in the layout.
      *
      * @param primaryStyleName
      *            The style name to use as primary
@@ -364,7 +364,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
-     * Internal wrapper for wrapping widgets in the Absolute layout
+     * Internal wrapper for wrapping widgets in the Absolute layout.
      */
     protected class AbsoluteWrapper extends SimplePanel {
         private String css;
@@ -378,7 +378,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         private String[] extraStyleNames;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param child
          *            The child to wrap
@@ -388,14 +388,14 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
 
         /**
-         * Get the caption of the wrapper
+         * Get the caption of the wrapper.
          */
         public VCaption getCaption() {
             return caption;
         }
 
         /**
-         * Set the caption for the wrapper
+         * Set the caption for the wrapper.
          *
          * @param caption
          *            The caption for the wrapper
@@ -410,7 +410,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
 
         /**
-         * Removes the wrapper caption and itself from the layout
+         * Removes the wrapper caption and itself from the layout.
          */
         public void destroy() {
             if (caption != null) {
@@ -420,7 +420,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
 
         /**
-         * Set the position for the wrapper in the layout
+         * Set the position for the wrapper in the layout.
          *
          * @param position
          *            The position string
@@ -484,7 +484,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         }
 
         /**
-         * Updates the style names using the primary style name as prefix
+         * Updates the style names using the primary style name as prefix.
          */
         protected void updateStyleNames() {
             setStyleName(

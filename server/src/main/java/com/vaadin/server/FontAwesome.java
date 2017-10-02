@@ -778,7 +778,7 @@ public enum FontAwesome implements FontIcon {
     }
 
     /**
-     * Finds an instance of FontAwesome with given codepoint
+     * Finds an instance of FontAwesome with given codepoint.
      *
      * @since 7.5.0
      * @param codepoint

@@ -1311,7 +1311,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     }
 
     /**
-     * Gets the theme currently in use by this UI
+     * Gets the theme currently in use by this UI.
      *
      * @return the theme name
      */

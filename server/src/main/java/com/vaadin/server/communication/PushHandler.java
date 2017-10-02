@@ -48,7 +48,7 @@ import elemental.json.JsonException;
 
 /**
  * Handles incoming push connections and messages and dispatches them to the
- * correct {@link UI}/ {@link AtmospherePushConnection}
+ * correct {@link UI}/ {@link AtmospherePushConnection}.
  *
  * @author Vaadin Ltd
  * @since 7.1
@@ -164,7 +164,7 @@ public class PushHandler {
     }
 
     /**
-     * Suspends the given resource
+     * Suspends the given resource.
      *
      * @since 7.6
      * @param resource

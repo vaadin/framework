@@ -273,7 +273,7 @@ public interface RowContainer {
             throws IndexOutOfBoundsException, IllegalStateException;
 
     /**
-     * Returns the root element of RowContainer
+     * Returns the root element of RowContainer.
      *
      * @return RowContainer root element
      */

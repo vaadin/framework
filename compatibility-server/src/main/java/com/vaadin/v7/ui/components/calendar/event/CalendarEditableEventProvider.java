@@ -17,7 +17,7 @@
 package com.vaadin.v7.ui.components.calendar.event;
 
 /**
- * An event provider which allows adding and removing events
+ * An event provider which allows adding and removing events.
  *
  * @since 7.1.0
  * @author Vaadin Ltd.
@@ -26,7 +26,7 @@ package com.vaadin.v7.ui.components.calendar.event;
 public interface CalendarEditableEventProvider extends CalendarEventProvider {
 
     /**
-     * Adds an event to the event provider
+     * Adds an event to the event provider.
      *
      * @param event
      *            The event to add
@@ -34,7 +34,7 @@ public interface CalendarEditableEventProvider extends CalendarEventProvider {
     void addEvent(CalendarEvent event);
 
     /**
-     * Removes an event from the event provider
+     * Removes an event from the event provider.
      *
      * @param event
      *            The event

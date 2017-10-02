@@ -895,7 +895,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Override if required
+     * Override if required.
      *
      * @param context
      * @return

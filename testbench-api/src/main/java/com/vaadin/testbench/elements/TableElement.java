@@ -52,7 +52,7 @@ public class TableElement extends AbstractSelectElement {
     }
 
     /**
-     * Return table row element by zero-based index
+     * Return table row element by zero-based index.
      *
      * @return table row element by zero-based index
      */
@@ -78,7 +78,7 @@ public class TableElement extends AbstractSelectElement {
     }
 
     /**
-     * Function to get footer cell with given column index
+     * Function to get footer cell with given column index.
      *
      * @param column
      *            0 based column index
@@ -130,7 +130,7 @@ public class TableElement extends AbstractSelectElement {
     }
 
     /**
-     * Fetches the context menu for the table
+     * Fetches the context menu for the table.
      *
      * @return {@link com.vaadin.testbench.elements.TableElement.ContextMenuElement}
      * @throws java.util.NoSuchElementException

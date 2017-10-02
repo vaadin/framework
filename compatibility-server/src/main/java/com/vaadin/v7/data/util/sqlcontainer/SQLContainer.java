@@ -65,7 +65,7 @@ public class SQLContainer implements Container, Container.Filterable,
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = CACHE_RATIO x pageLength */
+    /** Number of items to cache = CACHE_RATIO x pageLength. */
     public static final int CACHE_RATIO = 2;
 
     /** Amount of cache to overlap with previous page */
@@ -128,7 +128,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Creates and initializes SQLContainer using the given QueryDelegate
+     * Creates and initializes SQLContainer using the given QueryDelegate.
      *
      * @param delegate
      *            QueryDelegate implementation
@@ -1493,7 +1493,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**************************************************/
 
     /**
-     * Adds a RowIdChangeListener to the QueryDelegate
+     * Adds a RowIdChangeListener to the QueryDelegate.
      *
      * @param listener
      */
@@ -1514,7 +1514,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Removes a RowIdChangeListener from the QueryDelegate
+     * Removes a RowIdChangeListener from the QueryDelegate.
      *
      * @param listener
      */

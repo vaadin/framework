@@ -48,7 +48,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Utility methods which are related to client side code only
+ * Utility methods which are related to client side code only.
  */
 public class WidgetUtil {
 
@@ -66,7 +66,7 @@ public class WidgetUtil {
 
     /**
      * Redirects the browser to the given url or refreshes the page if url is
-     * null
+     * null.
      *
      * @since 7.6
      * @param url
@@ -418,7 +418,7 @@ public class WidgetUtil {
     }
 
     /**
-     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}.
      *
      * @since 7.2.6
      * @param elem
@@ -791,7 +791,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-
+    
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -806,7 +806,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-
+    
      }-*/;
 
     /**
@@ -820,7 +820,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-
+    
         }
     }-*/;
 
@@ -829,10 +829,11 @@ public class WidgetUtil {
      * DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
-     * {@code C}, this method will not find {@code W} but returns {@code C}.
-     * This may also be the case with other Composite-like classes that hijack
-     * the event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W} but returns {@code C}. This may also be
+     * the case with other Composite-like classes that hijack the event handling
+     * of their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -848,11 +849,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      * <p>
      * Only accepts the exact class {@code class1} if not null.
      *
@@ -872,11 +874,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link com.google.gwt.user.client.ui.Composite Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -927,7 +930,7 @@ public class WidgetUtil {
     }
 
     /**
-     * Force webkit to redraw an element
+     * Force webkit to redraw an element.
      *
      * @param element
      *            The element that should be redrawn
@@ -1173,12 +1176,12 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-
+    
        return null;
      }-*/;
 
     /**
-     * Gets currently focused element and checks if it's editable
+     * Gets currently focused element and checks if it's editable.
      *
      * @since 7.4
      *
@@ -1244,11 +1247,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-
+    
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-
+    
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1257,12 +1260,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-
+    
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-
+    
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1270,7 +1273,7 @@ public class WidgetUtil {
 
     /**
      * Checks if the given event is either a touch event or caused by the left
-     * mouse button
+     * mouse button.
      *
      * @param event
      * @return true if the event is a touch event or caused by the left mouse
@@ -1711,7 +1714,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-
+    
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1881,17 +1884,17 @@ public class WidgetUtil {
          * {@code prefix-errorLevel} format.
          *
          * @param element
-         *         element to apply the style name to
+         *            element to apply the style name to
          * @param prefix
-         *         part of the style name before the error level string
+         *            part of the style name before the error level string
          * @param errorLevel
-         *         error level for which the style will be applied
+         *            error level for which the style will be applied
          */
         public static void setErrorLevelStyle(Element element, String prefix,
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
-                String className =
-                        prefix + "-" + errorLevelValue.toString().toLowerCase();
+                String className = prefix + "-"
+                        + errorLevelValue.toString().toLowerCase();
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {

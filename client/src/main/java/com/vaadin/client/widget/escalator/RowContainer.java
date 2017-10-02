@@ -129,8 +129,7 @@ public interface RowContainer {
          *            row elements.
          * @since 8.1
          */
-        public void setNewRowCallback(
-                Consumer<List<TableRowElement>> consumer);
+        public void setNewRowCallback(Consumer<List<TableRowElement>> consumer);
     }
 
     /**
@@ -289,7 +288,7 @@ public interface RowContainer {
             throws IndexOutOfBoundsException, IllegalStateException;
 
     /**
-     * Returns the root element of RowContainer
+     * Returns the root element of RowContainer.
      *
      * @return RowContainer root element
      */

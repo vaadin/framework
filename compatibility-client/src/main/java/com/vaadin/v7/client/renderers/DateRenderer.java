@@ -23,7 +23,7 @@ import com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat;
 import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 /**
- * A renderer for rendering dates into cells
+ * A renderer for rendering dates into cells.
  *
  * @since 7.4
  * @author Vaadin Ltd

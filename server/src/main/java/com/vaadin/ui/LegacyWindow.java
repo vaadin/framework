@@ -35,7 +35,7 @@ public class LegacyWindow extends UI {
     private LegacyApplication application;
 
     /**
-     * Create a new legacy window
+     * Create a new legacy window.
      */
     public LegacyWindow() {
         super(new VerticalLayout());
@@ -43,7 +43,7 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Creates a new legacy window with the given caption
+     * Creates a new legacy window with the given caption.
      *
      * @param caption
      *            the caption of the window
@@ -54,7 +54,7 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Creates a legacy window with the given caption and content layout
+     * Creates a legacy window with the given caption and content layout.
      *
      * @param caption
      * @param content

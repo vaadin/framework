@@ -21,7 +21,7 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.v7.shared.AbstractFieldState;
 
 /**
- * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}
+ * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}.
  *
  * @since 7.1
  * @author Vaadin Ltd

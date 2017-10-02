@@ -30,7 +30,7 @@ import java.io.Writer;
 @SuppressWarnings("serial")
 public class UnsupportedBrowserHandler extends SynchronizedRequestHandler {
 
-    /** Cookie used to ignore browser checks */
+    /** Cookie used to ignore browser checks. */
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
     @Override
@@ -64,6 +64,7 @@ public class UnsupportedBrowserHandler extends SynchronizedRequestHandler {
         try (Writer page = response.getWriter()) {
             WebBrowser b = VaadinSession.getCurrent().getBrowser();
 
+            // @formatter:off
             page.write(
                     "<html>"
                             + "<head>"
@@ -129,11 +130,12 @@ public class UnsupportedBrowserHandler extends SynchronizedRequestHandler {
                             + (b.isIE()
                                     ? "<script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>"
                                             + "<p>If you can not upgrade your browser, please consider trying <a onclick=\"CFInstall.check({mode:'overlay'});return false;\" href=\"http://www.google.com/chromeframe\">Chrome Frame</a>.</p>"
-                                    : "") //
+                                    : "")
                             + "<p><sub><a onclick=\"document.cookie='"
                             + FORCE_LOAD_COOKIE
                             + "';window.location.reload();return false;\" href=\"#\">Continue without updating</a> (not recommended)</sub></p>"
                             + "</body>\n" + "</html>");
+            // @formatter:on
         }
     }
 }

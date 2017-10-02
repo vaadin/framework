@@ -98,7 +98,7 @@ public class DebugButton extends Button {
     }
 
     /**
-     * Indicates wheter the Button is currently in its active state or not
+     * Indicates wheter the Button is currently in its active state or not.
      *
      * @return true if the Button is active, false otherwise
      */

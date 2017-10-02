@@ -159,7 +159,7 @@ public class Button extends AbstractFocusable
         }
 
         /**
-         * Constructor with mouse details
+         * Constructor with mouse details.
          *
          * @param source
          *            The source where the click took place
@@ -564,7 +564,7 @@ public class Button extends AbstractFocusable
     }
 
     /**
-     * Return HTML rendering setting
+     * Return HTML rendering setting.
      *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise

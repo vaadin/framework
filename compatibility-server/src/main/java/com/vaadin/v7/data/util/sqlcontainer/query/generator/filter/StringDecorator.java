@@ -61,7 +61,7 @@ public class StringDecorator implements Serializable {
     }
 
     /**
-     * Groups a string by surrounding it in parenthesis
+     * Groups a string by surrounding it in parenthesis.
      *
      * @param str
      *            the string to group
