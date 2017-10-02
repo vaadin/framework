@@ -120,9 +120,8 @@ public class ListenerMethod implements EventListener, Serializable {
     private static Method findHighestMethod(Class<?> cls, String method,
             Class<?>[] paramTypes) {
         Class<?>[] ifaces = cls.getInterfaces();
-        for (int i = 0; i < ifaces.length; i++) {
-            Method ifaceMethod = findHighestMethod(ifaces[i], method,
-                    paramTypes);
+        for (Class<?> c : ifaces) {
+            Method ifaceMethod = findHighestMethod(c, method, paramTypes);
             if (ifaceMethod != null) {
                 return ifaceMethod;
             }
@@ -134,11 +133,10 @@ public class ListenerMethod implements EventListener, Serializable {
                 return parentMethod;
             }
         }
-        Method[] methods = cls.getMethods();
-        for (int i = 0; i < methods.length; i++) {
+        for (Method m : cls.getMethods()) {
             // we ignore parameter types for now - you need to add this
-            if (methods[i].getName().equals(method)) {
-                return methods[i];
+            if (m.getName().equals(method)) {
+                return m;
             }
         }
         return null;
@@ -245,11 +243,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
             }
         }
         if (method == null) {
@@ -355,11 +352,9 @@ public class ListenerMethod implements EventListener, Serializable {
             Object[] arguments) throws IllegalArgumentException {
 
         // Find the correct method
-        final Method[] methods = target.getClass().getMethods();
-        Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
             }
         }
         if (method == null) {
@@ -456,11 +451,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
             }
         }
         if (method == null) {

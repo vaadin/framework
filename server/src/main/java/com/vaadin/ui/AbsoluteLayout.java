@@ -302,9 +302,8 @@ public class AbsoluteLayout extends AbstractLayout
                 return;
             }
 
-            String[] cssProperties = css.split(";");
-            for (int i = 0; i < cssProperties.length; i++) {
-                String[] keyValuePair = cssProperties[i].split(":");
+            for (String cssProperty : css.split(";")) {
+                String[] keyValuePair = cssProperty.split(":");
                 String key = keyValuePair[0].trim();
                 if (key.isEmpty()) {
                     continue;

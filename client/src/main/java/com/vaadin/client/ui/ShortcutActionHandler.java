@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -188,8 +187,8 @@ class ShortcutKeyCombination {
 
         modifiersMask = 0;
         if (modifiers != null) {
-            for (int i = 0; i < modifiers.length; i++) {
-                switch (modifiers[i]) {
+            for (int modifier : modifiers) {
+                switch (modifier) {
                 case ALT:
                     modifiersMask = modifiersMask
                             | KeyboardListener.MODIFIER_ALT;

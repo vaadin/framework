@@ -526,11 +526,10 @@ public class IndexedContainer
 
         // Sends event to listeners listening all value changes
         if (propertyValueChangeListeners != null) {
-            final Object[] l = propertyValueChangeListeners.toArray();
             final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                     source);
-            for (int i = 0; i < l.length; i++) {
-                ((Property.ValueChangeListener) l[i]).valueChange(event);
+            for (Object l : propertyValueChangeListeners.toArray()) {
+                ((Property.ValueChangeListener) l).valueChange(event);
             }
         }
 
@@ -544,9 +543,8 @@ public class IndexedContainer
                 if (listenerList != null) {
                     final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                             source);
-                    Object[] listeners = listenerList.toArray();
-                    for (int i = 0; i < listeners.length; i++) {
-                        ((Property.ValueChangeListener) listeners[i])
+                    for (Object listener : listenerList.toArray()) {
+                        ((Property.ValueChangeListener) listener)
                                 .valueChange(event);
                     }
                 }

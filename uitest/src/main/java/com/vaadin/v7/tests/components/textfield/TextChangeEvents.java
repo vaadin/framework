@@ -81,9 +81,9 @@ public class TextChangeEvents extends TestBase {
      */
     private class VaadinDeveloperNameField extends TextField
             implements TextChangeListener {
-        private String[] names = { "Matti Tahvonen",
-                "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
-                "Marko Grönroos", "Artur Signell" };
+        private String[] names = { "Matti Tahvonen", "Marc Englund",
+                "Joonas Lehtinen", "Jouni Koivuviita", "Marko Grönroos",
+                "Artur Signell" };
 
         public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
@@ -123,9 +123,9 @@ public class TextChangeEvents extends TestBase {
 
         private String findMatch(String currentTextContent) {
             if (!currentTextContent.isEmpty()) {
-                for (int i = 0; i < names.length; i++) {
-                    if (names[i].startsWith(currentTextContent)) {
-                        return names[i];
+                for (String name : names) {
+                    if (name.startsWith(currentTextContent)) {
+                        return name;
                     }
                 }
             }

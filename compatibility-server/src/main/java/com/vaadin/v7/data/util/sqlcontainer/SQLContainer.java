@@ -1460,11 +1460,10 @@ public class SQLContainer implements Container, Container.Filterable,
 
     protected void fireContentsChange() {
         if (itemSetChangeListeners != null) {
-            final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new SQLContainer.ItemSetChangeEvent(
                     this);
-            for (int i = 0; i < l.length; i++) {
-                ((Container.ItemSetChangeListener) l[i])
+            for (Object l : itemSetChangeListeners.toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }

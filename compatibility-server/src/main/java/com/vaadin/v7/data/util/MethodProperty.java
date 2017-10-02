@@ -351,26 +351,26 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         this.type = type;
 
         // Find set and get -methods
-        final Method[] m = instance.getClass().getMethods();
+        final Method[] methods = instance.getClass().getMethods();
 
         // Finds get method
         boolean found = false;
-        for (int i = 0; i < m.length; i++) {
+        for (Method m : methods) {
 
             // Tests the name of the get Method
-            if (!m[i].getName().equals(getMethodName)) {
+            if (!m.getName().equals(getMethodName)) {
 
                 // name does not match, try next method
                 continue;
             }
 
             // Tests return type
-            if (!type.equals(m[i].getReturnType())) {
+            if (!type.equals(m.getReturnType())) {
                 continue;
             }
 
             // Tests the parameter types
-            final Class<?>[] c = m[i].getParameterTypes();
+            final Class<?>[] c = m.getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -395,7 +395,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                                     + "-method");
                 } else {
                     found = true;
-                    getMethod = m[i];
+                    getMethod = m;
                 }
             }
         }
@@ -409,17 +409,17 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
             // Finds setMethod
             found = false;
-            for (int i = 0; i < m.length; i++) {
+            for (Method m : methods) {
 
                 // Checks name
-                if (!m[i].getName().equals(setMethodName)) {
+                if (!m.getName().equals(setMethodName)) {
 
                     // name does not match, try next method
                     continue;
                 }
 
                 // Checks parameter compatibility
-                final Class<?>[] c = m[i].getParameterTypes();
+                final Class<?>[] c = m.getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -448,7 +448,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                                         + "-method");
                     } else {
                         found = true;
-                        setMethod = m[i];
+                        setMethod = m;
                     }
                 }
             }

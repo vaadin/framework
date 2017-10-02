@@ -144,8 +144,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             throw new IllegalArgumentException(
                     "Invalid property name '" + propertyName + "'");
         }
-        for (int i = 0; i < simplePropertyNames.length; i++) {
-            String simplePropertyName = simplePropertyNames[i].trim();
+        for (String simplePropertyName : simplePropertyNames) {
+            simplePropertyName = simplePropertyName.trim();
             if (!simplePropertyName.isEmpty()) {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;

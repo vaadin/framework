@@ -695,20 +695,19 @@ public class Table extends AbstractSelect implements Action.Container,
         // Checks that the new visible columns contains no nulls, properties
         // exist and that there are no duplicates before adding them to newVC.
         final Collection<?> properties = getContainerPropertyIds();
-        for (int i = 0; i < visibleColumns.length; i++) {
-            if (visibleColumns[i] == null) {
+        for (Object id : visibleColumns) {
+            if (id == null) {
                 throw new NullPointerException("Ids must be non-nulls");
-            } else if (!properties.contains(visibleColumns[i])
-                    && !columnGenerators.containsKey(visibleColumns[i])) {
+            } else if (!properties.contains(id)
+                    && !columnGenerators.containsKey(id)) {
                 throw new IllegalArgumentException(
                         "Ids must exist in the Container or as a generated column, missing id: "
-                                + visibleColumns[i]);
-            } else if (newVC.contains(visibleColumns[i])) {
+                                + id);
+            } else if (newVC.contains(id)) {
                 throw new IllegalArgumentException(
-                        "Ids must be unique, duplicate id: "
-                                + visibleColumns[i]);
+                        "Ids must be unique, duplicate id: " + id);
             } else {
-                newVC.add(visibleColumns[i]);
+                newVC.add(id);
             }
         }
 
@@ -1476,11 +1475,10 @@ public class Table extends AbstractSelect implements Action.Container,
             return;
         }
         final LinkedList<Object> newOrder = new LinkedList<Object>();
-        for (int i = 0; i < columnOrder.length; i++) {
-            if (columnOrder[i] != null
-                    && visibleColumns.contains(columnOrder[i])) {
-                visibleColumns.remove(columnOrder[i]);
-                newOrder.add(columnOrder[i]);
+        for (Object id : columnOrder) {
+            if (id != null && visibleColumns.contains(id)) {
+                visibleColumns.remove(id);
+                newOrder.add(id);
             }
         }
         for (final Object columnId : visibleColumns) {
@@ -2848,9 +2846,9 @@ public class Table extends AbstractSelect implements Action.Container,
          * selected on the client side (the ones that the client side is aware
          * of).
          */
-        for (int i = 0; i < ka.length; i++) {
+        for (String k : ka) {
             // key to id
-            final Object id = itemIdMapper.get(ka[i]);
+            final Object id = itemIdMapper.get(k);
             if (!isNullSelectionAllowed()
                     && (id == null || id == getNullSelectionItemId())) {
                 // skip empty selection if nullselection is not allowed
@@ -2892,8 +2890,8 @@ public class Table extends AbstractSelect implements Action.Container,
     private Set<Object> getCurrentlyRenderedItemIds() {
         HashSet<Object> ids = new HashSet<Object>();
         if (pageBuffer != null) {
-            for (int i = 0; i < pageBuffer[CELL_ITEMID].length; i++) {
-                ids.add(pageBuffer[CELL_ITEMID][i]);
+            for (Object id : pageBuffer[CELL_ITEMID]) {
+                ids.add(id);
             }
         }
         return ids;
@@ -4486,8 +4484,8 @@ public class Table extends AbstractSelect implements Action.Container,
         // may be null if the table has not been rendered yet (e.g. not attached
         // to a layout)
         if (null != cells) {
-            for (int i = 0; i < cells[CELL_ITEMID].length; i++) {
-                visible.add(cells[CELL_ITEMID][i]);
+            for (Object id : cells[CELL_ITEMID]) {
+                visible.add(id);
             }
         }
 
