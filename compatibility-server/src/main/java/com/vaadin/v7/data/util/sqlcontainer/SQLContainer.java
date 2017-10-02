@@ -1462,7 +1462,7 @@ public class SQLContainer implements Container, Container.Filterable,
         if (itemSetChangeListeners != null) {
             final Container.ItemSetChangeEvent event = new SQLContainer.ItemSetChangeEvent(
                     this);
-            for (Object l : itemSetChangeListeners.toArray()) {
+            for (Object l : itemSetChangeListeners) {
                 ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }

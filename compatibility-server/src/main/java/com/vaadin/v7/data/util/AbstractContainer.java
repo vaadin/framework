@@ -220,7 +220,7 @@ public abstract class AbstractContainer implements Container {
     protected void fireContainerPropertySetChange(
             Container.PropertySetChangeEvent event) {
         if (getPropertySetChangeListeners() != null) {
-            for (Object l : getPropertySetChangeListeners().toArray()) {
+            for (Object l : getPropertySetChangeListeners()) {
                 ((Container.PropertySetChangeListener) l)
                         .containerPropertySetChange(event);
             }
@@ -245,7 +245,7 @@ public abstract class AbstractContainer implements Container {
      */
     protected void fireItemSetChange(ItemSetChangeEvent event) {
         if (getItemSetChangeListeners() != null) {
-            for (Object l : getItemSetChangeListeners().toArray()) {
+            for (Object l : getItemSetChangeListeners()) {
                 ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }

@@ -197,7 +197,7 @@ public class EventRouter implements MethodEventSource {
 
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
-            for (Object l : listenerList.toArray()) {
+            for (Object l : listenerList) {
                 ListenerMethod listenerMethod = (ListenerMethod) l;
                 if (null != errorHandler) {
                     try {

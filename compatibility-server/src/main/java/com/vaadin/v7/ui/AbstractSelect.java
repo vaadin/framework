@@ -1720,7 +1720,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 && !propertySetEventListeners.isEmpty()) {
             final Container.PropertySetChangeEvent event = new PropertySetChangeEvent(
                     this);
-            for (Object l : propertySetEventListeners.toArray()) {
+            for (Object l : propertySetEventListeners) {
                 ((Container.PropertySetChangeListener) l)
                         .containerPropertySetChange(event);
             }
@@ -1735,7 +1735,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
             final Container.ItemSetChangeEvent event = new ItemSetChangeEvent(
                     this);
-            for (Object l : itemSetEventListeners.toArray()) {
+            for (Object l : itemSetEventListeners) {
                 ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }

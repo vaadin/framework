@@ -528,7 +528,7 @@ public class IndexedContainer
         if (propertyValueChangeListeners != null) {
             final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                     source);
-            for (Object l : propertyValueChangeListeners.toArray()) {
+            for (Object l : propertyValueChangeListeners) {
                 ((Property.ValueChangeListener) l).valueChange(event);
             }
         }
@@ -543,14 +543,13 @@ public class IndexedContainer
                 if (listenerList != null) {
                     final Property.ValueChangeEvent event = new IndexedContainer.PropertyValueChangeEvent(
                             source);
-                    for (Object listener : listenerList.toArray()) {
+                    for (Object listener : listenerList) {
                         ((Property.ValueChangeListener) listener)
                                 .valueChange(event);
                     }
                 }
             }
         }
-
     }
 
     @Override

@@ -657,11 +657,10 @@ public class Form extends AbstractField<Object>
      *         (and only if) the return value is <code>true</code>.
      */
     public boolean removeAllProperties() {
-        final Object[] properties = propertyIds.toArray();
         boolean success = true;
 
-        for (int i = 0; i < properties.length; i++) {
-            if (!removeItemProperty(properties[i])) {
+        for (Object property : propertyIds) {
+            if (!removeItemProperty(property)) {
                 success = false;
             }
         }
@@ -809,13 +808,12 @@ public class Form extends AbstractField<Object>
 
         // Move fields from previous layout
         if (getLayout() != null) {
-            final Object[] properties = propertyIds.toArray();
-            for (int i = 0; i < properties.length; i++) {
-                Field<?> f = getField(properties[i]);
+            for (Object property : propertyIds) {
+                Field<?> f = getField(property);
                 detachField(f);
                 if (layout instanceof CustomLayout) {
                     ((CustomLayout) layout).addComponent(f,
-                            properties[i].toString());
+                            property.toString());
                 } else {
                     layout.addComponent(f);
                 }

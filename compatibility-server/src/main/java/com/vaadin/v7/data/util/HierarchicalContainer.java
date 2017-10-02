@@ -615,7 +615,7 @@ public class HierarchicalContainer extends IndexedContainer
         boolean success = true;
         Collection<?> children2 = container.getChildren(itemId);
         if (children2 != null) {
-            for (Object o : children2.toArray()) {
+            for (Object o : children2) {
                 boolean removeItemRecursively = removeItemRecursively(container,
                         o);
                 if (!removeItemRecursively) {

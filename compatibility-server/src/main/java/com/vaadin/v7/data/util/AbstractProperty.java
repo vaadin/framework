@@ -166,7 +166,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
         if (readOnlyStatusChangeListeners != null) {
             final Property.ReadOnlyStatusChangeEvent event = new ReadOnlyStatusChangeEvent(
                     this);
-            for (Object l : readOnlyStatusChangeListeners.toArray()) {
+            for (Object l : readOnlyStatusChangeListeners) {
                 ((Property.ReadOnlyStatusChangeListener) l)
                         .readOnlyStatusChange(event);
             }
@@ -245,7 +245,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     protected void fireValueChange() {
         if (valueChangeListeners != null) {
             final Property.ValueChangeEvent event = new ValueChangeEvent(this);
-            for (Object l : valueChangeListeners.toArray()) {
+            for (Object l : valueChangeListeners) {
                 ((Property.ValueChangeListener) l).valueChange(event);
             }
         }

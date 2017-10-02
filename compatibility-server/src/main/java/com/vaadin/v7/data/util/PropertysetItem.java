@@ -261,7 +261,7 @@ public class PropertysetItem
         if (propertySetChangeListeners != null) {
             final Item.PropertySetChangeEvent event = new PropertysetItem.PropertySetChangeEvent(
                     this);
-            for (Object l : propertySetChangeListeners.toArray()) {
+            for (Object l : propertySetChangeListeners) {
                 ((Item.PropertySetChangeListener) l)
                         .itemPropertySetChange(event);
             }
