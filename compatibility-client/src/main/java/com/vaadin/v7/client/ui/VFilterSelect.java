@@ -1686,11 +1686,7 @@ public class VFilterSelect extends Composite
      *         last page
      */
     public boolean hasNextPage() {
-        if (pageLength > 0 && totalMatches > (currentPage + 1) * pageLength) {
-            return true;
-        } else {
-            return false;
-        }
+        return pageLength > 0 && totalMatches > (currentPage + 1) * pageLength;
     }
 
     /**
