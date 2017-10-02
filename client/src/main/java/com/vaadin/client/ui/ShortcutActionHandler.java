@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;

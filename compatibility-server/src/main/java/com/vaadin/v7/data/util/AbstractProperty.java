@@ -18,7 +18,6 @@ package com.vaadin.v7.data.util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.logging.Logger;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValueProvider;
@@ -33,7 +32,8 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  *
- * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 public abstract class AbstractProperty<T> implements Property<T>,
