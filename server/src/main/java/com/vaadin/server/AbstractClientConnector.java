@@ -757,16 +757,8 @@ public abstract class AbstractClientConnector
         if (eventRouter == null) {
             eventRouter = new EventRouter();
         }
-        boolean needRepaint = !eventRouter.hasListeners(eventType);
-        Registration registration = eventRouter.addListener(eventType, target,
-                method);
-
-        if (needRepaint) {
-            ComponentStateUtil.addRegisteredEventListener(getState(),
-                    eventIdentifier);
-        }
-
-        return registration;
+        return eventRouter.addListener(eventType, target, method,
+                eventIdentifier, getState());
     }
 
     /**
@@ -789,8 +781,8 @@ public abstract class AbstractClientConnector
      *
      * <p>
      * This method additionally informs the event-api to stop routing events
-     * with the given eventIdentifier to the components handleEvent function
-     * call.
+     * with the given {@code eventIdentifier} to the components handleEvent
+     * function call.
      * </p>
      *
      * <p>

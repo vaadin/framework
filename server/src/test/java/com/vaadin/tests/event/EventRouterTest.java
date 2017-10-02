@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.event;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Method;
 
 import org.easymock.EasyMock;
@@ -23,7 +26,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.event.EventRouter;
+import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.server.ErrorHandler;
+import com.vaadin.shared.Registration;
+import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.util.ReflectTools;
@@ -106,5 +112,16 @@ public class EventRouterTest {
         EasyMock.replay(component, listener, listener2, errorHandler);
         router.fireEvent(new Component.Event(component), errorHandler);
         EasyMock.verify(listener, listener2, errorHandler);
+    }
+
+    @Test
+    public void registrationToRemoveRegisteredEventListener() {
+        SharedState state = new SharedState();
+        Listener listener2 = EasyMock.createMock(Component.Listener.class);
+        Registration registration = router.addListener(ClickEvent.class,
+                listener2, COMPONENT_EVENT_METHOD, "click", state);
+        assertTrue(!state.registeredEventListeners.isEmpty());
+        registration.remove();
+        assertNull(state.registeredEventListeners);
     }
 }
