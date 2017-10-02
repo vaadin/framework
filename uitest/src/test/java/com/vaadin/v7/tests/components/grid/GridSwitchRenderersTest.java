@@ -15,11 +15,12 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -37,8 +38,7 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertTrue(
-                "Initial rendering of column 1 is not unformatted text",
+        assertTrue("Initial rendering of column 1 is not unformatted text",
                 cellTextIsUnformatted(grid.getCell(0, 1).getText()));
 
         // NOTE: must click at 5,5 because of Valo and rendering in Chrome
@@ -46,12 +46,12 @@ public class GridSwitchRenderersTest extends MultiBrowserTest {
         CheckBoxElement cb = $(CheckBoxElement.class).first();
         cb.click(5, 5);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Column 1 data has not been rendered with HTMLRenderer after renderer swap",
                 cellTextIsHTMLFormatted(grid.getCell(0, 1).getText()));
         cb.click(5, 5);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Column 1 data has not been re-rendered as text after renderer swap",
                 cellTextIsUnformatted(grid.getCell(0, 1).getText()));
     }

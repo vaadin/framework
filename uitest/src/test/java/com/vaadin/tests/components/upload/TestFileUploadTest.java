@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.upload;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +26,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -59,7 +60,7 @@ public class TestFileUploadTest extends MultiBrowserTest {
                 md5(getTempFileContents()));
 
         String actual = getLogRow(0);
-        Assert.assertEquals("Upload log row does not match expected", expected,
+        assertEquals("Upload log row does not match expected", expected,
                 actual);
     }
 

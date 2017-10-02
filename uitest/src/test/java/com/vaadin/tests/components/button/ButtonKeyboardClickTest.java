@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.button;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -52,56 +53,56 @@ public class ButtonKeyboardClickTest extends MultiBrowserTest {
 
     private void checkCoordinates(WebElement button) {
         int xRelative = getValue("xRelative");
-        Assert.assertTrue(
+        assertTrue(
                 "X relative click coordinate is greater than middle of the button",
                 button.getSize().getWidth() / 2 >= xRelative - 1);
-        Assert.assertTrue(
+        assertTrue(
                 "X relative click coordinate is lower than middle of the button",
                 button.getSize().getWidth() / 2 <= xRelative + 1);
 
         int yRelative = getValue("yRelative");
-        Assert.assertTrue(
+        assertTrue(
                 "Y relative click coordinate is greater than middle of the button",
                 button.getSize().getHeight() / 2 >= yRelative - 1);
-        Assert.assertTrue(
+        assertTrue(
                 "Y relative click coordinate is lower than middle of the button",
                 button.getSize().getHeight() / 2 <= yRelative + 1);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Client X click cooridnate is lower than X button coordinate",
                 getValue("x") > button.getLocation().getX());
-        Assert.assertTrue(
+        assertTrue(
                 "Client X click cooridnate is greater than right button "
                         + "border coordinate",
                 getValue("x") < button.getLocation().getX()
                         + button.getSize().getWidth());
 
-        Assert.assertTrue(
+        assertTrue(
                 "Client Y click cooridnate is lower than Y button coordinate",
                 getValue("y") > button.getLocation().getY());
-        Assert.assertTrue(
+        assertTrue(
                 "Client Y click cooridnate is greater than bottom button "
                         + "border coordinate",
                 getValue("y") < button.getLocation().getY()
                         + button.getSize().getHeight());
 
-        Assert.assertTrue(
+        assertTrue(
                 "Client X click cooridnate is greater than X middle button "
                         + "coordinate",
                 button.getLocation().getX()
                         + button.getSize().getWidth() / 2 >= getValue("x") - 1);
-        Assert.assertTrue(
+        assertTrue(
                 "Client Y click cooridnate is greater than Y middle button coordinate",
                 button.getLocation().getY()
                         + button.getSize().getHeight() / 2 >= getValue("y")
                                 - 1);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Client X click cooridnate is lower than X middle button "
                         + "coordinate",
                 button.getLocation().getX()
                         + button.getSize().getWidth() / 2 <= getValue("x") + 1);
-        Assert.assertTrue(
+        assertTrue(
                 "Client Y click cooridnate is lower than Y middle button coordinate",
                 button.getLocation().getY()
                         + button.getSize().getHeight() / 2 <= getValue("y")

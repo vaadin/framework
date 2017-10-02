@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.logging.Level;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -35,7 +35,7 @@ public class InitialFrozenColumnsTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        Assert.assertFalse("Notification was present",
+        assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
 
         WebElement cell = $(GridElement.class).first().getCell(0, 0);
@@ -47,7 +47,7 @@ public class InitialFrozenColumnsTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL("frozen=3");
 
-        Assert.assertFalse("Notification was present",
+        assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
         assertNoDebugMessage(Level.SEVERE);
         WebElement cell = $(GridElement.class).first().getCell(0, 2);

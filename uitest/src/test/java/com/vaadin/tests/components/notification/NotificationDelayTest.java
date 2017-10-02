@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.notification;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -35,7 +36,7 @@ public class NotificationDelayTest extends MultiBrowserTest {
     public void testDelay() throws InterruptedException {
         openTestURL();
 
-        Assert.assertTrue("No notification found", hasNotification());
+        assertTrue("No notification found", hasNotification());
 
         waitUntil(new ExpectedCondition<Boolean>() {
 

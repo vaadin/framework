@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -35,7 +36,7 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
 
         GridElement gridElement = $(GridElement.class).first();
 
-        Assert.assertFalse(
+        assertFalse(
                 "Loading indicator should not be visible before disabling waitForVaadin",
                 isLoadingIndicatorVisible());
 
@@ -58,7 +59,7 @@ public class LoadingIndicatorTest extends GridBasicFeaturesTest {
         // Wait for potentially triggered loading indicator to become visible
         Thread.sleep(500);
 
-        Assert.assertFalse(
+        assertFalse(
                 "Loading indicator should not be visible when fetching rows that are not visible",
                 isLoadingIndicatorVisible());
 

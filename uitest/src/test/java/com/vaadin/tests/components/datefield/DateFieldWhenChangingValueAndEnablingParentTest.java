@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -68,11 +70,10 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
         boolean hasClass = hasCssClass(id, "v-disabled");
         boolean fieldEnabled = !hasClass;
         if (assertEnabled) {
-            Assert.assertTrue(
-                    "Field " + id.getAttribute("id") + " should be enabled",
+            assertTrue("Field " + id.getAttribute("id") + " should be enabled",
                     fieldEnabled);
         } else {
-            Assert.assertFalse(
+            assertFalse(
                     "Field " + id.getAttribute("id") + " should be disabled",
                     fieldEnabled);
         }
@@ -86,12 +87,12 @@ public class DateFieldWhenChangingValueAndEnablingParentTest
         boolean textinputEnabled = (disabledAttr == null);
 
         if (enabled) {
-            Assert.assertTrue(
+            assertTrue(
                     "Field " + id.getAttribute("id")
                             + " text field should be enabled",
                     textinputEnabled);
         } else {
-            Assert.assertFalse(
+            assertFalse(
                     "Field " + id.getAttribute("id")
                             + " text field should be disabled",
                     textinputEnabled);

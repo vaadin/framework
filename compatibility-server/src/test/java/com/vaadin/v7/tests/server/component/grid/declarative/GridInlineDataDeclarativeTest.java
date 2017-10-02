@@ -117,7 +117,7 @@ public class GridInlineDataDeclarativeTest extends GridDeclarativeTestBase {
 
         Grid read = read(design);
         Container cds = read.getContainerDataSource();
-        Assert.assertEquals("&amp;Test",
+        assertEquals("&amp;Test",
                 cds.getItem(cds.getItemIds().iterator().next())
                         .getItemProperty("test").getValue());
     }

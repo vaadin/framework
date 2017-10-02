@@ -15,6 +15,8 @@
  */
 package com.vaadin.ui.declarative;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -27,7 +29,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -62,7 +63,7 @@ public class DesignTest {
         String cp1251Html = getHtml();
         setUtf8Charset();
         String utf8Html = getHtml();
-        Assert.assertEquals(
+        assertEquals(
                 "Html written with UTF-8 as default encoding "
                         + "differs from html written with cp1251 encoding",
                 cp1251Html, utf8Html);
@@ -74,7 +75,7 @@ public class DesignTest {
             IllegalArgumentException, IllegalAccessException {
         setCp1251Charset();
         String cp1251Html = getHtml();
-        Assert.assertEquals(
+        assertEquals(
                 "Non ascii string parsed from serialized HTML "
                         + "differs from expected",
                 NON_ASCII_STRING, getHtmlLabelValue(cp1251Html));
@@ -86,7 +87,7 @@ public class DesignTest {
             IllegalArgumentException, IllegalAccessException {
         setUtf8Charset();
         String utf8 = getHtml();
-        Assert.assertEquals(
+        assertEquals(
                 "Non ascii string parsed from serialized HTML "
                         + "differs from expected",
                 NON_ASCII_STRING, getHtmlLabelValue(utf8));

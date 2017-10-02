@@ -1,5 +1,12 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -9,7 +16,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Property.ReadOnlyException;
@@ -22,7 +28,7 @@ public class ColumnPropertyTest {
     public void constructor_legalParameters_shouldSucceed() {
         ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
                 "Ville", String.class);
-        Assert.assertNotNull(cp);
+        assertNotNull(cp);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -40,7 +46,7 @@ public class ColumnPropertyTest {
     public void getValue_defaultValue_returnsVille() {
         ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
                 "Ville", String.class);
-        Assert.assertEquals("Ville", cp.getValue());
+        assertEquals("Ville", cp.getValue());
     }
 
     @Test
@@ -53,7 +59,7 @@ public class ColumnPropertyTest {
         container.itemChangeNotification(owner);
         EasyMock.replay(container);
         cp.setValue("Kalle");
-        Assert.assertEquals("Kalle", cp.getValue());
+        assertEquals("Kalle", cp.getValue());
         EasyMock.verify(container);
     }
 
@@ -79,7 +85,7 @@ public class ColumnPropertyTest {
         container.itemChangeNotification(owner);
         EasyMock.replay(container);
         cp.setValue(null);
-        Assert.assertNull(cp.getValue());
+        assertNull(cp.getValue());
         EasyMock.verify(container);
     }
 
@@ -93,7 +99,7 @@ public class ColumnPropertyTest {
         container.itemChangeNotification(owner);
         EasyMock.replay(container);
         cp.setValue(null);
-        Assert.assertNotNull(cp.getValue());
+        assertNotNull(cp.getValue());
         EasyMock.verify(container);
     }
 
@@ -101,21 +107,21 @@ public class ColumnPropertyTest {
     public void getType_normal_returnsStringClass() {
         ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
                 "Ville", String.class);
-        Assert.assertSame(String.class, cp.getType());
+        assertSame(String.class, cp.getType());
     }
 
     @Test
     public void isReadOnly_readWriteNullable_returnsTrue() {
         ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
                 "Ville", String.class);
-        Assert.assertFalse(cp.isReadOnly());
+        assertFalse(cp.isReadOnly());
     }
 
     @Test
     public void isReadOnly_readOnlyNullable_returnsTrue() {
         ColumnProperty cp = new ColumnProperty("NAME", true, true, true, false,
                 "Ville", String.class);
-        Assert.assertTrue(cp.isReadOnly());
+        assertTrue(cp.isReadOnly());
     }
 
     @Test
@@ -123,7 +129,7 @@ public class ColumnPropertyTest {
         ColumnProperty cp = new ColumnProperty("NAME", false, true, true, false,
                 "Ville", String.class);
         cp.setReadOnly(true);
-        Assert.assertTrue(cp.isReadOnly());
+        assertTrue(cp.isReadOnly());
     }
 
     @Test
@@ -131,14 +137,14 @@ public class ColumnPropertyTest {
         ColumnProperty cp = new ColumnProperty("NAME", false, false, true,
                 false, "Ville", String.class);
         cp.setReadOnly(true);
-        Assert.assertFalse(cp.isReadOnly());
+        assertFalse(cp.isReadOnly());
     }
 
     @Test
     public void getPropertyId_normal_returnsNAME() {
         ColumnProperty cp = new ColumnProperty("NAME", false, false, true,
                 false, "Ville", String.class);
-        Assert.assertEquals("NAME", cp.getPropertyId());
+        assertEquals("NAME", cp.getPropertyId());
     }
 
     @Test
@@ -151,8 +157,8 @@ public class ColumnPropertyTest {
         container.itemChangeNotification(owner);
         EasyMock.replay(container);
         cp.setValue("Kalle");
-        Assert.assertEquals("Kalle", cp.getValue());
-        Assert.assertTrue(cp.isModified());
+        assertEquals("Kalle", cp.getValue());
+        assertTrue(cp.isModified());
         EasyMock.verify(container);
     }
 
@@ -160,7 +166,7 @@ public class ColumnPropertyTest {
     public void isModified_valueNotModified_returnsFalse() {
         ColumnProperty cp = new ColumnProperty("NAME", false, false, true,
                 false, "Ville", String.class);
-        Assert.assertFalse(cp.isModified());
+        assertFalse(cp.isModified());
     }
 
     @Test
@@ -171,7 +177,7 @@ public class ColumnPropertyTest {
         new RowItem(container, new RowId(new Object[] { 1 }),
                 Arrays.asList(cp));
         cp.setValue(null);
-        Assert.assertNull(cp.getValue());
+        assertNull(cp.getValue());
     }
 
     @Test
@@ -182,9 +188,9 @@ public class ColumnPropertyTest {
         new RowItem(container, new RowId(new Object[] { 1 }),
                 Arrays.asList(cp));
         cp.setValue("asdf");
-        Assert.assertEquals("asdf", cp.getValue());
+        assertEquals("asdf", cp.getValue());
         cp.setValue(null);
-        Assert.assertNull(cp.getValue());
+        assertNull(cp.getValue());
     }
 
     @Test
@@ -232,8 +238,8 @@ public class ColumnPropertyTest {
                 Arrays.asList(property));
 
         property.setValue("Kalle");
-        Assert.assertEquals("Kalle", container.value);
-        Assert.assertTrue(container.modified);
+        assertEquals("Kalle", container.value);
+        assertTrue(container.modified);
     }
 
     @Test
@@ -242,7 +248,7 @@ public class ColumnPropertyTest {
                 false, "Ville", String.class);
         property.setVersionColumn(true);
 
-        Assert.assertFalse(property.isPersistent());
+        assertFalse(property.isPersistent());
     }
 
     @Test
@@ -250,7 +256,7 @@ public class ColumnPropertyTest {
         ColumnProperty property = new ColumnProperty("NAME", true, false, true,
                 false, "Ville", String.class);
 
-        Assert.assertFalse(property.isPersistent());
+        assertFalse(property.isPersistent());
     }
 
     @Test
@@ -258,7 +264,7 @@ public class ColumnPropertyTest {
         ColumnProperty property = new ColumnProperty("NAME", false, true, true,
                 false, "Ville", String.class);
 
-        Assert.assertTrue(property.isPersistent());
+        assertTrue(property.isPersistent());
     }
 
     @Test
@@ -266,7 +272,7 @@ public class ColumnPropertyTest {
         ColumnProperty property = new ColumnProperty("NAME", true, true, true,
                 false, "Ville", String.class);
 
-        Assert.assertFalse(property.isPersistent());
+        assertFalse(property.isPersistent());
     }
 
     @Test
@@ -274,7 +280,7 @@ public class ColumnPropertyTest {
         ColumnProperty property = new ColumnProperty("NAME", false, true, true,
                 true, "Ville", String.class);
 
-        Assert.assertTrue(property.isRowIdentifier());
+        assertTrue(property.isRowIdentifier());
     }
 
     @Test
@@ -283,7 +289,7 @@ public class ColumnPropertyTest {
                 false, "Ville", String.class);
         property.setVersionColumn(true);
 
-        Assert.assertTrue(property.isRowIdentifier());
+        assertTrue(property.isRowIdentifier());
     }
 
     @Test
@@ -291,7 +297,7 @@ public class ColumnPropertyTest {
         ColumnProperty property = new ColumnProperty("NAME", false, true, true,
                 false, "Ville", String.class);
 
-        Assert.assertFalse(property.isRowIdentifier());
+        assertFalse(property.isRowIdentifier());
     }
 
     @Test
@@ -311,9 +317,9 @@ public class ColumnPropertyTest {
 
         property.setValue("Kalle");
         // Just check that the new value was actually set...
-        Assert.assertEquals("Kalle", property.getValue());
+        assertEquals("Kalle", property.getValue());
         // Assert that old value is the original value...
-        Assert.assertEquals("Ville", property.getOldValue());
+        assertEquals("Ville", property.getOldValue());
     }
 
 }

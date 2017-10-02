@@ -1,11 +1,12 @@
 package com.vaadin.v7.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UndefinedHeightSubWindowAndContentTest extends MultiBrowserTest {
@@ -21,13 +22,13 @@ public class UndefinedHeightSubWindowAndContentTest extends MultiBrowserTest {
 
         WindowElement window = $(WindowElement.class).first();
         int height = window.getSize().getHeight();
-        Assert.assertTrue("Window height with validation failure",
+        assertTrue("Window height with validation failure",
                 161 <= height && height <= 164);
 
         textField.setValue("valid");
         textField.sendKeys(Keys.ENTER);
         height = window.getSize().getHeight();
-        Assert.assertTrue("Window height with validation success",
+        assertTrue("Window height with validation success",
                 136 <= height && height <= 139);
     }
 

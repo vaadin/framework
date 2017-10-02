@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.table;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,7 +39,7 @@ public class ReloadWidgetsTest extends MultiBrowserTest {
         waitForScrollToFinish();
 
         // Assert that we have the button widget.
-        Assert.assertTrue(
+        assertTrue(
                 "Button widget was not found after scrolling for the first time",
                 !findElements(By.id("46")).isEmpty());
 
@@ -51,7 +52,7 @@ public class ReloadWidgetsTest extends MultiBrowserTest {
         waitForScrollToFinish();
 
         // Assert that we still get the button
-        Assert.assertTrue(
+        assertTrue(
                 "Button widget was not found after refreshing container items.",
                 !findElements(By.id("46")).isEmpty());
     }

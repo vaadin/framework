@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -40,7 +41,7 @@ public class CssLayoutRemoveComponentTest extends SingleBrowserTestPhantomJS2 {
 
         Long mutationEvents = (Long) executeScript(
                 "return document.mutationEventCount;");
-        Assert.assertEquals(
+        assertEquals(
                 "Parent should only have two mutation events (remove field and its caption)",
                 2, mutationEvents.intValue());
     }

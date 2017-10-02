@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.slider;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -31,7 +32,7 @@ public class SliderGetHandleTest extends MultiBrowserTest {
 
         String initial = "" + (int) SliderGetHandle.INITIAL_VALUE;
         String actual = slider.getValue();
-        Assert.assertNotEquals(initial, actual);
+        assertNotEquals(initial, actual);
     }
 
 }

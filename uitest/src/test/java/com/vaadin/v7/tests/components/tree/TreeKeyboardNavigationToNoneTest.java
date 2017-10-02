@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.components.tree;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -53,7 +54,7 @@ public class TreeKeyboardNavigationToNoneTest extends MultiBrowserTest {
     }
 
     private void checkNotificationErrorAbsence(String item) {
-        Assert.assertFalse(
+        assertFalse(
                 "Notification is found after using keyboard for navigation "
                         + "from " + item + " tree item",
                 isElementPresent(By.className("v-Notification")));

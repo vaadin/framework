@@ -28,50 +28,50 @@ public class SimpleStringFilterTest
 
     @Test
     public void testStartsWithCaseSensitive() {
-        Assert.assertTrue(passes(PROPERTY1, "ab", false, true));
-        Assert.assertTrue(passes(PROPERTY1, "", false, true));
+        assertTrue(passes(PROPERTY1, "ab", false, true));
+        assertTrue(passes(PROPERTY1, "", false, true));
 
-        Assert.assertFalse(passes(PROPERTY2, "ab", false, true));
-        Assert.assertFalse(passes(PROPERTY1, "AB", false, true));
+        assertFalse(passes(PROPERTY2, "ab", false, true));
+        assertFalse(passes(PROPERTY1, "AB", false, true));
     }
 
     @Test
     public void testStartsWithCaseInsensitive() {
-        Assert.assertTrue(passes(PROPERTY1, "AB", true, true));
-        Assert.assertTrue(passes(PROPERTY2, "te", true, true));
-        Assert.assertFalse(passes(PROPERTY2, "AB", true, true));
+        assertTrue(passes(PROPERTY1, "AB", true, true));
+        assertTrue(passes(PROPERTY2, "te", true, true));
+        assertFalse(passes(PROPERTY2, "AB", true, true));
     }
 
     @Test
     public void testContainsCaseSensitive() {
-        Assert.assertTrue(passes(PROPERTY1, "ab", false, false));
-        Assert.assertTrue(passes(PROPERTY1, "abcde", false, false));
-        Assert.assertTrue(passes(PROPERTY1, "cd", false, false));
-        Assert.assertTrue(passes(PROPERTY1, "e", false, false));
-        Assert.assertTrue(passes(PROPERTY1, "", false, false));
+        assertTrue(passes(PROPERTY1, "ab", false, false));
+        assertTrue(passes(PROPERTY1, "abcde", false, false));
+        assertTrue(passes(PROPERTY1, "cd", false, false));
+        assertTrue(passes(PROPERTY1, "e", false, false));
+        assertTrue(passes(PROPERTY1, "", false, false));
 
-        Assert.assertFalse(passes(PROPERTY2, "ab", false, false));
-        Assert.assertFalse(passes(PROPERTY1, "es", false, false));
+        assertFalse(passes(PROPERTY2, "ab", false, false));
+        assertFalse(passes(PROPERTY1, "es", false, false));
     }
 
     @Test
     public void testContainsCaseInsensitive() {
-        Assert.assertTrue(passes(PROPERTY1, "AB", true, false));
-        Assert.assertTrue(passes(PROPERTY1, "aBcDe", true, false));
-        Assert.assertTrue(passes(PROPERTY1, "CD", true, false));
-        Assert.assertTrue(passes(PROPERTY1, "", true, false));
+        assertTrue(passes(PROPERTY1, "AB", true, false));
+        assertTrue(passes(PROPERTY1, "aBcDe", true, false));
+        assertTrue(passes(PROPERTY1, "CD", true, false));
+        assertTrue(passes(PROPERTY1, "", true, false));
 
-        Assert.assertTrue(passes(PROPERTY2, "es", true, false));
+        assertTrue(passes(PROPERTY2, "es", true, false));
 
-        Assert.assertFalse(passes(PROPERTY2, "ab", true, false));
+        assertFalse(passes(PROPERTY2, "ab", true, false));
     }
 
     @Test
     public void testAppliesToProperty() {
         SimpleStringFilter filter = f(PROPERTY1, "ab", false, true);
-        Assert.assertTrue(filter.appliesToProperty(PROPERTY1));
-        Assert.assertFalse(filter.appliesToProperty(PROPERTY2));
-        Assert.assertFalse(filter.appliesToProperty("other"));
+        assertTrue(filter.appliesToProperty(PROPERTY1));
+        assertFalse(filter.appliesToProperty(PROPERTY2));
+        assertFalse(filter.appliesToProperty("other"));
     }
 
     @Test
@@ -88,43 +88,43 @@ public class SimpleStringFilterTest
         SimpleStringFilter f4b = f(PROPERTY1, "ab", false, false);
 
         // equal but not same instance
-        Assert.assertEquals(f1, f1b);
-        Assert.assertEquals(f2, f2b);
-        Assert.assertEquals(f3, f3b);
-        Assert.assertEquals(f4, f4b);
+        assertEquals(f1, f1b);
+        assertEquals(f2, f2b);
+        assertEquals(f3, f3b);
+        assertEquals(f4, f4b);
 
         // more than one property differ
-        Assert.assertFalse(f1.equals(f2));
-        Assert.assertFalse(f1.equals(f3));
-        Assert.assertFalse(f1.equals(f4));
-        Assert.assertFalse(f2.equals(f1));
-        Assert.assertFalse(f2.equals(f3));
-        Assert.assertFalse(f2.equals(f4));
-        Assert.assertFalse(f3.equals(f1));
-        Assert.assertFalse(f3.equals(f2));
-        Assert.assertFalse(f3.equals(f4));
-        Assert.assertFalse(f4.equals(f1));
-        Assert.assertFalse(f4.equals(f2));
-        Assert.assertFalse(f4.equals(f3));
+        assertFalse(f1.equals(f2));
+        assertFalse(f1.equals(f3));
+        assertFalse(f1.equals(f4));
+        assertFalse(f2.equals(f1));
+        assertFalse(f2.equals(f3));
+        assertFalse(f2.equals(f4));
+        assertFalse(f3.equals(f1));
+        assertFalse(f3.equals(f2));
+        assertFalse(f3.equals(f4));
+        assertFalse(f4.equals(f1));
+        assertFalse(f4.equals(f2));
+        assertFalse(f4.equals(f3));
 
         // only one property differs
-        Assert.assertFalse(filter.equals(f1));
-        Assert.assertFalse(filter.equals(f2));
-        Assert.assertFalse(filter.equals(f3));
-        Assert.assertFalse(filter.equals(f4));
+        assertFalse(filter.equals(f1));
+        assertFalse(filter.equals(f2));
+        assertFalse(filter.equals(f3));
+        assertFalse(filter.equals(f4));
 
-        Assert.assertFalse(f1.equals(null));
-        Assert.assertFalse(f1.equals(new Object()));
+        assertFalse(f1.equals(null));
+        assertFalse(f1.equals(new Object()));
 
-        Assert.assertEquals(f1.hashCode(), f1b.hashCode());
-        Assert.assertEquals(f2.hashCode(), f2b.hashCode());
-        Assert.assertEquals(f3.hashCode(), f3b.hashCode());
-        Assert.assertEquals(f4.hashCode(), f4b.hashCode());
+        assertEquals(f1.hashCode(), f1b.hashCode());
+        assertEquals(f2.hashCode(), f2b.hashCode());
+        assertEquals(f3.hashCode(), f3b.hashCode());
+        assertEquals(f4.hashCode(), f4b.hashCode());
     }
 
     @Test
     public void testNonExistentProperty() {
-        Assert.assertFalse(passes("other1", "ab", false, true));
+        assertFalse(passes("other1", "ab", false, true));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class SimpleStringFilterTest
         TestItem<String, String> item = createTestItem();
         item.addItemProperty("other1", new NullProperty());
 
-        Assert.assertFalse(
+        assertFalse(
                 f("other1", "ab", false, true).passesFilter(null, item));
     }
 

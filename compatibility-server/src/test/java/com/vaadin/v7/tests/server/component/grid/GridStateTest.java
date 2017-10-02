@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.grid.GridState;
@@ -31,14 +32,14 @@ public class GridStateTest {
     public void getPrimaryStyleName_gridHasCustomPrimaryStyleName() {
         Grid grid = new Grid();
         GridState state = new GridState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, grid.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                grid.getPrimaryStyleName());
     }
 
     @Test
     public void gridStateHasCustomPrimaryStyleName() {
         GridState state = new GridState();
-        Assert.assertEquals("Unexpected primary style name", "v-grid",
+        assertEquals("Unexpected primary style name", "v-grid",
                 state.primaryStyleName);
     }
 }

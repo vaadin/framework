@@ -1,6 +1,7 @@
 package com.vaadin.tests.applicationservlet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -24,7 +25,7 @@ public class MultipleServletConfigurationTest extends MultiBrowserTest {
     }
 
     private void assertLabelText(String expected) {
-        Assert.assertEquals("Unexpected label text,", expected,
+        assertEquals("Unexpected label text,", expected,
                 $(LabelElement.class).first().getText());
     }
 }

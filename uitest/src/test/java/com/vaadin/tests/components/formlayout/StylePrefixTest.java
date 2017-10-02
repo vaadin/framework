@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.formlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -33,7 +34,7 @@ public class StylePrefixTest extends MultiBrowserTest {
     public void testStylePrefix() {
         openTestURL();
 
-        Assert.assertTrue("Custom style has unexpected prefix",
+        assertTrue("Custom style has unexpected prefix",
                 isElementPresent(By.className("v-formlayout-mystyle")));
     }
 

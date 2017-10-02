@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.DataProvider;
@@ -39,7 +41,7 @@ public class GridValueProvider {
                 person -> person.getFirstName() + " " + person.getLastName());
         Person person = new Person("first", "last", "email", 123, Sex.UNKNOWN,
                 null);
-        Assert.assertEquals("first last", col.getValueProvider().apply(person));
+        assertEquals("first last", col.getValueProvider().apply(person));
     }
 
     @Test
@@ -49,7 +51,7 @@ public class GridValueProvider {
                 .getColumn("email");
         Person person = new Person("first", "last", "eeemaaail", 123,
                 Sex.UNKNOWN, null);
-        Assert.assertEquals("eeemaaail", col.getValueProvider().apply(person));
+        assertEquals("eeemaaail", col.getValueProvider().apply(person));
 
     }
 
@@ -71,7 +73,7 @@ public class GridValueProvider {
 
         List<Person> queryPersons = persons.fetch(new Query<>())
                 .collect(Collectors.toList());
-        Assert.assertEquals(1, queryPersons.size());
-        Assert.assertSame(upperCasePerson, queryPersons.get(0));
+        assertEquals(1, queryPersons.size());
+        assertSame(upperCasePerson, queryPersons.get(0));
     }
 }

@@ -15,8 +15,10 @@
  */
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.StreamResource;
@@ -33,7 +35,7 @@ public class StreamResourceTest {
         StreamResource resource1 = new StreamResource(null, null);
         StreamResource resource2 = new StreamResource(null, null);
 
-        Assert.assertEquals(resource1, resource2);
+        assertEquals(resource1, resource2);
     }
 
     @Test
@@ -42,7 +44,7 @@ public class StreamResourceTest {
         StreamResource resource2 = new StreamResource(
                 EasyMock.createMock(StreamSource.class), "");
 
-        Assert.assertNotEquals(resource1, resource2);
+        assertNotEquals(resource1, resource2);
     }
 
     @Test

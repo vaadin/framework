@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.splitpanel;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -29,11 +30,11 @@ public class SplitPanelMoveComponentTest extends MultiBrowserTest {
     @Test
     public void moveComponent() {
         openTestURL();
-        Assert.assertEquals(BUTTON_TEXT, getFirstChild().getText());
+        assertEquals(BUTTON_TEXT, getFirstChild().getText());
         getFirstChild().click();
-        Assert.assertEquals(BUTTON_TEXT, getSecondChild().getText());
+        assertEquals(BUTTON_TEXT, getSecondChild().getText());
         getSecondChild().click();
-        Assert.assertEquals(BUTTON_TEXT, getFirstChild().getText());
+        assertEquals(BUTTON_TEXT, getFirstChild().getText());
     }
 
     private WebElement getFirstChild() {

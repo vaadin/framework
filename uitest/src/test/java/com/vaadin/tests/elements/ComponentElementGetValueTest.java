@@ -15,11 +15,12 @@
  */
 package com.vaadin.tests.elements;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         ComboBoxElement elem = $(ComboBoxElement.class).get(0);
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -57,7 +58,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         ListSelectElement elem = $(ListSelectElement.class).get(0);
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         NativeSelectElement elem = $(NativeSelectElement.class).get(0);
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -74,7 +75,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         List<String> expected = Collections
                 .singletonList(ComponentElementGetValue.TEST_STRING_VALUE);
         List<String> actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -82,7 +83,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         RadioButtonGroupElement elem = $(RadioButtonGroupElement.class).get(0);
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -90,7 +91,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         TwinColSelectElement elem = $(TwinColSelectElement.class).get(0);
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -116,7 +117,7 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         CheckBoxElement cb = $(CheckBoxElement.class).get(0);
         String expected = "checked";
         String actual = cb.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -126,12 +127,12 @@ public class ComponentElementGetValueTest extends MultiBrowserTest {
         String expected = formatter
                 .format(ComponentElementGetValue.TEST_DATE_VALUE);
         String actual = df.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     private void checkValue(AbstractTextFieldElement elem) {
         String expected = ComponentElementGetValue.TEST_STRING_VALUE;
         String actual = elem.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 }

@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.label;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -53,8 +54,7 @@ public class LabelTooltipTest extends MultiBrowserTest {
 
     private void assertTooltips() throws IOException {
         $(LabelElement.class).get(2).showTooltip();
-        Assert.assertEquals("Default tooltip content",
-                getTooltipElement().getText());
+        assertEquals("Default tooltip content", getTooltipElement().getText());
 
         /*
          * Some cases tooltip doesn't disappear without some extra mouse events
@@ -64,11 +64,10 @@ public class LabelTooltipTest extends MultiBrowserTest {
                 .click().perform();
 
         $(LabelElement.class).get(4).showTooltip();
-        Assert.assertEquals(
+        assertEquals(
                 "Error inside tooltip together with the regular tooltip message.",
                 getTooltipErrorElement().getText());
-        Assert.assertEquals("Default tooltip content",
-                getTooltipElement().getText());
+        assertEquals("Default tooltip content", getTooltipElement().getText());
 
         /* Visual comparison */
         compareScreen("tooltipVisible");

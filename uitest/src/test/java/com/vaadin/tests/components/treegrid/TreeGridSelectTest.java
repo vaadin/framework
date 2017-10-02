@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -44,13 +46,13 @@ public class TreeGridSelectTest extends SingleBrowserTest {
 
     private void assertAllRowsSelected(TreeGridElement grid) {
         for (int i = 0; i < grid.getRowCount(); i++) {
-            Assert.assertTrue(grid.getRow(i).isSelected());
+            assertTrue(grid.getRow(i).isSelected());
         }
     }
 
     private void assertAllRowsDeselected(TreeGridElement grid) {
         for (int i = 0; i < grid.getRowCount(); i++) {
-            Assert.assertFalse(grid.getRow(i).isSelected());
+            assertFalse(grid.getRow(i).isSelected());
         }
     }
 

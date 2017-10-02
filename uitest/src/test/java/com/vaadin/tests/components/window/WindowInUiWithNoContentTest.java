@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -37,7 +38,7 @@ public class WindowInUiWithNoContentTest extends MultiBrowserTest {
         WebElement window = driver.findElement(By.className("v-window"));
         String position = window.getCssValue("position");
 
-        Assert.assertEquals("Window element has non-absolute position and "
+        assertEquals("Window element has non-absolute position and "
                 + "is broken in the UI", "absolute", position);
     }
 

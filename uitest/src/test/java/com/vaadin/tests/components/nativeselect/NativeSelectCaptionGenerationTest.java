@@ -1,19 +1,20 @@
 package com.vaadin.tests.components.nativeselect;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
 public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
 
-    private static final String[] value = { "Foo", "Bar", "Baz",
-            "Spam", "Eggs" };
+    private static final String[] value = { "Foo", "Bar", "Baz", "Spam",
+            "Eggs" };
 
     @Test
     public void testDefaultDeclarativeCaptions() {
@@ -21,7 +22,7 @@ public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
         List<TestBenchElement> options = $(NativeSelectElement.class).first()
                 .getOptions();
         for (int i = 0; i < options.size(); ++i) {
-            Assert.assertEquals("Captions don't match.", value[i],
+            assertEquals("Captions don't match.", value[i],
                     options.get(i).getText());
         }
     }
@@ -33,7 +34,7 @@ public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
         List<TestBenchElement> options = $(NativeSelectElement.class).first()
                 .getOptions();
         for (int i = 0; i < options.size(); ++i) {
-            Assert.assertEquals("Captions don't match.", "Option " + (i + 1),
+            assertEquals("Captions don't match.", "Option " + (i + 1),
                     options.get(i).getText());
         }
     }
@@ -45,7 +46,7 @@ public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
         List<TestBenchElement> options = $(NativeSelectElement.class).first()
                 .getOptions();
         for (int i = 0; i < options.size(); ++i) {
-            Assert.assertEquals("Captions don't match.", "" + (i + 1),
+            assertEquals("Captions don't match.", "" + (i + 1),
                     options.get(i).getText());
         }
     }
@@ -58,7 +59,7 @@ public class NativeSelectCaptionGenerationTest extends SingleBrowserTest {
         List<TestBenchElement> options = $(NativeSelectElement.class).first()
                 .getOptions();
         for (int i = 0; i < options.size(); ++i) {
-            Assert.assertEquals("Captions don't match.", value[i],
+            assertEquals("Captions don't match.", value[i],
                     options.get(i).getText());
         }
     }

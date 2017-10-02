@@ -1,8 +1,8 @@
 package com.vaadin.v7.tests.server.component.abstractfield;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.Address;
@@ -32,7 +32,7 @@ public class AbsFieldValueConversionErrorTest {
             tf.validate();
             fail();
         } catch (InvalidValueException e) {
-            Assert.assertEquals(
+            assertEquals(
                     "(Type: Integer) Converter exception message: Could not convert 'abc' to java.lang.Integer",
                     e.getMessage());
         }
@@ -50,7 +50,7 @@ public class AbsFieldValueConversionErrorTest {
             tf.getConvertedValue();
             fail();
         } catch (ConversionException e) {
-            Assert.assertEquals(
+            assertEquals(
                     "(Type: Integer) Converter exception message: Could not convert 'abc' to java.lang.Integer",
                     e.getMessage());
         }
@@ -68,7 +68,7 @@ public class AbsFieldValueConversionErrorTest {
             tf.validate();
             fail();
         } catch (InvalidValueException e) {
-            Assert.assertEquals(null, e.getMessage());
+            assertEquals(null, e.getMessage());
         }
 
     }
@@ -84,8 +84,7 @@ public class AbsFieldValueConversionErrorTest {
             tf.validate();
             fail();
         } catch (InvalidValueException e) {
-            Assert.assertEquals("Could not convert value to Integer",
-                    e.getMessage());
+            assertEquals("Could not convert value to Integer", e.getMessage());
         }
 
     }

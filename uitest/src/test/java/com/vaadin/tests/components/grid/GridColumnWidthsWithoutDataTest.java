@@ -15,13 +15,17 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -37,9 +41,9 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         GridElement grid = $(GridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
-        Assert.assertEquals("Sanity check", 2, baseWidths.length);
+        assertEquals("Sanity check", 2, baseWidths.length);
 
-        Assert.assertTrue("Columns should not have equal width",
+        assertTrue("Columns should not have equal width",
                 Math.abs(baseWidths[0] - baseWidths[1]) > 2);
 
         removeData();
@@ -60,20 +64,20 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         GridElement grid = $(GridElement.class).first();
 
         int[] baseWidths = getColWidths(grid);
-        Assert.assertEquals("Sanity check", 2, baseWidths.length);
+        assertEquals("Sanity check", 2, baseWidths.length);
 
-        Assert.assertTrue("Columns should have roughly equal width",
+        assertTrue("Columns should have roughly equal width",
                 Math.abs(baseWidths[0] - baseWidths[1]) < 10);
-        Assert.assertTrue("Columns should not have default widths",
+        assertTrue("Columns should not have default widths",
                 baseWidths[0] > 140);
-        Assert.assertTrue("Columns should not have default widths",
+        assertTrue("Columns should not have default widths",
                 baseWidths[1] > 140);
 
         addData();
 
         assertSameWidths(baseWidths, getColWidths(grid));
 
-        Assert.assertFalse("Notification was present",
+        assertFalse("Notification was present",
                 isElementPresent(NotificationElement.class));
     }
 
@@ -89,7 +93,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         int sum = sumUsedWidths(grid);
 
         // 295 instead of 300 to avoid rounding issues
-        Assert.assertTrue("Only " + sum + " out of 300px was used", sum > 295);
+        assertTrue("Only " + sum + " out of 300px was used", sum > 295);
 
         $(ButtonElement.class).caption("Recreate without data").first().click();
 
@@ -97,7 +101,7 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
         sum = sumUsedWidths(grid);
 
         // 295 instead of 300 to avoid rounding issues
-        Assert.assertTrue("Only " + sum + " out of 300px was used", sum > 295);
+        assertTrue("Only " + sum + " out of 300px was used", sum > 295);
     }
 
     private int sumUsedWidths(GridElement grid) {
@@ -109,12 +113,12 @@ public class GridColumnWidthsWithoutDataTest extends SingleBrowserTest {
     }
 
     private static void assertSameWidths(int[] expected, int[] actual) {
-        Assert.assertEquals("Arrays have differing lengths", expected.length,
+        assertEquals("Arrays have differing lengths", expected.length,
                 actual.length);
 
         for (int i = 0; i < expected.length; i++) {
             if (Math.abs(expected[i] - actual[i]) > 1) {
-                Assert.fail("Differing sizes at index " + i + ". Expected "
+                fail("Differing sizes at index " + i + ". Expected "
                         + expected[i] + " but got " + actual[i]);
             }
         }

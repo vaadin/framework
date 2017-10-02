@@ -15,11 +15,12 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -95,7 +96,7 @@ public class ConnectorResourceHandlerTest {
         }
 
         ConnectorResourceHandler handler = new ConnectorResourceHandler();
-        Assert.assertTrue(handler.handleRequest(session, request, response));
+        assertTrue(handler.handleRequest(session, request, response));
 
         EasyMock.verify(errorHandler);
     }

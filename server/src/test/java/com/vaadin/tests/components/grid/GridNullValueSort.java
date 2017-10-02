@@ -1,10 +1,11 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -148,7 +149,7 @@ public class GridNullValueSort {
                 .createSortingComparator();
         List<Integer> data = new ArrayList<>(source);
         data.sort(sortingComparator);
-        Assert.assertEquals(expected, data);
+        assertEquals(expected, data);
     }
 
 }

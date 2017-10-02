@@ -15,7 +15,9 @@
  */
 package com.vaadin.v7.tests.server.component.textfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -26,24 +28,24 @@ public class TextFieldTest {
     @Test
     public void initiallyEmpty() {
         TextField tf = new TextField();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
     @Test
     public void emptyAfterClearUsingPDS() {
         TextField tf = new TextField(new ObjectProperty<String>("foo"));
-        Assert.assertFalse(tf.isEmpty());
+        assertFalse(tf.isEmpty());
         tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
     @Test
     public void emptyAfterClear() {
         TextField tf = new TextField();
         tf.setValue("foobar");
-        Assert.assertFalse(tf.isEmpty());
+        assertFalse(tf.isEmpty());
         tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
 }

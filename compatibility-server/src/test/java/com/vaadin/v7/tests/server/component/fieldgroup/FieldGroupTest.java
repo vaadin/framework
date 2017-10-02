@@ -15,6 +15,11 @@
  */
 package com.vaadin.v7.tests.server.component.fieldgroup;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Item;
@@ -51,7 +55,7 @@ public class FieldGroupTest {
 
         fieldGroup.setReadOnly(true);
 
-        Assert.assertTrue("Field is not read only", field.isReadOnly());
+        assertTrue("Field is not read only", field.isReadOnly());
     }
 
     @Test
@@ -63,7 +67,7 @@ public class FieldGroupTest {
 
         fieldGroup.setReadOnly(false);
 
-        Assert.assertFalse("Field is not writable", field.isReadOnly());
+        assertFalse("Field is not writable", field.isReadOnly());
     }
 
     @Test
@@ -86,7 +90,7 @@ public class FieldGroupTest {
 
         try {
             fieldGroup.commit();
-            Assert.fail("No commit exception is thrown");
+            fail("No commit exception is thrown");
         } catch (CommitException exception) {
             Map<Field<?>, ? extends InvalidValueException> invalidFields = exception
                     .getInvalidFields();
@@ -94,10 +98,9 @@ public class FieldGroupTest {
                     .entrySet()) {
                 set.remove(entry.getKey());
             }
-            Assert.assertEquals(
-                    "Some fields are not found in the invalid fields map", 0,
-                    set.size());
-            Assert.assertEquals(
+            assertEquals("Some fields are not found in the invalid fields map",
+                    0, set.size());
+            assertEquals(
                     "Invalid value exception should be thrown for each field",
                     2, invalidFields.size());
         }

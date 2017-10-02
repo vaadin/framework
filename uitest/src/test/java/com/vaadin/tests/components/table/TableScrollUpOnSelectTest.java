@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -54,6 +55,6 @@ public class TableScrollUpOnSelectTest extends MultiBrowserTest {
         row.click();
         int newRowLocation = row.getLocation().getY();
 
-        Assert.assertTrue("Table has scrolled.", rowLocation == newRowLocation);
+        assertTrue("Table has scrolled.", rowLocation == newRowLocation);
     }
 }

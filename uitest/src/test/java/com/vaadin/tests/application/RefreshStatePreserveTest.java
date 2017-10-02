@@ -1,6 +1,7 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -24,7 +25,6 @@ public class RefreshStatePreserveTest extends MultiBrowserTest {
     private void assertCorrectState() {
         waitForElementPresent(By.className("v-label"));
         LabelElement uiIdLabel = $(LabelElement.class).get(7);
-        Assert.assertEquals("Incorrect UI id,", UI_ID_TEXT,
-                uiIdLabel.getText());
+        assertEquals("Incorrect UI id,", UI_ID_TEXT, uiIdLabel.getText());
     }
 }

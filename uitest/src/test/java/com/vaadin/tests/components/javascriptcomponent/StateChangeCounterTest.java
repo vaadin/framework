@@ -15,11 +15,12 @@
  */
 package com.vaadin.tests.components.javascriptcomponent;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -54,6 +55,6 @@ public class StateChangeCounterTest extends SingleBrowserTest {
     private void assertMessages(String... expectedMessages) {
         List<String> actualMessages = findElements(By.className("logRow"))
                 .stream().map(WebElement::getText).collect(Collectors.toList());
-        Assert.assertEquals(Arrays.asList(expectedMessages), actualMessages);
+        assertEquals(Arrays.asList(expectedMessages), actualMessages);
     }
 }

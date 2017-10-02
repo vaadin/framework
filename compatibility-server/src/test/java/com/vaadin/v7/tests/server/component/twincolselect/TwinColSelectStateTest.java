@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.twincolselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.twincolselect.TwinColSelectState;
@@ -31,7 +32,7 @@ public class TwinColSelectStateTest {
     public void getState_selectHasCustomState() {
         TestTwinColSelect select = new TestTwinColSelect();
         TwinColSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class", TwinColSelectState.class,
+        assertEquals("Unexpected state class", TwinColSelectState.class,
                 state.getClass());
     }
 
@@ -39,14 +40,14 @@ public class TwinColSelectStateTest {
     public void getPrimaryStyleName_selectHasCustomPrimaryStyleName() {
         TwinColSelect table = new TwinColSelect();
         TwinColSelectState state = new TwinColSelectState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, table.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                table.getPrimaryStyleName());
     }
 
     @Test
     public void selectStateHasCustomPrimaryStyleName() {
         TwinColSelectState state = new TwinColSelectState();
-        Assert.assertEquals("Unexpected primary style name", "v-select-twincol",
+        assertEquals("Unexpected primary style name", "v-select-twincol",
                 state.primaryStyleName);
     }
 

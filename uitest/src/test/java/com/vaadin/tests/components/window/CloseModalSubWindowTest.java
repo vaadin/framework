@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.window;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -35,12 +36,12 @@ public class CloseModalSubWindowTest extends MultiBrowserTest {
         List<WebElement> buttons = getDriver()
                 .findElements(By.id(CloseModalSubWindow.DELETE_BUTTON + "0"));
         int deleteButtonCount = buttons.size();
-        Assert.assertEquals(1, deleteButtonCount);
+        assertEquals(1, deleteButtonCount);
 
         // assert that there's no sub-windows open
         List<WebElement> subWindows = getDriver()
                 .findElements(By.id(CloseModalSubWindow.SUB_WINDOW));
-        Assert.assertEquals(0, subWindows.size());
+        assertEquals(0, subWindows.size());
 
         // click the first delete button
         getFirstDeteleButton(0).click();
@@ -48,7 +49,7 @@ public class CloseModalSubWindowTest extends MultiBrowserTest {
         // assert that there's ONE sub-window open
         subWindows = getDriver()
                 .findElements(By.id(CloseModalSubWindow.SUB_WINDOW));
-        Assert.assertEquals(1, subWindows.size());
+        assertEquals(1, subWindows.size());
 
         WebElement confirm = getDriver()
                 .findElement(By.id(CloseModalSubWindow.CONFIRM_BUTTON));
@@ -59,12 +60,12 @@ public class CloseModalSubWindowTest extends MultiBrowserTest {
         // assert that there's no sub-windows open
         subWindows = getDriver()
                 .findElements(By.id(CloseModalSubWindow.SUB_WINDOW));
-        Assert.assertEquals(0, subWindows.size());
+        assertEquals(0, subWindows.size());
 
         // assert that there's no button with 'del-btn0' id anymore
         buttons = getDriver()
                 .findElements(By.id(CloseModalSubWindow.DELETE_BUTTON + "0"));
-        Assert.assertEquals(0, buttons.size());
+        assertEquals(0, buttons.size());
     }
 
     private WebElement getFirstDeteleButton(int index) {

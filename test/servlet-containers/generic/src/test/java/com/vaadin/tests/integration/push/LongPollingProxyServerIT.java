@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.integration.push;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -67,14 +68,14 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
         // The wildfly9-nginx server has a configured timeout of 10s for
         // *-timeout urls
         Thread.sleep(15000);
-        Assert.assertEquals(0, getClientCounter());
+        assertEquals(0, getClientCounter());
         getIncrementButton().click();
-        Assert.assertEquals(1, getClientCounter());
+        assertEquals(1, getClientCounter());
     }
 
     @Test
     public void basicPush() {
-        Assert.assertEquals(0, getServerCounter());
+        assertEquals(0, getServerCounter());
         getServerCounterStartButton().click();
         waitUntil(e -> getServerCounter() > 1, 10);
     }

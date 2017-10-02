@@ -15,6 +15,12 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +35,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -124,7 +129,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
 
         registration = selectToTest.addSelectionListener(event -> {
             listenerCount.incrementAndGet();
-            Assert.assertFalse(event.isUserOriginated());
+            assertFalse(event.isUserOriginated());
         });
 
         selectToTest.select("1");
@@ -136,23 +141,23 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
         selectToTest.select("2", "3", "4");
         selectToTest.deselect("1", "4");
 
-        Assert.assertEquals(6, listenerCount.get());
+        assertEquals(6, listenerCount.get());
 
         // select partly selected
         selectToTest.select("2", "3", "4");
-        Assert.assertEquals(7, listenerCount.get());
+        assertEquals(7, listenerCount.get());
 
         // select completely selected
         selectToTest.select("2", "3", "4");
-        Assert.assertEquals(7, listenerCount.get());
+        assertEquals(7, listenerCount.get());
 
         // deselect partly not selected
         selectToTest.select("1", "4");
-        Assert.assertEquals(8, listenerCount.get());
+        assertEquals(8, listenerCount.get());
 
         // deselect completely not selected
         selectToTest.select("1", "4");
-        Assert.assertEquals(8, listenerCount.get());
+        assertEquals(8, listenerCount.get());
         verifyValueChangeEvents();
     }
 
@@ -162,7 +167,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
 
         registration = selectToTest.addSelectionListener(event -> {
             listenerCount.incrementAndGet();
-            Assert.assertTrue(event.isUserOriginated());
+            assertTrue(event.isUserOriginated());
         });
 
         rpcSelect("1");
@@ -177,58 +182,58 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
         rpcDeselectItems("1", "3");
         assertSelectionOrder("6");
 
-        Assert.assertEquals(5, listenerCount.get());
+        assertEquals(5, listenerCount.get());
 
         // select partly selected
         rpcSelect("2", "3", "4");
-        Assert.assertEquals(6, listenerCount.get());
+        assertEquals(6, listenerCount.get());
         assertSelectionOrder("6", "2", "3", "4");
 
         // select completely selected
         rpcSelect("2", "3", "4");
-        Assert.assertEquals(6, listenerCount.get());
+        assertEquals(6, listenerCount.get());
         assertSelectionOrder("6", "2", "3", "4");
 
         // deselect partly not selected
         rpcDeselectItems("1", "4");
-        Assert.assertEquals(7, listenerCount.get());
+        assertEquals(7, listenerCount.get());
         assertSelectionOrder("6", "2", "3");
 
         // deselect completely not selected
         rpcDeselectItems("1", "4");
-        Assert.assertEquals(7, listenerCount.get());
+        assertEquals(7, listenerCount.get());
         assertSelectionOrder("6", "2", "3");
 
         // select completely selected and deselect completely not selected
         rpcUpdateSelection(new String[] { "3" }, new String[] { "1", "4" });
-        Assert.assertEquals(7, listenerCount.get());
+        assertEquals(7, listenerCount.get());
         assertSelectionOrder("6", "2", "3");
 
         // select partly selected and deselect completely not selected
         rpcUpdateSelection(new String[] { "4", "2" },
                 new String[] { "1", "8" });
-        Assert.assertEquals(8, listenerCount.get());
+        assertEquals(8, listenerCount.get());
         assertSelectionOrder("6", "2", "3", "4");
 
         // select completely selected and deselect partly not selected
         rpcUpdateSelection(new String[] { "4", "3" },
                 new String[] { "1", "2" });
-        Assert.assertEquals(9, listenerCount.get());
+        assertEquals(9, listenerCount.get());
         assertSelectionOrder("6", "3", "4");
 
         // duplicate case - ignored
         rpcUpdateSelection(new String[] { "2" }, new String[] { "2" });
-        Assert.assertEquals(9, listenerCount.get());
+        assertEquals(9, listenerCount.get());
         assertSelectionOrder("6", "3", "4");
 
         // duplicate case - duplicate removed
         rpcUpdateSelection(new String[] { "2" }, new String[] { "2", "3" });
-        Assert.assertEquals(10, listenerCount.get());
+        assertEquals(10, listenerCount.get());
         assertSelectionOrder("6", "4");
 
         // duplicate case - duplicate removed
         rpcUpdateSelection(new String[] { "6", "8" }, new String[] { "6" });
-        Assert.assertEquals(11, listenerCount.get());
+        assertEquals(11, listenerCount.get());
         assertSelectionOrder("6", "4", "8");
         verifyValueChangeEvents();
     }
@@ -237,19 +242,18 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
     public void getValue() {
         selectToTest.select("1");
 
-        Assert.assertEquals(Collections.singleton("1"),
-                selectToTest.getValue());
+        assertEquals(Collections.singleton("1"), selectToTest.getValue());
 
         selectToTest.deselectAll();
         LinkedHashSet<String> set = new LinkedHashSet<>();
         set.add("1");
         set.add("5");
         selectToTest.select(set.toArray(new String[2]));
-        Assert.assertEquals(set, selectToTest.getValue());
+        assertEquals(set, selectToTest.getValue());
 
         set.add("3");
         selectToTest.select("3");
-        Assert.assertEquals(set, selectToTest.getValue());
+        assertEquals(set, selectToTest.getValue());
         verifyValueChangeEvents();
     }
 
@@ -276,7 +280,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
             }
         };
 
-        Assert.assertSame(set, select.getValue());
+        assertSame(set, select.getValue());
         verifyValueChangeEvents();
     }
 
@@ -284,7 +288,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
     public void setValue() {
         selectToTest.setValue(Collections.singleton("1"));
 
-        Assert.assertEquals(Collections.singleton("1"),
+        assertEquals(Collections.singleton("1"),
                 selectToTest.getSelectedItems());
 
         Set<String> set = new LinkedHashSet<>();
@@ -292,7 +296,7 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
         set.add("3");
         selectToTest.setValue(set);
 
-        Assert.assertEquals(set, selectToTest.getSelectedItems());
+        assertEquals(set, selectToTest.getSelectedItems());
         verifyValueChangeEvents();
     }
 
@@ -352,18 +356,18 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
 
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
         Registration actualRegistration = select.addValueChangeListener(evt -> {
-            Assert.assertNull(event.get());
+            assertNull(event.get());
             event.set(evt);
         });
 
-        Assert.assertSame(registration, actualRegistration);
+        assertSame(registration, actualRegistration);
 
         selectionListener.get().selectionChange(new MultiSelectionEvent<>(
                 select, Mockito.mock(Set.class), true));
 
-        Assert.assertEquals(select, event.get().getComponent());
-        Assert.assertEquals(set, event.get().getValue());
-        Assert.assertTrue(event.get().isUserOriginated());
+        assertEquals(select, event.get().getComponent());
+        assertEquals(set, event.get().getValue());
+        assertTrue(event.get().isUserOriginated());
     }
 
     private void rpcSelect(String... keysToSelect) {
@@ -388,16 +392,16 @@ public class AbstractMultiSelectTest<S extends AbstractMultiSelect<String>> {
     }
 
     private void assertSelectionOrder(String... selectionOrder) {
-        Assert.assertEquals(Arrays.asList(selectionOrder),
+        assertEquals(Arrays.asList(selectionOrder),
                 new ArrayList<>(selectToTest.getSelectedItems()));
     }
 
     private void verifyValueChangeEvents() {
         if (oldValues.size() > 0) {
-            Assert.assertTrue(oldValues.get(0).isEmpty());
-            Assert.assertEquals(values.size(), oldValues.size());
+            assertTrue(oldValues.get(0).isEmpty());
+            assertEquals(values.size(), oldValues.size());
             for (int i = 0; i < oldValues.size() - 1; i++) {
-                Assert.assertEquals(values.get(i), oldValues.get(i + 1));
+                assertEquals(values.get(i), oldValues.get(i + 1));
             }
         }
     }

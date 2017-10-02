@@ -17,9 +17,11 @@
 package com.vaadin.tests.server.navigator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
@@ -31,7 +33,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.easymock.EasyMock;
 import org.easymock.IArgumentMatcher;
 import org.easymock.IMocksControl;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.navigator.NavigationStateManager;
@@ -370,24 +371,23 @@ public class NavigatorTest {
 
         TestNavigatorWithFragments navigator = new TestNavigatorWithFragments(
                 ui);
-        Assert.assertTrue("Add URI fragment Page method has not been called",
+        assertTrue("Add URI fragment Page method has not been called",
                 page.addUriFragmentCalled());
-        Assert.assertFalse("Unexpected remove URI fragment Page method call",
+        assertFalse("Unexpected remove URI fragment Page method call",
                 page.removeUriFragmentCalled());
-        Assert.assertNotNull("Navigator is null in UI", ui.getNavigator());
+        assertNotNull("Navigator is null in UI", ui.getNavigator());
 
         navigator.destroy();
-        Assert.assertTrue(
+        assertTrue(
                 "Remove URI fragment Page method has not been called after destroy",
                 page.removeUriFragmentCalled());
-        Assert.assertNull("Navigator is not null in UI after destroy",
+        assertNull("Navigator is not null in UI after destroy",
                 ui.getNavigator());
 
         try {
             page.setUriFragment("foobar", true); // This should throw
-            Assert.fail(
-                    "Expected null pointer exception after call uriFragmentChanged "
-                            + "for destroyed navigator");
+            fail("Expected null pointer exception after call uriFragmentChanged "
+                    + "for destroyed navigator");
         } catch (NullPointerException e) {
             // All ok.
         }
@@ -399,25 +399,24 @@ public class NavigatorTest {
         UI ui = new TestPushStateUI(page);
 
         TestNavigator navigator = new TestNavigator(ui);
-        Assert.assertTrue("Add URI fragment Page method has not been called",
+        assertTrue("Add URI fragment Page method has not been called",
                 page.addPopstateCalled());
-        Assert.assertFalse("Unexpected remove URI fragment Page method call",
+        assertFalse("Unexpected remove URI fragment Page method call",
                 page.removePopstateCalled());
-        Assert.assertNotNull("Navigator is null in UI", ui.getNavigator());
+        assertNotNull("Navigator is null in UI", ui.getNavigator());
 
         navigator.destroy();
-        Assert.assertTrue(
+        assertTrue(
                 "Remove URI fragment Page method has not been called after destroy",
                 page.removePopstateCalled());
-        Assert.assertNull("Navigator is not null in UI after destroy",
+        assertNull("Navigator is not null in UI after destroy",
                 ui.getNavigator());
 
         try {
             page.updateLocation("http://server/path/info", true, true);
 
-            Assert.fail(
-                    "Expected null pointer exception after call uriFragmentChanged "
-                            + "for destroyed navigator");
+            fail("Expected null pointer exception after call uriFragmentChanged "
+                    + "for destroyed navigator");
         } catch (NullPointerException e) {
             // All ok.
         }
@@ -531,12 +530,12 @@ public class NavigatorTest {
         navigator.addProvider(provider);
 
         navigator.navigateTo("test2");
-        Assert.assertEquals("", view2.getParams());
-        Assert.assertEquals(null, view1.getParams());
+        assertEquals("", view2.getParams());
+        assertEquals(null, view1.getParams());
         navigator.navigateTo("");
-        Assert.assertEquals("", view1.getParams());
+        assertEquals("", view1.getParams());
         navigator.navigateTo("test1/params");
-        Assert.assertEquals("params", view1.getParams());
+        assertEquals("params", view1.getParams());
     }
 
     @Test
@@ -1005,11 +1004,11 @@ public class NavigatorTest {
 
         // First time navigation
         navigator.navigateTo(viewName);
-        Assert.assertEquals(1, count[0]);
+        assertEquals(1, count[0]);
 
         // Second time navigation to the same view
         navigator.navigateTo(viewName);
-        Assert.assertEquals(1, count[0]);
+        assertEquals(1, count[0]);
     }
 
     public static class ViewIsNotAComponent implements View {
@@ -1065,8 +1064,8 @@ public class NavigatorTest {
         navigator.addView("foo", ViewIsNotAComponent.class);
         navigator.navigateTo("foo");
 
-        Assert.assertEquals(HorizontalLayout.class, ui.getContent().getClass());
-        Assert.assertEquals("Hello",
+        assertEquals(HorizontalLayout.class, ui.getContent().getClass());
+        assertEquals("Hello",
                 ((Label) ((HorizontalLayout) ui.getContent()).getComponent(0))
                         .getValue());
     }
@@ -1074,14 +1073,14 @@ public class NavigatorTest {
     @Test
     public void parameterMap_noViewSeparator() {
         Navigator navigator = createNavigatorWithState("fooview");
-        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
-        Assert.assertTrue(navigator.getStateParameterMap("foo").isEmpty());
+        assertTrue(navigator.getStateParameterMap().isEmpty());
+        assertTrue(navigator.getStateParameterMap("foo").isEmpty());
     }
 
     @Test
     public void parameterMap_noParameters() {
         Navigator navigator = createNavigatorWithState("fooview/");
-        Assert.assertTrue(navigator.getStateParameterMap().isEmpty());
+        assertTrue(navigator.getStateParameterMap().isEmpty());
     }
 
     @Test
@@ -1119,12 +1118,12 @@ public class NavigatorTest {
     @SafeVarargs
     private final void assertMap(Map<String, String> map,
             Entry<String, String>... entries) {
-        Assert.assertEquals(entries.length, map.size());
+        assertEquals(entries.length, map.size());
         for (Entry<String, String> entry : entries) {
-            Assert.assertTrue(
+            assertTrue(
                     "Map should contain a key called '" + entry.getKey() + "'",
                     map.containsKey(entry.getKey()));
-            Assert.assertEquals(entry.getValue(), map.get(entry.getKey()));
+            assertEquals(entry.getValue(), map.get(entry.getKey()));
         }
 
     }
@@ -1179,8 +1178,8 @@ public class NavigatorTest {
 
         navigator.navigateTo("view1");
 
-        Assert.assertTrue(mapRef.get().isEmpty());
-        Assert.assertTrue(mapRefB.get().isEmpty());
+        assertTrue(mapRef.get().isEmpty());
+        assertTrue(mapRefB.get().isEmpty());
         navigator.navigateTo("view1/a&b=c&d");
 
         assertMap(mapRef.get(), entry("a", ""), entry("b", "c"),
@@ -1208,7 +1207,7 @@ public class NavigatorTest {
         navigator.addView("view2", view2);
         navigator.navigateTo("view1");
         navigator.navigateTo("view2");
-        Assert.assertEquals("view1", navigator.getState());
+        assertEquals("view1", navigator.getState());
     }
 
     @Test
@@ -1231,7 +1230,7 @@ public class NavigatorTest {
         navigator.addView("view2", view2);
         navigator.navigateTo("view1");
         navigator.navigateTo("view2");
-        Assert.assertEquals("view2", navigator.getState());
+        assertEquals("view2", navigator.getState());
 
     }
 
@@ -1256,9 +1255,9 @@ public class NavigatorTest {
         navigator.addView("view2", view2);
         navigator.navigateTo("view1");
         navigator.navigateTo("view2");
-        Assert.assertEquals("view1", navigator.getState());
+        assertEquals("view1", navigator.getState());
         eventRef.get().navigate();
-        Assert.assertEquals("view2", navigator.getState());
+        assertEquals("view2", navigator.getState());
 
     }
 
@@ -1287,9 +1286,9 @@ public class NavigatorTest {
         navigator.runAfterLeaveConfirmation(() -> {
             leaveCount.incrementAndGet();
         });
-        Assert.assertEquals(0, leaveCount.get());
+        assertEquals(0, leaveCount.get());
         eventRef.get().navigate();
-        Assert.assertEquals(1, leaveCount.get());
-        Assert.assertEquals("view1", navigator.getState());
+        assertEquals(1, leaveCount.get());
+        assertEquals("view1", navigator.getState());
     }
 }

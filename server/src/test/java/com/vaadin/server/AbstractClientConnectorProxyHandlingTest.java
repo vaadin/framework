@@ -15,10 +15,11 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -38,13 +39,12 @@ public class AbstractClientConnectorProxyHandlingTest {
             int modifiers = method.getModifiers();
             if (Modifier.isFinal(modifiers) || !Modifier.isProtected(modifiers)
                     || Modifier.isStatic(modifiers)) {
-                Assert.fail(
-                        "isThis has invalid modifiers, CDI proxies will not work.");
+                fail("isThis has invalid modifiers, CDI proxies will not work.");
             }
         } catch (SecurityException e) {
             // Ignore, no can do
         } catch (NoSuchMethodException e) {
-            Assert.fail("isThis is missing, CDI proxies will not work.");
+            fail("isThis is missing, CDI proxies will not work.");
         }
     }
 

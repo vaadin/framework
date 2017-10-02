@@ -16,11 +16,11 @@
 package com.vaadin.tests.components.tabsheet;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -89,10 +89,10 @@ public class TabSheetErrorTooltipTest extends MultiBrowserTest {
     }
 
     private void assertTooltip(String tooltip) {
-        Assert.assertEquals(tooltip, getCurrentTooltip().getText());
+        assertEquals(tooltip, getCurrentTooltip().getText());
     }
 
     private void assertErrorMessage(String message) {
-        Assert.assertEquals(message, getCurrentErrorMessage().getText());
+        assertEquals(message, getCurrentErrorMessage().getText());
     }
 }

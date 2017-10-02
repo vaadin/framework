@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.upload;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -43,8 +44,7 @@ public class UploadTitleWithTooltipTest extends TooltipTest {
             }
         }
 
-        Assert.assertNotNull("Input element with type 'file' is not found",
-                input);
+        assertNotNull("Input element with type 'file' is not found", input);
 
         checkTooltip(input, "tooltip");
 

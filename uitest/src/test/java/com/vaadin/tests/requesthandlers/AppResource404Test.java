@@ -1,8 +1,10 @@
 package com.vaadin.tests.requesthandlers;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -15,7 +17,7 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).first().click(5, 5);
         disableWaitingAndWait();
-        Assert.assertFalse("Page contains the given text",
+        assertFalse("Page contains the given text",
                 driver.getPageSource().contains("404"));
     }
 
@@ -24,7 +26,7 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).get(1).click(5, 5);
         disableWaitingAndWait();
-        Assert.assertTrue("Page does not contain the given text",
+        assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains(
                         "/APP/connector/0/4/asdfasdf can not be found"));
     }
@@ -34,9 +36,9 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).get(2).click(5, 5);
         disableWaitingAndWait();
-        Assert.assertTrue("Page does not contain the given text",
+        assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains("HTTP ERROR 404"));
-        Assert.assertTrue("Page does not contain the given text",
+        assertTrue("Page does not contain the given text",
                 driver.getPageSource().contains("Problem accessing /run/APP/"));
     }
 
@@ -45,7 +47,7 @@ public class AppResource404Test extends MultiBrowserTest {
         openTestURL();
         $(LinkElement.class).get(3).click(5, 5);
         disableWaitingAndWait();
-        Assert.assertFalse("Page contains the given text",
+        assertFalse("Page contains the given text",
                 driver.getPageSource().contains("can not be found"));
     }
 

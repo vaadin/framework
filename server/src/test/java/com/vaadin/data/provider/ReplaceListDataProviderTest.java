@@ -1,9 +1,13 @@
 package com.vaadin.data.provider;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -21,13 +25,13 @@ public class ReplaceListDataProviderTest {
     public void testGetIdOfItem() {
         Object id = dataProvider.fetch(new Query<>()).findFirst()
                 .map(dataProvider::getId).get();
-        Assert.assertEquals("DataProvider not using correct identifier getter",
+        assertEquals("DataProvider not using correct identifier getter",
                 TEST_OBJECT.getId(), id);
     }
 
     @Test
     public void testGetIdOfReplacementItem() {
-        Assert.assertFalse("Test object was stale before making any changes.",
+        assertFalse("Test object was stale before making any changes.",
                 dataProvider.isStale(TEST_OBJECT));
 
         dataProvider.refreshItem(new StrBean("Replacement TestObject", 10, -2));
@@ -36,13 +40,13 @@ public class ReplaceListDataProviderTest {
                 .get();
         Object id = dataProvider.getId(fromDataProvider);
 
-        Assert.assertNotEquals("DataProvider did not return the replacement",
+        assertNotEquals("DataProvider did not return the replacement",
                 TEST_OBJECT, fromDataProvider);
 
-        Assert.assertEquals("DataProvider not using correct identifier getter",
+        assertEquals("DataProvider not using correct identifier getter",
                 TEST_OBJECT.getId(), id);
 
-        Assert.assertTrue("Old test object should be stale",
+        assertTrue("Old test object should be stale",
                 dataProvider.isStale(TEST_OBJECT));
     }
 }

@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +57,7 @@ public class GridComponentRendererTest {
         generateDataForClient(true);
         dataProvider.refreshItem(PERSON);
         generateDataForClient(false);
-        Assert.assertNotNull("Old component should exist.", oldComponent);
+        assertNotNull("Old component should exist.", oldComponent);
     }
 
     @Test
@@ -63,26 +65,25 @@ public class GridComponentRendererTest {
         generateDataForClient(true);
         grid.select(PERSON);
         generateDataForClient(false);
-        Assert.assertNotNull("Old component should exist.", oldComponent);
+        assertNotNull("Old component should exist.", oldComponent);
     }
 
     @Test
     public void testComponentChangeOnDataProviderChange() {
         generateDataForClient(true);
         grid.setItems(PERSON);
-        Assert.assertEquals(
-                "Test component was not detached on DataProvider change.", null,
-                testComponent.getParent());
+        assertEquals("Test component was not detached on DataProvider change.",
+                null, testComponent.getParent());
     }
 
     private void generateDataForClient(boolean initial) {
         grid.getDataCommunicator().beforeClientResponse(initial);
         if (testComponent != null) {
-            Assert.assertEquals("New component was not attached.", grid,
+            assertEquals("New component was not attached.", grid,
                     testComponent.getParent());
         }
         if (oldComponent != null) {
-            Assert.assertEquals("Old component was not detached.", null,
+            assertEquals("Old component was not detached.", null,
                     oldComponent.getParent());
         }
     }

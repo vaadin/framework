@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -65,9 +67,9 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
 
         Point newComboLocation = cb.getLocation();
         Point newPopupLocation = popup.getLocation();
-        Assert.assertNotEquals("ComboBox didn't move on the page", 0,
+        assertNotEquals("ComboBox didn't move on the page", 0,
                 newComboLocation.y - comboLocation.y);
-        Assert.assertEquals("Popup didn't move with the combo box",
+        assertEquals("Popup didn't move with the combo box",
                 newComboLocation.y - comboLocation.y,
                 newPopupLocation.y - popupLocation.y);
     }

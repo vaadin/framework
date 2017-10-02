@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -40,10 +41,9 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
         window.$(TextFieldElement.class).first().sendKeys(Keys.ESCAPE);
 
         // Window should have been closed
-        Assert.assertTrue($(WindowElement.class).all().isEmpty());
+        assertTrue($(WindowElement.class).all().isEmpty());
         // "Close page" should not have been clicked
-        Assert.assertTrue(
-                $(ButtonElement.class).caption("Close page").exists());
+        assertTrue($(ButtonElement.class).caption("Close page").exists());
     }
 
     @Test
@@ -56,8 +56,7 @@ public class WindowAndUIShortcutsTest extends SingleBrowserTest {
                 By.className("v-window-modalitycurtain"));
         curtain.sendKeys(Keys.ESCAPE);
         // "Close page" should not have been clicked
-        Assert.assertTrue(
-                $(ButtonElement.class).caption("Close page").exists());
+        assertTrue($(ButtonElement.class).caption("Close page").exists());
 
     }
 }
