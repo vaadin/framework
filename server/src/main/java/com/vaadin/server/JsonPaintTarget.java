@@ -446,12 +446,12 @@ public class JsonPaintTarget implements PaintTarget {
         }
         final StringBuilder buf = new StringBuilder();
         buf.append("\"").append(name).append("\":[");
-        for (Object value : values) {
-            if (buf.length() != 0) {
+        for (int i = 0; i < values.length; i++) {
+            if (i > 0) {
                 buf.append(',');
             }
             buf.append("\"");
-            buf.append(escapeJSON(value.toString()));
+            buf.append(escapeJSON(values[i].toString()));
             buf.append("\"");
         }
         buf.append(']');
