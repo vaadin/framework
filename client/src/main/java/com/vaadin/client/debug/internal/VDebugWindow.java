@@ -843,8 +843,7 @@ public final class VDebugWindow extends VOverlay {
                 }
             };
             modes[getDevMode()].setActive(true);
-            for (int i = 0; i < modes.length; i++) {
-                Button b = modes[i];
+            for (Button b : modes) {
                 b.addClickHandler(modeHandler);
                 mode.add(b);
             }

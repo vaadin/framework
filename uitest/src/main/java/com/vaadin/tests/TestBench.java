@@ -307,9 +307,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
                         }
 
-                        // for (int i = 0; i < c.getInterfaces().length; i++) {
-                        // Class cc = c.getInterfaces()[i];
-                        // if (c.getInterfaces()[i].equals(Testable.class)) {
+                        // for (Class cc : c.getInterfaces()) {
+                        // if (cc.equals(Testable.class)) {
                         // // Class is testable
                         // classes.add(c);
                         // }

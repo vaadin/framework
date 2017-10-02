@@ -184,8 +184,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 Object[] array = roots.toArray();
                 Arrays.sort(array, basedOnOrderFromWrappedContainer);
                 roots = new LinkedHashSet<Object>();
-                for (int i = 0; i < array.length; i++) {
-                    roots.add(array[i]);
+                for (Object root : array) {
+                    roots.add(root);
                 }
                 for (Object object : children.keySet()) {
                     LinkedList<Object> object2 = children.get(object);

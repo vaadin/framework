@@ -371,11 +371,11 @@ public class DevelopmentServerLauncher {
      */
     protected static Map<String, String> parseArguments(String[] args) {
         final Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < args.length; i++) {
-            final int d = args[i].indexOf("=");
-            if (d > 0 && d < args[i].length() && args[i].startsWith("--")) {
-                final String name = args[i].substring(2, d);
-                final String value = args[i].substring(d + 1);
+        for (String arg : args) {
+            final int d = arg.indexOf("=");
+            if (d > 0 && d < arg.length() && arg.startsWith("--")) {
+                final String name = arg.substring(2, d);
+                final String value = arg.substring(d + 1);
                 map.put(name, value);
             }
         }

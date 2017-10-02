@@ -479,9 +479,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
                 // Converts the key-array to id-set
                 final LinkedList<Object> acceptedSelections = new LinkedList<Object>();
-                for (int i = 0; i < clientSideSelectedKeys.length; i++) {
-                    final Object id = itemIdMapper
-                            .get(clientSideSelectedKeys[i]);
+                for (String key : clientSideSelectedKeys) {
+                    final Object id = itemIdMapper.get(key);
                     if (!isNullSelectionAllowed()
                             && (id == null || id == getNullSelectionItemId())) {
                         // skip empty selection if nullselection is not allowed
@@ -1721,9 +1720,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 && !propertySetEventListeners.isEmpty()) {
             final Container.PropertySetChangeEvent event = new PropertySetChangeEvent(
                     this);
-            final Object[] listeners = propertySetEventListeners.toArray();
-            for (int i = 0; i < listeners.length; i++) {
-                ((Container.PropertySetChangeListener) listeners[i])
+            for (Object l : propertySetEventListeners.toArray()) {
+                ((Container.PropertySetChangeListener) l)
                         .containerPropertySetChange(event);
             }
         }
@@ -1737,9 +1735,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
             final Container.ItemSetChangeEvent event = new ItemSetChangeEvent(
                     this);
-            final Object[] listeners = itemSetEventListeners.toArray();
-            for (int i = 0; i < listeners.length; i++) {
-                ((Container.ItemSetChangeListener) listeners[i])
+            for (Object l : itemSetEventListeners.toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }

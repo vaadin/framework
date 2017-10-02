@@ -1702,9 +1702,7 @@ public class VScrollTable extends FlowPanel
             tHead.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
-        int i;
-        for (i = 0; i < strings.length; i++) {
-            final String cid = strings[i];
+        for (final String cid : strings) {
             visibleColOrder[colIndex] = cid;
             tHead.enableColumn(cid, colIndex);
             colIndex++;
@@ -1737,9 +1735,7 @@ public class VScrollTable extends FlowPanel
             tFoot.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
-        int i;
-        for (i = 0; i < strings.length; i++) {
-            final String cid = strings[i];
+        for (final String cid : strings) {
             tFoot.enableColumn(cid, colIndex);
             colIndex++;
         }
@@ -2118,11 +2114,11 @@ public class VScrollTable extends FlowPanel
             newIndex--; // columnOrder don't have rowHeader
         }
         // add back hidden rows,
-        for (int i = 0; i < columnOrder.length; i++) {
-            if (columnOrder[i].equals(oldKeyOnNewIndex)) {
+        for (String order : columnOrder) {
+            if (order.equals(oldKeyOnNewIndex)) {
                 break; // break loop at target
             }
-            if (isCollapsedColumn(columnOrder[i])) {
+            if (isCollapsedColumn(order)) {
                 newIndex++;
             }
         }
@@ -4036,8 +4032,8 @@ public class VScrollTable extends FlowPanel
             }
             List<Action> actions = new ArrayList<Action>(cols.length);
 
-            for (int i = 0; i < cols.length; i++) {
-                final String cid = (String) cols[i];
+            for (Object col : cols) {
+                final String cid = (String) col;
                 boolean noncollapsible = noncollapsibleColumns.contains(cid);
 
                 if (noncollapsible
