@@ -49,6 +49,9 @@ import elemental.json.JsonObject;
 @Connect(EditorImpl.class)
 public class EditorConnector extends AbstractExtensionConnector {
 
+    private Integer currentEditedRow = null;
+    private boolean waitingForAvailableData = false;
+
     /**
      * EditorHandler for communicating with the server-side implementation.
      */
@@ -56,9 +59,6 @@ public class EditorConnector extends AbstractExtensionConnector {
         private EditorServerRpc rpc = getRpcProxy(EditorServerRpc.class);
         private EditorRequest<JsonObject> currentRequest = null;
         private boolean serverInitiated = false;
-        private DataAvailableHandler dataAvailableListener = null;
-        private Integer currentEditedRow = null;
-        private boolean waitingForAvailableData = false;
 
         public CustomEditorHandler() {
             registerRpc(EditorClientRpc.class, new EditorClientRpc() {
@@ -68,19 +68,9 @@ public class EditorConnector extends AbstractExtensionConnector {
                     // call this deferred to avoid issues with editing on init
                     Scheduler.get().scheduleDeferred(() -> {
                         currentEditedRow = rowIndex;
-                        // might need to wait for available data, register listener if necessary on first try
+                        // might need to wait for available data,
                         // if data is available, ensureAvailability will immediately trigger the handler anyway,
                         // so no need for alternative "immediately available" logic
-                        if (dataAvailableListener == null) {
-                            dataAvailableListener = (event) -> {
-                                Range range = event.getAvailableRows();
-                                if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
-                                    getParent().getWidget().editRow(currentEditedRow);
-                                    waitingForAvailableData = false;
-                                }
-                            };
-                            getParent().getWidget().addDataAvailableHandler(dataAvailableListener);
-                        }
                         waitingForAvailableData = true;
                         getParent().getDataSource().ensureAvailability(rowIndex, 1);
                     });
@@ -231,6 +221,13 @@ public class EditorConnector extends AbstractExtensionConnector {
     protected void extend(ServerConnector target) {
         Grid<JsonObject> grid = getParent().getWidget();
         grid.getEditor().setHandler(new CustomEditorHandler());
+        grid.addDataAvailableHandler((event) -> {
+            Range range = event.getAvailableRows();
+            if (waitingForAvailableData && currentEditedRow != null && range.contains(currentEditedRow)) {
+                getParent().getWidget().editRow(currentEditedRow);
+                waitingForAvailableData = false;
+            }
+        });
     }
 
     @Override
