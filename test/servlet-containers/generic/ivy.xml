@@ -116,6 +116,8 @@
             conf="build -> default" />
         <dependency org="com.vaadin" name="vaadin-testbench-api"
             rev="${vaadin.version}" conf="build-provided -> default" />
+        <dependency org="com.vaadin" name="vaadin-test-server-tests"
+            rev="8.2-SNAPSHOT" conf="build-provided -> default" />
         <!-- This should be removed once tests have been updated to use lang3 -->
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build -> default" />

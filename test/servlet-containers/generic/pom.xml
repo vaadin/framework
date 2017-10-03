@@ -21,11 +21,6 @@
             <artifactId>vaadin-test-server-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-testbench-api</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 
