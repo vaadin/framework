@@ -15,7 +15,9 @@
  */
 package com.vaadin.v7.tests.server.component.form;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.ui.Form;
@@ -60,9 +62,9 @@ public class FormTest {
         form.addField("b", field2);
         form.focus();
 
-        Assert.assertTrue("Field with enabled connector is not focused",
+        assertTrue("Field with enabled connector is not focused",
                 secondFieldIsFocused[0]);
-        Assert.assertFalse("Field with disabled connector is focused",
+        assertFalse("Field with disabled connector is focused",
                 firstFieldIsFocused[0]);
     }
 }

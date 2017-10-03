@@ -34,11 +34,12 @@ import static com.vaadin.tools.CvalCheckerTest.saveCache;
 import static com.vaadin.tools.CvalCheckerTest.unreachableLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validEvaluationLicenseProvider;
 import static com.vaadin.tools.CvalCheckerTest.validLicenseProvider;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -220,7 +221,8 @@ public class CvalAddonstCheckerUseCasesTest {
             deleteCache(productNameCval);
         } else {
             String type = lic == License.EVAL || lic == License.EVAL_EXPIRED
-                    ? "evaluation" : null;
+                    ? "evaluation"
+                    : null;
             Boolean expired = lic == License.EVAL_EXPIRED
                     || lic == License.REAL_EXPIRED ? true : null;
             String key = val == Validated.OLD_KEY ? "oldkey" : null;
@@ -247,26 +249,24 @@ public class CvalAddonstCheckerUseCasesTest {
             addonChecker.run();
             message = readSystemOut();
             if (res == Compile.NO) {
-                Assert.fail(testNumber + "Exception not thrown:" + message);
+                fail(testNumber + "Exception not thrown:" + message);
             }
         } catch (Exception e) {
             restoreSystemOut();
             message = e.getMessage();
             if (res == Compile.YES) {
-                Assert.fail(
-                        testNumber + "Unexpected Exception: " + e.getMessage());
+                fail(testNumber + "Unexpected Exception: " + e.getMessage());
             }
         }
 
         // System.err.println("\n> " + testNumber + " " + lic + " " + ver + " "
         // + val + " " + net + " " + res + " " + cached + "\n" + message);
 
-        Assert.assertTrue(testNumber + "Fail:\n" + message + "\nDoes not match:"
+        assertTrue(testNumber + "Fail:\n" + message + "\nDoes not match:"
                 + msg.msg, message.matches("(?s).*" + msg.msg + ".*"));
 
         String c = cachedPreferences(productNameCval);
-        Assert.assertTrue(testNumber + "Fail: cacheExists != "
-                + (cached == Cached.YES) + "\n  " + c,
-                (c != null) == (cached == Cached.YES));
+        assertTrue(testNumber + "Fail: cacheExists != " + (cached == Cached.YES)
+                + "\n  " + c, (c != null) == (cached == Cached.YES));
     }
 }

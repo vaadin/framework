@@ -1,5 +1,12 @@
 package com.vaadin.v7.data.util.sqlcontainer.query;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +44,7 @@ public class TableQueryTest {
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
         DataGenerator.addPeopleToDatabase(connectionPool);
     }
@@ -57,22 +63,22 @@ public class TableQueryTest {
     public void construction_legalParameters_shouldSucceed() {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 new DefaultSQLGenerator());
-        Assert.assertArrayEquals(new Object[] { "ID" },
+        assertArrayEquals(new Object[] { "ID" },
                 tQuery.getPrimaryKeyColumns().toArray());
         boolean correctTableName = "people"
                 .equalsIgnoreCase(tQuery.getTableName());
-        Assert.assertTrue(correctTableName);
+        assertTrue(correctTableName);
     }
 
     @Test
     public void construction_legalParameters_defaultGenerator_shouldSucceed() {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
-        Assert.assertArrayEquals(new Object[] { "ID" },
+        assertArrayEquals(new Object[] { "ID" },
                 tQuery.getPrimaryKeyColumns().toArray());
         boolean correctTableName = "people"
                 .equalsIgnoreCase(tQuery.getTableName());
-        Assert.assertTrue(correctTableName);
+        assertTrue(correctTableName);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -102,7 +108,7 @@ public class TableQueryTest {
     public void getCount_simpleQuery_returnsFour() throws SQLException {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
-        Assert.assertEquals(4, tQuery.getCount());
+        assertEquals(4, tQuery.getCount());
     }
 
     @Test
@@ -127,7 +133,7 @@ public class TableQueryTest {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
 
-        Assert.assertEquals(6, tQuery.getCount());
+        assertEquals(6, tQuery.getCount());
     }
 
     @Test
@@ -137,7 +143,7 @@ public class TableQueryTest {
         tQuery.getCount();
         tQuery.getCount();
         Connection c = connectionPool.reserveConnection();
-        Assert.assertNotNull(c);
+        assertNotNull(c);
         connectionPool.releaseConnection(c);
     }
 
@@ -152,23 +158,23 @@ public class TableQueryTest {
         tQuery.beginTransaction();
         ResultSet rs = tQuery.getResults(0, 0);
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1));
-        Assert.assertEquals("Ville", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1));
+        assertEquals("Ville", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1));
-        Assert.assertEquals("Kalle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1));
+        assertEquals("Kalle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(2 + offset, rs.getInt(1));
-        Assert.assertEquals("Pelle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2 + offset, rs.getInt(1));
+        assertEquals("Pelle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(3 + offset, rs.getInt(1));
-        Assert.assertEquals("Börje", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(3 + offset, rs.getInt(1));
+        assertEquals("Börje", rs.getString(2));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         tQuery.commit();
     }
 
@@ -183,9 +189,9 @@ public class TableQueryTest {
         tQuery.beginTransaction();
         ResultSet rs = tQuery.getResults(0, 0);
         for (int i = 0; i < 5000; i++) {
-            Assert.assertTrue(rs.next());
+            assertTrue(rs.next());
         }
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         tQuery.commit();
     }
 
@@ -201,8 +207,7 @@ public class TableQueryTest {
         tQuery.beginTransaction();
         try {
             tQuery.beginTransaction();
-            Assert.fail(
-                    "Should throw exception when starting a transaction while already in a transaction");
+            fail("Should throw exception when starting a transaction while already in a transaction");
         } catch (IllegalStateException e) {
             // Cleanup to make test connection pool happy
             tQuery.rollback();
@@ -247,7 +252,7 @@ public class TableQueryTest {
             throws SQLException {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
-        Assert.assertTrue(tQuery.containsRowWithKey(1));
+        assertTrue(tQuery.containsRowWithKey(1));
     }
 
     @Test
@@ -256,7 +261,7 @@ public class TableQueryTest {
         TableQuery tQuery = new TableQuery("people", connectionPool,
                 SQLTestsConstants.sqlGen);
 
-        Assert.assertFalse(tQuery.containsRowWithKey(1337));
+        assertFalse(tQuery.containsRowWithKey(1337));
     }
 
     @Test
@@ -270,7 +275,7 @@ public class TableQueryTest {
         } catch (SQLException se) {
             return;
         }
-        Assert.assertFalse(b);
+        assertFalse(b);
     }
 
     @Test
@@ -304,7 +309,7 @@ public class TableQueryTest {
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Like("NAME", "%lle"));
         tQuery.setFilters(filters);
-        Assert.assertEquals(3, tQuery.getCount());
+        assertEquals(3, tQuery.getCount());
     }
 
     @Test
@@ -320,23 +325,23 @@ public class TableQueryTest {
         ResultSet rs;
         rs = tQuery.getResults(0, 0);
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(3 + offset, rs.getInt(1));
-        Assert.assertEquals("Börje", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(3 + offset, rs.getInt(1));
+        assertEquals("Börje", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1));
-        Assert.assertEquals("Kalle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1));
+        assertEquals("Kalle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(2 + offset, rs.getInt(1));
-        Assert.assertEquals("Pelle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2 + offset, rs.getInt(1));
+        assertEquals("Pelle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1));
-        Assert.assertEquals("Ville", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1));
+        assertEquals("Ville", rs.getString(2));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         tQuery.commit();
     }
 
@@ -353,23 +358,23 @@ public class TableQueryTest {
         ResultSet rs;
         rs = tQuery.getResults(0, 0);
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1));
-        Assert.assertEquals("Ville", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1));
+        assertEquals("Ville", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(2 + offset, rs.getInt(1));
-        Assert.assertEquals("Pelle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2 + offset, rs.getInt(1));
+        assertEquals("Pelle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1));
-        Assert.assertEquals("Kalle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1));
+        assertEquals("Kalle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(3 + offset, rs.getInt(1));
-        Assert.assertEquals("Börje", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(3 + offset, rs.getInt(1));
+        assertEquals("Börje", rs.getString(2));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         tQuery.commit();
     }
 
@@ -397,15 +402,15 @@ public class TableQueryTest {
                 SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(tQuery);
         container.setAutoCommit(false);
-        Assert.assertTrue(
+        assertTrue(
                 container.removeItem(container.getItemIds().iterator().next()));
 
-        Assert.assertEquals(4, tQuery.getCount());
-        Assert.assertEquals(3, container.size());
+        assertEquals(4, tQuery.getCount());
+        assertEquals(3, container.size());
         container.commit();
 
-        Assert.assertEquals(3, tQuery.getCount());
-        Assert.assertEquals(3, container.size());
+        assertEquals(3, tQuery.getCount());
+        assertEquals(3, container.size());
     }
 
     @Test
@@ -416,7 +421,7 @@ public class TableQueryTest {
 
         SQLContainer container = new SQLContainer(tQuery);
         container.setAutoCommit(true);
-        Assert.assertFalse(container.removeItem("foo"));
+        assertFalse(container.removeItem("foo"));
     }
 
     /**********************************************************************
@@ -432,14 +437,14 @@ public class TableQueryTest {
         container.setAutoCommit(false);
 
         Object item = container.addItem();
-        Assert.assertNotNull(item);
+        assertNotNull(item);
 
-        Assert.assertEquals(4, tQuery.getCount());
-        Assert.assertEquals(5, container.size());
+        assertEquals(4, tQuery.getCount());
+        assertEquals(5, container.size());
         container.commit();
 
-        Assert.assertEquals(5, tQuery.getCount());
-        Assert.assertEquals(5, container.size());
+        assertEquals(5, tQuery.getCount());
+        assertEquals(5, container.size());
     }
 
     @Test
@@ -453,29 +458,29 @@ public class TableQueryTest {
         container.setAutoCommit(false);
 
         /* Check that the container size is correct and there is no 'Viljami' */
-        Assert.assertEquals(4, container.size());
+        assertEquals(4, container.size());
         List<Filter> filters = new ArrayList<Filter>();
         filters.add(new Equal("NAME", "Viljami"));
         tQuery.setFilters(filters);
-        Assert.assertEquals(0, tQuery.getCount());
+        assertEquals(0, tQuery.getCount());
         tQuery.setFilters(null);
 
         /* Fetch first item, modify and commit */
         Object item = container
                 .getItem(container.getItemIds().iterator().next());
-        Assert.assertNotNull(item);
+        assertNotNull(item);
 
         RowItem ri = (RowItem) item;
-        Assert.assertNotNull(ri.getItemProperty("NAME"));
+        assertNotNull(ri.getItemProperty("NAME"));
         ri.getItemProperty("NAME").setValue("Viljami");
 
         container.commit();
 
         // Check that the size is still correct and only 1 'Viljami' is found
-        Assert.assertEquals(4, tQuery.getCount());
-        Assert.assertEquals(4, container.size());
+        assertEquals(4, tQuery.getCount());
+        assertEquals(4, container.size());
         tQuery.setFilters(filters);
-        Assert.assertEquals(1, tQuery.getCount());
+        assertEquals(1, tQuery.getCount());
     }
 
     @Test
@@ -497,7 +502,7 @@ public class TableQueryTest {
                 .prepareStatement("SELECT * FROM PEOPLE WHERE \"NAME\" = ?");
         stmt.setString(1, "R2D2");
         ResultSet rs = stmt.executeQuery();
-        Assert.assertTrue(rs.next());
+        assertTrue(rs.next());
         rs.close();
         stmt.close();
         connectionPool.releaseConnection(conn);
@@ -513,7 +518,7 @@ public class TableQueryTest {
         tQuery.setVersionColumn("VERSION");
         SQLContainer container = new SQLContainer(tQuery);
         RowItem row = (RowItem) container.getItem(container.firstItemId());
-        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+        assertEquals("Junk", row.getItemProperty("TEXT").getValue());
 
         row.getItemProperty("TEXT").setValue("asdf");
         container.commit();
@@ -523,7 +528,7 @@ public class TableQueryTest {
                 .prepareStatement("SELECT * FROM VERSIONED WHERE \"TEXT\" = ?");
         stmt.setString(1, "asdf");
         ResultSet rs = stmt.executeQuery();
-        Assert.assertTrue(rs.next());
+        assertTrue(rs.next());
         rs.close();
         stmt.close();
         conn.commit();
@@ -545,7 +550,7 @@ public class TableQueryTest {
         tQuery.setVersionColumn("VERSION");
         SQLContainer container = new SQLContainer(tQuery);
         RowItem row = (RowItem) container.getItem(container.firstItemId());
-        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+        assertEquals("Junk", row.getItemProperty("TEXT").getValue());
 
         row.getItemProperty("TEXT").setValue("asdf");
 
@@ -573,7 +578,7 @@ public class TableQueryTest {
         tQuery.setVersionColumn("VERSION");
         SQLContainer container = new SQLContainer(tQuery);
         RowItem row = (RowItem) container.getItem(container.firstItemId());
-        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+        assertEquals("Junk", row.getItemProperty("TEXT").getValue());
 
         container.removeItem(container.firstItemId());
         container.commit();
@@ -583,7 +588,7 @@ public class TableQueryTest {
                 .prepareStatement("SELECT * FROM VERSIONED WHERE \"TEXT\" = ?");
         stmt.setString(1, "Junk");
         ResultSet rs = stmt.executeQuery();
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         rs.close();
         stmt.close();
         conn.commit();
@@ -605,7 +610,7 @@ public class TableQueryTest {
         tQuery.setVersionColumn("VERSION");
         SQLContainer container = new SQLContainer(tQuery);
         RowItem row = (RowItem) container.getItem(container.firstItemId());
-        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+        assertEquals("Junk", row.getItemProperty("TEXT").getValue());
 
         // Update the version using another connection.
         Connection conn = connectionPool.reserveConnection();
@@ -637,7 +642,7 @@ public class TableQueryTest {
         tQuery.setVersionColumn("VERSION");
         SQLContainer container = new SQLContainer(tQuery);
         RowItem row = (RowItem) container.getItem(container.firstItemId());
-        Assert.assertEquals("Junk", row.getItemProperty("TEXT").getValue());
+        assertEquals("Junk", row.getItemProperty("TEXT").getValue());
 
         // Update the version using another connection.
         Connection conn = connectionPool.reserveConnection();
@@ -694,7 +699,7 @@ public class TableQueryTest {
             // metadata scanning at query creation time should not fail
             TableQuery tq1 = new TableQuery(null, "oaas", "product",
                     connectionPool, SQLTestsConstants.sqlGen);
-            Assert.assertNotNull(tq1);
+            assertNotNull(tq1);
         } finally {
             // cleanup - might not be an in-memory DB
             statement.execute(SQLTestsConstants.dropSchema);
@@ -737,7 +742,7 @@ public class TableQueryTest {
             // name
             TableQuery tq1 = new TableQuery("sqlcontainer", "oaas", "product",
                     connectionPool, SQLTestsConstants.sqlGen);
-            Assert.assertNotNull(tq1);
+            assertNotNull(tq1);
         } finally {
             // cleanup - might not be an in-memory DB
             statement.execute(SQLTestsConstants.dropSchema);

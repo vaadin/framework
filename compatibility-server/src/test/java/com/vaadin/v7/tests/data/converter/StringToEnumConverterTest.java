@@ -1,6 +1,9 @@
 package com.vaadin.v7.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.Converter;
@@ -46,15 +49,14 @@ public class StringToEnumConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel("", Enum.class, null));
+        assertEquals(null, converter.convertToModel("", Enum.class, null));
     }
 
     @Test
     public void testInvalidEnumClassConversion() {
         try {
             converter.convertToModel("Foo", Enum.class, null);
-            Assert.fail("No exception thrown");
+            fail("No exception thrown");
         } catch (ConversionException e) {
             // OK
         }
@@ -62,69 +64,68 @@ public class StringToEnumConverterTest {
 
     @Test
     public void testNullConversion() {
-        Assert.assertEquals(null,
-                converter.convertToModel(null, Enum.class, null));
+        assertEquals(null, converter.convertToModel(null, Enum.class, null));
     }
 
     @Test
     public void testReverseNullConversion() {
-        Assert.assertEquals(null,
+        assertEquals(null,
                 reverseConverter.convertToModel(null, String.class, null));
     }
 
     @Test
     public void testValueConversion() {
-        Assert.assertEquals(FooEnum.VALUE1,
+        assertEquals(FooEnum.VALUE1,
                 converter.convertToModel("Value1", FooEnum.class, null));
-        Assert.assertEquals(FooEnum.SOME_VALUE,
+        assertEquals(FooEnum.SOME_VALUE,
                 converter.convertToModel("Some value", FooEnum.class, null));
-        Assert.assertEquals(FooEnum.FOO_BAR_BAZ,
+        assertEquals(FooEnum.FOO_BAR_BAZ,
                 converter.convertToModel("Foo bar baz", FooEnum.class, null));
-        Assert.assertEquals(FooEnum.Bar,
+        assertEquals(FooEnum.Bar,
                 converter.convertToModel("Bar", FooEnum.class, null));
-        Assert.assertEquals(FooEnum.nonStandardCase, converter
+        assertEquals(FooEnum.nonStandardCase, converter
                 .convertToModel("Nonstandardcase", FooEnum.class, null));
-        Assert.assertEquals(FooEnum._HUGH,
+        assertEquals(FooEnum._HUGH,
                 converter.convertToModel("_hugh", FooEnum.class, null));
     }
 
     @Test
     public void testReverseValueConversion() {
-        Assert.assertEquals("Value1", reverseConverter
-                .convertToModel(FooEnum.VALUE1, String.class, null));
-        Assert.assertEquals("Some value", reverseConverter
-                .convertToModel(FooEnum.SOME_VALUE, String.class, null));
-        Assert.assertEquals("Foo bar baz", reverseConverter
-                .convertToModel(FooEnum.FOO_BAR_BAZ, String.class, null));
-        Assert.assertEquals("Bar", reverseConverter.convertToModel(FooEnum.Bar,
+        assertEquals("Value1", reverseConverter.convertToModel(FooEnum.VALUE1,
                 String.class, null));
-        Assert.assertEquals("Nonstandardcase", reverseConverter
+        assertEquals("Some value", reverseConverter
+                .convertToModel(FooEnum.SOME_VALUE, String.class, null));
+        assertEquals("Foo bar baz", reverseConverter
+                .convertToModel(FooEnum.FOO_BAR_BAZ, String.class, null));
+        assertEquals("Bar", reverseConverter.convertToModel(FooEnum.Bar,
+                String.class, null));
+        assertEquals("Nonstandardcase", reverseConverter
                 .convertToModel(FooEnum.nonStandardCase, String.class, null));
-        Assert.assertEquals("_hugh", reverseConverter
-                .convertToModel(FooEnum._HUGH, String.class, null));
+        assertEquals("_hugh", reverseConverter.convertToModel(FooEnum._HUGH,
+                String.class, null));
 
     }
 
     @Test
     public void preserveFormattingWithCustomToString() {
         for (EnumWithCustomToString e : EnumWithCustomToString.values()) {
-            Assert.assertEquals(e.toString(), convertToString(e));
+            assertEquals(e.toString(), convertToString(e));
         }
     }
 
     @Test
     public void findEnumWithCustomToString() {
         for (EnumWithCustomToString e : EnumWithCustomToString.values()) {
-            Assert.assertSame(e,
+            assertSame(e,
                     convertToEnum(e.toString(), EnumWithCustomToString.class));
-            Assert.assertSame(e,
+            assertSame(e,
                     convertToEnum(e.name(), EnumWithCustomToString.class));
         }
     }
 
     @Test
     public void unambigousValueInEnumWithAmbigous_succeed() {
-        Assert.assertSame(EnumWithAmbigousToString.FOO,
+        assertSame(EnumWithAmbigousToString.FOO,
                 convertToEnum("foo", EnumWithAmbigousToString.class));
     }
 

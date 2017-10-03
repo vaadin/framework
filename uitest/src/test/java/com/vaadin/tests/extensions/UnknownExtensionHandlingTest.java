@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.extensions;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -34,10 +36,9 @@ public class UnknownExtensionHandlingTest extends SingleBrowserTest {
 
         openDebugLogTab();
 
-        Assert.assertTrue(
-                hasMessageContaining(MyExtension.class.getCanonicalName()));
+        assertTrue(hasMessageContaining(MyExtension.class.getCanonicalName()));
 
-        Assert.assertFalse(hasMessageContaining("Hierachy claims"));
+        assertFalse(hasMessageContaining("Hierachy claims"));
     }
 
     private boolean hasMessageContaining(String needle) {

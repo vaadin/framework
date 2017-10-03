@@ -1,5 +1,7 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -26,7 +28,6 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -213,7 +214,7 @@ public class ClassesSerializableTest {
                         field.getDeclaringClass().getName(), field.getName()))
                 .collect(Collectors.joining(", "));
 
-        Assert.fail("Fields with functional types that are not serializable: "
+        fail("Fields with functional types that are not serializable: "
                 + nonSerializableString);
     }
 
@@ -233,9 +234,8 @@ public class ClassesSerializableTest {
                 nonSerializableString += ")";
             }
         }
-        Assert.fail(
-                "Serializable not implemented by the following classes and interfaces: "
-                        + nonSerializableString);
+        fail("Serializable not implemented by the following classes and interfaces: "
+                + nonSerializableString);
 
     }
 

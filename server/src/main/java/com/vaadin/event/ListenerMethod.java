@@ -243,10 +243,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        Method method = null;
         for (Method m : target.getClass().getMethods()) {
             if (m.getName().equals(methodName)) {
                 method = m;
+                break;
             }
         }
         if (method == null) {
@@ -271,7 +271,6 @@ public class ListenerMethod implements EventListener, Serializable {
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         this.arguments = arguments;
         this.eventArgumentIndex = eventArgumentIndex;
     }
@@ -355,6 +354,7 @@ public class ListenerMethod implements EventListener, Serializable {
         for (Method m : target.getClass().getMethods()) {
             if (m.getName().equals(methodName)) {
                 method = m;
+                break;
             }
         }
         if (method == null) {
@@ -364,7 +364,6 @@ public class ListenerMethod implements EventListener, Serializable {
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         this.arguments = arguments;
         eventArgumentIndex = -1;
     }
@@ -451,10 +450,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        Method method = null;
         for (Method m : target.getClass().getMethods()) {
             if (m.getName().equals(methodName)) {
                 method = m;
+                break;
             }
         }
         if (method == null) {
@@ -464,7 +463,6 @@ public class ListenerMethod implements EventListener, Serializable {
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         eventArgumentIndex = -1;
 
         final Class<?>[] params = method.getParameterTypes();

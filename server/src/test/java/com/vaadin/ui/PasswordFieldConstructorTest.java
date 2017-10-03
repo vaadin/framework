@@ -15,29 +15,31 @@
  */
 package com.vaadin.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 public class PasswordFieldConstructorTest {
 
     @Test
     public void initiallyEmpty() {
         PasswordField passwordField = new PasswordField();
-        Assert.assertTrue(passwordField.isEmpty());
+        assertTrue(passwordField.isEmpty());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
         PasswordField passwordField = new PasswordField(null, "foobar");
-        Assert.assertFalse(passwordField.isEmpty());
+        assertFalse(passwordField.isEmpty());
 
         passwordField.clear();
-        Assert.assertTrue(passwordField.isEmpty());
+        assertTrue(passwordField.isEmpty());
     }
 
     @Test

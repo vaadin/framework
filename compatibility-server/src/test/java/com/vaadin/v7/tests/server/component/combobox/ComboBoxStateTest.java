@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.combobox.ComboBoxState;
@@ -30,7 +31,7 @@ public class ComboBoxStateTest {
     public void getState_comboboxHasCustomState() {
         TestComboBox combobox = new TestComboBox();
         ComboBoxState state = combobox.getState();
-        Assert.assertEquals("Unexpected state class", ComboBoxState.class,
+        assertEquals("Unexpected state class", ComboBoxState.class,
                 state.getClass());
     }
 
@@ -38,14 +39,14 @@ public class ComboBoxStateTest {
     public void getPrimaryStyleName_comboboxHasCustomPrimaryStyleName() {
         ComboBox combobox = new ComboBox();
         ComboBoxState state = new ComboBoxState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, combobox.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                combobox.getPrimaryStyleName());
     }
 
     @Test
     public void comboboxStateHasCustomPrimaryStyleName() {
         ComboBoxState state = new ComboBoxState();
-        Assert.assertEquals("Unexpected primary style name", "v-filterselect",
+        assertEquals("Unexpected primary style name", "v-filterselect",
                 state.primaryStyleName);
     }
 

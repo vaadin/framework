@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.embedded;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -58,13 +60,13 @@ public class EmbeddedClickListenerRelativeCoordinatesTest
         int x = Integer.parseInt(xLabel.getText());
         int y = Integer.parseInt(yLabel.getText());
 
-        Assert.assertEquals(
+        assertEquals(
                 "Reported X-coordinate from Embedded does not match click location",
                 expectedX, x);
 
         // IE10 and IE11 sometimes click one pixel below the given position
         int tolerance = isIE() ? 1 : 0;
-        Assert.assertTrue(
+        assertTrue(
                 "Reported Y-coordinate from Embedded does not match click location",
                 Math.abs(expectedY - y) <= tolerance);
     }

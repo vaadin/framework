@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.widgetset.server;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -28,6 +29,6 @@ public class NoneLoadStyleTest extends SingleBrowserTest {
 
         String componentText = findElement(By.id("component")).getText();
 
-        Assert.assertTrue(componentText.contains("does not contain"));
+        assertTrue(componentText.contains("does not contain"));
     }
 }

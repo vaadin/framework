@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -85,7 +87,7 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
         assertHeight(component, 500 - spacing, 1);
         int offset = component.getLocation().getY()
                 - gridLayout.getLocation().getY();
-        Assert.assertEquals(spacing, offset);
+        assertEquals(spacing, offset);
 
     }
 
@@ -95,12 +97,12 @@ public class GridLayoutExtraSpacingTest extends MultiBrowserTest {
 
         int offset = component.getLocation().getY()
                 - gridLayout.getLocation().getY();
-        Assert.assertEquals(0, offset);
+        assertEquals(0, offset);
 
     }
 
     private void assertHeight(WebElement component, int height, int tolerance) {
-        Assert.assertTrue(Math
+        assertTrue(Math
                 .abs(height - component.getSize().getHeight()) <= tolerance);
     }
 }

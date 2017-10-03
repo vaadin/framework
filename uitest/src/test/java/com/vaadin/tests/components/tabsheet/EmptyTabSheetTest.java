@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -37,7 +38,7 @@ public class EmptyTabSheetTest extends MultiBrowserTest {
         WebElement deco = getDriver()
                 .findElement(By.className("v-tabsheet-deco"));
 
-        Assert.assertEquals("none", deco.getCssValue("display"));
+        assertEquals("none", deco.getCssValue("display"));
     }
 
 }

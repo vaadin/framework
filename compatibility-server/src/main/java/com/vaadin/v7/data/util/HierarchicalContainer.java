@@ -593,8 +593,7 @@ public class HierarchicalContainer extends IndexedContainer
     public boolean removeItemRecursively(Object itemId) {
         disableContentsChangeEvents();
         try {
-            boolean removeItemRecursively = removeItemRecursively(this, itemId);
-            return removeItemRecursively;
+            return removeItemRecursively(this, itemId);
         } finally {
             enableAndFireContentsChangeEvents();
         }

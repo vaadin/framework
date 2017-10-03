@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.design;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -43,13 +44,11 @@ public class DesignTest {
         Component root = Design.read(getClass()
                 .getResourceAsStream("verticallayout-two-children.html"));
         VerticalLayout rootLayout = (VerticalLayout) root;
-        Assert.assertEquals(VerticalLayout.class, root.getClass());
+        assertEquals(VerticalLayout.class, root.getClass());
 
-        Assert.assertEquals(2, rootLayout.getComponentCount());
-        Assert.assertEquals(TextField.class,
-                rootLayout.getComponent(0).getClass());
-        Assert.assertEquals(Button.class,
-                rootLayout.getComponent(1).getClass());
+        assertEquals(2, rootLayout.getComponentCount());
+        assertEquals(TextField.class, rootLayout.getComponent(0).getClass());
+        assertEquals(Button.class, rootLayout.getComponent(1).getClass());
     }
 
     @Test(expected = DesignException.class)

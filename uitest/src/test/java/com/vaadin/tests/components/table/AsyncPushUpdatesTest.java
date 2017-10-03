@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -40,7 +41,7 @@ public class AsyncPushUpdatesTest extends MultiBrowserTest {
         button.click();
 
         $(TableElement.class).first().getCell(12, 0);
-        Assert.fail("Duplicates are present.");
+        fail("Duplicates are present.");
     }
 
 }

@@ -15,11 +15,12 @@
  */
 package com.vaadin.tests.smoke;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -31,16 +32,16 @@ public class GridSmokeTest extends MultiBrowserTest {
 
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertEquals("Lorem", grid.getCell(0, 1).getText());
-        Assert.assertEquals("2", grid.getCell(1, 2).getText());
+        assertEquals("Lorem", grid.getCell(0, 1).getText());
+        assertEquals("2", grid.getCell(1, 2).getText());
 
         addRow();
 
-        Assert.assertEquals("Dolor", grid.getCell(2, 1).getText());
+        assertEquals("Dolor", grid.getCell(2, 1).getText());
 
         addRow();
 
-        Assert.assertEquals("Dolor", grid.getCell(3, 1).getText());
+        assertEquals("Dolor", grid.getCell(3, 1).getText());
     }
 
     private void addRow() {

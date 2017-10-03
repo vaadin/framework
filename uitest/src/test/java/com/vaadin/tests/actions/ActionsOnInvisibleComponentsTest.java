@@ -1,8 +1,9 @@
 package com.vaadin.tests.actions;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -22,13 +23,13 @@ public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
     @Test
     public void testShortcutsOnInvisibleDisabledButtons() {
         openTestURL();
-        Assert.assertEquals(LAST_INIT_LOG, getLogRow(0));
+        assertEquals(LAST_INIT_LOG, getLogRow(0));
         invokeShortcut("A");
-        Assert.assertEquals(LAST_INIT_LOG, getLogRow(0));
+        assertEquals(LAST_INIT_LOG, getLogRow(0));
         invokeShortcut("B");
-        Assert.assertEquals(LAST_INIT_LOG, getLogRow(0));
+        assertEquals(LAST_INIT_LOG, getLogRow(0));
         invokeShortcut("C");
-        Assert.assertEquals("4. Click event for enabled button", getLogRow(0));
+        assertEquals("4. Click event for enabled button", getLogRow(0));
     }
 
     private void invokeShortcut(CharSequence key) {

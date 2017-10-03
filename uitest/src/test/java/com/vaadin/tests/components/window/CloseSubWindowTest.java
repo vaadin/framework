@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -41,7 +42,7 @@ public class CloseSubWindowTest extends MultiBrowserTest {
     }
 
     private void assertLogText() {
-        Assert.assertEquals("Unexpected log contents,",
+        assertEquals("Unexpected log contents,",
                 "1. Window 'Sub-window' closed", getLogRow(0));
     }
 }

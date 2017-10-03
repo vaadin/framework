@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -29,7 +30,7 @@ public class UiDependenciesInHtmlTest extends SingleBrowserTest {
 
         String statusText = findElement(By.id("statusBox")).getText();
 
-        Assert.assertEquals(
+        assertEquals(
                 "Script loaded before vaadinBootstrap.js: true\nStyle tag before vaadin theme: true\nStyle tags in correct order: true",
                 statusText);
     }

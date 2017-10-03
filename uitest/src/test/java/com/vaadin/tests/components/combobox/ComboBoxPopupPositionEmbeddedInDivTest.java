@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
@@ -43,10 +44,10 @@ public class ComboBoxPopupPositionEmbeddedInDivTest extends MultiBrowserTest {
 
         Point comboboxLocation = combobox.getLocation();
         Point popupLocation = popup.getLocation();
-        Assert.assertTrue("Popup should be below combobox",
+        assertTrue("Popup should be below combobox",
                 popupLocation.getY() > comboboxLocation.getY());
 
-        Assert.assertTrue("Popup should be left aligned with the combobox",
+        assertTrue("Popup should be left aligned with the combobox",
                 popupLocation.getX() == comboboxLocation.getX());
     }
 

@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.checkboxgroup;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.CheckBoxGroupElement;
@@ -34,10 +35,10 @@ public class DisabledCheckBoxGroupTest extends MultiBrowserTest {
         openTestURL();
         List<String> options = $(CheckBoxGroupElement.class).first()
                 .getOptions();
-        Assert.assertEquals(3, options.size());
-        Assert.assertEquals("a", options.get(0));
-        Assert.assertEquals("b", options.get(1));
-        Assert.assertEquals("c", options.get(2));
+        assertEquals(3, options.size());
+        assertEquals("a", options.get(0));
+        assertEquals("b", options.get(1));
+        assertEquals("c", options.get(2));
     }
 
 }

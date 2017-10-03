@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.serialization;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -28,8 +29,7 @@ public class GenericWidgetHandlingTest extends MultiBrowserTest {
         openTestURL();
         WebElement label = vaadinElementById("label");
 
-        Assert.assertEquals("The generic text is strong in this one",
-                label.getText());
+        assertEquals("The generic text is strong in this one", label.getText());
     }
 
 }

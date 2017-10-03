@@ -1,6 +1,8 @@
 package com.vaadin.tests.elements.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
@@ -34,8 +36,7 @@ public class GetRowHeaderTest extends MultiBrowserTest {
         TableHeaderElement header = table.getHeaderCell(COLUMN_INDEX);
         String expected = "property0";
         String actual = header.getCaption();
-        Assert.assertEquals(
-                "TableHeaderElement.getCaption() returns wrong value.",
+        assertEquals("TableHeaderElement.getCaption() returns wrong value.",
                 expected, actual);
     }
 
@@ -51,10 +52,8 @@ public class GetRowHeaderTest extends MultiBrowserTest {
         table.waitForVaadin();
         String expected = "col=0 row=99";
         String actual = table.getCell(0, COLUMN_INDEX).getText();
-        Assert.assertEquals(
-                "TableHeaderElement.toggleSort() did not sort column "
-                        + COLUMN_INDEX,
-                expected, actual);
+        assertEquals("TableHeaderElement.toggleSort() did not sort column "
+                + COLUMN_INDEX, expected, actual);
     }
 
     @Test
@@ -82,7 +81,7 @@ public class GetRowHeaderTest extends MultiBrowserTest {
         }
         header = table.getHeaderCell(COLUMN_INDEX);
         int widthAfterResize = header.getSize().width;
-        Assert.assertTrue(
+        assertTrue(
                 "The column with index " + COLUMN_INDEX + " was not resized.",
                 initialWidth > widthAfterResize);
     }

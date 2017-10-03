@@ -15,11 +15,15 @@
  */
 package com.vaadin.v7.ui;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -30,8 +34,8 @@ public class AbsSelectTest {
     public void addItemsStrings() {
         NativeSelect ns = new NativeSelect();
         ns.addItems("Foo", "bar", "baz");
-        Assert.assertEquals(3, ns.size());
-        Assert.assertArrayEquals(new Object[] { "Foo", "bar", "baz" },
+        assertEquals(3, ns.size());
+        assertArrayEquals(new Object[] { "Foo", "bar", "baz" },
                 ns.getItemIds().toArray());
     }
 
@@ -43,8 +47,8 @@ public class AbsSelectTest {
 
         NativeSelect ns = new NativeSelect();
         ns.addItems(o1, o2, o3);
-        Assert.assertEquals(3, ns.size());
-        Assert.assertArrayEquals(new Object[] { o1, o2, o3 },
+        assertEquals(3, ns.size());
+        assertArrayEquals(new Object[] { o1, o2, o3 },
                 ns.getItemIds().toArray());
     }
 
@@ -56,8 +60,8 @@ public class AbsSelectTest {
         itemIds.add("baz");
         NativeSelect ns = new NativeSelect();
         ns.addItems(itemIds);
-        Assert.assertEquals(3, ns.size());
-        Assert.assertArrayEquals(new Object[] { "foo", "bar", "baz" },
+        assertEquals(3, ns.size());
+        assertArrayEquals(new Object[] { "foo", "bar", "baz" },
                 ns.getItemIds().toArray());
     }
 
@@ -72,8 +76,8 @@ public class AbsSelectTest {
         itemIds.add(o3);
         NativeSelect ns = new NativeSelect();
         ns.addItems(itemIds);
-        Assert.assertEquals(3, ns.size());
-        Assert.assertArrayEquals(new Object[] { o1, o2, o3 },
+        assertEquals(3, ns.size());
+        assertArrayEquals(new Object[] { o1, o2, o3 },
                 ns.getItemIds().toArray());
 
     }
@@ -81,7 +85,7 @@ public class AbsSelectTest {
     @Test
     public void singleSelectInitiallyEmpty() {
         AbstractSelect s = new ListSelect();
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
     @Test
@@ -91,9 +95,9 @@ public class AbsSelectTest {
         s.addItem("bar");
         s.setPropertyDataSource(new ObjectProperty<String>("foo"));
 
-        Assert.assertFalse(s.isEmpty());
+        assertFalse(s.isEmpty());
         s.clear();
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
     @Test
@@ -103,16 +107,16 @@ public class AbsSelectTest {
         s.addItem("bar");
         s.setValue("bar");
 
-        Assert.assertFalse(s.isEmpty());
+        assertFalse(s.isEmpty());
         s.clear();
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
     @Test
     public void multiSelectInitiallyEmpty() {
         AbstractSelect s = new ListSelect();
         s.setMultiSelect(true);
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
     @Test
@@ -126,9 +130,9 @@ public class AbsSelectTest {
         sel.add("bar");
         s.setPropertyDataSource(new ObjectProperty<HashSet>(sel));
 
-        Assert.assertFalse(s.isEmpty());
+        assertFalse(s.isEmpty());
         s.clear();
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
     @Test
@@ -140,9 +144,9 @@ public class AbsSelectTest {
         s.select("foo");
         s.select("bar");
 
-        Assert.assertFalse(s.isEmpty());
+        assertFalse(s.isEmpty());
         s.clear();
-        Assert.assertTrue(s.isEmpty());
+        assertTrue(s.isEmpty());
     }
 
 }

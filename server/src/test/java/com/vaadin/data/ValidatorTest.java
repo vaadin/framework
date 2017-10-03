@@ -15,10 +15,12 @@
  */
 package com.vaadin.data;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
 import java.util.Objects;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.validator.ValidatorTestBase;
@@ -33,7 +35,7 @@ public class ValidatorTest extends ValidatorTestBase {
     public void alwaysPass() {
         Validator<String> alwaysPass = Validator.alwaysPass();
         ValidationResult result = alwaysPass.apply("foo", new ValueContext());
-        Assert.assertFalse(result.isError());
+        assertFalse(result.isError());
     }
 
     @Test
@@ -41,10 +43,10 @@ public class ValidatorTest extends ValidatorTestBase {
         Validator<String> validator = Validator.from(Objects::nonNull,
                 "Cannot be null");
         ValidationResult result = validator.apply(null, new ValueContext());
-        Assert.assertTrue(result.isError());
+        assertTrue(result.isError());
 
         result = validator.apply("", new ValueContext());
-        Assert.assertFalse(result.isError());
+        assertFalse(result.isError());
     }
 
     @Test

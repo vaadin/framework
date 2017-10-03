@@ -550,7 +550,6 @@ public class IndexedContainer
                 }
             }
         }
-
     }
 
     @Override

@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.optiongroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.optiongroup.OptionGroupState;
@@ -31,7 +32,7 @@ public class OptionGroupStateTest {
     public void getState_optionGroupHasCustomState() {
         TestOptionGroup group = new TestOptionGroup();
         OptionGroupState state = group.getState();
-        Assert.assertEquals("Unexpected state class", OptionGroupState.class,
+        assertEquals("Unexpected state class", OptionGroupState.class,
                 state.getClass());
     }
 
@@ -39,15 +40,15 @@ public class OptionGroupStateTest {
     public void getPrimaryStyleName_optionGroupHasCustomPrimaryStyleName() {
         OptionGroup layout = new OptionGroup();
         OptionGroupState state = new OptionGroupState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, layout.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                layout.getPrimaryStyleName());
     }
 
     @Test
     public void optionGroupStateHasCustomPrimaryStyleName() {
         OptionGroupState state = new OptionGroupState();
-        Assert.assertEquals("Unexpected primary style name",
-                "v-select-optiongroup", state.primaryStyleName);
+        assertEquals("Unexpected primary style name", "v-select-optiongroup",
+                state.primaryStyleName);
     }
 
     private static class TestOptionGroup extends OptionGroup {

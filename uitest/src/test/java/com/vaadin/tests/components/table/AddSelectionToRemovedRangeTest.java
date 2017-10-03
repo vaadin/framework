@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.table;
 
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -61,7 +62,7 @@ public class AddSelectionToRemovedRangeTest extends MultiBrowserTest {
         driver.findElement(By.className("v-button")).click();
         try {
             driver.findElement(By.vaadin("Root/VNotification[0]"));
-            Assert.fail("Notification is shown");
+            fail("Notification is shown");
         } catch (NoSuchElementException e) {
             // All is well.
         }

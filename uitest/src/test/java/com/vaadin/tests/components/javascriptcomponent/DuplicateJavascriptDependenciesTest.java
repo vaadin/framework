@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.javascriptcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -28,7 +29,6 @@ public class DuplicateJavascriptDependenciesTest extends SingleBrowserTest {
     public void duplicateJavascriptsDoNotCauseProblems() {
         openTestURL();
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("It works",
-                $(LabelElement.class).id("result").getText());
+        assertEquals("It works", $(LabelElement.class).id("result").getText());
     }
 }

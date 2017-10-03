@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -33,7 +34,7 @@ public class CssLayoutAbsoluteUrlTest extends SingleBrowserTest {
 
         // Not testing string equality since some browsers return the style with
         // quotes around the url argument and some without quotes.
-        Assert.assertTrue(backgroundImage + " does not contain 'about:blank'",
+        assertTrue(backgroundImage + " does not contain 'about:blank'",
                 backgroundImage.contains("about:blank"));
     }
 }

@@ -3,10 +3,10 @@ package com.vaadin.v7.tests.server.component.abstractfield;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinSession;
@@ -266,8 +266,7 @@ public class AbsFieldValueConversionsTest {
         try {
             Object v = tf.getConvertedValue();
             System.out.println(v);
-            Assert.fail(
-                    "Trying to convert String -> Integer should fail when there is no converter");
+            fail("Trying to convert String -> Integer should fail when there is no converter");
         } catch (ConversionException e) {
             // ok, should happen when there is no converter but conversion is
             // needed

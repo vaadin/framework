@@ -1,6 +1,7 @@
 package com.vaadin.test.dependencyrewrite;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -13,7 +14,7 @@ public class DependencyFilterIT extends TestBenchTestCase {
     public void dynamicallyAddedResources() {
         setDriver(new PhantomJSDriver());
         getDriver().get("http://localhost:8080/dynamic/");
-        Assert.assertEquals(1L, ((JavascriptExecutor) getDriver())
+        assertEquals(1L, ((JavascriptExecutor) getDriver())
                 .executeScript("return window.jqueryLoaded"));
     }
 
@@ -22,7 +23,7 @@ public class DependencyFilterIT extends TestBenchTestCase {
         setDriver(new PhantomJSDriver());
         getDriver().get("http://localhost:8080/initial/");
         // 2 because of https://github.com/vaadin/framework/issues/9181
-        Assert.assertEquals(2L, ((JavascriptExecutor) getDriver())
+        assertEquals(2L, ((JavascriptExecutor) getDriver())
                 .executeScript("return window.jqueryLoaded"));
     }
 

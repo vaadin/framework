@@ -51,7 +51,7 @@ public class TreeDragStart extends TestBase {
 
         tree.setContainerDataSource(createTreeContent());
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID);
-        for (Object item : tree.getItemIds().toArray()) {
+        for (Object item : tree.getItemIds()) {
             tree.setItemCaption(item, (String) ((BeanItem<?>) item)
                     .getItemProperty("name").getValue());
         }

@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.event;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,10 +77,10 @@ public class EventRouterTest {
         EasyMock.replay(component, listener);
         try {
             router.fireEvent(new Component.Event(component));
-            Assert.fail("Did not receive expected exception from listener");
+            fail("Did not receive expected exception from listener");
         } catch (RuntimeException e) {
             // e is a ListenerMethod@MethodException
-            Assert.assertEquals("listener failed", e.getCause().getMessage());
+            assertEquals("listener failed", e.getCause().getMessage());
         }
         EasyMock.verify(listener);
     }

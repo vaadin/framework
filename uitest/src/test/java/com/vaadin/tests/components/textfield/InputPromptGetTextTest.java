@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.components.textfield;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.lang.RandomStringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -48,7 +49,7 @@ public class InputPromptGetTextTest extends MultiBrowserTest {
         WebElement label = getDriver()
                 .findElement(By.id(InputPromptGetText.LABEL2));
 
-        Assert.assertEquals("Your input was:", label.getText().trim());
+        assertEquals("Your input was:", label.getText().trim());
     }
 
     private String getRandomString() {

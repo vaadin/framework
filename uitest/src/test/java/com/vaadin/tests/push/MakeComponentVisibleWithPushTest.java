@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -30,10 +31,10 @@ public class MakeComponentVisibleWithPushTest extends SingleBrowserTest {
         openTestURL();
 
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Unexpected row count", 1,
+        assertEquals("Unexpected row count", 1,
                 $(GridElement.class).first().getRowCount());
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Unexpected row count", 2,
+        assertEquals("Unexpected row count", 2,
                 $(GridElement.class).first().getRowCount());
 
         assertNoErrorNotifications();

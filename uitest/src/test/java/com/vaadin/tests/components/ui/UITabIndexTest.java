@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -22,7 +23,7 @@ public class UITabIndexTest extends MultiBrowserTest {
     }
 
     private void assertTabIndex(String expected) {
-        Assert.assertEquals("Unexpected tab index,", expected,
+        assertEquals("Unexpected tab index,", expected,
                 $(UIElement.class).first().getAttribute("tabIndex"));
     }
 }
