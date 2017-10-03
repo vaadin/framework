@@ -1,6 +1,9 @@
 package com.vaadin.v7.data.util.filter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class SimpleStringFilterTest
@@ -132,8 +135,7 @@ public class SimpleStringFilterTest
         TestItem<String, String> item = createTestItem();
         item.addItemProperty("other1", new NullProperty());
 
-        assertFalse(
-                f("other1", "ab", false, true).passesFilter(null, item));
+        assertFalse(f("other1", "ab", false, true).passesFilter(null, item));
     }
 
 }

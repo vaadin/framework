@@ -16,7 +16,9 @@
 
 package com.vaadin.v7.data.util.filter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.Item;
@@ -31,7 +33,6 @@ public class LikeFilterTest extends AbstractFilterTestBase<Like> {
 
     @Test
     public void testLikeWithNulls() {
-
         Like filter = new Like("value", "a");
 
         item1.addItemProperty("value", new ObjectProperty<String>("a"));
@@ -42,7 +43,6 @@ public class LikeFilterTest extends AbstractFilterTestBase<Like> {
         assertTrue(filter.passesFilter(null, item1));
         assertFalse(filter.passesFilter(null, item2));
         assertFalse(filter.passesFilter(null, item3));
-
     }
 
 }

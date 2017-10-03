@@ -1,9 +1,14 @@
 package com.vaadin.v7.data.util.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Filter;
@@ -37,9 +42,8 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
             null);
     protected final Filter lessEqualNull = new LessOrEqual(PROPERTY1, null);
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         itemNull = new PropertysetItem();
         itemNull.addItemProperty(PROPERTY1,
                 new ObjectProperty<String>(null, String.class));
@@ -57,9 +61,8 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
                 new ObjectProperty<String>("c", String.class));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         itemNull = null;
         itemEmpty = null;
         itemA = null;
@@ -206,10 +209,8 @@ public class CompareFilterTest extends AbstractFilterTestBase<Compare> {
         assertFalse(isNonPositive.passesFilter(null, itemPositive));
 
         Filter isPositiveScaleTwo = new Equal(PROPERTY1, positiveScaleTwo);
-        assertTrue(
-                isPositiveScaleTwo.passesFilter(null, itemPositiveScaleTwo));
+        assertTrue(isPositiveScaleTwo.passesFilter(null, itemPositiveScaleTwo));
         assertTrue(isPositiveScaleTwo.passesFilter(null, itemPositive));
-
     }
 
     @Test
