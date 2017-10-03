@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.Binder.PropertyFilterDefinition;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
@@ -216,6 +217,60 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     public static class NestedBeanPropertyDefinition<T, V>
             extends AbstractBeanPropertyDefinition<T, V> {
 
+        /**
+         * Default maximum depth for scanning nested properties.
+         *
+         * @since
+         */
+        protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
+
+        /**
+         * Class containing the constraints for filtering nested properties.
+         *
+         * @since
+         *
+         */
+        protected static class PropertyFilterDefinition
+                implements Serializable {
+            private static final long serialVersionUID = 7035499395627976263L;
+            private int maxNestingDepth;
+            private List<String> ignorePackageNamesStartingWith;
+
+            public PropertyFilterDefinition(int maxNestingDepth,
+                    List<String> ignorePackageNamesStartingWith) {
+                this.maxNestingDepth = maxNestingDepth;
+                this.ignorePackageNamesStartingWith = ignorePackageNamesStartingWith;
+            }
+
+            /**
+             * Returns the maximum amount of nesting levels for sub-properties.
+             *
+             * @return maximum nesting depth
+             */
+            public int getMaxNestingDepth() {
+                return maxNestingDepth;
+            }
+
+            /**
+             * Returns a list of package name prefixes to ignore.
+             *
+             * @return list of strings that
+             */
+            public List<String> getIgnorePackageNamesStartingWith() {
+                return ignorePackageNamesStartingWith;
+            }
+
+            /**
+             * Get the default nested property filtering conditions.
+             *
+             * @return default property filter
+             */
+            public static PropertyFilterDefinition getDefaultFilter() {
+                return new PropertyFilterDefinition(MAX_PROPERTY_NESTING_DEPTH,
+                        Arrays.asList("java"));
+            }
+        }
+
         private final PropertyDefinition<T, ?> parent;
 
         private boolean useLongFormName = false;
@@ -251,9 +306,8 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         public ValueProvider<T, V> getGetter() {
             return bean -> {
                 Method readMethod = getDescriptor().getReadMethod();
-                ValueProvider<T, ?> parentGetter = parent.getGetter();
-                Object getResult = parentGetter.apply(bean);
-                Object value = invokeWrapExceptions(readMethod, getResult);
+                Object value = invokeWrapExceptions(readMethod,
+                        parent.getGetter().apply(bean));
                 return getType().cast(value);
             };
         }
@@ -306,7 +360,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     /**
-     * Key for identifying cached BeanPropertySet instances
+     * Key for identifying cached BeanPropertySet instances.
+     *
+     * @since
      */
     private static class InstanceKey implements Serializable {
         private static final long serialVersionUID = -1363522555010923369L;

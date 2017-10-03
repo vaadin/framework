@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
@@ -94,8 +95,6 @@ import com.vaadin.util.ReflectTools;
  * @since 8.0
  */
 public class Binder<BEAN> implements Serializable {
-
-    protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
 
     /**
      * Represents the binding between a field and a data property.
@@ -1096,55 +1095,8 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Class containing the constraints for filtering nested properties.
-     *
-     * @since
-     *
-     */
-    protected static class PropertyFilterDefinition implements Serializable {
-        private static final long serialVersionUID = 7035499395627976263L;
-        private int maxNestingDepth;
-        private List<String> ignorePackageNamesStartingWith;
-
-        public PropertyFilterDefinition(int maxNestingDepth,
-                List<String> ignorePackageNamesStartingWith) {
-            this.maxNestingDepth = maxNestingDepth;
-            this.ignorePackageNamesStartingWith = ignorePackageNamesStartingWith;
-        }
-
-        /**
-         * Returns the maximum amount of nesting levels for sub-properties.
-         *
-         * @return maximum nesting depth
-         */
-        public int getMaxNestingDepth() {
-            return maxNestingDepth;
-        }
-
-        /**
-         * Returns a list of package name prefixes to ignore.
-         *
-         * @return list of strings that
-         */
-        public List<String> getIgnorePackageNamesStartingWith() {
-            return ignorePackageNamesStartingWith;
-        }
-
-        /**
-         * Get the default nested property filtering conditions.
-         *
-         * @return default property filter
-         */
-        public static PropertyFilterDefinition getDefaultFilter() {
-            return new PropertyFilterDefinition(MAX_PROPERTY_NESTING_DEPTH,
-                    Arrays.asList("java"));
-        }
-    }
-
-    /**
      * Creates a new binder that uses reflection based on the provided bean type
-     * to resolve bean properties. Allows scanning for nested properties as
-     * well.
+     * to resolve bean properties.
      *
      * @param beanType
      *            the bean type to use, not <code>null</code>
