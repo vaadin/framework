@@ -184,7 +184,7 @@ public class GridConnector extends AbstractListingConnector
      * @param refreshCallback
      *            Details refreshed callback
      */
-    public void addDetailsRefreshCallback(Runnable refreshCallback) {
+    private void addDetailsRefreshCallback(Runnable refreshCallback) {
         refreshDetailsCallbacks.add(refreshCallback);
     }
 
@@ -194,7 +194,7 @@ public class GridConnector extends AbstractListingConnector
      * @param rowIndex
      * @return
      */
-    public boolean rowHasDetails(int rowIndex) {
+    private boolean rowHasDetails(int rowIndex) {
         JsonObject row = getWidget().getDataSource().getRow(rowIndex);
 
         return row != null && row.hasKey(GridState.JSONKEY_DETAILS_VISIBLE)
