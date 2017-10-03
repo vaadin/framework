@@ -115,17 +115,10 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
-        <module>servlet-containers/generic</module>
         <module>cdi</module>
-        <module>servlet-containers/jsp-integration</module>
-        <module>servlet-containers/karaf</module>
 
-        <!-- maven based server tests -->
-        <module>servlet-containers/generic-ui</module>
-        <module>servlet-containers/generic-tests</module>
-        <!-- individual servers -->
-        <module>servlet-containers/wildfly10</module>
-        <module>servlet-containers/jetty9</module>
+        <!-- Servlet container tests -->
+        <module>servlet-containers</module>
 
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>

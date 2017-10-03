@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
         <version>8.2-SNAPSHOT</version>
-        <relativePath>../..</relativePath>
     </parent>
     <artifactId>vaadin-test-server-ui</artifactId>
     <name>vaadin-test-server-ui</name>

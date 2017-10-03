@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-test</artifactId>
+        <version>8.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-servlet-containers-test</artifactId>
+    <name>vaadin-servlet-containers-test</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>generic-ui</module>
+        <module>generic-tests</module>
+    </modules>
+
+    <profiles>
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>jsp-integration</module>
+                <module>karaf</module>
+                <module>wildfly10</module>
+                <module>jetty9</module>
+            </modules>
+        </profile>
+        <!-- TODO Remove this when the ant build is no longer used. -->
+        <profile>
+            <id>ant-test</id>
+            <modules>
+                <module>generic</module>
+            </modules>
+        </profile>
+    </profiles>
+
+</project>
