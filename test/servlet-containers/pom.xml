@@ -15,6 +15,71 @@
         <module>generic-ui</module>
         <module>generic-tests</module>
     </modules>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>1.2.0.Final</version>
+                    <executions>
+                        <execution>
+                            <id>start-wildfly</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start</goal>
+                                <goal>deploy</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Context path comes from WAR deployment name -->
+                                <name>demo.war</name>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>stop-wildfly</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>shutdown</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <configuration>
+                        <webApp>
+                            <contextPath>/demo</contextPath>
+                        </webApp>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <dependenciesToScan>
+                        <dependency>${project.groupId}:vaadin-test-server-tests</dependency>
+                    </dependenciesToScan>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>

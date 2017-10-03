@@ -12,6 +12,7 @@
     <packaging>war</packaging>
     <properties>
         <jetty.skip>false</jetty.skip>
+        <!-- jetty.version is set in the test root POM -->
         <server.name>jetty9</server.name>
     </properties>
 
@@ -32,36 +33,10 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <dependenciesToScan>
-                        <dependency>${project.groupId}:vaadin-test-server-tests</dependency>
-                    </dependenciesToScan>
-                </configuration>
-            </plugin>
-
             <!-- Server configuration -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
-                <configuration>
-                    <webApp>
-                        <contextPath>/demo</contextPath>
-                    </webApp>
-                </configuration>
             </plugin>
         </plugins>
     </build>
