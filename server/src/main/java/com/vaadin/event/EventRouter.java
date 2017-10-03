@@ -78,6 +78,12 @@ public class EventRouter implements MethodEventSource {
      * </p>
      *
      * <p>
+     * The only way to remove the listener is to use the returned
+     * {@link Registration}. The other methods, e.g.
+     * {@link #removeAllListeners()} do not do that.
+     * </p>
+     *
+     * <p>
      * For more information on the inheritable event mechanism see the
      * {@link com.vaadin.event com.vaadin.event package documentation}.
      * </p>
