@@ -15,6 +15,9 @@
         <jetty.skip>true</jetty.skip>
     </properties>
 
+    <!-- This module exists only to run the Ant based server tests.
+         It will be removed in the future. -->
+
     <dependencies>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -23,21 +26,8 @@
         </dependency>
     </dependencies>
 
-
     <build>
-
         <plugins>
-            <!--TODO run this on different servers -->
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty.version}</version>
-                <configuration>
-                    <webApp>
-                        <contextPath>/demo</contextPath>
-                    </webApp>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <configuration>

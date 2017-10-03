@@ -17,7 +17,7 @@
     </properties>
 
     <dependencies>
-        <!-- War and tests -->
+        <!-- UI classes and tests from dependencies -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-test-server-ui</artifactId>
@@ -64,8 +64,6 @@
                     </webApp>
                 </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 </project>

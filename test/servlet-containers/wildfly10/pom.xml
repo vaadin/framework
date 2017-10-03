@@ -8,8 +8,8 @@
         <version>8.2-SNAPSHOT</version>
         <relativePath>../..</relativePath>
     </parent>
-    <artifactId>vaadin-test-widfly10-server</artifactId>
-    <name>Vaadin Widlfly 10 Test</name>
+    <artifactId>vaadin-test-wildfly10-server</artifactId>
+    <name>Vaadin Wildfly 10 Test</name>
     <packaging>war</packaging>
     <properties>
         <jetty.skip>true</jetty.skip>
@@ -17,7 +17,7 @@
     </properties>
 
     <dependencies>
-        <!-- War and tests -->
+        <!-- UI classes and tests from dependencies -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-test-server-ui</artifactId>
@@ -68,11 +68,12 @@
                             <goal>deploy</goal>
                         </goals>
                         <configuration>
+                            <!-- Context path comes from WAR deployment name -->
                             <name>demo.war</name>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>stop-test</id>
+                        <id>stop-wildfly</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>shutdown</goal>
