@@ -63,7 +63,7 @@ public abstract class VTabsheetBase extends ComplexPanel implements HasEnabled {
     public abstract Iterator<Widget> getWidgetIterator();
 
     /**
-     * Clears current tabs and contents
+     * Clears current tabs and contents.
      */
     protected abstract void clearPaintables();
 

@@ -1,8 +1,11 @@
 package com.vaadin.data.validator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 
 import com.vaadin.data.ValidationResult;
@@ -23,7 +26,7 @@ public class ValidatorTestBase {
     protected <T> void assertPasses(T value, Validator<? super T> validator) {
         ValidationResult result = validator.apply(value, new ValueContext());
         if (result.isError()) {
-            Assert.fail(value + " should pass " + validator + " but got "
+            fail(value + " should pass " + validator + " but got "
                     + result.getErrorMessage());
         }
     }
@@ -32,8 +35,8 @@ public class ValidatorTestBase {
             Validator<? super T> validator) {
         ValidationResult result = validator.apply(value,
                 new ValueContext(localeContext));
-        Assert.assertTrue(result.isError());
-        Assert.assertEquals(errorMessage, result.getErrorMessage());
+        assertTrue(result.isError());
+        assertEquals(errorMessage, result.getErrorMessage());
     }
 
     protected <T> void assertFails(T value, AbstractValidator<? super T> v) {

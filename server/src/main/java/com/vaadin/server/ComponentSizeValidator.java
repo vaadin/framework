@@ -671,7 +671,7 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     /**
-     * Validates the layout and returns a collection of errors
+     * Validates the layout and returns a collection of errors.
      *
      * @since 7.1
      * @param ui

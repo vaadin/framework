@@ -42,7 +42,7 @@ import com.vaadin.v7.client.ui.VCalendar;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * A class representing a single cell within the calendar in month-view
+ * A class representing a single cell within the calendar in month-view.
  *
  * @since 7.1
  * @author Vaadin Ltd.

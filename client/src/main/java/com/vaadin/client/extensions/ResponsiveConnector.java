@@ -43,17 +43,17 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         implements ElementResizeListener {
 
     /**
-     * The target component which we will monitor for width changes
+     * The target component which we will monitor for width changes.
      */
     protected AbstractComponentConnector target;
 
     /**
-     * All the width breakpoints found for this particular instance
+     * All the width breakpoints found for this particular instance.
      */
     protected JavaScriptObject widthBreakpoints;
 
     /**
-     * All the height breakpoints found for this particular instance
+     * All the height breakpoints found for this particular instance.
      */
     protected JavaScriptObject heightBreakpoints;
 
@@ -97,7 +97,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
 
     /**
      * Construct the list of selectors that should be matched against in the
-     * range selectors
+     * range selectors.
      *
      * @return The selectors in a comma delimited string.
      */

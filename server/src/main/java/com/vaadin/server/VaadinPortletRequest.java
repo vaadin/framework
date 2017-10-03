@@ -46,7 +46,7 @@ public class VaadinPortletRequest extends PortletRequestWrapper
     private final VaadinPortletService vaadinService;
 
     /**
-     * Wraps a portlet request and an associated vaadin service
+     * Wraps a portlet request and an associated vaadin service.
      *
      * @param request
      *            the portlet request to wrap

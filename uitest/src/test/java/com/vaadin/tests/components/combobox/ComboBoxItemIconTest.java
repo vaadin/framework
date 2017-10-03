@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -61,11 +62,11 @@ public class ComboBoxItemIconTest extends MultiBrowserTest {
 
     private void assertSelection(ComboBoxElement cb, String imageSuffix,
             String caption) {
-        Assert.assertEquals(caption, cb.getValue());
+        assertEquals(caption, cb.getValue());
         String imgSrc = cb.findElement(By.className("v-icon"))
                 .getAttribute("src");
         imgSrc = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
-        Assert.assertEquals(imageSuffix, imgSrc);
+        assertEquals(imageSuffix, imgSrc);
 
     }
 

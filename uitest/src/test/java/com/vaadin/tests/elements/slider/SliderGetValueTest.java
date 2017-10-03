@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.slider;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +26,6 @@ public class SliderGetValueTest extends MultiBrowserTest {
         SliderElement pb = $(SliderElement.class).get(0);
         String expected = "" + ComponentElementGetValue.TEST_SLIDER_VALUE;
         String actual = pb.getValue();
-        Assert.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 }

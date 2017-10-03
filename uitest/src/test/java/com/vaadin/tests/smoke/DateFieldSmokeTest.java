@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.smoke;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -38,9 +39,9 @@ public class DateFieldSmokeTest extends MultiBrowserTest {
         openTestURL();
 
         PopupDateFieldElement popup = $(PopupDateFieldElement.class).first();
-        Assert.assertEquals("12/28/16", popup.getValue());
+        assertEquals("12/28/16", popup.getValue());
         InlineDateFieldElement inline = $(InlineDateFieldElement.class).first();
-        Assert.assertEquals("29",
+        assertEquals("29",
                 inline.findElement(By.className(
                         "v-inline-datefield-calendarpanel-day-selected"))
                         .getText());
@@ -60,12 +61,12 @@ public class DateFieldSmokeTest extends MultiBrowserTest {
         inline.findElement(By.className("v-button-prevmonth")).click();
         WebElement monthTitle = inline.findElement(
                 By.className("v-inline-datefield-calendarpanel-month"));
-        Assert.assertEquals("November 2016", monthTitle.getText());
+        assertEquals("November 2016", monthTitle.getText());
 
         inline.findElement(By.className("v-button-nextyear")).click();
         monthTitle = inline.findElement(
                 By.className("v-inline-datefield-calendarpanel-month"));
-        Assert.assertEquals("November 2017", monthTitle.getText());
+        assertEquals("November 2017", monthTitle.getText());
     }
 
     private void selectDay(WebElement calendar, int day, String cssPrefix) {

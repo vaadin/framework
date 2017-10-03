@@ -49,7 +49,7 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
     public void testHtmlEntities() throws IOException {
         String design = "<vaadin7-text-area>&amp; Test</vaadin7-text-area>";
         TextArea read = read(design);
-        Assert.assertEquals("& Test", read.getValue());
+        assertEquals("& Test", read.getValue());
 
         read.setValue("&amp; Test");
 
@@ -57,7 +57,7 @@ public class TextAreaDeclarativeTest extends DeclarativeTestBase<TextArea> {
         Element root = new Element(Tag.valueOf("vaadin-text-area"), "");
         read.writeDesign(root, dc);
 
-        Assert.assertEquals("&amp;amp; Test", root.html());
+        assertEquals("&amp;amp; Test", root.html());
     }
 
     @Test

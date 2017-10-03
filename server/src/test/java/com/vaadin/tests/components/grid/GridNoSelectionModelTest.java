@@ -1,10 +1,12 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,15 +36,15 @@ public class GridNoSelectionModelTest {
     public void select() {
         model.select(PERSON_A);
 
-        Assert.assertFalse(model.isSelected(PERSON_A));
-        Assert.assertEquals(0, model.getSelectedItems().size());
-        Assert.assertEquals(Optional.empty(), model.getFirstSelectedItem());
+        assertFalse(model.isSelected(PERSON_A));
+        assertEquals(0, model.getSelectedItems().size());
+        assertEquals(Optional.empty(), model.getFirstSelectedItem());
 
         model.select(PERSON_B);
 
-        Assert.assertFalse(model.isSelected(PERSON_B));
-        Assert.assertEquals(0, model.getSelectedItems().size());
-        Assert.assertEquals(Optional.empty(), model.getFirstSelectedItem());
+        assertFalse(model.isSelected(PERSON_B));
+        assertEquals(0, model.getSelectedItems().size());
+        assertEquals(Optional.empty(), model.getFirstSelectedItem());
     }
 
     @Test
@@ -50,7 +52,7 @@ public class GridNoSelectionModelTest {
         grid.setSelectionMode(SelectionMode.SINGLE);
 
         grid.getSelectionModel().select(PERSON_B);
-        Assert.assertEquals(PERSON_B,
+        assertEquals(PERSON_B,
                 grid.getSelectionModel().getFirstSelectedItem().get());
     }
 
@@ -59,7 +61,7 @@ public class GridNoSelectionModelTest {
         grid.setSelectionMode(SelectionMode.MULTI);
 
         grid.getSelectionModel().select(PERSON_B);
-        Assert.assertEquals(new LinkedHashSet<>(Arrays.asList(PERSON_B)),
+        assertEquals(new LinkedHashSet<>(Arrays.asList(PERSON_B)),
                 grid.getSelectionModel().getSelectedItems());
     }
 

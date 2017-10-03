@@ -488,7 +488,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param columns
              *            the columns which header should be merged
@@ -526,7 +526,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
 
             /**
-             * Merges columns cells in a row
+             * Merges columns cells in a row.
              *
              * @param cells
              *            The cells to merge. Must be from the same row.
@@ -963,7 +963,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Returns the events consumed by the header
+         * Returns the events consumed by the header.
          *
          * @return a collection of BrowserEvents
          */
@@ -4862,7 +4862,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Returns the current header caption for this column
+         * Returns the current header caption for this column.
          *
          * @since 7.6
          * @return the header caption string
@@ -7212,7 +7212,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the vertical scroll offset
+     * Gets the vertical scroll offset.
      *
      * @return the number of pixels this grid is scrolled down
      */
@@ -7221,7 +7221,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the horizontal scroll offset
+     * Sets the horizontal scroll offset.
      *
      * @since 7.5.0
      * @param px
@@ -7232,7 +7232,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the horizontal scroll offset
+     * Gets the horizontal scroll offset.
      *
      * @return the number of pixels this grid is scrolled to the right
      */
@@ -8490,7 +8490,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Adds a scroll handler to this grid
+     * Adds a scroll handler to this grid.
      *
      * @param handler
      *            the scroll handler to add
@@ -8591,7 +8591,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the style generator that is used for generating styles for cells
+     * Sets the style generator that is used for generating styles for cells.
      *
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
@@ -8604,7 +8604,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the style generator that is used for generating styles for cells
+     * Gets the style generator that is used for generating styles for cells.
      *
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
@@ -8614,7 +8614,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Sets the style generator that is used for generating styles for rows
+     * Sets the style generator that is used for generating styles for rows.
      *
      * @param rowStyleGenerator
      *            the row style generator to set, or <code>null</code> to remove
@@ -8626,7 +8626,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the style generator that is used for generating styles for rows
+     * Gets the style generator that is used for generating styles for rows.
      *
      * @return the row style generator, or <code>null</code> if no generator is
      *         set

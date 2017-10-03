@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.colorpicker;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -36,8 +37,7 @@ public class ColorPickerGridUITest extends SingleBrowserTest {
 
         // check that the color picker does not have component error set
         if (hasCssClass(grid, "v-colorpicker-grid-error")) {
-            Assert.fail(
-                    "ColorPickerGrid should not have an active component error");
+            fail("ColorPickerGrid should not have an active component error");
         }
     }
 }

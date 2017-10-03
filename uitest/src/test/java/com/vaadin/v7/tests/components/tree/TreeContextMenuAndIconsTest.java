@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.tree;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
@@ -26,7 +27,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.v7.tests.components.tree.Trees;
 
 public class TreeContextMenuAndIconsTest extends MultiBrowserTest {
 
@@ -84,7 +84,7 @@ public class TreeContextMenuAndIconsTest extends MultiBrowserTest {
         // background image contains parts of other sprites =>
         // just check that the menu is of correct size
         Dimension size = menu.getSize();
-        Assert.assertEquals("Menu height with large icons", 74, size.height);
+        assertEquals("Menu height with large icons", 74, size.height);
 
         closeContextMenu();
     }

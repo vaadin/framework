@@ -41,7 +41,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     private ValueProvider<V, Object> identifierGetter;
 
     /**
-     * Constructs a new mapper
+     * Constructs a new mapper.
      *
      * @param identifierGetter
      *            has to return a unique key for every bean, and the returned
@@ -55,7 +55,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     }
 
     /**
-     * Constructs a new mapper with trivial {@code identifierGetter}
+     * Constructs a new mapper with trivial {@code identifierGetter}.
      */
     public KeyMapper() {
         this(v -> v);

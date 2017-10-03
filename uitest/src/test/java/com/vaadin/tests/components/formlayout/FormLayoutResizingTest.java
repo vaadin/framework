@@ -15,16 +15,17 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.FormLayoutElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserThemeTest;
 
@@ -34,10 +35,10 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
         openTestURL();
 
         List<TableElement> tables = $(TableElement.class).all();
-        Assert.assertEquals("Sanity check", 2, tables.size());
+        assertEquals("Sanity check", 2, tables.size());
 
         List<FormLayoutElement> layouts = $(FormLayoutElement.class).all();
-        Assert.assertEquals("Sanity check", 2, layouts.size());
+        assertEquals("Sanity check", 2, layouts.size());
 
         ButtonElement toggleButton = $(ButtonElement.class).first();
 
@@ -58,9 +59,9 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         int[] expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+        assertEquals("Table should have grown ", originalWidths[0] + 200,
                 expandedWidths[0]);
-        Assert.assertEquals("Wrapped table should have grown ",
+        assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
 
         // Toggle size from 600 px to 400 px
@@ -68,9 +69,9 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         int[] collapsedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should return to original width ",
+        assertEquals("Table should return to original width ",
                 originalWidths[0], collapsedWidths[0]);
-        Assert.assertEquals("Wrapped table should return to original width ",
+        assertEquals("Wrapped table should return to original width ",
                 originalWidths[1], collapsedWidths[1]);
 
         // Verify that growing is not restricted after triggering the fix
@@ -79,9 +80,9 @@ public class FormLayoutResizingTest extends MultiBrowserThemeTest {
 
         expandedWidths = getWidths(tables);
 
-        Assert.assertEquals("Table should have grown ", originalWidths[0] + 200,
+        assertEquals("Table should have grown ", originalWidths[0] + 200,
                 expandedWidths[0]);
-        Assert.assertEquals("Wrapped table should have grown ",
+        assertEquals("Wrapped table should have grown ",
                 originalWidths[1] + 200, expandedWidths[1]);
     }
 

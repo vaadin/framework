@@ -485,7 +485,7 @@ public class IndexedContainerTest extends AbstractInMemoryContainerTestBase {
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        Assert.assertEquals(
+        assertEquals(
                 "Container returned too many items when the range was >> container size",
                 1, ic.getItemIds(0, 10).size());
     }

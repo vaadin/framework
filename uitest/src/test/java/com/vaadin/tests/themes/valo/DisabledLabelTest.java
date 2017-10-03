@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -39,7 +40,7 @@ public class DisabledLabelTest extends MultiBrowserTest {
         WebElement disabled = findElement(By.className("my-disabled"));
         String disabledOpacity = disabled.getCssValue("opacity");
 
-        Assert.assertNotEquals(
+        assertNotEquals(
                 "Opacity value is the same for enabled and disabled label",
                 enabledOpacity, disabledOpacity);
     }

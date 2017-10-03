@@ -493,7 +493,7 @@ public class WeekGrid extends SimplePanel {
     }
 
     /**
-     * Get width of the single date cell
+     * Get width of the single date cell.
      *
      * @return Date cell width
      */

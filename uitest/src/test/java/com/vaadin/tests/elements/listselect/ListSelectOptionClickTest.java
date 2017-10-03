@@ -1,8 +1,9 @@
 package com.vaadin.tests.elements.listselect;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,23 +44,23 @@ public class ListSelectOptionClickTest extends MultiBrowserTest {
     @Test
     public void testMultiSelectDeselectByText() {
         select.selectByText("item2");
-        Assert.assertEquals("1: [item1, item2]", counterLbl.getText());
+        assertEquals("1: [item1, item2]", counterLbl.getText());
         select.selectByText("item3");
-        Assert.assertEquals("2: [item1, item2, item3]", counterLbl.getText());
+        assertEquals("2: [item1, item2, item3]", counterLbl.getText());
         select.deselectByText("item2");
-        Assert.assertEquals("3: [item1, item3]", counterLbl.getText());
+        assertEquals("3: [item1, item3]", counterLbl.getText());
     }
 
     @Test
     public void testDeselectSelectByText() {
         select.deselectByText("item1");
-        Assert.assertEquals("1: []", counterLbl.getText());
+        assertEquals("1: []", counterLbl.getText());
         select.selectByText("item1");
-        Assert.assertEquals("2: [item1]", counterLbl.getText());
+        assertEquals("2: [item1]", counterLbl.getText());
         select.selectByText("item3");
-        Assert.assertEquals("3: [item1, item3]", counterLbl.getText());
+        assertEquals("3: [item1, item3]", counterLbl.getText());
         select.deselectByText("item1");
-        Assert.assertEquals("4: [item3]", counterLbl.getText());
+        assertEquals("4: [item3]", counterLbl.getText());
     }
 
     /*
@@ -69,10 +70,9 @@ public class ListSelectOptionClickTest extends MultiBrowserTest {
     private void checkValueChanged() {
         String actual = select.getValue();
         String actualCounter = counterLbl.getText();
-        Assert.assertEquals("The value of the ListSelect has not changed",
-                "item2", actual);
-        Assert.assertEquals(
-                "The number of list select valueChange events is not one.",
+        assertEquals("The value of the ListSelect has not changed", "item2",
+                actual);
+        assertEquals("The number of list select valueChange events is not one.",
                 "1: item2", actualCounter);
     }
 }

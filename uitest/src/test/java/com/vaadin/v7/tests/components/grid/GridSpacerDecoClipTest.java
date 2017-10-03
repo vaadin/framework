@@ -15,7 +15,9 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -56,7 +58,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
         nearToBottomRow.doubleClick();
         deco = getSpacerDeco(0);
         System.out.println("Lower deco.clip = " + deco.getCssValue("clip"));
-        Assert.assertNotEquals(
+        assertNotEquals(
                 "Spacer deco clipping is not updated after opening another spacer",
                 "auto", deco.getCssValue("clip"));
     }
@@ -85,7 +87,7 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
         String clip = deco.getCssValue("clip");
         System.out.println("deco.rect = " + clip);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Part of lower Row Details is visible, its deco clip height should be positive, but it is negative",
                 clip.indexOf('-') < 0);
     }

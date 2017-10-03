@@ -100,11 +100,7 @@ public class TestLayoutPerformance extends TestBase {
 
         try {
             return (Layout) value.newInstance();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
@@ -116,11 +112,7 @@ public class TestLayoutPerformance extends TestBase {
         AbstractComponent newInstance = null;
         try {
             newInstance = (AbstractComponent) componentClass.newInstance();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         if (componentClass == Label.class) {

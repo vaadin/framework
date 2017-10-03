@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.debug;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -45,7 +46,7 @@ public class ProfilerZeroOverheadTest extends SingleBrowserTest {
 
         // Method body shouldn't contain anything else than whitespace
         if (!methodBody.replaceAll("\\s", "").isEmpty()) {
-            Assert.fail("Canary method is not empty: " + canaryMethodString);
+            fail("Canary method is not empty: " + canaryMethodString);
         }
     }
 }

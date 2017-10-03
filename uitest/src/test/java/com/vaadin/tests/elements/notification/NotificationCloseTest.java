@@ -1,8 +1,9 @@
 package com.vaadin.tests.elements.notification;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -46,7 +47,6 @@ public class NotificationCloseTest extends MultiBrowserTest {
         List<NotificationElement> notifications = $(NotificationElement.class)
                 .all();
         // check that all notifications are closed
-        Assert.assertTrue("There are open notifications",
-                notifications.isEmpty());
+        assertTrue("There are open notifications", notifications.isEmpty());
     }
 }

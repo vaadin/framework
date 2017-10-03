@@ -100,7 +100,7 @@ public class MenuBarConnector extends AbstractComponentConnector
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
-        Iterator<Object> itr = uidlItems.getChildIterator();
+        Iterator<Object> itr = uidlItems.iterator();
         Stack<Iterator<Object>> iteratorStack = new Stack<>();
         Stack<VMenuBar> menuStack = new Stack<>();
         VMenuBar currentMenu = getWidget();
@@ -137,7 +137,7 @@ public class MenuBarConnector extends AbstractComponentConnector
             if (item.getChildCount() > 0) {
                 menuStack.push(currentMenu);
                 iteratorStack.push(itr);
-                itr = item.getChildIterator();
+                itr = item.iterator();
                 currentMenu = new VMenuBar(true, currentMenu);
                 client.getVTooltip().connectHandlersToWidget(currentMenu);
                 // this is the top-level style that also propagates to items -

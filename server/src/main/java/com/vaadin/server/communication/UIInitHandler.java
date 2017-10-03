@@ -16,6 +16,8 @@
 
 package com.vaadin.server.communication;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -111,7 +113,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // iOS 6 Safari requires this (#9732)
         response.setHeader("Cache-Control", "no-cache");
 
-        byte[] b = json.getBytes("UTF-8");
+        byte[] b = json.getBytes(UTF_8);
         response.setContentLength(b.length);
 
         OutputStream outputStream = response.getOutputStream();

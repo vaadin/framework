@@ -16,7 +16,6 @@
 package com.vaadin.v7.client.ui.table;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
@@ -190,7 +189,8 @@ public class TableConnector extends AbstractFieldConnector
 
         // Update child measure hint
         int childMeasureHint = uidl.hasAttribute("measurehint")
-                ? uidl.getIntAttribute("measurehint") : 0;
+                ? uidl.getIntAttribute("measurehint")
+                : 0;
         getWidget().setChildMeasurementHint(
                 ChildMeasurementHint.values()[childMeasureHint]);
 
@@ -451,9 +451,7 @@ public class TableConnector extends AbstractFieldConnector
      */
     public void showSavedContextMenu(ContextMenuDetails savedContextMenu) {
         if (isEnabled() && savedContextMenu != null) {
-            Iterator<Widget> iterator = getWidget().scrollBody.iterator();
-            while (iterator.hasNext()) {
-                Widget w = iterator.next();
+            for (Widget w : getWidget().scrollBody) {
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (row.getKey().equals(savedContextMenu.rowKey)) {
                     row.showContextMenu(savedContextMenu.left,

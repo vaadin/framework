@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.components.menubar;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -140,8 +142,8 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
 
         List<MenuItem> expectedMenuItems = expected.getItems();
         List<MenuItem> actualMenuItems = result.getItems();
-        Assert.assertEquals("Different amount of menu items",
-                expectedMenuItems.size(), actualMenuItems.size());
+        assertEquals("Different amount of menu items", expectedMenuItems.size(),
+                actualMenuItems.size());
 
         for (int i = 0; i < expectedMenuItems.size(); ++i) {
             compareMenus(expectedMenuItems.get(i), actualMenuItems.get(i));
@@ -153,38 +155,37 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
     private void compareMenus(MenuItem expected, MenuItem actual) {
         String baseError = "Error Comparing MenuItem " + expected.getText()
                 + ": ";
-        Assert.assertEquals(baseError + "Visibile", expected.isVisible(),
+        assertEquals(baseError + "Visibile", expected.isVisible(),
                 actual.isVisible());
-        Assert.assertEquals(baseError + "Checkable", expected.isCheckable(),
+        assertEquals(baseError + "Checkable", expected.isCheckable(),
                 actual.isCheckable());
-        Assert.assertEquals(baseError + "Checked", expected.isChecked(),
+        assertEquals(baseError + "Checked", expected.isChecked(),
                 actual.isChecked());
-        Assert.assertEquals(baseError + "Separator", expected.isSeparator(),
+        assertEquals(baseError + "Separator", expected.isSeparator(),
                 actual.isSeparator());
-        Assert.assertEquals(baseError + "Enabled", expected.isEnabled(),
+        assertEquals(baseError + "Enabled", expected.isEnabled(),
                 actual.isEnabled());
 
-        Assert.assertEquals(baseError + "Text", expected.getText(),
-                actual.getText());
-        Assert.assertEquals(baseError + "Description",
-                expected.getDescription(), actual.getDescription());
-        Assert.assertEquals(baseError + "Style Name", expected.getStyleName(),
+        assertEquals(baseError + "Text", expected.getText(), actual.getText());
+        assertEquals(baseError + "Description", expected.getDescription(),
+                actual.getDescription());
+        assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
 
         if (expected.getIcon() != null) {
-            Assert.assertNotNull(baseError + "Icon was null", actual.getIcon());
+            assertNotNull(baseError + "Icon was null", actual.getIcon());
         } else {
             if (actual.getIcon() != null) {
-                Assert.fail(baseError + "Icon should've been null");
+                fail(baseError + "Icon should've been null");
             }
         }
 
-        Assert.assertEquals(baseError + "Has Children", expected.hasChildren(),
+        assertEquals(baseError + "Has Children", expected.hasChildren(),
                 actual.hasChildren());
         if (expected.hasChildren()) {
             List<MenuItem> children = expected.getChildren();
             List<MenuItem> actualChildren = actual.getChildren();
-            Assert.assertEquals(baseError + "Child count", children.size(),
+            assertEquals(baseError + "Child count", children.size(),
                     actualChildren.size());
             for (int i = 0; i < children.size(); ++i) {
                 compareMenus(children.get(i), actualChildren.get(i));

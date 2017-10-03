@@ -30,7 +30,7 @@ import com.vaadin.ui.Component;
 public class ConnectorHelper {
 
     /**
-     * Creates a string containing debug info for the connector
+     * Creates a string containing debug info for the connector.
      *
      * @since 7.1
      * @param connector
@@ -56,7 +56,7 @@ public class ConnectorHelper {
     }
 
     /**
-     * Creates a string containing hierarchy information for the connector
+     * Creates a string containing hierarchy information for the connector.
      *
      * @since 7.1
      * @param connector

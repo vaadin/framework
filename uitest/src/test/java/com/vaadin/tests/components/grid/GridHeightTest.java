@@ -18,12 +18,12 @@ package com.vaadin.tests.components.grid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -95,7 +95,7 @@ public class GridHeightTest extends MultiBrowserTest {
                 } catch (AssertionError e) {
                     errors.put(e, new Object[] { gridHeight, gridWidth,
                             detailsRowHeight, "initial" });
-                    Assert.fail();
+                    fail();
                 }
 
                 grid.getRow(2).click(5, 5);
@@ -139,7 +139,7 @@ public class GridHeightTest extends MultiBrowserTest {
                 }
                 sb.append(entry.getKey().getMessage());
             }
-            Assert.fail(sb.toString());
+            fail(sb.toString());
         }
     }
 

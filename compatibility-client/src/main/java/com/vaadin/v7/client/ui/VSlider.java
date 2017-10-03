@@ -466,7 +466,7 @@ public class VSlider extends SimpleFocusablePanel
     }
 
     /**
-     * Handles the keyboard events handled by the Slider
+     * Handles the keyboard events handled by the Slider.
      *
      * @param keycode
      *            The key code received

@@ -47,7 +47,8 @@ import com.vaadin.v7.data.util.MethodProperty.MethodException;
  *
  * @since 6.6
  *
- * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 public class NestedMethodProperty<T> extends AbstractProperty<T> {
@@ -70,8 +71,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     private Class<? extends T> type;
 
     /* Special serialization to handle method references */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // getMethods and setMethod are reconstructed on read based on
         // propertyName
@@ -144,8 +144,8 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             throw new IllegalArgumentException(
                     "Invalid property name '" + propertyName + "'");
         }
-        for (int i = 0; i < simplePropertyNames.length; i++) {
-            String simplePropertyName = simplePropertyNames[i].trim();
+        for (String simplePropertyName : simplePropertyNames) {
+            simplePropertyName = simplePropertyName.trim();
             if (!simplePropertyName.isEmpty()) {
                 lastSimplePropertyName = simplePropertyName;
                 lastClass = propertyClass;
@@ -276,7 +276,7 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * The instance used by this property
+     * The instance used by this property.
      *
      * @return the instance used for fetching the property value
      * @since 7.7.7

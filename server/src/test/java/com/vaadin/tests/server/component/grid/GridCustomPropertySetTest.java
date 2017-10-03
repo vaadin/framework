@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.PropertyDefinition;
@@ -166,20 +167,20 @@ public class GridCustomPropertySetTest {
     @Test
     public void customPropertySet() {
         GridWithCustomPropertySet customGrid = new GridWithCustomPropertySet();
-        Assert.assertEquals(0, customGrid.getColumns().size());
+        assertEquals(0, customGrid.getColumns().size());
 
         Column<MyBeanWithoutGetters, Integer> numberColumn = (Column<MyBeanWithoutGetters, Integer>) customGrid
                 .addColumn("numbah");
-        Assert.assertEquals(1, customGrid.getColumns().size());
-        Assert.assertEquals("The Number", numberColumn.getCaption());
-        Assert.assertEquals(24, (int) numberColumn.getValueProvider()
+        assertEquals(1, customGrid.getColumns().size());
+        assertEquals("The Number", numberColumn.getCaption());
+        assertEquals(24, (int) numberColumn.getValueProvider()
                 .apply(new MyBeanWithoutGetters("foo", 24)));
 
         Column<MyBeanWithoutGetters, String> stringColumn = (Column<MyBeanWithoutGetters, String>) customGrid
                 .addColumn("string");
-        Assert.assertEquals(2, customGrid.getColumns().size());
-        Assert.assertEquals("The String", stringColumn.getCaption());
-        Assert.assertEquals("foo", stringColumn.getValueProvider()
+        assertEquals(2, customGrid.getColumns().size());
+        assertEquals("The String", stringColumn.getCaption());
+        assertEquals("foo", stringColumn.getValueProvider()
                 .apply(new MyBeanWithoutGetters("foo", 24)));
     }
 

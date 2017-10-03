@@ -24,7 +24,7 @@ import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Action performed by the calendar
+ * Action performed by the calendar.
  *
  * @since 7.1
  * @author Vaadin Ltd.
@@ -53,7 +53,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param owner
      *            The owner who trigger this kinds of events
@@ -90,7 +90,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Get the date and time when the action starts
+     * Get the date and time when the action starts.
      *
      * @return
      */
@@ -99,7 +99,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Set the date when the actions start
+     * Set the date when the actions start.
      *
      * @param actionStartDate
      *            The date and time when the action starts
@@ -109,7 +109,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Get the date and time when the action ends
+     * Get the date and time when the action ends.
      *
      * @return
      */
@@ -118,7 +118,7 @@ public class VCalendarAction extends Action {
     }
 
     /**
-     * Set the date and time when the action ends
+     * Set the date and time when the action ends.
      *
      * @param actionEndDate
      *            The date and time when the action ends

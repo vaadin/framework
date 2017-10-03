@@ -491,7 +491,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Sets whether the tab selection part should be shown in the UI
+     * Sets whether the tab selection part should be shown in the UI.
      *
      * @since 7.5
      * @param tabsVisible
@@ -502,7 +502,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Checks if the tab selection part should be shown in the UI
+     * Checks if the tab selection part should be shown in the UI.
      *
      * @return true if the tabs are shown in the UI, false otherwise
      * @since 7.5
@@ -1117,7 +1117,7 @@ public class TabSheet extends AbstractComponentContainer
         public ErrorMessage getComponentError();
 
         /**
-         * Get the component related to the Tab
+         * Get the component related to the Tab.
          */
         public Component getComponent();
 
@@ -1167,7 +1167,7 @@ public class TabSheet extends AbstractComponentContainer
         public void setId(String id);
 
         /**
-         * Gets currently set debug identifier
+         * Gets currently set debug identifier.
          *
          * @return current id, null if not set
          */
@@ -1429,7 +1429,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Gets the position of the tab
+     * Gets the position of the tab.
      *
      * @param tab
      *            The tab

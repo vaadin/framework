@@ -15,12 +15,14 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.Theme;
@@ -35,43 +37,40 @@ public class UIProviderTest {
 
     @Test
     public void getAnnotationFor_widgetsetAnnotationForSubclass_annotationFound() {
-        Assert.assertNotNull("Widgetset annotation is not found for subclass",
+        assertNotNull("Widgetset annotation is not found for subclass",
                 UIProvider.getAnnotationFor(TestClass.class, Widgetset.class));
     }
 
     @Test
     public void getAnnotationFor_themeAnnotationForSubclass_annotationFound() {
-        Assert.assertNotNull("Theme annotation is not found for subclass",
+        assertNotNull("Theme annotation is not found for subclass",
                 UIProvider.getAnnotationFor(TestClass.class, Theme.class));
     }
 
     @Test
     public void getAnnotationFor_themeAnnotationForSubclass_annotationOverridden() {
-        Assert.assertEquals(
-                "Theme annotation is not overridden correctly in subclass", "c",
-                UIProvider.getAnnotationFor(TestClass.class, Theme.class)
+        assertEquals("Theme annotation is not overridden correctly in subclass",
+                "c", UIProvider.getAnnotationFor(TestClass.class, Theme.class)
                         .value());
     }
 
     @Test
     public void getAnnotationFor_notInheritedAnnotationForSubclass_annotationFound() {
-        Assert.assertNotNull(
-                "TestAnnotation annotation is not found for subclass",
+        assertNotNull("TestAnnotation annotation is not found for subclass",
                 UIProvider.getAnnotationFor(TestClass.class,
                         TestAnnotation.class));
     }
 
     @Test
     public void getAnnotationFor_directAnnotationForSubclass_annotationFound() {
-        Assert.assertNotNull(
-                "TestAnnotation1 annotation is not found for subclass",
+        assertNotNull("TestAnnotation1 annotation is not found for subclass",
                 UIProvider.getAnnotationFor(TestClass.class,
                         TestAnnotation1.class));
     }
 
     @Test
     public void getAnnotationFor_annotationInheritedFromInterface_annotationFound() {
-        Assert.assertNotNull("Theme annotation is not inherited from interface",
+        assertNotNull("Theme annotation is not inherited from interface",
                 UIProvider.getAnnotationFor(ClassImplementingInterface.class,
                         Theme.class));
     }

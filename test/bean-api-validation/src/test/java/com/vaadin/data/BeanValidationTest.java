@@ -15,7 +15,9 @@
  */
 package com.vaadin.data;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.ui.TextField;
@@ -44,7 +46,7 @@ public class BeanValidationTest {
     public void binderWorksWithoutBeanValidationLib() {
         try {
             Class.forName("javax.validation.Validation");
-            Assert.fail();
+            fail();
         } catch (ClassNotFoundException ignored) {
         }
 
@@ -57,7 +59,7 @@ public class BeanValidationTest {
         binder.setBean(bean);
 
         field.setValue("foo");
-        Assert.assertEquals(field.getValue(), bean.getProperty());
+        assertEquals(field.getValue(), bean.getProperty());
 
     }
 }

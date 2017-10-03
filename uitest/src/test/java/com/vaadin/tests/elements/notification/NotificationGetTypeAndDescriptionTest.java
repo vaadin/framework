@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.notification;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -38,14 +39,13 @@ public class NotificationGetTypeAndDescriptionTest extends MultiBrowserTest {
         NotificationElement notification = $(NotificationElement.class).get(0);
         String eCaption = NotificationGetTypeAndDescription.captions[index];
         String aCaption = notification.getCaption();
-        Assert.assertEquals("Test captions fail", eCaption, aCaption);
+        assertEquals("Test captions fail", eCaption, aCaption);
         String eDescription = NotificationGetTypeAndDescription.descriptions[index];
         String aDescription = notification.getDescription();
-        Assert.assertEquals("Test descriptions fail", eDescription,
-                aDescription);
+        assertEquals("Test descriptions fail", eDescription, aDescription);
         String eType = NotificationGetTypeAndDescription.type_names[index];
         String aType = notification.getType();
-        Assert.assertEquals("Test types fail", eType, aType);
+        assertEquals("Test types fail", eType, aType);
 
     }
 }

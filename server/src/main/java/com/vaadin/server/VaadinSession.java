@@ -83,7 +83,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         private final Runnable runnable;
 
         /**
-         * Creates an instance for the given runnable
+         * Creates an instance for the given runnable.
          *
          * @param session
          *            the session to which the task belongs
@@ -439,7 +439,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * Retrieves all {@link VaadinSession}s which are stored in the given HTTP
-     * session
+     * session.
      *
      * @since 7.2
      * @param httpSession
@@ -522,7 +522,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the configuration for this session
+     * Gets the configuration for this session.
      *
      * @return the deployment configuration
      */
@@ -793,7 +793,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Checks if the current thread has exclusive access to this VaadinSession
+     * Checks if the current thread has exclusive access to this VaadinSession.
      *
      * @return true if the thread has exclusive access, false otherwise
      * @since 7.1
@@ -1035,10 +1035,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                                         + ui.getUIId(),
                                 e);
                     }
-                    // Store session after modifications have been done so that
-                    // Spring Session and possibly other implementations realize
-                    // that something has changed inside the session attribute
-                    service.storeSession(this, session);
                 }
             }
         } finally {

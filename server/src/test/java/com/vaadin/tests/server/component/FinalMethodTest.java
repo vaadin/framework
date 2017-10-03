@@ -1,10 +1,11 @@
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
@@ -29,7 +30,7 @@ public class FinalMethodTest {
             ensureNoFinalMethods(c, tested);
             count++;
         }
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
     }
 
     private void ensureNoFinalMethods(Class<?> clazz,

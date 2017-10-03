@@ -80,7 +80,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
         getWidget().readonly = isReadOnly();
 
         getWidget().dragMode = uidl.hasAttribute("dragMode")
-                ? uidl.getIntAttribute("dragMode") : 0;
+                ? uidl.getIntAttribute("dragMode")
+                : 0;
 
         getWidget().isNullSelectionAllowed = uidl
                 .getBooleanAttribute("nullselect");
@@ -98,8 +99,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
 
         TreeNode childTree = null;
         UIDL childUidl = null;
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            childUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            childUidl = (UIDL) child;
             if ("actions".equals(childUidl.getTag())) {
                 updateActionMap(childUidl);
                 continue;
@@ -213,7 +214,7 @@ public class TreeConnector extends AbstractLegacyComponentConnector
                 VConsole.error(e);
             }
 
-            renderChildNodes(rootNode, (Iterator) uidl.getChildIterator(),
+            renderChildNodes(rootNode, (Iterator) uidl.iterator(),
                     levelProperty + 1);
         }
     }
@@ -224,9 +225,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
      * @param uidl
      */
     private void updateActionMap(UIDL uidl) {
-        final Iterator<?> it = uidl.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : uidl) {
+            final UIDL action = (UIDL) child;
             final String key = action.getStringAttribute("key");
             final String caption = action
                     .getStringAttribute(TreeConstants.ATTRIBUTE_ACTION_CAPTION);
@@ -265,7 +265,7 @@ public class TreeConnector extends AbstractLegacyComponentConnector
             if (uidl.getChildCount() == 0) {
                 treeNode.childNodeContainer.setVisible(false);
             } else {
-                renderChildNodes(treeNode, (Iterator) uidl.getChildIterator(),
+                renderChildNodes(treeNode, (Iterator) uidl.iterator(),
                         level + 1);
                 treeNode.childrenLoaded = true;
             }

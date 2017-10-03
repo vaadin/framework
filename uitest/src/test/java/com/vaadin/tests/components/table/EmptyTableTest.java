@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NotificationElement;
@@ -33,7 +34,7 @@ public class EmptyTableTest extends MultiBrowserTest {
 
     private void ensureNoErrors() {
         if (isElementPresent(NotificationElement.class)) {
-            Assert.fail("Error notification was shown!");
+            fail("Error notification was shown!");
         }
     }
 

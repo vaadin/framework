@@ -155,7 +155,7 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Gets the maximum slider value
+     * Gets the maximum slider value.
      *
      * @return the largest value the slider can have
      */
@@ -184,7 +184,7 @@ public class Slider extends AbstractField<Double> {
     }
 
     /**
-     * Gets the minimum slider value
+     * Gets the minimum slider value.
      *
      * @return the smallest value the slider can have
      */

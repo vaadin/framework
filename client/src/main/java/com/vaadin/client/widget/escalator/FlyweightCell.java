@@ -24,8 +24,9 @@ import com.vaadin.client.widget.escalator.FlyweightRow.CellIterator;
 import com.vaadin.client.widgets.Escalator;
 
 /**
- * A {@link FlyweightCell} represents a cell in the {@link com.vaadin.client.widgets.Grid Grid} or
- * {@link Escalator} at a certain point in time.
+ * A {@link FlyweightCell} represents a cell in the
+ * {@link com.vaadin.client.widgets.Grid Grid} or {@link Escalator} at a certain
+ * point in time.
  *
  * <p>
  * Since the {@link FlyweightCell} follows the <code>Flyweight</code>-pattern
@@ -51,7 +52,7 @@ public class FlyweightCell {
     }
 
     /**
-     * Returns the row index of the cell
+     * Returns the row index of the cell.
      */
     public int getRow() {
         assertSetup();
@@ -59,7 +60,7 @@ public class FlyweightCell {
     }
 
     /**
-     * Returns the column index of the cell
+     * Returns the column index of the cell.
      */
     public int getColumn() {
         assertSetup();

@@ -18,11 +18,8 @@ package com.vaadin.client.ui.button;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;

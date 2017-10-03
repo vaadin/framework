@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.data.fieldgroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 public class BeanFieldGroupTest {
@@ -63,8 +64,8 @@ public class BeanFieldGroupTest {
     public void propertyTypeWithoutItem() {
         BeanFieldGroup<Sub2> s = new BeanFieldGroup<BeanFieldGroupTest.Sub2>(
                 Sub2.class);
-        Assert.assertEquals(boolean.class, s.getPropertyType("sub2field"));
-        Assert.assertEquals(Integer.class, s.getPropertyType("sub1Field"));
-        Assert.assertEquals(String.class, s.getPropertyType("mainField"));
+        assertEquals(boolean.class, s.getPropertyType("sub2field"));
+        assertEquals(Integer.class, s.getPropertyType("sub1Field"));
+        assertEquals(String.class, s.getPropertyType("mainField"));
     }
 }

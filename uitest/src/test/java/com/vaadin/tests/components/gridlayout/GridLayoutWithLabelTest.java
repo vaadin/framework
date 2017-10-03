@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.gridlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
@@ -21,7 +22,7 @@ public class GridLayoutWithLabelTest extends MultiBrowserTest {
         cb.click(); // Turn off
         int after = gridLayout.getSize().getWidth();
 
-        Assert.assertEquals(
+        assertEquals(
                 "layout width should not have changed after checkbox was toggled",
                 before, after);
     }

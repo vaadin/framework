@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
@@ -60,12 +62,12 @@ public class NativeSelectEmptySelectionTest extends MultiBrowserTest {
         Set<String> options = select.getOptions().stream()
                 .map(TestBenchElement::getText).collect(Collectors.toSet());
         if (emptyCaption == null) {
-            Assert.assertEquals(49, options.size());
-            Assert.assertTrue(options.containsAll(originalOptions));
+            assertEquals(49, options.size());
+            assertTrue(options.containsAll(originalOptions));
         } else {
             options.contains(emptyCaption);
-            Assert.assertEquals(50, options.size());
-            Assert.assertTrue(options.containsAll(originalOptions));
+            assertEquals(50, options.size());
+            assertTrue(options.containsAll(originalOptions));
         }
     }
 }

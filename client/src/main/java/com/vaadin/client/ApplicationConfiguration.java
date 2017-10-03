@@ -204,7 +204,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Wraps a native javascript object containing fields for an error message
+     * Wraps a native javascript object containing fields for an error message.
      *
      * @since 7.0
      */
@@ -311,7 +311,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Gets the URL to the context root of the web application
+     * Gets the URL to the context root of the web application.
      *
      * @return the URL to the server-side context root as a string
      *
@@ -833,7 +833,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Registers that callback that the bootstrap javascript uses to start
      * applications once the widgetset is loaded and all required information is
-     * available
+     * available.
      *
      * @param widgetsetName
      *            the name of this widgetset
@@ -882,7 +882,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }-*/;
 
     /**
-     * Checks whether debug logging should be quiet
+     * Checks whether debug logging should be quiet.
      *
      * @return <code>true</code> if debug logging should be quiet
      */

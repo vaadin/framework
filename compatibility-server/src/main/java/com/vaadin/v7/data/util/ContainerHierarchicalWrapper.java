@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -167,8 +166,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 s.addAll(roots);
 
                 // Remove unnecessary items
-                for (final Iterator<Object> i = s.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : s) {
                     if (!container.containsId(id)) {
                         removeFromHierarchyWrapper(id);
                     }
@@ -176,8 +174,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
 
                 // Add all the missing items
                 final Collection<?> ids = container.getItemIds();
-                for (final Iterator<?> i = ids.iterator(); i.hasNext();) {
-                    final Object id = i.next();
+                for (final Object id : ids) {
                     if (!s.contains(id)) {
                         addToHierarchyWrapper(id);
                         s.add(id);
@@ -187,8 +184,8 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
                 Object[] array = roots.toArray();
                 Arrays.sort(array, basedOnOrderFromWrappedContainer);
                 roots = new LinkedHashSet<Object>();
-                for (int i = 0; i < array.length; i++) {
-                    roots.add(array[i]);
+                for (Object root : array) {
+                    roots.add(root);
                 }
                 for (Object object : children.keySet()) {
                     LinkedList<Object> object2 = children.get(object);

@@ -15,11 +15,13 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -49,13 +51,13 @@ public class ProgrammaticEditorControlTest extends SingleBrowserTest {
     private void assertEditorFieldContents(GridElement grid, String text) {
         TextFieldElement editorField = wrap(TextFieldElement.class,
                 grid.getEditor().getField(0));
-        Assert.assertEquals(text, editorField.getValue());
+        assertEquals(text, editorField.getValue());
     }
 
     private void assertEditorNotPresent(GridElement grid) {
         try {
             grid.getEditor();
-            Assert.fail("Editor should not be present");
+            fail("Editor should not be present");
         } catch (Exception e) {
 
         }

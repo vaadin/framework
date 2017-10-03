@@ -363,7 +363,7 @@ public class MessageSender {
     }
 
     /**
-     * Used internally to update what the server expects
+     * Used internally to update what the server expects.
      *
      * @param nextExpectedId
      *            the new client id to set

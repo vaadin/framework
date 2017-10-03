@@ -15,10 +15,12 @@
  */
 package com.vaadin.v7.tests.server.component.abstractselect;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;
@@ -179,7 +181,7 @@ public class AbstractSelectDeclarativeTest
         container.addContainerProperty("name", String.class, null);
         cb.setContainerDataSource(container);
         cb.readDesign(design, new DesignContext());
-        Assert.assertTrue("Adding new items should be allowed.",
+        assertTrue("Adding new items should be allowed.",
                 cb.isNewItemsAllowed());
         assertEquals("Wrong item caption mode.",
                 AbstractSelect.ItemCaptionMode.PROPERTY,
@@ -188,7 +190,7 @@ public class AbstractSelectDeclarativeTest
                 cb.getItemCaptionPropertyId());
         assertEquals("Wrong item icon property id.", "icon",
                 cb.getItemIconPropertyId());
-        Assert.assertTrue("Null selection should be allowed.",
+        assertTrue("Null selection should be allowed.",
                 cb.isNullSelectionAllowed());
         assertEquals("Wrong null selection item id.", "No items selected",
                 cb.getNullSelectionItemId());
@@ -199,12 +201,11 @@ public class AbstractSelectDeclarativeTest
         Element design = createDesignWithAttributesMultiSelect();
         ListSelect ls = new ListSelect();
         ls.readDesign(design, new DesignContext());
-        Assert.assertTrue("Multi select should be allowed.",
-                ls.isMultiSelect());
+        assertTrue("Multi select should be allowed.", ls.isMultiSelect());
         assertEquals("Wrong caption mode.",
                 AbstractSelect.ItemCaptionMode.EXPLICIT,
                 ls.getItemCaptionMode());
-        Assert.assertFalse("Null selection should not be allowed.",
+        assertFalse("Null selection should not be allowed.",
                 ls.isNullSelectionAllowed());
     }
 
@@ -235,13 +236,13 @@ public class AbstractSelectDeclarativeTest
         cb.writeDesign(e, new DesignContext());
         assertEquals("Wrong caption for the combo box.", "A combo box",
                 e.attr("caption"));
-        Assert.assertTrue("Adding new items should be allowed.",
+        assertTrue("Adding new items should be allowed.",
                 "".equals(e.attr("new-items-allowed")));
         assertEquals("Wrong item caption mode.", "icon_only",
                 e.attr("item-caption-mode"));
         assertEquals("Wrong item icon property id.", "icon",
                 e.attr("item-icon-property-id"));
-        Assert.assertTrue("Null selection should be allowed.",
+        assertTrue("Null selection should be allowed.",
                 "".equals(e.attr("null-selection-allowed"))
                         || "true".equals(e.attr("null-selection-allowed")));
         assertEquals("Wrong null selection item id.", "No item selected",
@@ -255,7 +256,7 @@ public class AbstractSelectDeclarativeTest
         ls.writeDesign(e, new DesignContext());
         assertEquals("Null selection should not be allowed.", "false",
                 e.attr("null-selection-allowed"));
-        Assert.assertTrue("Multi select should be allowed.",
+        assertTrue("Multi select should be allowed.",
                 "".equals(e.attr("multi-select"))
                         || "true".equals(e.attr("multi-select")));
     }
@@ -267,7 +268,7 @@ public class AbstractSelectDeclarativeTest
                 + "  <option>&gt; Two</option>" + "</vaadin7-combo-box>";
         AbstractSelect read = read(design);
 
-        Assert.assertEquals("> One", read.getItemCaption("one"));
+        assertEquals("> One", read.getItemCaption("one"));
 
         AbstractSelect underTest = new ComboBox();
         underTest.addItem("> One");
@@ -278,7 +279,7 @@ public class AbstractSelectDeclarativeTest
                 DeclarativeTestBaseBase.ALWAYS_WRITE_DATA);
         underTest.writeDesign(root, dc);
 
-        Assert.assertEquals("&gt; One",
+        assertEquals("&gt; One",
                 root.getElementsByTag("option").first().html());
     }
 

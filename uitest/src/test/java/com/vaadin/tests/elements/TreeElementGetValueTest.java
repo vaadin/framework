@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.elements;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,6 @@ public class TreeElementGetValueTest extends MultiBrowserTest {
     @Test
     public void testGetValue() {
         TreeElement tree = $(TreeElement.class).get(0);
-        Assert.assertEquals(tree.getValue(),
-                TreeElementGetValue.TEST_VALUE_LVL2);
+        assertEquals(tree.getValue(), TreeElementGetValue.TEST_VALUE_LVL2);
     }
 }

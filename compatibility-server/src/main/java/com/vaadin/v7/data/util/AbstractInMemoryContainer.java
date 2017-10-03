@@ -525,9 +525,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         // Filter
         boolean equal = true;
         Iterator<ITEMIDTYPE> origIt = originalFilteredItemIds.iterator();
-        for (final Iterator<ITEMIDTYPE> i = getAllItemIds().iterator(); i
-                .hasNext();) {
-            final ITEMIDTYPE id = i.next();
+        for (final ITEMIDTYPE id : getAllItemIds()) {
             if (passesFilters(id)) {
                 // filtered list comes from the full list, can use ==
                 equal = equal && origIt.hasNext() && origIt.next() == id;
@@ -554,9 +552,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty()) {
             return true;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (!f.passesFilter(itemId, item)) {
                 return false;
             }
@@ -644,9 +640,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         if (getFilters().isEmpty() || propertyId == null) {
             return false;
         }
-        final Iterator<Filter> i = getFilters().iterator();
-        while (i.hasNext()) {
-            final Filter f = i.next();
+        for (final Filter f : getFilters()) {
             if (f.appliesToProperty(propertyId)) {
                 return true;
             }

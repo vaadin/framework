@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigInteger;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Result;
@@ -50,8 +51,7 @@ public class StringToBigIntegerConverterTest
 
         String converted = getConverter().convertToPresentation(bd,
                 new ValueContext(Locale.GERMAN));
-        Assert.assertEquals(
-                "Value with specific locale was converted incorrectly",
+        assertEquals("Value with specific locale was converted incorrectly",
                 expected, converted);
     }
 
@@ -62,8 +62,8 @@ public class StringToBigIntegerConverterTest
 
         assertValue(BigInteger.ZERO,
                 converter.convertToModel("", new ValueContext()));
-        Assert.assertEquals("0", converter
-                .convertToPresentation(BigInteger.ZERO, new ValueContext()));
+        assertEquals("0", converter.convertToPresentation(BigInteger.ZERO,
+                new ValueContext()));
     }
 
 }

@@ -265,8 +265,8 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
             setErrorIndicatorElementVisible(true);
 
             // Hide error indicator from assistive devices
-            Roles.getTextboxRole()
-                    .setAriaHiddenState(errorIndicatorElement, true);
+            Roles.getTextboxRole().setAriaHiddenState(errorIndicatorElement,
+                    true);
 
             ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                     StyleConstants.STYLE_NAME_ERROR_INDICATOR,
@@ -662,7 +662,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
     }
 
     /**
-     * Sets the tooltip that should be shown for the caption
+     * Sets the tooltip that should be shown for the caption.
      *
      * @param tooltipInfo
      *            The tooltip that should be shown or null if no tooltip should
@@ -673,7 +673,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
     }
 
     /**
-     * Returns the tooltip that should be shown for the caption
+     * Returns the tooltip that should be shown for the caption.
      *
      * @return The tooltip to show or null if no tooltip should be shown
      */

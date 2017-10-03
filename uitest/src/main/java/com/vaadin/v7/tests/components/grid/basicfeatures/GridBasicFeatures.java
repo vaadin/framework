@@ -1490,7 +1490,6 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                 try {
                     c.saveEditor();
                 } catch (CommitException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }

@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.browserframe;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
@@ -100,17 +101,7 @@ public class BrowserFrameIsVisible extends TestBase {
                 sb.append("\n");
             }
 
-            ByteArrayInputStream istream;
-            try {
-                istream = new ByteArrayInputStream(
-                        sb.toString().getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return null;
-            }
-            return istream; // new DownloadStream (istream,null,null);
-
+            return new ByteArrayInputStream(sb.toString().getBytes(UTF_8));
         }
     }
 

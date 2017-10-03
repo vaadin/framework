@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.applicationservlet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -27,9 +28,9 @@ public class ContextProtocolTest extends SingleBrowserTest {
     public void contextPathCorrect() {
         openTestURL();
         // Added by bootstrap
-        Assert.assertEquals("said", executeScript("return window.hello"));
+        assertEquals("said", executeScript("return window.hello"));
         // Added by client side
-        Assert.assertEquals(getBaseURL() + "/statictestfiles/image.png",
+        assertEquals(getBaseURL() + "/statictestfiles/image.png",
                 findElement(By.id("image")).getAttribute("src"));
     }
 

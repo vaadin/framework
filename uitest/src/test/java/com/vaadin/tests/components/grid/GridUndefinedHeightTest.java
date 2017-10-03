@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class GridUndefinedHeightTest extends SingleBrowserTest {
         int gridHeight = grid.getSize().getHeight();
         int rows = 4; // Header Row + 3 Body Rows
 
-        Assert.assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
+        assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
 
         assertNoErrorNotifications();
     }
@@ -37,7 +38,7 @@ public class GridUndefinedHeightTest extends SingleBrowserTest {
         int gridHeight = grid.getSize().getHeight();
         int rows = 4; // Header Row + 3 Body Rows
 
-        Assert.assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
+        assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
 
         assertNoErrorNotifications();
     }
@@ -52,7 +53,7 @@ public class GridUndefinedHeightTest extends SingleBrowserTest {
         int gridHeight = grid.getSize().getHeight();
         int rows = 5; // 2 Header Rows + 3 Body Rows
 
-        Assert.assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
+        assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
 
         assertNoErrorNotifications();
     }
@@ -67,7 +68,7 @@ public class GridUndefinedHeightTest extends SingleBrowserTest {
         int gridHeight = grid.getSize().getHeight();
         int rows = 5; // 2 Header Rows + 3 Body Rows
 
-        Assert.assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
+        assertEquals("Grid height mismatch", oneRow * rows, gridHeight);
 
         assertNoErrorNotifications();
     }

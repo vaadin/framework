@@ -1,5 +1,12 @@
 package com.vaadin.v7.data.util.sqlcontainer.query;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +17,6 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +45,7 @@ public class FreeformQueryTest {
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
 
         DataGenerator.addPeopleToDatabase(connectionPool);
@@ -56,10 +62,10 @@ public class FreeformQueryTest {
     public void construction_legalParameters_shouldSucceed() {
         FreeformQuery ffQuery = new FreeformQuery("SELECT * FROM foo",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertArrayEquals(new Object[] { "ID" },
+        assertArrayEquals(new Object[] { "ID" },
                 ffQuery.getPrimaryKeyColumns().toArray());
 
-        Assert.assertEquals("SELECT * FROM foo", ffQuery.getQueryString());
+        assertEquals("SELECT * FROM foo", ffQuery.getQueryString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -97,7 +103,7 @@ public class FreeformQueryTest {
     public void getCount_simpleQuery_returnsFour() throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertEquals(4, query.getCount());
+        assertEquals(4, query.getCount());
     }
 
     @Test(expected = SQLException.class)
@@ -130,7 +136,7 @@ public class FreeformQueryTest {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
 
-        Assert.assertEquals(6, query.getCount());
+        assertEquals(6, query.getCount());
     }
 
     @Test
@@ -138,7 +144,7 @@ public class FreeformQueryTest {
         FreeformQuery query = new FreeformQuery(
                 "SELECT * FROM people WHERE \"NAME\" LIKE '%lle'",
                 connectionPool, "ID");
-        Assert.assertEquals(3, query.getCount());
+        assertEquals(3, query.getCount());
     }
 
     @Test
@@ -149,7 +155,7 @@ public class FreeformQueryTest {
         query.getCount();
         query.getCount();
         Connection c = connectionPool.reserveConnection();
-        Assert.assertNotNull(c);
+        assertNotNull(c);
         // Cleanup to make test connection pool happy
         connectionPool.releaseConnection(c);
     }
@@ -165,7 +171,7 @@ public class FreeformQueryTest {
                 "SELECT COUNT(*) FROM people WHERE \"NAME\" LIKE '%lle'");
         EasyMock.replay(delegate);
         query.setDelegate(delegate);
-        Assert.assertEquals(3, query.getCount());
+        assertEquals(3, query.getCount());
         EasyMock.verify(delegate);
     }
 
@@ -181,7 +187,7 @@ public class FreeformQueryTest {
                 .andReturn("SELECT COUNT(*) FROM GARBAGE");
         EasyMock.replay(delegate);
         query.setDelegate(delegate);
-        Assert.assertEquals(0, query.getCount());
+        assertEquals(0, query.getCount());
         EasyMock.verify(delegate);
     }
 
@@ -194,23 +200,23 @@ public class FreeformQueryTest {
         query.beginTransaction();
         ResultSet rs = query.getResults(0, 0);
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1));
-        Assert.assertEquals("Ville", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1));
+        assertEquals("Ville", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1));
-        Assert.assertEquals("Kalle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1));
+        assertEquals("Kalle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(2 + offset, rs.getInt(1));
-        Assert.assertEquals("Pelle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2 + offset, rs.getInt(1));
+        assertEquals("Pelle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(3 + offset, rs.getInt(1));
-        Assert.assertEquals("Börje", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(3 + offset, rs.getInt(1));
+        assertEquals("Börje", rs.getString(2));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         query.commit();
     }
 
@@ -223,19 +229,19 @@ public class FreeformQueryTest {
         query.beginTransaction();
         ResultSet rs = query.getResults(0, 0);
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1));
-        Assert.assertEquals("Ville", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1));
+        assertEquals("Ville", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1));
-        Assert.assertEquals("Kalle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1));
+        assertEquals("Kalle", rs.getString(2));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(2 + offset, rs.getInt(1));
-        Assert.assertEquals("Pelle", rs.getString(2));
+        assertTrue(rs.next());
+        assertEquals(2 + offset, rs.getInt(1));
+        assertEquals("Pelle", rs.getString(2));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         query.commit();
     }
 
@@ -249,9 +255,9 @@ public class FreeformQueryTest {
         query.beginTransaction();
         ResultSet rs = query.getResults(0, 0);
         for (int i = 0; i < 5000; i++) {
-            Assert.assertTrue(rs.next());
+            assertTrue(rs.next());
         }
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         query.commit();
     }
 
@@ -290,7 +296,7 @@ public class FreeformQueryTest {
         try {
             query.storeRow(new RowItem(container, new RowId(new Object[] { 1 }),
                     null));
-            Assert.fail("storeRow should fail when there is no delegate");
+            fail("storeRow should fail when there is no delegate");
         } catch (UnsupportedOperationException e) {
             // Cleanup to make test connection pool happy
             query.rollback();
@@ -307,7 +313,7 @@ public class FreeformQueryTest {
         try {
             query.removeRow(new RowItem(container,
                     new RowId(new Object[] { 1 }), null));
-            Assert.fail("removeRow should fail when there is no delgate");
+            fail("removeRow should fail when there is no delgate");
         } catch (UnsupportedOperationException e) {
             // Cleanup to make test connection pool happy
             query.rollback();
@@ -349,7 +355,7 @@ public class FreeformQueryTest {
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertTrue(query.containsRowWithKey(1));
+        assertTrue(query.containsRowWithKey(1));
     }
 
     @Test
@@ -357,7 +363,7 @@ public class FreeformQueryTest {
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertFalse(query.containsRowWithKey(1337));
+        assertFalse(query.containsRowWithKey(1337));
     }
 
     // (expected = SQLException.class)
@@ -366,7 +372,7 @@ public class FreeformQueryTest {
             throws SQLException {
         FreeformQuery query = new FreeformQuery("SELECT * FROM people",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertFalse(query.containsRowWithKey(38796));
+        assertFalse(query.containsRowWithKey(38796));
     }
 
     @Test
@@ -375,7 +381,7 @@ public class FreeformQueryTest {
         FreeformQuery query = new FreeformQuery(
                 "SELECT * FROM people WHERE \"NAME\" LIKE '%lle'",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertTrue(query.containsRowWithKey(1));
+        assertTrue(query.containsRowWithKey(1));
     }
 
     @Test
@@ -384,7 +390,7 @@ public class FreeformQueryTest {
         FreeformQuery query = new FreeformQuery(
                 "select * from people where \"NAME\" like '%lle'",
                 Arrays.asList("ID"), connectionPool);
-        Assert.assertTrue(query.containsRowWithKey(1));
+        assertTrue(query.containsRowWithKey(1));
     }
 
     @Test
@@ -413,7 +419,7 @@ public class FreeformQueryTest {
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
         query.setDelegate(delegate);
-        Assert.assertEquals(delegate, query.getDelegate());
+        assertEquals(delegate, query.getDelegate());
     }
 
     @Test
@@ -474,15 +480,15 @@ public class FreeformQueryTest {
         if (SQLTestsConstants.db == DB.MSSQL) {
             rsoffset++;
         }
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(0 + offset, rs.getInt(1 + rsoffset));
-        Assert.assertEquals("Ville", rs.getString(2 + rsoffset));
+        assertTrue(rs.next());
+        assertEquals(0 + offset, rs.getInt(1 + rsoffset));
+        assertEquals("Ville", rs.getString(2 + rsoffset));
 
-        Assert.assertTrue(rs.next());
-        Assert.assertEquals(1 + offset, rs.getInt(1 + rsoffset));
-        Assert.assertEquals("Kalle", rs.getString(2 + rsoffset));
+        assertTrue(rs.next());
+        assertEquals(1 + offset, rs.getInt(1 + rsoffset));
+        assertEquals("Kalle", rs.getString(2 + rsoffset));
 
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
 
         EasyMock.verify(delegate);
         query.commit();
@@ -515,10 +521,10 @@ public class FreeformQueryTest {
         query.beginTransaction();
         ResultSet rs = query.getResults(200, 100);
         for (int i = 0; i < 100; i++) {
-            Assert.assertTrue(rs.next());
-            Assert.assertEquals(200 + i + offset, rs.getInt("ID"));
+            assertTrue(rs.next());
+            assertEquals(200 + i + offset, rs.getInt("ID"));
         }
-        Assert.assertFalse(rs.next());
+        assertFalse(rs.next());
         query.commit();
     }
 
@@ -646,8 +652,7 @@ public class FreeformQueryTest {
                 null);
         try {
             query.storeRow(row);
-            Assert.fail(
-                    "storeRow should fail when delgate does not implement storeRow");
+            fail("storeRow should fail when delgate does not implement storeRow");
         } catch (UnsupportedOperationException e) {
             // Cleanup to make test connection pool happy
             query.rollback();
@@ -695,8 +700,7 @@ public class FreeformQueryTest {
                 null);
         try {
             query.removeRow(row);
-            Assert.fail(
-                    "removeRow should fail when delegate does not implement removeRow");
+            fail("removeRow should fail when delegate does not implement removeRow");
         } catch (UnsupportedOperationException e) {
             // Cleanup to make test connection pool happy
             query.rollback();
@@ -727,8 +731,7 @@ public class FreeformQueryTest {
         query.beginTransaction();
         try {
             query.beginTransaction();
-            Assert.fail(
-                    "Should throw exception when starting a transaction while already in a transaction");
+            fail("Should throw exception when starting a transaction while already in a transaction");
         } catch (IllegalStateException e) {
             // Cleanup to make test connection pool happy
             query.rollback();
@@ -882,7 +885,7 @@ public class FreeformQueryTest {
         query.setDelegate(delegate);
 
         // The id (key) used should be 1337 as above, for the call with key = 1
-        Assert.assertFalse(query.containsRowWithKey(1));
+        assertFalse(query.containsRowWithKey(1));
 
         EasyMock.verify(delegate);
     }
@@ -978,7 +981,7 @@ public class FreeformQueryTest {
         EasyMock.replay(delegate);
         query.setDelegate(delegate);
 
-        Assert.assertTrue(query.containsRowWithKey(1));
+        assertTrue(query.containsRowWithKey(1));
 
         EasyMock.verify(delegate);
     }
@@ -990,7 +993,7 @@ public class FreeformQueryTest {
                 "p1.ID");
         query.setDelegate(new NonMatchingStatementDelegateWithGroupBy());
 
-        Assert.assertEquals(0, query.getCount());
+        assertEquals(0, query.getCount());
     }
 
     @Test
@@ -1000,6 +1003,6 @@ public class FreeformQueryTest {
                 "p1.ID");
         query.setDelegate(new NonMatchingDelegateWithGroupBy());
 
-        Assert.assertEquals(0, query.getCount());
+        assertEquals(0, query.getCount());
     }
 }

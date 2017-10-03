@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -43,7 +44,7 @@ public class PreserveWithExpiredHeartbeatTest extends SingleBrowserTest {
             openTestURL();
 
             // Verify that that we still get the same UI
-            Assert.assertEquals("Original UI has been closed", originalId,
+            assertEquals("Original UI has been closed", originalId,
                     getUiIdentification());
         }
     }

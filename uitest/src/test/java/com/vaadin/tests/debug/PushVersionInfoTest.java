@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.debug;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -39,9 +41,9 @@ public class PushVersionInfoTest extends SingleBrowserTest {
         openTestURL();
 
         selectInfoTab();
-        Assert.assertNull("Found push info server string for disabled Push",
+        assertNull("Found push info server string for disabled Push",
                 getPushRowValue("Push server version"));
-        Assert.assertNull("Found push info client string for disabled Push",
+        assertNull("Found push info client string for disabled Push",
                 getPushRowValue("Push client version"));
     }
 
@@ -54,13 +56,12 @@ public class PushVersionInfoTest extends SingleBrowserTest {
         WebElement pushRow = getPushRowValue("Push server version");
         String atmVersion = findElement(By.className("atmosphere-version"))
                 .getText();
-        Assert.assertTrue("Push row doesn't contain Atmosphere version",
+        assertTrue("Push row doesn't contain Atmosphere version",
                 pushRow.getText().contains(atmVersion));
         String jsString = getPushRowValue("Push client version").getText();
-        Assert.assertTrue("Push client version doesn't contain 'vaadin' string",
+        assertTrue("Push client version doesn't contain 'vaadin' string",
                 jsString.contains("vaadin"));
-        Assert.assertTrue(
-                "Push client version doesn't contain 'javascript' string",
+        assertTrue("Push client version doesn't contain 'javascript' string",
                 jsString.contains("javascript"));
     }
 

@@ -21,12 +21,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -170,8 +170,7 @@ public class GridEditorTest {
             // Manual fail instead of @Test(expected=...) to check it is
             // saveEditor that fails and not setValue
             grid.saveEditor();
-            Assert.fail(
-                    "CommitException expected when saving an invalid field value");
+            fail("CommitException expected when saving an invalid field value");
         } catch (CommitException e) {
             // expected
         }
@@ -278,7 +277,7 @@ public class GridEditorTest {
         try {
             doEditMethod.invoke(grid);
         } catch (Exception e) {
-            Assert.fail("Editing item " + ITEM_ID + " failed. Cause: "
+            fail("Editing item " + ITEM_ID + " failed. Cause: "
                     + e.getCause().toString());
         }
     }

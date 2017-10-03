@@ -24,7 +24,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class ClassPathExplorer {
             && f.isDirectory();
 
     /**
-     * Contains information about widgetsets and themes found on the classpath
+     * Contains information about widgetsets and themes found on the classpath.
      *
      * @since 7.1
      */
@@ -194,15 +193,14 @@ public class ClassPathExplorer {
 
         if (directory.exists() && !directory.isHidden()) {
             // Get the list of the files contained in the directory
-            String[] files = directory.list();
-            for (int i = 0; i < files.length; i++) {
+            for (String file : directory.list()) {
                 // we are only interested in .gwt.xml files
-                if (!files[i].endsWith(".gwt.xml")) {
+                if (!file.endsWith(".gwt.xml")) {
                     continue;
                 }
 
                 // remove the .gwt.xml extension
-                String classname = files[i].substring(0, files[i].length() - 8);
+                String classname = file.substring(0, file.length() - 8);
                 String packageName = locationString
                         .substring(locationString.lastIndexOf('/') + 1);
                 classname = packageName + "." + classname;
@@ -318,8 +316,7 @@ public class ClassPathExplorer {
         debug("Classpath: " + classpath);
 
         String[] split = classpath.split(pathSep);
-        for (int i = 0; i < split.length; i++) {
-            String classpathEntry = split[i];
+        for (String classpathEntry : split) {
             if (acceptClassPathEntry(classpathEntry)) {
                 locations.add(classpathEntry);
             }
@@ -450,21 +447,20 @@ public class ClassPathExplorer {
         }
 
         // add all directories recursively
-        File[] dirs = file.listFiles(DIRECTORIES_ONLY);
-        for (int i = 0; i < dirs.length; i++) {
+        for (File dir : file.listFiles(DIRECTORIES_ONLY)) {
             try {
                 // add the present directory
-                if (!dirs[i].isHidden()
-                        && !dirs[i].getPath().contains(File.separator + ".")) {
-                    String key = dirs[i].getCanonicalPath() + "/" + name
-                            + dirs[i].getName();
-                    URL url = dirs[i].getCanonicalFile().toURI().toURL();
+                if (!dir.isHidden()
+                        && !dir.getPath().contains(File.separator + ".")) {
+                    String key = dir.getCanonicalPath() + "/" + name
+                            + dir.getName();
+                    URL url = dir.getCanonicalFile().toURI().toURL();
                     locations.put(key, url);
                 }
             } catch (Exception ioe) {
                 return;
             }
-            include(name + dirs[i].getName(), dirs[i], locations);
+            include(name + dir.getName(), dir, locations);
         }
     }
 
@@ -533,9 +529,7 @@ public class ClassPathExplorer {
         }
 
         URL firstDirectory = null;
-        Iterator<String> it = rawClasspathEntries.iterator();
-        while (it.hasNext()) {
-            String entry = it.next();
+        for (String entry : rawClasspathEntries) {
 
             File directory = new File(entry);
             if (directory.exists() && !directory.isHidden()
@@ -566,7 +560,7 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Test method for helper tool
+     * Test method for helper tool.
      */
     public static void main(String[] args) {
         log("Searching for available widgetsets and stylesheets...");

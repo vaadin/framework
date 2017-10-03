@@ -15,9 +15,11 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -43,7 +45,7 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
                 .findElements(By.className("v-tabsheet-tabitemcell"));
         tabHeaders.get(1).findElement(By.className("v-captiontext")).click();
 
-        Assert.assertFalse(
+        assertFalse(
                 "It's possible to activate TabSheet tab when its parent is disabled",
                 tabHeaders.get(1).getAttribute("class")
                         .contains("v-tabsheet-tabitemcell-selected"));
@@ -54,15 +56,14 @@ public class TabSheetInDisabledParentTest extends MultiBrowserTest {
         // selected tab is still the same
         tabHeaders = getDriver()
                 .findElements(By.className("v-tabsheet-tabitemcell"));
-        Assert.assertTrue(
-                "Tabsheet has wrong selected tab after enabling its parent",
+        assertTrue("Tabsheet has wrong selected tab after enabling its parent",
                 tabHeaders.get(0).getAttribute("class")
                         .contains("v-tabsheet-tabitemcell-selected"));
 
         // click to the second tab
         tabHeaders.get(1).findElement(By.className("v-captiontext")).click();
         // check the second tab is selected
-        Assert.assertTrue(
+        assertTrue(
                 "Second tab is not activated in the Tabsheet after clicking on it",
                 tabHeaders.get(1).getAttribute("class")
                         .contains("v-tabsheet-tabitemcell-selected"));

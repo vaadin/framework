@@ -49,7 +49,7 @@ public class DetailsConnectorChange implements Serializable {
     private Integer newIndex;
     private boolean shouldStillBeVisible;
 
-    /** Create a new connector index change */
+    /** Create a new connector index change. */
     public DetailsConnectorChange() {
     }
 
@@ -143,7 +143,7 @@ public class DetailsConnectorChange implements Serializable {
     }
 
     /**
-     * Sets the old index
+     * Sets the old index.
      *
      * @param oldIndex
      *            the old index. May be <code>null</code> if a new connector is
@@ -154,7 +154,7 @@ public class DetailsConnectorChange implements Serializable {
     }
 
     /**
-     * Sets the new index
+     * Sets the new index.
      *
      * @param newIndex
      *            the new index. May be <code>null</code> if a connector is

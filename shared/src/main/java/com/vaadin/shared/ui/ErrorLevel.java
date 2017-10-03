@@ -17,6 +17,7 @@ package com.vaadin.shared.ui;
 
 /**
  * Represents the error levels displayed on components.
+ * 
  * @author Vaadin Ltd
  * @since 8.2
  */
@@ -48,7 +49,7 @@ public enum ErrorLevel {
     SYSTEM;
 
     /**
-     * Integer representation of error severity for comparison
+     * Integer representation of error severity for comparison.
      *
      * @return integer for error severity
      */

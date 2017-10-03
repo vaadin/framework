@@ -317,7 +317,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
         public String getMinimizedValueAsHTML();
 
         /**
-         * This should return the full Component representing the data
+         * This should return the full Component representing the data.
          *
          * @return a Component for the value
          */

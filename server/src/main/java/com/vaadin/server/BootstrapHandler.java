@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -323,7 +325,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         protected String encodeQueryStringParameterValue(String queryString) {
             String encodedString = null;
             try {
-                encodedString = URLEncoder.encode(queryString, "UTF-8");
+                encodedString = URLEncoder.encode(queryString,
+                        UTF_8.name());
             } catch (UnsupportedEncodingException e) {
                 // should never happen
                 throw new RuntimeException("Could not find UTF-8", e);
@@ -495,7 +498,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         response.setContentType(
                 ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(response.getOutputStream(), "UTF-8"))) {
+                new OutputStreamWriter(response.getOutputStream(), UTF_8))) {
             writer.append(html);
         }
     }
@@ -517,7 +520,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 "content", ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
 
         // Force IE 11 to use IE 11 mode.
-        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible").attr("content", "IE=11");
+        head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
+                .attr("content", "IE=11");
 
         Class<? extends UI> uiClass = context.getUIClass();
 
@@ -891,7 +895,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     /**
-     * Override if required
+     * Override if required.
      *
      * @param context
      * @return

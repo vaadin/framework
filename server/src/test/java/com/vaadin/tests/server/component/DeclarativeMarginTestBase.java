@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.server.component;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.design.DeclarativeTestBase;
@@ -34,7 +35,7 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
         }
         design += " />";
         L layout = read(design);
-        Assert.assertTrue(layout.isSpacing());
+        assertTrue(layout.isSpacing());
         testWrite(design, layout);
 
         // Spacing off
@@ -44,7 +45,7 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
         }
         design += " />";
         layout = read(design);
-        Assert.assertFalse(layout.isSpacing());
+        assertFalse(layout.isSpacing());
         testWrite(design, layout);
     }
 
@@ -65,7 +66,7 @@ public abstract class DeclarativeMarginTestBase<L extends Layout & MarginHandler
             // introspection and MarginInfo is not a proper bean. It ends up
             // considering *all* MarginInfo objects equal... (#18229)
             L layout = read(design);
-            Assert.assertEquals("For tag: " + design, marginToTest,
+            assertEquals("For tag: " + design, marginToTest,
                     layout.getMargin());
 
             testWrite(design, layout);

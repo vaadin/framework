@@ -82,11 +82,10 @@ public class TestForMultipleStyleNames extends CustomComponent
     public void valueChange(ValueChangeEvent event) {
 
         final String currentStyle = l.getStyleName();
-        final String[] tmp = currentStyle.split(" ");
         final List<String> curStyles = new ArrayList<>();
-        for (int i = 0; i < tmp.length; i++) {
-            if (tmp[i] != "") {
-                curStyles.add(tmp[i]);
+        for (String tmp : currentStyle.split(" ")) {
+            if (tmp != "") {
+                curStyles.add(tmp);
             }
         }
 

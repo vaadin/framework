@@ -120,7 +120,7 @@ public class Window extends Panel
     private int orderPosition = -1;
 
     /**
-     * Creates a new, empty window
+     * Creates a new, empty window.
      */
     public Window() {
         this("", null);
@@ -285,7 +285,7 @@ public class Window extends Panel
 
     /**
      * Sets the position of the window on the screen using
-     * {@link #setPositionX(int)} and {@link #setPositionY(int)}
+     * {@link #setPositionX(int)} and {@link #setPositionY(int)}.
      *
      * @since 7.5
      * @param x
@@ -685,7 +685,7 @@ public class Window extends Panel
         }
 
         /**
-         * Get the window form which this event originated
+         * Get the window form which this event originated.
          *
          * @return the window
          */
@@ -911,7 +911,7 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the mode for the window
+     * Sets the mode for the window.
      *
      * @see WindowMode
      * @param windowMode

@@ -16,9 +16,12 @@
 
 package com.vaadin.tests.server.navigator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.navigator.Navigator;
@@ -40,10 +43,9 @@ public class UriFragmentManagerTest {
         EasyMock.replay(page);
 
         // test manager using the mock
-        Assert.assertEquals("Incorrect fragment value", "", manager.getState());
+        assertEquals("Incorrect fragment value", "", manager.getState());
         manager.setState("test");
-        Assert.assertEquals("Incorrect fragment value", "test",
-                manager.getState());
+        assertEquals("Incorrect fragment value", "test", manager.getState());
     }
 
     @Test
@@ -71,10 +73,10 @@ public class UriFragmentManagerTest {
         UriFragmentManager manager = new UriFragmentManager(page);
         manager.setNavigator(EasyMock.createMock(Navigator.class));
 
-        Assert.assertTrue(
+        assertTrue(
                 "addUriFragmentChangedListener() method is not called for the Page",
                 page.addUriFragmentCalled());
-        Assert.assertFalse(
+        assertFalse(
                 "removeUriFragmentChangedListener() method is called for the Page",
                 page.removeUriFragmentCalled());
     }
@@ -87,7 +89,7 @@ public class UriFragmentManagerTest {
         manager.setNavigator(EasyMock.createMock(Navigator.class));
 
         manager.setNavigator(null);
-        Assert.assertTrue(
+        assertTrue(
                 "removeUriFragmentChangedListener() method is not called for the Page",
                 page.removeUriFragmentCalled());
     }

@@ -53,7 +53,7 @@ public class CalendarTargetDetails extends TargetDetailsImpl {
     }
 
     /**
-     * Does the dropped item have a time associated with it
+     * Does the dropped item have a time associated with it.
      *
      * @param hasDropTime
      */

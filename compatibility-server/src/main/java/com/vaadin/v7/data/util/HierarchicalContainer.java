@@ -593,8 +593,7 @@ public class HierarchicalContainer extends IndexedContainer
     public boolean removeItemRecursively(Object itemId) {
         disableContentsChangeEvents();
         try {
-            boolean removeItemRecursively = removeItemRecursively(this, itemId);
-            return removeItemRecursively;
+            return removeItemRecursively(this, itemId);
         } finally {
             enableAndFireContentsChangeEvents();
         }
@@ -615,10 +614,9 @@ public class HierarchicalContainer extends IndexedContainer
         boolean success = true;
         Collection<?> children2 = container.getChildren(itemId);
         if (children2 != null) {
-            Object[] array = children2.toArray();
-            for (int i = 0; i < array.length; i++) {
+            for (Object o : children2.toArray()) {
                 boolean removeItemRecursively = removeItemRecursively(container,
-                        array[i]);
+                        o);
                 if (!removeItemRecursively) {
                     success = false;
                 }

@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,8 +24,7 @@ public class ComboBoxInputNotAllowedTest extends MultiBrowserTest {
         openTestURL();
         ComboBoxElement cb = $(ComboBoxElement.class).first();
 
-        String[] optionsToTest = {
-                ComboBoxInputNotAllowed.ITEM_ON_FIRST_PAGE,
+        String[] optionsToTest = { ComboBoxInputNotAllowed.ITEM_ON_FIRST_PAGE,
                 ComboBoxInputNotAllowed.ITEM_ON_SECOND_PAGE,
                 ComboBoxInputNotAllowed.ITEM_ON_LAST_PAGE,
                 ComboBoxInputNotAllowed.ITEM_LAST_WITH_PARENTHESIS,
@@ -32,9 +32,9 @@ public class ComboBoxInputNotAllowedTest extends MultiBrowserTest {
 
         for (String option : optionsToTest) {
             cb.selectByText(option);
-            Assert.assertEquals("Value is now: " + option,
+            assertEquals("Value is now: " + option,
                     $(LabelElement.class).last().getText());
-            Assert.assertEquals(option, cb.getValue());
+            assertEquals(option, cb.getValue());
         }
     }
 }

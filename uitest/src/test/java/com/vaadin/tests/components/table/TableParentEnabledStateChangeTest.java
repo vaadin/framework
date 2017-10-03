@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -34,19 +36,19 @@ public class TableParentEnabledStateChangeTest extends SingleBrowserTest {
         ButtonElement button = $(ButtonElement.class).first();
 
         row.click();
-        Assert.assertTrue(isSelected(row));
+        assertTrue(isSelected(row));
 
         // Disable
         button.click();
-        Assert.assertTrue(isSelected(row));
+        assertTrue(isSelected(row));
         row.click(); // Should have no effect
-        Assert.assertTrue(isSelected(row));
+        assertTrue(isSelected(row));
 
         // Enable
         button.click();
-        Assert.assertTrue(isSelected(row));
+        assertTrue(isSelected(row));
         row.click(); // Should deselect
-        Assert.assertFalse(isSelected(row));
+        assertFalse(isSelected(row));
     }
 
     private boolean isSelected(TableRowElement row) {

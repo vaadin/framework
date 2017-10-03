@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -20,9 +21,10 @@ public class GridDetailsReattachTest extends MultiBrowserTest {
     @Test
     public void clickToAddCaption() {
         openTestURL();
-        Assert.assertTrue("Grid details don't exist",  hasDetailsElement());
+        assertTrue("Grid details don't exist", hasDetailsElement());
         $(ButtonElement.class).first().click();
-        Assert.assertTrue("Grid details don't exist after deattach and reattach",hasDetailsElement() );
+        assertTrue("Grid details don't exist after deattach and reattach",
+                hasDetailsElement());
     }
 
     private final By locator = By.className("v-grid-spacer");

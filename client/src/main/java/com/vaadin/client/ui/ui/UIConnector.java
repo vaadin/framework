@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -467,8 +466,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         /*
          * Search the UIDL stream for CSS resources and strings to be injected.
          */
-        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL cssInjectionsUidl = (UIDL) it.next();
+        for (Object child : uidl) {
+            UIDL cssInjectionsUidl = (UIDL) child;
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
@@ -482,9 +481,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getHead().appendChild(link);
                 // Check if we have CSS string to inject
             } else if (cssInjectionsUidl.getTag().equals("css-string")) {
-                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
-                        .hasNext();) {
-                    StyleInjector.injectAtEnd((String) it2.next());
+                for (Object c : cssInjectionsUidl) {
+                    StyleInjector.injectAtEnd((String) c);
                     StyleInjector.flush();
                 }
             }
@@ -653,7 +651,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Checks if the given sub window is a child of this UI Connector
+     * Checks if the given sub window is a child of this UI Connector.
      *
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
@@ -875,7 +873,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Invokes the layout analyzer on the server
+     * Invokes the layout analyzer on the server.
      *
      * @since 7.1
      */
@@ -944,7 +942,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Loads the new theme and removes references to the old theme
+     * Loads the new theme and removes references to the old theme.
      *
      * @since 7.4.3
      * @param oldTheme
@@ -1154,7 +1152,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Returns the name of the theme currently in used by the UI
+     * Returns the name of the theme currently in used by the UI.
      *
      * @since 7.3
      * @return the theme name used by this UI

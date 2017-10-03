@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.treetable;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -32,8 +33,7 @@ public class TreeTableRowHeaderModeTest extends MultiBrowserTest {
     public void testIconRowHeaderMode() {
         openTestURL();
 
-        Assert.assertFalse(
-                "Unexpected row header for icons is found in TreeTable",
+        assertFalse("Unexpected row header for icons is found in TreeTable",
                 isElementPresent(
                         By.className("v-table-header-cell-rowheader")));
     }

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.popupview;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -44,7 +45,7 @@ public class PopupViewShortcutActionHandlerTest extends MultiBrowserTest {
                 .findElement(By.className("v-textfield"));
         textField.sendKeys("a", Keys.ENTER);
 
-        Assert.assertTrue(
+        assertTrue(
                 "Unable to find label component which is the result of"
                         + " shortcut action handling.",
                 isElementPresent(By.className("shortcut-result")));

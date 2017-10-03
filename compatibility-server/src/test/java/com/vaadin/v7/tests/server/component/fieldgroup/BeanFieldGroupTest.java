@@ -1,8 +1,8 @@
 package com.vaadin.v7.tests.server.component.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.PropertyId;
@@ -88,13 +88,13 @@ public class BeanFieldGroupTest {
                 .bindFieldsUnbuffered(myBean, viewStub);
 
         Field<String> field = (Field<String>) bindFields.getField("basicField");
-        Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
+        assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
         field.setValue("Foo");
-        Assert.assertEquals("Foo", myBean.basicField);
+        assertEquals("Foo", myBean.basicField);
 
         field = (Field<String>) bindFields.getField("anotherField");
         field.setValue("Foo");
-        Assert.assertEquals("Foo", myBean.anotherField);
+        assertEquals("Foo", myBean.anotherField);
     }
 
     @SuppressWarnings("unchecked")
@@ -109,17 +109,17 @@ public class BeanFieldGroupTest {
         Field<String> basicField = (Field<String>) bindFields
                 .getField("basicField");
         basicField.setValue("Foo");
-        Assert.assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
+        assertEquals(DEFAULT_FOR_BASIC_FIELD, myBean.basicField);
 
         Field<String> anotherField = (Field<String>) bindFields
                 .getField("anotherField");
         anotherField.setValue("Foo");
-        Assert.assertNull(myBean.anotherField);
+        assertNull(myBean.anotherField);
 
         bindFields.commit();
 
-        Assert.assertEquals("Foo", myBean.basicField);
-        Assert.assertEquals("Foo", myBean.anotherField);
+        assertEquals("Foo", myBean.basicField);
+        assertEquals("Foo", myBean.anotherField);
 
     }
 
@@ -156,7 +156,7 @@ public class BeanFieldGroupTest {
         group.setItemDataSource((MyBean) null);
 
         BeanItem<MyBean> dataSource = group.getItemDataSource();
-        Assert.assertNull("Data source is null for null bean", dataSource);
+        assertNull("Data source is null for null bean", dataSource);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class BeanFieldGroupTest {
 
         group.setItemDataSource((Item) null);
         BeanItem<MyBean> dataSource = group.getItemDataSource();
-        Assert.assertNull("Group returns not null data source", dataSource);
+        assertNull("Group returns not null data source", dataSource);
     }
 
 }

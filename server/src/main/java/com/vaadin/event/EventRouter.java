@@ -132,9 +132,10 @@ public class EventRouter implements MethodEventSource {
         // Find the correct method
         final Method[] methods = target.getClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : methods) {
+            if (m.getName().equals(methodName)) {
+                method = m;
+                break;
             }
         }
         if (method == null) {
@@ -152,7 +153,6 @@ public class EventRouter implements MethodEventSource {
                 }
             }
         }
-
     }
 
     /**
@@ -197,9 +197,8 @@ public class EventRouter implements MethodEventSource {
 
             // Send the event to all listeners. The listeners themselves
             // will filter out unwanted events.
-            final Object[] listeners = listenerList.toArray();
-            for (int i = 0; i < listeners.length; i++) {
-                ListenerMethod listenerMethod = (ListenerMethod) listeners[i];
+            for (Object l : listenerList.toArray()) {
+                ListenerMethod listenerMethod = (ListenerMethod) l;
                 if (null != errorHandler) {
                     try {
                         listenerMethod.receiveEvent(event);
@@ -210,7 +209,6 @@ public class EventRouter implements MethodEventSource {
                     listenerMethod.receiveEvent(event);
                 }
             }
-
         }
     }
 

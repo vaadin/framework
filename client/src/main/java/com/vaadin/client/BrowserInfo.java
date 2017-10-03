@@ -404,7 +404,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on iOS
+     * Checks if the browser is run on iOS.
      *
      * @return true if the browser is run on iOS, false otherwise
      */
@@ -423,7 +423,7 @@ public class BrowserInfo {
     }
 
     /**
-     * Checks if the browser is run on Android
+     * Checks if the browser is run on Android.
      *
      * @return true if the browser is run on Android, false otherwise
      */
@@ -461,7 +461,7 @@ public class BrowserInfo {
 
     /**
      * Tests if this is an Android devices with a broken scrollTop
-     * implementation
+     * implementation.
      *
      * @return true if scrollTop cannot be trusted on this device, false
      *         otherwise

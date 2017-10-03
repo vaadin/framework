@@ -15,7 +15,8 @@
  */
 package com.vaadin.data.provider;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.data.provider.BackendDataProviderTest.StrBeanBackEndDataProvider;
@@ -48,12 +49,12 @@ public class ConfigurableFilterDataProviderWrapperTest {
     public void void_setFilter() {
         configurableVoid.setFilter(xyzFilter);
 
-        Assert.assertEquals("Set filter should be used", 1,
+        assertEquals("Set filter should be used", 1,
                 configurableVoid.size(new Query<>()));
 
         configurableVoid.setFilter(null);
 
-        Assert.assertEquals("null filter should return all items", 100,
+        assertEquals("null filter should return all items", 100,
                 configurableVoid.size(new Query<>()));
     }
 
@@ -68,21 +69,21 @@ public class ConfigurableFilterDataProviderWrapperTest {
     public void predicate_setFilter() {
         configurablePredicate.setFilter(50);
 
-        Assert.assertEquals("Set filter should be used", 49,
+        assertEquals("Set filter should be used", 49,
                 configurablePredicate.size(new Query<>()));
 
         configurablePredicate.setFilter(null);
 
-        Assert.assertEquals("null filter should return all items", 100,
+        assertEquals("null filter should return all items", 100,
                 configurablePredicate.size(new Query<>()));
     }
 
     @Test
     public void predicate_queryFilter() {
-        Assert.assertEquals("Query filter should be used", 1,
+        assertEquals("Query filter should be used", 1,
                 configurablePredicate.size(new Query<>("Xyz")));
 
-        Assert.assertEquals("null query filter should return all items", 100,
+        assertEquals("null query filter should return all items", 100,
                 configurablePredicate.size(new Query<>()));
     }
 
@@ -90,12 +91,12 @@ public class ConfigurableFilterDataProviderWrapperTest {
     public void predicate_combinedFilters() {
         configurablePredicate.setFilter(50);
 
-        Assert.assertEquals("Both filters should be used", 0,
+        assertEquals("Both filters should be used", 0,
                 configurablePredicate.size(new Query<>("Xyz")));
 
         configurablePredicate.setFilter(null);
 
-        Assert.assertEquals("Only zyz filter should be used", 1,
+        assertEquals("Only zyz filter should be used", 1,
                 configurablePredicate.size(new Query<>("Xyz")));
     }
 

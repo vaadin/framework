@@ -42,7 +42,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     /**
      * Wrapper exception for exceptions which occur during invocation of an RPC
-     * call
+     * call.
      *
      * @author Vaadin Ltd
      * @since 7.0

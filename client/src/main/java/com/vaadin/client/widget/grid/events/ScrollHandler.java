@@ -18,7 +18,7 @@ package com.vaadin.client.widget.grid.events;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * A handler that gets called whenever a scrollbar bundle is scrolled
+ * A handler that gets called whenever a scrollbar bundle is scrolled.
  *
  * @author Vaadin Ltd
  * @since 7.4

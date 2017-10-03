@@ -53,7 +53,6 @@ public class TableInTabsheet extends AbstractReindeerTestUI {
             t.addTab(GDocs(""), "Abr 2012");
 
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         hP.addComponent(t);

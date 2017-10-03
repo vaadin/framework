@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.serialization;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -28,9 +29,9 @@ public class LegacySerializerUITest extends SingleBrowserTest {
     public void testInfinity() {
         openTestURL();
         WebElement html = findElement(By.className("gwt-HTML"));
-        Assert.assertEquals("doubleInfinity: Infinity", html.getText());
+        assertEquals("doubleInfinity: Infinity", html.getText());
         // Can't send infinity back, never have been able to
-        Assert.assertEquals("1. doubleInfinity: null", getLogRow(0));
+        assertEquals("1. doubleInfinity: null", getLogRow(0));
     }
 
 }
