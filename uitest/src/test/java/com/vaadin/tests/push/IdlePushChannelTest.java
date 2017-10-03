@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.parallel.TestCategory;
@@ -30,10 +31,10 @@ public abstract class IdlePushChannelTest extends MultiBrowserTest {
     public void longWaitBetweenActions() throws Exception {
         openTestURL();
         BasicPushTest.getIncrementButton(this).click();
-        Assert.assertEquals(1, BasicPushTest.getClientCounter(this));
+        assertEquals(1, BasicPushTest.getClientCounter(this));
         sleep(SEVEN_MINUTES_IN_MS);
         BasicPushTest.getIncrementButton(this).click();
-        Assert.assertEquals(2, BasicPushTest.getClientCounter(this));
+        assertEquals(2, BasicPushTest.getClientCounter(this));
     }
 
 }

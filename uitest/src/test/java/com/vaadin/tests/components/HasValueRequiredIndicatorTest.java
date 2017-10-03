@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -35,21 +36,21 @@ public abstract class HasValueRequiredIndicatorTest extends MultiBrowserTest {
     public void requiredIndicatorVisible() {
         openTestURL();
         List<WebElement> layouts = findElements(By.className("vaadin-layout"));
-        Assert.assertTrue(layouts.size() > 0);
+        assertTrue(layouts.size() > 0);
         layouts.stream().forEach(this::checkRequiredIndicator);
     }
 
     protected void checkRequiredIndicator(WebElement layout) {
         WebElement caption = layout.findElement(By.className("v-caption"));
-        Assert.assertTrue(caption.isDisplayed());
+        assertTrue(caption.isDisplayed());
         WebElement indicator = caption
                 .findElement(By.className("v-required-field-indicator"));
-        Assert.assertTrue(indicator.isDisplayed());
+        assertTrue(indicator.isDisplayed());
         Point layoutLocation = layout.getLocation();
         Point indicatorLocation = indicator.getLocation();
-        Assert.assertTrue("Indicator x-axis location is not inside layout",
+        assertTrue("Indicator x-axis location is not inside layout",
                 indicatorLocation.getX() >= layoutLocation.getX());
-        Assert.assertTrue("Indicator y-axis location is not inside layout",
+        assertTrue("Indicator y-axis location is not inside layout",
                 indicatorLocation.getY() >= layoutLocation.getY());
     }
 }

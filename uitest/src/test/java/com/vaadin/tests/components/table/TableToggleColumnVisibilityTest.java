@@ -15,12 +15,14 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableHeaderElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -44,11 +46,11 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         checkHeaderAttributes(1);
 
         toggleVisibilityButton.click(); // hide column #1
-        Assert.assertEquals("One column should be visible",
+        assertEquals("One column should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 1);
 
         toggleVisibilityButton.click(); // restore column #1
-        Assert.assertEquals("Two columns should be visible",
+        assertEquals("Two columns should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 2);
         checkHeaderAttributes(1);
 
@@ -65,16 +67,15 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         TableHeaderElement headerCell = $(TableElement.class).first()
                 .getHeaderCell(columnNumber);
 
-        Assert.assertTrue("Column header text should be custom",
+        assertTrue("Column header text should be custom",
                 headerCell.getText().equalsIgnoreCase("Hello World"));
 
-        Assert.assertTrue("Column should have an icon",
+        assertTrue("Column should have an icon",
                 headerCell.findElements(By.className("v-icon")).size() > 0);
 
-        Assert.assertTrue("Column should have alignment to the right",
-                headerCell
-                        .findElements(By.className(
-                                "v-table-caption-container-align-right"))
-                        .size() > 0);
+        assertTrue("Column should have alignment to the right", headerCell
+                .findElements(
+                        By.className("v-table-caption-container-align-right"))
+                .size() > 0);
     }
 }

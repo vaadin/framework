@@ -16,8 +16,8 @@
 package com.vaadin.tests.components.datefield;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -50,7 +50,7 @@ public class DateFieldFastForwardTest extends MultiBrowserTest {
         // Make browser context menu disappear, since it will crash IE
         $(VerticalLayoutElement.class).first().click();
 
-        Assert.assertFalse("Month did not change during fast forward",
+        assertFalse("Month did not change during fast forward",
                 firstMonth.equals(expectedMonth));
 
         // Wait for a while.

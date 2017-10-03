@@ -239,7 +239,7 @@ public class GridLayoutDeclarativeTest
                     continue;
                 }
 
-                Assert.assertEquals(expected.getComponentAlignment(eC),
+                assertEquals(expected.getComponentAlignment(eC),
                         result.getComponentAlignment(rC));
 
             }
@@ -297,7 +297,7 @@ public class GridLayoutDeclarativeTest
         Component component = Design.read(input);
         GridLayout readLayout = (GridLayout) component;
 
-        Assert.assertEquals(layout.getRows(), readLayout.getRows());
+        assertEquals(layout.getRows(), readLayout.getRows());
     }
 
     @Test
@@ -333,15 +333,15 @@ public class GridLayoutDeclarativeTest
                 + "</vaadin-grid-layout>";
         DesignContext context = Design
                 .read(new ByteArrayInputStream(design.getBytes(UTF_8)), null);
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginLeftComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginRightComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginTopComponent")));
-        Assert.assertEquals(null, context.getCustomAttributes(
+        assertEquals(null, context.getCustomAttributes(
                 context.getComponentByLocalId("marginBottomComponent")));
     }
 
@@ -355,8 +355,8 @@ public class GridLayoutDeclarativeTest
 
         PreconfiguredGridLayout myLayout = (PreconfiguredGridLayout) Design
                 .read(new ByteArrayInputStream(design.getBytes(UTF_8)));
-        Assert.assertEquals(2, myLayout.getRows());
-        Assert.assertEquals(2, myLayout.getColumns());
+        assertEquals(2, myLayout.getRows());
+        assertEquals(2, myLayout.getColumns());
     }
 
 }

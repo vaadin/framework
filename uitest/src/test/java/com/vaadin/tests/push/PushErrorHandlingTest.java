@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,7 +33,7 @@ public class PushErrorHandlingTest extends MultiBrowserTest {
         setPush(true);
         openTestURL();
         vaadinElementById("npeButton").click();
-        Assert.assertEquals(
+        assertEquals(
                 "An error! Unable to invoke method click in com.vaadin.shared.ui.button.ButtonServerRpc",
                 $(LabelElement.class).get(1).getText());
 
@@ -41,7 +42,7 @@ public class PushErrorHandlingTest extends MultiBrowserTest {
                 .findElement(By.xpath("//div[text()='Click for NPE']"));
         row.click();
 
-        Assert.assertEquals("Internal error",
+        assertEquals("Internal error",
                 vaadinElement("Root/VNotification[0]/HTML[0]/domChild[0]")
                         .getText());
     }

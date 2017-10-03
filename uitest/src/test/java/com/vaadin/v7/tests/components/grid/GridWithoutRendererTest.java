@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -36,7 +37,7 @@ public class GridWithoutRendererTest extends SingleBrowserTest {
         // System.out.println(errorIndicator);
         List<WebElement> errorIndicator = findElements(
                 By.xpath("//span[@class='v-errorindicator']"));
-        Assert.assertTrue("There should not be an error indicator",
+        assertTrue("There should not be an error indicator",
                 errorIndicator.isEmpty());
     }
 

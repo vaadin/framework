@@ -15,10 +15,11 @@
  */
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.StringToBigDecimalConverter;
@@ -29,13 +30,13 @@ public class StringToBigDecimalConverterTest {
 
     @Test
     public void testNullConversion() {
-        Assert.assertEquals(null,
+        assertEquals(null,
                 converter.convertToModel(null, BigDecimal.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals(null,
+        assertEquals(null,
                 converter.convertToModel("", BigDecimal.class, null));
     }
 
@@ -44,7 +45,7 @@ public class StringToBigDecimalConverterTest {
         BigDecimal converted = converter.convertToModel("10", BigDecimal.class,
                 null);
         BigDecimal expected = new BigDecimal(10);
-        Assert.assertEquals(expected, converted);
+        assertEquals(expected, converted);
     }
 
     @Test
@@ -54,6 +55,6 @@ public class StringToBigDecimalConverterTest {
 
         String converted = converter.convertToPresentation(bd, String.class,
                 Locale.GERMAN);
-        Assert.assertEquals(expected, converted);
+        assertEquals(expected, converted);
     }
 }

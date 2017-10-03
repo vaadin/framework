@@ -15,10 +15,13 @@
  */
 package com.vaadin.v7.tests.server.component.abstractfield;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.tests.VaadinClasses;
@@ -36,7 +39,7 @@ public class FieldDefaultValuesTest {
 
             Object clearedValue = field.getValue();
 
-            Assert.assertEquals(
+            assertEquals(
                     "Expected to get default value after clearing "
                             + field.getClass().getName(),
                     originalValue, clearedValue);
@@ -51,18 +54,18 @@ public class FieldDefaultValuesTest {
             field.clear();
 
             if (field instanceof Slider) {
-                Assert.assertFalse(
+                assertFalse(
                         "Slider should not be empty even after being cleared",
                         field.isEmpty());
 
             } else {
-                Assert.assertTrue(
+                assertTrue(
                         field.getClass().getName()
                                 + " should be empty after being cleared",
                         field.isEmpty());
             }
         }
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
     }
 
     @SuppressWarnings("rawtypes")

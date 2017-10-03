@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.server.validation;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.BeanToValidate;
@@ -70,7 +71,7 @@ public class BeanValidationTest {
             causes = e.getCauses();
         }
 
-        Assert.assertEquals(1, causes.length);
+        assertEquals(1, causes.length);
     }
 
     @Test
@@ -84,7 +85,7 @@ public class BeanValidationTest {
             causes = e.getCauses();
         }
 
-        Assert.assertEquals(2, causes.length);
+        assertEquals(2, causes.length);
     }
 
     @Test
@@ -98,14 +99,14 @@ public class BeanValidationTest {
         fieldGroup.setItemDataSource(beanToValidate);
 
         Field<?> nameField = fieldGroup.buildAndBind("firstname");
-        Assert.assertEquals(1, nameField.getValidators().size());
+        assertEquals(1, nameField.getValidators().size());
 
         try {
             nameField.validate();
         } catch (InvalidValueException e) {
             // The 1 cause is from BeanValidator, where it tells what failed
             // 1 validation exception never gets wrapped.
-            Assert.assertEquals(1, e.getCauses().length);
+            assertEquals(1, e.getCauses().length);
         }
 
         // Create new, identical bean to cause duplicate validator unless #11045
@@ -114,14 +115,14 @@ public class BeanValidationTest {
         beanToValidate.setFirstname("a");
         fieldGroup.setItemDataSource(beanToValidate);
 
-        Assert.assertEquals(1, nameField.getValidators().size());
+        assertEquals(1, nameField.getValidators().size());
 
         try {
             nameField.validate();
         } catch (InvalidValueException e) {
             // The 1 cause is from BeanValidator, where it tells what failed
             // 1 validation exception never gets wrapped.
-            Assert.assertEquals(1, e.getCauses().length);
+            assertEquals(1, e.getCauses().length);
         }
 
     }

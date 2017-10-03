@@ -16,6 +16,7 @@
 package com.vaadin.tests.design;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +27,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ public class DesignReadInConstructorTest {
     @Test
     public void useDesignReadInConstructor() {
         DesignReadInConstructor dric = new DesignReadInConstructor();
-        Assert.assertEquals(3, dric.getComponentCount());
+        assertEquals(3, dric.getComponentCount());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class DesignReadInConstructorTest {
     }
 
     private void assertJsoupTreeEquals(Element expected, Element actual) {
-        Assert.assertEquals(expected.tagName(), actual.tagName());
+        assertEquals(expected.tagName(), actual.tagName());
 
         Set<String> keys = new HashSet<>();
 
@@ -66,12 +66,11 @@ public class DesignReadInConstructorTest {
             keys.add(attr.getKey());
         }
         for (String attributeKey : keys) {
-            Assert.assertEquals(expected.attr(attributeKey),
+            assertEquals(expected.attr(attributeKey),
                     actual.attr(attributeKey));
         }
 
-        Assert.assertEquals(expected.children().size(),
-                actual.children().size());
+        assertEquals(expected.children().size(), actual.children().size());
         for (int i = 0; i < expected.children().size(); i++) {
             assertJsoupTreeEquals(expected.child(i), actual.child(i));
         }

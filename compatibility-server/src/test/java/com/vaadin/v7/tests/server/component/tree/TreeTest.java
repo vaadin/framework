@@ -148,7 +148,7 @@ public class TreeTest {
     public void getState_treeHasCustomState() {
         TestTree table = new TestTree();
         TreeState state = table.getState();
-        Assert.assertEquals("Unexpected state class", TreeState.class,
+        assertEquals("Unexpected state class", TreeState.class,
                 state.getClass());
     }
 
@@ -156,14 +156,14 @@ public class TreeTest {
     public void getPrimaryStyleName_treeHasCustomPrimaryStyleName() {
         Tree table = new Tree();
         TreeState state = new TreeState();
-        Assert.assertEquals("Unexpected primary style name",
+        assertEquals("Unexpected primary style name",
                 state.primaryStyleName, table.getPrimaryStyleName());
     }
 
     @Test
     public void treeStateHasCustomPrimaryStyleName() {
         TreeState state = new TreeState();
-        Assert.assertEquals("Unexpected primary style name", "v-tree",
+        assertEquals("Unexpected primary style name", "v-tree",
                 state.primaryStyleName);
     }
 

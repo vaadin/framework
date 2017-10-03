@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.customlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -35,7 +36,7 @@ public class OverflowAutoFixTest extends MultiBrowserTest {
 
     private void assertElementCssValueEquals(String className,
             String propertyName, String expected) {
-        Assert.assertEquals(
+        assertEquals(
                 String.format(
                         "Unexpected value for property '%s' on element '%s',",
                         propertyName, className),

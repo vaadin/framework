@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -31,12 +32,10 @@ public class PushToggleComponentVisibilityTest extends SingleBrowserTest {
         openTestURL();
 
         $(ButtonElement.class).id(HIDE).click();
-        Assert.assertEquals("Please wait",
-                $(LabelElement.class).first().getText());
+        assertEquals("Please wait", $(LabelElement.class).first().getText());
 
         waitUntil(driver -> isElementPresent(ButtonElement.class));
         $(ButtonElement.class).id(HIDE).click();
-        Assert.assertEquals("Please wait",
-                $(LabelElement.class).first().getText());
+        assertEquals("Please wait", $(LabelElement.class).first().getText());
     }
 }

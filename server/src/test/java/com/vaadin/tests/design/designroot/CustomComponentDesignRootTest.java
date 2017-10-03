@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.design.designroot;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 
 import com.vaadin.tests.server.component.customcomponent.MyPrefilledCustomComponent;
@@ -29,11 +31,11 @@ public class CustomComponentDesignRootTest {
         CustomComponentDesignRootForVerticalLayout r = new CustomComponentDesignRootForVerticalLayout();
         // Composition root, should be VerticalLayout
         Component compositionRoot = r.iterator().next();
-        Assert.assertNotNull(compositionRoot);
-        Assert.assertEquals(VerticalLayout.class, compositionRoot.getClass());
-        Assert.assertNotNull(r.ok);
-        Assert.assertNotNull(r.cancel);
-        Assert.assertEquals("original", r.preInitializedField.getValue());
+        assertNotNull(compositionRoot);
+        assertEquals(VerticalLayout.class, compositionRoot.getClass());
+        assertNotNull(r.ok);
+        assertNotNull(r.cancel);
+        assertEquals("original", r.preInitializedField.getValue());
     }
 
     @Test
@@ -41,8 +43,8 @@ public class CustomComponentDesignRootTest {
         CustomComponentDesignRootForMyCustomComponent r = new CustomComponentDesignRootForMyCustomComponent();
         // Composition root, should be MyPrefilledCustomComponent
         Component compositionRoot = r.iterator().next();
-        Assert.assertNotNull(compositionRoot);
-        Assert.assertEquals(MyPrefilledCustomComponent.class,
+        assertNotNull(compositionRoot);
+        assertEquals(MyPrefilledCustomComponent.class,
                 compositionRoot.getClass());
 
     }

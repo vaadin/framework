@@ -3,6 +3,7 @@ package com.vaadin.server;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,7 +11,6 @@ import java.net.URL;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,36 +32,36 @@ public class VaadinServletServiceTest {
         // should return . (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "");
-        Assert.assertEquals(".", location);
+        assertEquals(".", location);
 
         // http://dummy.host:8080/contextpath/servlet/
         // should return ./.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "/");
-        Assert.assertEquals("./..", location);
+        assertEquals("./..", location);
 
         // http://dummy.host:8080/servlet
         // should return "."
         location = testLocation("http://dummy.host:8080", "", "/servlet", "");
-        Assert.assertEquals(".", location);
+        assertEquals(".", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath", "/servlet",
                 "/extra/stuff");
-        Assert.assertEquals("./../..", location);
+        assertEquals("./../..", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff/
         // should return ./../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath", "/servlet",
                 "/extra/stuff/");
-        Assert.assertEquals("./../../..", location);
+        assertEquals("./../../..", location);
 
         // http://dummy.host/context/path/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /context/path)
         location = testLocation("http://dummy.host", "/context/path",
                 "/servlet", "/extra/stuff");
-        Assert.assertEquals("./../..", location);
+        assertEquals("./../..", location);
 
     }
 

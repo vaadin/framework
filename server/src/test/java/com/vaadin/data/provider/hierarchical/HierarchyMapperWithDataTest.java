@@ -1,5 +1,8 @@
 package com.vaadin.data.provider.hierarchical;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,7 +10,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,58 +52,57 @@ public class HierarchyMapperWithDataTest {
 
     @Test
     public void expandRootNode() {
-        Assert.assertEquals("Map size should be equal to root node count",
-                ROOT_COUNT, mapper.getTreeSize());
+        assertEquals("Map size should be equal to root node count", ROOT_COUNT,
+                mapper.getTreeSize());
         expand(testData.get(0));
-        Assert.assertEquals("Should be root count + once parent count",
+        assertEquals("Should be root count + once parent count",
                 ROOT_COUNT + PARENT_COUNT, mapper.getTreeSize());
         checkMapSize();
     }
 
     @Test
     public void expandAndCollapseLastRootNode() {
-        Assert.assertEquals("Map size should be equal to root node count",
-                ROOT_COUNT, mapper.getTreeSize());
+        assertEquals("Map size should be equal to root node count", ROOT_COUNT,
+                mapper.getTreeSize());
         expand(roots.get(roots.size() - 1));
-        Assert.assertEquals("Should be root count + once parent count",
+        assertEquals("Should be root count + once parent count",
                 ROOT_COUNT + PARENT_COUNT, mapper.getTreeSize());
         checkMapSize();
         collapse(roots.get(roots.size() - 1));
-        Assert.assertEquals("Map size should be equal to root node count again",
+        assertEquals("Map size should be equal to root node count again",
                 ROOT_COUNT, mapper.getTreeSize());
         checkMapSize();
     }
 
     @Test
     public void expandHiddenNode() {
-        Assert.assertEquals("Map size should be equal to root node count",
-                ROOT_COUNT, mapper.getTreeSize());
+        assertEquals("Map size should be equal to root node count", ROOT_COUNT,
+                mapper.getTreeSize());
         expand(testData.get(1));
-        Assert.assertEquals(
-                "Map size should not change when expanding a hidden node",
+        assertEquals("Map size should not change when expanding a hidden node",
                 ROOT_COUNT, mapper.getTreeSize());
         checkMapSize();
         expand(roots.get(0));
-        Assert.assertEquals("Hidden node should now be expanded as well",
+        assertEquals("Hidden node should now be expanded as well",
                 ROOT_COUNT + PARENT_COUNT + LEAF_COUNT, mapper.getTreeSize());
         checkMapSize();
         collapse(roots.get(0));
-        Assert.assertEquals("Map size should be equal to root node count",
-                ROOT_COUNT, mapper.getTreeSize());
+        assertEquals("Map size should be equal to root node count", ROOT_COUNT,
+                mapper.getTreeSize());
         checkMapSize();
     }
 
     @Test
     public void expandLeafNode() {
-        Assert.assertEquals("Map size should be equal to root node count",
-                ROOT_COUNT, mapper.getTreeSize());
+        assertEquals("Map size should be equal to root node count", ROOT_COUNT,
+                mapper.getTreeSize());
         expand(testData.get(0));
         expand(testData.get(1));
-        Assert.assertEquals("Root and parent node expanded",
+        assertEquals("Root and parent node expanded",
                 ROOT_COUNT + PARENT_COUNT + LEAF_COUNT, mapper.getTreeSize());
         checkMapSize();
         expand(testData.get(2));
-        Assert.assertEquals("Expanding a leaf node should have no effect",
+        assertEquals("Expanding a leaf node should have no effect",
                 ROOT_COUNT + PARENT_COUNT + LEAF_COUNT, mapper.getTreeSize());
         checkMapSize();
     }
@@ -109,12 +110,12 @@ public class HierarchyMapperWithDataTest {
     @Test
     public void findParentIndexOfLeaf() {
         expand(testData.get(0));
-        Assert.assertEquals("Could not find the root node of a parent",
+        assertEquals("Could not find the root node of a parent",
                 Integer.valueOf(0), mapper.getParentIndex(testData.get(1)));
 
         expand(testData.get(1));
-        Assert.assertEquals("Could not find the parent of a leaf",
-                Integer.valueOf(1), mapper.getParentIndex(testData.get(2)));
+        assertEquals("Could not find the parent of a leaf", Integer.valueOf(1),
+                mapper.getParentIndex(testData.get(2)));
     }
 
     @Test
@@ -219,12 +220,13 @@ public class HierarchyMapperWithDataTest {
         List<Node> collect = mapper.fetchItems(range)
                 .collect(Collectors.toList());
         for (int i = 0; i < range.length(); ++i) {
-            Assert.assertEquals("Unexpected fetch results.",
+            assertEquals("Unexpected fetch results.",
                     expectedResult.get(i + range.getStart()), collect.get(i));
         }
     }
 
-    static List<Node> generateTestData(int rootCount, int parentCount, int leafCount) {
+    static List<Node> generateTestData(int rootCount, int parentCount,
+            int leafCount) {
         List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < rootCount; ++i) {
             Node root = new Node();
@@ -241,20 +243,20 @@ public class HierarchyMapperWithDataTest {
     }
 
     private void checkMapSize() {
-        Assert.assertEquals("Map size not properly updated",
-                mapper.getTreeSize(), mapSize);
+        assertEquals("Map size not properly updated", mapper.getTreeSize(),
+                mapSize);
     }
 
     public void removeRows(Range range) {
-        Assert.assertTrue("Index not in range",
+        assertTrue("Index not in range",
                 0 <= range.getStart() && range.getStart() < mapSize);
-        Assert.assertTrue("Removing more items than in map",
+        assertTrue("Removing more items than in map",
                 range.getEnd() <= mapSize);
         mapSize -= range.length();
     }
 
     public void insertRows(Range range) {
-        Assert.assertTrue("Index not in range",
+        assertTrue("Index not in range",
                 0 <= range.getStart() && range.getStart() <= mapSize);
         mapSize += range.length();
     }

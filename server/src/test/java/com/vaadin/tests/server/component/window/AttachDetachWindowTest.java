@@ -226,7 +226,7 @@ public class AttachDetachWindowTest {
             eventFired[0] = event.getAttachedComponent().equals(window);
         });
         ui.addWindow(window);
-        Assert.assertTrue("Attach event is not fired for added window",
+        assertTrue("Attach event is not fired for added window",
                 eventFired[0]);
     }
 
@@ -242,7 +242,7 @@ public class AttachDetachWindowTest {
         ui.addWindow(window);
         ui.removeWindow(window);
 
-        Assert.assertTrue("Detach event is not fired for removed window",
+        assertTrue("Detach event is not fired for removed window",
                 eventFired[0]);
     }
 

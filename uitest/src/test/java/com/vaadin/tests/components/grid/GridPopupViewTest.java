@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -47,8 +48,8 @@ public class GridPopupViewTest extends MultiBrowserTest {
             pv.click();
             GridElement grid = $(GridElement.class).first();
             Dimension rect = grid.getCell(0, 0).getSize();
-            Assert.assertEquals(500, rect.width);
-            Assert.assertEquals(38, rect.height);
+            assertEquals(500, rect.width);
+            assertEquals(38, rect.height);
             findElement(By.className("v-ui")).click();
             waitForElementNotPresent(By.className("v-grid"));
         }

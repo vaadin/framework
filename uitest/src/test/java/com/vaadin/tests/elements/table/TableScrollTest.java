@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -16,7 +17,7 @@ public class TableScrollTest extends MultiBrowserTest {
         openTestURL();
         TableElement table = $(TableElement.class).get(0);
         table.scrollLeft(SCROLL_VALUE);
-        Assert.assertEquals(SCROLL_VALUE, getScrollLeftValue(table));
+        assertEquals(SCROLL_VALUE, getScrollLeftValue(table));
     }
 
     @Test
@@ -24,7 +25,7 @@ public class TableScrollTest extends MultiBrowserTest {
         openTestURL();
         TableElement table = $(TableElement.class).get(0);
         table.scroll(SCROLL_VALUE);
-        Assert.assertEquals(SCROLL_VALUE, getScrollTopValue(table));
+        assertEquals(SCROLL_VALUE, getScrollTopValue(table));
     }
 
     // helper functions

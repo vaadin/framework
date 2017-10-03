@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -29,6 +30,6 @@ public class ShortcutInWindowTest extends SingleBrowserTest {
         openTestURL();
         TextFieldElement tf = $(TextFieldElement.class).first();
         tf.sendKeys("foo" + Keys.ENTER);
-        Assert.assertEquals("2. Submitted value: foo", getLogRow(0));
+        assertEquals("2. Submitted value: foo", getLogRow(0));
     }
 }

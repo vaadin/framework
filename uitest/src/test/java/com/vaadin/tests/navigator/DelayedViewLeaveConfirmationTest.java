@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.navigator;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -97,17 +98,16 @@ public class DelayedViewLeaveConfirmationTest extends SingleBrowserTest {
     }
 
     private void assertOnOtherView() {
-        Assert.assertEquals("Just another view",
+        assertEquals("Just another view",
                 $(LabelElement.class).first().getText());
     }
 
     private void assertOnMainView() {
-        Assert.assertEquals("Saved value",
-                $(LabelElement.class).first().getCaption());
+        assertEquals("Saved value", $(LabelElement.class).first().getCaption());
     }
 
     private void assertLoggedOut() {
-        Assert.assertEquals("You have been logged out",
+        assertEquals("You have been logged out",
                 $(LabelElement.class).first().getText());
     }
 

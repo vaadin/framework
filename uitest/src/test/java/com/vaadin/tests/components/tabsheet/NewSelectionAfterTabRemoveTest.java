@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -44,11 +45,11 @@ public class NewSelectionAfterTabRemoveTest extends MultiBrowserTest {
 
         selectAndClose(tab(19));
 
-        Assert.assertTrue("Tab 18 selected", isTabSelected(tab(18)));
+        assertTrue("Tab 18 selected", isTabSelected(tab(18)));
 
         selectAndClose(tab(16));
 
-        Assert.assertTrue("Tab 17 selected", isTabSelected(tab(17)));
+        assertTrue("Tab 17 selected", isTabSelected(tab(17)));
     }
 
     /*

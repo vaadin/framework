@@ -23,10 +23,10 @@ import static com.vaadin.tests.components.nativebutton.NativeButtonIconAndText.N
 import static com.vaadin.tests.components.nativebutton.NativeButtonIconAndText.NATIVE_BUTTON_TEXT_ICON;
 import static com.vaadin.tests.components.nativebutton.NativeButtonIconAndText.NATIVE_BUTTON_TEXT_ICON_ALT;
 import static com.vaadin.tests.components.nativebutton.NativeButtonIconAndText.UPDATED_ALTERNATE_TEXT;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -88,7 +88,7 @@ public class NativeButtonIconAndTextTest extends MultiBrowserTest {
             alt = "";
         }
 
-        Assert.assertEquals(expected, alt);
+        assertEquals(expected, alt);
 
     }
 }

@@ -1,5 +1,7 @@
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,7 +11,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -96,7 +97,7 @@ public class StateGetDoesNotMarkDirtyTest {
                 }
             }
         }
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
     }
 
     private void prepareMockUI(Component newInstance) {

@@ -15,7 +15,10 @@
  */
 package com.vaadin.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.server.VaadinRequest;
@@ -38,14 +41,13 @@ public class PushConfigurationTransportTest {
         };
         for (Transport transport : Transport.values()) {
             ui.getPushConfiguration().setTransport(transport);
-            Assert.assertEquals(ui.getPushConfiguration().getTransport(),
-                    transport);
+            assertEquals(ui.getPushConfiguration().getTransport(), transport);
 
             if (transport == Transport.WEBSOCKET_XHR) {
-                Assert.assertTrue(ui
+                assertTrue(ui
                         .getState().pushConfiguration.alwaysUseXhrForServerRequests);
             } else {
-                Assert.assertFalse(ui
+                assertFalse(ui
                         .getState().pushConfiguration.alwaysUseXhrForServerRequests);
             }
         }

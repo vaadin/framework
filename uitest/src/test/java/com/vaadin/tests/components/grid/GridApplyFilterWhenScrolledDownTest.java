@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,11 +34,11 @@ public class GridApplyFilterWhenScrolledDownTest extends MultiBrowserTest {
         });
         WebElement cell = gridBody.findElements(By.className("v-grid-cell"))
                 .get(0);
-        Assert.assertEquals("Test", cell.getText());
+        assertEquals("Test", cell.getText());
 
         int gridHeight = grid.getSize().getHeight();
         int scrollerHeight = grid.getVerticalScroller().getSize().getHeight();
-        Assert.assertTrue(
+        assertTrue(
                 "Scroller height is " + scrollerHeight
                         + ", should be smaller than grid height: " + gridHeight,
                 scrollerHeight < gridHeight);

@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.menubar;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -69,13 +71,13 @@ public class MenuBarIconsTest extends SingleBrowserTest {
 
     private void assertImage(String image, WebElement menuItem) {
         WebElement imageElement = menuItem.findElement(By.className("v-icon"));
-        Assert.assertTrue(imageElement.getAttribute("src").endsWith(image));
+        assertTrue(imageElement.getAttribute("src").endsWith(image));
     }
 
     private void assertFontIcon(FontAwesome expected, WebElement menuItem) {
         WebElement mainIcon = menuItem.findElement(By.className("v-icon"));
 
-        Assert.assertEquals(expected.getCodepoint(),
+        assertEquals(expected.getCodepoint(),
                 mainIcon.getText().codePointAt(0));
 
     }

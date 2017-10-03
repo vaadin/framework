@@ -15,6 +15,8 @@
  */
 package com.vaadin.server.communication;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -22,7 +24,6 @@ import java.io.ObjectOutputStream;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.communication.AtmospherePushConnection.State;
@@ -39,7 +40,7 @@ public class AtmospherePushConnectionTest {
         AtmospherePushConnection connection = new AtmospherePushConnection(ui);
         connection.connect(resource);
 
-        Assert.assertEquals(State.CONNECTED, connection.getState());
+        assertEquals(State.CONNECTED, connection.getState());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -48,6 +49,6 @@ public class AtmospherePushConnectionTest {
         connection = (AtmospherePushConnection) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Assert.assertEquals(State.DISCONNECTED, connection.getState());
+        assertEquals(State.DISCONNECTED, connection.getState());
     }
 }

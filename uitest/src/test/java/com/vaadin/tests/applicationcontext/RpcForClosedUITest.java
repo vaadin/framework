@@ -1,6 +1,8 @@
 package com.vaadin.tests.applicationcontext;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -21,7 +23,7 @@ public class RpcForClosedUITest extends MultiBrowserTest {
         clickButton("Log 'hello'");
         /* Ensure 'hello' was not logged */
         checkLogMatches("2. Current WrappedSession id: .*");
-        Assert.assertFalse("Page contains word 'Hello'",
+        assertFalse("Page contains word 'Hello'",
                 driver.getPageSource().contains("Hello"));
     }
 
@@ -31,7 +33,7 @@ public class RpcForClosedUITest extends MultiBrowserTest {
 
     private void checkLogMatches(String expected) {
         String actual = getLogRow(0);
-        Assert.assertTrue(String.format(
+        assertTrue(String.format(
                 "Unexpected log row.\n expected format: '%s'\n was: '%s'",
                 expected, actual), actual.matches(expected));
     }

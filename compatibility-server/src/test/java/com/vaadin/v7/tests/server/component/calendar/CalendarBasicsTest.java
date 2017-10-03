@@ -211,7 +211,7 @@ public class CalendarBasicsTest {
     @Test
     public void isClientChangeAllowed_connectorEnabled() {
         TestCalendar calendar = new TestCalendar(true);
-        Assert.assertTrue(
+        assertTrue(
                 "Calendar with enabled connector doesn't allow client change",
                 calendar.isClientChangeAllowed());
     }

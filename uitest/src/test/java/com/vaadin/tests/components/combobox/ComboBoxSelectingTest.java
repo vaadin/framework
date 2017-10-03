@@ -2,8 +2,8 @@ package com.vaadin.tests.components.combobox;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -34,7 +34,7 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
         int initialVisibleOptions = countVisibleOptions();
         clearInputAndType("b11");
         int visibleOptionsAfterFiltering = countVisibleOptions();
-        Assert.assertEquals(1, visibleOptionsAfterFiltering);
+        assertEquals(1, visibleOptionsAfterFiltering);
         clickOnLabel();
         sleep(1000);
         // no selection was made, clicking on arrow should show all options
@@ -42,7 +42,7 @@ public class ComboBoxSelectingTest extends MultiBrowserTest {
         comboBoxElement.openPopup();
 
         int visibleOptions = countVisibleOptions();
-        Assert.assertEquals(initialVisibleOptions, visibleOptions);
+        assertEquals(initialVisibleOptions, visibleOptions);
     }
 
     private int countVisibleOptions() {

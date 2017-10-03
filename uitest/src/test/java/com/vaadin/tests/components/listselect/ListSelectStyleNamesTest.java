@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.listselect;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -86,7 +87,7 @@ public class ListSelectStyleNamesTest extends SingleBrowserTest {
 
     private void assertStyleNames(TestBenchElement element,
             String... styleNames) {
-        Assert.assertEquals(new HashSet<>(Arrays.asList(styleNames)),
+        assertEquals(new HashSet<>(Arrays.asList(styleNames)),
                 element.getClassNames());
     }
 }

@@ -379,7 +379,7 @@ public class GridSelectionTest {
     @Test
     public void selectionChangeEventWhenChangingSelectionModeSingleToNone() {
         grid.select(itemId1Present);
-        Assert.assertEquals(itemId1Present, grid.getSelectedRow());
+        assertEquals(itemId1Present, grid.getSelectedRow());
         mockListener.clearEvent();
         grid.setSelectionMode(SelectionMode.NONE);
         assertTrue(mockListener.eventHasHappened());

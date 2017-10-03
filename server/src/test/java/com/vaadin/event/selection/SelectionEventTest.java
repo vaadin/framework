@@ -15,12 +15,14 @@
  */
 package com.vaadin.event.selection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -42,10 +44,10 @@ public class SelectionEventTest {
         Optional<?> selected = event.getFirstSelectedItem();
 
         Mockito.verify(event).getValue();
-        Assert.assertEquals("foo", selected.get());
+        assertEquals("foo", selected.get());
 
         Mockito.when(event.getValue()).thenReturn(Collections.emptySet());
-        Assert.assertFalse(event.getFirstSelectedItem().isPresent());
+        assertFalse(event.getFirstSelectedItem().isPresent());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -59,10 +61,10 @@ public class SelectionEventTest {
         Optional<?> selected = event.getSelectedItem();
 
         Mockito.verify(event).getSelectedItem();
-        Assert.assertEquals("foo", selected.get());
+        assertEquals("foo", selected.get());
 
         Mockito.when(event.getSelectedItem()).thenReturn(Optional.empty());
-        Assert.assertFalse(event.getFirstSelectedItem().isPresent());
+        assertFalse(event.getFirstSelectedItem().isPresent());
     }
 
 }

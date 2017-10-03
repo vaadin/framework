@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.serialization;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -72,10 +73,9 @@ public class NoLayoutTest extends MultiBrowserTest {
     }
 
     private void assertCounts(int layoutCount, int rpcCount) {
-        Assert.assertEquals("Unexpected layout count", layoutCount,
+        assertEquals("Unexpected layout count", layoutCount,
                 getCount("layoutCount"));
-        Assert.assertEquals("Unexpected RPC count", rpcCount,
-                getCount("rpcCount"));
+        assertEquals("Unexpected RPC count", rpcCount, getCount("rpcCount"));
     }
 
     private int getCount(String id) {

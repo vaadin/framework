@@ -15,6 +15,9 @@
  */
 package com.vaadin.data;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +26,6 @@ import java.net.URLClassLoader;
 
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.data.bean.BeanToValidate;
@@ -82,7 +84,7 @@ public class NotEmptyTest {
             try {
                 Class.forName(NOT_EMPTY);
                 // The NotEmpty class must not be in the classpath
-                Assert.fail();
+                fail();
             } catch (ClassNotFoundException e) {
             }
             BeanValidationBinder<BeanToValidate> binder = new BeanValidationBinder<>(
@@ -96,7 +98,7 @@ public class NotEmptyTest {
             binder.bind(nameField, "firstname");
             binder.setBean(item);
 
-            Assert.assertTrue(nameField.isRequiredIndicatorVisible());
+            assertTrue(nameField.isRequiredIndicatorVisible());
         }
 
     }

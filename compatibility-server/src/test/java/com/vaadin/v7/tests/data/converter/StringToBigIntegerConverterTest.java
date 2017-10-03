@@ -15,10 +15,11 @@
  */
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigInteger;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.StringToBigIntegerConverter;
@@ -29,13 +30,13 @@ public class StringToBigIntegerConverterTest {
 
     @Test
     public void testNullConversion() {
-        Assert.assertEquals("Null value was converted incorrectly", null,
+        assertEquals("Null value was converted incorrectly", null,
                 converter.convertToModel(null, BigInteger.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals("Empty value was converted incorrectly", null,
+        assertEquals("Empty value was converted incorrectly", null,
                 converter.convertToModel("", BigInteger.class, null));
     }
 
@@ -45,8 +46,7 @@ public class StringToBigIntegerConverterTest {
         BigInteger converted = converter.convertToModel(bigInt,
                 BigInteger.class, null);
         BigInteger expected = new BigInteger(bigInt);
-        Assert.assertEquals(
-                "Value bigger than max long was converted incorrectly",
+        assertEquals("Value bigger than max long was converted incorrectly",
                 expected, converted);
     }
 
@@ -57,8 +57,7 @@ public class StringToBigIntegerConverterTest {
 
         String converted = converter.convertToPresentation(bd, String.class,
                 Locale.GERMAN);
-        Assert.assertEquals(
-                "Value with specific locale was converted incorrectly",
+        assertEquals("Value with specific locale was converted incorrectly",
                 expected, converted);
     }
 }

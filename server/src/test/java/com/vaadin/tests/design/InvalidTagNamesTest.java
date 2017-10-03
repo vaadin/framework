@@ -16,10 +16,11 @@
 package com.vaadin.tests.design;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Button;
@@ -38,7 +39,7 @@ public class InvalidTagNamesTest {
     public void emptyTag() {
         // JSoup parses empty tags into text nodes
         Component c = readDesign("<>foo</>");
-        Assert.assertNull(c);
+        assertNull(c);
     }
 
     @Test(expected = DesignException.class)
@@ -51,7 +52,7 @@ public class InvalidTagNamesTest {
         // JSoup will refuse to parse tags starting with - and convert them into
         // text nodes instead
         Component c = readDesign("<-v>foo</-v>");
-        Assert.assertNull(c);
+        assertNull(c);
     }
 
     @Test(expected = DesignException.class)
@@ -69,7 +70,7 @@ public class InvalidTagNamesTest {
     // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagEndsInDash() {
         Component c = readDesign("<vaadin-button-></vaadin-button->");
-        Assert.assertTrue(c.getClass() == Button.class);
+        assertTrue(c.getClass() == Button.class);
     }
 
     // @Test(expected = DesignException.class)
@@ -77,7 +78,7 @@ public class InvalidTagNamesTest {
     // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagEndsInTwoDashes() {
         Component c = readDesign("<vaadin-button--></vaadin-button-->");
-        Assert.assertTrue(c.getClass() == Button.class);
+        assertTrue(c.getClass() == Button.class);
     }
 
     // @Test(expected = DesignException.class)
@@ -85,7 +86,7 @@ public class InvalidTagNamesTest {
     // parsed currently as <vaadin-button> (this should not be considered API)
     public void tagWithTwoDashes() {
         Component c = readDesign("<vaadin--button></vaadin--button>");
-        Assert.assertTrue(c.getClass() == Button.class);
+        assertTrue(c.getClass() == Button.class);
     }
 
     @Test(expected = DesignException.class)

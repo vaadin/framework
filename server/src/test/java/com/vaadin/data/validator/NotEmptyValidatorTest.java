@@ -15,7 +15,10 @@
  */
 package com.vaadin.data.validator;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.ValidationResult;
@@ -31,16 +34,16 @@ public class NotEmptyValidatorTest {
     public void nullValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
         ValidationResult result = validator.apply(null, new ValueContext());
-        Assert.assertTrue(result.isError());
-        Assert.assertEquals("foo", result.getErrorMessage());
+        assertTrue(result.isError());
+        assertEquals("foo", result.getErrorMessage());
     }
 
     @Test
     public void emptyValueIsDisallowed() {
         NotEmptyValidator<String> validator = new NotEmptyValidator<>("foo");
         ValidationResult result = validator.apply("", new ValueContext());
-        Assert.assertTrue(result.isError());
-        Assert.assertEquals("foo", result.getErrorMessage());
+        assertTrue(result.isError());
+        assertEquals("foo", result.getErrorMessage());
     }
 
     @Test
@@ -48,7 +51,7 @@ public class NotEmptyValidatorTest {
         NotEmptyValidator<Object> validator = new NotEmptyValidator<>("foo");
         Object value = new Object();
         ValidationResult result = validator.apply(value, new ValueContext());
-        Assert.assertFalse(result.isError());
-        Assert.assertFalse(result.isError());
+        assertFalse(result.isError());
+        assertFalse(result.isError());
     }
 }

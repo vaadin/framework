@@ -16,6 +16,7 @@
 package com.vaadin.tests.design;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -95,11 +96,11 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
     protected void assertEquals(String message, Object o1, Object o2) {
         if (o1 == null) {
-            Assert.assertNull(message, o2);
+            assertNull(message, o2);
             return;
         }
         if (o2 == null) {
-            Assert.assertNull(message, o1);
+            assertNull(message, o1);
             return;
         }
 

@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -26,7 +27,7 @@ public class RepaintWindowContentsTest extends MultiBrowserTest {
     }
 
     private void assertWindowContents(String expected) {
-        Assert.assertEquals("Unexpected window contents,", expected,
+        assertEquals("Unexpected window contents,", expected,
                 getWindowButton().getText());
     }
 

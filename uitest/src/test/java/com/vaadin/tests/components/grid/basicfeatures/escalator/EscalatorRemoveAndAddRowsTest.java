@@ -15,11 +15,11 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures.escalator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -75,7 +75,7 @@ public class EscalatorRemoveAndAddRowsTest
     private void verifyRow(int escalatorIndex, int rowIndexInText) {
         // the format of text in cells is
         // Row: <index_when_updated>: <cell_index>,<index_when_inserted>
-        Assert.assertEquals("Invalid row present in index " + escalatorIndex,
+        assertEquals("Invalid row present in index " + escalatorIndex,
                 "Row " + escalatorIndex + ": 0," + rowIndexInText,
                 getBodyCell(escalatorIndex, 0).getText());
     }

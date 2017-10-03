@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.splitpanel;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -65,10 +66,10 @@ public class GridLayoutWithCheckboxTest extends MultiBrowserTest {
             cbSize = cb.getSize();
             cbSlotSize = cbSlot.getSize();
         } else {
-            Assert.assertEquals(tfSize, tf.getSize());
-            Assert.assertEquals(tfSlotSize, tfSlot.getSize());
-            Assert.assertEquals(cbSize, cb.getSize());
-            Assert.assertEquals(cbSlotSize, cbSlot.getSize());
+            assertEquals(tfSize, tf.getSize());
+            assertEquals(tfSlotSize, tfSlot.getSize());
+            assertEquals(cbSize, cb.getSize());
+            assertEquals(cbSlotSize, cbSlot.getSize());
         }
 
     }

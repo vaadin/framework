@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -43,6 +44,6 @@ public class GridInWindowResizeTest extends MultiBrowserTest {
         $(ButtonElement.class).caption("resize").first().click();
         int col1WidthAfter = grid.getCell(0, 0).getSize().getWidth();
 
-        Assert.assertTrue(col1WidthAfter < col1WidthBefore);
+        assertTrue(col1WidthAfter < col1WidthBefore);
     }
 }

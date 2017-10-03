@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,7 +24,6 @@ import java.io.OutputStream;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -54,7 +55,7 @@ public class WriteEmptyDesignTest {
     private void checkHtml(String html) {
         Document doc = Jsoup.parse(html);
         Element body = doc.body();
-        Assert.assertEquals("There should be no elements in the html body.", "",
+        assertEquals("There should be no elements in the html body.", "",
                 body.html());
     }
 }
