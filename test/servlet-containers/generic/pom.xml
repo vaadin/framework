@@ -40,6 +40,7 @@
                                     <groupId>com.vaadin</groupId>
                                     <artifactId>vaadin-test-server-tests</artifactId>
                                     <version>${project.version}</version>
+                                    <includes>**/*.class</includes>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
