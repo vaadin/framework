@@ -88,8 +88,8 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     private String getDeploymentURL() {
         String deploymentUrl = System.getProperty("deployment.url");
         if (deploymentUrl == null || deploymentUrl.isEmpty()) {
-            throw new RuntimeException(
-                    "Deployment url must be given as deployment.url");
+            // Default to http://localhost:8080
+            return "http://localhost:8080";
         }
         return deploymentUrl;
     }
@@ -100,7 +100,8 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
                 + ".png";
         String errorFileName = identifier + "-"
                 + getDesiredCapabilities().getBrowserName().toLowerCase() + "-"
-                + System.getProperty("server-name") + ".png";
+                + System.getProperty("server-name") + "["
+                + getClass().getSimpleName() + "].png";
         File referenceFile = ImageFileUtil
                 .getReferenceScreenshotFile(refFileName);
         try {
