@@ -499,7 +499,7 @@ public abstract class AbstractConnector
     @Override
     public boolean hasEventListener(String eventIdentifier) {
         Map<String, Integer> reg = getState().registeredEventListeners;
-        return (reg != null && reg.keySet().contains(eventIdentifier));
+        return reg != null && reg.containsKey(eventIdentifier);
     }
 
     /**
