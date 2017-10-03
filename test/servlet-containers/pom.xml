@@ -91,6 +91,7 @@
                 <module>jsp-integration</module>
                 <module>karaf</module>
                 <module>wildfly10</module>
+                <module>wildfly9</module>
                 <module>jetty9</module>
             </modules>
         </profile>
