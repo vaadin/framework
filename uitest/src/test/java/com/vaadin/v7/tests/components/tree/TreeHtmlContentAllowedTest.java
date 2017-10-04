@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.tree;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -33,8 +34,8 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
         openTestURL();
 
         CheckBoxElement toggle = $(CheckBoxElement.class).first();
-        Assert.assertEquals("HTML content should be disabled by default",
-                "unchecked", toggle.getValue());
+        assertEquals("HTML content should be disabled by default", "unchecked",
+                toggle.getValue());
 
         // Markup is seen as plain text
         assertTreeCaptionTexts("Just text", "Some <b>html</b>",
@@ -62,7 +63,7 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
 
     private void assertHtmlElementSelected() {
         TreeElement tree = $(TreeElement.class).first();
-        Assert.assertEquals(tree.getValue(), "Child element html");
+        assertEquals(tree.getValue(), "Child element html");
     }
 
     private void assertTreeCaptionTexts(String... captions) {
@@ -70,9 +71,9 @@ public class TreeHtmlContentAllowedTest extends SingleBrowserTest {
         List<WebElement> nodes = tree
                 .findElements(By.className("v-tree-node-caption"));
 
-        Assert.assertEquals(captions.length, nodes.size());
+        assertEquals(captions.length, nodes.size());
         for (int i = 0; i < captions.length; i++) {
-            Assert.assertEquals(captions[i], nodes.get(i).getText());
+            assertEquals(captions[i], nodes.get(i).getText());
         }
     }
 

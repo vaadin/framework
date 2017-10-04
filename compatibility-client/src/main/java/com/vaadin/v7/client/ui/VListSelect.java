@@ -18,7 +18,6 @@ package com.vaadin.v7.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -90,8 +89,8 @@ public class VListSelect extends VOptionGroupBase {
             // need to deselect when something else is selected since it's only
             // used in single select mode.
         }
-        for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : uidl) {
+            final UIDL optionUidl = (UIDL) child;
             updateOrCreateItem(optionUidl.getStringAttribute("caption"),
                     optionUidl.getStringAttribute("key"), nextIndex,
                     previousKeys);

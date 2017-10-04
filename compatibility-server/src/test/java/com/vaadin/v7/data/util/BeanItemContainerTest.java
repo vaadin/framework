@@ -5,18 +5,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,9 +59,8 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
         beanItemContainer.removeAllItems();
 
-        Iterator<ClassName> it = nameToBean.values().iterator();
-        while (it.hasNext()) {
-            beanItemContainer.addBean(it.next());
+        for (ClassName name : nameToBean.values()) {
+            beanItemContainer.addBean(name);
         }
     }
 
@@ -88,15 +86,14 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
     @Test
     public void testGetType_existingProperty_typeReturned() {
         BeanItemContainer<ClassName> container = getContainer();
-        Assert.assertEquals(
-                "Unexpected type is returned for property 'simpleName'",
+        assertEquals("Unexpected type is returned for property 'simpleName'",
                 String.class, container.getType("simpleName"));
     }
 
     @Test
     public void testGetType_notExistingProperty_nullReturned() {
         BeanItemContainer<ClassName> container = getContainer();
-        Assert.assertNull("Not null type is returned for property ''",
+        assertNull("Not null type is returned for property ''",
                 container.getType(""));
     }
 
@@ -215,18 +212,18 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         BeanItemContainer<ClassName> container = new BeanItemContainer<ClassName>(
                 classNames);
 
-        Assert.assertEquals(3, container.size());
-        Assert.assertEquals(classNames.get(0), container.firstItemId());
-        Assert.assertEquals(classNames.get(1), container.getIdByIndex(1));
-        Assert.assertEquals(classNames.get(2), container.lastItemId());
+        assertEquals(3, container.size());
+        assertEquals(classNames.get(0), container.firstItemId());
+        assertEquals(classNames.get(1), container.getIdByIndex(1));
+        assertEquals(classNames.get(2), container.lastItemId());
 
         BeanItemContainer<ClassName> container2 = new BeanItemContainer<ClassName>(
                 ClassName.class, classNames);
 
-        Assert.assertEquals(3, container2.size());
-        Assert.assertEquals(classNames.get(0), container2.firstItemId());
-        Assert.assertEquals(classNames.get(1), container2.getIdByIndex(1));
-        Assert.assertEquals(classNames.get(2), container2.lastItemId());
+        assertEquals(3, container2.size());
+        assertEquals(classNames.get(0), container2.firstItemId());
+        assertEquals(classNames.get(1), container2.getIdByIndex(1));
+        assertEquals(classNames.get(2), container2.lastItemId());
     }
 
     // this only applies to the collection constructor with no type parameter
@@ -235,15 +232,13 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
     public void testEmptyCollectionConstructor() {
         try {
             new BeanItemContainer<ClassName>((Collection<ClassName>) null);
-            Assert.fail(
-                    "Initializing BeanItemContainer from a null collection should not work!");
+            fail("Initializing BeanItemContainer from a null collection should not work!");
         } catch (IllegalArgumentException e) {
             // success
         }
         try {
             new BeanItemContainer<ClassName>(new ArrayList<ClassName>());
-            Assert.fail(
-                    "Initializing BeanItemContainer from an empty collection should not work!");
+            fail("Initializing BeanItemContainer from an empty collection should not work!");
         } catch (IllegalArgumentException e) {
             // success
         }
@@ -277,7 +272,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(null, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.firstItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -285,7 +280,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(container.firstItemId(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.getIdByIndex(1),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -293,7 +288,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(container.lastItemId(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.lastItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -301,7 +296,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(0, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.firstItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -309,7 +304,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(1, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.getIdByIndex(1),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -317,7 +312,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(container.size(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.lastItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -403,7 +398,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(null, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.firstItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -411,7 +406,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(container.firstItemId(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.getIdByIndex(1),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -419,7 +414,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAfter(container.lastItemId(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.lastItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -427,7 +422,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(0, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.firstItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -435,7 +430,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(1, cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.getIdByIndex(1),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -443,7 +438,7 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         counter.reset();
         container.addItemAt(container.size(), cn1);
         counter.assertOnce();
-        Assert.assertEquals("com.example.Test",
+        assertEquals("com.example.Test",
                 container.getContainerProperty(container.lastItemId(),
                         FULLY_QUALIFIED_NAME).getValue());
 
@@ -657,28 +652,28 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
 
         try {
             container.addItem();
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAfter(new Person("Jane"));
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addItemAt(0);
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
 
         try {
             container.addContainerProperty("lastName", String.class, "");
-            Assert.fail();
+            fail();
         } catch (UnsupportedOperationException e) {
             // should get exception
         }
@@ -693,14 +688,14 @@ public class BeanItemContainerTest extends AbstractBeanContainerTestBase {
         Person john = new Person("John");
         container.addBean(john);
 
-        Assert.assertEquals("John",
+        assertEquals("John",
                 container.getContainerProperty(john, "name").getValue());
-        Assert.assertTrue(container.removeContainerProperty("name"));
-        Assert.assertNull(container.getContainerProperty(john, "name"));
+        assertTrue(container.removeContainerProperty("name"));
+        assertNull(container.getContainerProperty(john, "name"));
 
-        Assert.assertNotNull(container.getItem(john));
+        assertNotNull(container.getItem(john));
         // property removed also from item
-        Assert.assertNull(container.getItem(john).getItemProperty("name"));
+        assertNull(container.getItem(john).getItemProperty("name"));
     }
 
     @Test

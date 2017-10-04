@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.design;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.Component;
@@ -100,11 +102,11 @@ public class ComponentMapperTest {
         Component component = Design
                 .read(new ByteArrayInputStream("<custom-foobar />".getBytes()));
 
-        Assert.assertTrue(
+        assertTrue(
                 "<custom-foobar> should resolve "
                         + ComponentWithCustomTagName.class.getSimpleName(),
                 component instanceof ComponentWithCustomTagName);
-        Assert.assertEquals("custom-foobar",
+        assertEquals("custom-foobar",
                 ((ComponentWithCustomTagName) component).tagName);
     }
 
@@ -119,7 +121,7 @@ public class ComponentMapperTest {
         Design.write(component, bos);
         String writtenDesign = new String(bos.toByteArray());
 
-        Assert.assertTrue(
+        assertTrue(
                 "Written design should contain \"<custom-special\", but instead got "
                         + writtenDesign,
                 writtenDesign.contains("<custom-special"));

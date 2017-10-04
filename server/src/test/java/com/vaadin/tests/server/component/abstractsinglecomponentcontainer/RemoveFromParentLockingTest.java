@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.server.component.abstractsinglecomponentcontainer;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -66,7 +67,7 @@ public class RemoveFromParentLockingTest {
             throw new AssertionError(
                     "Moving component when not holding its sessions's lock should throw");
         } catch (IllegalStateException e) {
-            Assert.assertEquals(
+            assertEquals(
                     "Cannot remove from parent when the session is not locked.",
                     e.getMessage());
         }
@@ -99,7 +100,7 @@ public class RemoveFromParentLockingTest {
             throw new AssertionError(
                     "Moving component when not holding its sessions's lock should throw");
         } catch (IllegalStateException e) {
-            Assert.assertEquals(
+            assertEquals(
                     "Cannot remove from parent when the session is not locked."
                             + " Furthermore, there is another locked session, indicating that the component might be about to be moved from one session to another.",
                     e.getMessage());

@@ -20,7 +20,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -169,9 +168,8 @@ public class MenuBar extends AbstractComponent
         if (variables.containsKey("clickedId")) {
 
             Integer clickedId = (Integer) variables.get("clickedId");
-            Iterator<MenuItem> itr = getItems().iterator();
-            while (itr.hasNext()) {
-                items.push(itr.next());
+            for (MenuItem i : getItems()) {
+                items.push(i);
             }
 
             MenuItem tmpItem = null;
@@ -182,9 +180,8 @@ public class MenuBar extends AbstractComponent
                 found = (clickedId == tmpItem.getId());
 
                 if (tmpItem.hasChildren()) {
-                    itr = tmpItem.getChildren().iterator();
-                    while (itr.hasNext()) {
-                        items.push(itr.next());
+                    for (MenuItem i : tmpItem.getChildren()) {
+                        items.push(i);
                     }
                 }
 
@@ -203,7 +200,7 @@ public class MenuBar extends AbstractComponent
     }
 
     /**
-     * Constructs an empty, horizontal menu
+     * Constructs an empty, horizontal menu.
      */
     public MenuBar() {
         menuItems = new ArrayList<>();
@@ -285,7 +282,7 @@ public class MenuBar extends AbstractComponent
     }
 
     /**
-     * Returns a list with all the MenuItem objects in the menu bar
+     * Returns a list with all the MenuItem objects in the menu bar.
      *
      * @return a list containing the MenuItem objects in the menu bar
      */
@@ -294,7 +291,7 @@ public class MenuBar extends AbstractComponent
     }
 
     /**
-     * Remove first occurrence the specified item from the main menu
+     * Remove first occurrence the specified item from the main menu.
      *
      * @param item
      *            The item to be removed
@@ -307,7 +304,7 @@ public class MenuBar extends AbstractComponent
     }
 
     /**
-     * Empty the menu bar
+     * Empty the menu bar.
      */
     public void removeItems() {
         menuItems.clear();
@@ -648,7 +645,7 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
-         * Gets the objects text
+         * Gets the objects text.
          *
          * @return The text
          */

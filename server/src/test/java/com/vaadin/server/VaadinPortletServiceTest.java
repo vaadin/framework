@@ -17,12 +17,13 @@ package com.vaadin.server;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -211,9 +212,9 @@ public class VaadinPortletServiceTest {
                     .thenReturn(emptyWrappedSession);
 
             UI ui = sut.findUI(requestWithUIIDSet);
-            Assert.assertNull("Unset session did not return null", ui);
+            assertNull("Unset session did not return null", ui);
         } catch (NullPointerException e) {
-            Assert.fail("findUI threw a NullPointerException");
+            fail("findUI threw a NullPointerException");
         }
     }
 }

@@ -86,8 +86,7 @@ public class ListenerMethod implements EventListener, Serializable {
     private int eventArgumentIndex;
 
     /* Special serialization to handle method references */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         try {
             out.defaultWriteObject();
             String name = method.getName();
@@ -121,9 +120,8 @@ public class ListenerMethod implements EventListener, Serializable {
     private static Method findHighestMethod(Class<?> cls, String method,
             Class<?>[] paramTypes) {
         Class<?>[] ifaces = cls.getInterfaces();
-        for (int i = 0; i < ifaces.length; i++) {
-            Method ifaceMethod = findHighestMethod(ifaces[i], method,
-                    paramTypes);
+        for (Class<?> c : ifaces) {
+            Method ifaceMethod = findHighestMethod(c, method, paramTypes);
             if (ifaceMethod != null) {
                 return ifaceMethod;
             }
@@ -135,11 +133,10 @@ public class ListenerMethod implements EventListener, Serializable {
                 return parentMethod;
             }
         }
-        Method[] methods = cls.getMethods();
-        for (int i = 0; i < methods.length; i++) {
+        for (Method m : cls.getMethods()) {
             // we ignore parameter types for now - you need to add this
-            if (methods[i].getName().equals(method)) {
-                return methods[i];
+            if (m.getName().equals(method)) {
+                return m;
             }
         }
         return null;
@@ -183,10 +180,9 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new IllegalArgumentException(
-                    "The method " + method.getName()
-                            + " cannot be used for the given target: "
-                            + target.getClass().getName());
+            throw new IllegalArgumentException("The method " + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         // Checks that the event argument is null
@@ -199,10 +195,9 @@ public class ListenerMethod implements EventListener, Serializable {
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new IllegalArgumentException(
-                    "The method " + method.getName()
-                            + " does not accept the given eventType: "
-                            + eventType.getName());
+            throw new IllegalArgumentException("The method " + method.getName()
+                    + " does not accept the given eventType: "
+                    + eventType.getName());
         }
 
         this.eventType = eventType;
@@ -248,11 +243,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        final Method[] methods = target.getClass().getMethods();
-        Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
+                break;
             }
         }
         if (method == null) {
@@ -270,15 +264,13 @@ public class ListenerMethod implements EventListener, Serializable {
         if (eventArgumentIndex >= 0
                 && !method.getParameterTypes()[eventArgumentIndex]
                         .isAssignableFrom(eventType)) {
-            throw new IllegalArgumentException(
-                    "The method " + method.getName()
-                            + " does not accept the given eventType: "
-                            + eventType.getName());
+            throw new IllegalArgumentException("The method " + method.getName()
+                    + " does not accept the given eventType: "
+                    + eventType.getName());
         }
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         this.arguments = arguments;
         this.eventArgumentIndex = eventArgumentIndex;
     }
@@ -314,10 +306,9 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Check that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new IllegalArgumentException(
-                    "The method " + method.getName()
-                            + " cannot be used for the given target: "
-                            + target.getClass().getName());
+            throw new IllegalArgumentException("The method " + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -360,11 +351,10 @@ public class ListenerMethod implements EventListener, Serializable {
             Object[] arguments) throws IllegalArgumentException {
 
         // Find the correct method
-        final Method[] methods = target.getClass().getMethods();
-        Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
+                break;
             }
         }
         if (method == null) {
@@ -374,7 +364,6 @@ public class ListenerMethod implements EventListener, Serializable {
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         this.arguments = arguments;
         eventArgumentIndex = -1;
     }
@@ -407,10 +396,9 @@ public class ListenerMethod implements EventListener, Serializable {
 
         // Checks that the object is of correct type
         if (!method.getDeclaringClass().isAssignableFrom(target.getClass())) {
-            throw new IllegalArgumentException(
-                    "The method " + method.getName()
-                            + " cannot be used for the given target: "
-                            + target.getClass().getName());
+            throw new IllegalArgumentException("The method " + method.getName()
+                    + " cannot be used for the given target: "
+                    + target.getClass().getName());
         }
 
         this.eventType = eventType;
@@ -462,11 +450,10 @@ public class ListenerMethod implements EventListener, Serializable {
             throws IllegalArgumentException {
 
         // Finds the correct method
-        final Method[] methods = target.getClass().getMethods();
-        Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i].getName().equals(methodName)) {
-                method = methods[i];
+        for (Method m : target.getClass().getMethods()) {
+            if (m.getName().equals(methodName)) {
+                method = m;
+                break;
             }
         }
         if (method == null) {
@@ -476,7 +463,6 @@ public class ListenerMethod implements EventListener, Serializable {
 
         this.eventType = eventType;
         this.target = target;
-        this.method = method;
         eventArgumentIndex = -1;
 
         final Class<?>[] params = method.getParameterTypes();
@@ -523,8 +509,7 @@ public class ListenerMethod implements EventListener, Serializable {
 
             } catch (final IllegalAccessException e) {
                 // This should never happen
-                throw new RuntimeException(
-                        "Internal error - please report", e);
+                throw new RuntimeException("Internal error - please report", e);
             } catch (final InvocationTargetException e) {
                 // An exception was thrown by the invocation target. Throw it
                 // forwards.
@@ -634,7 +619,7 @@ public class ListenerMethod implements EventListener, Serializable {
     }
 
     /**
-     * Compares the type of this ListenerMethod to the given type
+     * Compares the type of this ListenerMethod to the given type.
      *
      * @param eventType
      *            The type to compare with
@@ -646,7 +631,7 @@ public class ListenerMethod implements EventListener, Serializable {
     }
 
     /**
-     * Compares the type of this ListenerMethod to the given type
+     * Compares the type of this ListenerMethod to the given type.
      *
      * @param eventType
      *            The type to compare with

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.dd;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -69,13 +70,12 @@ public class DDInterruptTest extends MultiBrowserTest {
     }
 
     private void assertNoNotifications() {
-        Assert.assertEquals(
-                "Notification found when there should have been none,", 0,
+        assertEquals("Notification found when there should have been none,", 0,
                 findElements(By.className("v-Notification")).size());
     }
 
     private void assertDragged(boolean dragged) {
-        Assert.assertEquals("Unexpected drag state,", dragged ? 1 : 0,
+        assertEquals("Unexpected drag state,", dragged ? 1 : 0,
                 findElements(By.className("v-ddwrapper-over-bottom")).size());
     }
 

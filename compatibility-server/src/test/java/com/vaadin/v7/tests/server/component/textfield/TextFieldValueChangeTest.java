@@ -1,10 +1,12 @@
 package com.vaadin.v7.tests.server.component.textfield;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -75,7 +77,7 @@ public class TextFieldValueChangeTest
 
         // get value should not fire value change again
         Object value = getField().getValue();
-        Assert.assertEquals("Foo", value);
+        assertEquals("Foo", value);
 
         // Ensure listener still has been called only once
         EasyMock.verify(getListener());
@@ -121,7 +123,7 @@ public class TextFieldValueChangeTest
         // field value should be different from the original value and current
         // proeprty value
         boolean isValueEqualToInitial = value.equals(initialValue);
-        Assert.assertTrue(isValueEqualToInitial);
+        assertTrue(isValueEqualToInitial);
 
         // Ensure listener still has been called only once
         EasyMock.verify(getListener());

@@ -144,8 +144,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
         URL dir = cl.getResource("com/vaadin/ui");
 
         String[] list2 = (new File(dir.getFile())).list();
-        for (int i = 0; i < list2.length; i++) {
-            String f = list2[i];
+        for (String f : list2) {
             if (f.endsWith(".class") && (f.indexOf("CustomComponent") == -1)
                     && (f.indexOf("Window") == -1)) {
                 f = f.replaceAll(".class", "");

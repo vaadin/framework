@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.grid.basicfeatures;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -74,7 +75,7 @@ public class GridColumnResizeModeTest extends GridBasicsTest {
 
         // See that we got a resize event
         sleep(500);
-        Assert.assertTrue("Log shows resize event", getLogRow(0)
+        assertTrue("Log shows resize event", getLogRow(0)
                 .contains("ColumnResizeEvent: isUserOriginated? true"));
 
     }

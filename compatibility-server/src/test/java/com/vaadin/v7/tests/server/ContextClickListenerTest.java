@@ -15,10 +15,11 @@
  */
 package com.vaadin.v7.tests.server;
 
+import static org.junit.Assert.fail;
+
 import java.util.EventObject;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.ContextClickEvent;
@@ -77,9 +78,9 @@ public class ContextClickListenerTest extends AbstractComponent {
 
         public void validate() {
             if (expected != null) {
-                Assert.fail("Expected context click never happened.");
+                fail("Expected context click never happened.");
             } else if (error != null) {
-                Assert.fail(error);
+                fail(error);
             }
         }
     }

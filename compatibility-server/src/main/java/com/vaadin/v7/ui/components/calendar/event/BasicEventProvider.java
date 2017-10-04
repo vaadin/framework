@@ -81,7 +81,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
     }
 
     /**
-     * Does this event provider container this event
+     * Does this event provider container this event.
      *
      * @param event
      *            The event to check for

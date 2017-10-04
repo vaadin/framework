@@ -37,7 +37,7 @@ public class StringToLongConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Long, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

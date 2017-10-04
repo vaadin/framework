@@ -15,7 +15,10 @@
  */
 package com.vaadin.tests.server.component.upload;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.server.StreamVariable;
@@ -38,14 +41,14 @@ public class UploadTest {
             variable.streamingFailed(new TestStreamingErrorEvent());
         } catch (Exception e) {
         }
-        Assert.assertFalse(upload.isUploading());
+        assertFalse(upload.isUploading());
     }
 
     @Test
     public void setImmediateMode_defaultTrue() {
         Upload upload = new Upload();
 
-        Assert.assertTrue("Upload should be in immediate mode by default",
+        assertTrue("Upload should be in immediate mode by default",
                 upload.isImmediateMode());
     }
 
@@ -53,7 +56,7 @@ public class UploadTest {
     public void getState_uploadHasCustomState() {
         TestUpload upload = new TestUpload();
         UploadState state = upload.getState();
-        Assert.assertEquals("Unexpected state class", UploadState.class,
+        assertEquals("Unexpected state class", UploadState.class,
                 state.getClass());
     }
 
@@ -61,14 +64,14 @@ public class UploadTest {
     public void getPrimaryStyleName_uploadHasCustomPrimaryStyleName() {
         Upload upload = new Upload();
         UploadState state = new UploadState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, upload.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                upload.getPrimaryStyleName());
     }
 
     @Test
     public void uploadStateHasCustomPrimaryStyleName() {
         UploadState state = new UploadState();
-        Assert.assertEquals("Unexpected primary style name", "v-upload",
+        assertEquals("Unexpected primary style name", "v-upload",
                 state.primaryStyleName);
     }
 

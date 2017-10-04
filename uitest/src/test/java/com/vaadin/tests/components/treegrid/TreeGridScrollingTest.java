@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TreeGridElement;
@@ -16,8 +17,7 @@ public class TreeGridScrollingTest extends SingleBrowserTest {
 
         TreeGridElement grid = $(TreeGridElement.class).first();
 
-        Assert.assertEquals(grid.getRowCount(),
-                TreeGridScrolling.DEFAULT_NODES);
+        assertEquals(grid.getRowCount(), TreeGridScrolling.DEFAULT_NODES);
 
         verifyRow(0, 0, 0);
         verifyRow(10, 0, 10);
@@ -156,7 +156,7 @@ public class TreeGridScrollingTest extends SingleBrowserTest {
     private void verifyRow(int rowActualIndex, int depth, int levelIndex) {
         TreeGridElement grid = $(TreeGridElement.class).first();
 
-        Assert.assertEquals("Invalid row at index " + rowActualIndex,
+        assertEquals("Invalid row at index " + rowActualIndex,
                 depth + " | " + levelIndex,
                 grid.getCell(rowActualIndex, 0).getText());
     }

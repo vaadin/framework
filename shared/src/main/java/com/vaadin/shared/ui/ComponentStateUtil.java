@@ -16,7 +16,7 @@
 package com.vaadin.shared.ui;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.HashMap;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Registration;
@@ -67,12 +67,19 @@ public final class ComponentStateUtil implements Serializable {
     @Deprecated
     public static final void removeRegisteredEventListener(SharedState state,
             String eventIdentifier) {
-        if (state.registeredEventListeners == null) {
-            return;
-        }
-        state.registeredEventListeners.remove(eventIdentifier);
-        if (state.registeredEventListeners.size() == 0) {
-            state.registeredEventListeners = null;
+        if (state.registeredEventListeners != null) {
+            Integer count = state.registeredEventListeners.get(eventIdentifier);
+            if (count != null) {
+                if (count > 1) {
+                    state.registeredEventListeners.put(eventIdentifier,
+                            count - 1);
+                } else {
+                    state.registeredEventListeners.remove(eventIdentifier);
+                    if (state.registeredEventListeners.isEmpty()) {
+                        state.registeredEventListeners = null;
+                    }
+                }
+            }
         }
     }
 
@@ -87,9 +94,13 @@ public final class ComponentStateUtil implements Serializable {
     public static final Registration addRegisteredEventListener(
             SharedState state, String eventListenerId) {
         if (state.registeredEventListeners == null) {
-            state.registeredEventListeners = new HashSet<>();
+            state.registeredEventListeners = new HashMap<>();
         }
-        state.registeredEventListeners.add(eventListenerId);
+        Integer count = state.registeredEventListeners.get(eventListenerId);
+        if (count == null) {
+            count = 0;
+        }
+        state.registeredEventListeners.put(eventListenerId, count + 1);
         return () -> removeRegisteredEventListener(state, eventListenerId);
     }
 }

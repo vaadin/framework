@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -46,6 +47,6 @@ public class GridDisallowUserSelectionTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         grid.getCell(index, 0).click();
 
-        Assert.assertFalse(grid.getRow(0).isSelected());
+        assertFalse(grid.getRow(0).isSelected());
     }
 }

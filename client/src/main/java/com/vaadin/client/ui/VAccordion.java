@@ -209,7 +209,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         /**
-         * Returns caption width including padding
+         * Returns caption width including padding.
          *
          * @return
          */

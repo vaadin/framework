@@ -1,6 +1,7 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -24,6 +25,6 @@ public class RefreshFragmentChangeTest extends MultiBrowserTest {
 
     private void assertLogText(String expected) {
         waitForElementPresent(By.className("v-label"));
-        Assert.assertEquals("Incorrect log text,", expected, getLogRow(0));
+        assertEquals("Incorrect log text,", expected, getLogRow(0));
     }
 }

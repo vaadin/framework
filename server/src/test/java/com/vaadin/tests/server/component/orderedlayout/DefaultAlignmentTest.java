@@ -1,6 +1,7 @@
 package com.vaadin.tests.server.component.orderedlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,10 +38,8 @@ public class DefaultAlignmentTest {
         TextField tf = new TextField("A TextField");
         layout.addComponent(label);
         layout.addComponent(tf);
-        Assert.assertEquals(Alignment.TOP_LEFT,
-                layout.getComponentAlignment(label));
-        Assert.assertEquals(Alignment.TOP_LEFT,
-                layout.getComponentAlignment(tf));
+        assertEquals(Alignment.TOP_LEFT, layout.getComponentAlignment(label));
+        assertEquals(Alignment.TOP_LEFT, layout.getComponentAlignment(tf));
     }
 
     @Test
@@ -59,9 +58,8 @@ public class DefaultAlignmentTest {
         layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
         layout.addComponent(label);
         layout.addComponent(tf);
-        Assert.assertEquals(Alignment.MIDDLE_CENTER,
+        assertEquals(Alignment.MIDDLE_CENTER,
                 layout.getComponentAlignment(label));
-        Assert.assertEquals(Alignment.MIDDLE_CENTER,
-                layout.getComponentAlignment(tf));
+        assertEquals(Alignment.MIDDLE_CENTER, layout.getComponentAlignment(tf));
     }
 }

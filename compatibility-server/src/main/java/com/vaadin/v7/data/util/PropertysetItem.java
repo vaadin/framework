@@ -259,11 +259,10 @@ public class PropertysetItem
      */
     private void fireItemPropertySetChange() {
         if (propertySetChangeListeners != null) {
-            final Object[] l = propertySetChangeListeners.toArray();
             final Item.PropertySetChangeEvent event = new PropertysetItem.PropertySetChangeEvent(
                     this);
-            for (int i = 0; i < l.length; i++) {
-                ((Item.PropertySetChangeListener) l[i])
+            for (Object l : propertySetChangeListeners.toArray()) {
+                ((Item.PropertySetChangeListener) l)
                         .itemPropertySetChange(event);
             }
         }

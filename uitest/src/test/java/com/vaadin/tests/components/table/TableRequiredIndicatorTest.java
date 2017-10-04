@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -32,7 +33,7 @@ public class TableRequiredIndicatorTest extends MultiBrowserTest {
     @Test
     public void testRequiredIndicatorIsVisible() {
         openTestURL();
-        Assert.assertTrue(
+        assertTrue(
                 isElementPresent(By.className("v-required-field-indicator")));
     }
 

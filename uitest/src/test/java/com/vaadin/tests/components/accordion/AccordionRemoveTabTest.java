@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.accordion;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -53,7 +55,7 @@ public class AccordionRemoveTabTest extends MultiBrowserTest {
         WebElement caption = firstItem
                 .findElement(By.className("v-accordion-item-caption"));
         caption.click();
-        Assert.assertEquals("Errors present in console", 0,
+        assertEquals("Errors present in console", 0,
                 findElements(By.className("SEVERE")).size());
     }
 
@@ -61,11 +63,10 @@ public class AccordionRemoveTabTest extends MultiBrowserTest {
         WebElement firstItem = driver
                 .findElement(By.className("v-accordion-item-first"));
         WebElement label = firstItem.findElement(By.className("v-label"));
-        Assert.assertEquals("Unexpected text in first item", text,
-                label.getText());
+        assertEquals("Unexpected text in first item", text, label.getText());
         int height = firstItem.getSize().getHeight();
         WebElement accordion = driver.findElement(By.className("v-accordion"));
-        Assert.assertTrue("First item in accordion has unexpected height",
+        assertTrue("First item in accordion has unexpected height",
                 height > accordion.getSize().getHeight() / 2);
     }
 

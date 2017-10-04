@@ -33,7 +33,7 @@ public class URLReference implements Serializable {
     }
 
     /**
-     * Sets the URL that this object refers to
+     * Sets the URL that this object refers to.
      *
      * @param URL
      */

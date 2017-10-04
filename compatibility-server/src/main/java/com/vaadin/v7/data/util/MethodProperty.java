@@ -64,7 +64,8 @@ import com.vaadin.v7.util.SerializerHelper;
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see {@link Binder}
+ * @deprecated As of 8.0, replaced by {@link ValueProvider}, {@link Setter}, see
+ *             {@link Binder}
  */
 @Deprecated
 @SuppressWarnings("serial")
@@ -102,8 +103,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     private static final Object[] DEFAULT_SET_ARGS = new Object[1];
 
     /* Special serialization to handle method references */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         SerializerHelper.writeClass(out, type);
         out.writeObject(instance);
@@ -351,26 +351,26 @@ public class MethodProperty<T> extends AbstractProperty<T> {
         this.type = type;
 
         // Find set and get -methods
-        final Method[] m = instance.getClass().getMethods();
+        final Method[] methods = instance.getClass().getMethods();
 
         // Finds get method
         boolean found = false;
-        for (int i = 0; i < m.length; i++) {
+        for (Method m : methods) {
 
             // Tests the name of the get Method
-            if (!m[i].getName().equals(getMethodName)) {
+            if (!m.getName().equals(getMethodName)) {
 
                 // name does not match, try next method
                 continue;
             }
 
             // Tests return type
-            if (!type.equals(m[i].getReturnType())) {
+            if (!type.equals(m.getReturnType())) {
                 continue;
             }
 
             // Tests the parameter types
-            final Class<?>[] c = m[i].getParameterTypes();
+            final Class<?>[] c = m.getParameterTypes();
             if (c.length != getArgs.length) {
 
                 // not the right amount of parameters, try next method
@@ -395,7 +395,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                                     + "-method");
                 } else {
                     found = true;
-                    getMethod = m[i];
+                    getMethod = m;
                 }
             }
         }
@@ -409,17 +409,17 @@ public class MethodProperty<T> extends AbstractProperty<T> {
 
             // Finds setMethod
             found = false;
-            for (int i = 0; i < m.length; i++) {
+            for (Method m : methods) {
 
                 // Checks name
-                if (!m[i].getName().equals(setMethodName)) {
+                if (!m.getName().equals(setMethodName)) {
 
                     // name does not match, try next method
                     continue;
                 }
 
                 // Checks parameter compatibility
-                final Class<?>[] c = m[i].getParameterTypes();
+                final Class<?>[] c = m.getParameterTypes();
                 if (c.length != setArgs.length) {
 
                     // not the right amount of parameters, try next method
@@ -448,7 +448,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
                                         + "-method");
                     } else {
                         found = true;
-                        setMethod = m[i];
+                        setMethod = m;
                     }
                 }
             }
@@ -752,7 +752,8 @@ public class MethodProperty<T> extends AbstractProperty<T> {
          */
         public MethodProperty getMethodProperty() {
             return (property instanceof MethodProperty)
-                    ? (MethodProperty) property : null;
+                    ? (MethodProperty) property
+                    : null;
         }
 
         /**
@@ -777,7 +778,7 @@ public class MethodProperty<T> extends AbstractProperty<T> {
     }
 
     /**
-     * The instance used by this property
+     * The instance used by this property.
      *
      * @return the instance used for fetching the property value
      * @since 7.7.7

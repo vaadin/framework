@@ -164,8 +164,8 @@ public class SharedUtil implements Serializable {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < parts.length; i++) {
-            sb.append(parts[i]);
+        for (String part : parts) {
+            sb.append(part);
             sb.append(separator);
         }
         return sb.substring(0, sb.length() - separator.length());
@@ -173,7 +173,7 @@ public class SharedUtil implements Serializable {
 
     /**
      * Capitalizes the first character in the given string in a way suitable for
-     * use in code (methods, properties etc)
+     * use in code (methods, properties etc).
      *
      * @since 7.4
      * @param string
@@ -230,8 +230,8 @@ public class SharedUtil implements Serializable {
      * @param uri
      *            The uri to which the parameters should be added.
      * @param extraParams
-     *            One or more parameters in the format "a=b" or "c=d&amp;e=f". An
-     *            empty string is allowed but will not modify the url.
+     *            One or more parameters in the format "a=b" or "c=d&amp;e=f".
+     *            An empty string is allowed but will not modify the url.
      * @return The modified URI with the get parameters in extraParams added.
      */
     public static String addGetParameters(String uri, String extraParams) {

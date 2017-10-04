@@ -571,8 +571,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 }
             }
         });
-        for (int i = 0; i < array.length; i++) {
-            VWindow w = array[i];
+        for (VWindow w : array) {
             if (w.bringToFrontSequence != -1 || w.vaadinModality) {
                 w.bringToFront(false);
                 w.bringToFrontSequence = -1;

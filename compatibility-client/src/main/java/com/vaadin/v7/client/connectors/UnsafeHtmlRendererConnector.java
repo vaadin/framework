@@ -20,7 +20,7 @@ import com.vaadin.v7.client.renderers.Renderer;
 import com.vaadin.v7.client.widget.grid.RendererCellReference;
 
 /**
- * A connector for {@link UnsafeHtmlRenderer}
+ * A connector for {@link UnsafeHtmlRenderer}.
  *
  * @since 7.4
  * @author Vaadin Ltd

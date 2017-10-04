@@ -1,6 +1,7 @@
 package com.vaadin.tests.fonticon;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -23,11 +24,11 @@ public class GridLayoutOnFontLoadTest extends MultiBrowserTest {
         TextAreaElement textarea = $(TextAreaElement.class).first();
         GridElement grid = $(GridElement.class).first();
 
-        Assert.assertTrue(
+        assertTrue(
                 "Button overlaps with checkbox (layout done before fonts loaded)",
                 button.getLocation().getX() + button.getSize().width <= checkbox
                         .getLocation().getX());
-        Assert.assertTrue(
+        assertTrue(
                 "TextArea overlaps with grid caption (layout done before fonts loaded)",
                 textarea.getLocation().getY() + textarea.getSize().height
                         + 10 < grid.getLocation().getY());

@@ -322,7 +322,7 @@ public class GridColumnVisibilityTest extends GridBasicFeaturesTest {
         getColumnHidingToggle(3).click();
 
         // Make sure that the new column contains the data it should
-        Assert.assertEquals("(999, 3)",
+        assertEquals("(999, 3)",
                 getGridElement().getCell(999, 3).getText());
     }
 

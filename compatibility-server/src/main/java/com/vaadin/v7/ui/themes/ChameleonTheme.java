@@ -18,8 +18,9 @@ package com.vaadin.v7.ui.themes;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
-*/
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is
+ *             supported.
+ */
 @Deprecated
 public class ChameleonTheme extends BaseTheme {
 
@@ -30,32 +31,32 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Large font for main application headings
+     * Large font for main application headings.
      */
     public static final String LABEL_H1 = "h1";
 
     /**
-     * Large font for different sections in the application
+     * Large font for different sections in the application.
      */
     public static final String LABEL_H2 = "h2";
 
     /**
-     * Font for sub-section headers
+     * Font for sub-section headers.
      */
     public static final String LABEL_H3 = "h3";
 
     /**
-     * Font for paragraphs headers
+     * Font for paragraphs headers.
      */
     public static final String LABEL_H4 = "h4";
 
     /**
-     * Big font for important or emphasized texts
+     * Big font for important or emphasized texts.
      */
     public static final String LABEL_BIG = "big";
 
     /**
-     * Small and a little lighter font
+     * Small and a little lighter font.
      */
     public static final String LABEL_SMALL = "small";
 
@@ -67,22 +68,23 @@ public class ChameleonTheme extends BaseTheme {
     public static final String LABEL_TINY = "tiny";
 
     /**
-     * Adds color to the text (usually the alternate color of the theme)
+     * Adds color to the text (usually the alternate color of the theme).
      */
     public static final String LABEL_COLOR = "color";
 
     /**
-     * Adds a warning icon on the left side and a yellow background to the label
+     * Adds a warning icon on the left side and a yellow background to the
+     * label.
      */
     public static final String LABEL_WARNING = "warning";
 
     /**
-     * Adds an error icon on the left side and a red background to the label
+     * Adds an error icon on the left side and a red background to the label.
      */
     public static final String LABEL_ERROR = "error";
 
     /**
-     * Adds a spinner icon on the left side of the label
+     * Adds a spinner icon on the left side of the label.
      */
     public static final String LABEL_LOADING = "loading";
 
@@ -98,12 +100,12 @@ public class ChameleonTheme extends BaseTheme {
     public static final String BUTTON_DEFAULT = "default";
 
     /**
-     * Small sized button, use for context specific actions for example
+     * Small sized button, use for context specific actions for example.
      */
     public static final String BUTTON_SMALL = "small";
 
     /**
-     * Big button, use to get more attention for the button action
+     * Big button, use to get more attention for the button action.
      */
     public static final String BUTTON_BIG = "big";
 
@@ -138,7 +140,7 @@ public class ChameleonTheme extends BaseTheme {
     public static final String BUTTON_ICON_ON_RIGHT = "icon-on-right";
 
     /**
-     * Removes the button caption and only shows its icon
+     * Removes the button caption and only shows its icon.
      */
     public static final String BUTTON_ICON_ONLY = "icon-only";
 
@@ -153,17 +155,17 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized text field with small font
+     * Small sized text field with small font.
      */
     public static final String TEXTFIELD_SMALL = "small";
 
     /**
-     * Large sized text field with big font
+     * Large sized text field with big font.
      */
     public static final String TEXTFIELD_BIG = "big";
 
     /**
-     * Adds a magnifier icon on the left side of the fields text
+     * Adds a magnifier icon on the left side of the fields text.
      */
     public static final String TEXTFIELD_SEARCH = "search";
 
@@ -172,22 +174,22 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized select with small font
+     * Small sized select with small font.
      */
     public static final String SELECT_SMALL = "small";
 
     /**
-     * Large sized select with big font
+     * Large sized select with big font.
      */
     public static final String SELECT_BIG = "big";
 
     /**
-     * Adds a magnifier icon on the left side of the fields text
+     * Adds a magnifier icon on the left side of the fields text.
      */
     public static final String COMBOBOX_SEARCH = "search";
 
     /**
-     * Adds a magnifier icon on the left side of the fields text
+     * Adds a magnifier icon on the left side of the fields text.
      */
     public static final String COMBOBOX_SELECT_BUTTON = "select-button";
 
@@ -196,12 +198,12 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized date field with small font
+     * Small sized date field with small font.
      */
     public static final String DATEFIELD_SMALL = "small";
 
     /**
-     * Large sized date field with big font
+     * Large sized date field with big font.
      */
     public static final String DATEFIELD_BIG = "big";
 
@@ -210,19 +212,19 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders and background color from the panel
+     * Removes borders and background color from the panel.
      */
     public static final String PANEL_BORDERLESS = "borderless";
 
     /**
      * Adds a more vibrant header for the panel, using the alternate color of
      * the theme, and adds slight rounded corners (not supported in all
-     * browsers)
+     * browsers).
      */
     public static final String PANEL_BUBBLE = "bubble";
 
     /**
-     * Removes borders and background color from the panel
+     * Removes borders and background color from the panel.
      */
     public static final String PANEL_LIGHT = "light";
 
@@ -231,7 +233,7 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Reduces the split handle to a minimal size (1 pixel)
+     * Reduces the split handle to a minimal size (1 pixel).
      */
     public static final String SPLITPANEL_SMALL = "small";
 
@@ -240,7 +242,7 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders and background color from the tab sheet
+     * Removes borders and background color from the tab sheet.
      */
     public static final String TABSHEET_BORDERLESS = "borderless";
 
@@ -249,7 +251,7 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Makes the accordion background opaque (non-transparent)
+     * Makes the accordion background opaque (non-transparent).
      */
     public static final String ACCORDION_OPAQUE = "opaque";
 
@@ -258,17 +260,17 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders and background color from the table
+     * Removes borders and background color from the table.
      */
     public static final String TABLE_BORDERLESS = "borderless";
 
     /**
-     * Makes the column header and content font size smaller inside the table
+     * Makes the column header and content font size smaller inside the table.
      */
     public static final String TABLE_SMALL = "small";
 
     /**
-     * Makes the column header and content font size bigger inside the table
+     * Makes the column header and content font size bigger inside the table.
      */
     public static final String TABLE_BIG = "big";
 
@@ -282,7 +284,7 @@ public class ChameleonTheme extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Reduces the height of the progress bar
+     * Reduces the height of the progress bar.
      */
     public static final String PROGRESS_INDICATOR_SMALL = "small";
 

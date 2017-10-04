@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -29,11 +31,11 @@ public class GridReplaceContainerTest extends SingleBrowserTest {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         grid.getCell(0, 0).click();
-        Assert.assertTrue(grid.getRow(0).isSelected());
+        assertTrue(grid.getRow(0).isSelected());
 
         $(ButtonElement.class).first().click();
-        Assert.assertFalse(grid.getRow(0).isSelected());
+        assertFalse(grid.getRow(0).isSelected());
         grid.getCell(0, 0).click();
-        Assert.assertTrue(grid.getRow(0).isSelected());
+        assertTrue(grid.getRow(0).isSelected());
     }
 }

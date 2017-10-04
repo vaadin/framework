@@ -15,14 +15,16 @@
  */
 package com.vaadin.tests.fieldgroup;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.AbstractHasTestBenchCommandExecutor;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.AbstractComponentElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 
@@ -35,7 +37,7 @@ public class BasicCrudTableTest extends SingleBrowserTest {
                 .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertEquals("TextField should be empty", "", e.getValue());
+            assertEquals("TextField should be empty", "", e.getValue());
         }
     }
 
@@ -54,15 +56,14 @@ public class BasicCrudTableTest extends SingleBrowserTest {
                 .$(TextFieldElement.class).all();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertNotEquals("TextField should not be empty", "",
-                    e.getValue());
+            assertNotEquals("TextField should not be empty", "", e.getValue());
         }
 
         // Deselect row
         $(TableElement.class).first().getCell(2, 2).click();
 
         for (TextFieldElement e : textFields) {
-            Assert.assertEquals("TextField should be empty", "", e.getValue());
+            assertEquals("TextField should be empty", "", e.getValue());
         }
 
     }

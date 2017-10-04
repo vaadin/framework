@@ -68,7 +68,7 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
 
         DesignContext context = readComponentAndCompare(design, component,
                 ctxt -> configureContext(type, attribute, component, ctxt));
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
@@ -97,7 +97,7 @@ public abstract class AbstractMultiSelectDeclarativeTest<T extends AbstractMulti
 
         DesignContext context = readComponentAndCompare(design, component,
                 ctxt -> configureContext(type, attribute, component, ctxt));
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();

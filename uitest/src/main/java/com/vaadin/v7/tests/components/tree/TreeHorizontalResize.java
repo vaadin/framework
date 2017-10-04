@@ -60,22 +60,22 @@ public class TreeHorizontalResize extends TestBase {
         // Create containerproperty for icon
         hwContainer.addContainerProperty(hw_PROPERTY_ICON, ThemeResource.class,
                 new ThemeResource("../runo/icons/16/document.png"));
-        for (int i = 0; i < hardware.length; i++) {
+        for (String[] type : hardware) {
             // Add new item
             item = hwContainer.addItem(itemId);
             // Add name property for item
-            item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][0]);
+            item.getItemProperty(hw_PROPERTY_NAME).setValue(type[0]);
             // Allow children
             hwContainer.setChildrenAllowed(itemId, true);
             itemId++;
-            for (int j = 1; j < hardware[i].length; j++) {
+            for (int j = 1; j < type.length; j++) {
                 if (j == 1) {
                     item.getItemProperty(hw_PROPERTY_ICON).setValue(
                             new ThemeResource("../runo/icons/16/folder.png"));
                 }
                 // Add child items
                 item = hwContainer.addItem(itemId);
-                item.getItemProperty(hw_PROPERTY_NAME).setValue(hardware[i][j]);
+                item.getItemProperty(hw_PROPERTY_NAME).setValue(type[j]);
                 hwContainer.setParent(itemId, itemId - j);
                 hwContainer.setChildrenAllowed(itemId, false);
 

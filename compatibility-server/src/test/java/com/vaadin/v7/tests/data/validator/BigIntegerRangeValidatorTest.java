@@ -1,8 +1,10 @@
 package com.vaadin.v7.tests.data.validator;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigInteger;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.validator.BigIntegerRangeValidator;
@@ -20,41 +22,41 @@ public class BigIntegerRangeValidatorTest {
 
     @Test
     public void testNullValue() {
-        Assert.assertTrue("Didn't accept null", cleanValidator.isValid(null));
-        Assert.assertTrue("Didn't accept null", minValidator.isValid(null));
-        Assert.assertTrue("Didn't accept null", maxValidator.isValid(null));
-        Assert.assertTrue("Didn't accept null", minMaxValidator.isValid(null));
+        assertTrue("Didn't accept null", cleanValidator.isValid(null));
+        assertTrue("Didn't accept null", minValidator.isValid(null));
+        assertTrue("Didn't accept null", maxValidator.isValid(null));
+        assertTrue("Didn't accept null", minMaxValidator.isValid(null));
     }
 
     @Test
     public void testMinValue() {
-        Assert.assertTrue("Validator without ranges didn't accept value",
+        assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(BigInteger.valueOf(-15)));
-        Assert.assertTrue("Didn't accept valid value",
+        assertTrue("Didn't accept valid value",
                 minValidator.isValid(BigInteger.valueOf(15)));
-        Assert.assertFalse("Accepted too small value",
+        assertFalse("Accepted too small value",
                 minValidator.isValid(BigInteger.valueOf(9)));
     }
 
     @Test
     public void testMaxValue() {
-        Assert.assertTrue("Validator without ranges didn't accept value",
+        assertTrue("Validator without ranges didn't accept value",
                 cleanValidator.isValid(BigInteger.valueOf(1120)));
-        Assert.assertTrue("Didn't accept valid value",
+        assertTrue("Didn't accept valid value",
                 maxValidator.isValid(BigInteger.valueOf(15)));
-        Assert.assertFalse("Accepted too large value",
+        assertFalse("Accepted too large value",
                 maxValidator.isValid(BigInteger.valueOf(120)));
     }
 
     @Test
     public void testMinMaxValue() {
-        Assert.assertTrue("Didn't accept valid value",
+        assertTrue("Didn't accept valid value",
                 minMaxValidator.isValid(BigInteger.valueOf(15)));
-        Assert.assertTrue("Didn't accept valid value",
+        assertTrue("Didn't accept valid value",
                 minMaxValidator.isValid(BigInteger.valueOf(99)));
-        Assert.assertFalse("Accepted too small value",
+        assertFalse("Accepted too small value",
                 minMaxValidator.isValid(BigInteger.valueOf(9)));
-        Assert.assertFalse("Accepted too large value",
+        assertFalse("Accepted too large value",
                 minMaxValidator.isValid(BigInteger.valueOf(110)));
     }
 }

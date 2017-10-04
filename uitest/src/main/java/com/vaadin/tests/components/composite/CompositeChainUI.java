@@ -82,10 +82,9 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         String msg = component.getClass().getSimpleName();
         if (component instanceof HasComponents) {
 
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            if (iterator.hasNext()) {
-                Component content = iterator.next();
+            Iterator<Component> it = ((HasComponents) component).iterator();
+            if (it.hasNext()) {
+                Component content = it.next();
                 if (content != null) {
                     msg += " -> " + getHierarchy(content);
                 }

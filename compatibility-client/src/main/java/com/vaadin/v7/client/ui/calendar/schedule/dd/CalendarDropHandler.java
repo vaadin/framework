@@ -31,7 +31,7 @@ public abstract class CalendarDropHandler extends VAbstractDropHandler {
     protected final CalendarConnector calendarConnector;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param connector
      *            The connector of the calendar

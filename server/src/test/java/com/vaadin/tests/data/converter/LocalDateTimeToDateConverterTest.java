@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Binder;
@@ -56,7 +57,7 @@ public class LocalDateTimeToDateConverterTest extends AbstractConverterTest {
 
     @Test
     public void testToPresentation() {
-        Assert.assertEquals(LOCAL_DATE,
+        assertEquals(LOCAL_DATE,
                 getConverter().convertToPresentation(DATE, new ValueContext()));
     }
 
@@ -73,7 +74,7 @@ public class LocalDateTimeToDateConverterTest extends AbstractConverterTest {
         BeanWithDate bean = new BeanWithDate();
         binder.writeBean(bean);
 
-        Assert.assertEquals(DATE, bean.getDate());
+        assertEquals(DATE, bean.getDate());
     }
 
     public static class BeanWithDate {

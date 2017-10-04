@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -72,12 +73,12 @@ public class TableWithPollingTest extends MultiBrowserTest {
 
     private void assertHeaderCellWidth(int column, int width)
             throws AssertionError {
-        Assert.assertEquals(width, getHeaderCell(column).getSize().width);
+        assertEquals(width, getHeaderCell(column).getSize().width);
     }
 
     private void assertBodyCellWidth(int column, int width)
             throws AssertionError {
-        Assert.assertEquals(width, getBodyCell(column).getSize().width);
+        assertEquals(width, getBodyCell(column).getSize().width);
     }
 
 }

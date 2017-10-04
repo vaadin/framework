@@ -189,7 +189,7 @@ public class ColorPickerPreview extends CssLayout
     }
 
     /**
-     * Called when the component is refreshing
+     * Called when the component is refreshing.
      */
     @Override
     protected String getCss(Component c) {

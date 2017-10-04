@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -40,13 +42,11 @@ public class DeprecatedTest {
                                 && !testRoot.equals(new File(entry)))
                 .forEach(cls -> {
                     count.incrementAndGet();
-                    Assert.assertNotNull(
-                            "Class " + cls
-                                    + " is in compatability package and it's not deprecated",
+                    assertNotNull("Class " + cls
+                            + " is in compatability package and it's not deprecated",
                             cls.getAnnotation(Deprecated.class));
                 });
-        Assert.assertNotEquals("Total number of checked classes", 0,
-                count.get());
+        assertNotEquals("Total number of checked classes", 0, count.get());
     }
 
 }

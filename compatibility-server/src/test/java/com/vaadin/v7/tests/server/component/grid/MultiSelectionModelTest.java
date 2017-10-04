@@ -15,13 +15,16 @@
  */
 package com.vaadin.v7.tests.server.component.grid;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,9 +73,9 @@ public class MultiSelectionModelTest {
 
     @After
     public void tearDown() {
-        Assert.assertFalse("Some expected select event did not happen.",
+        assertFalse("Some expected select event did not happen.",
                 expectingEvent);
-        Assert.assertFalse("Some expected deselect event did not happen.",
+        assertFalse("Some expected deselect event did not happen.",
                 expectingDeselectEvent);
     }
 
@@ -118,13 +121,13 @@ public class MultiSelectionModelTest {
 
     @Test
     public void testSelectAllWithoutItems() throws Throwable {
-        Assert.assertFalse(model.getState().allSelected);
+        assertFalse(model.getState().allSelected);
         dataSource.removeAllItems();
-        Assert.assertFalse(model.getState().allSelected);
+        assertFalse(model.getState().allSelected);
         model.select();
-        Assert.assertFalse(model.getState().allSelected);
+        assertFalse(model.getState().allSelected);
         model.deselect();
-        Assert.assertFalse(model.getState().allSelected);
+        assertFalse(model.getState().allSelected);
     }
 
     @Test
@@ -165,15 +168,15 @@ public class MultiSelectionModelTest {
 
             @Override
             public void select(SelectionEvent event) {
-                Assert.assertTrue("Selection did not contain expected items",
+                assertTrue("Selection did not contain expected items",
                         event.getAdded().containsAll(select));
-                Assert.assertTrue("Selection contained unexpected items",
+                assertTrue("Selection contained unexpected items",
                         select.containsAll(event.getAdded()));
                 select = new ArrayList<Object>();
 
-                Assert.assertTrue("Deselection did not contain expected items",
+                assertTrue("Deselection did not contain expected items",
                         event.getRemoved().containsAll(deselect));
-                Assert.assertTrue("Deselection contained unexpected items",
+                assertTrue("Deselection contained unexpected items",
                         deselect.containsAll(event.getRemoved()));
                 deselect = new ArrayList<Object>();
 
@@ -189,7 +192,7 @@ public class MultiSelectionModelTest {
                 && selected.containsAll(model.getSelectedRows())) {
             return;
         }
-        Assert.fail("Not all items were correctly selected");
+        fail("Not all items were correctly selected");
     }
 
     @Test(expected = IllegalStateException.class)

@@ -15,34 +15,37 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import java.time.LocalDate;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.shared.ui.datefield.DateResolution;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 public class DateFieldConstructorTest {
 
     @Test
     public void initiallyEmpty() {
         DateField dateField = new DateField();
-        Assert.assertTrue(dateField.isEmpty());
-        Assert.assertEquals(DateResolution.DAY, dateField.getResolution());
+        assertTrue(dateField.isEmpty());
+        assertEquals(DateResolution.DAY, dateField.getResolution());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
         DateField dateField = new DateField(null, LocalDate.now());
-        Assert.assertEquals(DateResolution.DAY, dateField.getResolution());
-        Assert.assertFalse(dateField.isEmpty());
+        assertEquals(DateResolution.DAY, dateField.getResolution());
+        assertFalse(dateField.isEmpty());
 
         dateField.clear();
-        Assert.assertTrue(dateField.isEmpty());
+        assertTrue(dateField.isEmpty());
     }
 
     @Test
@@ -50,7 +53,7 @@ public class DateFieldConstructorTest {
         HasValue.ValueChangeListener valueChangeListener = Mockito
                 .mock(HasValue.ValueChangeListener.class);
         DateField dateField = new DateField(valueChangeListener);
-        Assert.assertEquals(DateResolution.DAY, dateField.getResolution());
+        assertEquals(DateResolution.DAY, dateField.getResolution());
 
         dateField.setValue(LocalDate.now());
 
@@ -65,7 +68,7 @@ public class DateFieldConstructorTest {
                 .mock(HasValue.ValueChangeListener.class);
         DateField dateField = new DateField("Caption", LocalDate.now(),
                 valueChangeListener);
-        Assert.assertEquals(DateResolution.DAY, dateField.getResolution());
+        assertEquals(DateResolution.DAY, dateField.getResolution());
 
         verify(valueChangeListener, never())
                 .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));

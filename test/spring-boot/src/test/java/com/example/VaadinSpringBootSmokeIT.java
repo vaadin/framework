@@ -1,6 +1,8 @@
 package com.example;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,8 +45,8 @@ public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
     public void testPageLoadsAndButtonWorks() {
         getDriver().navigate().to("http://localhost:" + port + "");
         $(ButtonElement.class).first().click();
-        Assert.assertTrue($(NotificationElement.class).exists());
-        Assert.assertEquals(ThankYouService.THANK_YOU_TEXT,
+        assertTrue($(NotificationElement.class).exists());
+        assertEquals(ThankYouService.THANK_YOU_TEXT,
                 $(NotificationElement.class).first().getText());
     }
 }

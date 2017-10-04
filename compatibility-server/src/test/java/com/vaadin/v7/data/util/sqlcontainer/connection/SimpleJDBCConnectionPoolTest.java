@@ -1,10 +1,14 @@
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +29,7 @@ public class SimpleJDBCConnectionPoolTest {
     public void reserveConnection_reserveNewConnection_returnsConnection()
             throws SQLException {
         Connection conn = connectionPool.reserveConnection();
-        Assert.assertNotNull(conn);
+        assertNotNull(conn);
     }
 
     @Test
@@ -33,7 +37,7 @@ public class SimpleJDBCConnectionPoolTest {
             throws SQLException {
         Connection conn = connectionPool.reserveConnection();
         connectionPool.releaseConnection(conn);
-        Assert.assertFalse(conn.isClosed());
+        assertFalse(conn.isClosed());
     }
 
     @Test(expected = SQLException.class)
@@ -44,13 +48,11 @@ public class SimpleJDBCConnectionPoolTest {
             connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Exception before all connections used! " + e.getMessage());
+            fail("Exception before all connections used! " + e.getMessage());
         }
 
         connectionPool.reserveConnection();
-        Assert.fail(
-                "Reserving connection didn't fail even though no connections are available!");
+        fail("Reserving connection didn't fail even though no connections are available!");
     }
 
     @Test
@@ -60,12 +62,11 @@ public class SimpleJDBCConnectionPoolTest {
             connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Exception before all connections used! " + e.getMessage());
+            fail("Exception before all connections used! " + e.getMessage());
         }
 
         Connection conn = connectionPool.reserveConnection();
-        Assert.assertNotNull(conn);
+        assertNotNull(conn);
     }
 
     @Test
@@ -77,8 +78,7 @@ public class SimpleJDBCConnectionPoolTest {
             conn2 = connectionPool.reserveConnection();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(
-                    "Exception before all connections used! " + e.getMessage());
+            fail("Exception before all connections used! " + e.getMessage());
         }
 
         connectionPool.releaseConnection(conn2);
@@ -128,7 +128,7 @@ public class SimpleJDBCConnectionPoolTest {
                 SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
                 SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 0, 2);
         Connection c = connectionPool.reserveConnection();
-        Assert.assertNotNull(c);
+        assertNotNull(c);
     }
 
     @Test
@@ -167,8 +167,8 @@ public class SimpleJDBCConnectionPoolTest {
             // not empty but only after cleanup of the real pool has been done
         }
 
-        Assert.assertTrue(c1.isClosed());
-        Assert.assertTrue(c2.isClosed());
+        assertTrue(c1.isClosed());
+        assertTrue(c2.isClosed());
     }
 
     @Test
@@ -178,8 +178,8 @@ public class SimpleJDBCConnectionPoolTest {
         connectionPool.releaseConnection(c1);
         connectionPool.releaseConnection(c2);
         connectionPool.destroy();
-        Assert.assertTrue(c1.isClosed());
-        Assert.assertTrue(c2.isClosed());
+        assertTrue(c1.isClosed());
+        assertTrue(c2.isClosed());
     }
 
 }

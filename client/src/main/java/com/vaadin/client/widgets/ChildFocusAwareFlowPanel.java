@@ -144,11 +144,11 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = iterator();
-        if (iterator.hasNext()) {
-            Widget widget = iterator.next();
-            if (widget instanceof Focusable) {
-                ((Focusable) widget).setFocus(true);
+        Iterator<Widget> it = iterator();
+        if (it.hasNext()) {
+            Widget child = it.next();
+            if (child instanceof Focusable) {
+                ((Focusable) child).setFocus(true);
             }
         }
     }

@@ -15,6 +15,11 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,7 +32,6 @@ import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -51,9 +55,9 @@ public class AbstractClientConnectorTest {
         Mockito.doCallRealMethod().when(mock).registerRpc(implementation);
         try {
             mock.registerRpc(implementation);
-            Assert.fail("expected exception");
+            fail("expected exception");
         } catch (Exception expected) {
-            Assert.assertEquals(
+            assertEquals(
                     "Use registerRpc(T implementation, Class<T> rpcInterfaceType) "
                             + "if the Rpc implementation implements more than one interface",
                     expected.getMessage());
@@ -93,7 +97,7 @@ public class AbstractClientConnectorTest {
                 "com.vaadin.server.AbstractClientConnector");
         stateTypeCache.put(classRef.get(), null);
         int size = stateTypeCache.size();
-        Assert.assertNotNull("Class should not yet be garbage collected",
+        assertNotNull("Class should not yet be garbage collected",
                 classRef.get());
 
         for (int i = 0; i < 100; ++i) {
@@ -103,8 +107,8 @@ public class AbstractClientConnectorTest {
             }
             Thread.sleep(100);
         }
-        Assert.assertTrue(stateTypeCache.size() < size);
-        Assert.assertNull("Class should be garbage collected", classRef.get());
+        assertTrue(stateTypeCache.size() < size);
+        assertNull("Class should be garbage collected", classRef.get());
     }
 
     private WeakReference<Class<?>> loadClass(String name)
@@ -161,8 +165,7 @@ public class AbstractClientConnectorTest {
             if (!name.startsWith("com.vaadin.")) {
                 return super.loadClass(name);
             }
-            String path = name.replace('.', '/')
-                    .concat(".class");
+            String path = name.replace('.', '/').concat(".class");
             URL resource = Thread.currentThread().getContextClassLoader()
                     .getResource(path);
             try (InputStream stream = resource.openStream()) {

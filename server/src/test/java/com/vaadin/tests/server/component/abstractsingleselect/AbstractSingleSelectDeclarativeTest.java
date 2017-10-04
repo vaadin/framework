@@ -64,7 +64,7 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
         component.setSelectedItem("bar");
 
         DesignContext context = readComponentAndCompare(design, component);
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();
@@ -93,7 +93,7 @@ public abstract class AbstractSingleSelectDeclarativeTest<T extends AbstractSing
         component.setValue("bar");
 
         DesignContext context = readComponentAndCompare(design, component);
-        Assert.assertEquals(type,
+        assertEquals(type,
                 context.getCustomAttributes(context.getRootComponent())
                         .get(attribute));
         context = new DesignContext();

@@ -24,7 +24,8 @@ import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
- * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is supported.
+ * @deprecated As of 8.0, no replacement available, only {@link ValoTheme} is
+ *             supported.
  */
 @Deprecated
 public class Reindeer extends BaseTheme {
@@ -38,17 +39,17 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Large font for main application headings
+     * Large font for main application headings.
      */
     public static final String LABEL_H1 = "h1";
 
     /**
-     * Large font for different sections in the application
+     * Large font for different sections in the application.
      */
     public static final String LABEL_H2 = "h2";
 
     /**
-     * Small and a little lighter font
+     * Small and a little lighter font.
      */
     public static final String LABEL_SMALL = "light";
 
@@ -66,7 +67,7 @@ public class Reindeer extends BaseTheme {
     public static final String BUTTON_DEFAULT = "primary";
 
     /**
-     * Small sized button, use for context specific actions for example
+     * Small sized button, use for context specific actions for example.
      */
     public static final String BUTTON_SMALL = "small";
 
@@ -77,7 +78,7 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Small sized text field with small font
+     * Small sized text field with small font.
      */
     public static final String TEXTFIELD_SMALL = "small";
 
@@ -88,7 +89,7 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders and background color from the panel
+     * Removes borders and background color from the panel.
      */
     public static final String PANEL_LIGHT = "light";
 
@@ -111,7 +112,7 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Reduces the split handle to a minimal size (1 pixel)
+     * Reduces the split handle to a minimal size (1 pixel).
      */
     public static final String SPLITPANEL_SMALL = "small";
 
@@ -156,7 +157,7 @@ public class Reindeer extends BaseTheme {
      **************************************************************************/
 
     /**
-     * Removes borders from the table
+     * Removes borders from the table.
      */
     public static final String TABLE_BORDERLESS = "borderless";
 
@@ -173,8 +174,9 @@ public class Reindeer extends BaseTheme {
 
     /**
      * Changes the background of a layout to white. Applies to
-     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link com.vaadin.ui.GridLayout GridLayout},
-     * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
+     * {@link VerticalLayout}, {@link HorizontalLayout},
+     * {@link com.vaadin.ui.GridLayout GridLayout}, {@link FormLayout},
+     * {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
      * <em>Does not revert any contained components back to normal if some
@@ -184,8 +186,9 @@ public class Reindeer extends BaseTheme {
 
     /**
      * Changes the background of a layout to a shade of blue. Applies to
-     * {@link VerticalLayout}, {@link HorizontalLayout}, {@link com.vaadin.ui.GridLayout GridLayout},
-     * {@link FormLayout}, {@link CssLayout}, {@link VerticalSplitPanel} and
+     * {@link VerticalLayout}, {@link HorizontalLayout},
+     * {@link com.vaadin.ui.GridLayout GridLayout}, {@link FormLayout},
+     * {@link CssLayout}, {@link VerticalSplitPanel} and
      * {@link HorizontalSplitPanel}.
      * <p>
      * <em>Does not revert any contained components back to normal if some
@@ -202,7 +205,8 @@ public class Reindeer extends BaseTheme {
      * </p>
      * <p>
      * Applies to {@link VerticalLayout}, {@link HorizontalLayout},
-     * {@link com.vaadin.ui.GridLayout GridLayout}, {@link FormLayout} and {@link CssLayout}.
+     * {@link com.vaadin.ui.GridLayout GridLayout}, {@link FormLayout} and
+     * {@link CssLayout}.
      * </p>
      *
      */

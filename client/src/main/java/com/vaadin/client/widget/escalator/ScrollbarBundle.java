@@ -169,7 +169,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         /**
-         * Checks whether the scroll handle is currently visible or not
+         * Checks whether the scroll handle is currently visible or not.
          *
          * @return <code>true</code> if the scroll handle is currently visible.
          *         <code>false</code> if not.
@@ -373,7 +373,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract String internalGetScrollSize();
 
     /**
-     * Sets the primary style name
+     * Sets the primary style name.
      *
      * @param primaryStyleName
      *            The primary style name to use
@@ -496,7 +496,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract void internalForceScrollbar(boolean enable);
 
     /**
-     * Gets the length of the scrollbar
+     * Gets the length of the scrollbar.
      *
      * @return the length of the scrollbar in pixels
      */

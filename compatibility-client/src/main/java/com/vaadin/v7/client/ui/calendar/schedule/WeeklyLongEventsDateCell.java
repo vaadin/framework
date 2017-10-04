@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.v7.client.ui.VCalendar;
 
 /**
- * Represents a cell used in {@link WeeklyLongEvents}
+ * Represents a cell used in {@link WeeklyLongEvents}.
  *
  * @since 7.1
  */

@@ -992,8 +992,8 @@ public class Navigator implements Serializable {
 
         Map<String, String> parameterMap = new HashMap<>();
         String[] parameters = parameterString.split(separator);
-        for (int i = 0; i < parameters.length; i++) {
-            String[] keyAndValue = parameters[i]
+        for (String parameter : parameters) {
+            String[] keyAndValue = parameter
                     .split(DEFAULT_STATE_PARAMETER_KEY_VALUE_SEPARATOR);
             parameterMap.put(keyAndValue[0],
                     keyAndValue.length > 1 ? keyAndValue[1] : "");

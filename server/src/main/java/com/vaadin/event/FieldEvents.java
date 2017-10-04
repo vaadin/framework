@@ -93,7 +93,7 @@ public interface FieldEvents {
     public static class FocusEvent extends Component.Event {
 
         /**
-         * Identifier for event that can be used in {@link EventRouter}
+         * Identifier for event that can be used in {@link EventRouter}.
          */
         public static final String EVENT_ID = EventId.FOCUS;
 
@@ -116,7 +116,7 @@ public interface FieldEvents {
                 .findMethod(FocusListener.class, "focus", FocusEvent.class);
 
         /**
-         * Component has been focused
+         * Component has been focused.
          *
          * @param event
          *            Component focus event.
@@ -134,7 +134,7 @@ public interface FieldEvents {
     public static class BlurEvent extends Component.Event {
 
         /**
-         * Identifier for event that can be used in {@link EventRouter}
+         * Identifier for event that can be used in {@link EventRouter}.
          */
         public static final String EVENT_ID = EventId.BLUR;
 
@@ -157,7 +157,7 @@ public interface FieldEvents {
                 .findMethod(BlurListener.class, "blur", BlurEvent.class);
 
         /**
-         * Component has been blurred
+         * Component has been blurred.
          *
          * @param event
          *            Component blur event.

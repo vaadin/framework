@@ -16,6 +16,8 @@
 package com.vaadin.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +28,6 @@ import java.net.URLClassLoader;
 import javax.validation.Validation;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.util.BeanUtil;
@@ -82,7 +83,7 @@ public class Jsr303Test {
 
         @Override
         public void execute() {
-            Assert.assertFalse(BeanUtil.checkBeanValidationAvailable());
+            assertFalse(BeanUtil.checkBeanValidationAvailable());
 
             Binder<BeanToValidate> binder = new Binder<>(BeanToValidate.class);
             BeanToValidate item = new BeanToValidate();
@@ -102,7 +103,7 @@ public class Jsr303Test {
             try {
                 BeanValidationBinder<BeanToValidate> beanValidationBinder = new BeanValidationBinder<>(
                         BeanToValidate.class);
-                Assert.fail();
+                fail();
             } catch (IllegalStateException ignore) {
                 // an exception has to be thrown
             }

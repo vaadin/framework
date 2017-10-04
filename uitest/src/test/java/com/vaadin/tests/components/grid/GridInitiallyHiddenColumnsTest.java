@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -33,20 +34,20 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
     public void ensureCorrectlyRendered() {
         openTestURL("debug");
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Rowling", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Barks", grid.getCell(1, 0).getText());
+        assertEquals("Rowling", grid.getCell(0, 0).getText());
+        assertEquals("Barks", grid.getCell(1, 0).getText());
 
         getSidebarOpenButton(grid).click();
         getColumnHidingToggle(grid, "First Name").click();
         getColumnHidingToggle(grid, "Age").click();
         getSidebarOpenButton(grid).click();
 
-        Assert.assertEquals("Umberto", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Rowling", grid.getCell(0, 1).getText());
-        Assert.assertEquals("40", grid.getCell(0, 2).getText());
-        Assert.assertEquals("Alex", grid.getCell(1, 0).getText());
-        Assert.assertEquals("Barks", grid.getCell(1, 1).getText());
-        Assert.assertEquals("25", grid.getCell(1, 2).getText());
+        assertEquals("Umberto", grid.getCell(0, 0).getText());
+        assertEquals("Rowling", grid.getCell(0, 1).getText());
+        assertEquals("40", grid.getCell(0, 2).getText());
+        assertEquals("Alex", grid.getCell(1, 0).getText());
+        assertEquals("Barks", grid.getCell(1, 1).getText());
+        assertEquals("25", grid.getCell(1, 2).getText());
 
     }
 
@@ -61,12 +62,12 @@ public class GridInitiallyHiddenColumnsTest extends SingleBrowserTest {
         getColumnHidingToggle(grid, "Age").click();
         getSidebarOpenButton(grid).click();
 
-        Assert.assertEquals("Umberto", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Rowling", grid.getCell(0, 1).getText());
-        Assert.assertEquals("40", grid.getCell(0, 2).getText());
-        Assert.assertEquals("Alex", grid.getCell(1, 0).getText());
-        Assert.assertEquals("Barks", grid.getCell(1, 1).getText());
-        Assert.assertEquals("25", grid.getCell(1, 2).getText());
+        assertEquals("Umberto", grid.getCell(0, 0).getText());
+        assertEquals("Rowling", grid.getCell(0, 1).getText());
+        assertEquals("40", grid.getCell(0, 2).getText());
+        assertEquals("Alex", grid.getCell(1, 0).getText());
+        assertEquals("Barks", grid.getCell(1, 1).getText());
+        assertEquals("25", grid.getCell(1, 2).getText());
 
     }
 

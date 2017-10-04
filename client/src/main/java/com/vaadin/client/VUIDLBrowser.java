@@ -15,7 +15,6 @@
  */
 package com.vaadin.client;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
@@ -311,9 +310,7 @@ public class VUIDLBrowser extends SimpleTree {
                 // Ignored, no variables
             }
 
-            final Iterator<Object> i = uidl.getChildIterator();
-            while (i.hasNext()) {
-                final Object child = i.next();
+            for (final Object child : uidl) {
                 try {
                     add(new UIDLItem((UIDL) child));
                 } catch (final Exception e) {

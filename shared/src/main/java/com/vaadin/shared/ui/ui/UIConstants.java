@@ -31,7 +31,7 @@ public class UIConstants implements Serializable {
     public static final String ATTRIBUTE_REPLACE_STATE = "rs";
 
     /**
-     * Name of the parameter used to transmit UI ids back and forth
+     * Name of the parameter used to transmit UI ids back and forth.
      */
     public static final String UI_ID_PARAMETER = "v-uiId";
 

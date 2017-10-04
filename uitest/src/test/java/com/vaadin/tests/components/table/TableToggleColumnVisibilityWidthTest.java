@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -40,17 +41,16 @@ public class TableToggleColumnVisibilityWidthTest extends MultiBrowserTest {
         ButtonElement toggleButton = $(ButtonElement.class).id("toggler");
 
         toggleButton.click();
-        Assert.assertEquals("One column should be visible",
+        assertEquals("One column should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 1);
 
         toggleButton.click();
-        Assert.assertEquals("Two columns should be visible",
+        assertEquals("Two columns should be visible",
                 findElements(By.className("v-table-header-cell")).size(), 2);
         int secondColumnWidthRestored = findElements(
                 By.className("v-table-header-cell")).get(1).getSize()
                         .getWidth();
-        Assert.assertEquals(
-                "Column width should be the same as it was before hiding",
+        assertEquals("Column width should be the same as it was before hiding",
                 secondColumnWidthInitial, secondColumnWidthRestored);
 
     }

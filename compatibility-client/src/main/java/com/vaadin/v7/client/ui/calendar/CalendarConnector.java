@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -135,7 +134,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
     /**
      * Registers listeners on the calendar so server can be notified of the
-     * events
+     * events.
      */
     protected void registerListeners() {
         getWidget().setListener(new DateClickListener() {
@@ -394,9 +393,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Iterator<Object> childIterator = uidl.getChildIterator();
-        while (childIterator.hasNext()) {
-            UIDL child = (UIDL) childIterator.next();
+        for (Object c : uidl) {
+            UIDL child = (UIDL) c;
             if (DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG.equals(child.getTag())) {
                 if (getWidget().getDropHandler() == null) {
                     getWidget().setDropHandler(showingMonthView()
@@ -411,7 +409,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Returns the ApplicationConnection used to connect to the server side
+     * Returns the ApplicationConnection used to connect to the server side.
      */
     @Override
     public ApplicationConnection getClient() {
@@ -585,7 +583,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the original action ID that was passed in from the shared state
+     * Get the original action ID that was passed in from the shared state.
      *
      * @since 7.1.2
      * @param actionKey
@@ -597,7 +595,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the text that is displayed for a context menu item
+     * Get the text that is displayed for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -608,7 +606,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the icon url for a context menu item
+     * Get the icon url for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -619,7 +617,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the start date for an action item
+     * Get the start date for an action item.
      *
      * @param actionKey
      *            The unique action key
@@ -634,7 +632,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the end date for an action item
+     * Get the end date for an action item.
      *
      * @param actionKey
      *            The unique action key

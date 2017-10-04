@@ -118,14 +118,7 @@ public class ColorPickerHistory extends CustomComponent
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
         // Check that the color does not already exist
-        boolean exists = false;
-        Iterator<Color> iter = colorHistory.iterator();
-        while (iter.hasNext()) {
-            if (color.equals(iter.next())) {
-                exists = true;
-                break;
-            }
-        }
+        boolean exists = colorHistory.contains(color);
 
         // If the color does not exist then add it
         if (!exists) {
@@ -145,7 +138,7 @@ public class ColorPickerHistory extends CustomComponent
 
         // Create 2d color map
         Color[][] colors = new Color[rows][columns];
-        iter = colorList.iterator();
+        Iterator<Color> iter = colorList.iterator();
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -190,7 +183,7 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     /**
-     * Adds a color change listener
+     * Adds a color change listener.
      *
      * @param listener
      *            The listener
@@ -201,7 +194,7 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     /**
-     * Removes a color change listener
+     * Removes a color change listener.
      *
      * @param listener
      *            The listener

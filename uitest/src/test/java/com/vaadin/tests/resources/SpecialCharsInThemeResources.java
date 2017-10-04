@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.resources;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -47,7 +48,7 @@ public class SpecialCharsInThemeResources extends SingleBrowserTest {
 
     private void checkSource() {
         String source = getDriver().getPageSource();
-        Assert.assertTrue("Incorrect contents (was: " + source + ")",
+        assertTrue("Incorrect contents (was: " + source + ")",
                 source.contains("Just ordinary contents here"));
     }
 }

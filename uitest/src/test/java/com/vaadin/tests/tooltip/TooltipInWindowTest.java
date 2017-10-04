@@ -18,7 +18,6 @@ package com.vaadin.tests.tooltip;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.TooltipTest;
 
 /**

@@ -15,12 +15,13 @@
  */
 package com.vaadin.ui.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -129,9 +130,9 @@ public class StaticSectionTest {
 
         staticRow.writeDesign(container, null);
 
-        Assert.assertEquals(2, container.children().size());
-        Assert.assertEquals("col1,col2", container.child(0).attr("column-ids"));
-        Assert.assertEquals("col3", container.child(1).attr("column-ids"));
+        assertEquals(2, container.children().size());
+        assertEquals("col1,col2", container.child(0).attr("column-ids"));
+        assertEquals("col3", container.child(1).attr("column-ids"));
     }
 
 }

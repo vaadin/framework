@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -15,7 +16,7 @@ public class MoveGridAndAddRowTest extends SingleBrowserTest {
         $(ButtonElement.class).id("add").click();
 
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("1", grid.getCell(0, 0).getText());
-        Assert.assertEquals("2", grid.getCell(1, 0).getText());
+        assertEquals("1", grid.getCell(0, 0).getText());
+        assertEquals("2", grid.getCell(1, 0).getText());
     }
 }

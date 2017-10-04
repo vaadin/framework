@@ -58,6 +58,11 @@ public interface SelectionModel<T> {
         public boolean isSelectionAllowed() {
             return false;
         }
+
+        @Override
+        public boolean isMultiSelectionAllowed() {
+            return false;
+        }
     }
 
     /**
@@ -114,6 +119,16 @@ public interface SelectionModel<T> {
      *         <code>false</code> otherwise
      */
     boolean isSelectionAllowed();
+
+    /**
+     * Checks if the user is allowed to have more than on item selected.
+     * <p>
+     *
+     * @return <code>true</code> if the user is allowed to select multiple items,
+     *         <code>false</code> otherwise
+     * @since 8.2
+     */
+    boolean isMultiSelectionAllowed();
 
     /**
      * Gets the selected state from a given grid row json object. This is a

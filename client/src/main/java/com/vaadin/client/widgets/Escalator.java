@@ -1574,7 +1574,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Gets the child element that is visually at a certain index
+         * Gets the child element that is visually at a certain index.
          *
          * @param index
          *            the index of the element to retrieve
@@ -6649,7 +6649,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Adds a scroll handler to this escalator
+     * Adds a scroll handler to this escalator.
      *
      * @param handler
      *            the scroll handler to add
@@ -6790,6 +6790,16 @@ public class Escalator extends Widget
      */
     public Element getTableWrapper() {
         return tableWrapper;
+    }
+
+    /**
+     * Returns the {@code <table />} element of the grid.
+     *
+     * @return the table element
+     * @since 8.2
+     */
+    public Element getTable() {
+        return getTableWrapper().getFirstChildElement();
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {

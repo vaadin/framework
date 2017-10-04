@@ -1,8 +1,10 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -41,7 +43,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
     private GridElement openEditor() {
         GridElement grid = $(GridElement.class).first();
         grid.getRow(0).doubleClick();
-        Assert.assertTrue("Grid editor should be displayed.",
+        assertTrue("Grid editor should be displayed.",
                 grid.getEditor().isDisplayed());
         return grid;
     }
@@ -50,7 +52,7 @@ public class GridEditorMultiselectTest extends MultiBrowserTest {
         List<WebElement> checkboxes = grid
                 .findElements(By.xpath("//input[@type='checkbox']"));
         for (WebElement checkbox : checkboxes) {
-            Assert.assertEquals(
+            assertEquals(
                     "Select checkboxes should be "
                             + (isEnabled ? "enabled" : "disabled"),
                     isEnabled, checkbox.isEnabled());

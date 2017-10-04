@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -37,7 +39,7 @@ public class UIInitBrowserDetailsTest extends MultiBrowserTest {
     private void compareRequestAndBrowserValue(String paramName,
             String browserName, String errorValue) {
         assertTextNotEquals(browserName, errorValue);
-        Assert.assertEquals(
+        assertEquals(
                 String.format("Browser and request values differ in '%s',",
                         browserName),
                 getLabelText(paramName), getLabelText(browserName));
@@ -53,7 +55,7 @@ public class UIInitBrowserDetailsTest extends MultiBrowserTest {
 
     private void assertTextNotEquals(String id, String notExpected) {
         String actual = getLabelText(id);
-        Assert.assertNotEquals(String.format("Unexpected value for '%s'", id),
+        assertNotEquals(String.format("Unexpected value for '%s'", id),
                 notExpected, actual);
     }
 }

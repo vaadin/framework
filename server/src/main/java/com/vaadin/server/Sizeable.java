@@ -260,14 +260,14 @@ public interface Sizeable extends Serializable {
     public void setSizeUndefined();
 
     /**
-     * Clears any defined width
+     * Clears any defined width.
      *
      * @since 7.3
      */
     public void setWidthUndefined();
 
     /**
-     * Clears any defined height
+     * Clears any defined height.
      *
      * @since 7.3
      */

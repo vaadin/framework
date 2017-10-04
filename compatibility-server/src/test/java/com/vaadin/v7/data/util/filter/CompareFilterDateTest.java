@@ -1,9 +1,13 @@
 package com.vaadin.v7.data.util.filter;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Filter;
@@ -37,10 +41,8 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
     protected Filter greaterEqualCompSqlDate;
     protected Filter lessEqualCompSqlDate;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         equalCompUtilDate = new Equal(PROPERTY1, formatter.parse("26072016"));
         greaterCompUtilDate = new Greater(PROPERTY1,
                 formatter.parse("26072016"));
@@ -78,9 +80,8 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
                         java.sql.Date.class));
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         itemNullUtilDate = null;
         itemNullSqlDate = null;
         itemUtilDate = null;
@@ -89,54 +90,42 @@ public class CompareFilterDateTest extends AbstractFilterTestBase<Compare> {
 
     @Test
     public void testCompareUtilDatesAndUtilDates() {
-        Assert.assertFalse(
-                equalCompUtilDate.passesFilter(null, itemNullUtilDate));
-        Assert.assertFalse(equalCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(
-                greaterCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertTrue(lessCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(
-                greaterEqualCompUtilDate.passesFilter(null, itemUtilDate));
-        Assert.assertTrue(
-                lessEqualCompUtilDate.passesFilter(null, itemUtilDate));
+        assertFalse(equalCompUtilDate.passesFilter(null, itemNullUtilDate));
+        assertFalse(equalCompUtilDate.passesFilter(null, itemUtilDate));
+        assertFalse(greaterCompUtilDate.passesFilter(null, itemUtilDate));
+        assertTrue(lessCompUtilDate.passesFilter(null, itemUtilDate));
+        assertFalse(greaterEqualCompUtilDate.passesFilter(null, itemUtilDate));
+        assertTrue(lessEqualCompUtilDate.passesFilter(null, itemUtilDate));
     }
 
     @Test
     public void testCompareUtilDatesAndSqlDates() {
-        Assert.assertFalse(
-                equalCompUtilDate.passesFilter(null, itemNullSqlDate));
-        Assert.assertFalse(equalCompUtilDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(greaterCompUtilDate.passesFilter(null, itemSqlDate));
-        Assert.assertTrue(lessCompUtilDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(
-                greaterEqualCompUtilDate.passesFilter(null, itemSqlDate));
-        Assert.assertTrue(
-                lessEqualCompUtilDate.passesFilter(null, itemSqlDate));
+        assertFalse(equalCompUtilDate.passesFilter(null, itemNullSqlDate));
+        assertFalse(equalCompUtilDate.passesFilter(null, itemSqlDate));
+        assertFalse(greaterCompUtilDate.passesFilter(null, itemSqlDate));
+        assertTrue(lessCompUtilDate.passesFilter(null, itemSqlDate));
+        assertFalse(greaterEqualCompUtilDate.passesFilter(null, itemSqlDate));
+        assertTrue(lessEqualCompUtilDate.passesFilter(null, itemSqlDate));
     }
 
     @Test
     public void testCompareSqlDatesAndSqlDates() {
-        Assert.assertFalse(
-                equalCompSqlDate.passesFilter(null, itemNullSqlDate));
-        Assert.assertFalse(equalCompSqlDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(greaterCompSqlDate.passesFilter(null, itemSqlDate));
-        Assert.assertTrue(lessCompSqlDate.passesFilter(null, itemSqlDate));
-        Assert.assertFalse(
-                greaterEqualCompSqlDate.passesFilter(null, itemSqlDate));
-        Assert.assertTrue(lessEqualCompSqlDate.passesFilter(null, itemSqlDate));
+        assertFalse(equalCompSqlDate.passesFilter(null, itemNullSqlDate));
+        assertFalse(equalCompSqlDate.passesFilter(null, itemSqlDate));
+        assertFalse(greaterCompSqlDate.passesFilter(null, itemSqlDate));
+        assertTrue(lessCompSqlDate.passesFilter(null, itemSqlDate));
+        assertFalse(greaterEqualCompSqlDate.passesFilter(null, itemSqlDate));
+        assertTrue(lessEqualCompSqlDate.passesFilter(null, itemSqlDate));
     }
 
     @Test
     public void testCompareSqlDatesAndUtilDates() {
-        Assert.assertFalse(
-                equalCompSqlDate.passesFilter(null, itemNullUtilDate));
-        Assert.assertFalse(equalCompSqlDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(greaterCompSqlDate.passesFilter(null, itemUtilDate));
-        Assert.assertTrue(lessCompSqlDate.passesFilter(null, itemUtilDate));
-        Assert.assertFalse(
-                greaterEqualCompSqlDate.passesFilter(null, itemUtilDate));
-        Assert.assertTrue(
-                lessEqualCompSqlDate.passesFilter(null, itemUtilDate));
+        assertFalse(equalCompSqlDate.passesFilter(null, itemNullUtilDate));
+        assertFalse(equalCompSqlDate.passesFilter(null, itemUtilDate));
+        assertFalse(greaterCompSqlDate.passesFilter(null, itemUtilDate));
+        assertTrue(lessCompSqlDate.passesFilter(null, itemUtilDate));
+        assertFalse(greaterEqualCompSqlDate.passesFilter(null, itemUtilDate));
+        assertTrue(lessEqualCompSqlDate.passesFilter(null, itemUtilDate));
     }
 
 }

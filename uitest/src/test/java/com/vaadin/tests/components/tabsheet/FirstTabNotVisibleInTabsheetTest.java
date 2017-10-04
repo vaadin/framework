@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.tabsheet;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-
-import junit.framework.Assert;
 
 public class FirstTabNotVisibleInTabsheetTest extends MultiBrowserTest {
     @Test
@@ -18,7 +18,7 @@ public class FirstTabNotVisibleInTabsheetTest extends MultiBrowserTest {
 
         TabSheetElement tabSheet = $(TabSheetElement.class).first();
 
-        Assert.assertTrue("TabSheet should have first tab visible",
+        assertTrue("TabSheet should have first tab visible",
                 tabSheet.getTabCaptions().contains("first visible tab"));
     }
 

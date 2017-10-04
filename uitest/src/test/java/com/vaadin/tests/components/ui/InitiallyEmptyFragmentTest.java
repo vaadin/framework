@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -25,6 +26,6 @@ public class InitiallyEmptyFragmentTest extends MultiBrowserTest {
     }
 
     private void assertLogText(String expected) {
-        Assert.assertEquals("Unexpected log contents,", expected, getLogRow(0));
+        assertEquals("Unexpected log contents,", expected, getLogRow(0));
     }
 }

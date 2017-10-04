@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -104,7 +103,7 @@ public class VFilterSelect extends Composite
         HandlesAriaInvalid, HandlesAriaRequired, DeferredWorker {
 
     /**
-     * Represents a suggestion in the suggestion popup box
+     * Represents a suggestion in the suggestion popup box.
      */
     public class FilterSelectSuggestion implements Suggestion, Command {
 
@@ -114,7 +113,7 @@ public class VFilterSelect extends Composite
         private String style;
 
         /**
-         * Constructor
+         * Constructor.
          *
          * @param uidl
          *            The UIDL received from the server
@@ -257,12 +256,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -407,7 +406,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Shows the popup where the user can see the filtered options
+         * Shows the popup where the user can see the filtered options.
          *
          * @param currentSuggestions
          *            The filtered suggestions
@@ -539,7 +538,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Selects the next item in the filtered selections
+         * Selects the next item in the filtered selections.
          */
         public void selectNextItem() {
             debug("VFS.SP: selectNextItem()");
@@ -554,7 +553,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Selects the previous item in the filtered selections
+         * Selects the previous item in the filtered selections.
          */
         public void selectPrevItem() {
             debug("VFS.SP: selectPrevItem()");
@@ -1024,7 +1023,7 @@ public class VFilterSelect extends Composite
     }
 
     /**
-     * The menu where the suggestions are rendered
+     * The menu where the suggestions are rendered.
      */
     public class SuggestionMenu extends MenuBar
             implements SubPartAware, LoadHandler {
@@ -1080,7 +1079,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Sets the suggestions rendered in the menu
+         * Sets the suggestions rendered in the menu.
          *
          * @param suggestions
          *            The suggestions to be rendered in the menu
@@ -1092,10 +1091,8 @@ public class VFilterSelect extends Composite
             }
 
             clearItems();
-            final Iterator<FilterSelectSuggestion> it = suggestions.iterator();
             boolean isFirstIteration = true;
-            while (it.hasNext()) {
-                final FilterSelectSuggestion s = it.next();
+            for (final FilterSelectSuggestion s : suggestions) {
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
                 String style = s.getStyle();
                 if (style != null) {
@@ -1165,7 +1162,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Triggered after a selection has been made
+         * Triggered after a selection has been made.
          */
         public void doPostFilterSelectedItemAction() {
             debug("VFS.SM: doPostFilterSelectedItemAction()");
@@ -1364,7 +1361,7 @@ public class VFilterSelect extends Composite
         }
 
         /**
-         * Overridden to avoid selecting text when text input is disabled
+         * Overridden to avoid selecting text when text input is disabled.
          */
         @Override
         public void setSelectionRange(int pos, int length) {
@@ -1689,11 +1686,7 @@ public class VFilterSelect extends Composite
      *         last page
      */
     public boolean hasNextPage() {
-        if (pageLength > 0 && totalMatches > (currentPage + 1) * pageLength) {
-            return true;
-        } else {
-            return false;
-        }
+        return pageLength > 0 && totalMatches > (currentPage + 1) * pageLength;
     }
 
     /**
@@ -1708,7 +1701,7 @@ public class VFilterSelect extends Composite
     }
 
     /**
-     * Filters the options at certain page using the given filter
+     * Filters the options at certain page using the given filter.
      *
      * @param page
      *            The page to filter
@@ -1843,7 +1836,7 @@ public class VFilterSelect extends Composite
     }
 
     /**
-     * Triggered when a suggestion is selected
+     * Triggered when a suggestion is selected.
      *
      * @param suggestion
      *            The suggestion that just got selected.
@@ -2185,7 +2178,7 @@ public class VFilterSelect extends Composite
     }
 
     /**
-     * Triggered when a key was depressed
+     * Triggered when a key was depressed.
      *
      * @param event
      *            The KeyUpEvent of the key depressed
@@ -2249,7 +2242,7 @@ public class VFilterSelect extends Composite
     }
 
     /**
-     * Listener for popupopener
+     * Listener for popupopener.
      */
 
     @Override

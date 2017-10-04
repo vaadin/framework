@@ -45,7 +45,7 @@ public class UICreateEvent extends UIProviderEvent {
 
     /**
      * Creates a new UI create event for a given VaadinRequest, UI class and UI
-     * id
+     * id.
      *
      * @param request
      *            the request for which the UI will be created

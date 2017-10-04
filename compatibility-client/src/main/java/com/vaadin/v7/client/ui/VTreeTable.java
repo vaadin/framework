@@ -196,7 +196,8 @@ public class VTreeTable extends VScrollTable {
                     treeSpacer.setClassName(classname);
                     container.insertFirst(treeSpacer);
                     depth = rowUidl.hasAttribute("depth")
-                            ? rowUidl.getIntAttribute("depth") : 0;
+                            ? rowUidl.getIntAttribute("depth")
+                            : 0;
                     setIndent();
                     isTreeCellAdded = true;
                     return true;
@@ -341,11 +342,10 @@ public class VTreeTable extends VScrollTable {
                 htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
-                final Iterator<?> cells = uidl.getChildIterator();
                 if (spanColumns) {
                     int colCount = uidl.getChildCount();
-                    if (cells.hasNext()) {
-                        final Object cell = cells.next();
+                    // add the first cell only
+                    for (final Object cell : uidl) {
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
                                     htmlContentAllowed, false, null, colCount);
@@ -353,6 +353,7 @@ public class VTreeTable extends VScrollTable {
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
                         }
+                        break;
                     }
                 } else {
                     super.addCellsFromUIDL(uidl, aligns, col,
@@ -427,9 +428,8 @@ public class VTreeTable extends VScrollTable {
         @Override
         protected void calculateMaxIndent() {
             int maxIndent = 0;
-            Iterator<Widget> iterator = iterator();
-            while (iterator.hasNext()) {
-                VTreeTableRow next = (VTreeTableRow) iterator.next();
+            for (Widget w : this) {
+                VTreeTableRow next = (VTreeTableRow) w;
                 maxIndent = Math.max(maxIndent, next.getIndent());
             }
             this.maxIndent = maxIndent;
@@ -441,10 +441,8 @@ public class VTreeTable extends VScrollTable {
                 indentWidth = -1;
                 return;
             }
-            Iterator<Widget> iterator = iterator();
-            while (iterator.hasNext()) {
-                VTreeTableRow next = (VTreeTableRow) iterator.next();
-                next.setIndent();
+            for (Widget w : this) {
+                ((VTreeTableRow) w).setIndent();
             }
             calculateMaxIndent();
         }
@@ -768,7 +766,7 @@ public class VTreeTable extends VScrollTable {
 
     /**
      * Icons rendered into first actual column in TreeTable, not to row header
-     * cell
+     * cell.
      */
     @Override
     protected String buildCaptionHtmlSnippet(UIDL uidl) {

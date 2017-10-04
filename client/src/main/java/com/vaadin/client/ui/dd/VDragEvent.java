@@ -171,7 +171,9 @@ public class VDragEvent {
     }
 
     /**
-     * TODO consider using similar smaller (than map) api as in Transferable
+     * Returns the details of the drag and drop operation.
+     * 
+     * TODO consider using similar smaller (than map) API as in Transferable
      *
      * TODO clean up when drop handler changes
      *

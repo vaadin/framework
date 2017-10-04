@@ -56,7 +56,7 @@ public class ActionManager
      */
     protected HashSet<Handler> actionHandlers = null;
 
-    /** Action mapper */
+    /** Action mapper. */
     protected KeyMapper<Action> actionMapper = null;
 
     protected Component viewer;

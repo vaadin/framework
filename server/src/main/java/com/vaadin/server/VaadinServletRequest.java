@@ -35,7 +35,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper
     private final VaadinServletService vaadinService;
 
     /**
-     * Wraps a http servlet request and associates with a vaadin service
+     * Wraps a http servlet request and associates with a vaadin service.
      *
      * @param request
      *            the http servlet request to wrap

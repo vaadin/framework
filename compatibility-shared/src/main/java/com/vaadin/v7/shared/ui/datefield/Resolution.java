@@ -15,20 +15,22 @@
  */
 package com.vaadin.v7.shared.ui.datefield;
 
-import com.vaadin.shared.ui.datefield.DateResolution;
-import com.vaadin.shared.ui.datefield.DateTimeResolution;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
+
 /**
- * Resolutions for DateFields
+ * Resolutions for DateFields.
  *
  * @author Vaadin Ltd.
  * @since 7.0
  *
- * @deprecated As of 8.0, replaced by {@link DateResolution} and {@link DateTimeResolution},
- * used by new {@code com.vaadin.ui.DateField} and {@code com.vaadin.ui.DateTimeField}
+ * @deprecated As of 8.0, replaced by {@link DateResolution} and
+ *             {@link DateTimeResolution}, used by new
+ *             {@code com.vaadin.ui.DateField} and
+ *             {@code com.vaadin.ui.DateTimeField}
  */
 public enum Resolution {
     // Values from Calendar.SECOND etc. Set as ints to avoid Calendar dependency

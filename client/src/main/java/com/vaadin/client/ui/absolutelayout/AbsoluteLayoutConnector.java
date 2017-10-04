@@ -37,7 +37,7 @@ import com.vaadin.ui.AbsoluteLayout;
 
 /**
  * Connects the server side {@link AbsoluteLayout} with the client side
- * counterpart {@link VAbsoluteLayout}
+ * counterpart {@link VAbsoluteLayout}.
  */
 @Connect(AbsoluteLayout.class)
 public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector

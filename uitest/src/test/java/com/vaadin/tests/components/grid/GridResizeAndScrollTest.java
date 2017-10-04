@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -37,7 +38,7 @@ public class GridResizeAndScrollTest extends MultiBrowserTest {
         String textBefore = cell.getText();
         cell.click();
 
-        Assert.assertEquals("String contents changed on click", textBefore,
+        assertEquals("String contents changed on click", textBefore,
                 cell.getText());
 
     }

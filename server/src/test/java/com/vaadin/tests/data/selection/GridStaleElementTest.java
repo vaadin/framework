@@ -1,9 +1,11 @@
 package com.vaadin.tests.data.selection;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,15 +66,15 @@ public class GridStaleElementTest {
 
         assertStale(toReplace);
         model.getSelectedItems()
-                .forEach(item -> Assert.assertFalse(
+                .forEach(item -> assertFalse(
                         "Selection should not contain stale values",
                         dataProvider.isStale(item)));
 
         Object oldId = dataProvider.getId(toReplace);
-        Assert.assertTrue("Selection did not contain an item with matching Id.",
+        assertTrue("Selection did not contain an item with matching Id.",
                 model.getSelectedItems().stream().map(dataProvider::getId)
                         .anyMatch(oldId::equals));
-        Assert.assertTrue("Stale element is not considered selected.",
+        assertTrue("Stale element is not considered selected.",
                 model.isSelected(toReplace));
     }
 
@@ -91,26 +93,25 @@ public class GridStaleElementTest {
 
         assertStale(toReplace);
         model.getSelectedItems()
-                .forEach(i -> Assert.assertFalse(
+                .forEach(i -> assertFalse(
                         "Selection should not contain stale values",
                         dataProvider.isStale(i)));
 
-        Assert.assertTrue("Selection did not contain an item with matching Id.",
+        assertTrue("Selection did not contain an item with matching Id.",
                 model.getSelectedItems().stream().map(dataProvider::getId)
                         .filter(i -> dataProvider.getId(toReplace).equals(i))
                         .findFirst().isPresent());
-        Assert.assertTrue("Stale element is not considered selected.",
+        assertTrue("Stale element is not considered selected.",
                 model.isSelected(toReplace));
     }
 
     private void assertNotStale(StrBean bean) {
-        Assert.assertFalse(
-                "Bean with id " + bean.getId() + " should not be stale.",
+        assertFalse("Bean with id " + bean.getId() + " should not be stale.",
                 dataProvider.isStale(bean));
     }
 
     private void assertStale(StrBean bean) {
-        Assert.assertTrue("Bean with id " + bean.getId() + " should be stale.",
+        assertTrue("Bean with id " + bean.getId() + " should be stale.",
                 dataProvider.isStale(bean));
     }
 }

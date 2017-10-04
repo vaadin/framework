@@ -25,8 +25,10 @@ import static com.vaadin.tools.CvalChecker.cacheLicenseInfo;
 import static com.vaadin.tools.CvalChecker.deleteCache;
 import static com.vaadin.tools.CvalChecker.parseJson;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,7 +45,6 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.prefs.Preferences;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -162,58 +163,58 @@ public class CvalCheckerTest {
         try {
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // If the license key is empty, throw an exception
         System.setProperty(licenseName, "");
         try {
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // If license key is invalid, throw an exception
         System.setProperty(licenseName, "invalid");
         try {
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // Fail if version is bigger
         System.setProperty(licenseName, VALID_KEY);
         try {
             licenseChecker.validateProduct(productNameCval, "3.0",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
             assertTrue(expected.getMessage().contains("is not valid"));
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // Success if license key and version are valid
         System.setProperty(licenseName, VALID_KEY);
         licenseChecker.validateProduct(productNameCval, "2.1",
                 productTitleCval);
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
 
         // Success if license and cache file are valid, although the license
         // server is offline
         licenseChecker.setLicenseProvider(unreachableLicenseProvider);
         licenseChecker.validateProduct(productNameCval, "2.1",
                 productTitleCval);
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
 
         // Fail if license key changes although cache file were validated
         // previously and it is ok, we are offline
@@ -221,13 +222,13 @@ public class CvalCheckerTest {
             System.setProperty(licenseName, INVALID_KEY);
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
-            Assert.fail();
+            fail();
         } catch (UnreachableCvalServerException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // Fail with unreachable exception if license has never verified and
         // server is offline
@@ -235,13 +236,13 @@ public class CvalCheckerTest {
             System.setProperty(licenseName, VALID_KEY);
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
-            Assert.fail();
+            fail();
         } catch (UnreachableCvalServerException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertFalse(cacheExists(productNameCval));
+        assertFalse(cacheExists(productNameCval));
 
         // Fail when expired flag comes in the server response, although the
         // expired is valid.
@@ -250,20 +251,20 @@ public class CvalCheckerTest {
         try {
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
             // Check that we use server customized message if it comes
-            Assert.assertTrue(expected.getMessage().contains("Custom"));
+            assertTrue(expected.getMessage().contains("Custom"));
         }
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
 
         // Check an unlimited license
         deleteCache(productNameCval);
         licenseChecker.setLicenseProvider(unlimitedLicenseProvider);
         licenseChecker.validateProduct(productNameCval, "2.1",
                 productTitleCval);
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
 
         // Fail if expired flag does not come, but expired epoch is in the past
         System.setProperty(licenseName, VALID_KEY);
@@ -272,17 +273,17 @@ public class CvalCheckerTest {
         try {
             licenseChecker.validateProduct(productNameCval, "2.1",
                     productTitleCval);
-            Assert.fail();
+            fail();
         } catch (InvalidCvalException expected) {
             assertEquals(productNameCval, expected.name);
         }
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
 
         deleteCache(productNameCval);
         licenseChecker.setLicenseProvider(nullVersionLicenseProvider);
         licenseChecker.validateProduct(productNameCval, "2.1",
                 productTitleCval);
-        Assert.assertTrue(cacheExists(productNameCval));
+        assertTrue(cacheExists(productNameCval));
     }
 
     /*

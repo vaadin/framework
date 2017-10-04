@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.button;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -97,13 +98,12 @@ public class ButtonUndefinedWidthTest extends MultiBrowserTest {
     }
 
     private void assertRowWrapperWidth(int wrapperWidth, int rowWidth) {
-        Assert.assertTrue("Wrapper should be narrower than its parent: "
-                + wrapperWidth + " < " + rowWidth, wrapperWidth < rowWidth);
+        assertTrue("Wrapper should be narrower than its parent: " + wrapperWidth
+                + " < " + rowWidth, wrapperWidth < rowWidth);
     }
 
     private void assertButtonWidth(int buttonWidth, int containerWidth) {
-        Assert.assertTrue("Button should be narrower than its parent: "
-                + buttonWidth + " < " + containerWidth,
-                buttonWidth < containerWidth);
+        assertTrue("Button should be narrower than its parent: " + buttonWidth
+                + " < " + containerWidth, buttonWidth < containerWidth);
     }
 }

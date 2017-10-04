@@ -536,7 +536,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Exception which wraps InvalidValueExceptions from all invalid fields in a
-     * FieldGroup
+     * FieldGroup.
      *
      * @since 7.4
      */
@@ -648,7 +648,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the field that is bound to the given property id
+     * Returns the field that is bound to the given property id.
      *
      * @param propertyId
      *            The property id to use to lookup the field
@@ -660,7 +660,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the property id that is bound to the given field
+     * Returns the property id that is bound to the given field.
      *
      * @param field
      *            The field to use to lookup the property id
@@ -748,7 +748,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * FIXME javadoc
+     * The commit event.
      *
      */
     @Deprecated
@@ -760,7 +760,7 @@ public class FieldGroup implements Serializable {
         }
 
         /**
-         * Returns the field binder that this commit relates to
+         * Returns the field binder that this commit relates to.
          *
          * @return The FieldBinder that is being committed.
          */
@@ -1120,7 +1120,7 @@ public class FieldGroup implements Serializable {
         }
 
         /**
-         * Returns the field group where the exception occurred
+         * Returns the field group where the exception occurred.
          *
          * @since 7.4
          * @return the field group

@@ -1726,8 +1726,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> if the column may be hidable by the
-         *            user via UI interaction
+         *            <code>true</code> if the column may be hidable by the user
+         *            via UI interaction
          * @return this column
          */
         public Column<T, V> setHidable(boolean hidable) {
@@ -2420,7 +2420,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Creates a new {@code Grid} using the given caption
+     * Creates a new {@code Grid} using the given caption.
      *
      * @param caption
      *            the caption of the grid
@@ -2432,7 +2432,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given caption and
-     * {@code DataProvider}
+     * {@code DataProvider}.
      *
      * @param caption
      *            the caption of the grid
@@ -2445,7 +2445,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Creates a new {@code Grid} using the given {@code DataProvider}
+     * Creates a new {@code Grid} using the given {@code DataProvider}.
      *
      * @param dataProvider
      *            the data provider, not {@code null}
@@ -2457,7 +2457,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given caption and collection of
-     * items
+     * items.
      *
      * @param caption
      *            the caption of the grid
@@ -3989,7 +3989,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *            if the provided row is outside the item range
+     *             if the provided row is outside the item range
      */
     public void scrollTo(int row) throws IllegalArgumentException {
         scrollTo(row, ScrollDestination.ANY);

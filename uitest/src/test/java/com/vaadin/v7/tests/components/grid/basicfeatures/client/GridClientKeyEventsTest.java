@@ -16,13 +16,13 @@
 package com.vaadin.v7.tests.components.grid.basicfeatures.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
@@ -99,23 +99,23 @@ public class GridClientKeyEventsTest extends GridBasicClientFeaturesTest {
 
         // Focus cell above select all checkbox
         getGridElement().getHeaderCell(0, 0).click();
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
         new Actions(getDriver()).sendKeys(" ").perform();
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
 
         // Move down to select all checkbox cell
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
         new Actions(getDriver()).sendKeys(" ").perform(); // select all
-        Assert.assertTrue(isRowSelected(1));
+        assertTrue(isRowSelected(1));
         new Actions(getDriver()).sendKeys(" ").perform(); // deselect all
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
 
         // Move down to header below select all checkbox cell
         new Actions(getDriver()).sendKeys(Keys.ARROW_DOWN).perform();
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
         new Actions(getDriver()).sendKeys(" ").perform(); // deselect all
-        Assert.assertFalse(isRowSelected(1));
+        assertFalse(isRowSelected(1));
 
     }
 

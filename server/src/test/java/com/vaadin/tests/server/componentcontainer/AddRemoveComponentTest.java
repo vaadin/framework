@@ -1,11 +1,13 @@
 package com.vaadin.tests.server.componentcontainer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.tests.VaadinClasses;
@@ -23,7 +25,7 @@ public class AddRemoveComponentTest {
         List<Class<? extends ComponentContainer>> containerClasses = VaadinClasses
                 .getComponentContainersSupportingAddRemoveComponent();
 
-        Assert.assertTrue(containerClasses.size() > 0);
+        assertTrue(containerClasses.size() > 0);
 
         // No default constructor, special case
         containerClasses.remove(CustomLayout.class);
@@ -52,7 +54,7 @@ public class AddRemoveComponentTest {
         hl.addComponent(label);
 
         componentContainer.removeComponent(label);
-        Assert.assertEquals(
+        assertEquals(
                 "Parent no longer correct for " + componentContainer.getClass(),
                 hl, label.getParent());
     }

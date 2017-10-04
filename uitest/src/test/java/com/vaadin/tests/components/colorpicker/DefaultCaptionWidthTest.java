@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.colorpicker;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -56,10 +58,10 @@ public class DefaultCaptionWidthTest extends MultiBrowserTest {
         String clazz = $(ColorPickerElement.class).first()
                 .getAttribute("class");
         if (expectedStyle) {
-            Assert.assertTrue("Default caption style is not found",
+            assertTrue("Default caption style is not found",
                     clazz.contains("v-default-caption-width"));
         } else {
-            Assert.assertFalse("Found unexpected default caption style",
+            assertFalse("Found unexpected default caption style",
                     clazz.contains("v-default-caption-width"));
         }
     }

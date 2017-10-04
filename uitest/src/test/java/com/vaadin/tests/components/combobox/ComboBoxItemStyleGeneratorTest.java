@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -40,13 +41,13 @@ public class ComboBoxItemStyleGeneratorTest extends SingleBrowserTest {
         List<WebElement> boldItems = findElements(
                 By.className("v-filterselect-item-bold"));
 
-        Assert.assertEquals(1, boldItems.size());
-        Assert.assertEquals("Item 5", boldItems.get(0).getText());
+        assertEquals(1, boldItems.size());
+        assertEquals("Item 5", boldItems.get(0).getText());
 
         selectMenuPath("Component", "Features", "Item style generator", "-");
 
         boldItems = findElements(By.className("v-filterselect-item-bold"));
-        Assert.assertEquals(0, boldItems.size());
+        assertEquals(0, boldItems.size());
     }
 
     @Override

@@ -35,8 +35,8 @@ public class SimpleDayToolbar extends HorizontalPanel {
 
     public void setDayNames(String[] dayNames) {
         clear();
-        for (int i = 0; i < dayNames.length; i++) {
-            Label l = new Label(dayNames[i]);
+        for (String dayName : dayNames) {
+            Label l = new Label(dayName);
             l.setStylePrimaryName("v-calendar-header-day");
             add(l);
         }

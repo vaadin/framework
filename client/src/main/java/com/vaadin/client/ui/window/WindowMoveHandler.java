@@ -18,7 +18,7 @@ package com.vaadin.client.ui.window;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Handler for {@link WindowMoveEvent}s
+ * Handler for {@link WindowMoveEvent}s.
  *
  * @since 7.1.9
  * @author Vaadin Ltd
