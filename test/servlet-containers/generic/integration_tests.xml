@@ -56,6 +56,7 @@
         </antcall>
     </target>
     <target name="run-tb3-test">
+        <fail unless="phantomjs.binary.path" message="Define PhantomJS binary using -Dphantomjs.binary.path" />
         <fail unless="server-name" message="Server name must be defined in server-name" />
         <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
@@ -73,6 +74,7 @@
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Ddemo.war=${demo.war}" />
             <jvmarg value="-Dvaadin.testbench.developer.license=${vaadin.testbench.developer.license}" />
+            <jvmarg value="-Dphantomjs.binary.path=${phantomjs.binary.path}" />
             <test name="${junit.test.suite}" todir="${server.report.dir}" />
         </junit>
     </target>
