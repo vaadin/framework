@@ -5597,10 +5597,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             rowReference.set(rowIndex, rowData, rowElement);
 
-            if (hasData) {
-                setStyleName(rowElement, rowSelectedStyleName,
-                        isSelected(rowData));
+            boolean isSelected = hasData && isSelected(rowData);
+            if (Grid.this.selectionModel.isSelectionAllowed()) {
+                rowElement.setAttribute("aria-selected", String.valueOf(isSelected));
+            } else {
+                rowElement.removeAttribute("aria-selected");
+            }
 
+            if (hasData) {
+                setStyleName(rowElement, rowSelectedStyleName, isSelected);
                 if (rowStyleGenerator != null) {
                     try {
                         String rowStylename = rowStyleGenerator
@@ -6148,6 +6153,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         cellFocusHandler = new CellFocusHandler();
 
         setStylePrimaryName(STYLE_NAME);
+        setAriaRole("grid");
 
         escalator.getHeader().setEscalatorUpdater(createHeaderUpdater());
         escalator.getBody().setEscalatorUpdater(createBodyUpdater());
@@ -6306,6 +6312,17 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             requestRefreshBody();
             refreshFooter();
         }
+    }
+
+    /**
+     * Adds the given role as 'role="$param"' to the {@code <table />} element
+     * of the grid.
+     *
+     * @param role the role param
+     * @since 8.2
+     */
+    protected void setAriaRole(String role){
+        escalator.getTable().setAttribute("role", role);
     }
 
     /**
@@ -7971,6 +7988,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             setSelectColumnRenderer(null);
         }
 
+        if (this.selectionModel.isMultiSelectionAllowed()) {
+            escalator.getTable().setAttribute("aria-multiselectable", "true");
+        } else if (this.selectionModel.isSelectionAllowed()) {
+            escalator.getTable().setAttribute("aria-multiselectable", "false");
+        } else {
+            escalator.getTable().removeAttribute("aria-multiselectable");
+        }
         // Refresh rendered rows to update selection, if it has changed
         requestRefreshBody();
     }
