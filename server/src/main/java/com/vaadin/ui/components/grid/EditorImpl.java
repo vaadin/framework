@@ -37,6 +37,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.AbstractGridExtension;
 import com.vaadin.ui.Grid.Column;
+import com.vaadin.util.ReflectTools;
 
 import elemental.json.JsonObject;
 
@@ -338,19 +339,19 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     @Override
     public Registration addSaveListener(EditorSaveListener<T> listener) {
         return eventRouter.addListener(EditorSaveEvent.class, listener,
-                EditorSaveListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorSaveListener.class));
     }
 
     @Override
     public Registration addCancelListener(EditorCancelListener<T> listener) {
         return eventRouter.addListener(EditorCancelEvent.class, listener,
-                EditorCancelListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorCancelListener.class));
     }
 
     @Override
     public Registration addOpenListener(EditorOpenListener<T> listener) {
         return eventRouter.addListener(EditorOpenEvent.class, listener,
-                EditorOpenListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(EditorOpenListener.class));
     }
 
     @Override

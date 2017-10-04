@@ -18,6 +18,7 @@ package com.vaadin.ui.components.grid;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Drag start listener for HTML5 drag start on a Grid row.
@@ -31,8 +32,8 @@ import com.vaadin.event.ConnectorEventListener;
 @FunctionalInterface
 public interface GridDragStartListener<T> extends ConnectorEventListener {
 
-    static final Method DRAG_START_METHOD = GridDragStartListener.class
-            .getDeclaredMethods()[0];
+    static final Method DRAG_START_METHOD = ReflectTools
+            .getMethod(GridDragStartListener.class);
 
     /**
      * Invoked when the user has started dragging grid's rows.
