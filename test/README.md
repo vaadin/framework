@@ -22,5 +22,3 @@ mvn clean install -Dinstall.skip=false -pl .,servlet-containers,servlet-containe
 ```
 
 This will install the parent POMs on both levels as well as the UI and server test dependencies.
-
-When running against a remote WebDriver to test servers, use `-Ddeployment.url=http://<yourip>:8080` on the Maven command line. To test with local WebDriver, use `-DuseLocalWebDriver`.

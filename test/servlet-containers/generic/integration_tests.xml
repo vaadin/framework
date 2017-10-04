@@ -123,13 +123,13 @@
             <param name="target-server" value="wildfly8" />
         </antcall>
     </target>
+<!--
     <target name="integration-test-wildfly9">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="wildfly9" />
         </antcall>
     </target>
-<!--
     <target name="integration-test-wildfly10">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -182,8 +182,8 @@
             <antcall target="integration-test-payara" />
             <antcall target="integration-test-jboss-eap6" />
             <antcall target="integration-test-wildfly8" />
-            <antcall target="integration-test-wildfly9" />
-<!--            <antcall target="integration-test-wildfly10" /> -->
+<!--            <antcall target="integration-test-wildfly9" />
+            <antcall target="integration-test-wildfly10" /> -->
             <antcall target="integration-test-jetty8" />
 <!--            <antcall target="integration-test-jetty9" /> -->
             <antcall target="integration-test-tomcat7" />
