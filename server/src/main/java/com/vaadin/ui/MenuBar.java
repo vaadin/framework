@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.shared.ui.ContentMode;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -33,6 +32,7 @@ import org.jsoup.parser.Tag;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 import com.vaadin.ui.Component.Focusable;
@@ -146,7 +146,8 @@ public class MenuBar extends AbstractComponent
             }
 
             ContentMode contentMode = item.getContentMode();
-            if (description != null && description.length() > 0) {
+            // If the contentMode is equal to ContentMode.PREFORMATTED, we don't add any attribute.
+            if (contentMode != null && contentMode != ContentMode.PREFORMATTED) {
                 target.addAttribute(MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE,
                         contentMode.name());
             }
@@ -468,7 +469,7 @@ public class MenuBar extends AbstractComponent
         private boolean isSeparator = false;
         private String styleName;
         private String description;
-        private ContentMode contentMode;
+        private ContentMode contentMode = ContentMode.PREFORMATTED;
         private boolean checkable = false;
         private boolean checked = false;
 
@@ -823,7 +824,6 @@ public class MenuBar extends AbstractComponent
          *            the new description string for the component.
          * @param mode
          *            the content mode for the description
-         * @since 8.0
          */
         public void setDescription(String description, ContentMode mode) {
             this.description = description;
@@ -1025,7 +1025,7 @@ public class MenuBar extends AbstractComponent
                 item.getDescription(), def.getDescription(), String.class,
                 context);
         DesignAttributeHandler.writeAttribute("contentmode", attr,
-                item.getContentMode(), def.getContentMode(), ContentMode.class,
+                item.getContentMode().name(), def.getContentMode().name(), String.class,
                 context);
         DesignAttributeHandler.writeAttribute("style-name", attr,
                 item.getStyleName(), def.getStyleName(), String.class, context);
@@ -1086,8 +1086,13 @@ public class MenuBar extends AbstractComponent
                     attr, boolean.class));
         }
         if (menuElement.hasAttr("description")) {
-            menu.setDescription(DesignAttributeHandler
-                    .readAttribute("description", attr, String.class));
+            String description = DesignAttributeHandler.readAttribute("description", attr, String.class);
+            if (menuElement.hasAttr("contentmode")) {
+                String contentModeString = DesignAttributeHandler.readAttribute("contentmode", attr, String.class);
+                menu.setDescription(description, ContentMode.valueOf(contentModeString));
+            } else {
+                menu.setDescription(description);
+            }
         }
         if (menuElement.hasAttr("style-name")) {
             menu.setStyleName(DesignAttributeHandler.readAttribute("style-name",

@@ -1086,6 +1086,8 @@ public class VMenuBar extends SimpleFocusablePanel
                 String contentModeString = uidl.getStringAttribute(
                         MenuBarConstants.ATTRIBUTE_ITEM_CONTENT_MODE);
                 contentMode = ContentMode.valueOf(contentModeString);
+            } else {
+                contentMode = ContentMode.PREFORMATTED;
             }
 
             updateStyleNames();
