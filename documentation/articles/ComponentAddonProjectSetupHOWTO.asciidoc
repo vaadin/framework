@@ -96,7 +96,7 @@ src directory from Navigator view and select Team -> Add to Index. Then
 add the rest of the files (.settings, .project, .classpath and target)
 to .gitignore with Team -> Ignore. Finally, just do Team -> Commit.
 
-At this point - or later whenevery you are ready for it - you can
+At this point - or later whenever you are ready for it - you can
 publish the project to GitHub. Just go to github.com and create a new
 repository. Use MyList as the name for the repository. Then follow the
 instructions on the screen. In my case, I executed the following command
@@ -123,12 +123,12 @@ for Maven run configuration for "jetty:run". Now when you make any
 changes to server-side code - for example to `WidgetTestApplication.java`
 - hit save and reload the browser pointing to
 http://localhost:8080/mylist/?restartApplication, the changes are
-appliead immediately. Even better - you can start the project with Debug
+applied immediately. Even better - you can start the project with Debug
 As and add break points to the application.
 
 Client-side changes are more tricky as they are compiled from Java to
 JavaScript by GWT. To make those changes immediately you, must be
-running a GWT Devepment Mode. This is done by running Maven goal gwt:run
+running a GWT Development Mode. This is done by running Maven goal gwt:run
 instead of just pointing your web browser to the running application.
 Note that must be running both jetty:run and gwt:run concurrently.
 gwt:run starts application called "GWT Development Mode". From there you

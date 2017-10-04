@@ -96,7 +96,7 @@ with hierarchical table aka treetable. Another simple but important
 widget was multilingual text field. It acts just like normal textfield
 but when opened, you get the java field opened with multiple locale
 instances, it has nice UI too including user friendly flags. Great for
-handling i18n based data in your UI. We got multiple customercases that
+handling i18n based data in your UI. We got multiple customer cases that
 enjoy these new widgets. -*Jani Laakso*
 ===============================
 
@@ -259,7 +259,7 @@ business logic inside UI logic, there's no need to. This way the UI can
 be replaced in the future and also when updating old systems to use
 Vaadin (e.g. SWING applications that are written this way) it has been a
 breeze when the only thing that needs to be rewritten is the UI. Another
-very imporant factor is security, trust your data layer, do not trust
+very important factor is security, trust your data layer, do not trust
 your clients, using enterprise beans with JNDI helps you. Scalability
 and high-availability are also easier to cope with. Scale up with
 multiple cheap Tomcat machines acting as Vaadin clients, few powerful

@@ -579,7 +579,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         if (WidgetUtil.isTouchEvent(event) || !resized) {
             super.onBrowserEvent(event);
         } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
-            // Reset the resized flag after a mouseup has occured so the next
+            // Reset the resized flag after a mouseup has occurred so the next
             // mousedown/mouseup can be interpreted as a click.
             resized = false;
         }

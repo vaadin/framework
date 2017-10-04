@@ -1375,7 +1375,7 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void resizeSortedColumnForSortIndicator() {
         // Force recalculation of the captionContainer element inside the header
-        // cell to accomodate for the size of the sort arrow.
+        // cell to accommodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
             // Mark header as sorted now. Any earlier marking would lead to
@@ -3679,7 +3679,7 @@ public class VScrollTable extends FlowPanel
 
                 }
                 if (col.hasAttribute("width") && !c.isResizing) {
-                    // Make sure to accomodate for the sort indicator if
+                    // Make sure to accommodate for the sort indicator if
                     // necessary.
                     int width = col.getIntAttribute("width");
                     int widthWithoutAddedIndent = width;

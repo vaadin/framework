@@ -11,7 +11,7 @@ Vaadin 7 + Spring Security (base authentication)
 Vaadin 7 is easy to integrate with Spring Security. You should configure only
 2 files. First - web.xml and second one spring-security.xml (user
 credentials and security settings). This is a small example on how to use
-base form for authentification.
+base form for authentication.
 
 [[web.xml-configuration]]
 web.xml Configuration

@@ -512,7 +512,7 @@ public class GridStructureTest extends GridBasicFeaturesTest {
     public void testAddThirdRowToGrid() {
         openTestURL();
         selectMenuPath("Component", "Body rows", "Add third row");
-        assertFalse(logContainsText("Exception occured"));
+        assertFalse(logContainsText("Exception occurred"));
     }
 
     @Test

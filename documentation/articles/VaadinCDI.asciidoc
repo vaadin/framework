@@ -55,7 +55,7 @@ necessary and might in some cases even cause conflicts. +
 * *Objects must be injected* and managed by the CDI implementation in
 order to use CDI features.
 ** *Use @Inject on an instance field* to make the CDI implementation
-inject a managed intstance of the corresponding type.
+inject a managed instance of the corresponding type.
 ** *Annotate your UI class with @CDIUI("")* to let Vaadin CDI know that
 it should inject and use instances of that class when the application is
 opened in the browser.

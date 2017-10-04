@@ -45,8 +45,8 @@ public class GridSelectAllTest extends GridBasicsTest {
         selectionBox.click();
         selectionBox.click();
 
-        assertFalse("Exception occured on row reselection.", logContainsText(
-                "Exception occured, java.lang.IllegalStateException: No item id for key 101 found."));
+        assertFalse("Exception occurred on row reselection.", logContainsText(
+                "Exception occurred, java.lang.IllegalStateException: No item id for key 101 found."));
     }
 
     @Test

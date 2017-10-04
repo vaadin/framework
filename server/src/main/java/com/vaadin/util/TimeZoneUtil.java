@@ -93,11 +93,11 @@ public final class TimeZoneUtil implements Serializable {
                     if (i.toLocalDate().getYear() != year) {
                         break;
                     }
-                    long epocHours = Duration
+                    long epochHours = Duration
                             .ofSeconds(t.getInstant().getEpochSecond())
                             .toHours();
                     long duration = Math.max(t.getDuration().toMinutes(), 0);
-                    transitionsList.add(epocHours);
+                    transitionsList.add(epochHours);
                     transitionsList.add(duration);
                 }
             }

@@ -267,7 +267,7 @@ public class GridSelectionTest extends GridBasicsTest {
         assertFalse(
                 "Unexpected NullPointerException when removing selected rows",
                 logContainsText(
-                        "Exception occured, java.lang.NullPointerException: null"));
+                        "Exception occurred, java.lang.NullPointerException: null"));
     }
 
     @Test

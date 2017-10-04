@@ -13,7 +13,7 @@ http://en.wikipedia.org/wiki/HTTP_cookie[cookies] from both the server
 and the client side in Vaadin, with one caveat: Cookies are not possible
 if you enable Push using WebSocket (see tickets
 http://dev.vaadin.com/ticket/11808[11808] and
-http://dev.vaadin.com/ticket/12518[12518]). Begining in Vaadin 7.6,
+http://dev.vaadin.com/ticket/12518[12518]). Beginning in Vaadin 7.6,
 cookies can be used with the WEBSOCKET_XHR transport type.
 
 The

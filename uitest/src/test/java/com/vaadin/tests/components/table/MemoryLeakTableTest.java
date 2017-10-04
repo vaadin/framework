@@ -54,7 +54,7 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     @Test
     @Ignore
     public void memoryTest() throws IOException {
-        // Set breakoint and look memory consuption in Profiler
+        // Set breakpoint and look memory consumption in Profiler
         // Mozilla Firefox doesn't provide memory usage profiler, use chrome.
 
         openTestURL();
@@ -75,7 +75,7 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
             }
             btnDel.click();
         }
-        // Set breakoint and look memory consuption in Profiler
+        // Set breakpoint and look memory consumption in Profiler
         btnAdd = $(ButtonElement.class).get(0);
     }
 
