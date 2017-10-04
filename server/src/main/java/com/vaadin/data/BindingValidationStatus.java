@@ -186,6 +186,9 @@ public class BindingValidationStatus<TARGET> implements Serializable {
      *         status is not an error
      */
     public Optional<String> getMessage() {
+        if (getStatus() == Status.OK || result == null) {
+            return Optional.empty();
+        }
         return result.getMessage();
     }
 

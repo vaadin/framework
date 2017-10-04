@@ -2074,8 +2074,17 @@ public class Binder<BEAN> implements Serializable {
         HasValue<?> source = status.getField();
         clearError(source);
         if (status.isError()) {
-            // Conversion error of ValidationResult with ErrorLevel > WARNING
-            status.getResult().ifPresent(result -> handleError(source, result));
+            Optional<ValidationResult> firstError = status
+                    .getValidationResults().stream()
+                    .filter(ValidationResult::isError).findFirst();
+            if (firstError.isPresent()) {
+                // Failed with a Validation error
+                handleError(source, firstError.get());
+            } else {
+                // Conversion error
+                status.getResult()
+                        .ifPresent(result -> handleError(source, result));
+            }
         } else {
             // Show first non-error ValidationResult message.
             status.getValidationResults().stream()
