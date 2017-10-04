@@ -1902,7 +1902,7 @@ public class Binder<BEAN> implements Serializable {
      */
     public Registration addStatusChangeListener(StatusChangeListener listener) {
         return getEventRouter().addListener(StatusChangeEvent.class, listener,
-                StatusChangeListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(StatusChangeListener.class));
     }
 
     /**
@@ -1925,7 +1925,7 @@ public class Binder<BEAN> implements Serializable {
     public Registration addValueChangeListener(
             ValueChangeListener<?> listener) {
         return getEventRouter().addListener(ValueChangeEvent.class, listener,
-                ValueChangeListener.class.getDeclaredMethods()[0]);
+                ReflectTools.getMethod(ValueChangeListener.class));
     }
 
     /**
