@@ -14,13 +14,13 @@ To test only a subset of the servers, there are profiles with the server name. F
 
 ## Running an individual test locally
 
-To install dependencies for testing an individual module locally, run `mvn clean install -Dintall.skip=false` in the dependency module.
+To install dependencies for testing an individual module locally, run `mvn clean install -Dinstall.skip=false` in the dependency module.
 
 For example you can install all dependencies for running any individual server test module with the following command in the test root:
 ```
 mvn clean install -Dinstall.skip=false -pl .,servlet-containers,servlet-containers/generic-ui,servlet-containers/generic-tests
 ```
 
-This will isntall the parent POMs on both levels as well as the UI and server test dependencies.
+This will install the parent POMs on both levels as well as the UI and server test dependencies.
 
 When running against a remote WebDriver to test servers, use `-Ddeployment.url=http://<yourip>:8080` on the Maven command line. To test with local WebDriver, use `-DuseLocalWebDriver`.
