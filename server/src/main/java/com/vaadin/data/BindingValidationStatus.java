@@ -130,18 +130,19 @@ public class BindingValidationStatus<TARGET> implements Serializable {
     /**
      * Creates a new status change event.
      * <p>
-     * The {@code message} must be {@code null} if the {@code status} is
-     * {@link Status#OK}.
+     * If {@code result} is {@code null}, the {@code status} is
+     * {@link Status#UNRESOLVED}.
      *
      * @param result
      *            the related result object, may be {@code null}
      * @param source
      *            field whose status has changed, not {@code null}
+     * 
+     * @since 8.2
      */
     public BindingValidationStatus(Result<TARGET> result,
             Binding<?, TARGET> source) {
         Objects.requireNonNull(source, "Event source may not be null");
-        Objects.requireNonNull(source, "Result may not be null");
 
         binding = source;
         if (result != null) {
@@ -207,8 +208,10 @@ public class BindingValidationStatus<TARGET> implements Serializable {
     /**
      * Gets all the validation results related to this binding validation
      * status.
-     * 
+     *
      * @return list of validation results
+     *
+     * @since 8.2
      */
     public List<ValidationResult> getValidationResults() {
         return Collections.unmodifiableList(results);

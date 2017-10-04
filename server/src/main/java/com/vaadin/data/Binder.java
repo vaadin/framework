@@ -289,7 +289,8 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * A convenience method to add a validator to this binding using the
-         * {@link Validator#from(SerializablePredicate, String)} factory method.
+         * {@link Validator#from(SerializablePredicate, String, ErrorLevel)}
+         * factory method.
          * <p>
          * Validators are applied, in registration order, when the field value
          * is written to the backing property. If any validator returns a
@@ -310,6 +311,8 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
+         * 
+         * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate, String message,
@@ -372,6 +375,8 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
+         * 
+         * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
                 SerializablePredicate<? super TARGET> predicate,
@@ -2046,6 +2051,8 @@ public class Binder<BEAN> implements Serializable {
      *            the field with the invalid value
      * @param result
      *            the validation error result
+     *
+     * @since 8.2
      */
     protected void handleError(HasValue<?> field, ValidationResult result) {
         result.getErrorLevel().ifPresent(level -> {
@@ -2054,7 +2061,6 @@ public class Binder<BEAN> implements Serializable {
                         result.getErrorMessage(), ContentMode.TEXT, level));
             }
         });
-
     }
 
     /**
@@ -2068,9 +2074,10 @@ public class Binder<BEAN> implements Serializable {
         HasValue<?> source = status.getField();
         clearError(source);
         if (status.isError()) {
+            // Conversion error of ValidationResult with ErrorLevel > WARNING
             status.getResult().ifPresent(result -> handleError(source, result));
         } else {
-            // Show first non-error message.
+            // Show first non-error ValidationResult message.
             status.getValidationResults().stream()
                     .filter(result -> result.getErrorLevel().isPresent())
                     .findFirst()

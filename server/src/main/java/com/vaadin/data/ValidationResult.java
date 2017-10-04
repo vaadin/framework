@@ -84,11 +84,12 @@ public interface ValidationResult extends Serializable {
     String getErrorMessage();
 
     /**
-     * Returns optional error level for this validation result.
+     * Returns optional error level for this validation result. Error level is
+     * not defined for successful validation results.
      *
      * @return the error level if present
-     * @throws IllegalStateException
-     *             if the result represents success
+     * 
+     * @since 8.2
      */
     Optional<ErrorLevel> getErrorLevel();
 
@@ -138,7 +139,9 @@ public interface ValidationResult extends Serializable {
      * @return validation result which represent a failure with the given
      *         {@code errorMessage} and {@code errorLevel}
      * @throws NullPointerException
-     *             if {@code errorMessage} is null
+     *             if {@code errorMessage} or {@code errorLevel} is {@code null}
+     * 
+     * @since 8.2
      */
     public static ValidationResult failure(String errorMessage,
             ErrorLevel errorLevel) {

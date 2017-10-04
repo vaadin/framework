@@ -130,6 +130,8 @@ public interface Validator<T>
      * @param errorLevel
      *            the error level for failures from this validator, not null
      * @return the new validator using the function
+     *
+     * @since 8.2
      */
     public static <T> Validator<T> from(SerializablePredicate<T> guard,
             String errorMessage, ErrorLevel errorLevel) {
@@ -171,6 +173,8 @@ public interface Validator<T>
      * @param errorLevel
      *            the error level for failures from this validator, not null
      * @return the new validator using the function
+     *
+     * @since 8.2
      */
     public static <T> Validator<T> from(SerializablePredicate<T> guard,
             ErrorMessageProvider errorMessageProvider, ErrorLevel errorLevel) {

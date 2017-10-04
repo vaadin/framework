@@ -23,7 +23,17 @@ import java.util.Optional;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializableFunction;
 
-public class ValidationResultWrap<R> implements Result<R> {
+/**
+ * Internal implementation of a {@code Result} that collects all possible
+ * ValidationResults into one list. This class intercepts the normal chaining of
+ * Converters and Validators, catching and collecting results.
+ *
+ * @param <R>
+ *            the result data type
+ *
+ * @since 8.2
+ */
+class ValidationResultWrap<R> implements Result<R> {
 
     private final List<ValidationResult> resultList;
     private final Result<R> wrappedResult;
