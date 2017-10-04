@@ -15,7 +15,7 @@
         <module>generic-ui</module>
         <module>generic-tests</module>
     </modules>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -100,6 +100,19 @@
             <id>ant-test</id>
             <modules>
                 <module>generic</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>wildfly</id>
+            <modules>
+                <module>wildfly10</module>
+                <module>wildfly9</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>jetty</id>
+            <modules>
+                <module>jetty9</module>
             </modules>
         </profile>
     </profiles>
