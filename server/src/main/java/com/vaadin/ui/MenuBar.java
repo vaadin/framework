@@ -888,7 +888,20 @@ public class MenuBar extends AbstractComponent
             return description;
         }
 
-        private ContentMode getContentMode() {
+        /**
+         * Gets the content mode of the description of the menu item.
+         * The description is displayed as the tooltip of the menu item in the UI.
+         *
+         * <p>
+         * If no content mode was explicitly set using the {@link #setDescription(String, ContentMode)} method,
+         * the content mode will be {@link ContentMode#PREFORMATTED}
+         * </p>
+         *
+         * @return the {@link ContentMode} of the description of this menu item
+         * @see ContentMode
+         * @since 8.2
+         */
+        public ContentMode getContentMode() {
             return contentMode;
         }
 

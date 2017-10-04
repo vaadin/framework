@@ -187,12 +187,13 @@ public class MenuBarDeclarativeTest extends DeclarativeTestBase<MenuBar> {
                 actual.isSeparator());
         assertEquals(baseError + "Enabled", expected.isEnabled(),
                 actual.isEnabled());
-
         assertEquals(baseError + "Text", expected.getText(), actual.getText());
         assertEquals(baseError + "Description", expected.getDescription(),
                 actual.getDescription());
         assertEquals(baseError + "Style Name", expected.getStyleName(),
                 actual.getStyleName());
+        assertEquals(baseError + "Content Mode", expected.getContentMode(),
+                actual.getContentMode());
 
         if (expected.getIcon() != null) {
             assertNotNull(baseError + "Icon was null", actual.getIcon());
