@@ -211,7 +211,8 @@ public class ComboBoxConnector extends AbstractListingConnector
             }
         }
         int adjustment = getWidget().nullSelectionAllowed && filter.isEmpty()
-                ? 1 : 0;
+                ? 1
+                : 0;
         int startIndex = Math.max(0,
                 page * getWidget().pageLength - adjustment);
         int pageLength = getWidget().pageLength > 0 ? getWidget().pageLength
@@ -329,10 +330,9 @@ public class ComboBoxConnector extends AbstractListingConnector
                 String key = getRowKey(row);
                 String caption = row.getString(DataCommunicatorConstants.NAME);
                 String style = row.getString(ComboBoxConstants.STYLE);
-                String untranslatedIconUri = row
-                        .getString(ComboBoxConstants.ICON);
+                String iconUri = getResourceUrl(key);
                 ComboBoxSuggestion suggestion = getWidget().new ComboBoxSuggestion(
-                        key, caption, style, untranslatedIconUri);
+                        key, caption, style, iconUri);
                 getWidget().currentSuggestions.add(suggestion);
             } else {
                 // there is not enough options to fill the page

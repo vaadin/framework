@@ -43,7 +43,6 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializableFunction;
@@ -252,9 +251,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             }
             Resource icon = getItemIconGenerator().apply(data);
             if (icon != null) {
-                String iconUrl = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
-                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+                setResource(itemToKey(data), icon);
             }
         });
     }
@@ -704,7 +701,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemCaption() {
         String selectedCaption = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        T value = keyToItem(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
@@ -713,12 +710,11 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemIcon() {
         String selectedItemIcon = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        T value = keyToItem(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
-                selectedItemIcon = ResourceReference
-                        .create(icon, ComboBox.this, null).getURL();
+                setResource(itemToKey(value), icon);
             }
         }
         getState().selectedItemIcon = selectedItemIcon;
@@ -772,9 +768,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 ((DeclarativeStyleGenerator) styleGenerator).setStyle(item,
                         child.attr("style"));
             } else {
-                throw new IllegalStateException(String.format(
-                        "Don't know how "
-                                + "to set style using current style generator '%s'",
+                throw new IllegalStateException(String.format("Don't know how "
+                        + "to set style using current style generator '%s'",
                         styleGenerator.getClass().getName()));
             }
         }

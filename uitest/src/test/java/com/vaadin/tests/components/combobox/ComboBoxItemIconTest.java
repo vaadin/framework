@@ -10,6 +10,7 @@ import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxItemIconTest extends MultiBrowserTest {
+
     @Test
     public void testIconsInComboBox() throws Exception {
         openTestURL();
@@ -60,14 +61,13 @@ public class ComboBoxItemIconTest extends MultiBrowserTest {
 
     }
 
-    private void assertSelection(ComboBoxElement cb, String imageSuffix,
+    private static void assertSelection(ComboBoxElement cb, String imageSuffix,
             String caption) {
         assertEquals(caption, cb.getValue());
         String imgSrc = cb.findElement(By.className("v-icon"))
                 .getAttribute("src");
         imgSrc = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
         assertEquals(imageSuffix, imgSrc);
-
     }
 
 }

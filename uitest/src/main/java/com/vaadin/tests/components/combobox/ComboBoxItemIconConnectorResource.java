@@ -1,0 +1,43 @@
+package com.vaadin.tests.components.combobox;
+
+import java.io.File;
+
+import com.vaadin.server.FileResource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.ComboBox;
+
+public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
+
+    @Override
+    protected Integer getTicketNumber() {
+        return 9041;
+    }
+
+    @Override
+    protected String getTestDescription() {
+        return "All items in the ComboBoxes should have icons, when using a ConnectorResource";
+    }
+
+    @Override
+    protected void setup(VaadinRequest request) {
+        ComboBox<String> cb = new ComboBox<>();
+        cb.setItems("Finland", "Australia", "Hungary");
+
+        cb.setItemIconGenerator(item -> {
+            System.out.println(new File(
+                    "src/main/webapp/VAADIN/themes" + "/tests-tickets/icons/"
+                            + item.substring(0, 2).toLowerCase() + ".gif")
+                                    .getAbsolutePath());
+            return new FileResource(new File(
+                    "src/main/webapp/VAADIN/themes" + "/tests-tickets/icons/"
+                            + item.substring(0, 2).toLowerCase() + ".gif"));
+
+        });
+
+        cb.setValue("Hungary");
+
+        addComponent(cb);
+    }
+
+}

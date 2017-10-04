@@ -26,5 +26,4 @@ import java.io.Serializable;
  */
 public class ComboBoxConstants implements Serializable {
     public static final String STYLE = "style";
-    public static final String ICON = "icon";
 }
