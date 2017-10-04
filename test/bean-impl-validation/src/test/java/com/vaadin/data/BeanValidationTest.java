@@ -15,9 +15,11 @@
  */
 package com.vaadin.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import javax.validation.Validation;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.TextField;
@@ -46,7 +48,7 @@ public class BeanValidationTest {
     public void binderWorksWithoutBeanValidationImpl() {
         // Just to make sure that it's available at the compilation time and in
         // runtime
-        Assert.assertNotNull(Validation.class);
+        assertNotNull(Validation.class);
 
         Binder<Bean> binder = new Binder<>(Bean.class);
 
@@ -57,7 +59,7 @@ public class BeanValidationTest {
         binder.setBean(bean);
 
         field.setValue("foo");
-        Assert.assertEquals(field.getValue(), bean.getProperty());
+        assertEquals(field.getValue(), bean.getProperty());
 
     }
 }

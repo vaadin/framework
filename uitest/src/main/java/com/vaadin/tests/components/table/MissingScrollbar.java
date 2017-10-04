@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.table;
 
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import com.vaadin.tests.components.TestBase;
@@ -82,8 +83,7 @@ public class MissingScrollbar extends TestBase {
         return ic;
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws Exception {
-
+    private void writeObject(ObjectOutputStream out) throws Exception {
         out.defaultWriteObject();
         System.out.println("Serialize " + getClass().getName() + "("
                 + (this instanceof Serializable) + ")");

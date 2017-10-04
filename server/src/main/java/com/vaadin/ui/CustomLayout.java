@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +75,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     /**
      * Custom layout slots containing the components.
      */
-    private final HashMap<String, Component> slots = new HashMap<>();
+    private final Map<String, Component> slots = new HashMap<>();
 
     /**
      * Default constructor only used by subclasses. Subclasses are responsible
@@ -113,7 +115,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
     protected void initTemplateContentsFromInputStream(
             InputStream templateStream) throws IOException {
         BufferedReader reader = new BufferedReader(
-                new InputStreamReader(templateStream, "UTF-8"));
+                new InputStreamReader(templateStream, UTF_8));
         StringBuilder builder = new StringBuilder(BUFFER_SIZE);
         try {
             char[] cbuf = new char[BUFFER_SIZE];
@@ -263,12 +265,12 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         }
     }
 
-    /** Get the name of the template */
+    /** Get the name of the template. */
     public String getTemplateName() {
         return getState(false).templateName;
     }
 
-    /** Get the contents of the template */
+    /** Get the contents of the template. */
     public String getTemplateContents() {
         return getState(false).templateContents;
     }
@@ -307,7 +309,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
         // Workaround to make the CommunicationManager read the template file
         // and send it to the client
         String templateName = getState(false).templateName;
-        if (templateName != null && templateName.length() != 0) {
+        if (templateName != null && !templateName.isEmpty()) {
             Set<Object> usedResources = ((JsonPaintTarget) target)
                     .getUsedResources();
             String resourceName = "layouts/" + templateName + ".html";

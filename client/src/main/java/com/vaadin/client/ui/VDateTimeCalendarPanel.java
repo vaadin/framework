@@ -61,7 +61,7 @@ public class VDateTimeCalendarPanel
         private ListBox ampm;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public VTime() {
             super();
@@ -209,7 +209,7 @@ public class VDateTimeCalendarPanel
         }
 
         /**
-         * Updates the valus to correspond to the values in value
+         * Updates the value to correspond to the values in value.
          */
         public void updateTimes() {
             if (getDate() == null) {
@@ -316,7 +316,7 @@ public class VDateTimeCalendarPanel
     }
 
     /**
-     * Dispatches an event when the panel when time is changed
+     * Dispatches an event when the panel when time is changed.
      */
     public interface TimeChangeListener {
 

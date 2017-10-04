@@ -159,7 +159,7 @@ public class Button extends AbstractFocusable
         }
 
         /**
-         * Constructor with mouse details
+         * Constructor with mouse details.
          *
          * @param source
          *            The source where the click took place
@@ -241,7 +241,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Alt key was down when the mouse event took place.
          *
-         * @return true if Alt was down when the event occured, false otherwise
+         * @return true if Alt was down when the event occurred, false otherwise
          *         or if unknown
          */
         public boolean isAltKey() {
@@ -255,7 +255,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Ctrl key was down when the mouse event took place.
          *
-         * @return true if Ctrl was pressed when the event occured, false
+         * @return true if Ctrl was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isCtrlKey() {
@@ -269,7 +269,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Meta key was down when the mouse event took place.
          *
-         * @return true if Meta was pressed when the event occured, false
+         * @return true if Meta was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isMetaKey() {
@@ -283,7 +283,7 @@ public class Button extends AbstractFocusable
         /**
          * Checks if the Shift key was down when the mouse event took place.
          *
-         * @return true if Shift was pressed when the event occured, false
+         * @return true if Shift was pressed when the event occurred, false
          *         otherwise or if unknown
          */
         public boolean isShiftKey() {
@@ -564,7 +564,7 @@ public class Button extends AbstractFocusable
     }
 
     /**
-     * Return HTML rendering setting
+     * Return HTML rendering setting.
      *
      * @return <code>true</code> if the caption text is to be rendered as HTML,
      *         <code>false</code> otherwise

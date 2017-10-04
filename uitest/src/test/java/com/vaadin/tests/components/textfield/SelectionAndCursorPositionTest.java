@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.textfield;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -68,13 +69,7 @@ public class SelectionAndCursorPositionTest extends SingleBrowserTest {
     }
 
     private void assertSelection(int start, int length) {
-        Assert.assertEquals(new Selection(start, length),
-                getSelection(textField));
-    }
-
-    private void clearSelection() {
-        setSelectionRange(0, 0);
-
+        assertEquals(new Selection(start, length), getSelection(textField));
     }
 
     private WebElement getSelectAll() {

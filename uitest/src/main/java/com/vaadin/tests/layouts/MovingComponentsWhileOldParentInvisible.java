@@ -111,11 +111,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
             cc.setWidth("300px");
             cc.setHeight("300px");
             return cc;
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;

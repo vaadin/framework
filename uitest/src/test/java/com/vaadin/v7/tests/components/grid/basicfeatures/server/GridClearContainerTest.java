@@ -15,11 +15,12 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -40,12 +41,12 @@ public class GridClearContainerTest extends MultiBrowserTest {
         ButtonElement button = $(ButtonElement.class)
                 .caption("Clear and re-add").first();
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals(ERRORNOTE, "default", grid.getCell(0, 0).getText());
-        Assert.assertEquals(ERRORNOTE, "default", grid.getCell(1, 0).getText());
+        assertEquals(ERRORNOTE, "default", grid.getCell(0, 0).getText());
+        assertEquals(ERRORNOTE, "default", grid.getCell(1, 0).getText());
         button.click();
-        Assert.assertEquals(ERRORNOTE, "Updated value 1",
+        assertEquals(ERRORNOTE, "Updated value 1",
                 grid.getCell(0, 0).getText());
-        Assert.assertEquals(ERRORNOTE, "Updated value 2",
+        assertEquals(ERRORNOTE, "Updated value 2",
                 grid.getCell(1, 0).getText());
     }
 }

@@ -173,7 +173,7 @@ public class TwinColSelect extends AbstractSelect {
     /**
      * Sets the text shown above the right column.
      *
-     * @param caption
+     * @param rightColumnCaption
      *            The text to show
      */
     public void setRightColumnCaption(String rightColumnCaption) {
@@ -193,7 +193,7 @@ public class TwinColSelect extends AbstractSelect {
     /**
      * Sets the text shown above the left column.
      *
-     * @param caption
+     * @param leftColumnCaption
      *            The text to show
      */
     public void setLeftColumnCaption(String leftColumnCaption) {

@@ -24,7 +24,7 @@ import elemental.json.Json;
 import elemental.json.JsonValue;
 
 /**
- * Client side serializer/deserializer for java.util.Date
+ * Client side serializer/deserializer for java.util.Date.
  *
  * @since 7.2
  * @author Vaadin Ltd

@@ -15,7 +15,7 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -170,7 +170,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel
     public void setScrollPosition(int position) {
         if (BrowserInfo.get().isAndroidWithBrokenScrollTop()
                 && BrowserInfo.get().requiresTouchScrollDelegate()) {
-            ArrayList<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
+            List<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
                 final Style style = el.getStyle();

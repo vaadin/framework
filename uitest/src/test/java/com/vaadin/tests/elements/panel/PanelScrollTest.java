@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.panel;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -15,7 +16,7 @@ public class PanelScrollTest extends MultiBrowserTest {
         openTestURL();
         PanelElement panel = $(PanelElement.class).get(0);
         panel.scrollLeft(SCROLL_VALUE);
-        Assert.assertEquals(SCROLL_VALUE, getScrollLeftValue(panel));
+        assertEquals(SCROLL_VALUE, getScrollLeftValue(panel));
     }
 
     @Test
@@ -23,7 +24,7 @@ public class PanelScrollTest extends MultiBrowserTest {
         openTestURL();
         PanelElement panel = $(PanelElement.class).get(0);
         panel.scroll(SCROLL_VALUE);
-        Assert.assertEquals(SCROLL_VALUE, getScrollTopValue(panel));
+        assertEquals(SCROLL_VALUE, getScrollTopValue(panel));
     }
 
     // helper functions

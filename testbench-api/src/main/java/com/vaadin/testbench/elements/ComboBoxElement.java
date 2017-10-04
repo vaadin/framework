@@ -118,14 +118,14 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
     }
 
     /**
-     * Open the suggestion popup
+     * Open the suggestion popup.
      */
     public void openPopup() {
         findElement(By.vaadin("#button")).click();
     }
 
     /**
-     * Gets the text representation of all suggestions on the current page
+     * Gets the text representation of all suggestions on the current page.
      *
      * @return List of suggestion texts
      */
@@ -191,7 +191,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
     }
 
     /**
-     * Returns the suggestion popup element
+     * Returns the suggestion popup element.
      */
     public WebElement getSuggestionPopup() {
         ensurePopupOpen();

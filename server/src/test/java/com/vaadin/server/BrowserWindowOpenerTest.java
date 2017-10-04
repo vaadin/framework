@@ -16,9 +16,11 @@
 package com.vaadin.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.communication.URLReference;
@@ -39,14 +41,14 @@ public class BrowserWindowOpenerTest {
 
         assertEquals("Unexpected resource is got on getResource() method",
                 resource, opener.getResource());
-        Assert.assertNull("Unexpected resource is got on getUrl() method",
+        assertNull("Unexpected resource is got on getUrl() method",
                 opener.getUrl());
 
         URLReference ref = opener.getState(false).resources
                 .get(BrowserWindowOpenerState.locationResource);
-        Assert.assertTrue("Url reference in the state is not ResourceReference",
+        assertTrue("Url reference in the state is not ResourceReference",
                 ref instanceof ResourceReference);
-        Assert.assertEquals("Unexpected resource saved in state", resource,
+        assertEquals("Unexpected resource saved in state", resource,
                 ((ResourceReference) ref).getResource());
     }
 
@@ -59,18 +61,17 @@ public class BrowserWindowOpenerTest {
 
         assertEquals("Unexpected URL is got on getURL() method", url,
                 opener.getUrl());
-        Assert.assertNotNull(
-                "Unexpected resource is got on getResource() method",
+        assertNotNull("Unexpected resource is got on getResource() method",
                 opener.getResource());
 
         URLReference ref = opener.getState(false).resources
                 .get(BrowserWindowOpenerState.locationResource);
-        Assert.assertTrue("Url reference in the state is not ResourceReference",
+        assertTrue("Url reference in the state is not ResourceReference",
                 ref instanceof ResourceReference);
         Resource resource = ((ResourceReference) ref).getResource();
-        Assert.assertTrue("Resource reference is not ExternalResource",
+        assertTrue("Resource reference is not ExternalResource",
                 resource instanceof ExternalResource);
-        Assert.assertEquals("Unexpected URL in resource saved in state", url,
+        assertEquals("Unexpected URL in resource saved in state", url,
                 ((ExternalResource) resource).getURL());
     }
 

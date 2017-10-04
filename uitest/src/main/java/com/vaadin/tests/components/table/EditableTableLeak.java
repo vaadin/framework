@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
@@ -57,7 +58,7 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<>();
+        private final Map<Object, Map<Object, Field<?>>> cache = new HashMap<>();
 
         @Override
         public Field<?> createField(Container container, Object itemId,
@@ -95,7 +96,7 @@ public class EditableTableLeak extends TestBase {
         table.setHeight("170px");
         table.setSelectable(true);
         table.setContainerDataSource(TestUtils.getISO3166Container());
-        table.setColumnHeaders(new String[] { "Country", "Code" });
+        table.setColumnHeaders("Country", "Code");
         table.setColumnAlignment(TestUtils.iso3166_PROPERTY_SHORT,
                 Table.ALIGN_CENTER);
         table.setColumnExpandRatio(TestUtils.iso3166_PROPERTY_NAME, 1);

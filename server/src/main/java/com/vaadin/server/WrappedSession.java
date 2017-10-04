@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
  *
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface WrappedSession extends Serializable {

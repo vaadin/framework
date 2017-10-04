@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -149,7 +151,7 @@ public class CsrfTokenMissingTest {
         } catch (JsonException e) {
             LOGGER.log(Level.SEVERE, "", e);
 
-            Assert.assertTrue(false);
+            assertTrue(false);
             return null;
         }
     }
@@ -196,8 +198,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isDefaultToken(rpcRequest));
-        Assert.assertFalse(isRequestValid(rpcRequest));
+        assertTrue(isDefaultToken(rpcRequest));
+        assertFalse(isRequestValid(rpcRequest));
     }
 
     @Test
@@ -206,8 +208,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isDefaultToken(rpcRequest));
-        Assert.assertTrue(isRequestValid(rpcRequest));
+        assertTrue(isDefaultToken(rpcRequest));
+        assertTrue(isRequestValid(rpcRequest));
     }
 
     @Test
@@ -216,8 +218,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isInvalidToken(rpcRequest));
-        Assert.assertFalse(isRequestValid(rpcRequest));
+        assertTrue(isInvalidToken(rpcRequest));
+        assertFalse(isRequestValid(rpcRequest));
     }
 
     @Test
@@ -226,8 +228,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isInvalidToken(rpcRequest));
-        Assert.assertTrue(isRequestValid(rpcRequest));
+        assertTrue(isInvalidToken(rpcRequest));
+        assertTrue(isRequestValid(rpcRequest));
     }
 
     @Test
@@ -236,8 +238,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isValidToken(rpcRequest));
-        Assert.assertTrue(isRequestValid(rpcRequest));
+        assertTrue(isValidToken(rpcRequest));
+        assertTrue(isRequestValid(rpcRequest));
     }
 
     @Test
@@ -246,8 +248,8 @@ public class CsrfTokenMissingTest {
 
         RpcRequest rpcRequest = createRequest();
 
-        Assert.assertTrue(isValidToken(rpcRequest));
-        Assert.assertTrue(isRequestValid(rpcRequest));
+        assertTrue(isValidToken(rpcRequest));
+        assertTrue(isRequestValid(rpcRequest));
     }
 
 }

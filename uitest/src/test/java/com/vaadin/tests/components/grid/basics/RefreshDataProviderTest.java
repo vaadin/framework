@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid.basics;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -34,8 +36,7 @@ public class RefreshDataProviderTest extends MultiBrowserTest {
 
         findElement(By.id("update")).click();
         WebElement first = findElement(By.tagName("td"));
-        Assert.assertEquals(
-                "UI component is not refreshed after update in data",
+        assertEquals("UI component is not refreshed after update in data",
                 "Updated coordinates", first.getText());
     }
 
@@ -46,7 +47,7 @@ public class RefreshDataProviderTest extends MultiBrowserTest {
         findElement(By.id("add")).click();
         WebElement first = findElement(By.tagName("td"));
 
-        Assert.assertEquals("UI component is not refreshed after add new data",
+        assertEquals("UI component is not refreshed after add new data",
                 "Added", first.getText());
     }
 
@@ -57,8 +58,8 @@ public class RefreshDataProviderTest extends MultiBrowserTest {
         WebElement first = findElement(By.tagName("td"));
         String old = first.getText();
         first = findElement(By.id("remove"));
-        Assert.assertNotEquals("UI component is not refreshed after removal",
-                old, first.getText());
+        assertNotEquals("UI component is not refreshed after removal", old,
+                first.getText());
     }
 
 }

@@ -43,8 +43,8 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
      *            a grid reference
      * @param order
      *            an array dictating the desired sort order of the data source
-     * @param originator
-     *            a value indicating where this event originated from
+     * @param userOriginated
+     *            where this event originated from the user or not
      */
     public SortEvent(Grid<T> grid, List<SortOrder> order,
             boolean userOriginated) {
@@ -60,7 +60,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
 
     /**
      * Static access to the GWT event type identifier associated with this Event
-     * class
+     * class.
      *
      * @return a type object, uniquely describing this event type.
      */
@@ -69,7 +69,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get access to the Grid that fired this event
+     * Get access to the Grid that fired this event.
      *
      * @return the grid instance
      */
@@ -79,7 +79,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get access to the Grid that fired this event
+     * Get access to the Grid that fired this event.
      *
      * @return the grid instance
      */
@@ -88,7 +88,7 @@ public class SortEvent<T> extends GwtEvent<SortHandler<?>> {
     }
 
     /**
-     * Get the sort ordering that is to be applied to the Grid
+     * Get the sort ordering that is to be applied to the Grid.
      *
      * @return a list of sort order objects
      */

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.upload;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -29,7 +30,7 @@ public class UploadNoSelectionTest extends MultiBrowserTest {
         openTestURL();
 
         // empty content is populated by com.vaadin.tests.util.Log
-        Assert.assertEquals(" ", getLogRow(0));
+        assertEquals(" ", getLogRow(0));
 
         getSubmitButton().click();
 
@@ -50,7 +51,7 @@ public class UploadNoSelectionTest extends MultiBrowserTest {
 
     private void assertLogRow(int index, int expentedRowNo,
             String expectedValueWithoutRowNo) {
-        Assert.assertEquals(expentedRowNo + ". " + expectedValueWithoutRowNo,
+        assertEquals(expentedRowNo + ". " + expectedValueWithoutRowNo,
                 getLogRow(index));
     }
 }

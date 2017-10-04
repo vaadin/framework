@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TableElement;
@@ -44,7 +45,7 @@ public class TableColumnWidthsAndSortingTest extends MultiBrowserTest {
         // Assert all headers are correct height (37px according to default
         // Valo)
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals("Height of header cell " + i + " is wrong", 37,
+            assertEquals("Height of header cell " + i + " is wrong", 37,
                     t.getHeaderCell(0).getSize().getHeight());
         }
 

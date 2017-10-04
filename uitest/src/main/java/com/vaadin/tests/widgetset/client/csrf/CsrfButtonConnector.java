@@ -52,7 +52,7 @@ public class CsrfButtonConnector extends AbstractComponentConnector {
         return GWT.create(VButton.class);
     }
 
-    public final static String ID = "CsrfButton";
+    public static final String ID = "CsrfButton";
 
     @Override
     public void init() {

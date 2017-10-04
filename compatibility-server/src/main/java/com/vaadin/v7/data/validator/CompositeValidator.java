@@ -29,15 +29,16 @@ import com.vaadin.v7.data.Validator;
  * The <code>CompositeValidator</code> allows you to chain (compose) many
  * validators to validate one field. The contained validators may be required to
  * all validate the value to validate or it may be enough that one contained
- * validator validates the value. This behaviour is controlled by the modes
+ * validator validates the value. This behavior is controlled by the modes
  * <code>AND</code> and <code>OR</code>.
  *
  * @author Vaadin Ltd.
  * @since 3.0
  *
- * @deprecated As of 8.0, no direct replacement available. See {@link Binder#forField(HasValue)} and various methods for
- * validation and conversion chaining: {@code withValidator(...)}, {@code withConverter(...)},
- * {@code withNullRepresentation(...)}
+ * @deprecated As of 8.0, no direct replacement available. See
+ *             {@link Binder#forField(HasValue)} and various methods for
+ *             validation and conversion chaining: {@code withValidator(...)},
+ *             {@code withConverter(...)}, {@code withNullRepresentation(...)}
  */
 @SuppressWarnings("serial")
 @Deprecated

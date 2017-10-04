@@ -59,7 +59,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      */
     @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
-        ArrayList<CalendarEvent> activeEvents = new ArrayList<CalendarEvent>();
+        List<CalendarEvent> activeEvents = new ArrayList<CalendarEvent>();
 
         for (CalendarEvent ev : eventList) {
             long from = startDate.getTime();
@@ -81,7 +81,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
     }
 
     /**
-     * Does this event provider container this event
+     * Does this event provider container this event.
      *
      * @param event
      *            The event to check for

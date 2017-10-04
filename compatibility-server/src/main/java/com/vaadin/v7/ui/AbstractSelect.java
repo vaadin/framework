@@ -22,14 +22,12 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.ui.AbstractListing;
 import org.jsoup.nodes.Element;
 
 import com.vaadin.event.Transferable;
@@ -46,6 +44,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.AbstractListing;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
@@ -245,12 +244,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Item icons.
      */
-    private final HashMap<Object, Resource> itemIcons = new HashMap<Object, Resource>();
+    private final Map<Object, Resource> itemIcons = new HashMap<Object, Resource>();
 
     /**
      * Item captions.
      */
-    private final HashMap<Object, String> itemCaptions = new HashMap<Object, String>();
+    private final Map<Object, String> itemCaptions = new HashMap<Object, String>();
 
     /**
      * Item caption mode.
@@ -338,8 +337,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // Creates the options container and add given options to it
         final Container c = new IndexedContainer();
         if (options != null) {
-            for (final Iterator<?> i = options.iterator(); i.hasNext();) {
-                c.addItem(i.next());
+            for (final Object item : options) {
+                c.addItem(item);
             }
         }
 
@@ -404,11 +403,9 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             target.endTag("so");
         }
 
-        final Iterator<?> i = getItemIds().iterator();
         // Paints the available selection options from data source
-        while (i.hasNext()) {
+        for (final Object id : getItemIds()) {
             // Gets the option attribute values
-            final Object id = i.next();
             if (!isNullSelectionAllowed() && id != null
                     && id.equals(getNullSelectionItemId())) {
                 // Remove item if it's the null selection item but null
@@ -465,7 +462,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         // New option entered (and it is allowed)
         if (isNewItemsAllowed()) {
             final String newitem = (String) variables.get("newitem");
-            if (newitem != null && newitem.length() > 0) {
+            if (newitem != null && !newitem.isEmpty()) {
                 getNewItemHandler().addNewItem(newitem);
             }
         }
@@ -482,9 +479,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
                 // Converts the key-array to id-set
                 final LinkedList<Object> acceptedSelections = new LinkedList<Object>();
-                for (int i = 0; i < clientSideSelectedKeys.length; i++) {
-                    final Object id = itemIdMapper
-                            .get(clientSideSelectedKeys[i]);
+                for (String key : clientSideSelectedKeys) {
+                    final Object id = itemIdMapper.get(key);
                     if (!isNullSelectionAllowed()
                             && (id == null || id == getNullSelectionItemId())) {
                         // skip empty selection if nullselection is not allowed
@@ -561,19 +557,21 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * TODO refine doc Setter for new item handler that is called when user adds
-     * new item in newItemAllowed mode.
+     * TODO refine doc Setter for new item handler, which is called when user
+     * adds new item in {@code newItemAllowed} mode.
      *
      * @param newItemHandler
+     *            The new item handler
      */
     public void setNewItemHandler(NewItemHandler newItemHandler) {
         this.newItemHandler = newItemHandler;
     }
 
     /**
-     * TODO refine doc
+     * Returns the new item handler, which is called when user adds new item in
+     * {@code newItemAllowed} mode.
      *
-     * @return
+     * @return NewItemHandler
      */
     public NewItemHandler getNewItemHandler() {
         if (newItemHandler == null) {
@@ -628,7 +626,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Gets the visible item ids. In Select, this returns list of all item ids,
-     * but can be overriden in subclasses if they paint only part of the items
+     * but can be overridden in subclasses if they paint only part of the items
      * to the terminal or null if no items is visible.
      */
     public Collection<?> getVisibleItemIds() {
@@ -718,7 +716,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * </p>
      *
      * @since 7.5.7
-     * @param newValue
+     * @param newFieldValue
      *            the New selected item or collection of selected items.
      * @param repaintIsNotNeeded
      *            True if caller is sure that repaint is not needed.
@@ -824,7 +822,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
     /**
      * Gets the Property identified by the given itemId and propertyId from the
-     * Container
+     * Container.
      *
      * @see Container#getContainerProperty(Object, Object)
      */
@@ -1722,9 +1720,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 && !propertySetEventListeners.isEmpty()) {
             final Container.PropertySetChangeEvent event = new PropertySetChangeEvent(
                     this);
-            final Object[] listeners = propertySetEventListeners.toArray();
-            for (int i = 0; i < listeners.length; i++) {
-                ((Container.PropertySetChangeListener) listeners[i])
+            for (Object l : propertySetEventListeners.toArray()) {
+                ((Container.PropertySetChangeListener) l)
                         .containerPropertySetChange(event);
             }
         }
@@ -1738,9 +1735,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
             final Container.ItemSetChangeEvent event = new ItemSetChangeEvent(
                     this);
-            final Object[] listeners = itemSetEventListeners.toArray();
-            for (int i = 0; i < listeners.length; i++) {
-                ((Container.ItemSetChangeListener) listeners[i])
+            for (Object l : itemSetEventListeners.toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }
@@ -1941,8 +1937,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 }
                 Collection<?> pids = i.getItemPropertyIds();
                 if (pids != null) {
-                    for (Iterator<?> it = pids.iterator(); it.hasNext();) {
-                        Property<?> p = i.getItemProperty(it.next());
+                    for (Object id : pids) {
+                        Property<?> p = i.getItemProperty(id);
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
@@ -1977,9 +1973,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
         }
 
         public void clear() {
-            for (Iterator<Object> it = captionChangeNotifiers.iterator(); it
-                    .hasNext();) {
-                Object notifier = it.next();
+            for (Object notifier : captionChangeNotifiers) {
                 if (notifier instanceof Item.PropertySetChangeNotifier) {
                     ((Item.PropertySetChangeNotifier) notifier)
                             .removePropertySetChangeListener(
@@ -2046,7 +2040,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @since 6.3
      *
      */
-    private static abstract class AbstractItemSetCriterion
+    private abstract static class AbstractItemSetCriterion
             extends ClientSideCriterion {
         protected final Collection<Object> itemIds = new HashSet<Object>();
         protected AbstractSelect select;
@@ -2132,7 +2126,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         /**
          * Constructor that automatically converts itemIdOver key to
-         * corresponding item Id
+         * corresponding item Id.
          *
          */
         protected AbstractSelectTargetDetails(
@@ -2198,7 +2192,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
 
         /**
          * Called by Table when a cell (and row) is painted or a item is painted
-         * in Tree
+         * in Tree.
          *
          * @param source
          *            The source of the generator, the Tree or Table the

@@ -26,7 +26,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
- * A panel that contains an always visible 0x0 size element that holds the focus
+ * A panel that contains an always visible 0x0 size element that holds the
+ * focus.
  */
 public class FocusElementPanel extends SimpleFocusablePanel {
 

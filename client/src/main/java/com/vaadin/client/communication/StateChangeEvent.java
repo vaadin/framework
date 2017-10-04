@@ -133,7 +133,6 @@ public class StateChangeEvent
      * updated by the server.
      *
      * @author Vaadin Ltd
-     * @version @VERSION@
      * @since 7.0.0
      */
     public interface StateChangeHandler extends Serializable, EventHandler {
@@ -234,7 +233,7 @@ public class StateChangeEvent
      *            the JavaScript object to check
      * @return true if the property is defined
      */
-    private static native final boolean isInJson(String property,
+    private static final native boolean isInJson(String property,
             JavaScriptObject target)
     /*-{
         var segments = property.split('.');
@@ -284,10 +283,8 @@ public class StateChangeEvent
                 }
             }
         } catch (NoDataException e) {
-            throw new IllegalStateException(
-                    "No property info for " + type
-                            + ". Did you remember to compile the right widgetset?",
-                    e);
+            throw new IllegalStateException("No property info for " + type
+                    + ". Did you remember to compile the right widgetset?", e);
         }
     }
 

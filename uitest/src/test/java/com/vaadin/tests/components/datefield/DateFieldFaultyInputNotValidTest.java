@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.datefield;
 
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDate;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
@@ -18,7 +19,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
     public void testEmptyDateFieldOK() {
         openTestURL();
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Empty DateField should be ok", "OK",
+        assertEquals("Empty DateField should be ok", "OK",
                 $(NotificationElement.class).first().getText());
     }
 
@@ -29,7 +30,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
         dateField.setDate(LocalDate.now());
 
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Current date should be ok", "OK",
+        assertEquals("Current date should be ok", "OK",
                 $(NotificationElement.class).first().getText());
         $(NotificationElement.class).first().close();
 
@@ -37,7 +38,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
         new Actions(getDriver()).sendKeys("asd").perform();
 
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Added 'asd' should make date not parse correctly.",
+        assertEquals("Added 'asd' should make date not parse correctly.",
                 "Fail", $(NotificationElement.class).first().getText());
     }
 
@@ -48,14 +49,14 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
         dateField.setDate(LocalDate.now());
 
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Current date should be ok", "OK",
+        assertEquals("Current date should be ok", "OK",
                 $(NotificationElement.class).first().getText());
         $(NotificationElement.class).first().close();
 
         dateField.setDate(LocalDate.now().minusDays(7));
 
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Last week should not be ok", "Fail",
+        assertEquals("Last week should not be ok", "Fail",
                 $(NotificationElement.class).first().getText());
     }
 
@@ -66,7 +67,7 @@ public class DateFieldFaultyInputNotValidTest extends SingleBrowserTest {
 
         $(DateFieldElement.class).first().setDate(LocalDate.now());
         $(ButtonElement.class).first().click();
-        Assert.assertEquals("Current date should be ok", "OK",
+        assertEquals("Current date should be ok", "OK",
                 $(NotificationElement.class).first().getText());
     }
 }

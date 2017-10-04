@@ -460,11 +460,15 @@ public class VSlider extends SimpleFocusablePanel
     }
 
     /**
-     * Handles the keyboard events handled by the Slider
+     * Handles the keyboard events handled by the Slider.
      *
-     * @param event
-     *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
+     * @return true if the navigation event was handled
      */
     public boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
 

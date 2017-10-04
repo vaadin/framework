@@ -27,9 +27,6 @@ import com.vaadin.data.ValueContext;
  * Simple validator to check against {@code null} value and empty {@link String}
  * value.
  * <p>
- * This validator works similar to {@link NotNullValidator} but in addition it
- * also check whether the value is not an empty String.
- * <p>
  * This validator can be suitable for fields that have been marked as required
  * with {@link HasValue#setRequiredIndicatorVisible(boolean)}.
  * <p>

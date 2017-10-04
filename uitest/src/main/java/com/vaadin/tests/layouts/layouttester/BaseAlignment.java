@@ -23,7 +23,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
  * @since
  * @author Vaadin Ltd
  */
-abstract public class BaseAlignment extends BaseLayoutTestUI {
+public abstract class BaseAlignment extends BaseLayoutTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -46,11 +46,7 @@ abstract public class BaseAlignment extends BaseLayoutTestUI {
             AbstractOrderedLayout layout = null;
             try {
                 layout = (AbstractOrderedLayout) layoutClass.newInstance();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
             layout.setMargin(false);

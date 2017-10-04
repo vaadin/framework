@@ -96,7 +96,7 @@ public class FocusableFlexTable extends FlexTable implements HasFocusHandlers,
     }
 
     /**
-     * Sets the keyboard focus to the panel
+     * Sets the keyboard focus to the panel.
      *
      * @param focus
      *            Should the panel have keyboard focus. If true the keyboard

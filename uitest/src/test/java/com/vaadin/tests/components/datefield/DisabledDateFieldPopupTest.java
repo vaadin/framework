@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.components.datefield;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -44,7 +45,7 @@ public class DisabledDateFieldPopupTest extends MultiBrowserTest {
         new Actions(driver).moveToElement(button).click()
                 .sendKeys(Keys.ARROW_DOWN).perform();
 
-        Assert.assertFalse(
+        assertFalse(
                 "Calendar popup should not be opened for disabled date field",
                 isElementPresent(By.className("v-datefield-popup")));
     }

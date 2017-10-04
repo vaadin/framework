@@ -517,7 +517,7 @@ public class VDragAndDropManager {
 
         /*
          * Remove class name indicating drag source when server visit is done
-         * iff server visit was not initiated. Otherwise it will be removed once
+         * if server visit was not initiated. Otherwise it will be removed once
          * the server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {

@@ -1,3 +1,9 @@
+---
+title: Using Vaadin In IBM Domino
+order: 7
+layout: page
+---
+
 [[using-vaadin-in-ibm-domino]]
 Using Vaadin In IBM Domino
 --------------------------
@@ -280,7 +286,7 @@ image:img/domino15.png[15]
 com.paulwithers.helloVaadinFeature.
 image:img/domino16.png[16]
 
-27. Click Next and initialise from the com.paulwithers.helloVaadin
+27. Click Next and initialize from the com.paulwithers.helloVaadin
 plugin.
 
 28. Select *File* > *New* > *Update Site Project*. Call it

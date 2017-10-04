@@ -15,6 +15,10 @@
  */
 package com.vaadin.tests.server.component.customlayout;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -26,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.ui.CustomLayout;
@@ -52,9 +55,9 @@ public class CustomLayoutTest {
         InputStreamImpl stream = new InputStreamImpl(inputStream, buffer / 2);
         new CustomLayout(stream);
 
-        Assert.assertTrue("Stream is not closed in CustomLayout CTOR ",
+        assertTrue("Stream is not closed in CustomLayout CTOR ",
                 stream.isClosed());
-        Assert.assertEquals("Number of read bytes is incorrect", bytes.length,
+        assertEquals("Number of read bytes is incorrect", bytes.length,
                 stream.getCount());
     }
 
@@ -78,7 +81,7 @@ public class CustomLayoutTest {
                 }
             }
         }
-        Assert.assertNotNull(
+        assertNotNull(
                 "Unable to find default buffer size in CustomLayout class",
                 field);
         field.setAccessible(true);

@@ -16,7 +16,9 @@
 
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -27,10 +29,10 @@ public class UIRefreshTest extends MultiBrowserTest {
     @Test
     public void testUIRefresh() {
         openTestURL();
-        Assert.assertFalse(reinitLabelExists());
+        assertFalse(reinitLabelExists());
         // Reload the page; UI.refresh should be invoked
         openTestURL();
-        Assert.assertTrue(reinitLabelExists());
+        assertTrue(reinitLabelExists());
     }
 
     private boolean reinitLabelExists() {

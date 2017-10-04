@@ -15,6 +15,9 @@
  */
 package com.vaadin.tests.design;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
@@ -24,7 +27,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -35,7 +37,7 @@ public class DesignReadInConstructorTest {
     @Test
     public void useDesignReadInConstructor() {
         DesignReadInConstructor dric = new DesignReadInConstructor();
-        Assert.assertEquals(3, dric.getComponentCount());
+        assertEquals(3, dric.getComponentCount());
     }
 
     @Test
@@ -44,16 +46,16 @@ public class DesignReadInConstructorTest {
         DesignReadInConstructor dric = new DesignReadInConstructor();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Design.write(dric, baos);
-        Document doc = Jsoup.parse(baos.toString("UTF-8"));
+        Document doc = Jsoup.parse(baos.toString(UTF_8.name()));
 
         Document d = Jsoup.parse(
                 getClass().getResourceAsStream("DesignReadInConstructor.html"),
-                "UTF-8", "");
+                UTF_8.name(), "");
         assertJsoupTreeEquals(d.body().child(0), doc.body().child(0));
     }
 
     private void assertJsoupTreeEquals(Element expected, Element actual) {
-        Assert.assertEquals(expected.tagName(), actual.tagName());
+        assertEquals(expected.tagName(), actual.tagName());
 
         Set<String> keys = new HashSet<>();
 
@@ -64,12 +66,11 @@ public class DesignReadInConstructorTest {
             keys.add(attr.getKey());
         }
         for (String attributeKey : keys) {
-            Assert.assertEquals(expected.attr(attributeKey),
+            assertEquals(expected.attr(attributeKey),
                     actual.attr(attributeKey));
         }
 
-        Assert.assertEquals(expected.children().size(),
-                actual.children().size());
+        assertEquals(expected.children().size(), actual.children().size());
         for (int i = 0; i < expected.children().size(); i++) {
             assertJsoupTreeEquals(expected.child(i), actual.child(i));
         }

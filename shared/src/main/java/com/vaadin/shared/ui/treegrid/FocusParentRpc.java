@@ -26,7 +26,7 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface FocusParentRpc extends ServerRpc {
 
     /**
-     * Focuses cell in the row parent
+     * Focuses cell in the row parent.
      *
      * @param rowKey
      *            the row key

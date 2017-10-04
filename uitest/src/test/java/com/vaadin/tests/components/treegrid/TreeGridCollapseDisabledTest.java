@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +81,7 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
         selectMenuPath("Component", "Features", "Collapse allowed",
                 "depth 1 disabled");
 
-        Assert.assertTrue("First row should still be expanded",
+        assertTrue("First row should still be expanded",
                 grid.isRowExpanded(0, 0));
 
         // Assert second row expands but does not collapse
@@ -91,21 +93,20 @@ public class TreeGridCollapseDisabledTest extends SingleBrowserTest {
     }
 
     private void assertExpandRow(int row) {
-        Assert.assertFalse(grid.isRowExpanded(row, 0));
+        assertFalse(grid.isRowExpanded(row, 0));
         grid.expandWithClick(row);
-        Assert.assertTrue(grid.isRowExpanded(row, 0));
+        assertTrue(grid.isRowExpanded(row, 0));
     }
 
     private void assertCollapseRow(int row) {
-        Assert.assertTrue("Row not expanded", grid.isRowExpanded(row, 0));
+        assertTrue("Row not expanded", grid.isRowExpanded(row, 0));
         grid.collapseWithClick(row);
-        Assert.assertFalse("Row did not collapse", grid.isRowExpanded(row, 0));
+        assertFalse("Row did not collapse", grid.isRowExpanded(row, 0));
     }
 
     private void assertCollapseRowDisabled(int row) {
-        Assert.assertTrue("Row not expanded", grid.isRowExpanded(row, 0));
+        assertTrue("Row not expanded", grid.isRowExpanded(row, 0));
         grid.collapseWithClick(row);
-        Assert.assertTrue("Row should not collapse",
-                grid.isRowExpanded(row, 0));
+        assertTrue("Row should not collapse", grid.isRowExpanded(row, 0));
     }
 }

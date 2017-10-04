@@ -21,7 +21,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
 
 /**
- * Utility class for {@link Date} operations
+ * Utility class for {@link Date} operations.
  *
  * @since 7.1
  * @author Vaadin Ltd.

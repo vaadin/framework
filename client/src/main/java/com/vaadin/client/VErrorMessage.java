@@ -22,6 +22,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
+import com.vaadin.shared.ui.ErrorLevel;
 
 public class VErrorMessage extends FlowPanel {
     public static final String CLASSNAME = "v-errormessage";
@@ -49,12 +51,24 @@ public class VErrorMessage extends FlowPanel {
 
     public void updateMessage(String htmlErrorMessage) {
         clear();
-        if (htmlErrorMessage == null || htmlErrorMessage.length() == 0) {
+        if (htmlErrorMessage == null || htmlErrorMessage.isEmpty()) {
             add(new HTML(" "));
         } else {
             // pre-formatted on the server as div per child
             add(new HTML(htmlErrorMessage));
         }
+    }
+
+    /**
+     * Sets the correct error level style name for the error message and removes
+     * all previous style names.
+     *
+     * @param errorLevel
+     *         error level
+     * @since 8.2
+     */
+    public void updateErrorLevel(ErrorLevel errorLevel) {
+        ErrorUtil.setErrorLevelStyle(getStyleElement(), CLASSNAME, errorLevel);
     }
 
     /**

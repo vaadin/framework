@@ -35,7 +35,7 @@ public class RowVisibilityChangeEvent
     private final Range visibleRows;
 
     /**
-     * Creates a new row visibility change event
+     * Creates a new row visibility change event.
      *
      * @param firstVisibleRow
      *            the index of the first visible row

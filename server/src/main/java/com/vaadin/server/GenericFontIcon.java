@@ -16,7 +16,7 @@
 package com.vaadin.server;
 
 /**
- * A generic implementation of {@link FontIcon} interface
+ * A generic implementation of {@link FontIcon} interface.
  *
  * @since 7.5.0
  * @author Vaadin Ltd
@@ -28,7 +28,7 @@ public class GenericFontIcon implements FontIcon {
 
     /**
      * Creates a new instance of GenericFontIcon with given font family and
-     * codepoint
+     * codepoint.
      *
      * @param fontFamily
      *            Name of the type face that is used to display icons
@@ -83,7 +83,7 @@ public class GenericFontIcon implements FontIcon {
 
     /**
      * Utility method for generating HTML that displays an icon from specific
-     * fontFamiliy with a given codePoint in the font
+     * fontFamiliy with a given codePoint in the font.
      *
      * @param fontFamily
      *            Name of the font family

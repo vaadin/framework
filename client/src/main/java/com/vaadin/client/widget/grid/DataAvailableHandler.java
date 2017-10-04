@@ -28,10 +28,8 @@ public interface DataAvailableHandler extends EventHandler {
     /**
      * Called when DataSource has data available. Supplied with row range.
      *
-     * @param availableRows
-     *            Range of rows available in the DataSource
-     * @return true if the command was successfully completed, false to call
-     *         again the next time new data is available
+     * @param event
+     *            The triggered event
      */
     public void onDataAvailable(DataAvailableEvent event);
 }

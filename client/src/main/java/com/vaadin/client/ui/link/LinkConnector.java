@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui.link;
 
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.user.client.DOM;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -69,20 +67,6 @@ public class LinkConnector extends AbstractComponentConnector {
 
         // Set link caption
         VCaption.setCaptionText(getWidget().captionElement, getState());
-
-        // handle error
-        if (null != getState().errorMessage) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createDiv();
-                DOM.setElementProperty(getWidget().errorIndicatorElement,
-                        "className", "v-errorindicator");
-            }
-            DOM.insertChild(getWidget().getElement(),
-                    getWidget().errorIndicatorElement, 0);
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().errorIndicatorElement.getStyle()
-                    .setDisplay(Display.NONE);
-        }
 
         if (getWidget().icon != null) {
             getWidget().anchor.removeChild(getWidget().icon.getElement());

@@ -17,7 +17,6 @@ package com.vaadin.event.selection;
 
 import java.lang.reflect.Method;
 
-import com.vaadin.data.SelectionModel;
 import com.vaadin.event.SerializableEventListener;
 import com.vaadin.util.ReflectTools;
 
@@ -32,7 +31,7 @@ import com.vaadin.util.ReflectTools;
  * @param <T>
  *            the type of the selected item
  *
- * @see SelectionModel.Single
+ * @see com.vaadin.data.SelectionModel.Single SelectionModel.Single
  * @see SingleSelectionEvent
  */
 @FunctionalInterface

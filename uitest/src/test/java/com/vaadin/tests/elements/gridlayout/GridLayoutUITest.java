@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.elements.gridlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -28,18 +30,18 @@ public class GridLayoutUITest extends SingleBrowserTest {
     @Test
     public void getRows() {
         openTestURL();
-        Assert.assertEquals(1, $(GridLayoutElement.class)
+        assertEquals(1, $(GridLayoutElement.class)
                 .id(GridLayoutUI.ONE_ROW_ONE_COL).getRowCount());
-        Assert.assertEquals(10, $(GridLayoutElement.class)
+        assertEquals(10, $(GridLayoutElement.class)
                 .id(GridLayoutUI.TEN_ROWS_TEN_COLS).getRowCount());
     }
 
     @Test
     public void getColumns() {
         openTestURL();
-        Assert.assertEquals(1, $(GridLayoutElement.class)
+        assertEquals(1, $(GridLayoutElement.class)
                 .id(GridLayoutUI.ONE_ROW_ONE_COL).getColumnCount());
-        Assert.assertEquals(10, $(GridLayoutElement.class)
+        assertEquals(10, $(GridLayoutElement.class)
                 .id(GridLayoutUI.TEN_ROWS_TEN_COLS).getColumnCount());
     }
 
@@ -50,22 +52,22 @@ public class GridLayoutUITest extends SingleBrowserTest {
                 .id(GridLayoutUI.TEN_ROWS_TEN_COLS);
 
         WebElement cell55 = grid.getCell(5, 5);
-        Assert.assertEquals("v-gridlayout-slot", cell55.getAttribute("class"));
-        Assert.assertEquals("5-5", cell55.getText());
+        assertEquals("v-gridlayout-slot", cell55.getAttribute("class"));
+        assertEquals("5-5", cell55.getText());
 
         try {
             grid.getCell(4, 4);
-            Assert.fail("Should throw for empty cell");
+            fail("Should throw for empty cell");
         } catch (NoSuchElementException e) {
         }
 
         WebElement cell77 = grid.getCell(7, 7);
-        Assert.assertEquals("v-gridlayout-slot", cell77.getAttribute("class"));
-        Assert.assertEquals("7-7 8-8", cell77.getText());
+        assertEquals("v-gridlayout-slot", cell77.getAttribute("class"));
+        assertEquals("7-7 8-8", cell77.getText());
 
         try {
             grid.getCell(7, 8);
-            Assert.fail("Should throw for merged cell");
+            fail("Should throw for merged cell");
         } catch (NoSuchElementException e) {
         }
     }

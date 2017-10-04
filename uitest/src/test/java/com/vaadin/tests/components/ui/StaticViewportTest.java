@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -31,7 +32,6 @@ public class StaticViewportTest extends SingleBrowserTest {
         WebElement viewportElement = findElement(
                 By.cssSelector("meta[name=viewport]"));
 
-        Assert.assertEquals("myViewport",
-                viewportElement.getAttribute("content"));
+        assertEquals("myViewport", viewportElement.getAttribute("content"));
     }
 }

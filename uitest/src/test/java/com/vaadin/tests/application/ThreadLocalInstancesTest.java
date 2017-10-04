@@ -1,6 +1,7 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -30,6 +31,6 @@ public class ThreadLocalInstancesTest extends MultiBrowserTest {
     }
 
     private void assertLogText(String expected, int index) {
-        Assert.assertEquals("Incorrect log text,", expected, getLogRow(index));
+        assertEquals("Incorrect log text,", expected, getLogRow(index));
     }
 }

@@ -44,7 +44,7 @@ import elemental.json.JsonObject;
 
 /**
  * Provides a connection to the /UIDL url on the server and knows how to send
- * messages to that end point
+ * messages to that end point.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -118,7 +118,7 @@ public class XhrConnection {
         }
 
         /**
-         * Sets the payload which was sent to the server
+         * Sets the payload which was sent to the server.
          *
          * @param payload
          *            the payload which was sent to the server
@@ -226,7 +226,7 @@ public class XhrConnection {
     }
 
     /**
-     * Retrieves the URI to use when sending RPCs to the server
+     * Retrieves the URI to use when sending RPCs to the server.
      *
      * @return The URI to use for server messages.
      */

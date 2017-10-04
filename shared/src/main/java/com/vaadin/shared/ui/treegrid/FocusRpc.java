@@ -27,7 +27,7 @@ import com.vaadin.shared.communication.ClientRpc;
 public interface FocusRpc extends ClientRpc {
 
     /**
-     * Focuses a cell
+     * Focuses a cell.
      *
      * @param rowIndex
      *            the row index

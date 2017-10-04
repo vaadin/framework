@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TableElement;
@@ -12,7 +13,7 @@ public class SelectableEditableTest extends MultiBrowserTest {
         openTestURL();
         TableElement table = $(TableElement.class).first();
         table.getCell(0, 1).click(70, 12);
-        Assert.assertTrue("Element does not have the 'v-selected' css class",
+        assertTrue("Element does not have the 'v-selected' css class",
                 hasCssClass(table.getRow(0), "v-selected"));
     }
 }

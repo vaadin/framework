@@ -39,8 +39,8 @@ public interface FreeformStatementDelegate extends FreeformQueryDelegate {
      *
      * @param offset
      *            the first record (row) to fetch.
-     * @param pagelength
-     *            the number of records (rows) to fetch. 0 means all records
+     * @param limit
+     *            the limit of records (rows) to fetch. 0 means all records
      *            starting from offset.
      */
     public StatementHelper getQueryStatement(int offset, int limit)

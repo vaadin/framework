@@ -36,7 +36,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
         HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers, Focusable {
 
     /**
-     * Constructor
+     * Constructor.
      */
     public FocusableFlowPanel() {
         // make focusable, as we don't need access key magic we don't need to
@@ -108,7 +108,7 @@ public class FocusableFlowPanel extends FlowPanel implements HasFocusHandlers,
     }
 
     /**
-     * Focus the panel
+     * Focus the panel.
      */
     @Override
     public void focus() {

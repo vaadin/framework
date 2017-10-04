@@ -175,7 +175,7 @@ public class DragAndDropWrapper extends CustomComponent
 
     public enum DragStartMode {
         /**
-         * {@link DragAndDropWrapper} does not start drag events at all
+         * {@link DragAndDropWrapper} does not start drag events at all.
          */
         NONE,
         /**
@@ -459,10 +459,6 @@ public class DragAndDropWrapper extends CustomComponent
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
             }
 
             @Override

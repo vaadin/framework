@@ -358,7 +358,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Gecko engine
+     * Tests if the browser is using the Gecko engine.
      *
      * @return true if it is Gecko, false otherwise
      */
@@ -367,7 +367,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the WebKit engine
+     * Tests if the browser is using the WebKit engine.
      *
      * @return true if it is WebKit, false otherwise
      */
@@ -376,7 +376,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Presto engine
+     * Tests if the browser is using the Presto engine.
      *
      * @return true if it is Presto, false otherwise
      */
@@ -385,7 +385,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Trident engine
+     * Tests if the browser is using the Trident engine.
      *
      * @since 7.1.7
      * @return true if it is Trident, false otherwise

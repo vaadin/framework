@@ -210,7 +210,7 @@ public class ComboBoxConnector extends AbstractListingConnector
                 page = 0;
             }
         }
-        int adjustment = getWidget().nullSelectionAllowed && "".equals(filter)
+        int adjustment = getWidget().nullSelectionAllowed && filter.isEmpty()
                 ? 1 : 0;
         int startIndex = Math.max(0,
                 page * getWidget().pageLength - adjustment);

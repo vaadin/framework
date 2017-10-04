@@ -18,8 +18,8 @@ package com.vaadin.v7.ui;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -193,7 +193,7 @@ public class Upload extends AbstractLegacyComponent
 
         target.addAttribute("nextid", nextid);
 
-        // Post file to this strean variable
+        // Post file to this stream variable
         target.addVariable(this, "action", getStreamVariable());
 
     }
@@ -242,9 +242,9 @@ public class Upload extends AbstractLegacyComponent
                     "uploadStarted", new Class[] { StartedEvent.class });
             UPLOAD_SUCCEEDED_METHOD = SucceededListener.class.getDeclaredMethod(
                     "uploadSucceeded", new Class[] { SucceededEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in Upload");
         }
     }
@@ -614,16 +614,16 @@ public class Upload extends AbstractLegacyComponent
     public interface SucceededListener extends Serializable {
 
         /**
-         * Upload successfull..
+         * Upload successful.
          *
          * @param event
-         *            the Upload successfull event.
+         *            the Upload successful event.
          */
         public void uploadSucceeded(SucceededEvent event);
     }
 
     /**
-     * Listener for {@link ChangeEvent}
+     * Listener for {@link ChangeEvent}.
      *
      * @since 7.2
      */
@@ -829,7 +829,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     /**
-     * Adds a filename change event listener
+     * Adds a filename change event listener.
      *
      * @param listener
      *            the Listener to add, not null
@@ -840,7 +840,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     /**
-     * Removes a filename change event listener
+     * Removes a filename change event listener.
      *
      * @param listener
      *            the listener to be removed
@@ -925,9 +925,7 @@ public class Upload extends AbstractLegacyComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners
-                    .iterator(); it.hasNext();) {
-                ProgressListener l = it.next();
+            for (ProgressListener l : progressListeners) {
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -1050,7 +1048,7 @@ public class Upload extends AbstractLegacyComponent
     @Deprecated
     public interface ProgressListener extends Serializable {
         /**
-         * Updates progress to listener
+         * Updates progress to listener.
          *
          * @param readBytes
          *            bytes transferred
@@ -1201,7 +1199,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     @Override
-    public java.util.Collection<?> getListeners(java.lang.Class<?> eventType) {
+    public Collection<?> getListeners(Class<?> eventType) {
         if (StreamingProgressEvent.class.isAssignableFrom(eventType)) {
             if (progressListeners == null) {
                 return Collections.EMPTY_LIST;

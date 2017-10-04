@@ -15,29 +15,31 @@
  */
 package com.vaadin.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 public class RichTextAreaConstructorTest {
 
     @Test
     public void initiallyEmpty() {
         RichTextArea richTextArea = new RichTextArea();
-        Assert.assertTrue(richTextArea.isEmpty());
+        assertTrue(richTextArea.isEmpty());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
         RichTextArea richTextArea = new RichTextArea(null, "foobar");
-        Assert.assertFalse(richTextArea.isEmpty());
+        assertFalse(richTextArea.isEmpty());
 
         richTextArea.clear();
-        Assert.assertTrue(richTextArea.isEmpty());
+        assertTrue(richTextArea.isEmpty());
     }
 
     @Test

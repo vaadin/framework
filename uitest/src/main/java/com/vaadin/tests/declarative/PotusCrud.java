@@ -103,7 +103,6 @@ public class PotusCrud extends VerticalLayout {
         try {
             fg.commit();
         } catch (CommitException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

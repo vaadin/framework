@@ -36,7 +36,7 @@ public interface LayoutEvents {
                 LayoutClickEvent.class);
 
         /**
-         * Layout has been clicked
+         * Layout has been clicked.
          *
          * @param event
          *            Component click event.

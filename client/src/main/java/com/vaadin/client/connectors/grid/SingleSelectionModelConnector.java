@@ -82,6 +82,11 @@ public class SingleSelectionModelConnector
             return isSelectionAllowed;
         }
 
+        @Override
+        public boolean isMultiSelectionAllowed() {
+            return false;
+        }
+
         /**
          * Sets whether it's allowed to deselect the selected row through the
          * UI. Deselection is allowed by default.

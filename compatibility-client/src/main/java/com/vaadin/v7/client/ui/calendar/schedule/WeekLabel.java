@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.calendar.schedule;
 import com.google.gwt.user.client.ui.Label;
 
 /**
- * A label in the {@link SimpleWeekToolbar}
+ * A label in the {@link SimpleWeekToolbar}.
  *
  * @since 7.1
  */

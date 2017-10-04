@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * <code>UserError</code> is a controlled error occurred in application. User
  * errors are occur in normal usage of the application and guide the user.

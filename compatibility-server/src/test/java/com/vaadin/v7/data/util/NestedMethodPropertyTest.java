@@ -1,6 +1,9 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -10,7 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -140,8 +142,8 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<String> nameProperty = new NestedMethodProperty<String>(
                 vaadin, "name");
 
-        Assert.assertEquals(String.class, nameProperty.getType());
-        Assert.assertEquals("Vaadin", nameProperty.getValue());
+        assertEquals(String.class, nameProperty.getType());
+        assertEquals("Vaadin", nameProperty.getValue());
     }
 
     @Test
@@ -149,8 +151,8 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<Person> managerProperty = new NestedMethodProperty<Person>(
                 vaadin, "manager");
 
-        Assert.assertEquals(Person.class, managerProperty.getType());
-        Assert.assertEquals(joonas, managerProperty.getValue());
+        assertEquals(Person.class, managerProperty.getType());
+        assertEquals(joonas, managerProperty.getValue());
     }
 
     @Test
@@ -168,26 +170,25 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<Boolean> booleanProperty = new NestedMethodProperty<Boolean>(
                 vaadin, "manager.address.boolean");
 
-        Assert.assertEquals(String.class, managerNameProperty.getType());
-        Assert.assertEquals("Joonas", managerNameProperty.getValue());
+        assertEquals(String.class, managerNameProperty.getType());
+        assertEquals("Joonas", managerNameProperty.getValue());
 
-        Assert.assertEquals(Address.class, addressProperty.getType());
-        Assert.assertEquals(oldMill, addressProperty.getValue());
+        assertEquals(Address.class, addressProperty.getType());
+        assertEquals(oldMill, addressProperty.getValue());
 
-        Assert.assertEquals(String.class, streetProperty.getType());
-        Assert.assertEquals("Ruukinkatu 2-4", streetProperty.getValue());
+        assertEquals(String.class, streetProperty.getType());
+        assertEquals("Ruukinkatu 2-4", streetProperty.getValue());
 
-        Assert.assertEquals(Integer.class,
-                postalCodePrimitiveProperty.getType());
-        Assert.assertEquals(Integer.valueOf(20540),
+        assertEquals(Integer.class, postalCodePrimitiveProperty.getType());
+        assertEquals(Integer.valueOf(20540),
                 postalCodePrimitiveProperty.getValue());
 
-        Assert.assertEquals(Integer.class, postalCodeObjectProperty.getType());
-        Assert.assertEquals(Integer.valueOf(20540),
+        assertEquals(Integer.class, postalCodeObjectProperty.getType());
+        assertEquals(Integer.valueOf(20540),
                 postalCodeObjectProperty.getValue());
 
-        Assert.assertEquals(Boolean.class, booleanProperty.getType());
-        Assert.assertEquals(Boolean.TRUE, booleanProperty.getValue());
+        assertEquals(Boolean.class, booleanProperty.getType());
+        assertEquals(Boolean.TRUE, booleanProperty.getValue());
     }
 
     @Test
@@ -274,8 +275,8 @@ public class NestedMethodPropertyTest {
         assertNull(streetProperty.getValue());
 
         vaadin.setManager(joonas);
-        Assert.assertEquals("Joonas", managerNameProperty.getValue());
-        Assert.assertNull(streetProperty.getValue());
+        assertEquals("Joonas", managerNameProperty.getValue());
+        assertNull(streetProperty.getValue());
 
     }
 
@@ -293,20 +294,26 @@ public class NestedMethodPropertyTest {
                 vaadin, "manager.address.postalCodeObject");
 
         managerNameProperty.setValue("Joonas L");
-        Assert.assertEquals("Joonas L", joonas.getName());
+        assertEquals("Joonas L", joonas.getName());
         streetProperty.setValue("Ruukinkatu");
-        Assert.assertEquals("Ruukinkatu", oldMill.getStreet());
+        assertEquals("Ruukinkatu", oldMill.getStreet());
         postalCodePrimitiveProperty.setValue(0);
         postalCodeObjectProperty.setValue(1);
-        Assert.assertEquals(0, oldMill.getPostalCodePrimitive());
-        Assert.assertEquals(Integer.valueOf(1), oldMill.getPostalCodeObject());
+        assertEquals(0, oldMill.getPostalCodePrimitive());
+        assertEquals(Integer.valueOf(1), oldMill.getPostalCodeObject());
 
         postalCodeObjectProperty.setValue(null);
-        Assert.assertNull(oldMill.getPostalCodeObject());
+        assertNull(oldMill.getPostalCodeObject());
 
         Address address2 = new Address("Other street", 12345);
         addressProperty.setValue(address2);
-        Assert.assertEquals("Other street", streetProperty.getValue());
+        assertEquals("Other street", streetProperty.getValue());
+
+        Address address3 = null;
+        addressProperty.setValue(address3);
+        assertEquals(null, addressProperty.getValue());
+        streetProperty.setValue("Ruukinkatu");
+        assertEquals(null, streetProperty.getValue());
     }
 
     @Test
@@ -319,7 +326,7 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<String> property2 = (NestedMethodProperty<String>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Assert.assertEquals("Ruukinkatu 2-4", property2.getValue());
+        assertEquals("Ruukinkatu 2-4", property2.getValue());
     }
 
     @Test
@@ -334,7 +341,7 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<String> property2 = (NestedMethodProperty<String>) new ObjectInputStream(
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
-        Assert.assertNull(property2.getValue());
+        assertNull(property2.getValue());
     }
 
     @Test
@@ -344,8 +351,8 @@ public class NestedMethodPropertyTest {
         NestedMethodProperty<Boolean> booleanProperty = new NestedMethodProperty<Boolean>(
                 vaadin, "manager.address.boolean");
 
-        Assert.assertFalse(streetProperty.isReadOnly());
-        Assert.assertTrue(booleanProperty.isReadOnly());
+        assertFalse(streetProperty.isReadOnly());
+        assertTrue(booleanProperty.isReadOnly());
     }
 
     @Test
@@ -358,9 +365,9 @@ public class NestedMethodPropertyTest {
         Team someteam = new Team("The team", someone);
         streetProperty.setInstance(someteam);
 
-        Assert.assertEquals("The street", streetProperty.getValue());
-        Assert.assertEquals("Ruukinkatu 2-4", vaadin.getManager().getAddress()
-                .getStreet());
+        assertEquals("The street", streetProperty.getValue());
+        assertEquals("Ruukinkatu 2-4",
+                vaadin.getManager().getAddress().getStreet());
     }
 
     @Test(expected = IllegalArgumentException.class)

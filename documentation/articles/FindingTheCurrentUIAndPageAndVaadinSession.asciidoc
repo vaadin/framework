@@ -1,3 +1,9 @@
+---
+title: Finding The Current UI And Page And Vaadin Session
+order: 18
+layout: page
+---
+
 [[finding-the-current-ui-and-page-and-vaadin-session]]
 Finding the current UI and page and vaadin session
 --------------------------------------------------
@@ -41,7 +47,7 @@ public void buttonClick(ClickEvent event) {
 }
 ....
 
-And finally similiarly for `Page`. For instance adding a browser window
+And finally similarly for `Page`. For instance adding a browser window
 resize listener can be added like this:
 
 [source,java]

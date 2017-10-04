@@ -111,17 +111,17 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
 
             if (isAnimatingIn) {
-                styleBuf.append(" ");
+                styleBuf.append(' ');
                 styleBuf.append(primaryName);
-                styleBuf.append("-");
+                styleBuf.append('-');
                 styleBuf.append(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
             }
 
             if (ComponentStateUtil.hasStyles(getState())) {
                 for (String style : getState().styles) {
-                    styleBuf.append(" ");
+                    styleBuf.append(' ');
                     styleBuf.append(primaryName);
-                    styleBuf.append("-");
+                    styleBuf.append('-');
                     styleBuf.append(style);
                 }
             }

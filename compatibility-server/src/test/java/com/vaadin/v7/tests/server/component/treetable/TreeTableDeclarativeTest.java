@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.treetable;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.ui.declarative.DesignException;
@@ -125,7 +126,7 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
 
         try {
             read(design);
-            Assert.fail("Malformed hierarchy should fail: " + hierarchy);
+            fail("Malformed hierarchy should fail: " + hierarchy);
         } catch (DesignException expected) {
         }
     }
@@ -135,10 +136,10 @@ public class TreeTableDeclarativeTest extends TableDeclarativeTest {
         super.compareBody(read, expected);
 
         for (Object itemId : read.getItemIds()) {
-            Assert.assertEquals("parent of item " + itemId,
+            assertEquals("parent of item " + itemId,
                     ((TreeTable) expected).getParent(itemId),
                     ((TreeTable) read).getParent(itemId));
-            Assert.assertEquals("collapsed status of item " + itemId,
+            assertEquals("collapsed status of item " + itemId,
                     ((TreeTable) expected).isCollapsed(itemId),
                     ((TreeTable) read).isCollapsed(itemId));
         }

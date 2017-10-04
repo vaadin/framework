@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -59,7 +60,6 @@ public class TooltipModesTest extends TooltipTest {
         WebElement tooltip = getTooltip();
         WebElement tooltipContent = tooltip
                 .findElement(By.className("v-tooltip-text"));
-        Assert.assertEquals(tooltipText,
-                tooltipContent.getAttribute("innerHTML"));
+        assertEquals(tooltipText, tooltipContent.getAttribute("innerHTML"));
     }
 }

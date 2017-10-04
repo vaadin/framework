@@ -121,6 +121,10 @@ public class MultiSelectionModelConnector
             return isSelectionAllowed;
         }
 
+        @Override
+        public boolean isMultiSelectionAllowed() {
+            return true;
+        }
     }
 
     @Override

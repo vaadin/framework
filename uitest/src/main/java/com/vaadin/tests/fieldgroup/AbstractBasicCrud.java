@@ -50,7 +50,7 @@ import com.vaadin.v7.ui.TextField;
 public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
 
     protected AbstractForm form;
-    protected static String[] columns = new String[] { "firstName", "lastName",
+    protected static String[] columns = { "firstName", "lastName",
             "gender", "birthDate", "age", "alive", "address.streetAddress",
             "address.postalCode", "address.city", "address.country" };
     protected BeanItemContainer<ComplexPerson> container = ComplexPerson

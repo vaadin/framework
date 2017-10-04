@@ -13,13 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.embedded;
+package com.vaadin.shared.ui.notification;
 
-import java.io.Serializable;
+import com.vaadin.shared.communication.ServerRpc;
 
-@Deprecated
-public class EmbeddedConstants implements Serializable {
-    @Deprecated
-    public static final String ALTERNATE_TEXT = "alt";
+/**
+ * Client to server RPC interface for Notification.
+ *
+ * @author Vaadin Ltd.
+ *
+ * @since 8.2
+ */
+public interface NotificationServerRpc extends ServerRpc {
 
+    void closed();
 }

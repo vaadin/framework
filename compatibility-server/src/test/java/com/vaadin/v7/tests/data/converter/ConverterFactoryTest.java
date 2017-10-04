@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinSession;
@@ -85,7 +86,7 @@ public class ConverterFactoryTest {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 
     @Test
@@ -100,7 +101,7 @@ public class ConverterFactoryTest {
         tf.setConverter(Integer.class);
         // The application converter always returns 42. Current application is
         // null
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 
     @Test
@@ -121,6 +122,6 @@ public class ConverterFactoryTest {
 
         // The application converter always returns 42. Application.getCurrent()
         // should not be used
-        Assert.assertEquals(42, tf.getConvertedValue());
+        assertEquals(42, tf.getConvertedValue());
     }
 }

@@ -59,7 +59,7 @@ import elemental.json.JsonValue;
 public class LegacyCommunicationManager implements Serializable {
 
     // TODO Refactor (#11410)
-    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<>();
+    private final Map<Integer, ClientCache> uiToClientCache = new HashMap<>();
 
     /**
      * The session this communication manager is used for
@@ -323,7 +323,7 @@ public class LegacyCommunicationManager implements Serializable {
         }
     }
 
-    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
+    private final Map<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
     private int nextTypeKey = 0;
 
     /**

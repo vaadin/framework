@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -46,14 +48,14 @@ public class TableDragColumnTest extends MultiBrowserTest {
         new Actions(getDriver()).moveToElement(dragged).clickAndHold()
                 .moveByOffset(-6, 0).perform();
 
-        Assert.assertTrue("No drag element visible",
+        assertTrue("No drag element visible",
                 isElementPresent(By.className("v-table-header-drag")));
 
         WebElement dragImage = findElement(By.className("v-table-header-drag"));
         String cellContent = dragged.getText();
-        Assert.assertEquals("Drag image had different content than header cell",
+        assertEquals("Drag image had different content than header cell",
                 cellContent, dragImage.getText());
-        Assert.assertEquals("Drag image had different icon", imgSrc,
+        assertEquals("Drag image had different icon", imgSrc,
                 dragImage.findElement(By.tagName("img")).getAttribute("src"));
 
         TableHeaderElement target = table.getHeaderCell(3);
@@ -62,9 +64,9 @@ public class TableDragColumnTest extends MultiBrowserTest {
                 .perform();
 
         dragged = table.getHeaderCell(3);
-        Assert.assertEquals("Column was not dropped where expected.",
-                cellContent, dragged.getText());
-        Assert.assertEquals("Drag image had different icon", imgSrc,
+        assertEquals("Column was not dropped where expected.", cellContent,
+                dragged.getText());
+        assertEquals("Drag image had different icon", imgSrc,
                 dragged.findElement(By.tagName("img")).getAttribute("src"));
     }
 
@@ -89,14 +91,14 @@ public class TableDragColumnTest extends MultiBrowserTest {
         new Actions(getDriver()).moveToElement(dragged).clickAndHold()
                 .moveByOffset(-6, 0).perform();
 
-        Assert.assertTrue("No drag element visible",
+        assertTrue("No drag element visible",
                 isElementPresent(By.className("v-table-header-drag")));
 
         WebElement dragImage = findElement(By.className("v-table-header-drag"));
         String cellContent = dragged.getText();
-        Assert.assertEquals("Drag image had different content than header cell",
+        assertEquals("Drag image had different content than header cell",
                 cellContent, dragImage.getText());
-        Assert.assertTrue("Missing CSS class " + styleName,
+        assertTrue("Missing CSS class " + styleName,
                 hasCssClass(dragImage, styleName));
 
         new Actions(getDriver()).release().perform();

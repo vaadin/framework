@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.optiongroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -40,7 +41,7 @@ public class ReadOnlyOptionGroupTest extends MultiBrowserTest {
 
         assertNoErrorNotifications();
 
-        Assert.assertFalse(
+        assertFalse(
                 "Radio button in option group is still disabled "
                         + "after unset reaonly",
                 isElementPresent(By.className("v-radiobutton-disabled")));

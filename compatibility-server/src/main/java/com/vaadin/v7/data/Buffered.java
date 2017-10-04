@@ -21,9 +21,9 @@ import java.io.Serializable;
 import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 
 /**
@@ -46,7 +46,8 @@ import com.vaadin.v7.data.Validator.InvalidValueException;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated As of 8.0, no replacement available, see {@link Binder#writeBean(Object)}, {@link Binder#clearFields()}
+ * @deprecated As of 8.0, no replacement available, see
+ *             {@link Binder#writeBean(Object)}, {@link Binder#clearFields()}
  *
  */
 @Deprecated
@@ -94,7 +95,7 @@ public interface Buffered extends Serializable {
     public void setBuffered(boolean buffered);
 
     /**
-     * Checks the buffered mode
+     * Checks the buffered mode.
      *
      * @return true if buffered mode is on, false otherwise
      * @since 7.0

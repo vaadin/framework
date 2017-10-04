@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.server.component.audio;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.shared.ui.audio.AudioState;
@@ -30,7 +31,7 @@ public class AudioStateTest {
     public void getState_audioHasCustomState() {
         TestAudio audio = new TestAudio();
         AudioState state = audio.getState();
-        Assert.assertEquals("Unexpected state class", AudioState.class,
+        assertEquals("Unexpected state class", AudioState.class,
                 state.getClass());
     }
 
@@ -38,14 +39,14 @@ public class AudioStateTest {
     public void getPrimaryStyleName_audioHasCustomPrimaryStyleName() {
         Audio audio = new Audio();
         AudioState state = new AudioState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, audio.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                audio.getPrimaryStyleName());
     }
 
     @Test
     public void audioStateHasCustomPrimaryStyleName() {
         AudioState state = new AudioState();
-        Assert.assertEquals("Unexpected primary style name", "v-audio",
+        assertEquals("Unexpected primary style name", "v-audio",
                 state.primaryStyleName);
     }
 

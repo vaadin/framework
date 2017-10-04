@@ -30,7 +30,7 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Handles sending of heartbeats to the server and reacting to the response
+ * Handles sending of heartbeats to the server and reacting to the response.
  *
  * @since 7.2
  * @author Vaadin Ltd
@@ -53,9 +53,9 @@ public class Heartbeat {
     }
 
     /**
-     * Initializes the heartbeat for the given application connection
+     * Initializes the heartbeat for the given application connection.
      *
-     * @param connection
+     * @param applicationConnection
      *            the connection
      */
     public void init(ApplicationConnection applicationConnection) {
@@ -83,7 +83,7 @@ public class Heartbeat {
     }
 
     /**
-     * Sends a heartbeat to the server
+     * Sends a heartbeat to the server.
      */
     public void send() {
         timer.cancel();

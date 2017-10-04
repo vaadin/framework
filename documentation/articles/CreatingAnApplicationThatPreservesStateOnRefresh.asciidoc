@@ -1,3 +1,9 @@
+---
+title: Creating An Application That Preserves State On Refresh
+order: 19
+layout: page
+---
+
 [[creating-an-application-that-preserves-state-on-refresh]]
 Creating an application that preserves state on refresh
 -------------------------------------------------------

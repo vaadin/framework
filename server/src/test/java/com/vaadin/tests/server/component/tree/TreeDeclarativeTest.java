@@ -1,6 +1,7 @@
 package com.vaadin.tests.server.component.tree;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.TreeData;
@@ -32,28 +33,26 @@ public class TreeDeclarativeTest
         Tree<Person> tree = new Tree<>();
         tree.setTreeData(data);
         tree.setItemCaptionGenerator(item -> item.getFirstName());
-        
-        String designString = String.format("<%s>"
-                + "<node item='%s'>%s</node>"
-                + "<node item='%s' parent='%s'>%s</node>"
-                + "<node item='%s' parent='%s'>%s</node>"
-                + "<node item='%s' parent='%s'>%s</node>"
-                + "<node item='%s'>%s</node>"
-                + "</%s>", getComponentTag(),
-                person1.toString(), person1.getFirstName(),
+
+        String designString = String.format(
+                "<%s>" + "<node item='%s'>%s</node>"
+                        + "<node item='%s' parent='%s'>%s</node>"
+                        + "<node item='%s' parent='%s'>%s</node>"
+                        + "<node item='%s' parent='%s'>%s</node>"
+                        + "<node item='%s'>%s</node>" + "</%s>",
+                getComponentTag(), person1.toString(), person1.getFirstName(),
                 person2.toString(), person1.toString(), person2.getFirstName(),
                 person3.toString(), person1.toString(), person3.getFirstName(),
                 person4.toString(), person3.toString(), person4.getFirstName(),
-                person5.toString(), person5.getFirstName(),
-                getComponentTag());
+                person5.toString(), person5.getFirstName(), getComponentTag());
 
         testWrite(designString, tree, true);
         Tree<String> readTree = testRead(designString, tree);
-        Assert.assertEquals(2, readTree.getDataProvider()
+        assertEquals(2, readTree.getDataProvider()
                 .getChildCount(new HierarchicalQuery<>(null, null)));
-        Assert.assertEquals(2, readTree.getDataProvider().getChildCount(
+        assertEquals(2, readTree.getDataProvider().getChildCount(
                 new HierarchicalQuery<>(null, person1.toString())));
-        Assert.assertEquals(1, readTree.getDataProvider().getChildCount(
+        assertEquals(1, readTree.getDataProvider().getChildCount(
                 new HierarchicalQuery<>(null, person3.toString())));
     }
 
@@ -154,11 +153,11 @@ public class TreeDeclarativeTest
     @Override
     protected void assertEquals(String message, Object o1, Object o2) {
         if (o1 instanceof ItemCaptionGenerator) {
-            Assert.assertTrue(o2 instanceof ItemCaptionGenerator);
+            assertTrue(o2 instanceof ItemCaptionGenerator);
             return;
         }
         if (o1 instanceof IconGenerator) {
-            Assert.assertTrue(o2 instanceof IconGenerator);
+            assertTrue(o2 instanceof IconGenerator);
             return;
         }
         super.assertEquals(message, o1, o2);

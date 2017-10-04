@@ -180,7 +180,7 @@ public interface SelectionModel<T> {
             /**
              * Checks whether or not a batch has been started.
              *
-             * @return <code>true</code> iff a batch has been started
+             * @return <code>true</code> if a batch has been started
              */
             public boolean isBeingBatchSelected();
 

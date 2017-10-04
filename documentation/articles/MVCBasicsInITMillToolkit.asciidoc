@@ -1,3 +1,9 @@
+---
+title: MVC Basics In IT Mill Toolkit
+order: 24
+layout: page
+---
+
 [[mvc-basics-in-itmill-toolkit]]
 MVC Basics in IT Mill Toolkit
 -----------------------------
@@ -7,7 +13,7 @@ The Goal
 
 image:img/moduleDesign.jpg[1]
 
-We want to create a simple UI following the MVC pattern using the IT Mill Toolkit. The project components need to have low coupling and follow an enterprise design. In our example we also want to retrieve information from a database and display it in the view. The different parts of the UI need also to be able to communicate with eachother.
+We want to create a simple UI following the MVC pattern using the IT Mill Toolkit. The project components need to have low coupling and follow an enterprise design. In our example we also want to retrieve information from a database and display it in the view. The different parts of the UI need also to be able to communicate with each other.
 
 We have divided the project in two layers; A UI layer, which purpose is to display information to the user, and a Data layer which has no knowledge of the Toolkit and which is only responsible for retrieving and storing data. The reason for dividing the project up in these layers is so that, if we choose, we can easily use multiple servers.
 

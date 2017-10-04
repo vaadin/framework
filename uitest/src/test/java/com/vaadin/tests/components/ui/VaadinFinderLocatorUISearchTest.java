@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.UIElement;
@@ -38,6 +39,6 @@ public class VaadinFinderLocatorUISearchTest extends MultiBrowserTest {
     public void getUIElementTest() {
         openTestURL();
         UIElement ui = $(UIElement.class).first();
-        Assert.assertNotNull("Couldn't find the UI Element on the page", ui);
+        assertNotNull("Couldn't find the UI Element on the page", ui);
     }
 }

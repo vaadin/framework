@@ -15,12 +15,13 @@
  */
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.DefaultConverterFactory;
@@ -105,18 +106,18 @@ public class DefaultConverterFactoryTest {
 
         U tConvertedToU = factory.createConverter(tClass, uClass)
                 .convertToModel(t, uClass, Locale.ENGLISH);
-        Assert.assertEquals("Incorrect type of value converted from "
+        assertEquals("Incorrect type of value converted from "
                 + tClass.getSimpleName() + " to " + uClass.getSimpleName(),
                 uClass, tConvertedToU.getClass());
-        Assert.assertEquals("Incorrect conversion of " + t + " to "
+        assertEquals("Incorrect conversion of " + t + " to "
                 + uClass.getSimpleName(), u, tConvertedToU);
 
         T uConvertedToT = factory.createConverter(uClass, tClass)
                 .convertToModel(u, tClass, Locale.ENGLISH);
-        Assert.assertEquals("Incorrect type of value converted from "
+        assertEquals("Incorrect type of value converted from "
                 + uClass.getSimpleName() + " to " + tClass.getSimpleName(),
                 tClass, uConvertedToT.getClass());
-        Assert.assertEquals("Incorrect conversion of " + u + " to "
+        assertEquals("Incorrect conversion of " + u + " to "
                 + tClass.getSimpleName(), t, uConvertedToT);
 
     }

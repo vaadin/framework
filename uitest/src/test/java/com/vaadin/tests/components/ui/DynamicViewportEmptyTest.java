@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.ui;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -45,7 +46,7 @@ public class DynamicViewportEmptyTest extends MultiBrowserTest {
         List<WebElement> viewportElements = findElements(
                 By.cssSelector("meta[name=viewport]"));
 
-        Assert.assertTrue("There should be no viewport tags",
+        assertTrue("There should be no viewport tags",
                 viewportElements.isEmpty());
     }
 

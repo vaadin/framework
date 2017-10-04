@@ -279,9 +279,9 @@ public class DDTest2 extends TestBase {
 
     }
 
-    private final static ThemeResource FOLDER = new ThemeResource(
+    private static final ThemeResource FOLDER = new ThemeResource(
             "../runo/icons/16/folder.png");
-    private final static ThemeResource DOC = new ThemeResource(
+    private static final ThemeResource DOC = new ThemeResource(
             "../runo/icons/16/document.png");
 
     private void popuplateTrees() {

@@ -3,9 +3,9 @@ package com.vaadin.v7.data.fieldgroup;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,7 +67,7 @@ public class FieldGroupTest {
         group.bind(field, "name");
 
         Property propertyDataSource = field.getPropertyDataSource();
-        Assert.assertTrue(
+        assertTrue(
                 "Custom implementation of transactional property "
                         + "has not been used",
                 propertyDataSource instanceof TransactionalPropertyImpl);

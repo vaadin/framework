@@ -89,7 +89,7 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
         panelBLayout.addComponent(layoutB);
 
         // Create grid layout
-        final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+        final int gridSize = (int) Math.sqrt(componentCountC);
         VerticalLayout panelGLayout = new VerticalLayout();
         panelGLayout.setMargin(true);
         final Panel panelG = new Panel("Panel containing grid layout ("

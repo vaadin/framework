@@ -1,10 +1,15 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,20 +62,20 @@ public class PropertySetItemTest {
     @Test
     public void testEmptyItem() {
         PropertysetItem item = createPropertySetItem();
-        Assert.assertNotNull(item.getItemPropertyIds());
-        Assert.assertEquals(0, item.getItemPropertyIds().size());
+        assertNotNull(item.getItemPropertyIds());
+        assertEquals(0, item.getItemPropertyIds().size());
     }
 
     @Test
     public void testGetProperty() {
         PropertysetItem item = createPropertySetItem();
 
-        Assert.assertNull(item.getItemProperty(ID1));
+        assertNull(item.getItemProperty(ID1));
 
         item.addItemProperty(ID1, prop1);
 
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
-        Assert.assertNull(item.getItemProperty(ID2));
+        assertEquals(prop1, item.getItemProperty(ID1));
+        assertNull(item.getItemProperty(ID2));
     }
 
     @Test
@@ -78,10 +83,10 @@ public class PropertySetItemTest {
         PropertysetItem item = createPropertySetItem();
 
         item.addItemProperty(ID1, prop1);
-        Assert.assertEquals(1, item.getItemPropertyIds().size());
+        assertEquals(1, item.getItemPropertyIds().size());
         Object firstValue = item.getItemPropertyIds().iterator().next();
-        Assert.assertEquals(ID1, firstValue);
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(ID1, firstValue);
+        assertEquals(prop1, item.getItemProperty(ID1));
     }
 
     @Test
@@ -89,16 +94,16 @@ public class PropertySetItemTest {
         PropertysetItem item = createPropertySetItem();
 
         item.addItemProperty(ID1, prop1);
-        Assert.assertEquals(1, item.getItemPropertyIds().size());
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(1, item.getItemPropertyIds().size());
+        assertEquals(prop1, item.getItemProperty(ID1));
 
         item.addItemProperty(ID2, prop2);
-        Assert.assertEquals(2, item.getItemPropertyIds().size());
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
-        Assert.assertEquals(prop2, item.getItemProperty(ID2));
+        assertEquals(2, item.getItemPropertyIds().size());
+        assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(prop2, item.getItemProperty(ID2));
 
         item.addItemProperty(ID3, prop3);
-        Assert.assertEquals(3, item.getItemPropertyIds().size());
+        assertEquals(3, item.getItemPropertyIds().size());
     }
 
     @Test
@@ -109,32 +114,32 @@ public class PropertySetItemTest {
         item.addItemProperty(ID3, prop3);
 
         Iterator<?> it = item.getItemPropertyIds().iterator();
-        Assert.assertEquals(ID1, it.next());
-        Assert.assertEquals(ID2, it.next());
-        Assert.assertEquals(ID3, it.next());
+        assertEquals(ID1, it.next());
+        assertEquals(ID2, it.next());
+        assertEquals(ID3, it.next());
     }
 
     @Test
     public void testAddPropertyTwice() {
         PropertysetItem item = createPropertySetItem();
-        Assert.assertTrue(item.addItemProperty(ID1, prop1));
-        Assert.assertFalse(item.addItemProperty(ID1, prop1));
+        assertTrue(item.addItemProperty(ID1, prop1));
+        assertFalse(item.addItemProperty(ID1, prop1));
 
-        Assert.assertEquals(1, item.getItemPropertyIds().size());
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(1, item.getItemPropertyIds().size());
+        assertEquals(prop1, item.getItemProperty(ID1));
     }
 
     @Test
     public void testCannotChangeProperty() {
         PropertysetItem item = createPropertySetItem();
-        Assert.assertTrue(item.addItemProperty(ID1, prop1));
+        assertTrue(item.addItemProperty(ID1, prop1));
 
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(prop1, item.getItemProperty(ID1));
 
-        Assert.assertFalse(item.addItemProperty(ID1, prop2));
+        assertFalse(item.addItemProperty(ID1, prop2));
 
-        Assert.assertEquals(1, item.getItemPropertyIds().size());
-        Assert.assertEquals(prop1, item.getItemProperty(ID1));
+        assertEquals(1, item.getItemPropertyIds().size());
+        assertEquals(prop1, item.getItemProperty(ID1));
     }
 
     @Test
@@ -143,8 +148,8 @@ public class PropertySetItemTest {
         item.addItemProperty(ID1, prop1);
         item.removeItemProperty(ID1);
 
-        Assert.assertEquals(0, item.getItemPropertyIds().size());
-        Assert.assertNull(item.getItemProperty(ID1));
+        assertEquals(0, item.getItemPropertyIds().size());
+        assertNull(item.getItemProperty(ID1));
     }
 
     @Test
@@ -157,8 +162,8 @@ public class PropertySetItemTest {
         item.removeItemProperty(ID2);
 
         Iterator<?> it = item.getItemPropertyIds().iterator();
-        Assert.assertEquals(ID1, it.next());
-        Assert.assertEquals(ID3, it.next());
+        assertEquals(ID1, it.next());
+        assertEquals(ID3, it.next());
     }
 
     @Test
@@ -232,7 +237,7 @@ public class PropertySetItemTest {
     public void testItemEqualsNull() {
         PropertysetItem item = createPropertySetItem();
 
-        Assert.assertFalse(item.equals(null));
+        assertFalse(item.equals(null));
     }
 
     @Test
@@ -240,7 +245,7 @@ public class PropertySetItemTest {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
 
-        Assert.assertTrue(item1.equals(item2));
+        assertTrue(item1.equals(item2));
     }
 
     @Test
@@ -255,21 +260,21 @@ public class PropertySetItemTest {
         PropertysetItem item5 = createPropertySetItem();
         item5.addItemProperty(ID2, prop2);
 
-        Assert.assertFalse(item1.equals(item2));
-        Assert.assertFalse(item1.equals(item3));
-        Assert.assertFalse(item1.equals(item4));
-        Assert.assertFalse(item1.equals(item5));
+        assertFalse(item1.equals(item2));
+        assertFalse(item1.equals(item3));
+        assertFalse(item1.equals(item4));
+        assertFalse(item1.equals(item5));
 
-        Assert.assertTrue(item2.equals(item3));
-        Assert.assertFalse(item2.equals(item4));
-        Assert.assertFalse(item2.equals(item5));
+        assertTrue(item2.equals(item3));
+        assertFalse(item2.equals(item4));
+        assertFalse(item2.equals(item5));
 
-        Assert.assertFalse(item3.equals(item4));
-        Assert.assertFalse(item3.equals(item5));
+        assertFalse(item3.equals(item4));
+        assertFalse(item3.equals(item5));
 
-        Assert.assertFalse(item4.equals(item5));
+        assertFalse(item4.equals(item5));
 
-        Assert.assertFalse(item2.equals(item1));
+        assertFalse(item2.equals(item1));
     }
 
     @Test
@@ -285,9 +290,9 @@ public class PropertySetItemTest {
         item3.addItemProperty(ID1, prop1);
         item3.addItemProperty(ID2, prop2);
 
-        Assert.assertFalse(item1.equals(item2));
+        assertFalse(item1.equals(item2));
 
-        Assert.assertTrue(item2.equals(item3));
+        assertTrue(item2.equals(item3));
     }
 
     @Test
@@ -300,7 +305,7 @@ public class PropertySetItemTest {
         item2.addItemProperty(ID2, prop2);
         item2.addItemProperty(ID1, prop1);
 
-        Assert.assertFalse(item1.equals(item2));
+        assertFalse(item1.equals(item2));
     }
 
     @Test
@@ -310,13 +315,13 @@ public class PropertySetItemTest {
 
         item1.addListener(propertySetListenerMock);
 
-        Assert.assertFalse(item1.equals(item2));
-        Assert.assertFalse(item2.equals(item1));
+        assertFalse(item1.equals(item2));
+        assertFalse(item2.equals(item1));
 
         item2.addListener(propertySetListenerMock);
 
-        Assert.assertTrue(item1.equals(item2));
-        Assert.assertTrue(item2.equals(item1));
+        assertTrue(item1.equals(item2));
+        assertTrue(item2.equals(item1));
     }
 
     @Test
@@ -329,13 +334,13 @@ public class PropertySetItemTest {
 
         item2.addListener(propertySetListenerMock);
 
-        Assert.assertFalse(item1.equals(item2));
-        Assert.assertFalse(item2.equals(item1));
+        assertFalse(item1.equals(item2));
+        assertFalse(item2.equals(item1));
 
         item2.addListener(propertySetListenerMock2);
 
-        Assert.assertTrue(item1.equals(item2));
-        Assert.assertTrue(item2.equals(item1));
+        assertTrue(item1.equals(item2));
+        assertTrue(item2.equals(item1));
     }
 
     @Test
@@ -346,8 +351,8 @@ public class PropertySetItemTest {
         item1.addListener(propertySetListenerMock);
         item1.removeListener(propertySetListenerMock);
 
-        Assert.assertTrue(item1.equals(item2));
-        Assert.assertTrue(item2.equals(item1));
+        assertTrue(item1.equals(item2));
+        assertTrue(item2.equals(item1));
     }
 
     @Test
@@ -355,7 +360,7 @@ public class PropertySetItemTest {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
 
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
     }
 
     @Test
@@ -363,7 +368,7 @@ public class PropertySetItemTest {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
 
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
 
         item1.addItemProperty(ID1, prop1);
         item1.addItemProperty(ID2, prop2);
@@ -372,7 +377,7 @@ public class PropertySetItemTest {
         item2.addItemProperty(ID1, prop1);
         item2.addItemProperty(ID2, prop2);
         // but here hashCodes must be equal
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
     }
 
     @Test
@@ -380,14 +385,14 @@ public class PropertySetItemTest {
         PropertysetItem item1 = createPropertySetItem();
         PropertysetItem item2 = createPropertySetItem();
 
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
 
         item1.addListener(propertySetListenerMock);
         // hashCodes can be equal even if items are different
 
         item2.addListener(propertySetListenerMock);
         // but here hashCodes must be equal
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
     }
 
     @Test
@@ -398,7 +403,7 @@ public class PropertySetItemTest {
         item1.addItemProperty(ID1, prop1);
         item1.removeItemProperty(ID1);
 
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
     }
 
     @Test
@@ -409,7 +414,7 @@ public class PropertySetItemTest {
         item1.addListener(propertySetListenerMock);
         item1.removeListener(propertySetListenerMock);
 
-        Assert.assertEquals(item1.hashCode(), item2.hashCode());
+        assertEquals(item1.hashCode(), item2.hashCode());
     }
 
     @Test
@@ -417,15 +422,15 @@ public class PropertySetItemTest {
         // toString() behavior is specified in the class javadoc
         PropertysetItem item = createPropertySetItem();
 
-        Assert.assertEquals("", item.toString());
+        assertEquals("", item.toString());
 
         item.addItemProperty(ID1, prop1);
 
-        Assert.assertEquals(String.valueOf(prop1.getValue()), item.toString());
+        assertEquals(String.valueOf(prop1.getValue()), item.toString());
 
         item.addItemProperty(ID2, prop2);
 
-        Assert.assertEquals(String.valueOf(prop1.getValue()) + " "
+        assertEquals(String.valueOf(prop1.getValue()) + " "
                 + String.valueOf(prop2.getValue()), item.toString());
     }
 

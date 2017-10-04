@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -29,7 +30,7 @@ public class ResponseWritingErrorHandlingTest extends SingleBrowserTest {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertEquals("Message should be logged by error handler",
+        assertEquals("Message should be logged by error handler",
                 "1. Button.beforeClientResponse", getLogRow(0));
     }
 }

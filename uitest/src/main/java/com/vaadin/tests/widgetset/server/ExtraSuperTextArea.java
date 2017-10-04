@@ -5,7 +5,6 @@ import com.vaadin.ui.TextArea;
 
 /**
  * @author artamonov
- * @version $Id$
  */
 public class ExtraSuperTextArea extends TextArea {
 

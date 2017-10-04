@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -34,7 +35,6 @@ public class ComboBoxPopupWhenBodyScrollsTest extends MultiBrowserTest {
 
         int comboboxTop = combobox.getLocation().getY();
         int popupTop = popup.getLocation().getY();
-        Assert.assertTrue("Popup should be below combobox",
-                popupTop > comboboxTop);
+        assertTrue("Popup should be below combobox", popupTop > comboboxTop);
     }
 }

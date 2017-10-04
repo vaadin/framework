@@ -16,9 +16,10 @@
 
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -92,21 +93,19 @@ public class SpecificEnumToStringConverterTest {
 
     @Test
     public void nullConversion() {
-        Assert.assertEquals(null,
-                testEnumConverter.convertToModel(null, null, null));
+        assertEquals(null, testEnumConverter.convertToModel(null, null, null));
     }
 
     @Test
     public void enumToStringConversion() {
-        Assert.assertEquals(TestEnum.TWO.toString(), testEnumConverter
+        assertEquals(TestEnum.TWO.toString(), testEnumConverter
                 .convertToModel(TestEnum.TWO, String.class, null));
     }
 
     @Test
     public void stringToEnumConversion() {
-        Assert.assertEquals(TestEnum.TWO,
-                testEnumConverter.convertToPresentation(TestEnum.TWO.toString(),
-                        TestEnum.class, null));
+        assertEquals(TestEnum.TWO, testEnumConverter.convertToPresentation(
+                TestEnum.TWO.toString(), TestEnum.class, null));
     }
 
     @Test
@@ -114,11 +113,11 @@ public class SpecificEnumToStringConverterTest {
         TextField tf = new TextField();
         tf.setConverter(new ReverseConverter(anotherTestEnumConverter));
         tf.setPropertyDataSource(new ObjectProperty(AnotherTestEnum.TWO));
-        Assert.assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
+        assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
         tf.setValue(AnotherTestEnum.ONE.toString());
-        Assert.assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
-        Assert.assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(AnotherTestEnum.ONE,
+        assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
+        assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
+        assertEquals(AnotherTestEnum.ONE,
                 tf.getPropertyDataSource().getValue());
 
     }

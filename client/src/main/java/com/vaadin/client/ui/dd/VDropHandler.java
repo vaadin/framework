@@ -55,8 +55,8 @@ public interface VDropHandler {
      * drop was performed on this Paintable.
      *
      *
-     * @param dragEvent
-     *            DragEvent which contains the transferable and other
+     * @param drag
+     *            VDragEvent which contains the transferable and other
      *            information for the operation
      *
      * @return true if the Tranferrable of this drag event needs to be sent to
@@ -77,13 +77,13 @@ public interface VDropHandler {
     public void dragOver(VDragEvent currentDrag);
 
     /**
-     * Returns the ComponentConnector with which this DropHandler is associated
+     * Returns the ComponentConnector with which this DropHandler is associated.
      */
     public ComponentConnector getConnector();
 
     /**
      * Returns the application connection to which this {@link VDropHandler}
-     * belongs to. DragAndDropManager uses this fucction to send Transferable to
+     * belongs to. DragAndDropManager uses this function to send Transferable to
      * server side.
      */
     public ApplicationConnection getApplicationConnection();
