@@ -26,8 +26,8 @@ import com.vaadin.data.Binder.BindingBuilder;
 
 /**
  * Represents the status of field validation. Status can be {@code Status.OK},
- * {@code Status.ERROR} or {@code Status.RESET}. Status OK and ERROR are always
- * associated with a ValidationResult {@link #getResult}.
+ * {@code Status.ERROR} or {@code Status.UNRESOLVED}. Status OK and ERROR are
+ * always associated with a ValidationResult {@link #getResult}.
  * <p>
  * Use
  * {@link BindingBuilder#withValidationStatusHandler(BindingValidationStatusHandler)}

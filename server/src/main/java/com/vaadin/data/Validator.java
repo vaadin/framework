@@ -111,7 +111,7 @@ public interface Validator<T>
      * the function returns true, the validator returns {@code Result.ok()}; if
      * it returns false or throws an exception,
      * {@link ValidationResult#error(String)} is returned with the given message
-     * and error level {@link ErrorLevel#ERROR}.
+     * and error level.
      * <p>
      * For instance, the following validator checks if a number is between 0 and
      * 10, inclusive:
