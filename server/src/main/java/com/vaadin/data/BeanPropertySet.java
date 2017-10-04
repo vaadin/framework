@@ -33,7 +33,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
 import com.vaadin.shared.util.SharedUtil;
@@ -232,10 +231,20 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          */
         protected static class PropertyFilterDefinition
                 implements Serializable {
-            private static final long serialVersionUID = 7035499395627976263L;
             private int maxNestingDepth;
             private List<String> ignorePackageNamesStartingWith;
 
+            /**
+             * Create a property filter with max nesting depth and package names
+             * to ignore.
+             *
+             * @param maxNestingDepth
+             *            The maximum amount of nesting levels for
+             *            sub-properties.
+             * @param ignorePackageNamesStartingWith
+             *            Ignore package names that start with this string, e.g.
+             *            "java.lang".
+             */
             public PropertyFilterDefinition(int maxNestingDepth,
                     List<String> ignorePackageNamesStartingWith) {
                 this.maxNestingDepth = maxNestingDepth;
@@ -292,7 +301,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          * @param descriptor
          *            property descriptor
          * @param useLongFormName
-         *            use format grandparent.parent.property for name if true
+         *            use format grandparent.parent.property for name if true,
+         *            needed when creating nested definitions recursively like
+         *            in findNestedDefinitions
          * @since
          */
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
@@ -365,7 +376,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @since
      */
     private static class InstanceKey implements Serializable {
-        private static final long serialVersionUID = -1363522555010923369L;
         private Class<?> type;
         private boolean checkNestedDefinitions;
         private int depth;
@@ -453,7 +463,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private BeanPropertySet(Class<T> beanType, boolean checkNestedDefinitions,
-            PropertyFilterDefinition propertyFilterDefinition) {
+            NestedBeanPropertyDefinition.PropertyFilterDefinition propertyFilterDefinition) {
         this(beanType);
         if (checkNestedDefinitions) {
             Objects.requireNonNull(propertyFilterDefinition,
@@ -464,7 +474,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     private void findNestedDefinitions(
             Map<String, PropertyDefinition<T, ?>> parentDefinitions, int depth,
-            PropertyFilterDefinition filterCallback) {
+            NestedBeanPropertyDefinition.PropertyFilterDefinition filterCallback) {
         if (depth >= filterCallback.getMaxNestingDepth()) {
             return;
         }
@@ -544,7 +554,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     @SuppressWarnings("unchecked")
     public static <T> PropertySet<T> get(Class<? extends T> beanType,
             boolean checkNestedDefinitions,
-            PropertyFilterDefinition filterDefinition) {
+            NestedBeanPropertyDefinition.PropertyFilterDefinition filterDefinition) {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
         InstanceKey key = new InstanceKey(beanType, false,
                 filterDefinition.getMaxNestingDepth(),
