@@ -13,30 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.tabsheet;
-
-import java.io.Serializable;
-
-import com.vaadin.shared.ui.ErrorLevel;
+package com.vaadin.shared.ui;
 
 /**
- * Shared state of a single tab in a Tabsheet or an Accordion.
- *
- * @since 7.2
+ * Represents the error levels displayed on components.
  * @author Vaadin Ltd
+ * @since
  */
-public class TabState implements Serializable {
+public enum ErrorLevel {
 
-    public String caption = "";
-    public boolean enabled = true;
-    public boolean visible = true;
-    public boolean closable = false;
-    public String description = null;
-    public String styleName;
-    public String key;
-    public String componentError;
-    public ErrorLevel componentErrorLevel;
-    public String id;
-    public String iconAltText;
+    /**
+     * Error level for informational messages.
+     */
+    INFO,
 
+    /**
+     * Error level for warning messages.
+     */
+    WARNING,
+
+    /**
+     * Error level for regular messages.
+     */
+    ERROR,
+
+    /**
+     * Error level for critical messages.
+     */
+    CRITICAL,
+
+    /**
+     * Error level for system errors and bugs.
+     */
+    SYSTEM
 }

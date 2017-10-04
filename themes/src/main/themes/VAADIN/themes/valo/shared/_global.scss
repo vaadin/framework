@@ -339,6 +339,26 @@ $valo-shared-pathPrefix: null;
     @include valo-error-indicator-style;
   }
 
+  .v-errorindicator-info {
+    @include valo-error-indicator-style($indicator-color: $v-error-indicator-level-info-color);
+  }
+
+  .v-errorindicator-warning {
+    @include valo-error-indicator-style($indicator-color: $v-error-indicator-level-warning-color);
+  }
+
+  .v-errorindicator-error {
+    @include valo-error-indicator-style($indicator-color: $v-error-indicator-level-error-color);
+  }
+
+  .v-errorindicator-critical {
+    @include valo-error-indicator-style($indicator-color: $v-error-indicator-level-critical-color);
+  }
+
+  .v-errorindicator-system {
+    @include valo-error-indicator-style($indicator-color: $v-error-indicator-level-system-color);
+  }
+
   .v-required-field-indicator {
     color: $v-required-field-indicator-color;
     padding: 0 .2em;
@@ -400,8 +420,8 @@ $valo-shared-pathPrefix: null;
  *
  * @requires {mixin} valo-error-indicator-icon-style by default
  */
-@mixin valo-error-indicator-style ($is-pseudo-element: false) {
-  color: $v-error-indicator-color;
+@mixin valo-error-indicator-style ($is-pseudo-element: false, $indicator-color: $v-error-indicator-color) {
+  color: $indicator-color;
   font-weight: 600;
   width: ceil($v-unit-size/2);
   text-align: center;
