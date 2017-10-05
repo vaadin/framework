@@ -544,8 +544,7 @@ public abstract class UI extends AbstractSingleComponentContainer
         if (session == null) {
             return null;
         } else {
-            return session.toString() + " for "
-                    + session.getService().getServiceName();
+            return session + " for " + session.getService().getServiceName();
         }
     }
 

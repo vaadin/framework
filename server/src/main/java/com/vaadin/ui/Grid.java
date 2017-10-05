@@ -2540,9 +2540,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         if (!renderer.getPresentationType()
                 .isAssignableFrom(definition.getType())) {
-            throw new IllegalArgumentException(renderer.toString()
-                    + " cannot be used with a property of type "
-                    + definition.getType().getName());
+            throw new IllegalArgumentException(
+                    renderer + " cannot be used with a property of type "
+                            + definition.getType().getName());
         }
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -4259,7 +4259,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     protected T deserializeDeclarativeRepresentation(String item) {
         if (item == null) {
             return super.deserializeDeclarativeRepresentation(
-                    new String(UUID.randomUUID().toString()));
+                    UUID.randomUUID().toString());
         }
         return super.deserializeDeclarativeRepresentation(new String(item));
     }

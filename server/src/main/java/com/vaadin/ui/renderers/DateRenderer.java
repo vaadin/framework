@@ -230,7 +230,7 @@ public class DateRenderer extends AbstractRenderer<Object, Date> {
     public String toString() {
         final String fieldInfo;
         if (dateFormat != null) {
-            fieldInfo = "dateFormat: " + dateFormat.toString();
+            fieldInfo = "dateFormat: " + dateFormat;
         } else {
             fieldInfo = "locale: " + locale + ", formatString: " + formatString;
         }

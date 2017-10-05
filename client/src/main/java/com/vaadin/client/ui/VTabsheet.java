@@ -828,7 +828,7 @@ public class VTabsheet extends VTabsheetBase
             getCurrentlyDisplayedWidget().getElement().getParentElement()
                     .getStyle().setVisibility(Visibility.HIDDEN);
 
-            getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+            getRpcProxy().setSelected(tabKeys.get(tabIndex));
 
             waitingForResponse = true;
 

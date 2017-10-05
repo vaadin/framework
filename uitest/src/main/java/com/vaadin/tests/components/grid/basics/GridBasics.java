@@ -91,7 +91,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                     }
                     log("Columns reordered, userOriginated: "
                             + event.isUserOriginated());
-                    log("Column order: " + columnCaptions.toString());
+                    log("Column order: " + columnCaptions);
                 });
                 log("Registered a column reorder listener.");
             }

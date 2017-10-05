@@ -45,8 +45,7 @@ public class KeyControl extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table1.getValue();
-                selected1
-                        .setValue(value.toString() + " TOTAL: " + value.size());
+                selected1.setValue(value + " TOTAL: " + value.size());
             }
         });
 

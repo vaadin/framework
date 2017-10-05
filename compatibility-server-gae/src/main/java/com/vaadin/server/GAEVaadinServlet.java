@@ -151,16 +151,14 @@ public class GAEVaadinServlet extends VaadinServlet {
             VaadinServletResponse response) throws IOException {
         criticalNotification(request, response, "NotSerializableException",
                 "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
-                "",
-                getApplicationUrl(request).toString() + "?restartApplication");
+                "", getApplicationUrl(request) + "?restartApplication");
     }
 
     protected void sendCriticalErrorNotification(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException {
         criticalNotification(request, response, "Critical error",
                 "I'm sorry, but there seems to be a serious problem, please contact the administrator. And please take note of any unsaved data...",
-                "",
-                getApplicationUrl(request).toString() + "?restartApplication");
+                "", getApplicationUrl(request) + "?restartApplication");
     }
 
     @Override
@@ -227,8 +225,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    getLogger()
-                            .finer("Thread.sleep() interrupted while waiting for lock. Trying again. "
+                    getLogger().finer(
+                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
                                     + e);
                 }
             }

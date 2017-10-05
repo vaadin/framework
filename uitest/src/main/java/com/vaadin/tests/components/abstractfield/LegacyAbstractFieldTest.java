@@ -174,7 +174,7 @@ public abstract class LegacyAbstractFieldTest<T extends AbstractField>
                         new Locale("en", "US"));
                 value = format.format(d);
             } else {
-                value = "'" + o.toString() + "'";
+                value = "'" + o + "'";
             }
         }
 

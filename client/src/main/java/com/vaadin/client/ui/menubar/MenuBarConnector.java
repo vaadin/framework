@@ -131,7 +131,7 @@ public class MenuBarConnector extends AbstractComponentConnector
                 }
             }
 
-            currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem = currentMenu.addItem(itemHTML, cmd);
             currentItem.updateFromUIDL(item, client);
 
             if (item.getChildCount() > 0) {

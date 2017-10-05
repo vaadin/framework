@@ -27,7 +27,7 @@ public class FreeformQueryUtil {
                         QueryBuilder.getWhereStringForFilters(filters, sh));
             }
             query.append(") AS a WHERE a.rownum BETWEEN ").append(offset)
-                    .append(" AND ").append(Integer.toString(offset + limit));
+                    .append(" AND ").append(offset + limit);
             sh.setQueryString(query.toString());
             return sh;
         } else if (SQLTestsConstants.db == DB.ORACLE) {

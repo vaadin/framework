@@ -127,13 +127,13 @@ public final class RowItem implements Item {
     public String toString() {
         StringBuffer s = new StringBuffer();
         s.append("ID:");
-        s.append(getId().toString());
+        s.append(getId());
         for (Object propId : getItemPropertyIds()) {
             s.append('|');
-            s.append(propId.toString());
+            s.append(propId);
             s.append(':');
             Object value = getItemProperty(propId).getValue();
-            s.append((null != value) ? value.toString() : null);
+            s.append(value);
         }
         return s.toString();
     }

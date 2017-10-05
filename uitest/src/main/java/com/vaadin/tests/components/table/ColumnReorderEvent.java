@@ -34,7 +34,7 @@ public class ColumnReorderEvent extends TestBase {
     private String aToString(Object[] visibleColumns) {
         StringBuilder sb = new StringBuilder();
         for (Object object : visibleColumns) {
-            sb.append(object.toString());
+            sb.append(object);
             sb.append(" | ");
         }
         return sb.toString();
