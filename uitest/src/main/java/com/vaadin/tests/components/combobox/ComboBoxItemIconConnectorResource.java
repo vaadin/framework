@@ -25,14 +25,9 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
         cb.setItems("Finland", "Australia", "Hungary");
 
         cb.setItemIconGenerator(item -> {
-            System.out.println(new File(
-                    "src/main/webapp/VAADIN/themes" + "/tests-tickets/icons/"
-                            + item.substring(0, 2).toLowerCase() + ".gif")
-                                    .getAbsolutePath());
             return new FileResource(new File(
                     "src/main/webapp/VAADIN/themes" + "/tests-tickets/icons/"
                             + item.substring(0, 2).toLowerCase() + ".gif"));
-
         });
 
         cb.setValue("Hungary");

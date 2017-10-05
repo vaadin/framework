@@ -695,8 +695,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
-    protected void doSetSelectedKey(String key) {
-        super.doSetSelectedKey(key);
+    public void attach() {
+        super.attach();
 
         updateSelectedItemCaption();
         updateSelectedItemIcon();
@@ -704,7 +704,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemCaption() {
         String selectedCaption = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        T value = keyToItem(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
@@ -714,7 +714,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     private void updateSelectedItemIcon() {
         String selectedItemIcon = null;
         String key = getSelectedKey();
-        T value = getDataCommunicator().getKeyMapper().get(key);
+        T value = keyToItem(key);
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {

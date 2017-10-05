@@ -63,25 +63,25 @@ public class ResourceReference extends URLReference {
             if (filename != null && !filename.isEmpty()) {
                 prefix += '/' + filename;
             }
-            String uri = getConnectorResourceBase(prefix, connector);
-            return uri;
+            return getConnectorResourceBase(prefix, connector);
         } else if (resource instanceof ThemeResource) {
-            final String uri = ApplicationConstants.THEME_PROTOCOL_PREFIX
+            return ApplicationConstants.THEME_PROTOCOL_PREFIX
                     + ((ThemeResource) resource).getResourceId();
-            return uri;
         } else if (resource instanceof FontIcon) {
-            // fonticon://[font-family]/[codepoint]
-            final FontIcon icon = (FontIcon) resource;
-            final String uri = ApplicationConstants.FONTICON_PROTOCOL_PREFIX
-                    + urlEncode(icon.getFontFamily()) + "/"
-                    + Integer.toHexString(icon.getCodepoint());
-            return uri;
+            return getFontIconBase((FontIcon) resource);
         } else {
             throw new RuntimeException(getClass().getSimpleName()
                     + " does not support resources of type: "
                     + resource.getClass().getName());
         }
 
+    }
+
+    private String getFontIconBase(final FontIcon icon) {
+        // fonticon://[font-family]/[codepoint]
+        return ApplicationConstants.FONTICON_PROTOCOL_PREFIX
+                + urlEncode(icon.getFontFamily()) + "/"
+                + Integer.toHexString(icon.getCodepoint());
     }
 
     private static String getConnectorResourceBase(String filename,
