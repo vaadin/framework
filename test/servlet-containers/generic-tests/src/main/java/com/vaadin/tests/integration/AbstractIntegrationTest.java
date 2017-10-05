@@ -3,7 +3,6 @@ package com.vaadin.tests.integration;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,24 +11,19 @@ import javax.imageio.ImageIO;
 
 import org.junit.After;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.vaadin.testbench.annotations.BrowserConfiguration;
-import com.vaadin.testbench.annotations.BrowserFactory;
-import com.vaadin.testbench.annotations.RunOnHub;
+import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.testbench.parallel.Browser;
-import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.testbench.parallel.ParallelRunner;
 import com.vaadin.testbench.parallel.ParallelTest;
 import com.vaadin.testbench.parallel.TestNameSuffix;
 import com.vaadin.testbench.screenshot.ImageFileUtil;
 
-@RunOnHub("tb3-hub.intra.itmill.com")
+@RunLocally(Browser.PHANTOMJS)
 @RunWith(ParallelRunner.class)
-@BrowserFactory(CustomBrowserFactory.class)
 @TestNameSuffix(property = "server-name")
 public abstract class AbstractIntegrationTest extends ParallelTest {
 
@@ -44,16 +38,6 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     private static final int SCREENSHOT_WIDTH = 1500;
 
     private boolean screenshotErrors;
-
-    @BrowserConfiguration
-    public final List<DesiredCapabilities> getBrowsersToTest() {
-        return getBrowsers().map(BrowserUtil.getBrowserFactory()::create)
-                .collect(Collectors.toList());
-    }
-
-    protected Stream<Browser> getBrowsers() {
-        return Stream.of(Browser.PHANTOMJS);
-    }
 
     @Override
     public void setup() throws Exception {
@@ -88,8 +72,8 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     private String getDeploymentURL() {
         String deploymentUrl = System.getProperty("deployment.url");
         if (deploymentUrl == null || deploymentUrl.isEmpty()) {
-            throw new RuntimeException(
-                    "Deployment url must be given as deployment.url");
+            // Default to http://localhost:8080
+            return "http://localhost:8080";
         }
         return deploymentUrl;
     }
@@ -100,7 +84,8 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
                 + ".png";
         String errorFileName = identifier + "-"
                 + getDesiredCapabilities().getBrowserName().toLowerCase() + "-"
-                + System.getProperty("server-name") + ".png";
+                + System.getProperty("server-name") + "["
+                + getClass().getSimpleName() + "].png";
         File referenceFile = ImageFileUtil
                 .getReferenceScreenshotFile(refFileName);
         try {

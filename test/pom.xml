@@ -18,8 +18,18 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <!-- Don't care about coding style for tests -->
         <sonar.skip>true</sonar.skip>
+
+        <!-- Allow installing for local testing purposes -->
+        <install.skip>true</install.skip>
+
+        <!-- Default server.name is "jetty", used in server tests -->
+        <server.name>jetty</server.name>
+
+        <!-- Default reference screenshot location, relative to the module path -->
+        <reference.directory>${project.basedir}/../screenshots</reference.directory>
     </properties>
 
     <repositories>
@@ -53,6 +63,11 @@
                 <artifactId>vaadin-test-widget-set-testutil</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -80,7 +95,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -101,10 +115,11 @@
         <module>space in directory</module>
         <module>vaadinservletconfiguration-widget-set</module>
         <module>spring-boot</module>
-        <module>servlet-containers/generic</module>
         <module>cdi</module>
-        <module>servlet-containers/jsp-integration</module>
-        <module>servlet-containers/karaf</module>
+
+        <!-- Servlet container tests -->
+        <module>servlet-containers</module>
+
         <module>bean-api-validation</module>
         <module>bean-impl-validation</module>
         <module>dependency-rewrite-addon</module>
@@ -150,7 +165,7 @@
                     <artifactId>maven-install-plugin</artifactId>
                     <version>2.5.1</version>
                     <configuration>
-                        <skip>true</skip>
+                        <skip>${install.skip}</skip>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -233,7 +248,12 @@
                 <configuration>
                     <systemPropertyVariables>
                         <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+                        <server-name>${server.name}</server-name>
+                        <com.vaadin.testbench.Parameters.screenshotReferenceDirectory>${reference.directory}</com.vaadin.testbench.Parameters.screenshotReferenceDirectory>
+                        <com.vaadin.testbench.Parameters.screenshotErrorDirectory>target/error-screenshots</com.vaadin.testbench.Parameters.screenshotErrorDirectory>
                     </systemPropertyVariables>
+                    <!-- Run all the tests, don't stop on first failure -->
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
         </plugins>
