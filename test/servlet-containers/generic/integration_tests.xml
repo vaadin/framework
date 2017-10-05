@@ -119,13 +119,13 @@
             <param name="demo.war" value="${demo.jboss6.war}"/>
         </antcall>
     </target>
+<!--
     <target name="integration-test-wildfly8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="wildfly8" />
         </antcall>
     </target>
-<!--
     <target name="integration-test-wildfly9">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -146,6 +146,7 @@
             <param name="target-port" value="80" />
         </antcall>
     </target>
+<!--
     <target name="integration-test-glassfish4">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -158,7 +159,7 @@
             <param name="target-server" value="payara" />
         </antcall>
     </target>
-
+-->
 
     <target name="integration-test-weblogic12">
         <antcall target="run-generic-integration-test">
@@ -180,14 +181,20 @@
 
         <parallel>
             <antcall target="integration-test-weblogic12" />
-            <antcall target="integration-test-glassfish4" />
-            <antcall target="integration-test-payara" />
+
+<!--            <antcall target="integration-test-glassfish4" />
+            <antcall target="integration-test-payara" /> -->
+
             <antcall target="integration-test-jboss-eap6" />
-            <antcall target="integration-test-wildfly8" />
-<!--            <antcall target="integration-test-wildfly9" />
+
+<!--            <antcall target="integration-test-wildfly8" />
+            <antcall target="integration-test-wildfly9" />
             <antcall target="integration-test-wildfly10" /> -->
+
             <antcall target="integration-test-jetty8" />
+
 <!--            <antcall target="integration-test-jetty9" /> -->
+
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
             <antcall target="integration-test-tomcat7apacheproxy" />

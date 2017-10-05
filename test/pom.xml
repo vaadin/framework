@@ -24,12 +24,6 @@
 
         <!-- Allow installing for local testing purposes -->
         <install.skip>true</install.skip>
-
-        <!-- Default server.name is "jetty", used in server tests -->
-        <server.name>jetty</server.name>
-
-        <!-- Default reference screenshot location, relative to the module path -->
-        <reference.directory>${project.basedir}/../screenshots</reference.directory>
     </properties>
 
     <repositories>

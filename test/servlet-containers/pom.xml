@@ -11,6 +11,14 @@
     <name>vaadin-servlet-containers-test</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <server.name>jetty9</server.name>
+        <context.path>/${project.build.finalName}</context.path>
+
+        <!-- Default reference screenshot location, relative to the module path -->
+        <reference.directory>${project.basedir}/../screenshots</reference.directory>
+    </properties>
+
     <modules>
         <module>generic-ui</module>
         <module>generic-tests</module>
@@ -19,6 +27,7 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- Wildfly Configuration. Version selected with payara.version -->
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
@@ -31,10 +40,6 @@
                                 <goal>start</goal>
                                 <goal>deploy</goal>
                             </goals>
-                            <configuration>
-                                <!-- Context path comes from WAR deployment name -->
-                                <name>demo.war</name>
-                            </configuration>
                         </execution>
                         <execution>
                             <id>stop-wildfly</id>
@@ -45,12 +50,70 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!-- Payara Micro Configuration. Version selected with payara.version -->
+                <plugin>
+                    <groupId>fish.payara.maven.plugins</groupId>
+                    <artifactId>payara-micro-maven-plugin</artifactId>
+                    <version>1.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>start-payara</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>bundle</goal>
+                                <goal>start</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-payara</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <payaraVersion>${payara.version}</payaraVersion>
+                        <useUberJar>true</useUberJar>
+                        <daemon>true</daemon>
+                    </configuration>
+                </plugin>
+
+                <!-- Glassfish Embedded Configuration. -->
+                <plugin>
+                    <groupId>org.glassfish.embedded</groupId>
+                    <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                    <version>4.1.1</version>
+                    <executions>
+                        <execution>
+                            <id>start-glassfish</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start</goal>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-glassfish</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <port>8080</port>
+                    </configuration>
+                </plugin>
+
+                <!-- Jetty Configuration. Version selected with jetty.version -->
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <configuration>
                         <webApp>
-                            <contextPath>/demo</contextPath>
+                            <contextPath>${context.path}</contextPath>
                         </webApp>
                     </configuration>
                 </plugin>
@@ -74,6 +137,9 @@
                         <dependenciesToScan>
                             <dependency>${project.groupId}:vaadin-test-server-tests</dependency>
                         </dependenciesToScan>
+                        <systemPropertyVariables>
+                            <deployment.context.path>${context.path}</deployment.context.path>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
@@ -91,7 +157,10 @@
                 <module>karaf</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
+                <module>wildfly8</module>
                 <module>jetty9</module>
+                <module>payara</module>
+                <module>glassfish</module>
             </modules>
         </profile>
         <!-- TODO Remove this when the ant build is no longer used. -->
@@ -106,12 +175,20 @@
             <modules>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
+                <module>wildfly8</module>
             </modules>
         </profile>
         <profile>
             <id>jetty</id>
             <modules>
                 <module>jetty9</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>glassfish</id>
+            <modules>
+                <module>glassfish</module>
+                <module>payara</module>
             </modules>
         </profile>
     </profiles>
