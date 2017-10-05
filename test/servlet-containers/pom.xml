@@ -149,6 +149,44 @@
                         </execution>
                     </executions>
                 </plugin>
+                
+                <!-- WebSphere Liberty Configuration. Version and profile are configurable with liberty.version and liberty.profile -->
+                <plugin>
+                    <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                    <artifactId>liberty-maven-plugin</artifactId>
+                    <version>2.0</version>
+                    <executions>
+                        <execution>
+                            <id>start-liberty</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start-server</goal>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-liberty</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop-server</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <appArtifact>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <type>${project.packaging}</type>
+                        </appArtifact>
+                        <assemblyArtifact>
+                            <groupId>com.ibm.websphere.appserver.runtime</groupId>
+                            <artifactId>${liberty.profile}</artifactId>
+                            <version>${liberty.version}</version>
+                            <type>zip</type>
+                        </assemblyArtifact>
+                    </configuration>
+                </plugin>
 
                 <!-- Jetty Configuration. Version selected with jetty.version -->
                 <plugin>
@@ -210,6 +248,9 @@
 		<module>tomcat80</module>
 		<module>tomcat85</module>
 		<module>tomcat9</module>
+		<module>liberty-javaee</module>
+		<module>liberty-webprofile</module>
+		<module>liberty-microprofile</module>
             </modules>
         </profile>
         <!-- TODO Remove this when the ant build is no longer used. -->
@@ -232,6 +273,14 @@
             <modules>
                 <module>jetty9</module>
                 <module>jetty8</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>liberty</id>
+            <modules>
+                <module>liberty-webprofile</module>
+                <module>liberty-javaee</module>
+                <module>liberty-microprofile</module>
             </modules>
         </profile>
         <profile>
