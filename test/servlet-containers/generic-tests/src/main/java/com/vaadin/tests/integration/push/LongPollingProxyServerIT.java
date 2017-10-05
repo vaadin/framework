@@ -20,6 +20,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -28,7 +30,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.integration.AbstractIntegrationTest;
 
 @RunWith(Parameterized.class)
@@ -56,9 +57,10 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     @Parameter(1)
     public String path;
 
-    @Override
+    @Before
     public void setup() throws Exception {
-        setDesiredCapabilities(Browser.PHANTOMJS.getDesiredCapabilities());
+        Assume.assumeTrue(
+                "wildfly9-nginx".equals(System.getProperty("server-name")));
 
         super.setup();
     }
@@ -81,8 +83,13 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     }
 
     @Override
-    protected String getTestPath() {
+    protected String getContextPath() {
         return "/" + path + "/demo";
+    }
+
+    @Override
+    protected String getTestPath() {
+        return "/";
     }
 
     private int getClientCounter() {

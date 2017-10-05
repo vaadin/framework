@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.vaadin</groupId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
+        <version>8.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>vaadin-test-jetty9-server</artifactId>
+    <name>Vaadin Jetty 9 Test</name>
+    <packaging>war</packaging>
+    <properties>
+        <jetty.skip>false</jetty.skip>
+        <jetty.version>9.3.21.v20170918</jetty.version>
+        <server.name>jetty9</server.name>
+    </properties>
+
+    <dependencies>
+        <!-- UI classes and tests from dependencies -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-ui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-test-server-tests</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Server configuration -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
