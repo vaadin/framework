@@ -16,13 +16,6 @@
         <server.name>tomcat9</server.name>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>apache-snaphots</id>
-            <url>https://repository.apache.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!-- UI classes and tests from dependencies -->
         <dependency>
