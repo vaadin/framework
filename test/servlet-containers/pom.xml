@@ -158,9 +158,11 @@
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
+                <module>jetty8</module>
                 <module>jetty9</module>
                 <module>payara</module>
                 <module>glassfish</module>
+                <!-- TODO: Payara 5 and Glassfish 5 -->
             </modules>
         </profile>
         <!-- TODO Remove this when the ant build is no longer used. -->
@@ -182,6 +184,7 @@
             <id>jetty</id>
             <modules>
                 <module>jetty9</module>
+                <module>jetty8</module>
             </modules>
         </profile>
         <profile>

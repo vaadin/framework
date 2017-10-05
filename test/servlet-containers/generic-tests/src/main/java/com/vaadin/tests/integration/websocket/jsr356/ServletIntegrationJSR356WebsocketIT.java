@@ -15,11 +15,21 @@
  */
 package com.vaadin.tests.integration.websocket.jsr356;
 
+import org.junit.Assume;
+
 import com.vaadin.tests.integration.websocket.ServletIntegrationWebsocketIT;
 
 public class ServletIntegrationJSR356WebsocketIT
         extends ServletIntegrationWebsocketIT {
     // Uses the test method declared in the super class
+
+    @Override
+    public void setup() throws Exception {
+        Assume.assumeFalse("Jetty 8 does not support JSR356",
+                "jetty8".equals(System.getProperty("server-name")));
+
+        super.setup();
+    }
 
     @Override
     protected String getTestPath() {

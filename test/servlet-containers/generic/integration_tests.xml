@@ -98,13 +98,13 @@
         </antcall>
     </target>
 
+<!--
     <target name="integration-test-jetty8">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="90" />
             <param name="target-server" value="jetty8" />
         </antcall>
     </target>
-<!--
     <target name="integration-test-jetty9">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="90" />
@@ -182,18 +182,21 @@
         <parallel>
             <antcall target="integration-test-weblogic12" />
 
-<!--            <antcall target="integration-test-glassfish4" />
-            <antcall target="integration-test-payara" /> -->
+<!--
+            <antcall target="integration-test-glassfish4" />
+            <antcall target="integration-test-payara" /> 
+-->
 
             <antcall target="integration-test-jboss-eap6" />
 
-<!--            <antcall target="integration-test-wildfly8" />
+<!--            
+            <antcall target="integration-test-wildfly8" />
             <antcall target="integration-test-wildfly9" />
-            <antcall target="integration-test-wildfly10" /> -->
+            <antcall target="integration-test-wildfly10" />
 
             <antcall target="integration-test-jetty8" />
-
-<!--            <antcall target="integration-test-jetty9" /> -->
+            <antcall target="integration-test-jetty9" /> 
+-->
 
             <antcall target="integration-test-tomcat7" />
             <antcall target="integration-test-tomcat8" />
