@@ -43,6 +43,7 @@ import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
+import com.vaadin.server.ResourceReference;
 import com.vaadin.server.SerializableBiPredicate;
 import com.vaadin.server.SerializableConsumer;
 import com.vaadin.server.SerializableFunction;
@@ -251,7 +252,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
             }
             Resource icon = getItemIconGenerator().apply(data);
             if (icon != null) {
-                setResource(itemToKey(data), icon);
+                String iconUrl = ResourceReference
+                        .create(icon, ComboBox.this, itemToKey(data)).getURL();
+                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
             }
         });
     }
@@ -701,7 +704,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemCaption() {
         String selectedCaption = null;
-        T value = keyToItem(getSelectedKey());
+        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
@@ -710,11 +713,13 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemIcon() {
         String selectedItemIcon = null;
-        T value = keyToItem(getSelectedKey());
+        String key = getSelectedKey();
+        T value = getDataCommunicator().getKeyMapper().get(key);
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
-                setResource(itemToKey(value), icon);
+                selectedItemIcon = ResourceReference
+                        .create(icon, ComboBox.this, key).getURL();
             }
         }
         getState().selectedItemIcon = selectedItemIcon;
