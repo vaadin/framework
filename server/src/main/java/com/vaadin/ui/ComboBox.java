@@ -695,6 +695,16 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     }
 
     @Override
+    protected void doSetSelectedKey(String key) {
+        super.doSetSelectedKey(key);
+
+        if (isAttached()) {
+            updateSelectedItemCaption();
+            updateSelectedItemIcon();
+        }
+    }
+
+    @Override
     public void attach() {
         super.attach();
 
