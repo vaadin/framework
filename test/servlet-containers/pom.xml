@@ -107,33 +107,47 @@
                     </configuration>
                 </plugin>
 
-                <!-- Tomcat Configuration. Select version with tomcat.version property. -->
+                <!-- Generic cargo plugin configuration. Define container to use in submodule. -->
                 <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <configuration>
+                        <configuration>
+                            <type>standalone</type>
+                            <home>
+                                ${project.build.directory}/cargo-server
+                            </home>
+                            <properties>
+                                <cargo.servlet.port>8080</cargo.servlet.port>
+                            </properties>
+                        </configuration>
+                        <deployables>
+                            <deployable>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>${project.artifactId}</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>${context.path}</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </configuration>
                     <executions>
                         <execution>
-                            <id>start-tomcat</id>
+                            <id>start-cargo-server</id>
                             <phase>pre-integration-test</phase>
                             <goals>
-                                <goal>run-war</goal>
+                                <goal>start</goal>
                             </goals>
-                            <configuration>
-                                <fork>true</fork>
-                            </configuration>
                         </execution>
                         <execution>
-                            <id>stop-tomcat</id>
+                            <id>stop-cargo-server</id>
                             <phase>post-integration-test</phase>
                             <goals>
-                                <goal>shutdown</goal>
+                                <goal>stop</goal>
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <path>${context.path}</path>
-                    </configuration>
                 </plugin>
 
                 <!-- Jetty Configuration. Version selected with jetty.version -->
@@ -192,6 +206,10 @@
                 <module>payara</module>
                 <module>glassfish</module>
                 <!-- TODO: Payara 5 and Glassfish 5 -->
+		<module>tomcat7</module>
+		<module>tomcat80</module>
+		<module>tomcat85</module>
+		<module>tomcat9</module>
             </modules>
         </profile>
         <!-- TODO Remove this when the ant build is no longer used. -->
@@ -221,6 +239,15 @@
             <modules>
                 <module>glassfish</module>
                 <module>payara</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <modules>
+                <module>tomcat7</module>
+                <module>tomcat80</module>
+                <module>tomcat85</module>
+                <module>tomcat9</module>
             </modules>
         </profile>
     </profiles>

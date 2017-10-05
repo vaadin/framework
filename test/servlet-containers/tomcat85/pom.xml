@@ -7,14 +7,21 @@
         <artifactId>vaadin-servlet-containers-test</artifactId>
         <version>8.2-SNAPSHOT</version>
     </parent>
-    <artifactId>vaadin-test-tomcat7-server</artifactId>
-    <name>Vaadin Tomcat 7 Test</name>
+    <artifactId>vaadin-test-tomcat85-server</artifactId>
+    <name>Vaadin Tomcat 8.5 Test</name>
     <packaging>war</packaging>
     <properties>
         <jetty.skip>true</jetty.skip>
-        <tomcat.version>7.0.82</tomcat.version>
-        <server.name>tomcat7</server.name>
+        <tomcat.version>8.5.23</tomcat.version>
+        <server.name>tomcat8.5</server.name>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>apache-snaphots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- UI classes and tests from dependencies -->
@@ -39,7 +46,7 @@
                 <artifactId>cargo-maven2-plugin</artifactId>
                 <configuration>
                     <container>
-                        <containerId>tomcat7x</containerId>
+                        <containerId>tomcat8x</containerId>
                         <artifactInstaller>
                             <groupId>org.apache.tomcat</groupId>
                             <artifactId>tomcat</artifactId>
