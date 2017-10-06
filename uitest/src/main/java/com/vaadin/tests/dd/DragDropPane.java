@@ -86,9 +86,9 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
 
                 try {
                     root.getPosition(component)
-                            .setTopValue((float) (clientY - top));
+                            .setTopValue(Float.valueOf(clientY - top));
                     root.getPosition(component)
-                            .setLeftValue((float) (clientX - left));
+                            .setLeftValue(Float.valueOf(clientX - left));
                 } catch (Exception e) {
                 }
             } else {
