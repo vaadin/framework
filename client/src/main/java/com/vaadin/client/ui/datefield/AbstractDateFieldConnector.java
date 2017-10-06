@@ -26,8 +26,10 @@ import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 
 public abstract class AbstractDateFieldConnector<R extends Enum<R>>
@@ -45,20 +47,6 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         getWidget().setReadonly(isReadOnly());
         getWidget().setEnabled(isEnabled());
-
-        if (uidl.hasAttribute("locale")) {
-            final String locale = uidl.getStringAttribute("locale");
-            try {
-                getWidget().dts.setLocale(locale);
-                getWidget().setCurrentLocale(locale);
-            } catch (final LocaleNotLoadedException e) {
-                getWidget().setCurrentLocale(getWidget().dts.getLocale());
-                VConsole.error("Tried to use an unloaded locale \"" + locale
-                        + "\". Using default locale ("
-                        + getWidget().getCurrentLocale() + ").");
-                VConsole.error(e);
-            }
-        }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
@@ -122,6 +110,26 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
     @Override
     public VDateField<R> getWidget() {
         return (VDateField<R>) super.getWidget();
+    }
+
+    @Override
+    public AbstractDateFieldState getState() {
+        return (AbstractDateFieldState) super.getState();
+    }
+
+    @OnStateChange("locale")
+    private void onLocaleChange() {
+        final String locale = getState().locale;
+        try {
+            getWidget().dts.setLocale(locale);
+            getWidget().setCurrentLocale(locale);
+        } catch (final LocaleNotLoadedException e) {
+            getWidget().setCurrentLocale(getWidget().dts.getLocale());
+            VConsole.error("Tried to use an unloaded locale \"" + locale
+                    + "\". Using default locale ("
+                    + getWidget().getCurrentLocale() + ").");
+            VConsole.error(e);
+        }
     }
 
 }

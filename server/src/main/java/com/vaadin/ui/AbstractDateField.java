@@ -170,13 +170,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
-
-        // Adds the locale as attribute
-        final Locale l = getLocale();
-        if (l != null) {
-            target.addAttribute("locale", l.toString());
-        }
-
         if (getDateFormat() != null) {
             target.addAttribute("format", getDateFormat());
         }
@@ -207,6 +200,13 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 target.addVariable(this, "default-" + variableName, -1);
             }
         }
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+
+        updateLocale(getLocale());
     }
 
     /*
@@ -474,12 +474,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         getState().timeZoneJSON = timeZoneJSON;
     }
 
+    private void updateLocale(Locale locale) {
+        getState().locale = locale == null ? null : locale.toString();
+    }
+
     @Override
     public void setLocale(Locale locale) {
         Locale oldLocale = getLocale();
         if (locale != oldLocale
                 || (locale != null && !locale.equals(oldLocale))) {
             updateTimeZoneJSON(getZoneId(), locale);
+            updateLocale(locale);
         }
         super.setLocale(locale);
     }

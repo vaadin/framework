@@ -54,4 +54,11 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * @since 8.2
      */
     public String timeZoneJSON;
+
+    /**
+     * The used Locale, can be {@code null}.
+     * 
+     * @since
+     */
+    public String locale;
 }
