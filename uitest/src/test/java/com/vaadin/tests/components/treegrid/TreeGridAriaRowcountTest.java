@@ -30,7 +30,7 @@ public class TreeGridAriaRowcountTest extends SingleBrowserTest {
     private TreeGridElement grid;
 
     @Test
-    public void checkAriaMultiselectable() {
+    public void checkTreeGridAriaRowcount() {
         openTestURL();
 
         grid = $(TreeGridElement.class).first();

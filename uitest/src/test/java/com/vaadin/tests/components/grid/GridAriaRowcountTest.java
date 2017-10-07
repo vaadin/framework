@@ -31,7 +31,7 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
     private GridElement grid;
 
     @Test
-    public void checkAriaMultiselectable() {
+    public void checkGridAriaRowcount() {
         openTestURL();
 
         grid = $(GridElement.class).first();
