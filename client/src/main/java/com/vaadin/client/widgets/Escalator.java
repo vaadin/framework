@@ -1124,6 +1124,30 @@ public class Escalator extends Widget
         }
     }
 
+    public class AriaGridHelper {
+
+        private int allRows;
+
+        public void addRows(int numberOfRows) {
+            allRows += numberOfRows;
+            updateAriaRowCount();
+        }
+
+        public void removeRows(int numberOfRows) {
+            allRows -= numberOfRows;
+            updateAriaRowCount();
+        }
+
+        public void updateAriaRowCount() {
+            if (!isAttached() || 0 > allRows) {
+
+                return;
+            }
+
+            getTable().setAttribute("aria-rowcount", String.valueOf(allRows));
+        }
+    }
+
     public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -1137,6 +1161,7 @@ public class Escalator extends Widget
          * } tags) are contained in.
          */
         protected final TableSectionElement root;
+        protected final AriaGridHelper aria;
 
         /**
          * The primary style name of the escalator. Most commonly provided by
@@ -1150,9 +1175,10 @@ public class Escalator extends Widget
 
         private boolean initialColumnSizesCalculated = false;
 
-        public AbstractRowContainer(
-                final TableSectionElement rowContainerElement) {
+        public AbstractRowContainer(final TableSectionElement rowContainerElement,
+                                    final AriaGridHelper ariaGridHelper) {
             root = rowContainerElement;
+            aria = ariaGridHelper;
         }
 
         @Override
@@ -1216,6 +1242,7 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            aria.removeRows(numberOfRows);
 
             if (!isAttached()) {
                 return;
@@ -1340,6 +1367,7 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
+            aria.addRows(numberOfRows);
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -2168,9 +2196,9 @@ public class Escalator extends Widget
         /** The height of the combined rows in the DOM. Never negative. */
         private double heightOfSection = 0;
 
-        public AbstractStaticRowContainer(
-                final TableSectionElement headElement) {
-            super(headElement);
+        public AbstractStaticRowContainer(final TableSectionElement headElement,
+                                          final AriaGridHelper ariaGridHelper) {
+            super(headElement, ariaGridHelper);
         }
 
         @Override
@@ -2335,8 +2363,9 @@ public class Escalator extends Widget
     }
 
     private class HeaderRowContainer extends AbstractStaticRowContainer {
-        public HeaderRowContainer(final TableSectionElement headElement) {
-            super(headElement);
+        public HeaderRowContainer(final TableSectionElement headElement,
+                                  final AriaGridHelper ariaGridHelper) {
+            super(headElement, ariaGridHelper);
         }
 
         @Override
@@ -2363,8 +2392,9 @@ public class Escalator extends Widget
     }
 
     private class FooterRowContainer extends AbstractStaticRowContainer {
-        public FooterRowContainer(final TableSectionElement footElement) {
-            super(footElement);
+        public FooterRowContainer(final TableSectionElement footElement,
+                                  final AriaGridHelper ariaGridHelper) {
+            super(footElement, ariaGridHelper);
         }
 
         @Override
@@ -2520,8 +2550,9 @@ public class Escalator extends Widget
 
         private final SpacerContainer spacerContainer = new SpacerContainer();
 
-        public BodyRowContainerImpl(final TableSectionElement bodyElement) {
-            super(bodyElement);
+        public BodyRowContainerImpl(final TableSectionElement bodyElement,
+                                    final AriaGridHelper ariaGridHelper) {
+            super(bodyElement, ariaGridHelper);
         }
 
         @Override
@@ -5594,10 +5625,11 @@ public class Escalator extends Widget
     private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();
     private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
-    private final HeaderRowContainer header = new HeaderRowContainer(headElem);
-    private final BodyRowContainerImpl body = new BodyRowContainerImpl(
-            bodyElem);
-    private final FooterRowContainer footer = new FooterRowContainer(footElem);
+    private final AriaGridHelper ariaGridHelper = new AriaGridHelper();
+
+    private final HeaderRowContainer header = new HeaderRowContainer(headElem, ariaGridHelper);
+    private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem, ariaGridHelper);
+    private final FooterRowContainer footer = new FooterRowContainer(footElem, ariaGridHelper);
 
     /**
      * Flag for keeping track of {@link RowHeightChangedEvent}s
