@@ -116,7 +116,7 @@ public abstract class AbstractRenderer<T, V> extends AbstractExtension
     }
 
     /**
-     * Null representation for the renderer
+     * Null representation for the renderer.
      *
      * @return a textual representation of {@code null}
      */

@@ -1,6 +1,7 @@
 package com.vaadin.tests.applicationcontext;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -47,8 +48,7 @@ public class CloseSessionTest extends MultiBrowserTest {
     @Test
     public void testCloseVaadinServiceAndRedirect() {
         clickButton("Close VaadinServiceSession and redirect elsewhere");
-        Assert.assertEquals("Unexpected page contents,",
-                "This is a static file",
+        assertEquals("Unexpected page contents,", "This is a static file",
                 findElement(By.xpath("//h1")).getText());
     }
 
@@ -91,13 +91,13 @@ public class CloseSessionTest extends MultiBrowserTest {
     }
 
     private void assertLogText(int index, String expected) {
-        Assert.assertEquals("Unexpected log text,", expected, getLogRow(index));
+        assertEquals("Unexpected log text,", expected, getLogRow(index));
     }
 
     private void assertSessionExpired() {
         String expected = "Session Expired";
         String actual = $(NotificationElement.class).first().getCaption();
-        Assert.assertEquals("Unexpected notification,", actual, expected);
+        assertEquals("Unexpected notification,", actual, expected);
     }
 
     public void clickButton(String caption) {

@@ -172,7 +172,7 @@ public class VaadinTunesLayout extends AbstractReindeerTestUI {
         rootLayout.addComponent(bottom);
 
         // The splitpanel is by default 100% x 100%, but we'll need to adjust
-        // our main window layout to accomodate the height
+        // our main window layout to accommodate the height
         rootLayout.setExpandRatio(bottom, 1.0F);
 
         // Give the sidebar less space than the listing
@@ -245,27 +245,26 @@ public class VaadinTunesLayout extends AbstractReindeerTestUI {
                 new NativeSelect());
 
         // Lets populate the table with random data
-        String[] tracks = new String[] { "Red Flag", "Millstone", "Not The Sun",
-                "Breath", "Here We Are", "Deep Heaven", "Her Voice Resides",
+        String[] tracks = { "Red Flag", "Millstone", "Not The Sun", "Breath",
+                "Here We Are", "Deep Heaven", "Her Voice Resides",
                 "Natural Tan", "End It All", "Kings", "Daylight Slaving",
                 "Mad Man", "Resolve", "Teargas", "African Air",
                 "Passing Bird" };
-        String[] times = new String[] { "4:12", "6:03", "5:43", "4:32", "3:42",
-                "4:45", "2:56", "9:34", "2:10", "3:44", "5:49", "6:30", "5:18",
-                "7:42", "3:13", "2:52" };
-        String[] artists = new String[] { "Billy Talent", "Brand New",
-                "Breaking Benjamin", "Becoming The Archetype",
-                "Bullet For My Valentine", "Chasing Victory", "Chimaira",
-                "Danko Jones", "Deadlock", "Deftones", "From Autumn To Ashes",
-                "Haste The Day", "Four Year Strong", "In Flames", "Kemopetrol",
-                "John Legend" };
-        String[] albums = new String[] { "Once Again", "The Caitiff Choir",
+        String[] times = { "4:12", "6:03", "5:43", "4:32", "3:42", "4:45",
+                "2:56", "9:34", "2:10", "3:44", "5:49", "6:30", "5:18", "7:42",
+                "3:13", "2:52" };
+        String[] artists = { "Billy Talent", "Brand New", "Breaking Benjamin",
+                "Becoming The Archetype", "Bullet For My Valentine",
+                "Chasing Victory", "Chimaira", "Danko Jones", "Deadlock",
+                "Deftones", "From Autumn To Ashes", "Haste The Day",
+                "Four Year Strong", "In Flames", "Kemopetrol", "John Legend" };
+        String[] albums = { "Once Again", "The Caitiff Choir",
                 "The Devil And God", "Light Grenades", "Dicthonomy",
                 "Back In Black", "Dreamer", "Come Clarity", "Year Zero",
                 "Frames", "Fortress", "Phobia", "The Poison", "Manifesto",
                 "White Pony", "The Big Dirty" };
-        String[] genres = new String[] { "Rock", "Metal", "Hardcore", "Indie",
-                "Pop", "Alternative", "Blues", "Jazz", "Hip Hop", "Electronica",
+        String[] genres = { "Rock", "Metal", "Hardcore", "Indie", "Pop",
+                "Alternative", "Blues", "Jazz", "Hip Hop", "Electronica",
                 "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel", "Country" };
         for (int i = 0; i < 1000; i++) {
             NativeSelect s = new NativeSelect();

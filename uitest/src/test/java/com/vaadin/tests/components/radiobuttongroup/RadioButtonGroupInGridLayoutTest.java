@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.radiobuttongroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridLayoutElement;
@@ -27,6 +28,6 @@ public class RadioButtonGroupInGridLayoutTest extends MultiBrowserTest {
             ok = (before == after + 4);
         }
 
-        Assert.assertTrue("GridLayout size changed when selecting a value", ok);
+        assertTrue("GridLayout size changed when selecting a value", ok);
     }
 }

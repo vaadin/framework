@@ -143,7 +143,7 @@ public class ReportUsage {
         appendUserAgentProperty(extra, "os.name");
         appendUserAgentProperty(extra, "os.version");
 
-        if (extra.length() > 0) {
+        if (extra.length() != 0) {
             userAgent += " (" + extra.toString() + ")";
         }
 
@@ -154,7 +154,7 @@ public class ReportUsage {
             String propName) {
         String propValue = System.getProperty(propName);
         if (propValue != null) {
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 sb.append(';').append(' ');
             }
             sb.append(propName);

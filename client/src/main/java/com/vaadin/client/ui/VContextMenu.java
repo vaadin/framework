@@ -76,9 +76,6 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     /**
      * This method should be used only by Client object as only one per client
      * should exists. Request an instance via client.getContextMenu();
-     *
-     * @param cli
-     *            to be set as an owner of menu
      */
     public VContextMenu() {
         super(true, false);
@@ -107,7 +104,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Sets the element from which to build menu
+     * Sets the element from which to build menu.
      *
      * @param ao
      */
@@ -130,8 +127,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         this.left = left;
         this.top = top;
         menu.clearItems();
-        for (int i = 0; i < actions.length; i++) {
-            final Action a = actions[i];
+        for (final Action a : actions) {
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
 

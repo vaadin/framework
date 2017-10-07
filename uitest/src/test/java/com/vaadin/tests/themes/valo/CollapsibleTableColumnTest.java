@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -48,7 +49,7 @@ public class CollapsibleTableColumnTest extends MultiBrowserTest {
         String nonCollapsibleColumnOpacity = items.get(1)
                 .getCssValue("opacity");
 
-        Assert.assertNotEquals(
+        assertNotEquals(
                 "Opacity value is the same for collapsible "
                         + "and non-collapsible column item",
                 collapsibleColumnOpacity, nonCollapsibleColumnOpacity);

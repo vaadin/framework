@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -38,20 +40,19 @@ public class LeftColumnAlignmentTest extends MultiBrowserTest {
         WebElement webElement = driver.findElement(By.className("v-button"));
         webElement.click();
 
-        Assert.assertTrue("Table caption is not aligned to the left",
-                isElementPresent(
-                        By.className("v-table-caption-container-align-left")));
+        assertTrue("Table caption is not aligned to the left", isElementPresent(
+                By.className("v-table-caption-container-align-left")));
 
         WebElement footer = driver
                 .findElement(By.className("v-table-footer-container"));
 
-        Assert.assertEquals("Table footer is not aligned to the left", "left",
+        assertEquals("Table footer is not aligned to the left", "left",
                 footer.getCssValue("text-align"));
 
         WebElement cell = driver
                 .findElement(By.className("v-table-cell-wrapper"));
 
-        Assert.assertEquals("Table cell is not aligned to the left", "left",
+        assertEquals("Table cell is not aligned to the left", "left",
                 cell.getCssValue("text-align"));
     }
 

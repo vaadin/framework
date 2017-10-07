@@ -59,7 +59,7 @@ public class SingleUseDragAndDropUpload extends AbstractTestUIWithLog {
             @Override
             public void drop(DragAndDropEvent event) {
                 Transferable transferable = event.getTransferable();
-                log("Drop occured");
+                log("Drop occurred");
                 if (transferable instanceof WrapperTransferable) {
                     WrapperTransferable wTransferable = (WrapperTransferable) transferable;
                     Html5File[] files = wTransferable.getFiles();

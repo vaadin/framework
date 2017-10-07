@@ -112,7 +112,7 @@ public class ClasspathHelper {
         }
     }
 
-    private final static List<String> getRawClasspathEntries() {
+    private static final List<String> getRawClasspathEntries() {
         List<String> locations = new ArrayList<>();
 
         String pathSep = System.getProperty("path.separator");
@@ -125,9 +125,7 @@ public class ClasspathHelper {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        String[] split = classpath.split(pathSep);
-        for (int i = 0; i < split.length; i++) {
-            String classpathEntry = split[i];
+        for (String classpathEntry : classpath.split(pathSep)) {
             locations.add(classpathEntry);
         }
 

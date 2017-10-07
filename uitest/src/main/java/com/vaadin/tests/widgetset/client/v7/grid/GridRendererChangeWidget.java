@@ -94,7 +94,7 @@ public class GridRendererChangeWidget
 
     public GridRendererChangeWidget() {
         super(new Grid<String[]>());
-        String[] strArr = new String[] { "foo", "bar" };
+        String[] strArr = { "foo", "bar" };
         ListDataSource<String[]> ds = new ListDataSource<String[]>(strArr);
         final Grid<String[]> grid = getTestedWidget();
         grid.setDataSource(ds);

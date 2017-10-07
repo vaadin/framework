@@ -1,3 +1,9 @@
+---
+title: Using Polling
+order: 17
+layout: page
+---
+
 [[using-polling]]
 Using Polling
 -------------

@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.accordion;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -41,7 +42,7 @@ public class AccordionAddTabTest extends MultiBrowserTest {
 
         List<WebElement> panels = driver.findElements(By.className("v-panel"));
 
-        Assert.assertEquals(
+        assertEquals(
                 "Found two widgets inside one tab after "
                         + "subsequent tab removal and addition",
                 1, panels.size());

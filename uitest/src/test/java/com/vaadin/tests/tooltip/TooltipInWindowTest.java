@@ -18,7 +18,6 @@ package com.vaadin.tests.tooltip;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.TooltipTest;
 
 /**
@@ -45,10 +44,6 @@ public class TooltipInWindowTest extends TooltipTest {
         clearTooltip();
     }
 
-    private WebElement getTooltipContainerElement() {
-        return getDriver().findElement(By.className("v-tooltip"));
-    }
-
     private void ensureVisibleTooltipPositionedCorrectly(WebElement textfield)
             throws InterruptedException {
         int tooltipX = getTooltip().getLocation().getX();
@@ -57,11 +52,4 @@ public class TooltipInWindowTest extends TooltipTest {
                 + tooltipX + " < " + textfieldX + ")", tooltipX, textfieldX);
     }
 
-    private void ensureHiddenTooltipPositionedCorrectly() {
-        int tooltipX = getTooltipContainerElement().getLocation().getX();
-        assertLessThanOrEqual(
-                "Tooltip should be positioned outside of viewport (was at "
-                        + tooltipX + ")",
-                tooltipX, -1000);
-    }
 }

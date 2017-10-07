@@ -120,7 +120,7 @@ public class Window extends Panel
     private int orderPosition = -1;
 
     /**
-     * Creates a new, empty window
+     * Creates a new, empty window.
      */
     public Window() {
         this("", null);
@@ -285,7 +285,7 @@ public class Window extends Panel
 
     /**
      * Sets the position of the window on the screen using
-     * {@link #setPositionX(int)} and {@link #setPositionY(int)}
+     * {@link #setPositionX(int)} and {@link #setPositionY(int)}.
      *
      * @since 7.5
      * @param x
@@ -366,9 +366,9 @@ public class Window extends Panel
         try {
             WINDOW_CLOSE_METHOD = CloseListener.class
                     .getDeclaredMethod("windowClose", CloseEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window close method not found");
         }
     }
@@ -504,7 +504,7 @@ public class Window extends Panel
          * {@link Window} that was closed.
          *
          * @param e
-         *            Event containing
+         *            The triggered event
          */
         public void windowClose(CloseEvent e);
     }
@@ -662,9 +662,9 @@ public class Window extends Panel
         try {
             WINDOW_RESIZE_METHOD = ResizeListener.class
                     .getDeclaredMethod("windowResized", ResizeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error, window resized method not found");
         }
     }
@@ -685,7 +685,7 @@ public class Window extends Panel
         }
 
         /**
-         * Get the window form which this event originated
+         * Get the window form which this event originated.
          *
          * @return the window
          */
@@ -911,7 +911,7 @@ public class Window extends Panel
     }
 
     /**
-     * Sets the mode for the window
+     * Sets the mode for the window.
      *
      * @see WindowMode
      * @param windowMode

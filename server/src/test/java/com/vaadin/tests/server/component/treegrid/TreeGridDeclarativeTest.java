@@ -68,13 +68,13 @@ public class TreeGridDeclarativeTest
                 person7.getLastName(), getComponentTag());
 
         TreeGrid<String> readGrid = testRead(design, grid);
-        Assert.assertEquals(3, readGrid.getDataProvider()
+        assertEquals(3, readGrid.getDataProvider()
                 .size(new HierarchicalQuery<>(null, null)));
-        Assert.assertEquals(2, readGrid.getDataProvider()
+        assertEquals(2, readGrid.getDataProvider()
                 .size(new HierarchicalQuery<>(null, person1.toString())));
-        Assert.assertEquals(1, readGrid.getDataProvider()
+        assertEquals(1, readGrid.getDataProvider()
                 .size(new HierarchicalQuery<>(null, person5.toString())));
-        Assert.assertEquals(1, readGrid.getDataProvider()
+        assertEquals(1, readGrid.getDataProvider()
                 .size(new HierarchicalQuery<>(null, person6.toString())));
         testWrite(design, grid, true);
     }

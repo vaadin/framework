@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -54,7 +55,7 @@ public class SaneErrorsTest extends MultiBrowserTest {
                 .findElements(By.className("v-label"));
         for (WebElement webElement : errorMessages) {
             String text = webElement.getText();
-            Assert.assertEquals("java.lang.NullPointerException", text);
+            assertEquals("java.lang.NullPointerException", text);
         }
     }
 

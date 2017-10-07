@@ -73,7 +73,7 @@ public class FieldProperty extends Property {
 
     private static List<JField> getPublicFields(JClassType type) {
         Set<String> names = new HashSet<>();
-        ArrayList<JField> fields = new ArrayList<>();
+        List<JField> fields = new ArrayList<>();
         for (JClassType subType : type.getFlattenedSupertypeHierarchy()) {
             JField[] subFields = subType.getFields();
             for (JField field : subFields) {

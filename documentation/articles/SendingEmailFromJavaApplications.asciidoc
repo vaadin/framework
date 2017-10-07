@@ -1,3 +1,9 @@
+---
+title: Sending Email From Java Applications
+order: 12
+layout: page
+---
+
 [[sending-email-from-java-applications]]
 Sending email from Java Applications
 ------------------------------------

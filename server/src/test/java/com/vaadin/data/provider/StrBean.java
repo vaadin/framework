@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class StrBean implements Serializable {
 
-    private static final String[] values = new String[] { "Foo", "Bar", "Baz" };
+    private static final String[] values = { "Foo", "Bar", "Baz" };
 
     private String value;
     private final int id;

@@ -22,8 +22,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class PopupTimeClosingWithEscTest extends MultiBrowserTest {

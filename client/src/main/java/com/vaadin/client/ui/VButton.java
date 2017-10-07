@@ -30,8 +30,10 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 
-public class VButton extends FocusWidget implements ClickHandler {
+public class VButton extends FocusWidget implements ClickHandler,
+        HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -48,7 +50,7 @@ public class VButton extends FocusWidget implements ClickHandler {
     public final Element wrapper = DOM.createSpan();
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Element captionElement = DOM.createSpan();
@@ -434,8 +436,8 @@ public class VButton extends FocusWidget implements ClickHandler {
     /*-{
         // THIS METHOD IS ONLY USED FOR INTERNET EXPLORER, IT DOESN'T WORK WITH OTHERS
 
-    	var convertToPixel = function(elem, value) {
-    	    // From the awesome hack by Dean Edwards
+        var convertToPixel = function(elem, value) {
+            // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
 
             // Remember the original values
@@ -451,9 +453,9 @@ public class VButton extends FocusWidget implements ClickHandler {
             elem.runtimeStyle.left = rsLeft;
 
             return ret;
-    	}
+        }
 
-     	var ret = 0;
+         var ret = 0;
 
         var sides = ["Right","Left"];
         for(var i=0; i<2; i++) {
@@ -478,7 +480,24 @@ public class VButton extends FocusWidget implements ClickHandler {
             }
         }
 
-    	return ret;
+        return ret;
     }-*/;
 
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                wrapper.insertFirst(errorIndicatorElement);
+            }
+        } else if (errorIndicatorElement != null) {
+            wrapper.removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
+    }
 }

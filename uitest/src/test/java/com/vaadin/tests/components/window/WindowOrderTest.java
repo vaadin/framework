@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -46,25 +47,25 @@ public class WindowOrderTest extends MultiBrowserTest {
         // Bring the first window to front and check order positions of the
         // windows
         findElement(By.className("bring-to-front-first")).click();
-        Assert.assertTrue(
+        assertTrue(
                 "The first window has wrong order position after bring first to front",
                 hasOrder("window1", 2));
-        Assert.assertTrue(
+        assertTrue(
                 "The first window position is incorrectly updated via UI listener after bring first to front",
                 hasOrderInUi("window1", 2));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window has wrong order position after bring first to front",
                 hasOrder("window2", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window position is incorrectly updated via UI after bring first to front",
                 hasOrderInUi("window2", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The third window has wrong order position after bring first to front",
                 hasOrder("window3", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The third window position is incorrectly updated via UI after bring first to front",
                 hasOrderInUi("window3", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "Last window is not attached and should have '-1' position, but hasn't.",
                 lastWindowHasOrder(-1));
     }
@@ -75,25 +76,25 @@ public class WindowOrderTest extends MultiBrowserTest {
         // windows
         findElement(By.className("bring-to-front-all")).click();
 
-        Assert.assertTrue(
+        assertTrue(
                 "The first window has wrong order position after bring all to front",
                 hasOrder("window2", 2));
-        Assert.assertTrue(
+        assertTrue(
                 "The first window position is incorrectly updated via UI after bring all to front",
                 hasOrderInUi("window2", 2));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window has wrong order position after bring all to front",
                 hasOrder("window1", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window position is incorrectly updated via UI after bring all to front",
                 hasOrderInUi("window1", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The third window has wrong order position after bring all to front",
                 hasOrder("window3", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The third window position is incorrectly updated via UI after bring all to front",
                 hasOrderInUi("window3", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "Last window is not attached and should have '-1' position, but hasn't.",
                 lastWindowHasOrder(-1));
     }
@@ -103,25 +104,25 @@ public class WindowOrderTest extends MultiBrowserTest {
         // windows
         findElement(By.className("detach-window")).click();
 
-        Assert.assertTrue(
+        assertTrue(
                 "The first window has wrong order position after detach last window",
                 hasOrder("window2", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The first window position is incorrectly updated after detach last window",
                 hasOrderInUi("window2", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window has wrong order position after detach last window",
                 hasOrder("window1", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window position is incorrectly updated after detach last window",
                 hasOrderInUi("window1", 0));
         WebElement thirdWindowInfo = findElement(By.className("w3-detached"));
-        Assert.assertTrue("The third window has wrong order after detach",
+        assertTrue("The third window has wrong order after detach",
                 thirdWindowInfo.getAttribute("class").contains("w3--1"));
-        Assert.assertTrue(
+        assertTrue(
                 "The third window position is incorrectly updated after detach last window",
                 hasOrderInUi("window3", -1));
-        Assert.assertTrue(
+        assertTrue(
                 "Last window is not attached and should have '-1' position, but hasn't.",
                 lastWindowHasOrder(-1));
     }
@@ -131,22 +132,22 @@ public class WindowOrderTest extends MultiBrowserTest {
         // windows
         findElement(By.className("add-window")).click();
 
-        Assert.assertTrue(
+        assertTrue(
                 "The first window has wrong order position after add new window",
                 hasOrder("window2", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The first window position is incorrectly updated after add new window",
                 hasOrderInUi("window2", 1));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window has wrong order position after add new window",
                 hasOrder("window1", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The second window position is incorrectly updated after add new window",
                 hasOrderInUi("window1", 0));
-        Assert.assertTrue(
+        assertTrue(
                 "The last window has wrong order position after add new window",
                 hasOrder("window4", 2));
-        Assert.assertTrue(
+        assertTrue(
                 "The last window position is incorrectly updated after add new window",
                 hasOrderInUi("window4", 2));
     }

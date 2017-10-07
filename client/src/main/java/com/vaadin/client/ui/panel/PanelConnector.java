@@ -96,7 +96,7 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
                     .setClassName(VPanel.CLASSNAME + "-deco");
             getWidget().captionNode.setClassName(VPanel.CLASSNAME + "-caption");
             boolean hasCaption = false;
-            if (getState().caption != null && !"".equals(getState().caption)) {
+            if (getState().caption != null && !getState().caption.isEmpty()) {
                 getWidget().setCaption(getState().caption);
                 hasCaption = true;
             } else {
@@ -142,8 +142,6 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
         } else {
             getWidget().setIconUri(null, client);
         }
-
-        getWidget().setErrorIndicatorVisible(isErrorIndicatorVisible());
 
         // We may have actions attached to this panel
         if (uidl.getChildCount() > 0) {

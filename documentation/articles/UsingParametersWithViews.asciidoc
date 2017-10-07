@@ -1,3 +1,9 @@
+---
+title: Using Parameters With Views
+order: 14
+layout: page
+---
+
 [[using-parameters-with-views]]
 Using parameters with Views
 ---------------------------

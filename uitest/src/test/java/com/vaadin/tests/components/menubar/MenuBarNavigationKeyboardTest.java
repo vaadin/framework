@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.menubar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -36,34 +36,34 @@ public class MenuBarNavigationKeyboardTest extends MultiBrowserTest {
         openMenu("File");
         getMenuBar().sendKeys(Keys.DOWN, Keys.DOWN, Keys.DOWN, Keys.DOWN,
                 Keys.RIGHT, Keys.ENTER);
-        Assert.assertEquals("1. MenuItem File/Export../As PDF... selected",
+        assertEquals("1. MenuItem File/Export../As PDF... selected",
                 getLogRow(0));
 
         openMenu("File");
         getMenuBar().sendKeys(Keys.RIGHT, Keys.RIGHT, Keys.RIGHT, Keys.ENTER);
-        Assert.assertEquals("2. MenuItem Help selected", getLogRow(0));
+        assertEquals("2. MenuItem Help selected", getLogRow(0));
 
         openMenu("Edit");
         getMenuBar().sendKeys(Keys.LEFT, Keys.DOWN, Keys.DOWN, Keys.ENTER);
-        Assert.assertEquals("3. MenuItem Edit/Cut selected", getLogRow(0));
+        assertEquals("3. MenuItem Edit/Cut selected", getLogRow(0));
 
         openMenu("Edit");
         getMenuBar().sendKeys(Keys.ENTER);
-        Assert.assertEquals("3. MenuItem Edit/Cut selected", getLogRow(0));
+        assertEquals("3. MenuItem Edit/Cut selected", getLogRow(0));
 
         getMenuBar().sendKeys(Keys.ENTER);
-        Assert.assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
+        assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
 
         /* Enter while menubar has focus but no selection should focus "File" */
         getMenuBar().sendKeys(Keys.ENTER);
-        Assert.assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
+        assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
 
         /* Enter again should open File and focus Open */
         getMenuBar().sendKeys(Keys.ENTER);
-        Assert.assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
+        assertEquals("4. MenuItem Edit/Copy selected", getLogRow(0));
 
         getMenuBar().sendKeys(Keys.ENTER);
-        Assert.assertEquals("5. MenuItem File/Open selected", getLogRow(0));
+        assertEquals("5. MenuItem File/Open selected", getLogRow(0));
     }
 
     @Test

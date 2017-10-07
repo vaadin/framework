@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.resources;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -42,7 +43,7 @@ public class FrontendLaterLoadedResourceUITest extends MultiBrowserTest {
             testBench().disableWaitForVaadin();
         }
 
-        Assert.assertEquals("/VAADIN/frontend/" + es + "/logFilename.js",
+        assertEquals("/VAADIN/frontend/" + es + "/logFilename.js",
                 findElement(By.tagName("body")).getText());
     }
 

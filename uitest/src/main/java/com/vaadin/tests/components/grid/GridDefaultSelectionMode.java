@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -37,7 +38,7 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         person2.setFirstName("person");
         person2.setLastName("two");
 
-        ArrayList<Person> items = new ArrayList<>();
+        List<Person> items = new ArrayList<>();
         items.add(person1);
         items.add(person2);
 

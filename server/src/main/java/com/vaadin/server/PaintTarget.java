@@ -39,7 +39,7 @@ public interface PaintTarget extends Serializable {
      * @param sectionTagName
      *            the name of the tag.
      * @param sectionData
-     *            the scetion data.
+     *            the section data.
      * @throws PaintException
      *             if the paint operation failed.
      */
@@ -145,8 +145,8 @@ public interface PaintTarget extends Serializable {
     public void endTag(String tagName) throws PaintException;
 
     /**
-     * Adds a boolean attribute to component. Atributes must be added before any
-     * content is written.
+     * Adds a boolean attribute to component. Attributes must be added before
+     * any content is written.
      *
      * @param name
      *            the Attribute name.
@@ -159,8 +159,8 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, boolean value) throws PaintException;
 
     /**
-     * Adds a integer attribute to component. Atributes must be added before any
-     * content is written.
+     * Adds a integer attribute to component. Attributes must be added before
+     * any content is written.
      *
      * @param name
      *            the Attribute name.
@@ -173,7 +173,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, int value) throws PaintException;
 
     /**
-     * Adds a resource attribute to component. Atributes must be added before
+     * Adds a resource attribute to component. Attributes must be added before
      * any content is written.
      *
      * @param name
@@ -222,7 +222,7 @@ public interface PaintTarget extends Serializable {
             StreamVariable value) throws PaintException;
 
     /**
-     * Adds a long attribute to component. Atributes must be added before any
+     * Adds a long attribute to component. Attributes must be added before any
      * content is written.
      *
      * @param name
@@ -236,7 +236,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, long value) throws PaintException;
 
     /**
-     * Adds a float attribute to component. Atributes must be added before any
+     * Adds a float attribute to component. Attributes must be added before any
      * content is written.
      *
      * @param name
@@ -250,7 +250,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, float value) throws PaintException;
 
     /**
-     * Adds a double attribute to component. Atributes must be added before any
+     * Adds a double attribute to component. Attributes must be added before any
      * content is written.
      *
      * @param name
@@ -264,7 +264,7 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, double value) throws PaintException;
 
     /**
-     * Adds a string attribute to component. Atributes must be added before any
+     * Adds a string attribute to component. Attributes must be added before any
      * content is written.
      *
      * @param name
@@ -278,8 +278,11 @@ public interface PaintTarget extends Serializable {
     public void addAttribute(String name, String value) throws PaintException;
 
     /**
-     * TODO
+     * Adds a {@link Map} attribute to the component. Attributes must be added
+     * before any content is written.
      *
+     * TODO: specify how the map is added
+     * 
      * @param name
      * @param value
      * @throws PaintException
@@ -318,7 +321,7 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
-     * Adds a int type variable.
+     * Adds an int type variable.
      *
      * @param owner
      *            the Listener for variable changes.
@@ -434,7 +437,7 @@ public interface PaintTarget extends Serializable {
             throws PaintException;
 
     /**
-     * Adds a upload stream type variable.
+     * Adds an upload stream type variable.
      *
      * @param owner
      *            the Listener for variable changes.
@@ -475,7 +478,7 @@ public interface PaintTarget extends Serializable {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public void addUIDL(java.lang.String uidl) throws PaintException;
+    public void addUIDL(String uidl) throws PaintException;
 
     /**
      * Adds text node. All the contents of the text are XML-escaped.

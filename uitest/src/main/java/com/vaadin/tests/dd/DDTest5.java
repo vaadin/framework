@@ -147,7 +147,7 @@ public class DDTest5 extends TestBase {
 
                     String data = (String) dropEvent.getTransferable()
                             .getData("text/plain");
-                    if (data == null || "".equals(data)) {
+                    if (data == null || data.isEmpty()) {
                         data = "-- no Text --";
                     }
                     cssLayout.addComponent(new WrappedLabel(data));

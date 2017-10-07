@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -34,8 +35,8 @@ public class HtmlInTabCaptionTest extends SingleBrowserTest {
     public void tabsheetWithoutHtmlCaptions() {
         openTestURL();
         TabSheetElement ts = $(TabSheetElement.class).get(0);
-        Assert.assertEquals(PLAIN_TEXT_RED, getTab(ts, 0).getText());
-        Assert.assertEquals(PLAIN_TEXT_BLUE, getTab(ts, 1).getText());
+        assertEquals(PLAIN_TEXT_RED, getTab(ts, 0).getText());
+        assertEquals(PLAIN_TEXT_BLUE, getTab(ts, 1).getText());
     }
 
     private WebElement getTab(TabSheetElement tabSheetElement, int i) {
@@ -50,16 +51,16 @@ public class HtmlInTabCaptionTest extends SingleBrowserTest {
     public void tabsheetWithHtmlCaptions() {
         openTestURL();
         TabSheetElement ts = $(TabSheetElement.class).get(1);
-        Assert.assertEquals(HTML_TEXT_RED, getTab(ts, 0).getText());
-        Assert.assertEquals(HTML_TEXT_BLUE, getTab(ts, 1).getText());
+        assertEquals(HTML_TEXT_RED, getTab(ts, 0).getText());
+        assertEquals(HTML_TEXT_BLUE, getTab(ts, 1).getText());
     }
 
     @Test
     public void accordionWithoutHtmlCaptions() {
         openTestURL();
         AccordionElement acc = $(AccordionElement.class).get(0);
-        Assert.assertEquals(PLAIN_TEXT_RED, getTab(acc, 0).getText());
-        Assert.assertEquals(PLAIN_TEXT_BLUE, getTab(acc, 1).getText());
+        assertEquals(PLAIN_TEXT_RED, getTab(acc, 0).getText());
+        assertEquals(PLAIN_TEXT_BLUE, getTab(acc, 1).getText());
 
     }
 
@@ -67,7 +68,7 @@ public class HtmlInTabCaptionTest extends SingleBrowserTest {
     public void accordionWithHtmlCaptions() {
         openTestURL();
         AccordionElement acc = $(AccordionElement.class).get(1);
-        Assert.assertEquals(HTML_TEXT_RED, getTab(acc, 0).getText());
-        Assert.assertEquals(HTML_TEXT_BLUE, getTab(acc, 1).getText());
+        assertEquals(HTML_TEXT_RED, getTab(acc, 0).getText());
+        assertEquals(HTML_TEXT_BLUE, getTab(acc, 1).getText());
     }
 }

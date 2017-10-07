@@ -274,9 +274,4 @@ public class GridClientRenderers extends MultiBrowserTest {
         return $(MyClientGridElement.class).first();
     }
 
-    private void addColumn(Renderers renderer) {
-        // Add widget renderer column
-        $(NativeSelectElement.class).first().selectByText(renderer.toString());
-        $(NativeButtonElement.class).caption("Add").first().click();
-    }
 }

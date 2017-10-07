@@ -1,6 +1,7 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.data.Result;
@@ -56,7 +57,7 @@ public class StringToLongConverterTest extends AbstractStringConverterTest {
                 getErrorMessage());
 
         assertValue((long) 0, converter.convertToModel("", new ValueContext()));
-        Assert.assertEquals("0",
+        assertEquals("0",
                 converter.convertToPresentation((long) 0, new ValueContext()));
     }
 }

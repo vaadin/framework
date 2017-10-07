@@ -85,7 +85,7 @@ public class SizeWithUnit implements Serializable {
             return null;
         }
         s = s.trim();
-        if ("".equals(s)) {
+        if (s.isEmpty()) {
             return null;
         }
         float size = 0;
@@ -98,7 +98,7 @@ public class SizeWithUnit implements Serializable {
                 unit = Unit.PIXELS;
             } else {
                 String symbol = matcher.group(2);
-                if ((symbol != null && symbol.length() > 0)
+                if ((symbol != null && !symbol.isEmpty())
                         || defaultUnit == null) {
                     unit = Unit.getUnitFromSymbol(symbol);
                 } else {

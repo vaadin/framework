@@ -3,13 +3,13 @@ package com.vaadin.server;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,30 +34,30 @@ public class TestAbstractApplicationServletStaticFilesLocation {
         // should return . (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "");
-        Assert.assertEquals(".", location);
+        assertEquals(".", location);
 
         // http://dummy.host:8080/contextpath/servlet/
         // should return ./.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "/");
-        Assert.assertEquals("./..", location);
+        assertEquals("./..", location);
 
         // http://dummy.host:8080/servlet
         // should return "."
         location = testLocation("http://dummy.host:8080", "", "/servlet", "");
-        Assert.assertEquals(".", location);
+        assertEquals(".", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath", "/servlet",
                 "/extra/stuff");
-        Assert.assertEquals("./../..", location);
+        assertEquals("./../..", location);
 
         // http://dummy.host/context/path/servlet/extra/stuff
         // should return ./../.. (relative url resolving to /context/path)
         location = testLocation("http://dummy.host", "/context/path",
                 "/servlet", "/extra/stuff");
-        Assert.assertEquals("./../..", location);
+        assertEquals("./../..", location);
 
         /* Include requests */
         // Include request support dropped with support for portlet1
@@ -79,31 +79,6 @@ public class TestAbstractApplicationServletStaticFilesLocation {
         String location = servlet.getService()
                 .getStaticFileLocation(servlet.createVaadinRequest(request));
         return location;
-    }
-
-    private String testIncludedLocation(String base, String portletContextPath,
-            String servletPath, String pathInfo) throws Exception {
-
-        HttpServletRequest request = createIncludeRequest(base,
-                portletContextPath, servletPath, pathInfo);
-        // Set request into replay mode
-        replay(request);
-
-        String location = servlet.getService()
-                .getStaticFileLocation(servlet.createVaadinRequest(request));
-        return location;
-    }
-
-    private HttpServletRequest createIncludeRequest(String base,
-            String realContextPath, String realServletPath, String pathInfo)
-            throws Exception {
-        HttpServletRequest request = createRequest(base, "", "", pathInfo);
-        expect(request.getAttribute("javax.servlet.include.context_path"))
-                .andReturn(realContextPath).anyTimes();
-        expect(request.getAttribute("javax.servlet.include.servlet_path"))
-                .andReturn(realServletPath).anyTimes();
-
-        return request;
     }
 
     private HttpServletRequest createNonIncludeRequest(String base,

@@ -15,12 +15,13 @@
  */
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 
-import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.elements.TextFieldElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class MaximizeRestoreWindowWithManagedLayoutTest
@@ -54,6 +55,6 @@ public class MaximizeRestoreWindowWithManagedLayoutTest
     private void assertSameWidth(WindowElement window, TextFieldElement field) {
         Dimension windowSize = window.getSize();
         Dimension fieldSize = field.getSize();
-        Assert.assertEquals(windowSize.getWidth(), fieldSize.getWidth());
+        assertEquals(windowSize.getWidth(), fieldSize.getWidth());
     }
 }

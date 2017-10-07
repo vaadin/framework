@@ -83,9 +83,9 @@ public class VOptionGroup extends VOptionGroupBase
      * optiongroup: if a control inside this optiongroup gains focus right after
      * blur of another control inside this optiongroup (meaning: if onFocus
      * fires after onBlur has fired), the blur and focus won't be sent to the
-     * server side as only a focus change inside this optiongroup occured
+     * server side as only a focus change inside this optiongroup occurred
      */
-    private boolean blurOccured = false;
+    private boolean blurOccurred = false;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed = false;
@@ -114,12 +114,12 @@ public class VOptionGroup extends VOptionGroupBase
          * rebuilt (losing focus) if number of elements or their order is
          * changed.
          */
-        HashMap<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
+        Map<String, CheckBox> keysToOptions = new HashMap<String, CheckBox>();
         for (Map.Entry<CheckBox, String> entry : optionsToKeys.entrySet()) {
             keysToOptions.put(entry.getValue(), entry.getKey());
         }
-        ArrayList<Widget> existingwidgets = new ArrayList<Widget>();
-        ArrayList<Widget> newwidgets = new ArrayList<Widget>();
+        List<Widget> existingwidgets = new ArrayList<Widget>();
+        List<Widget> newwidgets = new ArrayList<Widget>();
 
         // Get current order of elements
         for (Widget wid : panel) {
@@ -134,8 +134,8 @@ public class VOptionGroup extends VOptionGroupBase
             Roles.getRadiogroupRole().set(getElement());
         }
 
-        for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            final UIDL opUidl = (UIDL) it.next();
+        for (final Object child : uidl) {
+            final UIDL opUidl = (UIDL) child;
 
             String itemHtml = opUidl.getStringAttribute("caption");
             if (!htmlContentAllowed) {
@@ -143,7 +143,7 @@ public class VOptionGroup extends VOptionGroupBase
             }
 
             String iconUrl = opUidl.getStringAttribute("icon");
-            if (iconUrl != null && iconUrl.length() != 0) {
+            if (iconUrl != null && !iconUrl.isEmpty()) {
                 Icon icon = client.getIcon(iconUrl);
                 itemHtml = icon.getElement().getString() + itemHtml;
             }
@@ -162,7 +162,7 @@ public class VOptionGroup extends VOptionGroupBase
                     op = new RadioButton(paintableId);
                     op.setStyleName("v-radiobutton");
                 }
-                if (iconUrl != null && iconUrl.length() != 0) {
+                if (iconUrl != null && !iconUrl.isEmpty()) {
                     WidgetUtil.sinkOnloadForImages(op.getElement());
                     op.addHandler(iconLoadHandler, LoadEvent.getType());
                 }
@@ -237,10 +237,8 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void setTabIndex(int tabIndex) {
-        for (Iterator<Widget> iterator = panel.iterator(); iterator
-                .hasNext();) {
-            FocusWidget widget = (FocusWidget) iterator.next();
-            widget.setTabIndex(tabIndex);
+        for (Widget widget : panel) {
+            ((FocusWidget) widget).setTabIndex(tabIndex);
         }
     }
 
@@ -269,43 +267,45 @@ public class VOptionGroup extends VOptionGroupBase
 
     @Override
     public void focus() {
-        Iterator<Widget> iterator = panel.iterator();
-        if (iterator.hasNext()) {
-            ((Focusable) iterator.next()).setFocus(true);
+        Iterator<Widget> it = panel.iterator();
+        if (it.hasNext()) {
+            ((Focusable) it.next()).setFocus(true);
+
         }
     }
 
     @Override
     public void onFocus(FocusEvent arg0) {
-        if (!blurOccured) {
-            // no blur occured before this focus event
+        if (!blurOccurred) {
+            // no blur occurred before this focus event
             // panel was blurred => fire the event to the server side if
             // requested by server side
             if (sendFocusEvents) {
                 client.updateVariable(paintableId, EventId.FOCUS, "", true);
             }
         } else {
-            // blur occured before this focus event
+            // blur occurred before this focus event
             // another control inside the panel (checkbox / radio box) was
-            // blurred => do not fire the focus and set blurOccured to false, so
+            // blurred => do not fire the focus and set blurOccurred to false,
+            // so
             // blur will not be fired, too
-            blurOccured = false;
+            blurOccurred = false;
         }
     }
 
     @Override
     public void onBlur(BlurEvent arg0) {
-        blurOccured = true;
+        blurOccurred = true;
         if (sendBlurEvents) {
             Scheduler.get().scheduleDeferred(new Command() {
                 @Override
                 public void execute() {
-                    // check whether blurOccured still is true and then send the
-                    // event out to the server
-                    if (blurOccured) {
+                    // check whether blurOccurred still is true and then send
+                    // the event out to the server
+                    if (blurOccurred) {
                         client.updateVariable(paintableId, EventId.BLUR, "",
                                 true);
-                        blurOccured = false;
+                        blurOccurred = false;
                     }
                 }
             });

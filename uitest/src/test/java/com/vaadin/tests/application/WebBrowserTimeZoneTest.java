@@ -1,6 +1,7 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -20,8 +21,7 @@ public class WebBrowserTimeZoneTest extends MultiBrowserTest {
     private void assertLabelText(String caption, String expected) {
         String actual = $(LabelElement.class).caption(caption).first()
                 .getText();
-        Assert.assertEquals(
-                String.format("Unexpected text in label '%s',", caption),
+        assertEquals(String.format("Unexpected text in label '%s',", caption),
                 expected, actual);
     }
 }

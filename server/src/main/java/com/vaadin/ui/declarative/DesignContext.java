@@ -337,7 +337,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Gets the package corresponding to the give prefix, or <code>null</code>
-     * no package has been registered for the prefix
+     * no package has been registered for the prefix.
      *
      * @since 7.5.0
      * @see #addPackagePrefix(String, String)
@@ -493,7 +493,7 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Reads the given design node and creates the corresponding component tree
+     * Reads the given design node and creates the corresponding component tree.
      *
      * @param componentDesign
      *            The design element containing the description of the component
@@ -511,7 +511,7 @@ public class DesignContext implements Serializable {
     /**
      *
      * Reads the given design node and populates the given component with the
-     * corresponding component tree
+     * corresponding component tree.
      * <p>
      * Additionally registers the component id, local id and caption of the
      * given component and all its children in the context
@@ -530,7 +530,7 @@ public class DesignContext implements Serializable {
         // global id: only update the mapping, the id has already been set for
         // the component
         String id = component.getId();
-        if (id != null && id.length() > 0) {
+        if (id != null && !id.isEmpty()) {
             boolean mappingExists = mapId(id, component);
             if (mappingExists) {
                 throw new DesignException(
@@ -670,7 +670,7 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Interface to be implemented by component creation listeners
+     * Interface to be implemented by component creation listeners.
      *
      * @author Vaadin Ltd
      */
@@ -678,7 +678,7 @@ public class DesignContext implements Serializable {
     public interface ComponentCreationListener extends Serializable {
 
         /**
-         * Called when component has been created in the design context
+         * Called when component has been created in the design context.
          *
          * @param event
          *            the component creation event containing information on the
@@ -688,8 +688,8 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Component creation event that is fired when a component is created in the
-     * context
+     * Component creation event that is fired when a component is created in
+     * the. context
      *
      * @author Vaadin Ltd
      */
@@ -713,7 +713,7 @@ public class DesignContext implements Serializable {
         }
 
         /**
-         * Returns the local id of the created component or null if not exist
+         * Returns the local id of the created component or null if not exist.
          *
          * @return the localId
          */
@@ -722,7 +722,7 @@ public class DesignContext implements Serializable {
         }
 
         /**
-         * Returns the created component
+         * Returns the created component.
          *
          * @return the component
          */
@@ -733,7 +733,7 @@ public class DesignContext implements Serializable {
 
     /**
      * Helper method for component write implementors to determine whether their
-     * children should be written out or not
+     * children should be written out or not.
      *
      * @param c
      *            The component being written
@@ -810,7 +810,7 @@ public class DesignContext implements Serializable {
     }
 
     /**
-     * Gets the attributes that the component did not handle
+     * Gets the attributes that the component did not handle.
      *
      * @since 7.7
      * @param component

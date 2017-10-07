@@ -24,7 +24,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class AbstractFieldElement extends AbstractComponentElement {
 
     /**
-     * Select contents of TextField Element
+     * Select contents of TextField Element.
      *
      * NOTE: When testing with firefox browser window should have focus in it
      *

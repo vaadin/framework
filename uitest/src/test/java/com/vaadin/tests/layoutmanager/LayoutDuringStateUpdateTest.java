@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layoutmanager;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -30,7 +31,7 @@ public class LayoutDuringStateUpdateTest extends SingleBrowserTest {
 
         WebElement label = findElement(By.className("gwt-Label"));
 
-        Assert.assertEquals("Layout phase count: 1", label.getText());
+        assertEquals("Layout phase count: 1", label.getText());
     }
 
 }

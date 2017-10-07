@@ -17,8 +17,8 @@ package com.vaadin.tests.components.table;
 
 import static com.vaadin.tests.components.table.TableSizeInTabsheet.TABLE;
 import static com.vaadin.tests.components.table.TableSizeInTabsheet.TABSHEET;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -35,7 +35,7 @@ public class TableSizeInTabsheetTest extends MultiBrowserTest {
         int tableHeight = getTableHeigth();
         int tabSheetContentHeight = getTableSheetContentHeight();
 
-        Assert.assertEquals(tableHeight, tabSheetContentHeight);
+        assertEquals(tableHeight, tabSheetContentHeight);
     }
 
     private int getTableHeigth() {

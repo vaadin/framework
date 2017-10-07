@@ -21,6 +21,7 @@ import java.util.List;
 import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Default shared state implementation for AbstractComponent.
@@ -43,9 +44,15 @@ public class AbstractComponentState extends SharedState {
     public String id = null;
     public String primaryStyleName = null;
 
-    // HTML formatted error message for the component
-    // TODO this could be an object with more information, but currently the UI
-    // only uses the message
+    /** HTML formatted error message for the component. */
     public String errorMessage = null;
+
+    /**
+     * Level of error.
+     *
+     * @since 8.2
+     */
+    public ErrorLevel errorLevel = null;
+
     public boolean captionAsHtml = false;
 }

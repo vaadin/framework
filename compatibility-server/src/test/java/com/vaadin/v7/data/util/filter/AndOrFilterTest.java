@@ -1,6 +1,9 @@
 package com.vaadin.v7.data.util.filter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Filter;
@@ -17,15 +20,15 @@ public class AndOrFilterTest
     public void testNoFilterAnd() {
         Filter filter = new And();
 
-        Assert.assertTrue(filter.passesFilter(null, item1));
+        assertTrue(filter.passesFilter(null, item1));
     }
 
     @Test
     public void testSingleFilterAnd() {
         Filter filter = new And(new SameItemFilter(item1));
 
-        Assert.assertTrue(filter.passesFilter(null, item1));
-        Assert.assertFalse(filter.passesFilter(null, item2));
+        assertTrue(filter.passesFilter(null, item1));
+        assertFalse(filter.passesFilter(null, item2));
     }
 
     @Test
@@ -35,11 +38,11 @@ public class AndOrFilterTest
         Filter filter2 = new And(new SameItemFilter(item1),
                 new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(null, item1));
-        Assert.assertFalse(filter1.passesFilter(null, item2));
+        assertTrue(filter1.passesFilter(null, item1));
+        assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertFalse(filter2.passesFilter(null, item1));
-        Assert.assertFalse(filter2.passesFilter(null, item2));
+        assertFalse(filter2.passesFilter(null, item1));
+        assertFalse(filter2.passesFilter(null, item2));
     }
 
     @Test
@@ -49,26 +52,26 @@ public class AndOrFilterTest
         Filter filter2 = new And(new SameItemFilter(item1),
                 new SameItemFilter(item1), new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(null, item1));
-        Assert.assertFalse(filter1.passesFilter(null, item2));
+        assertTrue(filter1.passesFilter(null, item1));
+        assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertFalse(filter2.passesFilter(null, item1));
-        Assert.assertFalse(filter2.passesFilter(null, item2));
+        assertFalse(filter2.passesFilter(null, item1));
+        assertFalse(filter2.passesFilter(null, item2));
     }
 
     @Test
     public void testNoFilterOr() {
         Filter filter = new Or();
 
-        Assert.assertFalse(filter.passesFilter(null, item1));
+        assertFalse(filter.passesFilter(null, item1));
     }
 
     @Test
     public void testSingleFilterOr() {
         Filter filter = new Or(new SameItemFilter(item1));
 
-        Assert.assertTrue(filter.passesFilter(null, item1));
-        Assert.assertFalse(filter.passesFilter(null, item2));
+        assertTrue(filter.passesFilter(null, item1));
+        assertFalse(filter.passesFilter(null, item2));
     }
 
     @Test
@@ -78,11 +81,11 @@ public class AndOrFilterTest
         Filter filter2 = new Or(new SameItemFilter(item1),
                 new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(null, item1));
-        Assert.assertFalse(filter1.passesFilter(null, item2));
+        assertTrue(filter1.passesFilter(null, item1));
+        assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertTrue(filter2.passesFilter(null, item1));
-        Assert.assertTrue(filter2.passesFilter(null, item2));
+        assertTrue(filter2.passesFilter(null, item1));
+        assertTrue(filter2.passesFilter(null, item2));
     }
 
     @Test
@@ -92,11 +95,11 @@ public class AndOrFilterTest
         Filter filter2 = new Or(new SameItemFilter(item1),
                 new SameItemFilter(item1), new SameItemFilter(item2));
 
-        Assert.assertTrue(filter1.passesFilter(null, item1));
-        Assert.assertFalse(filter1.passesFilter(null, item2));
+        assertTrue(filter1.passesFilter(null, item1));
+        assertFalse(filter1.passesFilter(null, item2));
 
-        Assert.assertTrue(filter2.passesFilter(null, item1));
-        Assert.assertTrue(filter2.passesFilter(null, item2));
+        assertTrue(filter2.passesFilter(null, item1));
+        assertTrue(filter2.passesFilter(null, item2));
     }
 
     @Test
@@ -115,28 +118,28 @@ public class AndOrFilterTest
         Filter other0 = new Or();
         Filter other1 = new Or(new SameItemFilter(item1));
 
-        Assert.assertEquals(filter0, filter0);
-        Assert.assertEquals(filter0, filter0b);
-        Assert.assertFalse(filter0.equals(filter1a));
-        Assert.assertFalse(filter0.equals(other0));
-        Assert.assertFalse(filter0.equals(other1));
+        assertEquals(filter0, filter0);
+        assertEquals(filter0, filter0b);
+        assertFalse(filter0.equals(filter1a));
+        assertFalse(filter0.equals(other0));
+        assertFalse(filter0.equals(other1));
 
-        Assert.assertFalse(filter1a.equals(filter1b));
-        Assert.assertFalse(filter1a.equals(other1));
+        assertFalse(filter1a.equals(filter1b));
+        assertFalse(filter1a.equals(other1));
 
-        Assert.assertFalse(filter1a.equals(filter2a));
-        Assert.assertFalse(filter2a.equals(filter1a));
+        assertFalse(filter1a.equals(filter2a));
+        assertFalse(filter2a.equals(filter1a));
 
-        Assert.assertFalse(filter2a.equals(filter2b));
-        Assert.assertEquals(filter2b, filter2b2);
+        assertFalse(filter2a.equals(filter2b));
+        assertEquals(filter2b, filter2b2);
 
         // hashCode()
-        Assert.assertEquals(filter0.hashCode(), filter0.hashCode());
-        Assert.assertEquals(filter0.hashCode(), filter0b.hashCode());
-        Assert.assertEquals(filter1a.hashCode(), filter1a.hashCode());
-        Assert.assertEquals(filter1a.hashCode(), filter1a2.hashCode());
-        Assert.assertEquals(filter2a.hashCode(), filter2a.hashCode());
-        Assert.assertEquals(filter2b.hashCode(), filter2b2.hashCode());
+        assertEquals(filter0.hashCode(), filter0.hashCode());
+        assertEquals(filter0.hashCode(), filter0b.hashCode());
+        assertEquals(filter1a.hashCode(), filter1a.hashCode());
+        assertEquals(filter1a.hashCode(), filter1a2.hashCode());
+        assertEquals(filter2a.hashCode(), filter2a.hashCode());
+        assertEquals(filter2b.hashCode(), filter2b2.hashCode());
     }
 
     @Test
@@ -155,28 +158,28 @@ public class AndOrFilterTest
         Filter other0 = new And();
         Filter other1 = new And(new SameItemFilter(item1));
 
-        Assert.assertEquals(filter0, filter0);
-        Assert.assertEquals(filter0, filter0b);
-        Assert.assertFalse(filter0.equals(filter1a));
-        Assert.assertFalse(filter0.equals(other0));
-        Assert.assertFalse(filter0.equals(other1));
+        assertEquals(filter0, filter0);
+        assertEquals(filter0, filter0b);
+        assertFalse(filter0.equals(filter1a));
+        assertFalse(filter0.equals(other0));
+        assertFalse(filter0.equals(other1));
 
-        Assert.assertFalse(filter1a.equals(filter1b));
-        Assert.assertFalse(filter1a.equals(other1));
+        assertFalse(filter1a.equals(filter1b));
+        assertFalse(filter1a.equals(other1));
 
-        Assert.assertFalse(filter1a.equals(filter2a));
-        Assert.assertFalse(filter2a.equals(filter1a));
+        assertFalse(filter1a.equals(filter2a));
+        assertFalse(filter2a.equals(filter1a));
 
-        Assert.assertFalse(filter2a.equals(filter2b));
-        Assert.assertEquals(filter2b, filter2b2);
+        assertFalse(filter2a.equals(filter2b));
+        assertEquals(filter2b, filter2b2);
 
         // hashCode()
-        Assert.assertEquals(filter0.hashCode(), filter0.hashCode());
-        Assert.assertEquals(filter0.hashCode(), filter0b.hashCode());
-        Assert.assertEquals(filter1a.hashCode(), filter1a.hashCode());
-        Assert.assertEquals(filter1a.hashCode(), filter1a2.hashCode());
-        Assert.assertEquals(filter2a.hashCode(), filter2a.hashCode());
-        Assert.assertEquals(filter2b.hashCode(), filter2b2.hashCode());
+        assertEquals(filter0.hashCode(), filter0.hashCode());
+        assertEquals(filter0.hashCode(), filter0b.hashCode());
+        assertEquals(filter1a.hashCode(), filter1a.hashCode());
+        assertEquals(filter1a.hashCode(), filter1a2.hashCode());
+        assertEquals(filter2a.hashCode(), filter2a.hashCode());
+        assertEquals(filter2b.hashCode(), filter2b2.hashCode());
     }
 
     @Test
@@ -192,23 +195,23 @@ public class AndOrFilterTest
                 new SameItemFilter(item1, "b"), new SameItemFilter(item1, "c"));
 
         // empty And does not filter out anything
-        Assert.assertFalse(filter0.appliesToProperty("a"));
-        Assert.assertFalse(filter0.appliesToProperty("d"));
+        assertFalse(filter0.appliesToProperty("a"));
+        assertFalse(filter0.appliesToProperty("d"));
 
-        Assert.assertTrue(filter1a.appliesToProperty("a"));
-        Assert.assertFalse(filter1a.appliesToProperty("b"));
-        Assert.assertFalse(filter1b.appliesToProperty("a"));
-        Assert.assertTrue(filter1b.appliesToProperty("b"));
+        assertTrue(filter1a.appliesToProperty("a"));
+        assertFalse(filter1a.appliesToProperty("b"));
+        assertFalse(filter1b.appliesToProperty("a"));
+        assertTrue(filter1b.appliesToProperty("b"));
 
-        Assert.assertTrue(filter2aa.appliesToProperty("a"));
-        Assert.assertFalse(filter2aa.appliesToProperty("b"));
-        Assert.assertTrue(filter2ab.appliesToProperty("a"));
-        Assert.assertTrue(filter2ab.appliesToProperty("b"));
+        assertTrue(filter2aa.appliesToProperty("a"));
+        assertFalse(filter2aa.appliesToProperty("b"));
+        assertTrue(filter2ab.appliesToProperty("a"));
+        assertTrue(filter2ab.appliesToProperty("b"));
 
-        Assert.assertTrue(filter3abc.appliesToProperty("a"));
-        Assert.assertTrue(filter3abc.appliesToProperty("b"));
-        Assert.assertTrue(filter3abc.appliesToProperty("c"));
-        Assert.assertFalse(filter3abc.appliesToProperty("d"));
+        assertTrue(filter3abc.appliesToProperty("a"));
+        assertTrue(filter3abc.appliesToProperty("b"));
+        assertTrue(filter3abc.appliesToProperty("c"));
+        assertFalse(filter3abc.appliesToProperty("d"));
     }
 
     @Test
@@ -224,23 +227,23 @@ public class AndOrFilterTest
                 new SameItemFilter(item1, "b"), new SameItemFilter(item1, "c"));
 
         // empty Or filters out everything
-        Assert.assertTrue(filter0.appliesToProperty("a"));
-        Assert.assertTrue(filter0.appliesToProperty("d"));
+        assertTrue(filter0.appliesToProperty("a"));
+        assertTrue(filter0.appliesToProperty("d"));
 
-        Assert.assertTrue(filter1a.appliesToProperty("a"));
-        Assert.assertFalse(filter1a.appliesToProperty("b"));
-        Assert.assertFalse(filter1b.appliesToProperty("a"));
-        Assert.assertTrue(filter1b.appliesToProperty("b"));
+        assertTrue(filter1a.appliesToProperty("a"));
+        assertFalse(filter1a.appliesToProperty("b"));
+        assertFalse(filter1b.appliesToProperty("a"));
+        assertTrue(filter1b.appliesToProperty("b"));
 
-        Assert.assertTrue(filter2aa.appliesToProperty("a"));
-        Assert.assertFalse(filter2aa.appliesToProperty("b"));
-        Assert.assertTrue(filter2ab.appliesToProperty("a"));
-        Assert.assertTrue(filter2ab.appliesToProperty("b"));
+        assertTrue(filter2aa.appliesToProperty("a"));
+        assertFalse(filter2aa.appliesToProperty("b"));
+        assertTrue(filter2ab.appliesToProperty("a"));
+        assertTrue(filter2ab.appliesToProperty("b"));
 
-        Assert.assertTrue(filter3abc.appliesToProperty("a"));
-        Assert.assertTrue(filter3abc.appliesToProperty("b"));
-        Assert.assertTrue(filter3abc.appliesToProperty("c"));
-        Assert.assertFalse(filter3abc.appliesToProperty("d"));
+        assertTrue(filter3abc.appliesToProperty("a"));
+        assertTrue(filter3abc.appliesToProperty("b"));
+        assertTrue(filter3abc.appliesToProperty("c"));
+        assertFalse(filter3abc.appliesToProperty("d"));
     }
 
 }

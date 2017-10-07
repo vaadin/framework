@@ -1,6 +1,8 @@
 package com.vaadin.v7.tests.data.validator;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.validator.EmailValidator;
@@ -11,21 +13,21 @@ public class EmailValidatorTest {
 
     @Test
     public void testEmailValidatorWithNull() {
-        Assert.assertTrue(validator.isValid(null));
+        assertTrue(validator.isValid(null));
     }
 
     @Test
     public void testEmailValidatorWithEmptyString() {
-        Assert.assertTrue(validator.isValid(""));
+        assertTrue(validator.isValid(""));
     }
 
     @Test
     public void testEmailValidatorWithFaultyString() {
-        Assert.assertFalse(validator.isValid("not.an.email"));
+        assertFalse(validator.isValid("not.an.email"));
     }
 
     @Test
     public void testEmailValidatorWithOkEmail() {
-        Assert.assertTrue(validator.isValid("my.name@email.com"));
+        assertTrue(validator.isValid("my.name@email.com"));
     }
 }

@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -38,7 +39,7 @@ public class TableGetRowTest extends MultiBrowserTest {
         String expected = "col=0 row=0";
         String actual = cell.getText();
 
-        Assert.assertEquals(GET_ROW_ERROR_MESSAGE, expected, actual);
+        assertEquals(GET_ROW_ERROR_MESSAGE, expected, actual);
     }
 
     @Test
@@ -47,14 +48,14 @@ public class TableGetRowTest extends MultiBrowserTest {
         WebElement cell = row.getCell(1);
         String expected = "col=1 row=4";
         String actual = cell.getText();
-        Assert.assertEquals(GET_ROW_ERROR_MESSAGE, expected, actual);
+        assertEquals(GET_ROW_ERROR_MESSAGE, expected, actual);
     }
 
     @Test
     public void rowGetCellTest() {
         TestBenchElement cellFromTable = table.getCell(firstRow, firstCol);
         WebElement cellFromRow = table.getRow(firstRow).getCell(firstCol);
-        Assert.assertEquals(
+        assertEquals(
                 "Table.getCell() and Row.getCell() return different values",
                 cellFromRow.getText(), cellFromTable.getText());
     }
@@ -64,7 +65,7 @@ public class TableGetRowTest extends MultiBrowserTest {
         TestBenchElement cell = table.getCell(firstRow, firstCol);
         String actual = cell.getText();
         String expected = "col=0 row=0";
-        Assert.assertEquals(GET_CELL_ERROR_MESSAGE, expected, actual);
+        assertEquals(GET_CELL_ERROR_MESSAGE, expected, actual);
     }
 
     @Test(expected = NoSuchElementException.class)

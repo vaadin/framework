@@ -252,7 +252,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                 childStyle.setPosition(Position.ABSOLUTE);
 
                 Style wrapperStyle = contentElement.getStyle();
-                if (window.getElement().getStyle().getWidth().length() == 0
+                if (window.getElement().getStyle().getWidth().isEmpty()
                         && !content.isRelativeWidth()) {
                     /*
                      * Need to lock width to make undefined width work even with

@@ -1,3 +1,9 @@
+---
+title: Vaadin Tutorial For Swing Developers
+order: 8
+layout: page
+---
+
 [[a-hitchhikers-guide-to-convert-aswing-appto-modern-web-app]]
 A hitchhiker's guide to convert a Swing app to modern web app
 -------------------------------------------------------------

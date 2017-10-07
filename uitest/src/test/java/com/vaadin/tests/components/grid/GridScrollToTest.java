@@ -1,8 +1,12 @@
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -12,11 +16,6 @@ import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import com.vaadin.ui.Button;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @TestCategory("grid")
 public class GridScrollToTest extends SingleBrowserTest {
@@ -80,22 +79,32 @@ public class GridScrollToTest extends SingleBrowserTest {
 
         waitForElementPresent(By.className("v-grid-spacer"));
         waitForElementPresent(By.className("v-label"));
-        assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 199 details")).findFirst().get().isDisplayed());
+        assertTrue("Details not visible",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 199 details"))
+                        .findFirst().get().isDisplayed());
         // scroll away
         $(ButtonElement.class).id("top").click();
 
         assertEquals("Found final element even though should be at top of list",
                 0, cellsContaining("199"));
 
-        assertFalse("Found final element  details even though should be at top of list", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 199 details")).findFirst().isPresent());
+        assertFalse(
+                "Found final element  details even though should be at top of list",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 199 details"))
+                        .findFirst().isPresent());
 
         // Scroll to end
         $(ButtonElement.class).id("end").click();
 
-        assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 199 details")).findFirst().get().isDisplayed());
+        assertTrue("Details not visible",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 199 details"))
+                        .findFirst().get().isDisplayed());
     }
 
     @Test
@@ -111,22 +120,32 @@ public class GridScrollToTest extends SingleBrowserTest {
 
         waitForElementPresent(By.className("v-grid-spacer"));
         waitForElementPresent(By.className("v-label"));
-        assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 50 details")).findFirst().get().isDisplayed());
+        assertTrue("Details not visible",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 50 details"))
+                        .findFirst().get().isDisplayed());
         // scroll away
         $(ButtonElement.class).id("top").click();
 
         assertEquals("Found final element even though should be at top of list",
                 0, cellsContaining("50"));
 
-        assertFalse("Found final element  details even though should be at top of list", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 50 details")).findFirst().isPresent());
+        assertFalse(
+                "Found final element  details even though should be at top of list",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 50 details"))
+                        .findFirst().isPresent());
 
         // Scroll to end
         $(ButtonElement.class).id("row").click();
 
-        assertTrue("Details not visible", getGrid().findElements(By.className("v-label")).stream()
-                .filter(element -> element.getText().contains("Name 50 details")).findFirst().get().isDisplayed());
+        assertTrue("Details not visible",
+                getGrid().findElements(By.className("v-label")).stream()
+                        .filter(element -> element.getText()
+                                .contains("Name 50 details"))
+                        .findFirst().get().isDisplayed());
     }
 
     private GridElement getGrid() {
@@ -146,6 +165,6 @@ public class GridScrollToTest extends SingleBrowserTest {
         if (first.isPresent())
             first.get().click();
         else
-            Assert.fail("Cell not present");
+            fail("Cell not present");
     }
 }

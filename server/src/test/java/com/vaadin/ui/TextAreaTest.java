@@ -15,23 +15,25 @@
  */
 package com.vaadin.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class TextAreaTest {
     @Test
     public void initiallyEmpty() {
         TextArea textArea = new TextArea();
-        Assert.assertTrue(textArea.isEmpty());
+        assertTrue(textArea.isEmpty());
     }
 
     @Test
     public void emptyAfterClear() {
         TextArea textArea = new TextArea();
         textArea.setValue("foobar");
-        Assert.assertFalse(textArea.isEmpty());
+        assertFalse(textArea.isEmpty());
         textArea.clear();
-        Assert.assertTrue(textArea.isEmpty());
+        assertTrue(textArea.isEmpty());
     }
 
 }

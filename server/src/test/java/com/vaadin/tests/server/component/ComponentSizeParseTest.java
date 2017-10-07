@@ -16,7 +16,8 @@
 
 package com.vaadin.tests.server.component;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.server.Sizeable.Unit;
@@ -49,13 +50,13 @@ public class ComponentSizeParseTest {
         LabelWithPublicState label = new LabelWithPublicState();
         label.setHeight(string);
 
-        Assert.assertEquals(amout, label.getHeight(), 0);
-        Assert.assertEquals(unit, label.getHeightUnits());
+        assertEquals(amout, label.getHeight(), 0);
+        assertEquals(unit, label.getHeightUnits());
 
         label = new LabelWithPublicState();
 
         label.setHeight(10, unit);
         label.beforeClientResponse(true);
-        Assert.assertEquals(string, label.getState().height);
+        assertEquals(string, label.getState().height);
     }
 }

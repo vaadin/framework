@@ -145,7 +145,7 @@ public class ConnectorBundle {
 
         JClassType serializerInterface = oracle
                 .findType(JSONSerializer.class.getName());
-        JType[] deserializeParamTypes = new JType[] {
+        JType[] deserializeParamTypes = {
                 oracle.findType(
                         com.vaadin.client.metadata.Type.class.getName()),
                 oracle.findType(JsonValue.class.getName()),

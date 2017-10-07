@@ -117,7 +117,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     }-*/;
 
     public void sendRpc(String name, JsArray<JavaScriptObject> arguments) {
-        Object[] parameters = new Object[] { name, Util.jso2json(arguments) };
+        Object[] parameters = { name, Util.jso2json(arguments) };
 
         /*
          * Must invoke manually as the RPC interface can't be used in GWT

@@ -13,7 +13,7 @@ import com.vaadin.v7.ui.AbstractSelect.ItemDescriptionGenerator;
 import com.vaadin.v7.ui.Tree;
 
 public class SimpleTree extends TestBase implements Action.Handler {
-    private static final String[][] hardware = { //
+    private static final String[][] hardware = {
             { "Desktops", "Dell OptiPlex GX240", "Dell OptiPlex GX260",
                     "Dell OptiPlex GX280" },
             { "Monitors", "Benq T190HD", "Benq T220HD", "Benq T240HD" },
@@ -28,8 +28,7 @@ public class SimpleTree extends TestBase implements Action.Handler {
     // Actions for the context menu
     private static final Action ACTION_ADD = new Action("Add child item");
     private static final Action ACTION_DELETE = new Action("Delete");
-    private static final Action[] ACTIONS = new Action[] { ACTION_ADD,
-            ACTION_DELETE };
+    private static final Action[] ACTIONS = { ACTION_ADD, ACTION_DELETE };
 
     private Tree tree;
 
@@ -83,15 +82,15 @@ public class SimpleTree extends TestBase implements Action.Handler {
         // Create containerproperty for icon
         hwContainer.addContainerProperty("icon", ThemeResource.class,
                 new ThemeResource("../runo/icons/16/document.png"));
-        for (int i = 0; i < hardware.length; i++) {
+        for (String[] type : hardware) {
             // Add new item
             item = hwContainer.addItem(itemId);
             // Add name property for item
-            item.getItemProperty("name").setValue(hardware[i][0]);
+            item.getItemProperty("name").setValue(type[0]);
             // Allow children
             hwContainer.setChildrenAllowed(itemId, true);
             itemId++;
-            for (int j = 1; j < hardware[i].length; j++) {
+            for (int j = 1; j < type.length; j++) {
                 if (j == 1) {
                     item.getItemProperty("icon").setValue(
                             new ThemeResource("../runo/icons/16/folder.png"));
@@ -99,7 +98,7 @@ public class SimpleTree extends TestBase implements Action.Handler {
 
                 // Add child items
                 item = hwContainer.addItem(itemId);
-                item.getItemProperty("name").setValue(hardware[i][j]);
+                item.getItemProperty("name").setValue(type[j]);
                 hwContainer.setParent(itemId, itemId - j);
 
                 hwContainer.setChildrenAllowed(itemId, false);

@@ -207,7 +207,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                         Arrays.asList(simpleBean, updatedSimpleBean));
                 updatedComplexBean.setPrivimite(complexBean.getPrivimite() + 1);
 
-                ArrayList<SimpleTestBean> arrayList = new ArrayList<>(
+                List<SimpleTestBean> arrayList = new ArrayList<>(
                         Arrays.asList(array));
                 Collections.reverse(arrayList);
 

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.applicationservlet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -29,7 +30,7 @@ public class VaadinRefreshServletTest extends SingleBrowserTest {
         getDriver().get(getBaseURL() + "/vaadinrefresh/");
         waitUntil((WebDriver d) -> "Please login"
                 .equals(findElement(By.tagName("body")).getText()));
-        Assert.assertEquals(getBaseURL() + "/statictestfiles/login.html",
+        assertEquals(getBaseURL() + "/statictestfiles/login.html",
                 getDriver().getCurrentUrl());
     }
 }

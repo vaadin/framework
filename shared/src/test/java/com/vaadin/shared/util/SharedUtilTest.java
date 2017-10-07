@@ -1,11 +1,14 @@
 package com.vaadin.shared.util;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class SharedUtilTest {
@@ -37,25 +40,23 @@ public class SharedUtilTest {
 
     @Test
     public void camelCaseToHumanReadable() {
-        Assert.assertEquals("First Name",
+        assertEquals("First Name",
                 SharedUtil.camelCaseToHumanFriendly("firstName"));
-        Assert.assertEquals("First Name",
+        assertEquals("First Name",
                 SharedUtil.camelCaseToHumanFriendly("first name"));
-        Assert.assertEquals("First Name2",
+        assertEquals("First Name2",
                 SharedUtil.camelCaseToHumanFriendly("firstName2"));
-        Assert.assertEquals("First",
-                SharedUtil.camelCaseToHumanFriendly("first"));
-        Assert.assertEquals("First",
-                SharedUtil.camelCaseToHumanFriendly("First"));
-        Assert.assertEquals("Some XYZ Abbreviation",
+        assertEquals("First", SharedUtil.camelCaseToHumanFriendly("first"));
+        assertEquals("First", SharedUtil.camelCaseToHumanFriendly("First"));
+        assertEquals("Some XYZ Abbreviation",
                 SharedUtil.camelCaseToHumanFriendly("SomeXYZAbbreviation"));
 
         // Javadoc examples
-        Assert.assertEquals("My Bean Container",
+        assertEquals("My Bean Container",
                 SharedUtil.camelCaseToHumanFriendly("MyBeanContainer"));
-        Assert.assertEquals("Awesome URL Factory",
+        assertEquals("Awesome URL Factory",
                 SharedUtil.camelCaseToHumanFriendly("AwesomeURLFactory"));
-        Assert.assertEquals("Some Uri Action",
+        assertEquals("Some Uri Action",
                 SharedUtil.camelCaseToHumanFriendly("SomeUriAction"));
 
     }
@@ -76,7 +77,7 @@ public class SharedUtilTest {
 
     private void assertCamelCaseSplit(String camelCaseString, String... parts) {
         String[] splitParts = SharedUtil.splitCamelCase(camelCaseString);
-        Assert.assertArrayEquals(parts, splitParts);
+        assertArrayEquals(parts, splitParts);
     }
 
     @Test
@@ -84,26 +85,23 @@ public class SharedUtilTest {
         String s1 = "foo-bar-baz";
         String s2 = "foo--bar";
 
-        Assert.assertEquals("foobarbaz", SharedUtil.join(s1.split("-"), ""));
-        Assert.assertEquals("foo!bar!baz", SharedUtil.join(s1.split("-"), "!"));
-        Assert.assertEquals("foo!!bar!!baz",
-                SharedUtil.join(s1.split("-"), "!!"));
+        assertEquals("foobarbaz", SharedUtil.join(s1.split("-"), ""));
+        assertEquals("foo!bar!baz", SharedUtil.join(s1.split("-"), "!"));
+        assertEquals("foo!!bar!!baz", SharedUtil.join(s1.split("-"), "!!"));
 
-        Assert.assertEquals("foo##bar", SharedUtil.join(s2.split("-"), "#"));
+        assertEquals("foo##bar", SharedUtil.join(s2.split("-"), "#"));
     }
 
     @Test
     public void dashSeparatedToCamelCase() {
-        Assert.assertEquals(null, SharedUtil.dashSeparatedToCamelCase(null));
-        Assert.assertEquals("", SharedUtil.dashSeparatedToCamelCase(""));
-        Assert.assertEquals("foo", SharedUtil.dashSeparatedToCamelCase("foo"));
-        Assert.assertEquals("fooBar",
-                SharedUtil.dashSeparatedToCamelCase("foo-bar"));
-        Assert.assertEquals("fooBar",
-                SharedUtil.dashSeparatedToCamelCase("foo--bar"));
-        Assert.assertEquals("fooBarBaz",
+        assertEquals(null, SharedUtil.dashSeparatedToCamelCase(null));
+        assertEquals("", SharedUtil.dashSeparatedToCamelCase(""));
+        assertEquals("foo", SharedUtil.dashSeparatedToCamelCase("foo"));
+        assertEquals("fooBar", SharedUtil.dashSeparatedToCamelCase("foo-bar"));
+        assertEquals("fooBar", SharedUtil.dashSeparatedToCamelCase("foo--bar"));
+        assertEquals("fooBarBaz",
                 SharedUtil.dashSeparatedToCamelCase("foo-bar-baz"));
-        Assert.assertEquals("fooBarBaz",
+        assertEquals("fooBarBaz",
                 SharedUtil.dashSeparatedToCamelCase("foo-Bar-Baz"));
     }
 
@@ -112,8 +110,8 @@ public class SharedUtilTest {
         Locale defaultLocale = Locale.getDefault();
         try {
             Locale.setDefault(new Locale("tr", "TR"));
-            Assert.assertEquals("Integer", SharedUtil.capitalize("integer"));
-            Assert.assertEquals("I", SharedUtil.capitalize("i"));
+            assertEquals("Integer", SharedUtil.capitalize("integer"));
+            assertEquals("I", SharedUtil.capitalize("i"));
         } finally {
             Locale.setDefault(defaultLocale);
         }
@@ -121,61 +119,56 @@ public class SharedUtilTest {
 
     @Test
     public void duplicatesInArray() {
-        Assert.assertTrue(
-                SharedUtil.containsDuplicates(new Object[] { "a", "a" }));
-        Assert.assertTrue(
+        assertTrue(SharedUtil.containsDuplicates(new Object[] { "a", "a" }));
+        assertTrue(
                 SharedUtil.containsDuplicates(new Object[] { "a", "b", "a" }));
-        Assert.assertTrue(SharedUtil
+        assertTrue(SharedUtil
                 .containsDuplicates(new Object[] { "a", "b", "a", "b" }));
-        Assert.assertTrue(
-                SharedUtil.containsDuplicates(new Object[] { 1, "b", 1 }));
+        assertTrue(SharedUtil.containsDuplicates(new Object[] { 1, "b", 1 }));
 
-        Assert.assertFalse(SharedUtil.containsDuplicates(new Object[] {}));
-        Assert.assertFalse(SharedUtil.containsDuplicates(new Object[] { "a" }));
-        Assert.assertFalse(
-                SharedUtil.containsDuplicates(new Object[] { "a", "b" }));
-        Assert.assertFalse(
-                SharedUtil.containsDuplicates(new Object[] { "1", 1 }));
+        assertFalse(SharedUtil.containsDuplicates(new Object[] {}));
+        assertFalse(SharedUtil.containsDuplicates(new Object[] { "a" }));
+        assertFalse(SharedUtil.containsDuplicates(new Object[] { "a", "b" }));
+        assertFalse(SharedUtil.containsDuplicates(new Object[] { "1", 1 }));
     }
 
     @Test
     public void getDuplicates() {
-        Assert.assertEquals("", SharedUtil.getDuplicates(new Object[] { "a" }));
-        Assert.assertEquals("a",
-                SharedUtil.getDuplicates(new Object[] { "a", "a" }));
-        Assert.assertEquals("a, b",
+        assertEquals("", SharedUtil.getDuplicates(new Object[] { "a" }));
+        assertEquals("a", SharedUtil.getDuplicates(new Object[] { "a", "a" }));
+        assertEquals("a, b",
                 SharedUtil.getDuplicates(new Object[] { "a", "b", "a", "b" }));
-        Assert.assertEquals("a, b, c", SharedUtil
+        assertEquals("a, b, c", SharedUtil
                 .getDuplicates(new Object[] { "c", "a", "b", "a", "b", "c" }));
-        Assert.assertEquals("1.2",
+        assertEquals("1.2",
                 SharedUtil.getDuplicates(new Object[] { 1.2, "a", 1.2 }));
     }
 
     @Test
     public void propertyIdToHumanFriendly() {
-        Assert.assertEquals("", SharedUtil.propertyIdToHumanFriendly(""));
-        Assert.assertEquals("First Name",
+        assertEquals("", SharedUtil.propertyIdToHumanFriendly(""));
+        assertEquals("First Name",
                 SharedUtil.propertyIdToHumanFriendly("firstName"));
-        Assert.assertEquals("First Name",
+        assertEquals("First Name",
                 SharedUtil.propertyIdToHumanFriendly("FirstName"));
-        Assert.assertEquals("First Name",
+        assertEquals("First Name",
                 SharedUtil.propertyIdToHumanFriendly("FIRST_NAME"));
-        Assert.assertEquals("Firstname",
+        assertEquals("Firstname",
                 SharedUtil.propertyIdToHumanFriendly("FIRSTNAME"));
 
-        Assert.assertEquals("2015 Q3",
+        assertEquals("2015 Q3",
                 SharedUtil.propertyIdToHumanFriendly("2015_Q3"));
-        Assert.assertEquals("Column X",
+        assertEquals("Column X",
                 SharedUtil.propertyIdToHumanFriendly("_COLUMN_X"));
-        Assert.assertEquals("Column X",
+        assertEquals("Column X",
                 SharedUtil.propertyIdToHumanFriendly("__COLUMN_X"));
-        Assert.assertEquals("1column Foobar",
+        assertEquals("1column Foobar",
                 SharedUtil.propertyIdToHumanFriendly("1COLUMN_FOOBAR"));
-        Assert.assertEquals("Result 2015",
+        assertEquals("Result 2015",
                 SharedUtil.propertyIdToHumanFriendly("RESULT_2015"));
-        Assert.assertEquals("2015result",
+        assertEquals("2015result",
                 SharedUtil.propertyIdToHumanFriendly("2015RESULT"));
-        Assert.assertEquals("Result2015",
+        assertEquals("Result2015",
                 SharedUtil.propertyIdToHumanFriendly("RESULT2015"));
 
     }

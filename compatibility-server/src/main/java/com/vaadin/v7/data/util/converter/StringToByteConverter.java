@@ -16,10 +16,10 @@
 
 package com.vaadin.v7.data.util.converter;
 
-import com.vaadin.data.Binder;
-
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import com.vaadin.data.Binder;
 
 /**
  * A converter that converts from {@link String} to {@link Byte} and back. Uses
@@ -33,7 +33,7 @@ import java.util.Locale;
  * @since 7.4
  *
  * @deprecated As of 8.0, a lightweight lambda-based converter can be build with
- *  {@link Binder}{@code .forField(...).withConverter(...)} methods.
+ *             {@link Binder}{@code .forField(...).withConverter(...)} methods.
  */
 @Deprecated
 public class StringToByteConverter
@@ -42,7 +42,7 @@ public class StringToByteConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Byte, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

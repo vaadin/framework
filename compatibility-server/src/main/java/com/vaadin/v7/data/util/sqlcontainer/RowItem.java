@@ -129,9 +129,9 @@ public final class RowItem implements Item {
         s.append("ID:");
         s.append(getId().toString());
         for (Object propId : getItemPropertyIds()) {
-            s.append("|");
+            s.append('|');
             s.append(propId.toString());
-            s.append(":");
+            s.append(':');
             Object value = getItemProperty(propId).getValue();
             s.append((null != value) ? value.toString() : null);
         }

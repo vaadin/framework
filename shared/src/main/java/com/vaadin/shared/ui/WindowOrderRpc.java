@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.ui;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ServerRpc;
@@ -37,5 +37,5 @@ public interface WindowOrderRpc extends ServerRpc {
      * @param windowOrders
      *            new windows order
      */
-    void windowOrderChanged(HashMap<Integer, Connector> windowOrders);
+    void windowOrderChanged(Map<Integer, Connector> windowOrders);
 }

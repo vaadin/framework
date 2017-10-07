@@ -47,8 +47,7 @@ public class DragAndDropFiles extends TestBase {
                 Html5File[] files = transferable.getFiles();
                 if (files != null) {
 
-                    for (int i = 0; i < files.length; i++) {
-                        Html5File file = files[i];
+                    for (Html5File file : files) {
                         // Max 1 MB files are uploaded
                         if (file.getFileSize() > 1024 * 1024) {
                             getMainWindow().showNotification("File "

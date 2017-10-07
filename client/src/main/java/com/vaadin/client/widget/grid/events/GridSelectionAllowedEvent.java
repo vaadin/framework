@@ -27,7 +27,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class GridSelectionAllowedEvent
         extends GwtEvent<GridSelectionAllowedHandler> {
     /**
-     * The type of this event
+     * The type of this event.
      */
     public static final Type<GridSelectionAllowedHandler> TYPE = new Type<>();
     private final boolean isSelectionAllowed;

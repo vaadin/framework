@@ -286,7 +286,7 @@ public class VRichTextArea extends Composite
     }
 
     /**
-     * Set the value of the text area
+     * Set the value of the text area.
      *
      * @param value
      *            The text value. Can be html.
@@ -300,7 +300,7 @@ public class VRichTextArea extends Composite
     }
 
     /**
-     * Get the value the text area
+     * Get the value the text area.
      */
     public String getValue() {
         if (rta.isAttached()) {

@@ -1,6 +1,8 @@
 package com.vaadin.tests.data;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,19 +23,19 @@ public class ReplaceDataProviderTest extends SingleBrowserTest {
         ButtonElement replaceDataProviderButton = $(ButtonElement.class)
                 .first();
 
-        Assert.assertEquals(20, grid.getRowCount());
+        assertEquals(20, grid.getRowCount());
         grid.getCell(0, 0).click();
         assertCellText("a", 0, 0);
 
         replaceDataProviderButton.click();
 
-        Assert.assertEquals(10, grid.getRowCount());
+        assertEquals(10, grid.getRowCount());
         assertCellText("b", 0, 0);
         for (int i = 1; i < 10; i++) {
             assertCellText("a", i, 0);
         }
 
-        Assert.assertFalse(grid.getRow(0).isSelected());
+        assertFalse(grid.getRow(0).isSelected());
 
         grid.getCell(0, 0).click();
         assertCellText("b", 0, 0);
@@ -47,6 +49,6 @@ public class ReplaceDataProviderTest extends SingleBrowserTest {
     private void assertCellText(String text, int rowIndex, int colIndex) {
         String firstCellText = $(GridElement.class).first()
                 .getCell(rowIndex, colIndex).getText();
-        Assert.assertEquals(text, firstCellText);
+        assertEquals(text, firstCellText);
     }
 }

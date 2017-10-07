@@ -29,7 +29,7 @@ import elemental.json.JsonValue;
 public class ProgressBarRenderer extends AbstractRenderer<Double> {
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer.
      */
     public ProgressBarRenderer() {
         super(Double.class, null);

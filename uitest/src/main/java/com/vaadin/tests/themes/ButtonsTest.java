@@ -112,21 +112,20 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
     private Layout buildButtons(boolean disabled, boolean icon, boolean error,
             boolean sized) {
 
-        String[] buttonStyles = new String[] { "Normal", "Primary", "Small",
-                "Link" };
+        String[] buttonStyles = { "Normal", "Primary", "Small", "Link" };
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setSpacing(true);
         hl.setMargin(true);
 
-        for (int i = 0; i < buttonStyles.length; i++) {
+        for (String style : buttonStyles) {
             Button b;
             if (nativeButtons) {
-                b = new NativeButton(buttonStyles[i] + " style");
+                b = new NativeButton(style + " style");
             } else {
-                b = new Button(buttonStyles[i] + " style");
+                b = new Button(style + " style");
             }
-            b.setStyleName(buttonStyles[i].toLowerCase());
+            b.setStyleName(style.toLowerCase());
             if (icon) {
                 b.setIcon(new ThemeResource("../runo/icons/"
                         + (largeIcons ? "64" : "16") + "/document.png"));

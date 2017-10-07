@@ -1,5 +1,9 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,7 +13,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Property;
@@ -166,10 +169,10 @@ public class BeanItemTest {
                 new MySuperClass());
 
         Collection<?> itemPropertyIds = item.getItemPropertyIds();
-        Assert.assertEquals(3, itemPropertyIds.size());
-        Assert.assertTrue(itemPropertyIds.contains("superPrivate"));
-        Assert.assertTrue(itemPropertyIds.contains("superProtected"));
-        Assert.assertTrue(itemPropertyIds.contains("superPublic"));
+        assertEquals(3, itemPropertyIds.size());
+        assertTrue(itemPropertyIds.contains("superPrivate"));
+        assertTrue(itemPropertyIds.contains("superProtected"));
+        assertTrue(itemPropertyIds.contains("superPublic"));
     }
 
     @Test
@@ -177,13 +180,13 @@ public class BeanItemTest {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
         Collection<?> itemPropertyIds = item.getItemPropertyIds();
-        Assert.assertEquals(6, itemPropertyIds.size());
-        Assert.assertTrue(itemPropertyIds.contains("superPrivate"));
-        Assert.assertTrue(itemPropertyIds.contains("superProtected"));
-        Assert.assertTrue(itemPropertyIds.contains("superPublic"));
-        Assert.assertTrue(itemPropertyIds.contains("name"));
-        Assert.assertTrue(itemPropertyIds.contains("noField"));
-        Assert.assertTrue(itemPropertyIds.contains("name2"));
+        assertEquals(6, itemPropertyIds.size());
+        assertTrue(itemPropertyIds.contains("superPrivate"));
+        assertTrue(itemPropertyIds.contains("superProtected"));
+        assertTrue(itemPropertyIds.contains("superPublic"));
+        assertTrue(itemPropertyIds.contains("name"));
+        assertTrue(itemPropertyIds.contains("noField"));
+        assertTrue(itemPropertyIds.contains("name2"));
     }
 
     @Test
@@ -191,12 +194,12 @@ public class BeanItemTest {
         BeanItem<MyClass2> item = new BeanItem<MyClass2>(new MyClass2("bean2"));
 
         Collection<?> itemPropertyIds = item.getItemPropertyIds();
-        Assert.assertEquals(6, itemPropertyIds.size());
+        assertEquals(6, itemPropertyIds.size());
 
-        Assert.assertTrue(MyClass2.class.equals(item.getBean().getClass()));
+        assertTrue(MyClass2.class.equals(item.getBean().getClass()));
 
         // check that name2 accessed via MyClass2, not MyClass
-        Assert.assertFalse(item.getItemProperty("name2").isReadOnly());
+        assertFalse(item.getItemProperty("name2").isReadOnly());
     }
 
     @Test
@@ -209,13 +212,13 @@ public class BeanItemTest {
         LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySuperInterface.class);
 
-        Assert.assertEquals(2, propertyDescriptors.size());
-        Assert.assertTrue(propertyDescriptors.containsKey("super1"));
-        Assert.assertTrue(propertyDescriptors.containsKey("override"));
+        assertEquals(2, propertyDescriptors.size());
+        assertTrue(propertyDescriptors.containsKey("super1"));
+        assertTrue(propertyDescriptors.containsKey("override"));
 
         MethodProperty<?> property = (MethodProperty<?>) propertyDescriptors
                 .get("override").createProperty(getClass());
-        Assert.assertTrue(property.isReadOnly());
+        assertTrue(property.isReadOnly());
     }
 
     @Test
@@ -228,15 +231,15 @@ public class BeanItemTest {
         LinkedHashMap<String, VaadinPropertyDescriptor<Class>> propertyDescriptors = (LinkedHashMap<String, VaadinPropertyDescriptor<Class>>) method
                 .invoke(null, MySubInterface.class);
 
-        Assert.assertEquals(4, propertyDescriptors.size());
-        Assert.assertTrue(propertyDescriptors.containsKey("sub"));
-        Assert.assertTrue(propertyDescriptors.containsKey("super1"));
-        Assert.assertTrue(propertyDescriptors.containsKey("super2"));
-        Assert.assertTrue(propertyDescriptors.containsKey("override"));
+        assertEquals(4, propertyDescriptors.size());
+        assertTrue(propertyDescriptors.containsKey("sub"));
+        assertTrue(propertyDescriptors.containsKey("super1"));
+        assertTrue(propertyDescriptors.containsKey("super2"));
+        assertTrue(propertyDescriptors.containsKey("override"));
 
         MethodProperty<?> property = (MethodProperty<?>) propertyDescriptors
                 .get("override").createProperty(getClass());
-        Assert.assertFalse(property.isReadOnly());
+        assertFalse(property.isReadOnly());
     }
 
     @Test
@@ -251,11 +254,11 @@ public class BeanItemTest {
                 ids);
 
         Iterator<?> it = item.getItemPropertyIds().iterator();
-        Assert.assertEquals("name", it.next());
-        Assert.assertEquals("superPublic", it.next());
-        Assert.assertEquals("name2", it.next());
-        Assert.assertEquals("noField", it.next());
-        Assert.assertFalse(it.hasNext());
+        assertEquals("name", it.next());
+        assertEquals("superPublic", it.next());
+        assertEquals("name2", it.next());
+        assertEquals("noField", it.next());
+        assertFalse(it.hasNext());
     }
 
     @Test
@@ -264,11 +267,11 @@ public class BeanItemTest {
                 new String[] { "name", "superPublic", "name2", "noField" });
 
         Iterator<?> it = item.getItemPropertyIds().iterator();
-        Assert.assertEquals("name", it.next());
-        Assert.assertEquals("superPublic", it.next());
-        Assert.assertEquals("name2", it.next());
-        Assert.assertEquals("noField", it.next());
-        Assert.assertFalse(it.hasNext());
+        assertEquals("name", it.next());
+        assertEquals("superPublic", it.next());
+        assertEquals("name2", it.next());
+        assertEquals("noField", it.next());
+        assertFalse(it.hasNext());
     }
 
     @Test
@@ -282,8 +285,8 @@ public class BeanItemTest {
                 ids);
 
         Iterator<?> it = item.getItemPropertyIds().iterator();
-        Assert.assertEquals("name", it.next());
-        Assert.assertFalse(it.hasNext());
+        assertEquals("name", it.next());
+        assertFalse(it.hasNext());
     }
 
     @Test
@@ -291,11 +294,11 @@ public class BeanItemTest {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
         Collection<?> itemPropertyIds = item.getItemPropertyIds();
-        Assert.assertEquals(6, itemPropertyIds.size());
+        assertEquals(6, itemPropertyIds.size());
 
         item.removeItemProperty("name2");
-        Assert.assertEquals(5, itemPropertyIds.size());
-        Assert.assertFalse(itemPropertyIds.contains("name2"));
+        assertEquals(5, itemPropertyIds.size());
+        assertFalse(itemPropertyIds.contains("name2"));
     }
 
     @Test
@@ -303,33 +306,32 @@ public class BeanItemTest {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
         Collection<?> itemPropertyIds = item.getItemPropertyIds();
-        Assert.assertEquals(6, itemPropertyIds.size());
+        assertEquals(6, itemPropertyIds.size());
 
         item.removeItemProperty("superPrivate");
-        Assert.assertEquals(5, itemPropertyIds.size());
-        Assert.assertFalse(itemPropertyIds.contains("superPrivate"));
+        assertEquals(5, itemPropertyIds.size());
+        assertFalse(itemPropertyIds.contains("superPrivate"));
     }
 
     @Test
     public void testPropertyTypes() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
-        Assert.assertTrue(Integer.class
+        assertTrue(Integer.class
                 .equals(item.getItemProperty("superPrivate").getType()));
-        Assert.assertTrue(Double.class
+        assertTrue(Double.class
                 .equals(item.getItemProperty("superProtected").getType()));
-        Assert.assertTrue(Boolean.class
+        assertTrue(Boolean.class
                 .equals(item.getItemProperty("superPublic").getType()));
-        Assert.assertTrue(
-                String.class.equals(item.getItemProperty("name").getType()));
+        assertTrue(String.class.equals(item.getItemProperty("name").getType()));
     }
 
     @Test
     public void testPropertyReadOnly() {
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
-        Assert.assertFalse(item.getItemProperty("name").isReadOnly());
-        Assert.assertTrue(item.getItemProperty("name2").isReadOnly());
+        assertFalse(item.getItemProperty("name").isReadOnly());
+        assertTrue(item.getItemProperty("name2").isReadOnly());
     }
 
     @Test
@@ -348,8 +350,8 @@ public class BeanItemTest {
         BeanItem<MyClass> item = constructor.newInstance(instance,
                 propertyDescriptors);
 
-        Assert.assertEquals(1, item.getItemPropertyIds().size());
-        Assert.assertEquals("bean1", item.getItemProperty("myname").getValue());
+        assertEquals(1, item.getItemPropertyIds().size());
+        assertEquals("bean1", item.getItemProperty("myname").getValue());
     }
 
     @Test
@@ -361,27 +363,26 @@ public class BeanItemTest {
 
         BeanItem<MyClass> item = new BeanItem<MyClass>(new MyClass("bean1"));
 
-        Assert.assertEquals(6, item.getItemPropertyIds().size());
-        Assert.assertEquals(null, item.getItemProperty("myname"));
+        assertEquals(6, item.getItemPropertyIds().size());
+        assertEquals(null, item.getItemProperty("myname"));
 
         item.addItemProperty("myname", pd.createProperty(item.getBean()));
-        Assert.assertEquals(7, item.getItemPropertyIds().size());
-        Assert.assertEquals("bean1", item.getItemProperty("myname").getValue());
+        assertEquals(7, item.getItemPropertyIds().size());
+        assertEquals("bean1", item.getItemProperty("myname").getValue());
         item.removeItemProperty("myname");
-        Assert.assertEquals(6, item.getItemPropertyIds().size());
-        Assert.assertEquals(null, item.getItemProperty("myname"));
+        assertEquals(6, item.getItemPropertyIds().size());
+        assertEquals(null, item.getItemProperty("myname"));
     }
 
     @Test
-    public void testOverridenGenericMethods() {
+    public void testOverriddenGenericMethods() {
         BeanItem<SubClass> item = new BeanItem<SubClass>(new SubClass());
 
         Property<?> property = item.getItemProperty("property");
-        Assert.assertEquals("Unexpected class for property type", String.class,
+        assertEquals("Unexpected class for property type", String.class,
                 property.getType());
 
-        Assert.assertEquals("Unexpected property value", "",
-                property.getValue());
+        assertEquals("Unexpected property value", "", property.getValue());
 
         // Should not be exception
         property.setValue(null);
@@ -392,7 +393,7 @@ public class BeanItemTest {
         BeanItem<MyClass> beanItem = new BeanItem<BeanItemTest.MyClass>(
                 new MyClass("Foo"));
         beanItem.setBean(new MyClass("Bar"));
-        Assert.assertEquals("Bar", beanItem.getItemProperty("name").getValue());
+        assertEquals("Bar", beanItem.getItemProperty("name").getValue());
     }
 
     @Test
@@ -400,7 +401,7 @@ public class BeanItemTest {
         BeanItem<MyClass> beanItem = new BeanItem<BeanItemTest.MyClass>(
                 new MyClass("Foo"));
         beanItem.setBean(new MyClass("Bar"));
-        Assert.assertEquals("Bar", beanItem.getItemProperty("name").getValue());
+        assertEquals("Bar", beanItem.getItemProperty("name").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)

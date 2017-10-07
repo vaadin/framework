@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.requesthandlers;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -35,7 +36,7 @@ public class CommunicationErrorTest extends MultiBrowserTest {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertTrue(isElementPresent(By.className("redirected")));
+        assertTrue(isElementPresent(By.className("redirected")));
     }
 
 }

@@ -1,8 +1,10 @@
 package com.vaadin.tests.fieldgroup;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -32,15 +34,15 @@ public class BooleanTextFieldTest extends BasicPersonFormTest {
         getDeceasedField().sendKeys("false", Keys.ENTER);
 
         /* error indicator */
-        Assert.assertEquals("Incorrect amount of error indicators on page.", 1,
+        assertEquals("Incorrect amount of error indicators on page.", 1,
                 findElements(By.className("v-errorindicator")).size());
-        Assert.assertEquals("false", getDeceasedField().getAttribute("value"));
+        assertEquals("false", getDeceasedField().getAttribute("value"));
 
         assertBeanValuesUnchanged();
 
         /* error message in tooltip */
         getDeceasedField().showTooltip();
-        Assert.assertEquals("Could not convert value to Boolean",
+        assertEquals("Could not convert value to Boolean",
                 getTooltipErrorElement().getText());
 
         getDeceasedField().click();
@@ -50,13 +52,13 @@ public class BooleanTextFieldTest extends BasicPersonFormTest {
         getDeceasedField().sendKeys("YAY!", Keys.ENTER);
 
         /* no error indicator */
-        Assert.assertFalse(isElementPresent(By.className("v-errorindicator")));
+        assertFalse(isElementPresent(By.className("v-errorindicator")));
 
         assertCommitSuccessful();
 
         /* commit last name and new deceased status */
         showBeanValues();
-        Assert.assertEquals(
+        assertEquals(
                 "4. Person [firstName=John, lastName=Dover, email=john@doe.com, age=64, sex=Male, address=Address [streetAddress=John street, postalCode=11223, city=John's town, country=USA], deceased=true, salary=null, salaryDouble=null, rent=null]",
                 getLogRow(0));
     }

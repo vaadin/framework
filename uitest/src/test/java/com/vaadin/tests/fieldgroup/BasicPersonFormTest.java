@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.fieldgroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.NotificationElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.NotificationElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.TableRowElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
@@ -115,14 +116,13 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     private void assertFieldValue(String caption, String expected,
             TestBenchElement field) {
-        Assert.assertEquals(
-                String.format("Unexpected value for field '%s',", caption),
+        assertEquals(String.format("Unexpected value for field '%s',", caption),
                 expected, field.getAttribute("value"));
     }
 
     protected void assertSelectedSex(Sex sex) {
         TableRowElement row = getGenderTable().getRow(getIndex(sex));
-        Assert.assertTrue(
+        assertTrue(
                 String.format("Given sex (%s) isn't selected.",
                         sex.getStringRepresentation()),
                 hasCssClass(row, "v-selected"));
@@ -164,8 +164,8 @@ public abstract class BasicPersonFormTest extends MultiBrowserTest {
 
     protected void assertLogText(String expected) {
         ++logCounter;
-        Assert.assertEquals("Unexpected log contents,",
-                logCounter + ". " + expected, getLogRow(0));
+        assertEquals("Unexpected log contents,", logCounter + ". " + expected,
+                getLogRow(0));
     }
 
     protected void assertDefaults() {

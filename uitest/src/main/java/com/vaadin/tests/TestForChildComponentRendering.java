@@ -18,6 +18,7 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
@@ -93,7 +94,7 @@ public class TestForChildComponentRendering extends CustomComponent {
 
     public void randomReorder() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<>();
+        final List<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }
@@ -110,7 +111,7 @@ public class TestForChildComponentRendering extends CustomComponent {
 
     public void removeRandomComponent() {
         final Iterator<Component> it = main.getComponentIterator();
-        final ArrayList<Component> components = new ArrayList<>();
+        final List<Component> components = new ArrayList<>();
         while (it.hasNext()) {
             components.add(it.next());
         }

@@ -36,7 +36,7 @@ public class TreeTest {
         public void itemCollapse(CollapseEvent<String> event) {
             assertEquals("Source component was incorrect", tree,
                     event.getComponent());
-            Assert.assertFalse("Multiple collapse events", collapsed);
+            assertFalse("Multiple collapse events", collapsed);
             collapsed = true;
         }
 
@@ -44,7 +44,7 @@ public class TreeTest {
         public void itemExpand(ExpandEvent<String> event) {
             assertEquals("Source component was incorrect", tree,
                     event.getComponent());
-            Assert.assertFalse("Multiple expand events", expanded);
+            assertFalse("Multiple expand events", expanded);
             expanded = true;
         }
 
@@ -71,13 +71,13 @@ public class TreeTest {
         tree.addExpandListener(listener);
         tree.addCollapseListener(listener);
 
-        Assert.assertFalse(listener.isExpanded());
+        assertFalse(listener.isExpanded());
         tree.expand("Foo");
         assertTrue("Item not expanded", tree.isExpanded("Foo"));
         assertTrue("Expand event not fired", listener.isExpanded());
-        Assert.assertFalse(listener.isCollapsed());
+        assertFalse(listener.isCollapsed());
         tree.collapse("Foo");
-        Assert.assertFalse("Item not collapsed", tree.isExpanded("Foo"));
+        assertFalse("Item not collapsed", tree.isExpanded("Foo"));
         assertTrue("Collapse event not fired", listener.isCollapsed());
     }
 

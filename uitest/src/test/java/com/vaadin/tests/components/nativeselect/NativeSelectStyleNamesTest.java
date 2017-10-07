@@ -15,11 +15,12 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NativeSelectElement;
@@ -38,7 +39,7 @@ public class NativeSelectStyleNamesTest extends SingleBrowserTest {
 
         Set<String> expected = Stream.of("v-select", "v-widget")
                 .collect(Collectors.toSet());
-        Assert.assertEquals(expected,
+        assertEquals(expected,
                 $(NativeSelectElement.class).first().getClassNames());
     }
 }

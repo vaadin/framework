@@ -93,7 +93,7 @@ public class ColorPickerTestUI extends AbstractReindeerTestUI {
     public class MyImageSource implements StreamResource.StreamSource {
 
         /** The imagebuffer. */
-        private java.io.ByteArrayOutputStream imagebuffer = null;
+        private ByteArrayOutputStream imagebuffer;
 
         /** The bg color. */
         private final java.awt.Color bgColor;

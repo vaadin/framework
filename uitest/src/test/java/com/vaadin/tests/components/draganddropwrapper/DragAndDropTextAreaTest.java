@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.draganddropwrapper;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -54,8 +55,8 @@ public class DragAndDropTextAreaTest extends MultiBrowserTest {
             }
         }
 
-        Assert.assertTrue(
-                "Text value is not found in the DnD image of text area", found);
+        assertTrue("Text value is not found in the DnD image of text area",
+                found);
     }
 
 }

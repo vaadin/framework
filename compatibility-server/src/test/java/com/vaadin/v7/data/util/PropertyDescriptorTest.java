@@ -1,5 +1,8 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
@@ -7,7 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Property;
@@ -38,7 +40,7 @@ public class PropertyDescriptorTest {
 
         Property<?> property = descriptor2
                 .createProperty(new Person("John", null));
-        Assert.assertEquals("John", property.getValue());
+        assertEquals("John", property.getValue());
     }
 
     @Test
@@ -54,7 +56,7 @@ public class PropertyDescriptorTest {
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
         Property<?> property = pd2.createProperty(new Person("John", null));
-        Assert.assertEquals("John", property.getValue());
+        assertEquals("John", property.getValue());
     }
 
     @Test
@@ -69,7 +71,7 @@ public class PropertyDescriptorTest {
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
         Property<?> property = pd2.createProperty(new Person("John", null));
-        Assert.assertNull(property.getValue());
+        assertNull(property.getValue());
     }
 
     @Test
@@ -79,6 +81,6 @@ public class PropertyDescriptorTest {
                 "age", int.class, Person.class.getMethod("getAge"),
                 Person.class.getMethod("setAge", int.class));
 
-        Assert.assertEquals(Integer.class, pd.getPropertyType());
+        assertEquals(Integer.class, pd.getPropertyType());
     }
 }

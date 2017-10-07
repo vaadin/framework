@@ -104,11 +104,7 @@ public class DeepComponentTrees extends TestBase {
         } else {
             try {
                 l = (Layout) currentValue.newInstance();
-            } catch (InstantiationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                // TODO Auto-generated catch block
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

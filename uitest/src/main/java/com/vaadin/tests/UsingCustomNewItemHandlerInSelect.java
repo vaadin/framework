@@ -54,7 +54,7 @@ public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
     }
 
     public void populateSelect() {
-        final String[] names = new String[] { "John", "Mary", "Joe", "Sarah",
+        final String[] names = { "John", "Mary", "Joe", "Sarah",
                 "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
         for (int j = 0; j < 4; j++) {
             Integer id = new Integer(sequence++);

@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -43,7 +45,8 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
 
         $(CheckBoxElement.class).first().click();
 
-        Assert.assertFalse("Checkbox is selected even though should be unselected.", $(CheckBoxElement.class).first().isChecked());
+        assertFalse("Checkbox is selected even though should be unselected.",
+                $(CheckBoxElement.class).first().isChecked());
 
         openPopupAndValidateNoWeeknumbers();
     }
@@ -81,10 +84,10 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
         waitUntil(ExpectedConditions.visibilityOfElementLocated(
                 org.openqa.selenium.By.className("v-datefield-popup")));
 
-        Assert.assertFalse("No week numbers found for date field!",
+        assertFalse("No week numbers found for date field!",
                 findElements(
                         By.className("v-datefield-calendarpanel-weeknumber"))
-                        .isEmpty());
+                                .isEmpty());
         // Close popup
         popupButton.click();
     }
@@ -98,10 +101,10 @@ public class DateTimeFieldWeekDaysTest extends SingleBrowserTest {
         waitUntil(ExpectedConditions.visibilityOfElementLocated(
                 org.openqa.selenium.By.className("v-datefield-popup")));
 
-        Assert.assertTrue("Week numbers still found in calendar popup!",
+        assertTrue("Week numbers still found in calendar popup!",
                 findElements(
                         By.className("v-datefield-calendarpanel-weeknumber"))
-                        .isEmpty());
+                                .isEmpty());
         // Close popup
         popupButton.click();
     }

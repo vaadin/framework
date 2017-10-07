@@ -9,8 +9,8 @@ import com.vaadin.v7.ui.Table;
 
 public class TableVisibleColumnsUpdate extends AbstractReindeerTestUI {
 
-    private String[] cols1 = new String[] { "p1", "p2", "p3" };
-    private String[] cols2 = new String[] { "p1", "p4", "p3" };
+    private String[] cols1 = { "p1", "p2", "p3" };
+    private String[] cols2 = { "p1", "p4", "p3" };
     private Table table;
 
     @Override

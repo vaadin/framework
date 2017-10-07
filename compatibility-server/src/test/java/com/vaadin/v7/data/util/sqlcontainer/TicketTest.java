@@ -1,5 +1,8 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -8,7 +11,6 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,7 +58,7 @@ public class TicketTest {
                 Arrays.asList("ID"), connectionPool);
         FreeformStatementDelegate delegate = EasyMock
                 .createMock(FreeformStatementDelegate.class);
-        final ArrayList<Filter> filters = new ArrayList<Filter>();
+        final List<Filter> filters = new ArrayList<Filter>();
         delegate.setFilters(null);
         EasyMock.expectLastCall().anyTimes();
         delegate.setOrderBy(EasyMock.isA(List.class));
@@ -105,23 +107,23 @@ public class TicketTest {
         query.setDelegate(delegate);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
-        Assert.assertEquals(4, container.size());
-        Assert.assertEquals("Börje",
+        assertEquals(4, container.size());
+        assertEquals("Börje",
                 container.getContainerProperty(container.lastItemId(), "NAME")
                         .getValue());
 
         container.addContainerFilter(new Equal("AGE", 18));
         // Pelle
-        Assert.assertEquals(1, container.size());
-        Assert.assertEquals("Pelle",
+        assertEquals(1, container.size());
+        assertEquals("Pelle",
                 container.getContainerProperty(container.firstItemId(), "NAME")
                         .getValue());
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertEquals(new BigDecimal(18), container
+            assertEquals(new BigDecimal(18), container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         } else {
-            Assert.assertEquals(18, container
+            assertEquals(18, container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         }
@@ -135,21 +137,21 @@ public class TicketTest {
                 SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
-        Assert.assertEquals(4, container.size());
+        assertEquals(4, container.size());
 
         container.addContainerFilter(new Equal("AGE", 18));
 
         // Pelle
-        Assert.assertEquals(1, container.size());
-        Assert.assertEquals("Pelle",
+        assertEquals(1, container.size());
+        assertEquals("Pelle",
                 container.getContainerProperty(container.firstItemId(), "NAME")
                         .getValue());
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertEquals(new BigDecimal(18), container
+            assertEquals(new BigDecimal(18), container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         } else {
-            Assert.assertEquals(18, container
+            assertEquals(18, container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
         }
@@ -167,18 +169,17 @@ public class TicketTest {
 
         // set a different name
         item.getItemProperty("NAME").setValue("otherName");
-        Assert.assertEquals("otherName",
-                item.getItemProperty("NAME").getValue());
+        assertEquals("otherName", item.getItemProperty("NAME").getValue());
 
         // access the item and reset the name to its old value
         Item item2 = container.getItem(id);
         item2.getItemProperty("NAME").setValue(name);
-        Assert.assertEquals(name, item2.getItemProperty("NAME").getValue());
+        assertEquals(name, item2.getItemProperty("NAME").getValue());
 
         Item item3 = container.getItem(id);
         String name3 = (String) item3.getItemProperty("NAME").getValue();
 
-        Assert.assertEquals(name, name3);
+        assertEquals(name, name3);
     }
 
     @Test
@@ -189,7 +190,6 @@ public class TicketTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people WHERE name='does_not_exist'",
                 Arrays.asList("ID"), connectionPool));
-        Assert.assertTrue("Got items while expected empty set",
-                container.size() == 0);
+        assertTrue("Got items while expected empty set", container.size() == 0);
     }
 }

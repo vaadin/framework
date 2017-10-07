@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -29,7 +30,7 @@ public class ChangeHierarchyBeforeResponseTest extends SingleBrowserTest {
 
         ButtonElement button = $(ButtonElement.class).first();
 
-        Assert.assertEquals(
+        assertEquals(
                 "Button caption should change by its own beforeClientResponse",
                 "Add label to layout", button.getText());
 
@@ -37,7 +38,7 @@ public class ChangeHierarchyBeforeResponseTest extends SingleBrowserTest {
 
         LabelElement label = $(LabelElement.class).all().get(1);
 
-        Assert.assertEquals("Label should have been considered initial twice",
+        assertEquals("Label should have been considered initial twice",
                 "Initial count: 2", label.getText());
     }
 }

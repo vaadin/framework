@@ -1,48 +1,48 @@
 <assembly
-	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
-	<id>bin</id>
-	<formats>
-		<format>zip</format>
-	</formats>
-	<includeBaseDirectory>false</includeBaseDirectory>
-	<dependencySets>
-		<dependencySet>
-			<outputDirectory />
-			<useProjectArtifact>false</useProjectArtifact>
-			<unpack>false</unpack>
-			<useTransitiveDependencies>false</useTransitiveDependencies>
-		</dependencySet>
-		<dependencySet>
-			<scope>compile</scope>
-			<outputDirectory>lib</outputDirectory>
-			<useProjectArtifact>false</useProjectArtifact>
-			<unpack>false</unpack>
-			<useTransitiveDependencies>true</useTransitiveDependencies>
-			<excludes>
-				<exclude>${project.groupId}:vaadin-shared</exclude>
-				<exclude>${project.groupId}:vaadin-push</exclude>
-				<exclude>${project.groupId}:vaadin-server</exclude>
-				<exclude>${project.groupId}:vaadin-themes</exclude>
-				<exclude>${project.groupId}:vaadin-client</exclude>
-				<exclude>${project.groupId}:vaadin-client-compiler</exclude>
-				<exclude>${project.groupId}:vaadin-client-compiled</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-shared</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-server</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-themes</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-client</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-client-compiled</exclude>
-				<exclude>${project.groupId}:vaadin-compatibility-server-gae</exclude>
-				<exclude>${project.groupId}:vaadin-osgi-integration</exclude>
-				<exclude>${project.groupId}:vaadin-liferay-integration</exclude>
-			</excludes>
-		</dependencySet>
-	</dependencySets>
-	<fileSets>
-		<fileSet>
-			<outputDirectory />
-			<directory>${webcontent.dir}</directory>
-		</fileSet>
-	</fileSets>
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory />
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>false</unpack>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+        </dependencySet>
+        <dependencySet>
+            <scope>compile</scope>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <unpack>false</unpack>
+            <useTransitiveDependencies>true</useTransitiveDependencies>
+            <excludes>
+                <exclude>${project.groupId}:vaadin-shared</exclude>
+                <exclude>${project.groupId}:vaadin-push</exclude>
+                <exclude>${project.groupId}:vaadin-server</exclude>
+                <exclude>${project.groupId}:vaadin-themes</exclude>
+                <exclude>${project.groupId}:vaadin-client</exclude>
+                <exclude>${project.groupId}:vaadin-client-compiler</exclude>
+                <exclude>${project.groupId}:vaadin-client-compiled</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-shared</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-server</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-themes</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-client</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-client-compiled</exclude>
+                <exclude>${project.groupId}:vaadin-compatibility-server-gae</exclude>
+                <exclude>${project.groupId}:vaadin-osgi-integration</exclude>
+                <exclude>${project.groupId}:vaadin-liferay-integration</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+    <fileSets>
+        <fileSet>
+            <outputDirectory />
+            <directory>${webcontent.dir}</directory>
+        </fileSet>
+    </fileSets>
 </assembly>

@@ -18,7 +18,7 @@ package com.vaadin.tests;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -44,7 +44,7 @@ public class TestForMultipleStyleNames extends CustomComponent
 
     private final TwinColSelect s = new TwinColSelect();
 
-    private ArrayList<String> styleNames2;
+    private List<String> styleNames2;
 
     public TestForMultipleStyleNames() {
         setCompositionRoot(main);
@@ -77,23 +77,21 @@ public class TestForMultipleStyleNames extends CustomComponent
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void valueChange(ValueChangeEvent event) {
 
         final String currentStyle = l.getStyleName();
-        final String[] tmp = currentStyle.split(" ");
-        final ArrayList<String> curStyles = new ArrayList<>();
-        for (int i = 0; i < tmp.length; i++) {
-            if (tmp[i] != "") {
-                curStyles.add(tmp[i]);
+        final List<String> curStyles = new ArrayList<>();
+        for (String tmp : currentStyle.split(" ")) {
+            if (tmp != "") {
+                curStyles.add(tmp);
             }
         }
 
-        final Collection<?> styles = (Collection<?>) s.getValue();
+        final Collection<String> styles = (Collection<String>) s.getValue();
 
-        for (final Iterator<?> iterator = styles.iterator(); iterator
-                .hasNext();) {
-            final String styleName = (String) iterator.next();
+        for (final String styleName : styles) {
             if (curStyles.contains(styleName)) {
                 // already added
                 curStyles.remove(styleName);
@@ -101,9 +99,7 @@ public class TestForMultipleStyleNames extends CustomComponent
                 l.addStyleName(styleName);
             }
         }
-        for (final Iterator<String> iterator2 = curStyles.iterator(); iterator2
-                .hasNext();) {
-            final String object = iterator2.next();
+        for (final String object : curStyles) {
             l.removeStyleName(object);
         }
     }

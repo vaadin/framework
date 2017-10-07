@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.listselect;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -53,7 +54,7 @@ public class ListSelectAddRemoveItemsTest extends SingleBrowserTest {
     }
 
     private void assertOptions(String... options) {
-        Assert.assertEquals(Arrays.asList(options),
+        assertEquals(Arrays.asList(options),
                 $(ListSelectElement.class).first().getOptions());
     }
 

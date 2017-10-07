@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.notification;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -67,18 +69,16 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         NotificationElement notification = $(NotificationElement.class).first();
 
         String text = notification.getAttribute("role");
-        Assert.assertTrue(
-                "Expected attribute 'role' to equal 'alert', found " + text,
+        assertTrue("Expected attribute 'role' to equal 'alert', found " + text,
                 text.equals("alert"));
 
         text = getHiddenText(notification
                 .findElements(By.className("v-assistive-device-only")).get(0));
-        Assert.assertTrue("Expected 'Prefix:', found " + text,
-                text.equals("Prefix:"));
+        assertTrue("Expected 'Prefix:', found " + text, text.equals("Prefix:"));
 
         text = getHiddenText(notification
                 .findElements(By.className("v-assistive-device-only")).get(1));
-        Assert.assertTrue("Expected '- press ESC to close', found " + text,
+        assertTrue("Expected '- press ESC to close', found " + text,
                 text.equals("- press ESC to close"));
 
         notification.close();
@@ -92,8 +92,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         notification = $(NotificationElement.class).first();
 
         text = notification.getAttribute("role");
-        Assert.assertTrue(
-                "Expected attribute 'role' to equal 'status', found " + text,
+        assertTrue("Expected attribute 'role' to equal 'status', found " + text,
                 text.equals("status"));
 
         notification.close();
@@ -111,8 +110,7 @@ public class NotificationsWaiAriaTest extends MultiBrowserTest {
         } catch (Exception e) {
             element = null;
         }
-        Assert.assertNull(
-                "Notification shouldn't have assistive-device-only spans",
+        assertNull("Notification shouldn't have assistive-device-only spans",
                 element);
 
     }

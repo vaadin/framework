@@ -32,7 +32,7 @@ import com.vaadin.shared.MouseEventDetails.MouseButton;
 public class MouseEventDetailsBuilder {
 
     /**
-     * Construct a {@link MouseEventDetails} object from the given event
+     * Construct a {@link MouseEventDetails} object from the given event.
      *
      * @param evt
      *            The event to use as a source for the details
@@ -43,7 +43,7 @@ public class MouseEventDetailsBuilder {
     }
 
     /**
-     * Construct a {@link MouseEventDetails} object from the given event
+     * Construct a {@link MouseEventDetails} object from the given event.
      *
      * @param evt
      *            The event to use as a source for the details

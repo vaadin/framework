@@ -177,7 +177,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     private void makeInvalidEdition() {
         editRow(5);
         assertFalse(logContainsText(
-                "Exception occured, java.lang.IllegalStateException"));
+                "Exception occurred, java.lang.IllegalStateException"));
 
         GridEditorElement editor = getGridElement().getEditor();
 

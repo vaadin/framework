@@ -39,7 +39,6 @@ import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.v7.data.Collapsible;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
-import com.vaadin.v7.data.Container.ItemSetChangeEvent;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.data.util.HierarchicalContainerOrderedWrapper;

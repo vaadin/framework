@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -39,28 +41,28 @@ public class TableSortingIndicatorTest extends MultiBrowserTest {
         ButtonElement button = $(ButtonElement.class).caption("Sort").first();
         TableElement table = $(TableElement.class).first();
 
-        Assert.assertFalse("Descending indicator was prematurely visible",
+        assertFalse("Descending indicator was prematurely visible",
                 getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
-        Assert.assertFalse("Ascending indicator was prematurely visible",
+        assertFalse("Ascending indicator was prematurely visible",
                 getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
 
         button.click();
-        Assert.assertTrue("Indicator did not become visible",
+        assertTrue("Indicator did not become visible",
                 getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
-        Assert.assertFalse("Ascending sort indicator was wrongly visible",
+        assertFalse("Ascending sort indicator was wrongly visible",
                 getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
 
         table.getHeaderCell(0).click();
-        Assert.assertFalse("Table sort indicator didn't change",
+        assertFalse("Table sort indicator didn't change",
                 getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
-        Assert.assertTrue("Ascending sort indicator didn't become visible",
+        assertTrue("Ascending sort indicator didn't become visible",
                 getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
 
         button.click();
-        Assert.assertTrue(
+        assertTrue(
                 "Descending sort indicator didn't appear on the second serverside sort.",
                 getHeaderClasses(table).contains(TABLE_HEADER_DESC_INDICATOR));
-        Assert.assertFalse("Ascending sort indicator didn't disappear",
+        assertFalse("Ascending sort indicator didn't disappear",
                 getHeaderClasses(table).contains(TABLE_HEADER_ASC_INDICATOR));
     }
 

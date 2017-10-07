@@ -114,12 +114,12 @@ public class Form extends AbstractField<Object>
     /**
      * Mapping from propertyName to corresponding field.
      */
-    private final HashMap<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
+    private final Map<Object, Field<?>> fields = new HashMap<Object, Field<?>>();
 
     /**
      * Form may act as an Item, its own properties are stored here.
      */
-    private final HashMap<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
+    private final Map<Object, Property<?>> ownProperties = new HashMap<Object, Property<?>>();
 
     /**
      * Field factory for this form.
@@ -245,9 +245,8 @@ public class Form extends AbstractField<Object>
         // getErrorMessage() recursively instead of validate().
         ErrorMessage validationError = null;
         if (isValidationVisible()) {
-            for (final Iterator<Object> i = propertyIds.iterator(); i
-                    .hasNext();) {
-                Object f = fields.get(i.next());
+            for (final Object id : propertyIds) {
+                Object f = fields.get(id);
                 if (f instanceof AbstractComponent) {
                     AbstractComponent field = (AbstractComponent) f;
 
@@ -286,7 +285,7 @@ public class Form extends AbstractField<Object>
      * Controls the making validation visible implicitly on commit.
      *
      * Having commit() call setValidationVisible(true) implicitly is the default
-     * behaviour. You can disable the implicit setting by setting this property
+     * behavior. You can disable the implicit setting by setting this property
      * as false.
      *
      * It is useful, because you usually want to start with the form free of
@@ -337,9 +336,9 @@ public class Form extends AbstractField<Object>
         }
 
         // Try to commit all
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+        for (final Object id : propertyIds) {
             try {
-                final Field<?> f = fields.get(i.next());
+                final Field<?> f = fields.get(id);
                 // Commit only non-readonly fields.
                 if (!f.isReadOnly()) {
                     f.commit();
@@ -362,12 +361,9 @@ public class Form extends AbstractField<Object>
         }
 
         // Commit problems
-        final Throwable[] causes = new Throwable[problems.size()];
-        int index = 0;
-        for (final Iterator<SourceException> i = problems.iterator(); i
-                .hasNext();) {
-            causes[index++] = i.next();
-        }
+        final Throwable[] causes = problems
+                .toArray(new Throwable[problems.size()]);
+
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
@@ -385,9 +381,9 @@ public class Form extends AbstractField<Object>
         LinkedList<SourceException> problems = null;
 
         // Try to discard all changes
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
+        for (final Object id : propertyIds) {
             try {
-                fields.get(i.next()).discard();
+                fields.get(id).discard();
             } catch (final Buffered.SourceException e) {
                 if (problems == null) {
                     problems = new LinkedList<SourceException>();
@@ -406,12 +402,9 @@ public class Form extends AbstractField<Object>
         }
 
         // Discards problems occurred
-        final Throwable[] causes = new Throwable[problems.size()];
-        int index = 0;
-        for (final Iterator<SourceException> i = problems.iterator(); i
-                .hasNext();) {
-            causes[index++] = i.next();
-        }
+        final Throwable[] causes = problems
+                .toArray(new Throwable[problems.size()]);
+
         final Buffered.SourceException e = new Buffered.SourceException(this,
                 causes);
         currentBufferedSourceException = e;
@@ -425,8 +418,8 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public boolean isModified() {
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            final Field<?> f = fields.get(i.next());
+        for (final Object id : propertyIds) {
+            final Field<?> f = fields.get(id);
             if (f != null && f.isModified()) {
                 return true;
             }
@@ -443,9 +436,8 @@ public class Form extends AbstractField<Object>
     public void setBuffered(boolean buffered) {
         if (buffered != this.buffered) {
             this.buffered = buffered;
-            for (final Iterator<Object> i = propertyIds.iterator(); i
-                    .hasNext();) {
-                fields.get(i.next()).setBuffered(buffered);
+            for (final Object id : propertyIds) {
+                fields.get(id).setBuffered(buffered);
             }
         }
     }
@@ -665,11 +657,10 @@ public class Form extends AbstractField<Object>
      *         (and only if) the return value is <code>true</code>.
      */
     public boolean removeAllProperties() {
-        final Object[] properties = propertyIds.toArray();
         boolean success = true;
 
-        for (int i = 0; i < properties.length; i++) {
-            if (!removeItemProperty(properties[i])) {
+        for (Object property : propertyIds.toArray()) {
+            if (!removeItemProperty(property)) {
                 success = false;
             }
         }
@@ -695,8 +686,9 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public void setItemDataSource(Item newDataSource) {
-        setItemDataSource(newDataSource, newDataSource != null
-                ? newDataSource.getItemPropertyIds() : null);
+        setItemDataSource(newDataSource,
+                newDataSource != null ? newDataSource.getItemPropertyIds()
+                        : null);
     }
 
     /**
@@ -740,8 +732,7 @@ public class Form extends AbstractField<Object>
         }
 
         // Adds all the properties to this form
-        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            final Object id = i.next();
+        for (final Object id : propertyIds) {
             final Property<?> property = itemDatasource.getItemProperty(id);
             if (id != null && property != null) {
                 final Field<?> f = fieldFactory.createField(itemDatasource, id,
@@ -817,13 +808,12 @@ public class Form extends AbstractField<Object>
 
         // Move fields from previous layout
         if (getLayout() != null) {
-            final Object[] properties = propertyIds.toArray();
-            for (int i = 0; i < properties.length; i++) {
-                Field<?> f = getField(properties[i]);
+            for (Object property : propertyIds) {
+                Field<?> f = getField(property);
                 detachField(f);
                 if (layout instanceof CustomLayout) {
                     ((CustomLayout) layout).addComponent(f,
-                            properties[i].toString());
+                            property.toString());
                 } else {
                     layout.addComponent(f);
                 }
@@ -889,9 +879,7 @@ public class Form extends AbstractField<Object>
         }
         if (value != null && !found) {
             if (value instanceof Collection) {
-                for (final Iterator<?> it = ((Collection<?>) value)
-                        .iterator(); it.hasNext();) {
-                    final Object val = it.next();
+                for (final Object val : ((Collection<?>) value)) {
                     found = false;
                     for (int i = 0; i < values.length && !found; i++) {
                         if (values[i] == val
@@ -964,8 +952,8 @@ public class Form extends AbstractField<Object>
     @Override
     public void validate() throws InvalidValueException {
         super.validate();
-        for (final Iterator<Object> i = propertyIds.iterator(); i.hasNext();) {
-            fields.get(i.next()).validate();
+        for (final Object id : propertyIds) {
+            fields.get(id).validate();
         }
     }
 
@@ -998,8 +986,8 @@ public class Form extends AbstractField<Object>
     @Override
     public void setReadOnly(boolean readOnly) {
         super.setReadOnly(readOnly);
-        for (final Iterator<?> i = propertyIds.iterator(); i.hasNext();) {
-            fields.get(i.next()).setReadOnly(readOnly);
+        for (final Object id : propertyIds) {
+            fields.get(id).setReadOnly(readOnly);
         }
     }
 
@@ -1178,9 +1166,8 @@ public class Form extends AbstractField<Object>
     @Override
     public void setTabIndex(int tabIndex) {
         super.setTabIndex(tabIndex);
-        for (final Iterator<?> i = getItemPropertyIds().iterator(); i
-                .hasNext();) {
-            getField(i.next()).setTabIndex(tabIndex);
+        for (final Object id : getItemPropertyIds()) {
+            getField(id).setTabIndex(tabIndex);
         }
     }
 
@@ -1191,8 +1178,7 @@ public class Form extends AbstractField<Object>
     @Override
     public void setImmediate(boolean immediate) {
         super.setImmediate(immediate);
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractLegacyComponent) {
                 ((AbstractLegacyComponent) f).setImmediate(immediate);
             }
@@ -1207,9 +1193,7 @@ public class Form extends AbstractField<Object>
      */
     @Override
     public boolean isEmpty() {
-
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractField) {
                 if (!((AbstractField<?>) f).isEmpty()) {
                     return false;
@@ -1222,8 +1206,7 @@ public class Form extends AbstractField<Object>
 
     @Override
     public void clear() {
-        for (Iterator<Field<?>> i = fields.values().iterator(); i.hasNext();) {
-            Field<?> f = i.next();
+        for (Field<?> f : fields.values()) {
             if (f instanceof AbstractField) {
                 ((AbstractField<?>) f).clear();
             }
@@ -1313,7 +1296,7 @@ public class Form extends AbstractField<Object>
     }
 
     /**
-     * Removes all action handlers
+     * Removes all action handlers.
      */
     public void removeAllActionHandlers() {
         if (ownActionManager != null) {

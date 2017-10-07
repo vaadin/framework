@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.table;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -41,7 +42,7 @@ public class DndTableTargetDetailsTest extends DndActionsTest {
         dragAndDrop(row, getTarget());
 
         WebElement label = findElement(By.className("dnd-button-name"));
-        Assert.assertEquals("Button name=left", label.getText());
+        assertEquals("Button name=left", label.getText());
     }
 
     protected WebElement getTarget() {

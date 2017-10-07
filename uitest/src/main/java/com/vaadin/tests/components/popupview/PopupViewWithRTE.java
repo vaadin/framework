@@ -30,7 +30,7 @@ public class PopupViewWithRTE extends TestBase {
             @Override
             public String getMinimizedValueAsHTML() {
                 String value = rte.getValue();
-                if (value == null || "".equals(value)) {
+                if (value == null || value.isEmpty()) {
                     value = "Initial <b>content</b> for <h3>rte</h3>.";
                     rte.setValue(value);
                     rte.setHeight("150px");

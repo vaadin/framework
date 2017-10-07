@@ -1,5 +1,8 @@
 package com.vaadin.tests.server.component;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -7,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 
 import com.vaadin.shared.Registration;
 import com.vaadin.tests.VaadinClasses;
@@ -54,13 +56,11 @@ public abstract class AbstractListenerMethodsTestBase {
                                         .getName()
                                 + ";");
                         System.out.println("import " + c.getName() + ";");
-                        System.out
-                                .println(
-                                        "public class " + c.getSimpleName()
-                                                + "Listeners extends "
-                                                + AbstractListenerMethodsTestBase.class
-                                                        .getSimpleName()
-                                                + " {");
+                        System.out.println("public class " + c.getSimpleName()
+                                + "Listeners extends "
+                                + AbstractListenerMethodsTestBase.class
+                                        .getSimpleName()
+                                + " {");
                     }
 
                     String listenerClassName = m.getParameterTypes()[0]
@@ -163,11 +163,10 @@ public abstract class AbstractListenerMethodsTestBase {
             SecurityException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         Collection<?> registeredListeners = getListeners(c, eventClass);
-        Assert.assertEquals("Number of listeners", expectedListeners.length,
+        assertEquals("Number of listeners", expectedListeners.length,
                 registeredListeners.size());
 
-        Assert.assertArrayEquals(expectedListeners,
-                registeredListeners.toArray());
+        assertArrayEquals(expectedListeners, registeredListeners.toArray());
 
     }
 }

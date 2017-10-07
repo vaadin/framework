@@ -17,31 +17,31 @@
 package com.vaadin.shared.ui.ui;
 
 /**
- * Transport modes for Push
+ * Transport modes for Push.
  *
  * @since 7.1
  * @author Vaadin Ltd
  */
 public enum Transport {
     /**
-     * Websockets
+     * Websockets.
      */
     WEBSOCKET("websocket"),
     /**
-     * Websockets for server to client, XHR for client to server
+     * Websockets for server to client, XHR for client to server.
      *
      * @since 7.6
      */
     WEBSOCKET_XHR("websocket-xhr"),
     /**
-     * HTTP streaming
+     * HTTP streaming.
      *
      * @deprecated Use the more reliable {@link Transport#LONG_POLLING} instead.
      */
     @Deprecated
     STREAMING("streaming"),
     /**
-     * HTTP long polling
+     * HTTP long polling.
      */
     LONG_POLLING("long-polling");
 

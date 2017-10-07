@@ -142,7 +142,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
     }
 
     /**
-     * Checks if there is a server side event listener registered for clicks
+     * Checks if there is a server side event listener registered for clicks.
      *
      * @return true if there is a server side event listener registered, false
      *         otherwise

@@ -9,7 +9,6 @@ import com.vaadin.server.MockVaadinSession;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

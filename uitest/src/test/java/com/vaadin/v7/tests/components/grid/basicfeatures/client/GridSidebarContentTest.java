@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.grid.basicfeatures.client;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -31,7 +32,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
     public void testSidebarWithHidableColumn() {
         openTestURL();
 
-        Assert.assertEquals("Sidebar should not be initially present", 0,
+        assertEquals("Sidebar should not be initially present", 0,
                 countBySelector(".v-grid-sidebar-button"));
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
@@ -41,12 +42,12 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
         WebElement toggle = getSidebarPopup()
                 .findElement(By.className("column-hiding-toggle"));
 
-        Assert.assertEquals("Column 0 should be togglable", "Header (0,0)",
+        assertEquals("Column 0 should be togglable", "Header (0,0)",
                 toggle.getText());
 
         selectMenuPath("Component", "Columns", "Column 0", "Hidable");
-        Assert.assertEquals("Sidebar should disappear without toggable column",
-                0, countBySelector(".v-grid-sidebar-button"));
+        assertEquals("Sidebar should disappear without toggable column", 0,
+                countBySelector(".v-grid-sidebar-button"));
 
     }
 
@@ -64,7 +65,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
         sidebarItem.click();
 
-        Assert.assertEquals("Sidebar should be closed after clicking item 0", 0,
+        assertEquals("Sidebar should be closed after clicking item 0", 0,
                 countBySelector(".v-grid-sidebar-content"));
     }
 
@@ -76,7 +77,7 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
 
         selectMenuPath("Component", "Sidebar", "Toggle sidebar visibility");
 
-        Assert.assertEquals("Sidebar should be open", 1,
+        assertEquals("Sidebar should be open", 1,
                 countBySelector(".v-grid-sidebar-content"));
     }
 
@@ -125,18 +126,18 @@ public class GridSidebarContentTest extends GridBasicClientFeaturesTest {
         List<WebElement> menuItems = getSidebarPopup()
                 .findElements(By.cssSelector(".v-grid-sidebar-content td"));
 
-        Assert.assertEquals("Expected " + items.length + " menu items",
-                items.length, menuItems.size());
+        assertEquals("Expected " + items.length + " menu items", items.length,
+                menuItems.size());
 
         for (int i = 0; i < items.length; i++) {
             String expectedItem = items[i];
             if (expectedItem == null) {
-                Assert.assertEquals("Item " + i + " should be a separator",
+                assertEquals("Item " + i + " should be a separator",
                         "gwt-MenuItemSeparator",
                         menuItems.get(i).getAttribute("class"));
             } else {
-                Assert.assertEquals("Unexpected content for item " + i,
-                        expectedItem, menuItems.get(i).getText());
+                assertEquals("Unexpected content for item " + i, expectedItem,
+                        menuItems.get(i).getText());
             }
         }
     }

@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -94,7 +95,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private int deltaScrollPos;
     private boolean transitionOn = false;
     private int finalScrollTop;
-    private ArrayList<Element> layers;
+    private List<Element> layers;
     private boolean moved;
     private ScrollHandler scrollHandler;
 
@@ -711,7 +712,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     /**
-     * long calcucation are not very efficient in GWT, so this helper method
+     * Long calculation are not very efficient in GWT, so this helper method
      * returns timestamp in double.
      *
      * @return

@@ -26,7 +26,6 @@ import com.vaadin.tests.widgetset.server.DummyLabel;
  * Dummy connector just to cause {@link LabelState} to be used to test #8683
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @Connect(DummyLabel.class)

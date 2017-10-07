@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TextFieldElement;
@@ -33,7 +34,7 @@ public class ContrastFontColorTest extends MultiBrowserTest {
         openTestURL();
 
         String color = $(TextFieldElement.class).first().getCssValue("color");
-        Assert.assertEquals(
+        assertEquals(
                 "Unexpected text color value using 0.1 as defualt contrast value :"
                         + color,
                 "rgba(230, 230, 230, 1)", color);

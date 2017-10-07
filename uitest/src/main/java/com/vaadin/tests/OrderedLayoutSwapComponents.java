@@ -17,6 +17,7 @@
 package com.vaadin.tests;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
@@ -29,7 +30,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  *
  * This Component contains some simple test to see that component updates its
- * contents propertly.
+ * contents properly.
  *
  * @author Vaadin Ltd.
  */
@@ -37,7 +38,7 @@ public class OrderedLayoutSwapComponents extends CustomComponent {
 
     private final AbstractOrderedLayout main;
 
-    ArrayList<MyComponent> order = new ArrayList<>();
+    List<MyComponent> order = new ArrayList<>();
 
     public OrderedLayoutSwapComponents() {
 

@@ -1,10 +1,14 @@
 package com.vaadin.tests.components.abstractsingleselect;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,16 +62,15 @@ public class AbstractSingleSelectionTest extends SingleBrowserTest {
         AbstractSingleSelectElement selectElement = getSelectElement();
         // TODO: TB API behavior should be unified.
         if (selectElement instanceof RadioButtonGroupElement) {
-            Assert.assertNull("No value should be selected",
-                    selectElement.getValue());
+            assertNull("No value should be selected", selectElement.getValue());
         } else if (selectElement instanceof ComboBoxElement) {
-            Assert.assertTrue("No value should be selected",
+            assertTrue("No value should be selected",
                     selectElement.getValue().isEmpty());
         } else {
             // NativeSelectElement throws if no value is selected.
             try {
                 selectElement.getValue();
-                Assert.fail("No value should be selected");
+                fail("No value should be selected");
             } catch (NoSuchElementException e) {
                 // All is fine.
             }
@@ -82,11 +85,11 @@ public class AbstractSingleSelectionTest extends SingleBrowserTest {
 
         AbstractSingleSelectElement select = getSelectElement();
         select.selectByText("Baz");
-        Assert.assertEquals("Value should change", "Baz", select.getValue());
+        assertEquals("Value should change", "Baz", select.getValue());
 
         $(ButtonElement.class).caption("Refresh").first().click();
-        Assert.assertEquals("Value should stay the same through refreshAll",
-                "Baz", select.getValue());
+        assertEquals("Value should stay the same through refreshAll", "Baz",
+                select.getValue());
     }
 
     @Test
@@ -97,10 +100,10 @@ public class AbstractSingleSelectionTest extends SingleBrowserTest {
 
         AbstractSingleSelectElement select = getSelectElement();
         select.selectByText("Baz");
-        Assert.assertEquals("Value should change", "Baz", select.getValue());
+        assertEquals("Value should change", "Baz", select.getValue());
 
         $(ButtonElement.class).caption("Select Bar").first().click();
-        Assert.assertEquals("Original value should be selected again", "Bar",
+        assertEquals("Original value should be selected again", "Bar",
                 select.getValue());
     }
 
@@ -113,12 +116,12 @@ public class AbstractSingleSelectionTest extends SingleBrowserTest {
         AbstractSingleSelectElement rbg = getSelectElement();
         rbg.selectByText("Reset");
         // Selecting "Reset" selects "Bar" on server. Value was initially "Bar"
-        Assert.assertEquals("Original value should be selected again", "Bar",
+        assertEquals("Original value should be selected again", "Bar",
                 rbg.getValue());
     }
 
     private void assertInitial() {
-        Assert.assertEquals("Initial state unexpected", "Bar",
+        assertEquals("Initial state unexpected", "Bar",
                 getSelectElement().getValue());
     }
 

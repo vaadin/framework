@@ -34,21 +34,22 @@ public interface GridDropTargetRpc extends ServerRpc {
      * Called when drop event happens on client side.
      *
      * @param types
-     *         List of data types from {@code DataTransfer.types} object.
+     *            List of data types from {@code DataTransfer.types} object.
      * @param data
-     *         Map containing all types and corresponding data from the {@code
+     *            Map containing all types and corresponding data from the
+     *            {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *         the desired drop effect
+     *            the desired drop effect
      * @param rowKey
-     *         Key of the row on which the drop event occured.
+     *            Key of the row on which the drop event occurred.
      * @param dropLocation
-     *         Location of the drop within the row.
+     *            Location of the drop within the row.
      * @param mouseEventDetails
-     *         Mouse event details object containing information about the drop
-     *         event
+     *            Mouse event details object containing information about the
+     *            drop event
      */
     public void drop(List<String> types, Map<String, String> data,
-            String dropEffect, String rowKey,
-            DropLocation dropLocation, MouseEventDetails mouseEventDetails);
+            String dropEffect, String rowKey, DropLocation dropLocation,
+            MouseEventDetails mouseEventDetails);
 }

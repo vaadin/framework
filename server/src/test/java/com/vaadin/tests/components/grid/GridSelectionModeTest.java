@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,22 +23,22 @@ public class GridSelectionModeTest {
 
     @Test
     public void testSelectionModes() {
-        Assert.assertEquals(SingleSelectionModelImpl.class,
+        assertEquals(SingleSelectionModelImpl.class,
                 grid.getSelectionModel().getClass());
 
-        Assert.assertEquals(MultiSelectionModelImpl.class,
+        assertEquals(MultiSelectionModelImpl.class,
                 grid.setSelectionMode(SelectionMode.MULTI).getClass());
-        Assert.assertEquals(MultiSelectionModelImpl.class,
+        assertEquals(MultiSelectionModelImpl.class,
                 grid.getSelectionModel().getClass());
 
-        Assert.assertEquals(NoSelectionModel.class,
+        assertEquals(NoSelectionModel.class,
                 grid.setSelectionMode(SelectionMode.NONE).getClass());
-        Assert.assertEquals(NoSelectionModel.class,
+        assertEquals(NoSelectionModel.class,
                 grid.getSelectionModel().getClass());
 
-        Assert.assertEquals(SingleSelectionModelImpl.class,
+        assertEquals(SingleSelectionModelImpl.class,
                 grid.setSelectionMode(SelectionMode.SINGLE).getClass());
-        Assert.assertEquals(SingleSelectionModelImpl.class,
+        assertEquals(SingleSelectionModelImpl.class,
                 grid.getSelectionModel().getClass());
     }
 

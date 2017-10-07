@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.listselect;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -63,7 +64,7 @@ public class ListSelectNoDomRebuildTest extends SingleBrowserTest {
         for (WebElement element : options) {
             // We really don't expect the text to be null, mainly doing this
             // since getText() will throw if the element is detached.
-            Assert.assertNotNull(element.getText());
+            assertNotNull(element.getText());
         }
     }
 

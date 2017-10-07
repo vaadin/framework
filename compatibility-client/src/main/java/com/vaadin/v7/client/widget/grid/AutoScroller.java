@@ -293,14 +293,10 @@ public class AutoScroller {
             if (pointerPageCordinate < startBound) {
                 final double distance = pointerPageCordinate - startBound;
                 ratio = Math.max(-1, distance / gradientArea);
-            }
-
-            else if (pointerPageCordinate > endBound) {
+            } else if (pointerPageCordinate > endBound) {
                 final double distance = pointerPageCordinate - endBound;
                 ratio = Math.min(1, distance / gradientArea);
-            }
-
-            else {
+            } else {
                 ratio = 0;
             }
 
@@ -357,13 +353,11 @@ public class AutoScroller {
             if (startBound == -1) {
                 startBound = Math.min(finalStartBound, pageCordinate);
                 endBound = Math.max(finalEndBound, pageCordinate);
-            }
-
-            /*
-             * Subsequent runs make sure that the scroll area grows (but doesn't
-             * shrink) with the finger, but no further than the final bound.
-             */
-            else {
+            } else {
+                /*
+                 * Subsequent runs make sure that the scroll area grows (but doesn't
+                 * shrink) with the finger, but no further than the final bound.
+                 */
                 int oldTopBound = startBound;
                 if (startBound < finalStartBound) {
                     startBound = Math.max(startBound,

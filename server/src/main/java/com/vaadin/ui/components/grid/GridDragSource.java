@@ -61,14 +61,15 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Default drag data generator for Grid. It creates a list of row values
      * separated by a tabulator character ({@code \t}).
+     * 
      * <pre>
-     *      "column1_value\tcolumn2_value\t ... columnN_value"
+     * "column1_value\tcolumn2_value\t ... columnN_value"
      * </pre>
      */
     private final SerializableFunction<T, String> defaultGridGenerator = item -> {
         StringBuilder generatedValue = new StringBuilder();
         getParent().getColumns().forEach(column -> {
-            generatedValue.append("\t");    // Tab separated values
+            generatedValue.append("\t"); // Tab separated values
             generatedValue.append(column.getValueProvider().apply(item));
         });
         return generatedValue.substring(1);
@@ -92,8 +93,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
         generatorFunctions = new HashMap<>();
 
         // Set default generator function for "text" parameter
-        generatorFunctions
-                .put(DragSourceState.DATA_TYPE_TEXT, defaultGridGenerator);
+        generatorFunctions.put(DragSourceState.DATA_TYPE_TEXT,
+                defaultGridGenerator);
     }
 
     @Override
@@ -163,6 +164,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * type} data.
      * <p>
      * Example, building a JSON object that contains the item's values:
+     * 
      * <pre>
      *     dragSourceExtension.setDragDataGenerator("application/json", item ->
      * {
@@ -181,12 +183,13 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * </pre>
      *
      * @param type
-     *         Type of the generated data. The generated value will be
-     *         accessible during drop using this type.
+     *            Type of the generated data. The generated value will be
+     *            accessible during drop using this type.
      * @param generator
-     *         Function to be executed on row data generation.
+     *            Function to be executed on row data generation.
      */
-    public void setDragDataGenerator(String type, SerializableFunction<T, String> generator) {
+    public void setDragDataGenerator(String type,
+            SerializableFunction<T, String> generator) {
         generatorFunctions.put(type, generator);
     }
 
@@ -194,7 +197,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Remove the generator function set for the given type.
      *
      * @param type
-     *         Type of the generator to be removed.
+     *            Type of the generator to be removed.
      */
     public void clearDragDataGenerator(String type) {
         generatorFunctions.remove(type);
@@ -204,7 +207,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Returns the drag data generator function for the given type.
      *
      * @param type
-     *         Type of the generated data.
+     *            Type of the generated data.
      * @return Drag data generator function for the given type.
      */
     public SerializableFunction<T, String> getDragDataGenerator(String type) {

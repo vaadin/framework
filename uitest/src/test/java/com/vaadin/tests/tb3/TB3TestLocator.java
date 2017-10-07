@@ -47,7 +47,6 @@ public class TB3TestLocator {
             List<?> l = findClasses(baseClass, basePackage, ignorePackages);
             return l.toArray(new Class[] {});
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -93,7 +92,6 @@ public class TB3TestLocator {
             public int compare(Class<? extends T> o1, Class<? extends T> o2) {
                 return o1.getName().compareTo(o2.getName());
             }
-
         });
 
         return classes;
@@ -134,7 +132,6 @@ public class TB3TestLocator {
                 addClassIfMatches(result, fullyQualifiedClassName, baseClass);
             }
         }
-
     }
 
     /**

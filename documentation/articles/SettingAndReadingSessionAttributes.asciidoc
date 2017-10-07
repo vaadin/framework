@@ -1,3 +1,9 @@
+---
+title: Setting And Reading Session Attributes
+order: 9
+layout: page
+---
+
 [[setting-and-reading-session-attributes]]
 Setting and reading session attributes
 --------------------------------------
@@ -8,7 +14,7 @@ data, e.g. how long it should be kept around and what parts of the code
 should have access to it.
 
 1.  Store the data as a field in your UI subclass. The data is easily
-accesible from components belonging to that UI instance and the data
+accessible from components belonging to that UI instance and the data
 will be gone when the UI is closed.
 2.  Store data in the `VaadinServiceSession`. The data is easily
 accessible from any UI belonging to the same VaadinServlet or

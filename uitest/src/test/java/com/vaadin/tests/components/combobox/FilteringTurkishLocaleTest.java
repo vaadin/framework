@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -35,7 +36,7 @@ public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 
         List<String> suggestions = getFilterSuggestions("i");
 
-        Assert.assertEquals("Both suggestions should be present", 2,
+        assertEquals("Both suggestions should be present", 2,
                 suggestions.size());
     }
 
@@ -47,9 +48,9 @@ public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 
         List<String> suggestions = getFilterSuggestions("i");
 
-        Assert.assertEquals("There should be only one suggestion", 1,
+        assertEquals("There should be only one suggestion", 1,
                 suggestions.size());
-        Assert.assertEquals("İ dotted", suggestions.get(0));
+        assertEquals("İ dotted", suggestions.get(0));
     }
 
     @Test
@@ -60,9 +61,9 @@ public class FilteringTurkishLocaleTest extends MultiBrowserTest {
 
         List<String> suggestions = getFilterSuggestions("ı");
 
-        Assert.assertEquals("There should be only one suggestion", 1,
+        assertEquals("There should be only one suggestion", 1,
                 suggestions.size());
-        Assert.assertEquals("I dotless", suggestions.get(0));
+        assertEquals("I dotless", suggestions.get(0));
     }
 
     private List<String> getFilterSuggestions(String string) {

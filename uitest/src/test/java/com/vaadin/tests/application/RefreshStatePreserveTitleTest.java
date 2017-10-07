@@ -1,6 +1,7 @@
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -15,6 +16,6 @@ public class RefreshStatePreserveTitleTest extends MultiBrowserTest {
     }
 
     private void assertTitleText() {
-        Assert.assertEquals("Incorrect page title,", "TEST", driver.getTitle());
+        assertEquals("Incorrect page title,", "TEST", driver.getTitle());
     }
 }

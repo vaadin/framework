@@ -1,10 +1,11 @@
 package com.vaadin.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.ValueContext;
@@ -57,9 +58,9 @@ public class StringToBooleanConverterTest extends AbstractStringConverterTest {
         assertValue(false,
                 yesNoConverter.convertToModel("no", new ValueContext()));
 
-        Assert.assertEquals("yes",
+        assertEquals("yes",
                 yesNoConverter.convertToPresentation(true, new ValueContext()));
-        Assert.assertEquals("no", yesNoConverter.convertToPresentation(false,
+        assertEquals("no", yesNoConverter.convertToPresentation(false,
                 new ValueContext()));
     }
 
@@ -70,23 +71,22 @@ public class StringToBooleanConverterTest extends AbstractStringConverterTest {
         assertValue(false, emptyTrueConverter.convertToModel("ABSENT",
                 new ValueContext()));
 
-        Assert.assertEquals("", emptyTrueConverter.convertToPresentation(true,
+        assertEquals("", emptyTrueConverter.convertToPresentation(true,
                 new ValueContext()));
-        Assert.assertEquals("ABSENT", emptyTrueConverter
-                .convertToPresentation(false, new ValueContext()));
+        assertEquals("ABSENT", emptyTrueConverter.convertToPresentation(false,
+                new ValueContext()));
     }
 
     @Test
     public void testLocale() {
-        Assert.assertEquals("May 18, 2033", localeConverter
-                .convertToPresentation(true, new ValueContext(Locale.US)));
-        Assert.assertEquals("January 24, 2065", localeConverter
+        assertEquals("May 18, 2033", localeConverter.convertToPresentation(true,
+                new ValueContext(Locale.US)));
+        assertEquals("January 24, 2065", localeConverter
                 .convertToPresentation(false, new ValueContext(Locale.US)));
 
-        Assert.assertEquals("18. Mai 2033", localeConverter
-                .convertToPresentation(true, new ValueContext(Locale.GERMANY)));
-        Assert.assertEquals("24. Januar 2065",
-                localeConverter.convertToPresentation(false,
-                        new ValueContext(Locale.GERMANY)));
+        assertEquals("18. Mai 2033", localeConverter.convertToPresentation(true,
+                new ValueContext(Locale.GERMANY)));
+        assertEquals("24. Januar 2065", localeConverter.convertToPresentation(
+                false, new ValueContext(Locale.GERMANY)));
     }
 }

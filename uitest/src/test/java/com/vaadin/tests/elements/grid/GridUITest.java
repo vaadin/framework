@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -13,13 +14,13 @@ public class GridUITest extends MultiBrowserTest {
     @Test
     public void testRowCount() {
         openTestURL("rowCount=0");
-        Assert.assertEquals(0, getRowCount());
+        assertEquals(0, getRowCount());
         openTestURL("rowCount=1&restartApplication");
-        Assert.assertEquals(1, getRowCount());
+        assertEquals(1, getRowCount());
         openTestURL("rowCount=10&restartApplication");
-        Assert.assertEquals(10, getRowCount());
+        assertEquals(10, getRowCount());
         openTestURL("rowCount=1000&restartApplication");
-        Assert.assertEquals(1000, getRowCount());
+        assertEquals(1000, getRowCount());
     }
 
     private long getRowCount() {
@@ -33,13 +34,13 @@ public class GridUITest extends MultiBrowserTest {
     @Test
     public void testGetRows() {
         openTestURL("rowCount=0");
-        Assert.assertEquals(0, checkRows());
+        assertEquals(0, checkRows());
         openTestURL("rowCount=1&restartApplication");
-        Assert.assertEquals(1, checkRows());
+        assertEquals(1, checkRows());
         openTestURL("rowCount=10&restartApplication");
-        Assert.assertEquals(10, checkRows());
+        assertEquals(10, checkRows());
         openTestURL("rowCount=100&restartApplication");
-        Assert.assertEquals(100, checkRows());
+        assertEquals(100, checkRows());
     }
 
     @Test
@@ -87,8 +88,8 @@ public class GridUITest extends MultiBrowserTest {
     private int checkRows() {
         int rowCount = 0;
         for (final GridRowElement row : getRows()) {
-            Assert.assertEquals("foo " + rowCount, row.getCell(0).getText());
-            Assert.assertEquals("bar " + rowCount, row.getCell(1).getText());
+            assertEquals("foo " + rowCount, row.getCell(0).getText());
+            assertEquals("bar " + rowCount, row.getCell(1).getText());
             rowCount++;
         }
         return rowCount;

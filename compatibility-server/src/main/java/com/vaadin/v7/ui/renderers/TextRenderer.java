@@ -27,14 +27,14 @@ import com.vaadin.v7.ui.Grid.AbstractRenderer;
 public class TextRenderer extends AbstractRenderer<String> {
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer.
      */
     public TextRenderer() {
         this("");
     }
 
     /**
-     * Creates a new text renderer
+     * Creates a new text renderer.
      *
      * @param nullRepresentation
      *            the textual representation of {@code null} value

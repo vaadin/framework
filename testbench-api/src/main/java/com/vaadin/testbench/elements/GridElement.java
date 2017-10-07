@@ -29,7 +29,7 @@ import com.vaadin.testbench.elementsbase.AbstractElement;
 import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
- * TestBench Element API for Grid
+ * TestBench Element API for Grid.
  *
  * @author Vaadin Ltd
  */
@@ -113,7 +113,7 @@ public class GridElement extends AbstractComponentElement {
          *
          * @param colIndex
          *            column index
-         * @return <code>true</code> iff the field is marked with an error
+         * @return <code>true</code> if the field is marked with an error
          */
         public boolean isFieldErrorMarked(int colIndex) {
             return getField(colIndex).getAttribute("class").contains("error");
@@ -157,7 +157,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Scrolls Grid element so that wanted row is displayed
+     * Scrolls Grid element so that wanted row is displayed.
      *
      * @param index
      *            Target row
@@ -316,7 +316,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get header row count
+     * Get header row count.
      *
      * @return Header row count
      */
@@ -325,7 +325,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get footer row count
+     * Get footer row count.
      *
      * @return Footer row count
      */
@@ -334,7 +334,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get a header row by index
+     * Get a header row by index.
      *
      * @param rowIndex
      *            Row index
@@ -345,7 +345,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get a footer row by index
+     * Get a footer row by index.
      *
      * @param rowIndex
      *            Row index
@@ -356,7 +356,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the vertical scroll element
+     * Get the vertical scroll element.
      *
      * @return The element representing the vertical scrollbar
      */
@@ -366,7 +366,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the horizontal scroll element
+     * Get the horizontal scroll element.
      *
      * @return The element representing the horizontal scrollbar
      */
@@ -376,7 +376,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the header element
+     * Get the header element.
      *
      * @return The thead element
      */
@@ -385,7 +385,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the body element
+     * Get the body element.
      *
      * @return the tbody element
      */
@@ -394,7 +394,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the footer element
+     * Get the footer element.
      *
      * @return the tfoot element
      */
@@ -403,7 +403,7 @@ public class GridElement extends AbstractComponentElement {
     }
 
     /**
-     * Get the element wrapping the table element
+     * Get the element wrapping the table element.
      *
      * @return The element that wraps the table element
      */

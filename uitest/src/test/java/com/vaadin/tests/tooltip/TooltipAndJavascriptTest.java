@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.tooltip;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -33,7 +34,7 @@ public class TooltipAndJavascriptTest extends MultiBrowserTest {
         WebElement tooltip = findElement(
                 By.cssSelector(".v-overlay-container .v-tooltip"));
         WebElement overlayContainer = getParent(tooltip);
-        Assert.assertTrue("v-overlay-container did not receive theme",
+        assertTrue("v-overlay-container did not receive theme",
                 hasClass(overlayContainer, "reindeer"));
     }
 

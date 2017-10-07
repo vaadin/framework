@@ -51,7 +51,7 @@ public class VaadinServletService extends VaadinService {
      * injection frameworks etc. {@link #getServlet()} should be overridden (or otherwise intercepted)
      * so it does not return <code>null</code>.
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinServletService() {
         this.servlet = null;
@@ -152,7 +152,7 @@ public class VaadinServletService extends VaadinService {
         }
 
         String pathInfo = servletRequest.getPathInfo();
-        if (pathInfo != null && !"".equals(pathInfo)) {
+        if (pathInfo != null && !pathInfo.isEmpty()) {
             servletPath += pathInfo;
         }
 
@@ -272,7 +272,7 @@ public class VaadinServletService extends VaadinService {
             // Just ignore problem here
         }
 
-        if (appId == null || "".equals(appId) || "/".equals(appId)) {
+        if (appId == null || appId.isEmpty() || "/".equals(appId)) {
             appId = "ROOT";
         }
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");

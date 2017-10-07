@@ -122,7 +122,7 @@ public interface EditorHandler<T> {
         /**
          * Checks whether the request is completed or not.
          *
-         * @return <code>true</code> iff the request is completed
+         * @return <code>true</code> if the request is completed
          */
         public boolean isCompleted();
     }

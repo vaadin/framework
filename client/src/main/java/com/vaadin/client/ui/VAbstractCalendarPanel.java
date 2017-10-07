@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -88,7 +87,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Blur listener that listens to blur event from the panel
+     * Blur listener that listens to blur event from the panel.
      */
     public interface FocusOutListener {
         /**
@@ -530,7 +529,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         updateControlButtonRangeStyles(needsMonth);
 
         final String monthName = needsMonth
-                ? getDateTimeService().getMonth(displayedMonth.getMonth()) : "";
+                ? getDateTimeService().getMonth(displayedMonth.getMonth())
+                : "";
         final int year = displayedMonth.getYear() + 1900;
 
         getFlexCellFormatter().setStyleName(0, 2,
@@ -903,7 +903,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Performs the rendering required by the {@link #renderCalendar(boolean)}.
      * Subclasses may override this method to provide a custom implementation
      * avoiding {@link #renderCalendar(boolean)} override. The latter method
-     * contains a common logic which should not be overriden.
+     * contains a common logic which should not be overridden.
      *
      * @param updateDate
      *            The value false prevents setting the selected date of the
@@ -1260,24 +1260,16 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Ctrl and Shift selection not supported
         if (ctrl || shift) {
             return false;
-        }
-
-        else if (keycode == getPreviousKey()) {
+        } else if (keycode == getPreviousKey()) {
             focusNextYear(10); // Add 10 years
             return true;
-        }
-
-        else if (keycode == getForwardKey()) {
+        } else if (keycode == getForwardKey()) {
             focusNextYear(1); // Add 1 year
             return true;
-        }
-
-        else if (keycode == getNextKey()) {
+        } else if (keycode == getNextKey()) {
             focusPreviousYear(10); // Subtract 10 years
             return true;
-        }
-
-        else if (keycode == getBackwardKey()) {
+        } else if (keycode == getBackwardKey()) {
             focusPreviousYear(1); // Subtract 1 year
             return true;
 
@@ -1302,7 +1294,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handle the keyboard navigation when the resolution is set to MONTH
+     * Handle the keyboard navigation when the resolution is set to MONTH.
      *
      * @param keycode
      *            The keycode to handle
@@ -1358,7 +1350,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handle keyboard navigation what the resolution is set to DAY
+     * Handle keyboard navigation what the resolution is set to DAY.
      *
      * @param keycode
      *            The keycode to handle
@@ -1464,7 +1456,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The key code that was pressed
@@ -1479,21 +1471,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
-        }
-
-        else if (isYear(getResolution())) {
+        } else if (isYear(getResolution())) {
             return handleNavigationYearMode(keycode, ctrl, shift);
-        }
-
-        else if (isMonth(getResolution())) {
+        } else if (isMonth(getResolution())) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
-        }
-
-        else if (isDay(getResolution())) {
+        } else if (isDay(getResolution())) {
             return handleNavigationDayMode(keycode, ctrl, shift);
-        }
-
-        else {
+        } else {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
 
@@ -1501,8 +1485,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overriden to change
-     * the key to whatever you want.
+     * selection. By default this is backspace but it can be overridden to
+     * change the key to whatever you want.
      *
      * @return
      */
@@ -1812,7 +1796,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     }
 
     /**
-     * Returns the submit listener that listens to selection made from the panel
+     * Returns the submit listener that listens to selection made from the
+     * panel.
      *
      * @return The listener or NULL if no listener has been set
      */
@@ -1942,9 +1927,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                     .parseInt(subPart.substring(SUBPART_DAY.length()));
             Date date = new Date(displayedMonth.getYear(),
                     displayedMonth.getMonth(), dayOfMonth);
-            Iterator<Widget> iter = days.iterator();
-            while (iter.hasNext()) {
-                Widget w = iter.next();
+            for (Widget w : days) {
                 if (w instanceof VAbstractCalendarPanel.Day) {
                     Day day = (Day) w;
                     if (day.getDate().equals(date)) {
@@ -2010,7 +1993,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         private void setLabel() {
             if (getDateField() instanceof VAbstractPopupCalendar) {
-                ((VAbstractPopupCalendar) getDateField()).setFocusedDate(this);
+                ((VAbstractPopupCalendar<?, ?>) getDateField())
+                        .setFocusedDate(this);
             }
         }
     }
@@ -2020,7 +2004,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param newRangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date newRangeStart) {
@@ -2039,7 +2023,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param newRangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date newRangeEnd) {
