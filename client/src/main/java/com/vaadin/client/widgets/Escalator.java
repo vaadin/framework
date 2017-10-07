@@ -5640,6 +5640,7 @@ public class Escalator extends Widget
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
+    private final Element table;
 
     private final DivElement horizontalScrollbarDeco = DivElement
             .as(DOM.createDiv());
@@ -5694,7 +5695,7 @@ public class Escalator extends Widget
 
         root.appendChild(tableWrapper);
 
-        final Element table = DOM.createTable();
+        table = DOM.createTable();
         tableWrapper.appendChild(table);
 
         table.appendChild(headElem);
@@ -6831,7 +6832,7 @@ public class Escalator extends Widget
      * @since 8.2
      */
     public Element getTable() {
-        return getTableWrapper().getFirstChildElement();
+        return table;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {
