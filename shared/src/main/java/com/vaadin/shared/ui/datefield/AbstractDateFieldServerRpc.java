@@ -15,12 +15,21 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-import java.io.Serializable;
+import java.util.Map;
 
-@Deprecated
-public class DateFieldConstants implements Serializable {
+import com.vaadin.shared.communication.ServerRpc;
 
-    @Deprecated
-    public static final String ATTR_WEEK_NUMBERS = "wn";
+/**
+ * RPC interface for calls from client to server.
+ *
+ * @since
+ */
+public interface AbstractDateFieldServerRpc extends ServerRpc {
 
+    void update(String lastInvalidDateString, String dateString,
+            Map<String, Integer> resolutions);
+
+    void blur();
+
+    void focus();
 }

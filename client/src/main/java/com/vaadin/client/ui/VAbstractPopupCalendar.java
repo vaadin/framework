@@ -79,16 +79,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /** For internal use only. May be removed or replaced in the future. */
     public boolean parsable = true;
 
-    private boolean open = false;
+    private boolean open;
 
     /*
      * #14857: If calendarToggle button is clicked when calendar popup is
      * already open we should prevent calling openCalendarPanel() in onClick,
      * since we don't want to reopen it again right after it closes.
      */
-    private boolean preventOpenPopupCalendar = false;
-    private boolean cursorOverCalendarToggleButton = false;
-    private boolean toggleButtonClosesWithGuarantee = false;
+    private boolean preventOpenPopupCalendar;
+    private boolean cursorOverCalendarToggleButton;
+    private boolean toggleButtonClosesWithGuarantee;
 
     private boolean textFieldEnabled = true;
 

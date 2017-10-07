@@ -57,18 +57,18 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * The date that is displayed the date field before a value is selected. If
      * null, display the current date.
      */
-    private Date defaultDate = null;
+    private Date defaultDate;
 
     /**
      * The date that is selected in the date field. Null if an invalid date is
      * specified.
      */
-    private Date date = null;
+    private Date date;
 
     /** For internal use only. May be removed or replaced in the future. */
     public DateTimeService dts;
 
-    protected boolean showISOWeekNumbers = false;
+    protected boolean showISOWeekNumbers;
 
     public VDateField(R resolution) {
         setStyleName(CLASSNAME);

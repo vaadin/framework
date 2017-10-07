@@ -103,41 +103,30 @@ public class VPopupTimeCalendar extends
     }
 
     @Override
-    protected void updateDateVariables() {
-        super.updateDateVariables();
+    protected void updateDateVariables(Map<String, Integer> resolutions) {
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
         if (getCurrentResolution().compareTo(DateTimeResolution.MONTH) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.MONTH),
-                    currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    getCurrentResolution() == DateTimeResolution.MONTH);
+            resolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
+                    currentDate != null ? currentDate.getMonth() + 1 : -1);
         }
         if (getCurrentResolution().compareTo(DateTimeResolution.DAY) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.DAY),
-                    currentDate != null ? currentDate.getDate() : -1,
-                    getCurrentResolution() == DateTimeResolution.DAY);
+            resolutions.put(getResolutionVariable(DateTimeResolution.DAY),
+                    currentDate != null ? currentDate.getDate() : -1);
         }
         if (getCurrentResolution().compareTo(DateTimeResolution.HOUR) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.HOUR),
-                    currentDate != null ? currentDate.getHours() : -1,
-                    getCurrentResolution() == DateTimeResolution.HOUR);
+            resolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
+                    currentDate != null ? currentDate.getHours() : -1);
         }
         if (getCurrentResolution().compareTo(DateTimeResolution.MINUTE) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.MINUTE),
-                    currentDate != null ? currentDate.getMinutes() : -1,
-                    getCurrentResolution() == DateTimeResolution.MINUTE);
+            resolutions.put(getResolutionVariable(DateTimeResolution.MINUTE),
+                    currentDate != null ? currentDate.getMinutes() : -1);
         }
         if (getCurrentResolution().compareTo(DateTimeResolution.SECOND) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.SECOND),
-                    currentDate != null ? currentDate.getSeconds() : -1,
-                    getCurrentResolution() == DateTimeResolution.SECOND);
+            resolutions.put(getResolutionVariable(DateTimeResolution.SECOND),
+                    currentDate != null ? currentDate.getSeconds() : -1);
         }
     }
 
@@ -197,7 +186,6 @@ public class VPopupTimeCalendar extends
                     if (dts.isTwelveHourClock()) {
                         frmString += " aaa";
                     }
-
                 }
 
                 return frmString;

@@ -16,6 +16,8 @@
 package com.vaadin.shared.ui.datefield;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
@@ -61,4 +63,41 @@ public class AbstractDateFieldState extends AbstractFieldState {
      * @since
      */
     public String locale;
+
+    /**
+     * Overridden date format string, can be {@code null}.
+     * 
+     * @since
+     */
+    public String format;
+
+    /**
+     * Whether the date/time interpretation is lenient.
+     * 
+     * @since
+     */
+    public boolean lenient;
+
+    /**
+     * The map of {@code Resolution}s which are currently used by the component.
+     * 
+     * @since
+     */
+    public Map<String, Integer> resolutions = new HashMap<>();
+
+    /**
+     * Determines if week numbers are shown in the date selector.
+     * 
+     * @since
+     */
+    public boolean showISOWeekNumbers;
+
+    /**
+     * Was the last entered string parsable? If this flag is false, datefields
+     * internal validator does not pass.
+     * 
+     * @since
+     */
+    public boolean parsable = true;
+
 }

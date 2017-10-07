@@ -193,7 +193,6 @@ public class VDateTimeCalendarPanel
                     }
                 }
             });
-
         }
 
         private ListBox getLastDropDown() {
@@ -213,7 +212,9 @@ public class VDateTimeCalendarPanel
          */
         public void updateTimes() {
             if (getDate() == null) {
+                // getLogger().info("updateTime 2");
                 setDate(new Date());
+                // getLogger().info("updateTime 3");
             }
             if (getDateTimeService().isTwelveHourClock()) {
                 int h = getDate().getHours();
@@ -243,14 +244,16 @@ public class VDateTimeCalendarPanel
             if (ampm != null) {
                 ampm.setEnabled(isEnabled());
             }
-
         }
 
         private DateTimeService getDateTimeService() {
-            if (VDateTimeCalendarPanel.this.getDateTimeService() == null) {
-                setDateTimeService(new DateTimeService());
+            DateTimeService dts = VDateTimeCalendarPanel.this
+                    .getDateTimeService();
+            if (dts == null) {
+                dts = new DateTimeService();
+                setDateTimeService(dts);
             }
-            return VDateTimeCalendarPanel.this.getDateTimeService();
+            return dts;
         }
 
         /*

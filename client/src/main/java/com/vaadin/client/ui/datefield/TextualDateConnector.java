@@ -72,11 +72,66 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
+    }
+
+    /**
+     * Updates listeners registered (or register them) for the widget based on
+     * the current resolution.
+     * <p>
+     * Subclasses may override this method to keep the common logic inside the
+     * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
+     * customizing only listeners logic.
+     */
+    protected void updateListeners() {
+        FocusChangeListener listener;
+        if (isResolutionMonthOrHigher()) {
+            listener = new FocusChangeListener() {
+                @Override
+                public void focusChanged(Date date) {
+                    if (isResolutionMonthOrHigher()) {
+                        getWidget().updateValue(date);
+                        getWidget().buildDate();
+                        Date date2 = getWidget().calendar.getDate();
+                        date2.setYear(date.getYear());
+                        date2.setMonth(date.getMonth());
+                    }
+                }
+            };
+        } else {
+            listener = null;
+        }
+        getWidget().calendar.setFocusChangeListener(listener);
+    }
+
+    /**
+     * Returns {@code true} is the current resolution of the widget is month or
+     * less specific (e.g. month, year, quarter, etc).
+     * 
+     * @return {@code true} if the current resolution is above month
+     */
+    protected abstract boolean isResolutionMonthOrHigher();
+
+    @Override
+    public VAbstractPopupCalendar<PANEL, R> getWidget() {
+        return (VAbstractPopupCalendar<PANEL, R>) super.getWidget();
+    }
+
+    @Override
+    public TextualDateFieldState getState() {
+        return (TextualDateFieldState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
         String oldLocale = getWidget().getCurrentLocale();
 
-        getWidget().parsable = uidl.getBooleanAttribute("parsable");
+        getWidget().parsable = getState().parsable;
 
-        super.updateFromUIDL(uidl, client);
+        super.onStateChanged(stateChangeEvent);
+
+        getWidget().setTextFieldEnabled(getState().textFieldEnabled);
+        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
+        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
 
         getWidget().calendar
                 .setDateTimeService(getWidget().getDateTimeService());
@@ -118,66 +173,11 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         getWidget().setTextFieldTabIndex();
     }
 
-    /**
-     * Updates listeners registered (or register them) for the widget based on
-     * the current resolution.
-     * <p>
-     * Subclasses may override this method to keep the common logic inside the
-     * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
-     * customizing only listeners logic.
-     */
-    protected void updateListeners() {
-        if (isResolutionMonthOrHigher()) {
-            getWidget().calendar
-                    .setFocusChangeListener(new FocusChangeListener() {
-                        @Override
-                        public void focusChanged(Date date) {
-                            if (isResolutionMonthOrHigher()) {
-                                getWidget().updateValue(date);
-                                getWidget().buildDate();
-                                Date date2 = getWidget().calendar.getDate();
-                                date2.setYear(date.getYear());
-                                date2.setMonth(date.getMonth());
-                            }
-                        }
-                    });
-        } else {
-            getWidget().calendar.setFocusChangeListener(null);
-        }
-    }
-
-    /**
-     * Returns {@code true} is the current resolution of the widget is month or
-     * less specific (e.g. month, year, quarter, etc).
-     * 
-     * @return {@code true} if the current resolution is above month
-     */
-    protected abstract boolean isResolutionMonthOrHigher();
-
-    @Override
-    public VAbstractPopupCalendar<PANEL, R> getWidget() {
-        return (VAbstractPopupCalendar<PANEL, R>) super.getWidget();
-    }
-
-    @Override
-    public TextualDateFieldState getState() {
-        return (TextualDateFieldState) super.getState();
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(nullSafeDateClone(getState().rangeStart));
-        getWidget().setRangeEnd(nullSafeDateClone(getState().rangeEnd));
-    }
-
     private Date nullSafeDateClone(Date date) {
-        if (date == null) {
-            return null;
-        } else {
+        if (date != null) {
             return (Date) date.clone();
         }
+        return null;
     }
 
     @Override
@@ -196,14 +196,10 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         // update the style change to popup calendar widget with the correct
         // prefix
         if (!styleName.startsWith("-")) {
-            getWidget().popup.setStyleName(
-                    getWidget().getStylePrimaryName() + "-popup-" + styleName,
-                    add);
-        } else {
-            getWidget().popup.setStyleName(
-                    getWidget().getStylePrimaryName() + "-popup" + styleName,
-                    add);
+            styleName = "-" + styleName;
         }
+        getWidget().popup.setStyleName(
+                getWidget().getStylePrimaryName() + "-popup" + styleName, add);
     }
 
 }

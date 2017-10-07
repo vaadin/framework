@@ -17,6 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -39,6 +41,7 @@ import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
  * Abstract textual date field base implementation. Provides a text box as an
@@ -66,7 +69,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
-    private final String TEXTFIELD_ID = "field";
+    /**
+     * @since
+     */
+    public AbstractDateFieldServerRpc rpc;
+
+    private static final String TEXTFIELD_ID = "field";
 
     /** For internal use only. May be removed or replaced in the future. */
     private String formatStr;
@@ -138,8 +146,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Sets the date format string to use for the text field.
      *
      * @param formatString
-     *            the format string to use, or null to force re-creating the
-     *            format string from the locale the next time it is needed
+     *            the format string to use, or {@code null} to force re-creating
+     *            the format string from the locale the next time it is needed
      * @since 8.1
      */
     public void setFormatString(String formatString) {
@@ -221,6 +229,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
+        String lastInvalidDateString = null;
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -244,8 +253,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
-                getClient().updateVariable(getId(), "lastInvalidDateString",
-                        text.getText(), false);
+                lastInvalidDateString = text.getText();
                 setDate(null);
             }
         } else {
@@ -253,11 +261,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-        // always send the date string
-        getClient().updateVariable(getId(), "dateString", text.getText(),
-                false);
 
-        updateDateVariables();
+        Map<String, Integer> resolutions = new HashMap<>();
+        updateDateVariables(resolutions);
+        // always send the date string
+        rpc.update(lastInvalidDateString, text.getText(), resolutions);
     }
 
     /**
@@ -266,17 +274,20 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
+     * 
+     * @param resolutions
+     *            The Resolution Map to fill
+     * @since
      */
-    protected void updateDateVariables() {
+    protected void updateDateVariables(Map<String, Integer> resolutions) {
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        getClient().updateVariable(getId(),
+        resolutions.put(
                 getResolutionVariable(getResolutions().filter(this::isYear)
                         .findFirst().get()),
-                currentDate != null ? currentDate.getYear() + 1900 : -1,
-                isYear(getCurrentResolution()));
+                currentDate != null ? currentDate.getYear() + 1900 : -1);
     }
 
     /**
@@ -390,7 +401,11 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
         if (getClient() != null && getClient()
                 .hasEventListeners(VAbstractTextualDate.this, eventId)) {
-            getClient().updateVariable(getId(), eventId, "", true);
+            if (EventId.FOCUS.equals(eventId)) {
+                rpc.focus();
+            } else {
+                rpc.blur();
+            }
         }
 
         // Needed for tooltip event handling
@@ -430,7 +445,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Date date = getIsoFormatter().parse(isoDate);
             setDate(date);
         }
-        updateDateVariables();
+        Map<String, Integer> resolutions = new HashMap<>();
+        updateDateVariables(resolutions);
+        rpc.update(null, null, resolutions);
     }
 
     /**
