@@ -48,6 +48,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
 
     @Override
     protected void init() {
+        super.init();
         getWidget().popup.addCloseHandler(new CloseHandler<PopupPanel>() {
 
             @Override
