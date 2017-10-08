@@ -69,12 +69,6 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
         });
     }
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-    }
-
     /**
      * Updates listeners registered (or register them) for the widget based on
      * the current resolution.

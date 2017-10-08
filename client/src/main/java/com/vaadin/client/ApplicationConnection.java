@@ -1358,8 +1358,7 @@ public class ApplicationConnection implements HasHandlers {
             return false;
         }
 
-        return hasEventListeners(getConnectorMap().getConnector(widget),
-                eventIdentifier);
+        return hasEventListeners(connector, eventIdentifier);
     }
 
     LayoutManager getLayoutManager() {

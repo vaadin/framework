@@ -26,7 +26,15 @@ import com.vaadin.shared.communication.ServerRpc;
  */
 public interface AbstractDateFieldServerRpc extends ServerRpc {
 
-    void update(String lastInvalidDateString, String dateString,
+    /**
+     * 
+     * @param newDateString
+     *            Enables analyzing invalid input on the server this variable is
+     *            {@code null} if the date was chosen with popup calendar or
+     *            contains user-typed string
+     * @since
+     */
+    void update(String lastInvalidDateString, String newDateString,
             Map<String, Integer> resolutions);
 
     void blur();

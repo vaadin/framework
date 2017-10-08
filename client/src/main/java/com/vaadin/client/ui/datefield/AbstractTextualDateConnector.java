@@ -39,8 +39,7 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
     @Override
     protected void init() {
         super.init();
-        getWidget().rpc = getRpcProxy(
-                AbstractDateFieldServerRpc.class);
+        getWidget().rpc = getRpcProxy(AbstractDateFieldServerRpc.class);
     }
 
     @Override
@@ -77,7 +76,9 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
             // force recreating format string
             getWidget().setFormatString(null);
         }
-        getWidget().setFormatString(getState().format);
+        if (getState().format != null) {
+            getWidget().setFormatString(getState().format);
+        }
 
         getWidget().lenient = getState().lenient;
 

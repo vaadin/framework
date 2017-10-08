@@ -76,23 +76,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
 
         @Override
-        public void update(String lastInvalidDateString, String dateStringNNN,
+        public void update(String lastInvalidDateString, String newDateString,
                 Map<String, Integer> resolutions) {
             Set<String> resolutionNames = getResolutions()
                     .map(AbstractDateField.this::getResolutionVariable)
                     .collect(Collectors.toSet());
             resolutionNames.retainAll(resolutions.keySet());
             if (!isReadOnly()
-                    && (!resolutionNames.isEmpty() || dateStringNNN != null)) {
+                    && (!resolutionNames.isEmpty() || newDateString != null)) {
 
                 // Old and new dates
                 final T oldDate = getValue();
-
-                // this enables analyzing invalid input on the server
-                // this variable is null if the date was chosen with popup
-                // calendar
-                // or contains user-typed string
-                final String newDateString = dateStringNNN;
 
                 T newDate;
 
@@ -195,8 +189,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            initial resolution for the field
      */
     public AbstractDateField(R resolution) {
-        this.resolution = resolution;
         registerRpc(rpc);
+        setResolution(resolution);
     }
 
     /**
