@@ -86,6 +86,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
         VDateField<R> widget = getWidget();
 
         // Save details
