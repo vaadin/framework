@@ -7,13 +7,14 @@
         <artifactId>vaadin-servlet-containers-test</artifactId>
         <version>8.2-SNAPSHOT</version>
     </parent>
-    <artifactId>vaadin-test-payara-server</artifactId>
-    <name>Vaadin Payara Test</name>
+    <artifactId>vaadin-test-wildfly8-server</artifactId>
+    <name>Vaadin Wildfly Swarm Test</name>
     <packaging>war</packaging>
     <properties>
         <jetty.skip>true</jetty.skip>
-        <payara.version>4.1.2.173</payara.version>
-        <server.name>payara</server.name>
+        <wildfly.swarm.version>2017.9.5</wildfly.swarm.version>
+        <context.path>/</context.path>
+        <server.name>wildfly-swarm</server.name>
     </properties>
 
     <dependencies>
@@ -35,31 +36,29 @@
         <plugins>
             <!-- Server configuration -->
             <plugin>
-                <groupId>fish.payara.maven.plugins</groupId>
-                <artifactId>payara-micro-maven-plugin</artifactId>
-            </plugin>
-
-            <!-- Payara Micro starting time is a bit over a minute. Need to wait. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
+                <groupId>org.wildfly.swarm</groupId>
+                <artifactId>wildfly-swarm-plugin</artifactId>
+                <version>${wildfly.swarm.version}</version>
                 <executions>
                     <execution>
-                        <id>wait-for-server-start</id>
+                        <id>start-swarm</id>
                         <phase>pre-integration-test</phase>
-                        <configuration>
-                            <target>
-                                <echo message="Waiting for Payara Micro server to start" />
-                                <!-- Starting time from a couple of local test runs -->
-                                <sleep seconds="65" />
-                            </target>
-                        </configuration>
                         <goals>
-                            <goal>run</goal>
+                            <goal>package</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop-swarm</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <useUberJar>true</useUberJar>
+                </configuration>
             </plugin>
         </plugins>
     </build>
