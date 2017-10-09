@@ -235,7 +235,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
         }
 
         public String getTestableName() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
             sb.append('[');
             for (Iterator<Configuration> i = configurations.iterator(); i

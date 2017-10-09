@@ -1705,7 +1705,7 @@ public class SQLContainerTest {
                                         .getQueryString();
                             }
                         } else {
-                            StringBuffer query = new StringBuffer(
+                            StringBuilder query = new StringBuilder(
                                     "SELECT * FROM people");
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");
@@ -1823,7 +1823,7 @@ public class SQLContainerTest {
                                         .getQueryString();
                             }
                         } else {
-                            StringBuffer query = new StringBuffer(
+                            StringBuilder query = new StringBuilder(
                                     "SELECT * FROM people");
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");
@@ -1911,7 +1911,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -1982,7 +1982,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -2052,7 +2052,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -2123,7 +2123,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -2200,7 +2200,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -2277,7 +2277,7 @@ public class SQLContainerTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder
@@ -2408,7 +2408,7 @@ public class SQLContainerTest {
                                         .getQueryString();
                             }
                         } else {
-                            StringBuffer query = new StringBuffer(
+                            StringBuilder query = new StringBuilder(
                                     "SELECT * FROM people");
                             if (!orderBys.isEmpty()) {
                                 query.append(" ORDER BY ");

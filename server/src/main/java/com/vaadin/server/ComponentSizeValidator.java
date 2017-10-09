@@ -124,7 +124,7 @@ public class ComponentSizeValidator implements Serializable {
     private static void printServerError(String msg,
             Deque<ComponentInfo> attributes, boolean widthError,
             PrintStream errorStream) {
-        StringBuffer err = new StringBuffer();
+        StringBuilder err = new StringBuilder();
         err.append("Vaadin DEBUG\n");
 
         StringBuilder indent = new StringBuilder();
@@ -369,7 +369,7 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     private static void showComponent(Component component, String attribute,
-            StringBuffer err, StringBuilder indent, boolean widthError) {
+            StringBuilder err, StringBuilder indent, boolean widthError) {
 
         FileLocation createLoc = creationLocations.get(component);
 
