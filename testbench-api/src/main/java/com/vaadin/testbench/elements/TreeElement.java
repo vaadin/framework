@@ -147,7 +147,7 @@ public class TreeElement extends AbstractComponentElement {
     }
 
     /**
-     * Convenience method for accessing the underlying TreeGrid.
+     * Convenient method for accessing the underlying TreeGrid.
      *
      * @return this tree element as a tree grid element.
      */

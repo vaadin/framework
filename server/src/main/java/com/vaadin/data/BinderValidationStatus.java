@@ -55,7 +55,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     private final List<ValidationResult> binderStatuses;
 
     /**
-     * Convenience method for creating a unresolved validation status for the
+     * Convenient method for creating a unresolved validation status for the
      * given binder.
      * <p>
      * In practice this status means that the values might not be valid, but
@@ -137,10 +137,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        List<ValidationResult> errors =
-                getFieldValidationErrors().stream()
-                        .map(s -> s.getResult().get())
-                        .collect(Collectors.toList());
+        List<ValidationResult> errors = getFieldValidationErrors().stream()
+                .map(s -> s.getResult().get()).collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }

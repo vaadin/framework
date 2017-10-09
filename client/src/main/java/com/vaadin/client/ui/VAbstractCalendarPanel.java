@@ -234,7 +234,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *            one of the days currently visible.
      */
     private void focusDay(Date date) {
-        // Only used when calender body is present
+        // Only used when calendar body is present
         if (acceptDayFocus()) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
@@ -1775,7 +1775,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     /**
      * The submit listener is called when the user selects a value from the
-     * calender either by clicking the day or selects it by keyboard.
+     * calendar either by clicking the day or selects it by keyboard.
      *
      * @param submitListener
      *            The listener to trigger

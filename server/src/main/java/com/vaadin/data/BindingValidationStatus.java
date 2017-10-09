@@ -74,7 +74,7 @@ public class BindingValidationStatus<TARGET> implements Serializable {
     private final Binding<?, TARGET> binding;
 
     /**
-     * Convenience method for creating a {@link Status#UNRESOLVED} validation
+     * Convenient method for creating a {@link Status#UNRESOLVED} validation
      * status for the given binding.
      *
      * @param source

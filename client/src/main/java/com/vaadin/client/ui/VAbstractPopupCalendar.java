@@ -96,7 +96,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     private Label selectedDate;
 
-    private Element descriptionForAssisitveDevicesElement;
+    private Element descriptionForAssistiveDevicesElement;
 
     private final String CALENDAR_TOGGLE_ID = "popupButton";
 
@@ -129,15 +129,15 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         add(calendarToggle);
 
-        // Description of the usage of the widget for assisitve device users
-        descriptionForAssisitveDevicesElement = DOM.createDiv();
-        descriptionForAssisitveDevicesElement.setInnerText(
+        // Description of the usage of the widget for assistive device users
+        descriptionForAssistiveDevicesElement = DOM.createDiv();
+        descriptionForAssistiveDevicesElement.setInnerText(
                 TextualDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
-        AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
+        AriaHelper.ensureHasId(descriptionForAssistiveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
-                Id.of(descriptionForAssisitveDevicesElement));
+                Id.of(descriptionForAssistiveDevicesElement));
         AriaHelper.setVisibleForAssistiveDevicesOnly(
-                descriptionForAssisitveDevicesElement, true);
+                descriptionForAssistiveDevicesElement, true);
 
         calendar = calendarPanel;
         calendar.setParentField(this);
@@ -207,13 +207,13 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     protected void onAttach() {
         super.onAttach();
         DOM.appendChild(RootPanel.get().getElement(),
-                descriptionForAssisitveDevicesElement);
+                descriptionForAssistiveDevicesElement);
     }
 
     @Override
     protected void onDetach() {
         super.onDetach();
-        descriptionForAssisitveDevicesElement.removeFromParent();
+        descriptionForAssistiveDevicesElement.removeFromParent();
         closeCalendarPanel();
     }
 
@@ -583,7 +583,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      */
     public void setDescriptionForAssistiveDevices(
             String descriptionForAssistiveDevices) {
-        descriptionForAssisitveDevicesElement
+        descriptionForAssistiveDevicesElement
                 .setInnerText(descriptionForAssistiveDevices);
     }
 
@@ -594,7 +594,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * @return String with the description
      */
     public String getDescriptionForAssistiveDevices() {
-        return descriptionForAssisitveDevicesElement.getInnerText();
+        return descriptionForAssistiveDevicesElement.getInnerText();
     }
 
     /**

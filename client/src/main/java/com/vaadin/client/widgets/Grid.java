@@ -5599,7 +5599,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             boolean isSelected = hasData && isSelected(rowData);
             if (Grid.this.selectionModel.isSelectionAllowed()) {
-                rowElement.setAttribute("aria-selected", String.valueOf(isSelected));
+                rowElement.setAttribute("aria-selected",
+                        String.valueOf(isSelected));
             } else {
                 rowElement.removeAttribute("aria-selected");
             }
@@ -6318,10 +6319,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Adds the given role as 'role="$param"' to the {@code <table />} element
      * of the grid.
      *
-     * @param role the role param
+     * @param role
+     *            the role param
      * @since 8.2
      */
-    protected void setAriaRole(String role){
+    protected void setAriaRole(String role) {
         escalator.getTable().setAttribute("role", role);
     }
 
@@ -6975,7 +6977,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the {@link Escalator} used by this Grid instnace.
+     * Gets the {@link Escalator} used by this Grid instance.
      *
      * @return the escalator instance, never <code>null</code>
      */

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -219,10 +218,10 @@ public class ContainerDataSourceTest {
     }
 
     /**
-     * Tests the addEvent convenience method with the default event provider
+     * Tests the addEvent convenient method with the default event provider
      */
     @Test
-    public void testAddEventConvinienceMethod() {
+    public void testAddEventConvinientMethod() {
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -246,10 +245,10 @@ public class ContainerDataSourceTest {
     }
 
     /**
-     * Test the removeEvent convenience method with the default event provider
+     * Test the removeEvent convenient method with the default event provider
      */
     @Test
-    public void testRemoveEventConvinienceMethod() {
+    public void testRemoveEventConvinientMethod() {
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();

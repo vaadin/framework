@@ -284,7 +284,7 @@ public class Escalator extends Widget
     // todo comments legend
     /*
      * [[optimize]]: There's an opportunity to rewrite the code in such a way
-     * that it _might_ perform better (rememeber to measure, implement,
+     * that it _might_ perform better (remember to measure, implement,
      * re-measure)
      */
     /*
@@ -382,7 +382,7 @@ public class Escalator extends Widget
                 });
             }-*/;
 
-            // Duration of the inertial scrolling simulation. Devices with
+            // Duration of the initial scrolling simulation. Devices with
             // larger screens take longer durations.
             private static final int DURATION = Window.getClientHeight();
             // multiply scroll velocity with repeated touching

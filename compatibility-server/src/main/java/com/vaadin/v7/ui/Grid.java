@@ -5826,7 +5826,7 @@ public class Grid extends AbstractComponent
      * Sets the Grid's selection mode.
      * <p>
      * Grid supports three selection modes: multiselect, single select and no
-     * selection, and this is a convenience method for choosing between one of
+     * selection, and this is a convenient method for choosing between one of
      * them.
      * <p>
      * Technically, this method is a shortcut that can be used instead of
