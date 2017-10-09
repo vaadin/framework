@@ -38,7 +38,7 @@ public class TabSheetIndexOperations extends TestBase {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         Tab tab = tabs.getTab(2);
-                        tab.setCaption(new StringBuffer(tab.getCaption())
+                        tab.setCaption(new StringBuilder(tab.getCaption())
                                 .reverse().toString());
                     }
                 });

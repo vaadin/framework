@@ -91,7 +91,7 @@ public class CompileTheme {
     private static void processSassTheme(String themeFolder, String themeName,
             String variant, String version) throws Exception {
 
-        StringBuffer cssHeader = new StringBuffer();
+        StringBuilder cssHeader = new StringBuilder();
 
         String stylesCssDir = themeFolder + File.separator + themeName
                 + File.separator;

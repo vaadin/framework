@@ -137,7 +137,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
             throw new IllegalArgumentException("Updated item must be given.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("UPDATE ").append(tableName).append(" SET");
 
         /* Generate column<->value and rowidentifiers map */
@@ -191,7 +191,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     "Cannot generate an insert query for item already in database.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("INSERT INTO ").append(tableName).append(" (");
 
         /* Generate column<->value map */
@@ -246,7 +246,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
                     "Valid keyColumnNames must be provided.");
         }
         StatementHelper sh = getStatementHelper();
-        StringBuffer query = new StringBuffer();
+        StringBuilder query = new StringBuilder();
         query.append("DELETE FROM ").append(tableName).append(" WHERE ");
         int count = 1;
         for (String keyColName : primaryKeyColumns) {

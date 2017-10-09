@@ -92,7 +92,7 @@ public class TicketTest {
                     @Override
                     public StatementHelper answer() throws Throwable {
                         StatementHelper sh = new StatementHelper();
-                        StringBuffer query = new StringBuffer(
+                        StringBuilder query = new StringBuilder(
                                 "SELECT COUNT(*) FROM people");
                         if (!filters.isEmpty()) {
                             query.append(QueryBuilder

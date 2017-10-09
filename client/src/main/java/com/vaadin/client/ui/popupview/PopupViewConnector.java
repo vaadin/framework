@@ -102,7 +102,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             getWidget().preparePopup(getWidget().popup);
             getWidget().popup.setPopupConnector(getChildComponents().get(0));
 
-            final StringBuffer styleBuf = new StringBuffer();
+            final StringBuilder styleBuf = new StringBuilder();
             final String primaryName = getWidget().popup.getStylePrimaryName();
             styleBuf.append(primaryName);
 

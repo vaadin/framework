@@ -100,7 +100,7 @@ public class TestForContainerFilterable extends CustomComponent {
 
     private String randomWord() {
         int len = (int) (Math.random() * 4);
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         while (len-- >= 0) {
             buf.append(parts[(int) (Math.random() * parts.length)]);
         }

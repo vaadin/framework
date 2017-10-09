@@ -40,7 +40,7 @@ public abstract class Action implements Command {
     public abstract void execute();
 
     public String getHTML() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append("<div>");
         // Could store the icon in a field instead, but it doesn't really matter
         // right now because Actions are recreated every time they are needed
