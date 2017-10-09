@@ -1,17 +1,18 @@
 package com.vaadin.tests.components;
 
+import com.vaadin.testbench.elements.AbstractTextFieldElement;
 import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
 import org.junit.Test;
+import org.openqa.selenium.Keys;
 
 import static org.junit.Assert.*;
 
 /**
- *
  * @author Vaadin Ltd
  */
-public class BinderFormValidateTest  extends SingleBrowserTest {
+public class BinderFormValidateTest extends SingleBrowserTest {
 
     @Test
     public void checkErrorAfterEditingOneFieldInBinder() {
@@ -21,34 +22,41 @@ public class BinderFormValidateTest  extends SingleBrowserTest {
         PasswordFieldElement password = $(PasswordFieldElement.class).id("password");
 
         username.waitForVaadin();
-        // initial - no errors
-        assertTrue("Username should have no error",
-                !username.getHTML().contains("aria-invalid=\"true\""));
+        password.waitForVaadin();
 
-        assertTrue("Password should have no error",
-                !password.getHTML().contains("aria-invalid=\"true\""));
+        // initial - no errors
+        assertTrue(hasNoError(username));
+        assertTrue(hasNoError(password));
 
         // adding text into username
-        username.setValue("test");
+        username.focus();
+        username.sendKeys("t", "e", "s", "t");
+        username.sendKeys(Keys.TAB);
 
         username.waitForVaadin();
-        // there should be no error.. because username is valid...
-        assertTrue("Username should have no error",
-                !username.getHTML().contains("aria-invalid=\"true\""));
+        password.waitForVaadin();
 
-        assertTrue("Password should have no error",
-                !password.getHTML().contains("aria-invalid=\"true\""));
+        // there should be no error.. because username is valid...
+        assertTrue(hasNoError(username));
+        assertTrue(hasNoError(password));
 
         // refocus username and remove value
         username.focus();
         username.clear();
 
         username.waitForVaadin();
-        // there should be an error in the username field.
-        assertTrue("Username should have an error",
-                username.getHTML().contains("aria-invalid=\"true\""));
+        password.waitForVaadin();
 
-        assertTrue("Password should have no error",
-                !password.getHTML().contains("aria-invalid=\"true\""));
+        // there should be an error in the username field.
+        assertTrue(hasError(username));
+        assertTrue(hasNoError(password));
+    }
+
+    private static boolean hasError(AbstractTextFieldElement field) {
+        return field.getAttribute("class").contains("v-textfield-error");
+    }
+
+    private static boolean hasNoError(AbstractTextFieldElement field) {
+        return !hasError(field);
     }
 }
