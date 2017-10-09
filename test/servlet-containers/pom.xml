@@ -27,7 +27,7 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Wildfly Configuration. Version selected with payara.version -->
+                <!-- Wildfly Configuration. Version selected with wildfly.version -->
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
@@ -149,7 +149,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                
+
                 <!-- WebSphere Liberty Configuration. Version and profile are configurable with liberty.version and liberty.profile -->
                 <plugin>
                     <groupId>net.wasdev.wlp.maven.plugins</groupId>
@@ -173,6 +173,7 @@
                         </execution>
                     </executions>
                     <configuration>
+                        <!-- FIXME: This plug-in should also use port 8080 -->
                         <appArtifact>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
@@ -244,17 +245,17 @@
                 <module>payara</module>
                 <module>glassfish</module>
                 <!-- TODO: Payara 5 and Glassfish 5 -->
-		<module>tomcat7</module>
-		<module>tomcat80</module>
-		<module>tomcat85</module>
-		<module>tomcat9</module>
-		<module>liberty-javaee</module>
-		<module>liberty-webprofile</module>
-		<module>liberty-microprofile</module>
+                <module>tomcat7</module>
+                <module>tomcat80</module>
+                <module>tomcat85</module>
+                <module>tomcat9</module>
+                <module>liberty-javaee</module>
+                <module>liberty-webprofile</module>
+                <module>liberty-microprofile</module>
             </modules>
         </profile>
-        <!-- TODO Remove this when the ant build is no longer used. -->
         <profile>
+            <!-- TODO Remove this when the ant build is no longer used. -->
             <id>ant-test</id>
             <modules>
                 <module>generic</module>
