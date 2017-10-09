@@ -32,9 +32,12 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      *            Enables analyzing invalid input on the server this variable is
      *            {@code null} if the date was chosen with popup calendar or
      *            contains user-typed string
-     * @since
+     * @param invalidDateString
+     *            Whether the last entered date string is invalid or not
+     * @param resolutions
+     *            map of resolution name and value
      */
-    void update(String lastInvalidDateString, String newDateString,
+    void update(String newDateString, boolean invalidDateString,
             Map<String, Integer> resolutions);
 
     void blur();

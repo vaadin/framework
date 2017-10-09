@@ -76,7 +76,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
 
         @Override
-        public void update(String lastInvalidDateString, String newDateString,
+        public void update(String newDateString, boolean invalidDateString,
                 Map<String, Integer> resolutions) {
             Set<String> resolutionNames = getResolutions()
                     .map(AbstractDateField.this::getResolutionVariable)
@@ -114,7 +114,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         setComponentError(null);
                         setValue(newDate, true);
                     } else {
-                        if (lastInvalidDateString != null) {
+                        if (invalidDateString) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
                             parsedDate.ifOk(v -> {
@@ -186,7 +186,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * specified {@code resolution}.
      *
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(R resolution) {
         registerRpc(rpc);
@@ -199,7 +199,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @param caption
      *            the caption of the datefield.
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(String caption, R resolution) {
         this(resolution);
@@ -215,7 +215,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @param value
      *            the date/time value.
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(String caption, T value, R resolution) {
         this(caption, resolution);

@@ -229,7 +229,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        String lastInvalidDateString = null;
+        boolean invalidDateString = false;
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -253,7 +253,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
-                lastInvalidDateString = text.getText();
+                invalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -265,7 +265,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         Map<String, Integer> resolutions = new HashMap<>();
         updateDateVariables(resolutions);
         // always send the date string
-        rpc.update(lastInvalidDateString, text.getText(), resolutions);
+        rpc.update(text.getText(), invalidDateString, resolutions);
     }
 
     /**
@@ -447,7 +447,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
         Map<String, Integer> resolutions = new HashMap<>();
         updateDateVariables(resolutions);
-        rpc.update(null, null, resolutions);
+        rpc.update(null, false, resolutions);
     }
 
     /**

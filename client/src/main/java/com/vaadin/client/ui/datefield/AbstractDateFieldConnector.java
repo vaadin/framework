@@ -21,10 +21,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.LocaleNotLoadedException;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
@@ -32,27 +29,29 @@ import com.vaadin.client.ui.VDateField;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 
 public abstract class AbstractDateFieldConnector<R extends Enum<R>>
-        extends AbstractFieldConnector implements Paintable {
+        extends AbstractFieldConnector {
 
     private void updateResolution() {
+        VDateField<R> widget = getWidget();
         Map<String, Integer> stateResolutions = getState().resolutions;
-        Optional<R> newResolution = getWidget().getResolutions()
+        Optional<R> newResolution = widget.getResolutions()
                 .filter(res -> stateResolutions
-                        .containsKey(getWidget().getResolutionVariable(res)))
+                        .containsKey(widget.getResolutionVariable(res)))
                 .findFirst();
 
-        getWidget().setCurrentResolution(newResolution.orElse(null));
+        widget.setCurrentResolution(newResolution.orElse(null));
     }
 
     private Map<R, Integer> getTimeValues() {
+        VDateField<R> widget = getWidget();
         Map<String, Integer> stateResolutions = getState().resolutions;
-        Stream<R> resolutions = getWidget().getResolutions();
-        R resolution = getWidget().getCurrentResolution();
+        Stream<R> resolutions = widget.getResolutions();
+        R resolution = widget.getCurrentResolution();
         return resolutions
                 .collect(Collectors.toMap(Function.identity(),
                         res -> (resolution.compareTo(res) <= 0)
-                                ? stateResolutions.get(
-                                        getWidget().getResolutionVariable(res))
+                                ? stateResolutions
+                                        .get(widget.getResolutionVariable(res))
                                 : -1));
     }
 
@@ -86,48 +85,46 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
     }
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-    }
-
-    @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        // Save details
-        getWidget().client = getConnection();
-        getWidget().paintableId = getConnectorId();
+        VDateField<R> widget = getWidget();
 
-        getWidget().setReadonly(isReadOnly());
-        getWidget().setEnabled(isEnabled());
+        // Save details
+        widget.client = getConnection();
+        widget.paintableId = getConnectorId();
+
+        widget.setReadonly(isReadOnly());
+        widget.setEnabled(isEnabled());
 
         final String locale = getState().locale;
         if (locale != null) {
             try {
-                getWidget().dts.setLocale(locale);
-                getWidget().setCurrentLocale(locale);
+                widget.dts.setLocale(locale);
+                widget.setCurrentLocale(locale);
             } catch (final LocaleNotLoadedException e) {
-                getWidget().setCurrentLocale(getWidget().dts.getLocale());
+                widget.setCurrentLocale(widget.dts.getLocale());
                 VConsole.error("Tried to use an unloaded locale \"" + locale
                         + "\". Using default locale ("
-                        + getWidget().getCurrentLocale() + ").");
+                        + widget.getCurrentLocale() + ").");
                 VConsole.error(e);
             }
         }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
-        getWidget().setShowISOWeekNumbers(getState().showISOWeekNumbers
-                && getWidget().dts.getFirstDayOfWeek() == 1);
+        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers
+                && widget.dts.getFirstDayOfWeek() == 1);
 
         // Remove old stylename that indicates current resolution
-        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
-                + getWidget().resolutionAsString(), false);
+        setWidgetStyleName(widget.getStylePrimaryName() + "-"
+                + widget.resolutionAsString(), false);
 
         updateResolution();
 
         // Add stylename that indicates current resolution
-        setWidgetStyleName(getWidget().getStylePrimaryName() + "-"
-                + getWidget().resolutionAsString(), true);
+        setWidgetStyleName(widget.getStylePrimaryName() + "-"
+                + widget.resolutionAsString(), true);
 
-        getWidget().setCurrentDate(getTimeValues());
-        getWidget().setDefaultDate(getDefaultValues());
+        widget.setCurrentDate(getTimeValues());
+        widget.setDefaultDate(getDefaultValues());
     }
 }

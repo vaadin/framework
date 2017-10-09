@@ -68,28 +68,33 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        R origRes = getWidget().getCurrentResolution();
-        String oldLocale = getWidget().getCurrentLocale();
+        VAbstractTextualDate<R> widget = getWidget();
+        AbstractTextualDateFieldState state = getState();
+
+        R origRes = widget.getCurrentResolution();
+        String oldLocale = widget.getCurrentLocale();
+
         super.onStateChanged(stateChangeEvent);
-        if (origRes != getWidget().getCurrentResolution()
-                || oldLocale != getWidget().getCurrentLocale()) {
+
+        if (origRes != widget.getCurrentResolution()
+                || oldLocale != widget.getCurrentLocale()) {
             // force recreating format string
-            getWidget().setFormatString(null);
+            widget.setFormatString(null);
         }
-        if (getState().format != null) {
-            getWidget().setFormatString(getState().format);
+        if (state.format != null) {
+            widget.setFormatString(state.format);
         }
 
-        getWidget().lenient = getState().lenient;
+        widget.lenient = state.lenient;
 
-        getWidget().buildDate();
+        widget.buildDate();
         // not a FocusWidget -> needs own tabindex handling
-        getWidget().text.setTabIndex(getState().tabIndex);
+        widget.text.setTabIndex(state.tabIndex);
 
-        if (getWidget().isReadonly()) {
-            getWidget().text.addStyleDependentName("readonly");
+        if (widget.isReadonly()) {
+            widget.text.addStyleDependentName("readonly");
         } else {
-            getWidget().text.removeStyleDependentName("readonly");
+            widget.text.removeStyleDependentName("readonly");
         }
     }
 }
