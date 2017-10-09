@@ -84,6 +84,7 @@ public interface ErrorMessage extends Serializable {
          * Converts this to an error level that can be used on the client side.
          *
          * @return error level for the client side
+         * @since 7.7.11
          */
         public com.vaadin.shared.ui.ErrorLevel convertToShared() {
             switch (this) {
@@ -103,32 +104,32 @@ public interface ErrorMessage extends Serializable {
     }
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEMERROR} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#SYSTEMERROR} instead
      */
     @Deprecated
     public static final ErrorLevel SYSTEMERROR = ErrorLevel.SYSTEMERROR;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#CRITICAL} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#CRITICAL} instead
      */
     @Deprecated
     public static final ErrorLevel CRITICAL = ErrorLevel.CRITICAL;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#ERROR} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#ERROR} instead
      */
 
     @Deprecated
     public static final ErrorLevel ERROR = ErrorLevel.ERROR;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#WARNING} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#WARNING} instead
      */
     @Deprecated
     public static final ErrorLevel WARNING = ErrorLevel.WARNING;
 
     /**
-     * @deprecated As of 7.0, use {@link ErrorLevel#INFORMATION} instead    
+     * @deprecated As of 7.0, use {@link ErrorLevel#INFORMATION} instead
      */
     @Deprecated
     public static final ErrorLevel INFORMATION = ErrorLevel.INFORMATION;

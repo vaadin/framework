@@ -694,7 +694,7 @@ public class WidgetUtil {
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
          var height = parseFloat(heightPx); // Will automatically skip "px" suffix
-         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
+         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix
          var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
          return height+border+padding;
      }-*/;
@@ -1826,6 +1826,8 @@ public class WidgetUtil {
 
     /**
      * Utility methods for displaying error message on components.
+     *
+     * @since 7.7.11
      */
     public static class ErrorUtil {
 
@@ -1835,17 +1837,17 @@ public class WidgetUtil {
          * {@code prefix-errorLevel} format.
          *
          * @param element
-         *         element to apply the style name to
+         *            element to apply the style name to
          * @param prefix
-         *         part of the style name before the error level string
+         *            part of the style name before the error level string
          * @param errorLevel
-         *         error level for which the style will be applied
+         *            error level for which the style will be applied
          */
         public static void setErrorLevelStyle(Element element, String prefix,
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
-                String className =
-                        prefix + "-" + errorLevelValue.toString().toLowerCase();
+                String className = prefix + "-"
+                        + errorLevelValue.toString().toLowerCase();
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {

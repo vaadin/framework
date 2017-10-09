@@ -45,7 +45,7 @@ public class TooltipInfo {
      * Constructs a new tooltip info instance.
      *
      * @param tooltip
-     *         tooltip title
+     *            tooltip title
      */
     public TooltipInfo(String tooltip) {
         setTitle(tooltip);
@@ -55,9 +55,9 @@ public class TooltipInfo {
      * Constructs a new tooltip info instance.
      *
      * @param tooltip
-     *         tooltip title
+     *            tooltip title
      * @param errorMessage
-     *         error message
+     *            error message
      */
     public TooltipInfo(String tooltip, String errorMessage) {
         this(tooltip, errorMessage, null);
@@ -67,11 +67,11 @@ public class TooltipInfo {
      * Constructs a new tooltip info instance.
      *
      * @param tooltip
-     *         tooltip title
+     *            tooltip title
      * @param errorMessage
-     *         error message
+     *            error message
      * @param identifier
-     *         the tooltip's identifier
+     *            the tooltip's identifier
      */
     public TooltipInfo(String tooltip, String errorMessage, Object identifier) {
         this(tooltip, errorMessage, identifier, null);
@@ -81,13 +81,15 @@ public class TooltipInfo {
      * Constructs a new tooltip info instance.
      *
      * @param tooltip
-     *         tooltip title
+     *            tooltip title
      * @param errorMessage
-     *         error message
+     *            error message
      * @param identifier
-     *         the tooltip's identifier
+     *            the tooltip's identifier
      * @param errorLevel
-     *         error level
+     *            error level
+     *
+     * @since 7.7.11
      */
     public TooltipInfo(String tooltip, String errorMessage, Object identifier,
             ErrorLevel errorLevel) {
@@ -101,7 +103,7 @@ public class TooltipInfo {
      * Sets the tooltip's identifier.
      *
      * @param identifier
-     *         the identifier to set
+     *            the identifier to set
      */
     public void setIdentifier(Object identifier) {
         this.identifier = identifier;
@@ -129,7 +131,7 @@ public class TooltipInfo {
      * Sets the tooltip title.
      *
      * @param title
-     *         the title to set
+     *            the title to set
      */
     public void setTitle(String title) {
         this.title = title;
@@ -148,7 +150,7 @@ public class TooltipInfo {
      * Sets the error message.
      *
      * @param errorMessage
-     *         the error message to set
+     *            the error message to set
      */
     public void setErrorMessage(String errorMessage) {
         errorMessageHtml = errorMessage;
@@ -158,6 +160,7 @@ public class TooltipInfo {
      * Gets the error level.
      *
      * @return the error level
+     * @since 7.7.11
      */
     public ErrorLevel getErrorLevel() {
         return errorLevel;
@@ -167,7 +170,8 @@ public class TooltipInfo {
      * Sets the error level.
      *
      * @param errorLevel
-     *         the error level to set
+     *            the error level to set
+     * @since 7.7.11
      */
     public void setErrorLevel(ErrorLevel errorLevel) {
         this.errorLevel = errorLevel;
@@ -190,7 +194,7 @@ public class TooltipInfo {
      * identifier are equal.
      *
      * @param other
-     *         the reference tooltip info instance with which to compare
+     *            the reference tooltip info instance with which to compare
      * @return {@code true} if the instances are equal, {@code false} otherwise
      */
     public boolean equals(TooltipInfo other) {

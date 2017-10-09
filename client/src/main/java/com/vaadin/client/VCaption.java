@@ -335,6 +335,27 @@ public class VCaption extends HTML {
     }
 
     @Deprecated
+    /**
+     * Updates the caption without an owner component, for example a tabsheet's
+     * tab's.
+     *
+     * @param caption
+     *            the caption text to set
+     * @param disabled
+     *            style the caption as disabled if this is true
+     * @param hasDescription
+     *            add description style if this is true
+     * @param hasError
+     *            if true, add error indicator element
+     * @param errorLevel
+     *            if hasError is true, use this value to define the severity
+     * @param iconURL
+     *            url of the icon of the caption
+     * @param iconAltText
+     *            alt text of the caption
+     * @return true if the caption was placed after the component when it wasn't
+     *         before or vice versa
+     */
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, ErrorLevel errorLevel,
             String iconURL, String iconAltText) {

@@ -35,6 +35,11 @@ public class TabState implements Serializable {
     public String styleName;
     public String key;
     public String componentError;
+    /**
+     * The error level of the component.
+     * 
+     * @since 7.7.11
+     */
     public ErrorLevel componentErrorLevel;
     public String id;
     public String iconAltText;
