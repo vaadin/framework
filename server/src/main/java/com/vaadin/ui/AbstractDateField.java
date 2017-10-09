@@ -225,8 +225,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /* Component basic features */
 
     @Override
-    public void attach() {
-        super.attach();
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
         updateLocale(getLocale());
     }

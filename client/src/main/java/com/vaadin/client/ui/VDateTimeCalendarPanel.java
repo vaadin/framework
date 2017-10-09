@@ -212,9 +212,7 @@ public class VDateTimeCalendarPanel
          */
         public void updateTimes() {
             if (getDate() == null) {
-                // getLogger().info("updateTime 2");
                 setDate(new Date());
-                // getLogger().info("updateTime 3");
             }
             if (getDateTimeService().isTwelveHourClock()) {
                 int h = getDate().getHours();

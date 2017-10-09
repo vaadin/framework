@@ -104,6 +104,7 @@ public class VPopupTimeCalendar extends
 
     @Override
     protected void updateDateVariables(Map<String, Integer> resolutions) {
+        super.updateDateVariables(resolutions);
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
