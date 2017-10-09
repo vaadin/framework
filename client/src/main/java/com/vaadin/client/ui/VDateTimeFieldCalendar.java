@@ -16,6 +16,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -48,41 +49,40 @@ public class VDateTimeFieldCalendar extends
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.YEAR),
-                    date2.getYear() + 1900, false);
+            Map<String, Integer> resolutions = new HashMap<>();
+            resolutions.put(getResolutionVariable(DateTimeResolution.YEAR),
+                    date2.getYear() + 1900);
             if (getCurrentResolution().compareTo(DateTimeResolution.YEAR) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateTimeResolution.MONTH),
-                        date2.getMonth() + 1, false);
+                resolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
+                        date2.getMonth() + 1);
                 if (getCurrentResolution()
                         .compareTo(DateTimeResolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(),
+                    resolutions.put(
                             getResolutionVariable(DateTimeResolution.DAY),
-                            date2.getDate(), false);
+                            date2.getDate());
                     if (getCurrentResolution()
                             .compareTo(DateTimeResolution.DAY) < 0) {
-                        getClient().updateVariable(getId(),
+                        resolutions.put(
                                 getResolutionVariable(DateTimeResolution.HOUR),
-                                date2.getHours(), false);
+                                date2.getHours());
                         if (getCurrentResolution()
                                 .compareTo(DateTimeResolution.HOUR) < 0) {
-                            getClient().updateVariable(getId(),
+                            resolutions.put(
                                     getResolutionVariable(
                                             DateTimeResolution.MINUTE),
-                                    date2.getMinutes(), false);
+                                    date2.getMinutes());
                             if (getCurrentResolution()
                                     .compareTo(DateTimeResolution.MINUTE) < 0) {
-                                getClient().updateVariable(getId(),
+                                resolutions.put(
                                         getResolutionVariable(
                                                 DateTimeResolution.SECOND),
-                                        date2.getSeconds(), false);
+                                        date2.getSeconds());
                             }
                         }
                     }
                 }
             }
-            getClient().sendPendingVariableChanges();
+            rpc.update(null, false, resolutions);
         }
     }
 

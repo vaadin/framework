@@ -41,7 +41,6 @@ import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
  * Abstract textual date field base implementation. Provides a text box as an
@@ -68,11 +67,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
-
-    /**
-     * @since
-     */
-    public AbstractDateFieldServerRpc rpc;
 
     private static final String TEXTFIELD_ID = "field";
 

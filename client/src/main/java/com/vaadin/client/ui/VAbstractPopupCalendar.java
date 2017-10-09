@@ -17,6 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -219,26 +221,30 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
+        // always send the date string
+
+        Map<String, Integer> resolutions = new HashMap<>();
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            getClient().updateVariable(getId(),
+            resolutions.put(
                     getResolutionVariable(
                             calendar.getResolution(calendar::isYear)),
-                    newDate.getYear() + 1900, false);
+                    newDate.getYear() + 1900);
             if (!calendar.isYear(getCurrentResolution())) {
-                getClient().updateVariable(getId(),
+                resolutions.put(
                         getResolutionVariable(
                                 calendar.getResolution(calendar::isMonth)),
-                        newDate.getMonth() + 1, false);
+                        newDate.getMonth() + 1);
                 if (!calendar.isMonth(getCurrentResolution())) {
-                    getClient().updateVariable(getId(),
+                    resolutions.put(
                             getResolutionVariable(
                                     calendar.getResolution(calendar::isDay)),
-                            newDate.getDate(), false);
+                            newDate.getDate());
                 }
             }
         }
+        rpc.update(null, false, resolutions);
     }
 
     /**

@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
  * A very base widget class for a date field.
@@ -52,6 +53,11 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     protected boolean readonly;
 
     protected boolean enabled;
+
+    /**
+     * @since
+     */
+    public AbstractDateFieldServerRpc rpc;
 
     /**
      * The date that is displayed the date field before a value is selected. If

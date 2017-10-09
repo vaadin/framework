@@ -26,10 +26,17 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
 
 public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         extends AbstractFieldConnector {
+
+    @Override
+    protected void init() {
+        super.init();
+        getWidget().rpc = getRpcProxy(AbstractDateFieldServerRpc.class);
+    }
 
     private void updateResolution() {
         VDateField<R> widget = getWidget();
