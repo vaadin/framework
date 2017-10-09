@@ -51,6 +51,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
     private void openTestURL() {
         String url = getDeploymentURL() + getContextPath() + getTestPath() + "?"
                 + getParameters().collect(Collectors.joining("&"));
+
         driver.get(url);
 
         if (!isElementPresent(UIElement.class)) {
@@ -120,7 +121,19 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
         new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
 
+    /**
+     * Returns the deployment context path with a leading slash. If not provided
+     * through {@code deployment.context.path} system property, will default to
+     * {@code /demo}.
+     * 
+     * @return deployment context path
+     */
     protected String getContextPath() {
-        return "/demo";
+        String contextPath = System.getProperty("deployment.context.path");
+        if (contextPath == null || contextPath.isEmpty()) {
+            // Default to /demo
+            return "/demo";
+        }
+        return contextPath;
     }
 }
