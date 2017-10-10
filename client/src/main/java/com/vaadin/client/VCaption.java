@@ -355,6 +355,7 @@ public class VCaption extends HTML {
      *            alt text of the caption
      * @return true if the caption was placed after the component when it wasn't
      *         before or vice versa
+     * @since 7.7.11
      */
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, ErrorLevel errorLevel,
