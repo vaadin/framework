@@ -31,7 +31,7 @@ import com.vaadin.v7.data.util.converter.Converter;
  * For example <code>
  * <pre>textfield.setPropertyDataSource(new PropertyFormatter(property) {
             public String format(Object value) {
-                return ((Double) value).toString() + "000000000";
+                return ((Double) value) + "000000000";
             }
 
             public Object parse(String formattedValue) throws Exception {
@@ -223,7 +223,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
             }
         } else {
             try {
-                dataSource.setValue(parse(newValue.toString()));
+                dataSource.setValue(parse(newValue));
                 if (!newValue.equals(getValue())) {
                     fireValueChange();
                 }

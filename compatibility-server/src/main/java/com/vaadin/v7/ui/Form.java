@@ -861,7 +861,7 @@ public class Form extends AbstractField<Object>
         final Field<?> oldField = fields.get(propertyId);
         if (oldField == null) {
             throw new IllegalArgumentException("Field with given propertyid '"
-                    + propertyId.toString() + "' can not be found.");
+                    + propertyId + "' can not be found.");
         }
         final Object value = oldField.getPropertyDataSource() == null
                 ? oldField.getValue()
@@ -890,16 +890,14 @@ public class Form extends AbstractField<Object>
                     if (!found) {
                         throw new IllegalArgumentException(
                                 "Currently selected value '" + val
-                                        + "' of property '"
-                                        + propertyId.toString()
+                                        + "' of property '" + propertyId
                                         + "' was not found");
                     }
                 }
                 isMultiselect = true;
             } else {
-                throw new IllegalArgumentException(
-                        "Current value '" + value + "' of property '"
-                                + propertyId.toString() + "' was not found");
+                throw new IllegalArgumentException("Current value '" + value
+                        + "' of property '" + propertyId + "' was not found");
             }
         }
 

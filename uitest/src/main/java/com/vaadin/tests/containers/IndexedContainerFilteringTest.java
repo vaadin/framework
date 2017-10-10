@@ -55,8 +55,8 @@ public class IndexedContainerFilteringTest extends TestBase {
         cb.addValueChangeListener(event -> {
             container.removeAllContainerFilters();
             if (event.getValue()) {
-                container.addContainerFilter("column1",
-                        filterString.getValue().toString(), false, false);
+                container.addContainerFilter("column1", filterString.getValue(),
+                        false, false);
             }
         });
         vl.addComponent(cb);
@@ -113,8 +113,7 @@ public class IndexedContainerFilteringTest extends TestBase {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        int index = Integer
-                                .parseInt(position.getValue().toString());
+                        int index = Integer.parseInt(position.getValue());
                         String id = "addItemAt() " + nextToAdd;
                         Item item = container.addItemAt(index, id);
                         if (item != null) {

@@ -280,7 +280,7 @@ public class MeasuredSize {
             String changedFrom, String changedTo) {
         if (debugSizeChanges) {
             getLogger().info(sizeChangeType + " has changed from " + changedFrom
-                    + " to " + changedTo + " for " + element.toString());
+                    + " to " + changedTo + " for " + element);
         }
     }
 

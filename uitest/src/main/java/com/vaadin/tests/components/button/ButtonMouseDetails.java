@@ -16,7 +16,7 @@ public class ButtonMouseDetails extends TestBase {
 
         @Override
         public void buttonClick(ClickEvent event) {
-            StringBuilder str = new StringBuilder(out.getValue().toString());
+            StringBuilder str = new StringBuilder(out.getValue());
             str.append(clickCounter + ":\t");
 
             // Modifier keys

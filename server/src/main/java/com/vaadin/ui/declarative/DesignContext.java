@@ -402,8 +402,8 @@ public class DesignContext implements Serializable {
                         String contentString = attributes.get("content");
                         String[] parts = contentString.split(":");
                         if (parts.length != 2) {
-                            throw new DesignException("The meta tag '"
-                                    + child.toString() + "' cannot be parsed.");
+                            throw new DesignException("The meta tag '" + child
+                                    + "' cannot be parsed.");
                         }
                         String prefixName = parts[0];
                         String packageName = parts[1];

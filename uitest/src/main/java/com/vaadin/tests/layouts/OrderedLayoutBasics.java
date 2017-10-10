@@ -547,7 +547,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
-        // tf.setValue(tf.getValue().toString() + " (100% wide)");
+        // tf.setValue(tf.getValue() + " (100% wide)");
         // tf.setWidth("100%");
 
         // tf = new TextField("100%x70px Field");
@@ -640,7 +640,7 @@ public class OrderedLayoutBasics extends TestBase {
         // AlignmentHandler.ALIGNMENT_HORIZONTAL_CENTER, valign[i % 3]);
         // }
         //
-        // tf.setValue(tf.getValue().toString() + " (100% wide)");
+        // tf.setValue(tf.getValue() + " (100% wide)");
         // tf.setWidth("100%");
 
         // tf = new TextField("100%x70px Field");

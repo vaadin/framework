@@ -442,9 +442,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 lastKnownTextContent = getNullRepresentation();
                 textChangeEventPending = true;
             } else if (newValue != null
-                    && !newValue.toString().equals(lastKnownTextContent)) {
+                    && !newValue.equals(lastKnownTextContent)) {
                 // Value was changed to something else than null representation
-                lastKnownTextContent = newValue.toString();
+                lastKnownTextContent = newValue;
                 textChangeEventPending = true;
             }
             firePendingTextChangeEvent();
@@ -652,7 +652,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @since 6.4
      */
     public void selectAll() {
-        String text = getValue() == null ? "" : getValue().toString();
+        String text = getValue() == null ? "" : getValue();
         setSelectionRange(0, text.length());
     }
 

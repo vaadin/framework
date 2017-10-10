@@ -25,8 +25,7 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
         LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
         options.put("Null Caption Generator", item -> null);
         options.put("Default Caption Generator", item -> item.toString());
-        options.put("Custom Caption Generator",
-                item -> item.toString() + " Caption");
+        options.put("Custom Caption Generator", item -> item + " Caption");
 
         createSelectAction("Item Caption Generator", "Item Generator", options,
                 "None", (abstractMultiSelect, captionGenerator, data) -> {
