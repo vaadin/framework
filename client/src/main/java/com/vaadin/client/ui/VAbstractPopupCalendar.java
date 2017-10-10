@@ -221,9 +221,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
-        // always send the date string
-
         Map<String, Integer> resolutions = new HashMap<>();
+        fillResolutions(newDate, resolutions);
+        rpc.update(null, false, resolutions);
+    }
+
+    /**
+     * @since
+     */
+    protected void fillResolutions(Date newDate,
+            Map<String, Integer> resolutions) {
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
@@ -244,7 +251,6 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
                 }
             }
         }
-        rpc.update(null, false, resolutions);
     }
 
     /**

@@ -133,25 +133,25 @@ public class VPopupTimeCalendar extends
 
     @Override
     @SuppressWarnings("deprecation")
-    public void updateValue(Date newDate) {
+    protected void fillResolutions(Date newDate,
+            Map<String, Integer> resolutions) {
+        super.fillResolutions(newDate, resolutions);
         Date currentDate = getCurrentDate();
-        super.updateValue(newDate);
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             if (getCurrentResolution().compareTo(DateTimeResolution.DAY) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateTimeResolution.HOUR),
-                        newDate.getHours(), false);
+                resolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
+                        newDate.getHours());
                 if (getCurrentResolution()
                         .compareTo(DateTimeResolution.HOUR) < 0) {
-                    getClient().updateVariable(getId(),
+                    resolutions.put(
                             getResolutionVariable(DateTimeResolution.MINUTE),
-                            newDate.getMinutes(), false);
+                            newDate.getMinutes());
                     if (getCurrentResolution()
                             .compareTo(DateTimeResolution.MINUTE) < 0) {
-                        getClient().updateVariable(getId(),
+                        resolutions.put(
                                 getResolutionVariable(
                                         DateTimeResolution.SECOND),
-                                newDate.getSeconds(), false);
+                                newDate.getSeconds());
                     }
                 }
             }

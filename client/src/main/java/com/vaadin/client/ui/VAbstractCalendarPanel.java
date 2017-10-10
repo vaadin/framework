@@ -1155,9 +1155,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param sender
      *            The component that was clicked
-     * @param updateVariable
-     *            Should the value field be updated
-     *
      */
     private void processClickEvent(Widget sender) {
         if (!isEnabled() || isReadonly()) {
