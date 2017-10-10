@@ -849,7 +849,7 @@ public class WidgetUtil {
      *
      * @param element
      *            the element where to start seeking of Widget
-     * @since
+     * @since 7.7.11
      */
     @SuppressWarnings("unchecked")
     public static <T> T findWidget(Element element) {
@@ -892,13 +892,13 @@ public class WidgetUtil {
      * of their child widget(s).
      *
      * @param element
-     *         the element where to start seeking of Widget
+     *            the element where to start seeking of Widget
      * @param class1
-     *         the Widget type to seek for
+     *            the Widget type to seek for
      * @param exactMatch
-     *         true to only accept class1, false to also accept its
-     *         superclasses
-     * @since
+     *            true to only accept class1, false to also accept its
+     *            superclasses
+     * @since 7.7.11
      */
     @SuppressWarnings("unchecked")
     public static <T> T findWidget(Element element,
