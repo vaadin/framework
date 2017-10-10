@@ -769,9 +769,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     private void hardReset() {
-        if (reset) {
-            return;
-        }
         reset = true;
         markAsDirty();
     }
