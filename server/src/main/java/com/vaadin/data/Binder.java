@@ -118,14 +118,31 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Validates the field value and returns a {@code ValidationStatus}
-         * instance representing the outcome of the validation.
+         * instance representing the outcome of the validation. This method is a
+         * short-hand for calling {@link #validate(boolean)} with
+         * {@code fireEvent} {@code true}.
          *
+         * @see #validate(boolean)
          * @see Binder#validate()
          * @see Validator#apply(Object, ValueContext)
          *
          * @return the validation result.
          */
-        public BindingValidationStatus<TARGET> validate();
+        public default BindingValidationStatus<TARGET> validate() {
+            return validate(true);
+        }
+
+        /**
+         * Validates the field value and returns a {@code ValidationStatus}
+         * instance representing the outcome of the validation.
+         *
+         * @see #validate()
+         * 
+         * @param fireEvent
+         *            {@code true} to fire status event; {@code false} to not
+         * @return the validation result.
+         */
+        public BindingValidationStatus<TARGET> validate(boolean fireEvent);
 
         /**
          * Gets the validation status handler for this Binding.
@@ -423,11 +440,9 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null
-                            : fieldValue,
+                            ? null : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation
-                            : modelValue);
+                            ? nullRepresentation : modelValue);
         }
 
         /**
@@ -842,14 +857,17 @@ public class Binder<BEAN> implements Serializable {
         }
 
         @Override
-        public BindingValidationStatus<TARGET> validate() {
+        public BindingValidationStatus<TARGET> validate(boolean fireEvent) {
             Objects.requireNonNull(binder,
                     "This Binding is no longer attached to a Binder");
             BindingValidationStatus<TARGET> status = doValidation();
-            getBinder().getValidationStatusHandler()
-                    .statusChange(new BinderValidationStatus<>(getBinder(),
-                            Arrays.asList(status), Collections.emptyList()));
-            getBinder().fireStatusChangeEvent(status.isError());
+            if (fireEvent) {
+                getBinder().getValidationStatusHandler()
+                        .statusChange(new BinderValidationStatus<>(getBinder(),
+                                Arrays.asList(status),
+                                Collections.emptyList()));
+                getBinder().fireStatusChangeEvent(status.isError());
+            }
             return status;
         }
 
@@ -1449,7 +1467,8 @@ public class Binder<BEAN> implements Serializable {
      *             if some of the bound field values fail to validate
      */
     public void writeBean(BEAN bean) throws ValidationException {
-        BinderValidationStatus<BEAN> status = doWriteIfValid(bean, bindings);
+        BinderValidationStatus<BEAN> status = doWriteIfValid(bean,
+                new ArrayList<>(bindings));
         if (status.hasErrors()) {
             throw new ValidationException(status.getFieldValidationErrors(),
                     status.getBeanValidationErrors());
@@ -1478,12 +1497,15 @@ public class Binder<BEAN> implements Serializable {
      *         updated, {@code false} otherwise
      */
     public boolean writeBeanIfValid(BEAN bean) {
-        return doWriteIfValid(bean, bindings).isOk();
+        return doWriteIfValid(bean, new ArrayList<>(bindings)).isOk();
     }
 
     /**
      * Writes the field values into the given bean if all field level validators
      * pass. Runs bean level validators on the bean after writing.
+     * <p>
+     * <strong>Note:</strong> The collection of bindings is cleared on
+     * successful save.
      *
      * @param bean
      *            the bean to write field values into
@@ -1498,12 +1520,12 @@ public class Binder<BEAN> implements Serializable {
         Objects.requireNonNull(bean, "bean cannot be null");
         List<ValidationResult> binderResults = Collections.emptyList();
 
-        // First run fields level validation
-        List<BindingValidationStatus<?>> bindingStatuses = validateBindings();
+        // First run fields level validation, if no validation errors then
+        // update bean
+        List<BindingValidationStatus<?>> bindingResults = bindings.stream()
+                .map(b -> b.validate(false)).collect(Collectors.toList());
 
-        // If no validation errors then update bean
-        // TODO: Enable partial write when some fields don't pass
-        if (bindingStatuses.stream()
+        if (bindingResults.stream()
                 .noneMatch(BindingValidationStatus::isError)) {
             // Store old bean values so we can restore them if validators fail
             Map<Binding<BEAN, ?>, Object> oldValues = getBeanState(bean,
@@ -1525,13 +1547,13 @@ public class Binder<BEAN> implements Serializable {
                  * Writing changes to another bean when using setBean does not
                  * clear the set of changed bindings.
                  */
-                changedBindings.clear();
+                bindings.clear();
             }
         }
 
         // Generate status object and fire events.
         BinderValidationStatus<BEAN> status = new BinderValidationStatus<>(this,
-                bindingStatuses, binderResults);
+                bindingResults, binderResults);
         getValidationStatusHandler().statusChange(status);
         fireStatusChangeEvent(!status.isOk());
         return status;
@@ -2160,8 +2182,7 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue()
-                                : modelValue,
+                                ? field.getEmptyValue() : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);
