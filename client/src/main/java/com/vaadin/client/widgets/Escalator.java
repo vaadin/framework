@@ -6450,7 +6450,7 @@ public class Escalator extends Widget
             @SuppressWarnings("deprecation")
             com.google.gwt.user.client.Element castElement = (com.google.gwt.user.client.Element) possibleWidgetNode
                     .cast();
-            Widget w = WidgetUtil.findWidget(castElement, null);
+            Widget w = WidgetUtil.findWidget(castElement);
 
             // Ensure findWidget did not traverse past the cell element in the
             // DOM hierarchy
