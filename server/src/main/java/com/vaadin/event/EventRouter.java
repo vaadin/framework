@@ -164,7 +164,7 @@ public class EventRouter implements MethodEventSource {
     }
 
     /*
-     * Removes the event listener methods matching the given given paramaters.
+     * Removes the event listener methods matching the given given parameters.
      * Don't add a JavaDoc comment here, we use the default documentation from
      * implemented interface.
      */

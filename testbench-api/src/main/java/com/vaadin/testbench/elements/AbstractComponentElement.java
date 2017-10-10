@@ -53,7 +53,7 @@ public class AbstractComponentElement extends AbstractElement {
     public boolean isReadOnly() {
         final String READONLY_CSS_CLASS = "v-readonly";
         String readonlyClass = getAttribute("class");
-        // lookin for READONLY_CSS_CLASS string
+        // looking for READONLY_CSS_CLASS string
         String[] cssSelectors = readonlyClass.split("\\s");
         for (String selector : cssSelectors) {
             if (selector.equals(READONLY_CSS_CLASS)) {

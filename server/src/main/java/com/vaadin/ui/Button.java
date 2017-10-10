@@ -519,7 +519,7 @@ public class Button extends AbstractFocusable
      * Sets the component's icon and alt text.
      * <p>
      * An alt text is shown when an image could not be loaded, and read by
-     * assisitve devices.
+     * assistive devices.
      *
      * @param icon
      *            the icon to be shown with the component's caption.

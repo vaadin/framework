@@ -1667,7 +1667,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Adds an action handler to the calender that handles event produced by the
+     * Adds an action handler to the calendar that handles event produced by the
      * context menu.
      *
      * <p>

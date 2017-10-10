@@ -6976,7 +6976,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the {@link Escalator} used by this Grid instnace.
+     * Gets the {@link Escalator} used by this Grid instance.
      *
      * @return the escalator instance, never <code>null</code>
      */
