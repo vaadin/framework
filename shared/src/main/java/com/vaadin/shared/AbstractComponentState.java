@@ -47,7 +47,11 @@ public class AbstractComponentState extends SharedState {
     /** HTML formatted error message for the component */
     public String errorMessage = null;
 
-    /** Level of error */
+    /**
+     * Level of error
+     * 
+     * @since 7.7.11
+     */
     public ErrorLevel errorLevel = null;
 
     public boolean captionAsHtml = false;

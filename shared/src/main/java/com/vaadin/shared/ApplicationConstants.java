@@ -49,6 +49,11 @@ public class ApplicationConstants implements Serializable {
 
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
+    /**
+     * Name for push connection identifier.
+     * 
+     * @since 7.7.11
+     */
     public static final String UIDL_PUSH_ID = "Vaadin-Push-ID";
 
     @Deprecated

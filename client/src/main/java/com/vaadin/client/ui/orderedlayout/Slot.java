@@ -547,6 +547,7 @@ public class Slot extends SimplePanel {
      * @param captionAsHtml
      *            true if the caption should be rendered as HTML, false
      *            otherwise
+     * @since 7.7.11
      */
     public void setCaption(String captionText, Icon icon, List<String> styles,
             String error, ErrorLevel errorLevel, boolean showError,
