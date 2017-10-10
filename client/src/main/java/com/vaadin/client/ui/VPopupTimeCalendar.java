@@ -135,8 +135,8 @@ public class VPopupTimeCalendar extends
     @SuppressWarnings("deprecation")
     protected void fillResolutions(Date newDate,
             Map<String, Integer> resolutions) {
-        super.fillResolutions(newDate, resolutions);
         Date currentDate = getCurrentDate();
+        super.fillResolutions(newDate, resolutions);
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             if (getCurrentResolution().compareTo(DateTimeResolution.DAY) < 0) {
                 resolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
