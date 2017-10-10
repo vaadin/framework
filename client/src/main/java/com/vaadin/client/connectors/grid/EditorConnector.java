@@ -26,7 +26,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.EditorHandler;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.client.widgets.Grid.Column;
@@ -112,9 +111,7 @@ public class EditorConnector extends AbstractExtensionConnector {
 
         @Override
         public void bind(EditorRequest<JsonObject> request) {
-            if (!handleServerInitiated(request)) {
-                startRequest(request);
-            }
+            startRequest(request);
             rpc.bind(getRowKey(request.getRow()));
         }
 
