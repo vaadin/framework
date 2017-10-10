@@ -223,7 +223,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     /**
-     * Convenient method to bind Fields from a given "field container" to a
+     * Convenience method to bind Fields from a given "field container" to a
      * given bean with buffering disabled.
      * <p>
      * The returned {@link BeanFieldGroup} can be used for further
@@ -244,7 +244,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     /**
-     * Convenient method to bind Fields from a given "field container" to a
+     * Convenience method to bind Fields from a given "field container" to a
      * given bean with buffering enabled.
      * <p>
      * The returned {@link BeanFieldGroup} can be used for further

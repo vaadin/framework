@@ -257,8 +257,8 @@ public class GridBasicClientFeaturesWidget
     }
 
     /**
-     * Convenient method for creating a list of Data objects to be used as a Row
-     * in the data source
+     * Convenience method for creating a list of Data objects to be used as a
+     * Row in the data source
      *
      * @param cols
      *            number of columns (items) to include in the row

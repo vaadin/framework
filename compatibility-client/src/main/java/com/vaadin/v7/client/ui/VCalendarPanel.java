@@ -1632,7 +1632,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modified the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */

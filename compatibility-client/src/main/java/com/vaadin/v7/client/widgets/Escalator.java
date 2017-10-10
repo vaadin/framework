@@ -382,7 +382,7 @@ public class Escalator extends Widget
                 });
             }-*/;
 
-            // Duration of the initial scrolling simulation. Devices with
+            // Duration of the inertial scrolling simulation. Devices with
             // larger screens take longer durations.
             private static final int DURATION = Window.getClientHeight();
             // multiply scroll velocity with repeated touching

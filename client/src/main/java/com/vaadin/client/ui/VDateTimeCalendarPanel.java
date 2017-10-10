@@ -46,7 +46,7 @@ public class VDateTimeCalendarPanel
     private VTime time;
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modified the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */

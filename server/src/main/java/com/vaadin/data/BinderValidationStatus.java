@@ -55,7 +55,7 @@ public class BinderValidationStatus<BEAN> implements Serializable {
     private final List<ValidationResult> binderStatuses;
 
     /**
-     * Convenient method for creating a unresolved validation status for the
+     * Convenience method for creating a unresolved validation status for the
      * given binder.
      * <p>
      * In practice this status means that the values might not be valid, but

@@ -259,7 +259,7 @@ public class Binder<BEAN> implements Serializable {
                 Validator<? super TARGET> validator);
 
         /**
-         * A convenient method to add a validator to this binding using the
+         * A convenience method to add a validator to this binding using the
          * {@link Validator#from(SerializablePredicate, String)} factory method.
          * <p>
          * Validators are applied, in registration order, when the field value
@@ -285,7 +285,7 @@ public class Binder<BEAN> implements Serializable {
         }
 
         /**
-         * A convenient method to add a validator to this binding using the
+         * A convenience method to add a validator to this binding using the
          * {@link Validator#from(SerializablePredicate, ErrorMessageProvider)}
          * factory method.
          * <p>
@@ -1605,7 +1605,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * A convenient method to add a validator to this binder using the
+     * A convenience method to add a validator to this binder using the
      * {@link Validator#from(SerializablePredicate, String)} factory method.
      * <p>
      * Bean level validators are applied on the bean instance after the bean is
@@ -1629,7 +1629,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * A convenient method to add a validator to this binder using the
+     * A convenience method to add a validator to this binder using the
      * {@link Validator#from(SerializablePredicate, ErrorMessageProvider)}
      * factory method.
      * <p>
@@ -1796,7 +1796,7 @@ public class Binder<BEAN> implements Serializable {
      * <p>
      * Only the one validation error message is shown in this label at a time.
      * <p>
-     * This is a convenient method for
+     * This is a convenience method for
      * {@link #setValidationStatusHandler(BinderValidationStatusHandler)}, which
      * means that this method cannot be used after the handler has been set.
      * Also the handler cannot be set after this label has been set.

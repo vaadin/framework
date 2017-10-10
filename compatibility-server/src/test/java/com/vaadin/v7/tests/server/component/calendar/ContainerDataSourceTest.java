@@ -218,10 +218,10 @@ public class ContainerDataSourceTest {
     }
 
     /**
-     * Tests the addEvent convenient method with the default event provider
+     * Tests the addEvent convenience method with the default event provider
      */
     @Test
-    public void testAddEventConvinientMethod() {
+    public void testAddEventConvinienceMethod() {
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -245,10 +245,10 @@ public class ContainerDataSourceTest {
     }
 
     /**
-     * Test the removeEvent convenient method with the default event provider
+     * Test the removeEvent convenience method with the default event provider
      */
     @Test
-    public void testRemoveEventConvinientMethod() {
+    public void testRemoveEventConvinienceMethod() {
 
         // Start and end dates to query for
         java.util.Calendar cal = java.util.Calendar.getInstance();

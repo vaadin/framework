@@ -100,7 +100,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     /**
      * Gets the items that were removed from selection.
      * <p>
-     * This is just a convenient method for checking what was previously
+     * This is just a convenience method for checking what was previously
      * selected in {@link #getOldSelection()} but not selected anymore in
      * {@link #getNewSelection()}.
      *
@@ -115,7 +115,7 @@ public class MultiSelectionEvent<T> extends ValueChangeEvent<Set<T>>
     /**
      * Gets the items that were added to selection.
      * <p>
-     * This is just a convenient method for checking what is new selected in
+     * This is just a convenience method for checking what is new selected in
      * {@link #getNewSelection()} and wasn't selected in
      * {@link #getOldSelection()}.
      *
