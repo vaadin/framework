@@ -240,9 +240,10 @@
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
+                <module>wildfly-swarm</module>
                 <module>jetty8</module>
                 <module>jetty9</module>
-                <module>payara</module>
+                <module>payara-micro</module>
                 <module>glassfish</module>
                 <!-- TODO: Payara 5 and Glassfish 5 -->
                 <module>tomcat7</module>
@@ -281,14 +282,12 @@
             <modules>
                 <module>liberty-webprofile</module>
                 <module>liberty-javaee</module>
-                <module>liberty-microprofile</module>
             </modules>
         </profile>
         <profile>
             <id>glassfish</id>
             <modules>
                 <module>glassfish</module>
-                <module>payara</module>
             </modules>
         </profile>
         <profile>
@@ -298,6 +297,14 @@
                 <module>tomcat80</module>
                 <module>tomcat85</module>
                 <module>tomcat9</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>microprofile</id>
+            <modules>
+                <module>wildfly-swarm</module>
+                <module>payara-micro</module>
+                <module>liberty-microprofile</module>
             </modules>
         </profile>
     </profiles>
