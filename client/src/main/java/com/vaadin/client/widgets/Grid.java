@@ -6314,7 +6314,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
     }
 
-    // @formatter:off
     /**
      * Adds the given role as 'role="$param"' to the {@code <table />} element
      * of the grid.
@@ -6323,7 +6322,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      *            the role param
      * @since 8.2
      */
-    // @formatter:on
     protected void setAriaRole(String role) {
         escalator.getTable().setAttribute("role", role);
     }
