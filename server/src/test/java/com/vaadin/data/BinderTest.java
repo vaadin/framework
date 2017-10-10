@@ -506,9 +506,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         binder.forField(firstNameField)
                 .withValidator(new NotEmptyValidator<>(""))
-                .withValidationStatusHandler(validationStatus -> {
-                    invokes.addAndGet(1);
-                }).bind(Person::getFirstName, Person::setFirstName);
+                .withValidationStatusHandler(
+                        validationStatus -> invokes.addAndGet(1))
+                .bind(Person::getFirstName, Person::setFirstName);
         binder.forField(lastNameField)
                 .withValidator(new NotEmptyValidator<>(""))
                 .bind(Person::getLastName, Person::setLastName);

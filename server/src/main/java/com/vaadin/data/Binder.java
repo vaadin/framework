@@ -1538,16 +1538,19 @@ public class Binder<BEAN> implements Serializable {
             if (binderResults.stream().anyMatch(ValidationResult::isError)) {
                 // Bean validator failed, revert values
                 restoreBeanState(bean, oldValues);
-            } else if (getBean() == null || bean.equals(getBean())) {
+            } else if (bean.equals(getBean())) {
                 /*
                  * Changes have been successfully saved. The set is only cleared
-                 * if using readBean/writeBean or when the changes are stored in
-                 * the currently set bean.
-                 *
-                 * Writing changes to another bean when using setBean does not
-                 * clear the set of changed bindings.
+                 * when the changes are stored in the currently set bean.
                  */
                 bindings.clear();
+            } else if (getBean() == null) {
+                /*
+                 * When using readBean and writeBean there is no knowledge of
+                 * which bean the changes come from or are stored in. Binder is
+                 * no longer "changed" when saved succesfully to any bean.
+                 */
+                changedBindings.clear();
             }
         }
 

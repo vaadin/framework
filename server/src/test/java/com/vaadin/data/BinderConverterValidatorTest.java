@@ -621,13 +621,21 @@ public class BinderConverterValidatorTest
 
         // bind a new field that has invalid value in bean
         TextField lastNameField = new TextField();
-        person.setLastName("");
+
+        // The test starts with a valid value as the last name of the person,
+        // since the binder assumes any non-changed values to be valid.
+        person.setLastName("bar");
+
         BindingBuilder<Person, String> binding2 = binder.forField(lastNameField)
                 .withValidator(notEmpty);
         binding2.bind(Person::getLastName, Person::setLastName);
 
-        // should not have error shown
+        // should not have error shown when initialized
         assertNull(lastNameField.getComponentError());
+
+        // Set a value that breaks the validation
+        lastNameField.setValue("");
+        assertNotNull(lastNameField.getComponentError());
 
         // add status label to show bean level error
         Label statusLabel = new Label();
