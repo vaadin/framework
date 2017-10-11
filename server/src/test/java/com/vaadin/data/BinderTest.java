@@ -392,9 +392,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         String customNullPointerRepresentation = "foo";
         Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField)
-                .withConverter(value -> value,
-                        value -> value == null ? customNullPointerRepresentation
-                                : value)
+                .withConverter(value -> value, value -> value == null
+                        ? customNullPointerRepresentation : value)
                 .bind("firstName");
 
         Person person = new Person();
@@ -490,7 +489,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         ErrorMessage errorMessage = textField.getErrorMessage();
         assertNotNull(errorMessage);
         assertEquals("foobar", errorMessage.getFormattedHtmlMessage());
-        // validation is done for the whole bean at once.
+        // validation is done for all changed bindings once.
         assertEquals(1, invokes.get());
 
         textField.setValue("value");
@@ -941,5 +940,34 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertEquals("Binding still affects bean even after unbind",
                 ageBeforeUnbind, String.valueOf(item.getAge()));
+    }
+
+    @Test
+    public void two_asRequired_fields_without_initial_values() {
+        binder.forField(nameField).asRequired("Empty name").bind(p -> "",
+                (p, s) -> {
+                });
+        binder.forField(ageField).asRequired("Empty age").bind(p -> "",
+                (p, s) -> {
+                });
+
+        binder.setBean(item);
+        assertNull("Initially there should be no errors",
+                nameField.getComponentError());
+        assertNull("Initially there should be no errors",
+                ageField.getComponentError());
+
+        nameField.setValue("Foo");
+        assertNull("Name with a value should not be an error",
+                nameField.getComponentError());
+        assertNull(
+                "Age field should not be in error, since it has not been modified.",
+                ageField.getComponentError());
+
+        nameField.setValue("");
+        assertNotNull("Empty name should now be in error.",
+                nameField.getComponentError());
+        assertNull("Age field should still be ok.",
+                ageField.getComponentError());
     }
 }
