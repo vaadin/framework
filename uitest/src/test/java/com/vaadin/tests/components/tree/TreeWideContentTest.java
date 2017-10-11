@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tree;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -16,9 +17,8 @@ public class TreeWideContentTest extends SingleBrowserTest {
 
         TreeGridElement tree = $(TreeElement.class).first()
                 .wrap(TreeGridElement.class);
-        Assert.assertTrue("Row should be wider than tree",
-                tree.getTableWrapper().getSize().getWidth() < tree.getRow(0)
-                        .getSize().getWidth());
+        assertTrue("Row should be wider than tree", tree.getTableWrapper()
+                .getSize().getWidth() < tree.getRow(0).getSize().getWidth());
     }
 
     @Test
@@ -28,7 +28,7 @@ public class TreeWideContentTest extends SingleBrowserTest {
         TreeElement tree = $(TreeElement.class).first();
         tree.collapse(0);
         TreeGridElement treeGrid = tree.wrap(TreeGridElement.class);
-        Assert.assertTrue("Row should be as wide as tree",
+        assertTrue("Row should be as wide as tree",
                 treeGrid.getTableWrapper().getSize().getWidth() == treeGrid
                         .getRow(0).getSize().getWidth());
     }
@@ -41,7 +41,7 @@ public class TreeWideContentTest extends SingleBrowserTest {
 
         TreeElement tree = $(TreeElement.class).first();
         TreeGridElement treeGrid = tree.wrap(TreeGridElement.class);
-        Assert.assertTrue("Row should be as wide as tree",
+        assertTrue("Row should be as wide as tree",
                 treeGrid.getTableWrapper().getSize().getWidth() == treeGrid
                         .getRow(0).getSize().getWidth());
     }

@@ -100,7 +100,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public AbstractComponentConnector() {
     }
@@ -142,11 +142,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * @since 7.6
      */
@@ -166,11 +166,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     /**
-     * The new default behaviour is for long taps to fire a contextclick event
-     * if there's a contextclick listener attached to the component.
+     * The new default behavior is for long taps to fire a contextclick event if
+     * there's a contextclick listener attached to the component.
      *
      * If you do not want this in your component, override this with a blank
-     * method to get rid of said behaviour.
+     * method to get rid of said behavior.
      *
      * Some Vaadin Components already handle the long tap as a context menu.
      * This method is unnecessary for those.
@@ -490,7 +490,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
-    @OnStateChange({"errorMessage", "errorLevel"})
+    @OnStateChange({ "errorMessage", "errorLevel" })
     private void setErrorLevel() {
         // Add or remove the widget's error level style name
         ErrorUtil.setErrorLevelStyle(getWidget().getElement(),

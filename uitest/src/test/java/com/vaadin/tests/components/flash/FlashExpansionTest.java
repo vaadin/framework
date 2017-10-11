@@ -1,8 +1,10 @@
 package com.vaadin.tests.components.flash;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -29,11 +31,11 @@ public class FlashExpansionTest extends MultiBrowserTest {
         waitForElementPresent(locator);
         WebElement embed = $(FlashElement.class).first().findElement(locator);
         String width = embed.getAttribute("width");
-        Assert.assertEquals("Width is not 400.0px initially", "400", width);
+        assertEquals("Width is not 400.0px initially", "400", width);
         $(ButtonElement.class).first().click();
         embed = $(FlashElement.class).first().findElement(locator);
         String widthAfterExpansion = embed.getAttribute("width");
-        Assert.assertNotEquals("Width is still 400.0px after expansion", "400",
+        assertNotEquals("Width is still 400.0px after expansion", "400",
                 widthAfterExpansion);
     }
 

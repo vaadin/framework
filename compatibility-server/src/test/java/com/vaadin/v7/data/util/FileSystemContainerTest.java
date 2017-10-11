@@ -1,8 +1,9 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class FileSystemContainerTest {
@@ -11,6 +12,6 @@ public class FileSystemContainerTest {
     public void nonExistingDirectory() {
         FilesystemContainer fsc = new FilesystemContainer(
                 new File("/non/existing"));
-        Assert.assertTrue(fsc.getItemIds().isEmpty());
+        assertTrue(fsc.getItemIds().isEmpty());
     }
 }

@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.abstractselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.select.AbstractSelectState;
@@ -31,7 +32,7 @@ public class AbstractSelectStateTest {
     public void getState_selectHasCustomState() {
         TestSelect select = new TestSelect();
         AbstractSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class", AbstractSelectState.class,
+        assertEquals("Unexpected state class", AbstractSelectState.class,
                 state.getClass());
     }
 
@@ -39,14 +40,14 @@ public class AbstractSelectStateTest {
     public void getPrimaryStyleName_selectHasCustomPrimaryStyleName() {
         TestSelect combobox = new TestSelect();
         AbstractSelectState state = new AbstractSelectState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, combobox.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                combobox.getPrimaryStyleName());
     }
 
     @Test
     public void selectStateHasCustomPrimaryStyleName() {
         AbstractSelectState state = new AbstractSelectState();
-        Assert.assertEquals("Unexpected primary style name", "v-select",
+        assertEquals("Unexpected primary style name", "v-select",
                 state.primaryStyleName);
     }
 

@@ -17,6 +17,7 @@ package com.vaadin.client.debug.internal;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
@@ -133,7 +134,7 @@ public final class VDebugWindow extends VOverlay {
     protected SimplePanel content = new SimplePanel();
 
     // sections
-    protected ArrayList<Section> sections = new ArrayList<>();
+    protected List<Section> sections = new ArrayList<>();
 
     // handles resize/move
     protected HandlerRegistration mouseDownHandler = null;
@@ -747,7 +748,7 @@ public final class VDebugWindow extends VOverlay {
     }
 
     /**
-     * Called when a response is received
+     * Called when a response is received.
      *
      * @param ac
      * @param uidl
@@ -786,8 +787,7 @@ public final class VDebugWindow extends VOverlay {
     protected class Menu extends VOverlay {
         FlowPanel content = new FlowPanel();
 
-        DebugButton[] sizes = {
-                new DebugButton(null, "Small", "A"),
+        DebugButton[] sizes = { new DebugButton(null, "Small", "A"),
                 new DebugButton(null, "Medium", "A"),
                 new DebugButton(null, "Large", "A") };
 
@@ -843,8 +843,7 @@ public final class VDebugWindow extends VOverlay {
                 }
             };
             modes[getDevMode()].setActive(true);
-            for (int i = 0; i < modes.length; i++) {
-                Button b = modes[i];
+            for (Button b : modes) {
                 b.addClickHandler(modeHandler);
                 mode.add(b);
             }

@@ -18,7 +18,7 @@ package com.vaadin.v7.client.widget.grid;
 import com.vaadin.v7.client.widgets.Grid;
 
 /**
- * Callback interface for generating custom style names for cells
+ * Callback interface for generating custom style names for cells.
  *
  * @author Vaadin Ltd
  * @param <T>

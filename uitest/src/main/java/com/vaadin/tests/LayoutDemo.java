@@ -138,7 +138,7 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
         layout.addComponent(new Label(
                 "Panel is a container for other components, by default it draws a frame around it's "
                         + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                        + " Panel contains an layout where the actual contained components are added, "
+                        + " Panel contains a layout where the actual contained components are added, "
                         + "this layout may be switched on the fly.",
                 ContentMode.HTML));
         panel.setWidth("222px");

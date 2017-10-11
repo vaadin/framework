@@ -15,10 +15,7 @@
  */
 package com.vaadin.client.ui.nativebutton;
 
-import com.google.gwt.user.client.DOM;
-import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ConnectorFocusAndBlurHandler;

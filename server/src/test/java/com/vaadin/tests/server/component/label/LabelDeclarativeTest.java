@@ -94,23 +94,23 @@ public class LabelDeclarativeTest extends DeclarativeTestBase<Label> {
     public void testHtmlEntities() {
         String design = "<vaadin-label plain-text=\"true\">&gt; Test</vaadin-label>";
         Label read = read(design);
-        Assert.assertEquals("> Test", read.getValue());
+        assertEquals("> Test", read.getValue());
 
         design = design.replace("plain-text=\"true\"", "");
         read = read(design);
-        Assert.assertEquals("&gt; Test", read.getValue());
+        assertEquals("&gt; Test", read.getValue());
 
         Label label = new Label("&amp; Test");
         label.setContentMode(ContentMode.TEXT);
 
         Element root = new Element(Tag.valueOf("vaadin-label"), "");
         label.writeDesign(root, new DesignContext());
-        Assert.assertEquals("&amp;amp; Test", root.html());
+        assertEquals("&amp;amp; Test", root.html());
 
         label.setContentMode(ContentMode.HTML);
         root = new Element(Tag.valueOf("vaadin-label"), "");
         label.writeDesign(root, new DesignContext());
-        Assert.assertEquals("&amp; Test", root.html());
+        assertEquals("&amp; Test", root.html());
     }
 
     /**

@@ -16,9 +16,10 @@
 
 package com.vaadin.v7.tests.data.converter;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,24 +85,23 @@ public class AnyEnumToStringConverterTest {
 
     @Test
     public void nullConversion() {
-        Assert.assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     @Test
     public void enumToStringConversion() {
-        Assert.assertEquals(TestEnum.TWO.toString(),
+        assertEquals(TestEnum.TWO.toString(),
                 converter.convertToModel(TestEnum.TWO, String.class, null));
-        Assert.assertEquals(AnotherTestEnum.TWO.toString(), converter
+        assertEquals(AnotherTestEnum.TWO.toString(), converter
                 .convertToModel(AnotherTestEnum.TWO, String.class, null));
     }
 
     @Test
     public void stringToEnumConversion() {
-        Assert.assertEquals(TestEnum.TWO, converter.convertToPresentation(
+        assertEquals(TestEnum.TWO, converter.convertToPresentation(
                 TestEnum.TWO.toString(), TestEnum.class, null));
-        Assert.assertEquals(AnotherTestEnum.TWO,
-                converter.convertToPresentation(AnotherTestEnum.TWO.toString(),
-                        AnotherTestEnum.class, null));
+        assertEquals(AnotherTestEnum.TWO, converter.convertToPresentation(
+                AnotherTestEnum.TWO.toString(), AnotherTestEnum.class, null));
     }
 
     @Test
@@ -109,20 +109,19 @@ public class AnyEnumToStringConverterTest {
         TextField tf = new TextField();
         tf.setConverter(new ReverseConverter(converter));
         tf.setPropertyDataSource(new ObjectProperty(AnotherTestEnum.TWO));
-        Assert.assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
+        assertEquals(AnotherTestEnum.TWO.toString(), tf.getValue());
         tf.setValue(AnotherTestEnum.ONE.toString());
-        Assert.assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
-        Assert.assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(AnotherTestEnum.ONE,
+        assertEquals(AnotherTestEnum.ONE.toString(), tf.getValue());
+        assertEquals(AnotherTestEnum.ONE, tf.getConvertedValue());
+        assertEquals(AnotherTestEnum.ONE,
                 tf.getPropertyDataSource().getValue());
 
         tf.setPropertyDataSource(new ObjectProperty(TestEnum.TWO));
-        Assert.assertEquals(TestEnum.TWO.toString(), tf.getValue());
+        assertEquals(TestEnum.TWO.toString(), tf.getValue());
         tf.setValue(TestEnum.ONE.toString());
-        Assert.assertEquals(TestEnum.ONE.toString(), tf.getValue());
-        Assert.assertEquals(TestEnum.ONE, tf.getConvertedValue());
-        Assert.assertEquals(TestEnum.ONE,
-                tf.getPropertyDataSource().getValue());
+        assertEquals(TestEnum.ONE.toString(), tf.getValue());
+        assertEquals(TestEnum.ONE, tf.getConvertedValue());
+        assertEquals(TestEnum.ONE, tf.getPropertyDataSource().getValue());
 
     }
 }

@@ -16,6 +16,8 @@
 
 package com.vaadin.tests.tb3;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +28,6 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import org.junit.Assert;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -92,9 +93,8 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         String allowRunLocally = getProperty(ALLOW_RUN_LOCALLY_PROPERTY);
         if ((allowRunLocally == null || !allowRunLocally.equals("" + true))
                 && getClass().getAnnotation(RunLocally.class) != null) {
-            Assert.fail(
-                    "@RunLocally annotation is not allowed by default in framework tests. "
-                            + "See file uitest/eclipse-run-selected-test.properties for more information.");
+            fail("@RunLocally annotation is not allowed by default in framework tests. "
+                    + "See file uitest/eclipse-run-selected-test.properties for more information.");
         }
 
         super.setup();

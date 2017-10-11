@@ -1,11 +1,12 @@
 package com.vaadin.tests.components;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -115,7 +116,7 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private void assertHasRightClassNames(WebElement element, String prefix,
             ErrorLevel errorLevel) {
-        Assert.assertTrue("Element must have only one error level class name",
+        assertTrue("Element must have only one error level class name",
                 containsCorrectErrorLevelClassNameOnly(element, prefix,
                         errorLevel));
     }

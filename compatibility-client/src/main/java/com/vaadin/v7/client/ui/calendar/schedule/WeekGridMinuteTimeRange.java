@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.calendar.schedule;
 import java.util.Date;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */

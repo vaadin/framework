@@ -284,7 +284,7 @@ public class Escalator extends Widget
     // todo comments legend
     /*
      * [[optimize]]: There's an opportunity to rewrite the code in such a way
-     * that it _might_ perform better (rememeber to measure, implement,
+     * that it _might_ perform better (remember to measure, implement,
      * re-measure)
      */
     /*
@@ -703,13 +703,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.v7.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.v7.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             var hScroll = esc.@com.vaadin.v7.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.v7.client.widget.escalator.ScrollbarBundle::getElement()();
-
+        
             return $entry(function(e) {
                 var target = e.target;
-
+        
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -730,29 +730,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // Delta mode 0 is in pixels; we don't need to do anything...
-
+        
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if(e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.v7.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.v7.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-
+        
                 // Other delta modes aren't supported
                 if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-
+        
                     // Print warning message
                     esc.@com.vaadin.v7.client.widgets.Escalator::logWarning(*)(msg);
                 }
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.v7.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1559,7 +1559,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Gets the child element that is visually at a certain index
+         * Gets the child element that is visually at a certain index.
          *
          * @param index
          *            the index of the element to retrieve
@@ -4521,11 +4521,11 @@ public class Escalator extends Widget
             }
 
             if (index < 0 || index + numberOfColumns > getColumnCount()) {
-                throw new IndexOutOfBoundsException(
-                        "The given " + "column range (" + index + ".."
-                                + (index + numberOfColumns)
-                                + ") was outside of the current number of columns ("
-                                + getColumnCount() + ")");
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
             }
 
             header.refreshColumns(index, numberOfColumns);
@@ -5022,7 +5022,7 @@ public class Escalator extends Widget
         public Collection<SpacerImpl> getSpacersAfterPx(final double px,
                 final SpacerInclusionStrategy strategy) {
 
-            ArrayList<SpacerImpl> spacers = new ArrayList<SpacerImpl>(
+            List<SpacerImpl> spacers = new ArrayList<SpacerImpl>(
                     rowIndexToSpacer.values());
 
             for (int i = 0; i < spacers.size(); i++) {
@@ -6499,7 +6499,8 @@ public class Escalator extends Widget
         double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle()
-                ? horizontalScrollbar.getScrollbarThickness() : 0;
+                ? horizontalScrollbar.getScrollbarThickness()
+                : 0;
         double spacerHeight = 0; // ignored if HeightMode.ROW
         if (heightMode == HeightMode.UNDEFINED) {
             spacerHeight = body.spacerContainer.getSpacerHeightsSum();
@@ -6636,7 +6637,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Adds a scroll handler to this escalator
+     * Adds a scroll handler to this escalator.
      *
      * @param handler
      *            the scroll handler to add

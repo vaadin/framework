@@ -15,12 +15,13 @@
  */
 package com.vaadin.data.provider;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collections;
 import java.util.concurrent.Future;
 
-import elemental.json.Json;
-import elemental.json.JsonArray;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -31,9 +32,9 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 
+import elemental.json.Json;
+import elemental.json.JsonArray;
 import elemental.json.JsonObject;
-
-import static org.junit.Assert.assertFalse;
 
 /**
  * @author Vaadin Ltd
@@ -134,7 +135,7 @@ public class DataCommunicatorTest {
 
         communicator.extend(ui);
 
-        Assert.assertTrue(dataProvider.isListenerAdded());
+        assertTrue(dataProvider.isListenerAdded());
     }
 
     @Test
@@ -150,7 +151,7 @@ public class DataCommunicatorTest {
 
         communicator.extend(ui);
 
-        Assert.assertTrue(dataProvider.isListenerAdded());
+        assertTrue(dataProvider.isListenerAdded());
 
         communicator.detach();
 
@@ -174,25 +175,25 @@ public class DataCommunicatorTest {
 
         // Generate initial data.
         communicator.beforeClientResponse(true);
-        Assert.assertEquals("DataGenerator generate was not called",
-                TEST_OBJECT, generator.generated);
+        assertEquals("DataGenerator generate was not called", TEST_OBJECT,
+                generator.generated);
         generator.generated = null;
 
         // Make sure data does not get re-generated
         communicator.beforeClientResponse(false);
-        Assert.assertEquals("DataGenerator generate was called again", null,
+        assertEquals("DataGenerator generate was called again", null,
                 generator.generated);
 
         // Refresh a data object to trigger an update.
         dataProvider.refreshItem(TEST_OBJECT);
 
-        Assert.assertEquals("DataGenerator refresh was not called", TEST_OBJECT,
+        assertEquals("DataGenerator refresh was not called", TEST_OBJECT,
                 generator.refreshed);
 
         // Test refreshed data generation
         communicator.beforeClientResponse(false);
-        Assert.assertEquals("DataGenerator generate was not called",
-                TEST_OBJECT, generator.generated);
+        assertEquals("DataGenerator generate was not called", TEST_OBJECT,
+                generator.generated);
     }
 
     @Test
@@ -213,7 +214,8 @@ public class DataCommunicatorTest {
         keys.set(0, key);
         communicator.onDropRows(keys);
         // Replace everything
-        communicator.setDataProvider(new ListDataProvider<>(Collections.singleton(new Object())));
+        communicator.setDataProvider(
+                new ListDataProvider<>(Collections.singleton(new Object())));
         // The communicator does not have to throw exceptions during
         // request finalization
         communicator.beforeClientResponse(false);

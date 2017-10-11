@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -57,10 +59,10 @@ public class HorizontalScrollAfterResizeTest extends GridBasicFeaturesTest {
 
         // With the bug scrolling doesn't happen. Location should be around of
         // the initial scrolling
-        Assert.assertEquals(locationAfterFirstScroll.getY(),
+        assertEquals(locationAfterFirstScroll.getY(),
                 locationAfterSecondScrollcation.getY());
         int delta = 5;
-        Assert.assertTrue(Math.abs(locationAfterFirstScroll.getX()
+        assertTrue(Math.abs(locationAfterFirstScroll.getX()
                 - locationAfterSecondScrollcation.getX()) < delta);
     }
 

@@ -134,7 +134,7 @@ public interface MouseEvents {
         /**
          * Checks if the Alt key was down when the mouse event took place.
          *
-         * @return true if Alt was down when the event occured, false otherwise
+         * @return true if Alt was down when the event occurred, false otherwise
          */
         public boolean isAltKey() {
             return details.isAltKey();
@@ -143,7 +143,7 @@ public interface MouseEvents {
         /**
          * Checks if the Ctrl key was down when the mouse event took place.
          *
-         * @return true if Ctrl was pressed when the event occured, false
+         * @return true if Ctrl was pressed when the event occurred, false
          *         otherwise
          */
         public boolean isCtrlKey() {
@@ -153,7 +153,7 @@ public interface MouseEvents {
         /**
          * Checks if the Meta key was down when the mouse event took place.
          *
-         * @return true if Meta was pressed when the event occured, false
+         * @return true if Meta was pressed when the event occurred, false
          *         otherwise
          */
         public boolean isMetaKey() {
@@ -163,7 +163,7 @@ public interface MouseEvents {
         /**
          * Checks if the Shift key was down when the mouse event took place.
          *
-         * @return true if Shift was pressed when the event occured, false
+         * @return true if Shift was pressed when the event occurred, false
          *         otherwise
          */
         public boolean isShiftKey() {

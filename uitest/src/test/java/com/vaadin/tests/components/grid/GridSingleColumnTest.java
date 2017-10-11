@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -32,7 +34,7 @@ public class GridSingleColumnTest extends MultiBrowserTest {
         openTestURL();
 
         GridCellElement cell = $(GridElement.class).first().getHeaderCell(0, 0);
-        Assert.assertTrue("No header available",
+        assertTrue("No header available",
                 cell.getText().equalsIgnoreCase("header"));
     }
 
@@ -41,7 +43,7 @@ public class GridSingleColumnTest extends MultiBrowserTest {
         setDebug(true);
         openTestURL();
 
-        Assert.assertFalse("Exception when scrolling on init",
+        assertFalse("Exception when scrolling on init",
                 isElementPresent(NotificationElement.class));
     }
 }

@@ -1,11 +1,12 @@
 package com.vaadin.client;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class DateTimeServiceTest {
@@ -77,7 +78,7 @@ public class DateTimeServiceTest {
             Date d = new Date(start + i * MILLISECONDS_PER_DAY);
             int expected = getCalendarISOWeekNr(d);
             int calculated = DateTimeService.getISOWeekNumber(d);
-            Assert.assertEquals(d + " should be week " + expected, expected,
+            assertEquals(d + " should be week " + expected, expected,
                     calculated);
 
         }
@@ -94,11 +95,11 @@ public class DateTimeServiceTest {
             // System.out.println("Sample: " + d);
             int expected = isoWeekNumbers.get(d);
             int calculated = DateTimeService.getISOWeekNumber(d);
-            Assert.assertEquals(
+            assertEquals(
                     d + " should be week " + expected
                             + " (Java Calendar is wrong?)",
                     expected, getCalendarISOWeekNr(d));
-            Assert.assertEquals(d + " should be week " + expected, expected,
+            assertEquals(d + " should be week " + expected, expected,
                     calculated);
 
         }

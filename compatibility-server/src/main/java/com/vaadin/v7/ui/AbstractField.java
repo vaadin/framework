@@ -21,11 +21,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -652,9 +650,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             final Collection<Validator> validators = ((Validatable) dataSource)
                     .getValidators();
             if (validators != null) {
-                for (final Iterator<Validator> i = validators.iterator(); i
-                        .hasNext();) {
-                    addValidator(i.next());
+                for (final Validator v : validators) {
+                    addValidator(v);
                 }
             }
         }
@@ -1766,8 +1763,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField<?> def = designContext
-                .getDefaultInstance(this);
+        AbstractField<?> def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,

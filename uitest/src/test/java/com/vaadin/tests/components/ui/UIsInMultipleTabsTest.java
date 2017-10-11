@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -19,7 +20,7 @@ public class UIsInMultipleTabsTest extends MultiBrowserTest {
     }
 
     private void assertUI(int i) {
-        Assert.assertEquals("Unexpected UI found,", "This is UI number " + i,
+        assertEquals("Unexpected UI found,", "This is UI number " + i,
                 $(LabelElement.class).first().getText());
     }
 }

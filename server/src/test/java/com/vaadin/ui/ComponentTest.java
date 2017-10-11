@@ -15,11 +15,11 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
-
-import org.junit.Assert;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.LegacyCommunicationManager;
@@ -111,8 +111,7 @@ public class ComponentTest {
         JsonObject encodeState = connector.encodeState();
 
         // Collect to HashSet so that order doesn't matter
-        Assert.assertEquals(message,
-                new HashSet<>(Arrays.asList(expectedProperties)),
+        assertEquals(message, new HashSet<>(Arrays.asList(expectedProperties)),
                 new HashSet<>(Arrays.asList(encodeState.keys())));
     }
 

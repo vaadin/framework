@@ -15,38 +15,38 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import java.time.LocalDateTime;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-
 public class InlineDateTimeFieldConstructorTest {
 
     @Test
     public void initiallyEmpty() {
         InlineDateTimeField dateTimeField = new InlineDateTimeField();
-        Assert.assertTrue(dateTimeField.isEmpty());
-        Assert.assertEquals(DateTimeResolution.MINUTE,
-                dateTimeField.getResolution());
+        assertTrue(dateTimeField.isEmpty());
+        assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
         InlineDateTimeField dateTimeField = new InlineDateTimeField(null,
                 LocalDateTime.now());
-        Assert.assertFalse(dateTimeField.isEmpty());
-        Assert.assertEquals(DateTimeResolution.MINUTE,
-                dateTimeField.getResolution());
+        assertFalse(dateTimeField.isEmpty());
+        assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
 
         dateTimeField.clear();
-        Assert.assertTrue(dateTimeField.isEmpty());
+        assertTrue(dateTimeField.isEmpty());
     }
 
     @Test
@@ -55,8 +55,7 @@ public class InlineDateTimeFieldConstructorTest {
                 .mock(HasValue.ValueChangeListener.class);
         InlineDateTimeField dateTimeField = new InlineDateTimeField(
                 valueChangeListener);
-        Assert.assertEquals(DateTimeResolution.MINUTE,
-                dateTimeField.getResolution());
+        assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
 
         dateTimeField.setValue(LocalDateTime.now());
 
@@ -71,8 +70,7 @@ public class InlineDateTimeFieldConstructorTest {
                 .mock(HasValue.ValueChangeListener.class);
         InlineDateTimeField dateTimeField = new InlineDateTimeField("Caption",
                 LocalDateTime.now(), valueChangeListener);
-        Assert.assertEquals(DateTimeResolution.MINUTE,
-                dateTimeField.getResolution());
+        assertEquals(DateTimeResolution.MINUTE, dateTimeField.getResolution());
 
         verify(valueChangeListener, never())
                 .valueChange(Mockito.any(HasValue.ValueChangeEvent.class));

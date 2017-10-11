@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Point;
 
@@ -79,8 +80,8 @@ public class GridLayoutAlignmentsTest extends MultiBrowserTest {
         x++;
         y++;
 
-        Assert.assertEquals("X offset incorrect", x, offsetX);
-        Assert.assertEquals("Y offset incorrect", y, offsetY);
+        assertEquals("X offset incorrect", x, offsetX);
+        assertEquals("Y offset incorrect", y, offsetY);
 
     }
 }

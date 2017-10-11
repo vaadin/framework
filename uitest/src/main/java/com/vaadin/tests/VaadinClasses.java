@@ -82,8 +82,7 @@ public class VaadinClasses {
             try {
                 File f = new File(location.toURI());
                 if (!f.exists()) {
-                    throw new IOException(
-                            "Directory " + f.toString() + " does not exist");
+                    throw new IOException("Directory " + f + " does not exist");
                 }
                 findPackages(f, basePackage, baseClass, classes,
                         ignoredPackages);

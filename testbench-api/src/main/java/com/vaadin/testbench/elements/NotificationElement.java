@@ -30,7 +30,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 @ServerClass("com.vaadin.ui.Notification")
 public class NotificationElement extends AbstractElement {
     /**
-     * Closes a notification
+     * Closes a notification.
      *
      * @throws TimeoutException
      *             If a notification can not be closed and the timeout expires.
@@ -45,7 +45,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns the caption of the Notification element
+     * Returns the caption of the Notification element.
      *
      * @since 8.0
      * @return the caption of the Notification element
@@ -57,7 +57,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns description of the Notification element
+     * Returns description of the Notification element.
      *
      * @return description of the Notification element
      */
@@ -68,7 +68,7 @@ public class NotificationElement extends AbstractElement {
     }
 
     /**
-     * Returns type of the Notification element
+     * Returns type of the Notification element.
      *
      * @return type of the Notification element
      */
@@ -77,7 +77,7 @@ public class NotificationElement extends AbstractElement {
         // the notification
         // To get type we search for css rules which represent notification type
         // This map maps css style rule to type of a notification
-        HashMap<String, String> styleToTypeMap = initStyleToTypeMap();
+        Map<String, String> styleToTypeMap = initStyleToTypeMap();
         for (Map.Entry<String, String> entry : styleToTypeMap.entrySet()) {
             String notifType = entry.getKey();
             // Check notification has css style which describes notification
@@ -89,8 +89,8 @@ public class NotificationElement extends AbstractElement {
         return "";
     }
 
-    private HashMap<String, String> initStyleToTypeMap() {
-        HashMap<String, String> styleToType = new HashMap<String, String>();
+    private Map<String, String> initStyleToTypeMap() {
+        Map<String, String> styleToType = new HashMap<String, String>();
         styleToType.put("v-Notification-error", "error");
         styleToType.put("v-Notification-warning", "warning");
         styleToType.put("v-Notification-humanized", "humanized");

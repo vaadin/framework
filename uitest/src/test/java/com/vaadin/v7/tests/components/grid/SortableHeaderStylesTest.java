@@ -15,7 +15,9 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -27,9 +29,9 @@ public class SortableHeaderStylesTest extends SingleBrowserTest {
     public void testSortableHeaderStyles() {
         openTestURL();
 
-        Assert.assertFalse(hasSortableStyle(0));
+        assertFalse(hasSortableStyle(0));
         for (int i = 1; i < 8; i++) {
-            Assert.assertTrue(hasSortableStyle(i));
+            assertTrue(hasSortableStyle(i));
         }
 
         OptionGroupElement sortableSelector = $(OptionGroupElement.class)
@@ -37,11 +39,11 @@ public class SortableHeaderStylesTest extends SingleBrowserTest {
 
         // Toggle sortability
         sortableSelector.selectByText("lastName");
-        Assert.assertFalse(hasSortableStyle(3));
+        assertFalse(hasSortableStyle(3));
 
         // Toggle back
         sortableSelector.selectByText("lastName");
-        Assert.assertTrue(hasSortableStyle(3));
+        assertTrue(hasSortableStyle(3));
     }
 
     private boolean hasSortableStyle(int column) {

@@ -16,7 +16,6 @@
 package com.vaadin.v7.client.ui.combobox;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
@@ -126,8 +125,8 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
         List<FilterSelectSuggestion> newSuggestions = new ArrayList<FilterSelectSuggestion>();
 
-        for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
-            final UIDL optionUidl = (UIDL) i.next();
+        for (final Object child : options) {
+            final UIDL optionUidl = (UIDL) child;
             final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
                     optionUidl);
             newSuggestions.add(suggestion);

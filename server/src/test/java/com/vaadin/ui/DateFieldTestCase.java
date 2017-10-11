@@ -3,10 +3,11 @@ package com.vaadin.ui;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,14 +34,14 @@ public class DateFieldTestCase {
     public void rangeStartIsAcceptedAsValue() {
         dateField.setRangeStart(date);
         dateField.setValue(date);
-        Assert.assertNull(dateField.getComponentError());
+        assertNull(dateField.getComponentError());
     }
 
     @Test
     public void belowRangeStartIsNotAcceptedAsValue() {
         dateField.setRangeStart(date);
         dateField.setValue(date.minusDays(1));
-        Assert.assertNotNull(dateField.getComponentError());
+        assertNotNull(dateField.getComponentError());
     }
 
     @Test
@@ -54,13 +55,13 @@ public class DateFieldTestCase {
     public void rangeEndIsAcceptedAsValue() {
         dateField.setRangeEnd(date);
         dateField.setValue(date);
-        Assert.assertNull(dateField.getComponentError());
+        assertNull(dateField.getComponentError());
     }
 
     @Test
     public void aboveRangeEndIsNotAcceptedAsValue() {
         dateField.setRangeEnd(date);
         dateField.setValue(date.plusDays(1));
-        Assert.assertNotNull(dateField.getComponentError());
+        assertNotNull(dateField.getComponentError());
     }
 }

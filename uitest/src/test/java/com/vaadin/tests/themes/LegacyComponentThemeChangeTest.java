@@ -15,19 +15,21 @@
  */
 package com.vaadin.tests.themes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.ComboBoxElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.EmbeddedElement;
 import com.vaadin.testbench.elements.MenuBarElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.testbench.parallel.BrowserUtil;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -115,8 +117,7 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
         // Something in Selenium normalizes the image so it becomes
         // "/themes/runo/icons/16/ok.png" here although it is
         // "/themes/<currenttheme>/../runo/icons/16/ok.png" in the browser
-        Assert.assertEquals(getThemeURL("runo") + "icons/16/ok.png",
-                runoImageSrc);
+        assertEquals(getThemeURL("runo") + "icons/16/ok.png", runoImageSrc);
 
         // The other image should change with the theme
         WebElement themeImage = $(MenuBarElement.class).first()
@@ -131,7 +132,7 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
         WebElement subMenuRuno = subMenu
                 .findElement(By.xpath(".//span[text()='runo']/img"));
         String subMenuRunoImageSrc = subMenuRuno.getAttribute("src");
-        Assert.assertEquals(getThemeURL("runo") + "icons/16/ok.png",
+        assertEquals(getThemeURL("runo") + "icons/16/ok.png",
                 subMenuRunoImageSrc);
         WebElement subMenuThemeImage = subMenu
                 .findElement(By.xpath(".//span[text()='selectedtheme']/img"));
@@ -142,7 +143,7 @@ public class LegacyComponentThemeChangeTest extends MultiBrowserTest {
             String theme) {
         String value = element.getAttribute(attribute);
         String expectedPrefix = getThemeURL(theme);
-        Assert.assertTrue(
+        assertTrue(
                 "Attribute " + attribute + "='" + value
                         + "' does not start with " + expectedPrefix,
                 value.startsWith(expectedPrefix));

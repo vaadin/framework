@@ -52,6 +52,7 @@ import com.vaadin.server.SystemMessages;
 import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.UIClassSelectionEvent;
+import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -59,6 +60,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -267,6 +269,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
             return (Class<? extends UI>) classToRun;
         }
+
+        @Override
+        public UI createInstance(UICreateEvent event) {
+            event.getRequest().setAttribute(ApplicationConstants.UI_ROOT_PATH,
+                    "/" + event.getUIClass().getName());
+            return super.createInstance(event);
+        }
     }
 
     // TODO Don't need to use a data object now that there's only one field
@@ -295,8 +304,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      *         context, runner, application classname
      */
     private static URIS getApplicationRunnerURIs(HttpServletRequest request) {
-        final String[] urlParts = request.getRequestURI().toString()
-                .split("\\/");
+        final String[] urlParts = request.getRequestURI().split("\\/");
         // String runner = null;
         URIS uris = new URIS();
         String applicationClassname = null;

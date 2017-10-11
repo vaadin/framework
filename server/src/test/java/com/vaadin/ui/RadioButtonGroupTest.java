@@ -15,9 +15,12 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +45,7 @@ public class RadioButtonGroupTest {
 
         radioButtonGroup.addSelectionListener(event -> {
             listenerCount.incrementAndGet();
-            Assert.assertFalse(event.isUserOriginated());
+            assertFalse(event.isUserOriginated());
         });
 
         radioButtonGroup.setValue("First");
@@ -51,7 +54,7 @@ public class RadioButtonGroupTest {
         radioButtonGroup.setValue(null);
         radioButtonGroup.setValue(null);
 
-        Assert.assertEquals(3, listenerCount.get());
+        assertEquals(3, listenerCount.get());
     }
 
     @Test
@@ -60,7 +63,7 @@ public class RadioButtonGroupTest {
 
         radioButtonGroup.addSelectionListener(event -> {
             listenerCount.incrementAndGet();
-            Assert.assertTrue(event.isUserOriginated());
+            assertTrue(event.isUserOriginated());
         });
 
         SelectionServerRpc rpc = ServerRpcManager.getRpcProxy(radioButtonGroup,
@@ -70,7 +73,7 @@ public class RadioButtonGroupTest {
         rpc.select(getItemKey("Second"));
         rpc.deselect(getItemKey("Second"));
 
-        Assert.assertEquals(3, listenerCount.get());
+        assertEquals(3, listenerCount.get());
     }
 
     private String getItemKey(String dataObject) {

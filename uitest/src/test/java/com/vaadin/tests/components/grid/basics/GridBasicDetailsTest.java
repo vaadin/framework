@@ -56,7 +56,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
         try {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
 
         getGridElement().getDetails(0);
@@ -77,7 +77,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
         getGridElement().getDetails(0);
     }
@@ -100,7 +100,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             selectMenuPath(OPEN_FIRST_ITEM_DETAILS);
             getGridElement().scroll(0);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
         getGridElement().getDetails(0);
     }
@@ -135,7 +135,7 @@ public class GridBasicDetailsTest extends GridBasicsTest {
             // scroll somewhere to hit uncached rows
             getGridElement().scrollToRow(101);
         } catch (NoSuchElementException e) {
-            Assert.fail("Unable to set up details.");
+            fail("Unable to set up details.");
         }
 
         // this should throw

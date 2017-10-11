@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
@@ -48,6 +49,6 @@ public class TextFieldValueGoesMissingTest extends MultiBrowserTest {
 
         new Actions(getDriver()).contextClick(textfield).perform();
 
-        Assert.assertEquals("test", textfield.getValue());
+        assertEquals("test", textfield.getValue());
     }
 }

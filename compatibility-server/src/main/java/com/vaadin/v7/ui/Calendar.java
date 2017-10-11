@@ -239,7 +239,7 @@ public class Calendar extends AbstractLegacyComponent
     private Integer customFirstDayOfWeek;
 
     /**
-     * Returns the logger for the calendar
+     * Returns the logger for the calendar.
      */
     protected Logger getLogger() {
         return Logger.getLogger(Calendar.class.getName());
@@ -1056,7 +1056,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Is the user allowed to trigger events which alters the events
+     * Is the user allowed to trigger events which alters the events.
      *
      * @return true if the client is allowed to send changes to server
      * @see #isEventClickAllowed()
@@ -1095,7 +1095,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Fires an event move event to all server side move listerners
+     * Fires an event move event to all server side move listeners.
      *
      * @param index
      *            The index of the event in the events list
@@ -1308,7 +1308,7 @@ public class Calendar extends AbstractLegacyComponent
 
     /**
      * Finds the first day of the week and returns a day representing the start
-     * of that day
+     * of that day.
      *
      * @param start
      *            The actual date
@@ -1339,7 +1339,7 @@ public class Calendar extends AbstractLegacyComponent
 
     /**
      * Finds the last day of the week and returns a day representing the end of
-     * that day
+     * that day.
      *
      * @param end
      *            The actual date
@@ -1496,7 +1496,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Get the currently active drop handler
+     * Get the currently active drop handler.
      */
     @Override
     public DropHandler getDropHandler() {
@@ -1667,7 +1667,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Adds an action handler to the calender that handles event produced by the
+     * Adds an action handler to the calendar that handles event produced by the
      * context menu.
      *
      * <p>
@@ -1713,7 +1713,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Is the calendar in a mode where all days of the month is shown
+     * Is the calendar in a mode where all days of the month is shown.
      *
      * @return Returns true if calendar is in monthly mode and false if it is in
      *         weekly mode

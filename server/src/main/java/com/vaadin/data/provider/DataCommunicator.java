@@ -370,7 +370,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @since 8.1
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected List<T> fetchItemsWithRange(int offset, int limit) {
+    public List<T> fetchItemsWithRange(int offset, int limit) {
         return (List<T>) getDataProvider().fetch(new Query(offset, limit,
                 backEndSorting, inMemorySorting, filter))
                 .collect(Collectors.toList());
@@ -587,15 +587,18 @@ public class DataCommunicator<T> extends AbstractExtension {
      * <p>
      * This method is called from the constructor.
      *
-     * @param identifierGetter has to return a unique key for every bean, and the returned key has to
-     *                         follow general {@code hashCode()} and {@code equals()} contract,
-     *                         see {@link Object#hashCode()} for details.
+     * @param identifierGetter
+     *            has to return a unique key for every bean, and the returned
+     *            key has to follow general {@code hashCode()} and
+     *            {@code equals()} contract, see {@link Object#hashCode()} for
+     *            details.
      * @return key mapper
      *
      * @since 8.1
      *
      */
-    protected DataKeyMapper<T> createKeyMapper(ValueProvider<T, Object> identifierGetter) {
+    protected DataKeyMapper<T> createKeyMapper(
+            ValueProvider<T, Object> identifierGetter) {
         return new KeyMapper<T>(identifierGetter);
     }
 
@@ -766,9 +769,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     private void hardReset() {
-        if (reset) {
-            return;
-        }
         reset = true;
         markAsDirty();
     }
@@ -781,7 +781,8 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     /**
-     * Sets a new {@code DataProvider} and refreshes all the internal structures
+     * Sets a new {@code DataProvider} and refreshes all the internal
+     * structures.
      *
      * @param dataProvider
      * @since 8.1

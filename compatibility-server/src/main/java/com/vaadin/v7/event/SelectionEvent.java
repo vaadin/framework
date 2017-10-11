@@ -117,7 +117,7 @@ public class SelectionEvent extends EventObject {
     @Deprecated
     public interface SelectionNotifier extends Serializable {
         /**
-         * Registers a new selection listener
+         * Registers a new selection listener.
          *
          * @param listener
          *            the listener to register
@@ -125,7 +125,7 @@ public class SelectionEvent extends EventObject {
         void addSelectionListener(SelectionListener listener);
 
         /**
-         * Removes a previously registered selection change listener
+         * Removes a previously registered selection change listener.
          *
          * @param listener
          *            the listener to remove

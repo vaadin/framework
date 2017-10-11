@@ -53,7 +53,7 @@ public class OptionGroups extends AbstractSelectTestCase<OptionGroup> {
 
     private void createDisabledItemsMultiToggle(String category) {
         for (Object id : getComponent().getItemIds()) {
-            createBooleanAction(id.toString() + " - enabled", category, true,
+            createBooleanAction(id + " - enabled", category, true,
                     enabledItemCommand, id);
         }
     }

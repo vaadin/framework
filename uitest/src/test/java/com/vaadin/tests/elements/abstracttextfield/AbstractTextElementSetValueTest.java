@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.elements.abstracttextfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,7 +66,7 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
         // we can type any string in date field element
         elem.setValue(TYPED_STRING);
         // invalid values should stay unchanged
-        Assert.assertEquals(TYPED_STRING, elem.getValue());
+        assertEquals(TYPED_STRING, elem.getValue());
     }
 
     // helper methods
@@ -73,15 +74,15 @@ public class AbstractTextElementSetValueTest extends MultiBrowserTest {
     private void checkType(AbstractTextFieldElement elem,
             LabelElement eventCount) {
         // check first that the initial value is set
-        Assert.assertEquals(AbstractTextElementSetValue.INITIAL_VALUE,
+        assertEquals(AbstractTextElementSetValue.INITIAL_VALUE,
                 elem.getValue());
         elem.setValue(TYPED_STRING);
 
         // check that typed value is the same
-        Assert.assertEquals(TYPED_STRING, elem.getValue());
+        assertEquals(TYPED_STRING, elem.getValue());
 
         // checks that there was only one change value event
-        Assert.assertEquals("1", eventCount.getText());
+        assertEquals("1", eventCount.getText());
 
     }
 }

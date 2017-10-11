@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -306,12 +308,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @return the created deployment configuration
      *
      * @throws ServletException
-     *            if construction of the {@link Properties} for
-     *            {@link #createDeploymentConfiguration(Properties)} fails
+     *             if construction of the {@link Properties} for
+     *             {@link #createDeploymentConfiguration(Properties)} fails
      *
-     * @since
+     * @since 8.2
      */
-    protected DeploymentConfiguration createDeploymentConfiguration() throws ServletException {
+    protected DeploymentConfiguration createDeploymentConfiguration()
+            throws ServletException {
         Properties initParameters = new Properties();
 
         readUiFromEnclosingClass(initParameters);
@@ -363,11 +366,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @return the created vaadin servlet service
      *
      * @throws ServletException
-     *            if creating a deployment configuration fails
+     *             if creating a deployment configuration fails
      * @throws ServiceException
-     *            if creating the vaadin servlet service fails
+     *             if creating the vaadin servlet service fails
      *
-     * @since
+     * @since 8.2
      */
     protected VaadinServletService createServletService()
             throws ServletException, ServiceException {
@@ -383,7 +386,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @return the created vaadin servlet service
      *
      * @throws ServiceException
-     *            if creating the vaadin servlet service fails
+     *             if creating the vaadin servlet service fails
      *
      * @since 7.0.0
      */
@@ -667,7 +670,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         final OutputStream out = response.getOutputStream();
         try ( // Set the response type
                 PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8")))) {
+                        new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print(output);
             outWriter.flush();
         }
@@ -1396,7 +1399,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 + request.getServerName()
                 + (request.isSecure() && request.getServerPort() == 443
                         || !request.isSecure() && request.getServerPort() == 80
-                                ? "" : ":" + request.getServerPort())
+                                ? ""
+                                : ":" + request.getServerPort())
                 + request.getRequestURI());
         String servletPath = "";
         if (request
@@ -1510,7 +1514,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 safe.append("&#");
                 safe.append((int) c);
-                safe.append(";");
+                safe.append(';');
             }
         }
 

@@ -267,7 +267,7 @@ public class GridSelectionTest extends GridBasicsTest {
         assertFalse(
                 "Unexpected NullPointerException when removing selected rows",
                 logContainsText(
-                        "Exception occured, java.lang.NullPointerException: null"));
+                        "Exception occurred, java.lang.NullPointerException: null"));
     }
 
     @Test
@@ -455,10 +455,10 @@ public class GridSelectionTest extends GridBasicsTest {
         for (int i = 0; i < 10; i++) {
             boolean rowSelected = grid.getRow(i).isSelected();
             if (expected.contains(i)) {
-                Assert.assertTrue("Expected row " + i + " to be selected",
+                assertTrue("Expected row " + i + " to be selected",
                         rowSelected);
             } else {
-                Assert.assertFalse("Expected row " + i + " not to be selected",
+                assertFalse("Expected row " + i + " not to be selected",
                         rowSelected);
             }
         }

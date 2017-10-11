@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.listselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.select.AbstractSelectState;
@@ -31,7 +32,7 @@ public class ListSelectStateTest {
     public void getState_listSelectHasCustomState() {
         TestListSelect select = new TestListSelect();
         AbstractSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class", AbstractSelectState.class,
+        assertEquals("Unexpected state class", AbstractSelectState.class,
                 state.getClass());
     }
 

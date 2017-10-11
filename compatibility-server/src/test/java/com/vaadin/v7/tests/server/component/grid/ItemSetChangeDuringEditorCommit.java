@@ -1,6 +1,9 @@
 package com.vaadin.v7.tests.server.component.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
@@ -63,21 +66,21 @@ public class ItemSetChangeDuringEditorCommit {
                 .setValue("New last");
         grid.saveEditor();
 
-        Assert.assertEquals("New first", indexedContainer
+        assertEquals("New first", indexedContainer
                 .getContainerProperty(grid.getEditedItemId(), "firstName")
                 .getValue());
-        Assert.assertEquals("New last", indexedContainer
+        assertEquals("New last", indexedContainer
                 .getContainerProperty(grid.getEditedItemId(), "lastName")
                 .getValue());
 
         grid.cancelEditor();
-        Assert.assertFalse(grid.isEditorActive());
+        assertFalse(grid.isEditorActive());
 
         editItem(grid, 0);
-        Assert.assertEquals("New first",
+        assertEquals("New first",
                 ((TextField) grid.getEditorFieldGroup().getField("firstName"))
                         .getValue());
-        Assert.assertEquals("New last",
+        assertEquals("New last",
                 ((TextField) grid.getEditorFieldGroup().getField("lastName"))
                         .getValue());
         saveEditor(grid, 0);
@@ -90,7 +93,7 @@ public class ItemSetChangeDuringEditorCommit {
         invocation.setParameters(new Object[] { itemIndex });
         grid.getRpcManager(EditorServerRpc.class.getName())
                 .applyInvocation(invocation);
-        Assert.assertTrue(grid.isEditorActive());
+        assertTrue(grid.isEditorActive());
 
     }
 

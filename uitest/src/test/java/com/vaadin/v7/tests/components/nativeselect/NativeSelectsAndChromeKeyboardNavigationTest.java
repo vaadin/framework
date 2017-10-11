@@ -15,9 +15,10 @@
  */
 package com.vaadin.v7.tests.components.nativeselect;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -55,9 +56,9 @@ public class NativeSelectsAndChromeKeyboardNavigationTest
 
         String bodytext = getDriver().findElement(By.tagName("body")).getText();
 
-        Assert.assertTrue(bodytext.contains("new value: 'Item 1'"));
-        Assert.assertTrue(bodytext.contains("new value: 'Item 2'"));
-        Assert.assertTrue(bodytext.contains("new value: 'Item 3'"));
+        assertTrue(bodytext.contains("new value: 'Item 1'"));
+        assertTrue(bodytext.contains("new value: 'Item 2'"));
+        assertTrue(bodytext.contains("new value: 'Item 3'"));
 
     }
 

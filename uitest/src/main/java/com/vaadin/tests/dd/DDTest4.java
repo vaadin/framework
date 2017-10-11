@@ -122,9 +122,7 @@ public class DDTest4 extends TestBase {
                                 item.getItemProperty(propId).getValue());
                     }
 
-                    // TODO Auto-generated method stub
                 } catch (CloneNotSupportedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 

@@ -52,8 +52,9 @@ import com.vaadin.shared.ui.ErrorLevel;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The validation is performed
- * outside components, see {@link Binder}.{@code withValidator(...)}
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The
+ *             validation is performed outside components, see
+ *             {@link Binder}.{@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
@@ -140,8 +141,8 @@ public interface Validator extends Serializable {
                 return false;
             }
             if (causes != null) {
-                for (int i = 0; i < causes.length; i++) {
-                    if (!causes[i].isInvisible()) {
+                for (InvalidValueException e : causes) {
+                    if (!e.isInvisible()) {
                         return false;
                     }
                 }

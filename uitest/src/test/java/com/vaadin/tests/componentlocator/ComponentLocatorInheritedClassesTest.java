@@ -1,6 +1,7 @@
 package com.vaadin.tests.componentlocator;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -20,18 +21,18 @@ public class ComponentLocatorInheritedClassesTest extends SingleBrowserTest {
     @Test
     public void label_finds_all_three() {
         openTestURL();
-        Assert.assertEquals(3, $(LabelElement.class).all().size());
+        assertEquals(3, $(LabelElement.class).all().size());
     }
 
     @Test
     public void defaultlabel_finds_two() {
         openTestURL();
-        Assert.assertEquals(2, $(DefaultLabelElement.class).all().size());
+        assertEquals(2, $(DefaultLabelElement.class).all().size());
     }
 
     @Test
     public void mycustomlabel_finds_one() {
         openTestURL();
-        Assert.assertEquals(1, $(MyCustomLabelElement.class).all().size());
+        assertEquals(1, $(MyCustomLabelElement.class).all().size());
     }
 }

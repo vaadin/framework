@@ -1,8 +1,9 @@
 package com.vaadin.tests.extensions;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -26,7 +27,7 @@ public class IframeIsOpenedInNonIOSTest extends MultiBrowserTest {
                     .contains(IframeIsOpenedInNonIOS.FILE_NAME);
         }
 
-        Assert.assertTrue("page doesn't contain iframe with the file",
+        assertTrue("page doesn't contain iframe with the file",
                 containsFileIframe);
     }
 

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.application;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -29,6 +30,6 @@ public class InitiallyDeferredLoadingTest extends SingleBrowserTest {
 
         WebElement deferredComponent = findElement(By.id("deferred"));
 
-        Assert.assertEquals("DeferredConnector", deferredComponent.getText());
+        assertEquals("DeferredConnector", deferredComponent.getText());
     }
 }

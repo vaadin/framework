@@ -45,6 +45,13 @@ public class TreeGrid extends Grid<JsonObject> {
     private String depthStyleNamePrefix;
 
     /**
+     * Creates a new instance.
+     */
+    public TreeGrid() {
+        setAriaRole("treegrid");
+    }
+
+    /**
      * Body updater that adds additional style to each row containing depth
      * information inside the hierarchy.
      */
@@ -91,20 +98,21 @@ public class TreeGrid extends Grid<JsonObject> {
 
     /**
      * Method for accessing the private {@link Grid#focusCell(int, int)} method
-     * from this package
+     * from this package.
      */
-    public native void focusCell(int rowIndex, int columnIndex)/*-{
+    public native void focusCell(int rowIndex, int columnIndex)
+    /*-{
         this.@com.vaadin.client.widgets.Grid::focusCell(II)(rowIndex, columnIndex);
     }-*/;
 
     /**
      * Method for accessing the private
-     * {@link Grid#isElementInChildWidget(Element)} method from this package
+     * {@link Grid#isElementInChildWidget(Element)} method from this package.
      */
-    public native boolean isElementInChildWidget(Element e)/*-{
+    public native boolean isElementInChildWidget(Element e)
+    /*-{
         return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
     }-*/;
-
 
     @Override
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {

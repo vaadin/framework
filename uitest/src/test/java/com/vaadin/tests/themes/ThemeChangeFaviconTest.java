@@ -15,10 +15,12 @@
  */
 package com.vaadin.tests.themes;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -62,10 +64,10 @@ public class ThemeChangeFaviconTest extends SingleBrowserTest {
         List<WebElement> elements = findElements(
                 By.cssSelector("link[rel~=\"icon\"]"));
 
-        Assert.assertEquals(2, elements.size());
+        assertEquals(2, elements.size());
 
         for (WebElement element : elements) {
-            Assert.assertTrue(
+            assertTrue(
                     element.getAttribute("href") + " does not end with "
                             + faviconUrl,
                     element.getAttribute("href").endsWith(faviconUrl));

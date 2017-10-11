@@ -13,7 +13,7 @@ and `ComponentContainer`{empty}s. ComponentContainers are Components in
 themselves which can also contain other components. If you are about to
 implement a component that contains other components, then you'll get a
 headstart by extending Vaadin's `ComponentContainer`. The biggest feature
-is in tranferring the list of server side components from your component
+is in transferring the list of server side components from your component
 to the client. Here's how you do it.
 
 [[server-side]]

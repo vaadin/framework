@@ -2,6 +2,8 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -127,11 +128,11 @@ public class GridSingleSelectionModelTest {
 
         customGrid.getDataCommunicator().beforeClientResponse(true);
 
-        Assert.assertFalse("Item should have been updated as selected",
+        assertFalse("Item should have been updated as selected",
                 customModel.generatedData.get("Foo"));
-        Assert.assertFalse("Item should have been updated as NOT selected",
+        assertFalse("Item should have been updated as NOT selected",
                 customModel.generatedData.get("Bar"));
-        Assert.assertFalse("Item should have been updated as NOT selected",
+        assertFalse("Item should have been updated as NOT selected",
                 customModel.generatedData.get("Baz"));
 
         customModel.generatedData.clear();
@@ -139,11 +140,11 @@ public class GridSingleSelectionModelTest {
         customGrid.getSelectionModel().select("Foo");
         customGrid.getDataCommunicator().beforeClientResponse(false);
 
-        Assert.assertTrue("Item should have been updated as selected",
+        assertTrue("Item should have been updated as selected",
                 customModel.generatedData.get("Foo"));
-        Assert.assertFalse("Item should have NOT been updated",
+        assertFalse("Item should have NOT been updated",
                 customModel.generatedData.containsKey("Bar"));
-        Assert.assertFalse("Item should have NOT been updated",
+        assertFalse("Item should have NOT been updated",
                 customModel.generatedData.containsKey("Baz"));
 
         // switch to another selection model to cause event
@@ -154,11 +155,11 @@ public class GridSingleSelectionModelTest {
         // since the selection model has been removed, it is no longer a data
         // generator for the data communicator, would need to verify somehow
         // that row is not marked as selected anymore ? (done in UI tests)
-        Assert.assertTrue(customModel.generatedData.isEmpty()); // at least
-                                                                // removed
-                                                                // selection
-                                                                // model is not
-                                                                // triggered
+        assertTrue(customModel.generatedData.isEmpty()); // at least
+                                                         // removed
+                                                         // selection
+                                                         // model is not
+                                                         // triggered
     }
 
     @Test
@@ -167,19 +168,19 @@ public class GridSingleSelectionModelTest {
         gridWithStrings.setItems("Foo", "Bar", "Baz");
 
         GridSelectionModel<String> model = gridWithStrings.getSelectionModel();
-        Assert.assertFalse(model.isSelected("Foo"));
+        assertFalse(model.isSelected("Foo"));
 
         model.select("Foo");
-        Assert.assertTrue(model.isSelected("Foo"));
-        Assert.assertEquals(Optional.of("Foo"), model.getFirstSelectedItem());
+        assertTrue(model.isSelected("Foo"));
+        assertEquals(Optional.of("Foo"), model.getFirstSelectedItem());
 
         model.select("Bar");
-        Assert.assertFalse(model.isSelected("Foo"));
-        Assert.assertTrue(model.isSelected("Bar"));
+        assertFalse(model.isSelected("Foo"));
+        assertTrue(model.isSelected("Bar"));
 
         model.deselect("Bar");
-        Assert.assertFalse(model.isSelected("Bar"));
-        Assert.assertFalse(model.getFirstSelectedItem().isPresent());
+        assertFalse(model.isSelected("Bar"));
+        assertFalse(model.getFirstSelectedItem().isPresent());
     }
 
     @Test
@@ -271,21 +272,21 @@ public class GridSingleSelectionModelTest {
     public void getSelectedItem() {
         selectionModel.setSelectedItem(PERSON_B);
 
-        Assert.assertEquals(PERSON_B, selectionModel.getSelectedItem().get());
+        assertEquals(PERSON_B, selectionModel.getSelectedItem().get());
 
         selectionModel.deselect(PERSON_B);
-        Assert.assertFalse(selectionModel.getSelectedItem().isPresent());
+        assertFalse(selectionModel.getSelectedItem().isPresent());
     }
 
     @Test
     public void select_deselect_getSelectedItem() {
         selectionModel.select(PERSON_C);
 
-        Assert.assertEquals(PERSON_C, selectionModel.getSelectedItem().get());
+        assertEquals(PERSON_C, selectionModel.getSelectedItem().get());
 
         selectionModel.deselect(PERSON_C);
 
-        Assert.assertFalse(selectionModel.getSelectedItem().isPresent());
+        assertFalse(selectionModel.getSelectedItem().isPresent());
     }
 
     @SuppressWarnings({ "serial" })
@@ -313,18 +314,18 @@ public class GridSingleSelectionModelTest {
         AtomicReference<ValueChangeEvent<?>> event = new AtomicReference<>();
         Registration actualRegistration = select
                 .addSingleSelectionListener(evt -> {
-                    Assert.assertNull(event.get());
+                    assertNull(event.get());
                     event.set(evt);
                 });
-        Assert.assertSame(registration, actualRegistration);
+        assertSame(registration, actualRegistration);
 
         selectionListener.get().selectionChange(new SingleSelectionEvent<>(grid,
                 select.asSingleSelect(), null, true));
 
-        Assert.assertEquals(grid, event.get().getComponent());
-        Assert.assertEquals(value, event.get().getValue());
-        Assert.assertEquals(null, event.get().getOldValue());
-        Assert.assertTrue(event.get().isUserOriginated());
+        assertEquals(grid, event.get().getComponent());
+        assertEquals(value, event.get().getValue());
+        assertEquals(null, event.get().getOldValue());
+        assertTrue(event.get().isUserOriginated());
     }
 
 }

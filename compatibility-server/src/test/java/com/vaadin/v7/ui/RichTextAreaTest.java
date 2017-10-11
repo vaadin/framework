@@ -15,7 +15,9 @@
  */
 package com.vaadin.v7.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -24,24 +26,24 @@ public class RichTextAreaTest {
     @Test
     public void initiallyEmpty() {
         RichTextArea tf = new RichTextArea();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
     @Test
     public void emptyAfterClearUsingPDS() {
         RichTextArea tf = new RichTextArea(new ObjectProperty<String>("foo"));
-        Assert.assertFalse(tf.isEmpty());
+        assertFalse(tf.isEmpty());
         tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
     @Test
     public void emptyAfterClear() {
         RichTextArea tf = new RichTextArea();
         tf.setValue("foobar");
-        Assert.assertFalse(tf.isEmpty());
+        assertFalse(tf.isEmpty());
         tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
 }

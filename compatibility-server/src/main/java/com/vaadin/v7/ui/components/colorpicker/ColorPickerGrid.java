@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.ui.components.colorpicker;
 
-import java.awt.Point;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +33,24 @@ import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridState;
 @Deprecated
 public class ColorPickerGrid extends AbstractComponent
         implements ColorSelector {
+
+    private static class Point implements Serializable {
+        private int x;
+        private int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+    }
 
     private static final String STYLENAME = "v-colorpicker-grid";
 
@@ -150,8 +168,8 @@ public class ColorPickerGrid extends AbstractComponent
                 String color = c.getCSS();
 
                 colors[counter] = color;
-                XCoords[counter] = String.valueOf((int) p.getX());
-                YCoords[counter] = String.valueOf((int) p.getY());
+                XCoords[counter] = String.valueOf(p.getX());
+                YCoords[counter] = String.valueOf(p.getY());
                 counter++;
             }
             getState().changedColor = colors;
@@ -184,7 +202,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Adds a color change listener
+     * Adds a color change listener.
      *
      * @param listener
      *            The color change listener
@@ -200,7 +218,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Removes a color change listener
+     * Removes a color change listener.
      *
      * @param listener
      *            The listener
@@ -243,7 +261,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Notifies the listeners that a color change has occurred
+     * Notifies the listeners that a color change has occurred.
      *
      * @param color
      *            The color which it changed to

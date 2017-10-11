@@ -67,7 +67,7 @@ import elemental.json.JsonObject;
  */
 public class ConnectorTracker implements Serializable {
 
-    private final HashMap<String, ClientConnector> connectorIdToConnector = new HashMap<>();
+    private final Map<String, ClientConnector> connectorIdToConnector = new HashMap<>();
     private final Set<ClientConnector> dirtyConnectors = new HashSet<>();
     private final Set<ClientConnector> uninitializedConnectors = new HashSet<>();
 
@@ -271,7 +271,7 @@ public class ConnectorTracker implements Serializable {
      *
      * @param force
      *            {@code true} to force cleaning
-     * @since
+     * @since 8.2
      */
     public void cleanConnectorMap(boolean force) {
         if (force || !dirtyConnectors.isEmpty()) {
@@ -399,10 +399,9 @@ public class ConnectorTracker implements Serializable {
     }
 
     private static boolean hasVisibleChild(ClientConnector parent) {
-        Iterator<? extends ClientConnector> iterator = AbstractClientConnector
-                .getAllChildrenIterable(parent).iterator();
-        while (iterator.hasNext()) {
-            ClientConnector child = iterator.next();
+        Iterable<? extends ClientConnector> iterable = AbstractClientConnector
+                .getAllChildrenIterable(parent);
+        for (ClientConnector child : iterable) {
             if (LegacyCommunicationManager.isConnectorVisibleToClient(child)) {
                 return true;
             }
@@ -729,12 +728,11 @@ public class ConnectorTracker implements Serializable {
     }
 
     /* Special serialization to JsonObjects which are not serializable */
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         // Convert JsonObjects in diff state to String representation as
         // JsonObject is not serializable
-        HashMap<ClientConnector, String> stringDiffStates = new HashMap<>(
+        Map<ClientConnector, String> stringDiffStates = new HashMap<>(
                 diffStates.size() * 2);
         for (ClientConnector key : diffStates.keySet()) {
             stringDiffStates.put(key, diffStates.get(key).toString());
@@ -751,7 +749,7 @@ public class ConnectorTracker implements Serializable {
         // JsonObject is not serializable
         diffStates = new HashMap<>();
         @SuppressWarnings("unchecked")
-        HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
+        Map<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
                 .readObject();
         diffStates = new HashMap<>(stringDiffStates.size() * 2);
         for (ClientConnector key : stringDiffStates.keySet()) {

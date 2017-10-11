@@ -69,7 +69,6 @@ public class ResourceDownload extends TestBase {
                 try {
                     return new FileInputStream("FIXME C:/temp/file.xls");
                 } catch (FileNotFoundException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     return null;
                 }

@@ -112,7 +112,7 @@ public class ContainerEventProvider
     private Object allDayProperty = ALL_DAY_PROPERTY;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param container
      *            Container to use as a data source.
@@ -123,7 +123,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Set the container data source
+     * Set the container data source.
      *
      * @param container
      *            The container to use as datasource
@@ -138,7 +138,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Returns the container used as data source
+     * Returns the container used as data source.
      *
      */
     public Container.Indexed getContainerDataSource() {
@@ -299,77 +299,77 @@ public class ContainerEventProvider
     }
 
     /**
-     * Get the property which provides the caption of the event
+     * Get the property which provides the caption of the event.
      */
     public Object getCaptionProperty() {
         return captionProperty;
     }
 
     /**
-     * Set the property which provides the caption of the event
+     * Set the property which provides the caption of the event.
      */
     public void setCaptionProperty(Object captionProperty) {
         this.captionProperty = captionProperty;
     }
 
     /**
-     * Get the property which provides the description of the event
+     * Get the property which provides the description of the event.
      */
     public Object getDescriptionProperty() {
         return descriptionProperty;
     }
 
     /**
-     * Set the property which provides the description of the event
+     * Set the property which provides the description of the event.
      */
     public void setDescriptionProperty(Object descriptionProperty) {
         this.descriptionProperty = descriptionProperty;
     }
 
     /**
-     * Get the property which provides the starting date and time of the event
+     * Get the property which provides the starting date and time of the event.
      */
     public Object getStartDateProperty() {
         return startDateProperty;
     }
 
     /**
-     * Set the property which provides the starting date and time of the event
+     * Set the property which provides the starting date and time of the event.
      */
     public void setStartDateProperty(Object startDateProperty) {
         this.startDateProperty = startDateProperty;
     }
 
     /**
-     * Get the property which provides the ending date and time of the event
+     * Get the property which provides the ending date and time of the event.
      */
     public Object getEndDateProperty() {
         return endDateProperty;
     }
 
     /**
-     * Set the property which provides the ending date and time of the event
+     * Set the property which provides the ending date and time of the event.
      */
     public void setEndDateProperty(Object endDateProperty) {
         this.endDateProperty = endDateProperty;
     }
 
     /**
-     * Get the property which provides the style name for the event
+     * Get the property which provides the style name for the event.
      */
     public Object getStyleNameProperty() {
         return styleNameProperty;
     }
 
     /**
-     * Set the property which provides the style name for the event
+     * Set the property which provides the style name for the event.
      */
     public void setStyleNameProperty(Object styleNameProperty) {
         this.styleNameProperty = styleNameProperty;
     }
 
     /**
-     * Set the all day property for the event
+     * Set the all day property for the event.
      *
      * @since 7.3.4
      */
@@ -378,7 +378,7 @@ public class ContainerEventProvider
     }
 
     /**
-     * Get the all day property for the event
+     * Get the all day property for the event.
      *
      * @since 7.3.4
      */
@@ -451,7 +451,7 @@ public class ContainerEventProvider
      * If you are reusing the container which previously have been attached to
      * this ContainerEventProvider call this method to remove this event
      * providers container listeners before attaching it to an other
-     * ContainerEventProvider
+     * ContainerEventProvider.
      */
     public void detachContainerDataSource() {
         ignoreContainerEvents();

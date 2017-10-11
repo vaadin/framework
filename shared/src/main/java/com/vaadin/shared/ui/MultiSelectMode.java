@@ -20,12 +20,12 @@ package com.vaadin.shared.ui;
  */
 public enum MultiSelectMode {
     /**
-     * The default behavior of the multi select mode
+     * The default behavior of the multi select mode.
      */
     DEFAULT,
 
     /**
-     * The previous more simple behavior of the multi select
+     * The previous more simple behavior of the multi select.
      */
     SIMPLE
 }

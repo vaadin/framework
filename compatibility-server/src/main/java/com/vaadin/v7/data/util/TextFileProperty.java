@@ -145,7 +145,7 @@ public class TextFileProperty extends AbstractProperty<String> {
                     ? new OutputStreamWriter(fos)
                     : new OutputStreamWriter(fos, charset);
             BufferedWriter w = new BufferedWriter(osw);
-            w.append(newValue.toString());
+            w.append(newValue);
             w.flush();
             w.close();
             osw.close();

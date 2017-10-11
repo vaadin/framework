@@ -15,9 +15,11 @@
  */
 package com.vaadin.v7.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Collections;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -51,7 +53,7 @@ public class NativeSelectTest {
     public void getState_listSelectHasCustomState() {
         TestNativeSelect select = new TestNativeSelect();
         AbstractSelectState state = select.getState();
-        Assert.assertEquals("Unexpected state class", AbstractSelectState.class,
+        assertEquals("Unexpected state class", AbstractSelectState.class,
                 state.getClass());
     }
 
@@ -63,7 +65,7 @@ public class NativeSelectTest {
     }
 
     private void assertFocusRpcRegistered(NativeSelect s) {
-        Assert.assertNotNull("RPC is not correctly registered", s.getRpcManager(
+        assertNotNull("RPC is not correctly registered", s.getRpcManager(
                 "com.vaadin.shared.communication.FieldRpc$FocusAndBlurServerRpc"));
     }
 

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.orderedlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -38,11 +39,11 @@ public class HorizontalLayoutFullsizeContentWithErrorMsgTest
 
         errorToggleButton.click();
 
-        Assert.assertEquals(location, element.getLocation());
+        assertEquals(location, element.getLocation());
 
         errorToggleButton.click();
 
-        Assert.assertEquals(location, element.getLocation());
+        assertEquals(location, element.getLocation());
 
     }
 

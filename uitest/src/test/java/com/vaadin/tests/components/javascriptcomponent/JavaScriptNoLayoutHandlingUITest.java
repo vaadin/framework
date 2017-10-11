@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.javascriptcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -29,9 +30,9 @@ public class JavaScriptNoLayoutHandlingUITest extends MultiBrowserTest {
     public void stateUpdate() {
         openTestURL("debug");
         WebElement js = findElement(By.id("js"));
-        Assert.assertEquals("state: 1", js.getText());
+        assertEquals("state: 1", js.getText());
         $(ButtonElement.class).first().click();
 
-        Assert.assertEquals("state: 2", js.getText());
+        assertEquals("state: 2", js.getText());
     }
 }

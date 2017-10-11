@@ -204,7 +204,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Wraps a native javascript object containing fields for an error message
+     * Wraps a native javascript object containing fields for an error message.
      *
      * @since 7.0
      */
@@ -248,7 +248,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage sessionExpiredError;
     private int heartbeatInterval;
 
-    private HashMap<Integer, String> unknownComponents;
+    private Map<Integer, String> unknownComponents;
 
     private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<>();
 
@@ -256,11 +256,11 @@ public class ApplicationConfiguration implements EntryPoint {
     private static boolean moduleLoaded = false;
 
     static// TODO consider to make this hashmap per application
-    LinkedList<Command> callbacks = new LinkedList<>();
+    List<Command> callbacks = new LinkedList<>();
 
     private static int dependenciesLoading;
 
-    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<>();
+    private static List<ApplicationConnection> runningApplications = new ArrayList<>();
 
     private Map<Integer, Integer> componentInheritanceMap = new HashMap<>();
     private Map<Integer, String> tagToServerSideClassName = new HashMap<>();
@@ -311,7 +311,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Gets the URL to the context root of the web application
+     * Gets the URL to the context root of the web application.
      *
      * @return the URL to the server-side context root as a string
      *
@@ -833,7 +833,7 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Registers that callback that the bootstrap javascript uses to start
      * applications once the widgetset is loaded and all required information is
-     * available
+     * available.
      *
      * @param widgetsetName
      *            the name of this widgetset
@@ -882,7 +882,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }-*/;
 
     /**
-     * Checks whether debug logging should be quiet
+     * Checks whether debug logging should be quiet.
      *
      * @return <code>true</code> if debug logging should be quiet
      */

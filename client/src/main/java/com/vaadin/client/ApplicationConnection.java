@@ -115,7 +115,7 @@ public class ApplicationConnection implements HasHandlers {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    private final HashMap<String, String> resourcesMap = new HashMap<>();
+    private final Map<String, String> resourcesMap = new HashMap<>();
 
     private WidgetSet widgetSet;
 
@@ -288,7 +288,7 @@ public class ApplicationConnection implements HasHandlers {
         /**
          * Triggered when the {@link ApplicationConnection} marks a previously
          * running application as stopped by invoking
-         * {@link ApplicationConnection#setApplicationRunning(false)}
+         * {@link ApplicationConnection#setApplicationRunning(false)}.
          *
          * @param event
          *            the event triggered by the {@link ApplicationConnection}
@@ -383,8 +383,8 @@ public class ApplicationConnection implements HasHandlers {
                 + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
-            getLogger()
-                    .severe("Warning: your widget set seems to be built with a different "
+            getLogger().severe(
+                    "Warning: your widget set seems to be built with a different "
                             + "version than the one used on server. Unexpected "
                             + "behavior may occur.");
         }
@@ -494,7 +494,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-
+    
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -509,7 +509,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-
+    
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -526,7 +526,7 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-
+    
         $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
@@ -756,7 +756,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Returns the loading indicator used by this ApplicationConnection
+     * Returns the loading indicator used by this ApplicationConnection.
      *
      * @return The loading indicator for this ApplicationConnection
      */
@@ -1058,7 +1058,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Returns false
+     * Returns false.
      *
      * @param paintable
      * @return false, always
@@ -1235,7 +1235,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the main view
+     * Gets the main view.
      *
      * @return the main view
      */
@@ -1306,7 +1306,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Get VTooltip instance related to application connection
+     * Get VTooltip instance related to application connection.
      *
      * @return VTooltip instance
      */
@@ -1517,7 +1517,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the server RPC queue for this application
+     * Gets the server RPC queue for this application.
      *
      * @since 7.6
      * @return the server RPC queue
@@ -1527,7 +1527,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the communication error handler for this application
+     * Gets the communication error handler for this application.
      *
      * @since 7.6
      * @return the server RPC queue
@@ -1537,7 +1537,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the (server to client) message handler for this application
+     * Gets the (server to client) message handler for this application.
      *
      * @since 7.6
      * @return the message handler
@@ -1547,7 +1547,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the server rpc manager for this application
+     * Gets the server rpc manager for this application.
      *
      * @since 7.6
      * @return the server rpc manager
@@ -1557,7 +1557,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     /**
-     * Gets the (client to server) message sender for this application
+     * Gets the (client to server) message sender for this application.
      *
      * @since 7.6
      * @return the message sender

@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -138,9 +137,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             // try to find a proper test class
 
                             // exact match
-                            Iterator<?> iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getName();
@@ -153,9 +150,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
 
                             // simple name match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -167,9 +162,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 }
                             }
                             // ticket match
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -182,10 +175,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 }
                             }
 
-                            // just partly mach lowercase
-                            iterator = menu.getItemIds().iterator();
-                            while (iterator.hasNext()) {
-                                Object next = iterator.next();
+                            // just partly match lowercase
+                            for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
@@ -200,9 +191,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
 
                             getMainWindow().showNotification(
                                     "No potential matc for #" + fragment);
-
                         }
-
                     }
                 });
 
@@ -237,8 +226,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                 e1.printStackTrace();
                 VerticalLayout lo = new VerticalLayout();
                 lo.addComponent(new Label(
-                        "Cannot create application / custom component: "
-                                + e1.toString()));
+                        "Cannot create application / custom component: " + e1));
 
                 Link l = new Link("Try opening via app runner",
                         new ExternalResource("../run/" + c.getName()));
@@ -276,7 +264,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
      */
     public static List<Class<?>> getTestableClassesForPackage(
             String packageName) throws Exception {
-        final ArrayList<File> directories = new ArrayList<>();
+        final List<File> directories = new ArrayList<>();
         try {
             final ClassLoader cld = Thread.currentThread()
                     .getContextClassLoader();
@@ -295,7 +283,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                     packageName + " does not appear to be a valid package.");
         }
 
-        final ArrayList<Class<?>> classes = new ArrayList<>();
+        final List<Class<?>> classes = new ArrayList<>();
         // For every directory identified capture all the .class files
         for (final File directory : directories) {
             if (directory.exists()) {
@@ -318,9 +306,8 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                             }
                         }
 
-                        // for (int i = 0; i < c.getInterfaces().length; i++) {
-                        // Class cc = c.getInterfaces()[i];
-                        // if (c.getInterfaces()[i].equals(Testable.class)) {
+                        // for (Class cc : c.getInterfaces()) {
+                        // if (cc.equals(Testable.class)) {
                         // // Class is testable
                         // classes.add(c);
                         // }

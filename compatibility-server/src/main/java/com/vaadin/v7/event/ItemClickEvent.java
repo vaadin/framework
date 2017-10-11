@@ -61,7 +61,7 @@ public class ItemClickEvent extends ClickEvent implements Serializable {
     }
 
     /**
-     * Gets a possible identifier in source for clicked Item
+     * Gets a possible identifier in source for clicked Item.
      *
      * @return
      */

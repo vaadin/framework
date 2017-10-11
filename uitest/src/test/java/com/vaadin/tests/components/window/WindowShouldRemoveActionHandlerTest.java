@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -45,7 +46,7 @@ public class WindowShouldRemoveActionHandlerTest extends MultiBrowserTest {
     }
 
     private void assertState(String expected) {
-        Assert.assertEquals("Unexpected state,", expected,
+        assertEquals("Unexpected state,", expected,
                 $(LabelElement.class).id("state").getText());
     }
 }

@@ -15,13 +15,16 @@
  */
 package com.vaadin.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.Setter;
@@ -59,8 +62,8 @@ public class BinderCustomPropertySetTest {
         public Class<String> getType() {
             return String.class;
         }
-        
-        public Class<?> getPropertyHolderType(){
+
+        public Class<?> getPropertyHolderType() {
             return Map.class;
         }
 
@@ -116,7 +119,7 @@ public class BinderCustomPropertySetTest {
         binder.setBean(map);
 
         field.setValue("value");
-        Assert.assertEquals(
+        assertEquals(
                 "Field value should propagate to the corresponding key in the map",
                 "value", map.get("key"));
     }
@@ -130,17 +133,17 @@ public class BinderCustomPropertySetTest {
 
         binder.bindInstanceFields(instanceFields);
 
-        Assert.assertNotNull(
+        assertNotNull(
                 "Field corresponding to supported property name should be bound",
                 instanceFields.one);
-        Assert.assertNull(
+        assertNull(
                 "Field corresponding to unsupported property name should be ignored",
                 instanceFields.another);
 
         binder.setBean(map);
 
         instanceFields.one.setValue("value");
-        Assert.assertEquals(
+        assertEquals(
                 "Field value should propagate to the corresponding key in the map",
                 "value", map.get("one"));
     }

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.server.component.abstractorderedlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.ui.AbstractComponent;
@@ -52,7 +53,7 @@ public class LayoutSettingsOnReplaceTest {
         };
         layout.replaceComponent(first, replace);
 
-        Assert.assertEquals(
+        assertEquals(
                 "Expand ratio for replaced component is not "
                         + "the same as for previous one",
                 ratio, layout.getExpandRatio(replace), 0.0001);
@@ -79,7 +80,7 @@ public class LayoutSettingsOnReplaceTest {
         };
         layout.replaceComponent(first, replace);
 
-        Assert.assertEquals(
+        assertEquals(
                 "Alignment for replaced component is not "
                         + "the same as for previous one",
                 alignment, layout.getComponentAlignment(replace));

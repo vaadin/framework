@@ -15,11 +15,13 @@
  */
 package com.vaadin.tests.performance;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -44,7 +46,6 @@ public class MemoryIT extends SingleBrowserTest {
 
         performTest(TreeGridMemory.PATH + "?items=1", "tree-grid-one-item-");
         performTest(TreeTableMemory.PATH + "?items=1", "tree-table-one-item-");
-
 
         performTest(TreeGridMemory.PATH + "?items=100&initiallyExpanded",
                 "tree-grid-100-items-initially-expanded-");
@@ -89,7 +90,7 @@ public class MemoryIT extends SingleBrowserTest {
                 return;
             }
             if (i == MAX_ITERATIONS) {
-                Assert.fail("Memory size does not stabilize");
+                fail("Memory size does not stabilize");
             }
         }
     }
@@ -112,7 +113,7 @@ public class MemoryIT extends SingleBrowserTest {
 
     private void openUI(String path) {
         getDriver().get(StringUtils.strip(getBaseURL(), "/") + path);
-        Assert.assertTrue(isElementPresent(By.className("v-grid"))
+        assertTrue(isElementPresent(By.className("v-grid"))
                 || isElementPresent(By.className("v-treegrid"))
                 || isElementPresent(By.className("v-table")));
     }

@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.splitpanel;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -66,7 +68,7 @@ public class SplitPositionChangeTest extends MultiBrowserTest {
     }
 
     private void assertPosition(int original, int current) {
-        Assert.assertFalse("Position didn't change", original == current);
+        assertFalse("Position didn't change", original == current);
     }
 
     private void assertLogText(boolean horizontal) {
@@ -74,7 +76,7 @@ public class SplitPositionChangeTest extends MultiBrowserTest {
                 "1. Split position changed: %s, position: .*",
                 horizontal ? "horizontal" : "vertical");
         String actual = getLogRow(0);
-        Assert.assertTrue(String.format(
+        assertTrue(String.format(
                 "Log content didn't match the expected format.\nexpected: '%s'\nwas: '%s'",
                 expected, actual), actual.matches(expected));
     }

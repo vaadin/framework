@@ -26,7 +26,7 @@ public class CheckBoxElement extends AbstractFieldElement {
 
     /**
      * Return string representation of value of the checkbox Return either
-     * checked or unchecked
+     * checked or unchecked.
      */
     public String getValue() {
         if (isChecked()) {

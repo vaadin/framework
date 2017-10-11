@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.nativeselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.NativeSelectElement;
@@ -32,7 +33,7 @@ public class NativeSelectInitTest extends MultiBrowserTest {
         openTestURL();
 
         String selected = $(NativeSelectElement.class).first().getValue();
-        Assert.assertEquals("Bar", selected);
+        assertEquals("Bar", selected);
     }
 
 }

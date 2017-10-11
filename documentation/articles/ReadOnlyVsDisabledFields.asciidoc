@@ -96,7 +96,7 @@ one might expect. Doing the same with _disabled does_, though.)
 One caveat regarding read-only fields is that if the text is longer than
 the field, it will be clipped, as opposed to a Label, which instead will
 wrap the text to a new line. Thus, in certain situations, switching to
-Labels may be preferrable.
+Labels may be preferable.
 
 It’s probably best to mention here that *setReadOnly(true)* also has a
 certain side-effect in Vaadin that *setEnabled(false)* does not: You

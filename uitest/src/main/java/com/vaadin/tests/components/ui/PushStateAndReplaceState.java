@@ -2,6 +2,7 @@ package com.vaadin.tests.components.ui;
 
 import java.net.URI;
 
+import com.vaadin.annotations.Title;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.PopStateEvent;
 import com.vaadin.server.Page.PopStateListener;
@@ -13,6 +14,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 
+@Title("Original title")
 public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 
     private final Label locationLabel = new Label();
@@ -38,7 +40,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         addComponent(replace);
 
         addComponent(createButton("test", "Move to ./test",
-                Page.getCurrent().getLocation().toString() + "/test"));
+                Page.getCurrent().getLocation() + "/test"));
         addComponent(createButton("X", "Move to X", "X"));
         addComponent(createButton("root_X", "Move to /X", "/X"));
     }
@@ -48,6 +50,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         Button button = new Button(caption, new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
+                getPage().setTitle(caption);
                 if (replace.getValue()) {
                     getPage().replaceState(newUri);
                 } else {
@@ -64,7 +67,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 
     private void updateLabel() {
         URI location = getPage().getLocation();
-        locationLabel.setValue("Current Location: " + location.toString());
+        locationLabel.setValue("Current Location: " + location);
     }
 
     @Override

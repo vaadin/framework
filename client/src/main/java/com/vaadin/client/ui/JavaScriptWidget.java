@@ -23,14 +23,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class JavaScriptWidget extends Widget {
 
     /**
-     * Creates a JavaScriptWidget based on a &lt;div&gt; element
+     * Creates a JavaScriptWidget based on a &lt;div&gt; element.
      */
     public JavaScriptWidget() {
         this("div");
     }
 
     /**
-     * Creates a JavaScriptWidget based on an element with the given tag
+     * Creates a JavaScriptWidget based on an element with the given tag.
      * 
      * @param tagName
      *            the tag to use for the element

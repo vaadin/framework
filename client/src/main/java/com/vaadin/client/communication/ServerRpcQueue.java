@@ -82,7 +82,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Removes any pending invocation of the given method from the queue
+     * Removes any pending invocation of the given method from the queue.
      *
      * @param invocation
      *            The invocation to remove
@@ -129,7 +129,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Returns a collection of all queued method invocations
+     * Returns a collection of all queued method invocations.
      * <p>
      * The returned collection must not be modified in any way
      *
@@ -140,7 +140,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Clears the queue
+     * Clears the queue.
      */
     public void clear() {
         pendingInvocations.clear();
@@ -150,7 +150,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Returns the current size of the queue
+     * Returns the current size of the queue.
      *
      * @return the number of invocations in the queue
      */
@@ -159,7 +159,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Returns the server RPC queue for the given application
+     * Returns the server RPC queue for the given application.
      *
      * @param connection
      *            the application connection which owns the queue
@@ -170,7 +170,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Checks if the queue is empty
+     * Checks if the queue is empty.
      *
      * @return true if the queue is empty, false otherwise
      */
@@ -204,7 +204,7 @@ public class ServerRpcQueue {
     };
 
     /**
-     * Checks if a flush operation is pending
+     * Checks if a flush operation is pending.
      *
      * @return true if a flush is pending, false otherwise
      */
@@ -214,7 +214,7 @@ public class ServerRpcQueue {
 
     /**
      * Checks if a loading indicator should be shown when the RPCs have been
-     * sent to the server and we are waiting for a response
+     * sent to the server and we are waiting for a response.
      *
      * @return true if a loading indicator should be shown, false otherwise
      */
@@ -236,7 +236,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Returns the current invocations as JSON
+     * Returns the current invocations as JSON.
      *
      * @return the current invocations in a JSON format ready to be sent to the
      *         server
@@ -251,7 +251,7 @@ public class ServerRpcQueue {
             String connectorId = invocation.getConnectorId();
             if (!connectorExists(connectorId)) {
                 getLogger().info("Ignoring RPC for removed connector: "
-                        + connectorId + ": " + invocation.toString());
+                        + connectorId + ": " + invocation);
                 continue;
             }
 
@@ -269,8 +269,8 @@ public class ServerRpcQueue {
                     Method method = type.getMethod(invocation.getMethodName());
                     parameterTypes = method.getParameterTypes();
                 } catch (NoDataException e) {
-                    throw new RuntimeException(
-                            "No type data for " + invocation.toString(), e);
+                    throw new RuntimeException("No type data for " + invocation,
+                            e);
                 }
             }
 
@@ -307,7 +307,7 @@ public class ServerRpcQueue {
     }
 
     /**
-     * Checks if the given method invocation originates from Javascript
+     * Checks if the given method invocation originates from Javascript.
      *
      * @param invocation
      *            the invocation to check
@@ -320,7 +320,7 @@ public class ServerRpcQueue {
 
     /**
      * Checks if the given method invocation represents a Vaadin 6 variable
-     * change
+     * change.
      *
      * @param invocation
      *            the invocation to check

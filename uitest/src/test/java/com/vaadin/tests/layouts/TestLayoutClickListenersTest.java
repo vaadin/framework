@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.interactions.Actions;
@@ -195,6 +196,6 @@ public class TestLayoutClickListenersTest extends MultiBrowserTest {
 
     private void assertLogText(String message, String expected) {
         String actual = $(LabelElement.class).first().getText();
-        Assert.assertEquals(message, expected, actual);
+        assertEquals(message, expected, actual);
     }
 }

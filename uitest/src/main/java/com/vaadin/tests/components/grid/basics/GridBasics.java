@@ -91,7 +91,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                     }
                     log("Columns reordered, userOriginated: "
                             + event.isUserOriginated());
-                    log("Column order: " + columnCaptions.toString());
+                    log("Column order: " + columnCaptions);
                 });
                 log("Registered a column reorder listener.");
             }
@@ -256,7 +256,8 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
         log("SingleSelectionEvent: Selected: "
                 + (event.getSelectedItem().isPresent()
-                        ? event.getSelectedItem().get().toString() : "none"));
+                        ? event.getSelectedItem().get().toString()
+                        : "none"));
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
@@ -267,13 +268,14 @@ public class GridBasics extends AbstractTestUIWithLog {
         String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
         String removedRow = firstRemoved.isPresent()
-                ? firstRemoved.get().toString() : "none";
+                ? firstRemoved.get().toString()
+                : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
     private Component createMenu() {
         MenuBar menu = new MenuBar();
-        menu.setErrorHandler(error -> log("Exception occured, "
+        menu.setErrorHandler(error -> log("Exception occurred, "
                 + error.getThrowable().getClass().getName() + ": "
                 + error.getThrowable().getMessage()));
         MenuItem componentMenu = menu.addItem("Component", null);
@@ -361,9 +363,11 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
 
-        columnsMenu.addItem("Simple resize mode",
-                item -> grid.setColumnResizeMode(item.isChecked()
-                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
+        columnsMenu
+                .addItem("Simple resize mode",
+                        item -> grid.setColumnResizeMode(
+                                item.isChecked() ? ColumnResizeMode.SIMPLE
+                                        : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
     }
 
@@ -406,13 +410,12 @@ public class GridBasics extends AbstractTestUIWithLog {
                         ? t -> "Row tooltip for row " + t.getRowNumber()
                         : null))
                 .setCheckable(true);
-        stateMenu
-                .addItem("Cell description generator", item -> grid.getColumns()
-                        .stream().findFirst()
-                        .ifPresent(c -> c.setDescriptionGenerator(
-                                item.isChecked() ? t -> "Cell tooltip for row "
+        stateMenu.addItem("Cell description generator",
+                item -> grid.getColumns().stream().findFirst().ifPresent(
+                        c -> c.setDescriptionGenerator(item.isChecked()
+                                ? t -> "Cell tooltip for row "
                                         + t.getRowNumber() + ", Column 0"
-                                        : null)))
+                                : null)))
                 .setCheckable(true);
         stateMenu.addItem("Item click listener", new Command() {
 
@@ -759,6 +762,11 @@ public class GridBasics extends AbstractTestUIWithLog {
 
         editorMenu.addItem("Save", i -> grid.getEditor().save());
         editorMenu.addItem("Cancel edit", i -> grid.getEditor().cancel());
+
+        Stream.of(0, 5, 100).forEach(i -> editorMenu.addItem("Edit row " + i,
+                menuItem -> grid.getEditor().editRow(i)));
+        editorMenu.addItem("Edit last row", menuItem -> grid.getEditor()
+                .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
 
         editorMenu.addItem("Change save caption",
                 e -> grid.getEditor().setSaveCaption("ǝʌɐS"));

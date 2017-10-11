@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.components.nativeselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
@@ -49,11 +50,11 @@ public class NativeSelectsFocusAndBlurListenerTests extends MultiBrowserTest {
         // Chrome/PhantomJS
         if (BrowserUtil.isChrome(getDesiredCapabilities())
                 || BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
-            Assert.assertEquals("4. FocusEvent", getLogRow(1));
-            Assert.assertEquals("5. BlurEvent", getLogRow(0));
+            assertEquals("4. FocusEvent", getLogRow(1));
+            assertEquals("5. BlurEvent", getLogRow(0));
         } else {
-            Assert.assertEquals("2. FocusEvent", getLogRow(1));
-            Assert.assertEquals("3. BlurEvent", getLogRow(0));
+            assertEquals("2. FocusEvent", getLogRow(1));
+            assertEquals("3. BlurEvent", getLogRow(0));
         }
 
     }

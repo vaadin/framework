@@ -42,8 +42,8 @@ public class ComboPushTiming extends TestBase {
         cb.addFocusListener(new FieldEvents.FocusListener() {
             @Override
             public void focus(FocusEvent event) {
-                log.setValue(log.getValue().toString() + "<br>" + counter
-                        + ": Focus event!");
+                log.setValue(
+                        log.getValue() + "<br>" + counter + ": Focus event!");
                 counter++;
                 changeValue(cb);
             }
@@ -52,8 +52,8 @@ public class ComboPushTiming extends TestBase {
         cb.addBlurListener(new FieldEvents.BlurListener() {
             @Override
             public void blur(BlurEvent event) {
-                log.setValue(log.getValue().toString() + "<br>" + counter
-                        + ": Blur event!");
+                log.setValue(
+                        log.getValue() + "<br>" + counter + ": Blur event!");
                 counter++;
             }
         });

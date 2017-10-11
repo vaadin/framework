@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.nativeselect;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,8 +36,8 @@ public class NativeSelectSetValueTest extends MultiBrowserTest {
     private void checkTestValue() {
         // checks value has changed
         String actual = select.getValue();
-        Assert.assertEquals("item 2", actual);
+        assertEquals("item 2", actual);
         // checks change value event occures
-        Assert.assertEquals("1", counter.getText());
+        assertEquals("1", counter.getText());
     }
 }

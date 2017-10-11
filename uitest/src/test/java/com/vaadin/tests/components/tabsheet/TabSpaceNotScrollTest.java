@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -48,7 +49,7 @@ public class TabSpaceNotScrollTest extends MultiBrowserTest {
 
         Point newLocation = tab.getLocation();
 
-        Assert.assertEquals(oldLocation, newLocation);
+        assertEquals(oldLocation, newLocation);
     }
 
 }

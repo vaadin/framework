@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * ListSet is an internal Vaadin class which implements a combination of a List
@@ -42,7 +42,7 @@ public class ListSet<E> extends ArrayList<E> {
      * Contains a map from an element to the number of duplicates it has. Used
      * to temporarily allow duplicates in the list.
      */
-    private HashMap<E, Integer> duplicates = new HashMap<E, Integer>();
+    private Map<E, Integer> duplicates = new HashMap<E, Integer>();
 
     public ListSet() {
         super();
@@ -105,9 +105,7 @@ public class ListSet<E> extends ArrayList<E> {
     @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }
@@ -125,9 +123,7 @@ public class ListSet<E> extends ArrayList<E> {
         ensureCapacity(size() + c.size());
 
         boolean modified = false;
-        Iterator<? extends E> i = c.iterator();
-        while (i.hasNext()) {
-            E e = i.next();
+        for (E e : c) {
             if (contains(e)) {
                 continue;
             }

@@ -225,7 +225,7 @@ public class VFlash extends HTML {
         }
 
         // End object tag
-        html.append(">");
+        html.append('>');
 
         // Ensure we have an movie parameter
         if (embedParams.get("movie") == null) {
@@ -263,7 +263,7 @@ public class VFlash extends HTML {
         // Add the parameters to the Embed
         for (String name : embedParams.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
-            html.append("=");
+            html.append('=');
             html.append("\"" + WidgetUtil.escapeAttribute(embedParams.get(name))
                     + "\"");
         }

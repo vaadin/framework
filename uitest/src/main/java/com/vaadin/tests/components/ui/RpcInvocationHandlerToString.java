@@ -32,7 +32,7 @@ public class RpcInvocationHandlerToString extends AbstractTestUIWithLog {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        log("An invoation proxy: " + dummyProxy.toString());
+                        log("An invoation proxy: " + dummyProxy);
                     }
                 });
         addButton("Exec hashCode() for an invocation proxy",

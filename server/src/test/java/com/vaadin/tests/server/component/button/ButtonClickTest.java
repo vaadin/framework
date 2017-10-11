@@ -1,8 +1,11 @@
 package com.vaadin.tests.server.component.button;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.VaadinRequest;
@@ -25,13 +28,13 @@ public class ButtonClickTest {
         });
 
         b.click();
-        Assert.assertEquals(1, counter.get());
+        assertEquals(1, counter.get());
     }
 
     @Test
     public void testClick() {
         getButton().click();
-        Assert.assertTrue("Button doesn't fire clicks", clicked);
+        assertTrue("Button doesn't fire clicks", clicked);
     }
 
     @Test
@@ -39,7 +42,7 @@ public class ButtonClickTest {
         Button b = getButton();
         b.setEnabled(false);
         b.click();
-        Assert.assertFalse("Disabled button fires click events", clicked);
+        assertFalse("Disabled button fires click events", clicked);
     }
 
     private Button getButton() {

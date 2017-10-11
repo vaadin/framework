@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.javascriptcomponent;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -18,12 +19,12 @@ public class JSComponentLoadingIndicatorTest extends SingleBrowserTest {
         js.click();
         waitUntilLoadingIndicatorVisible();
         waitUntilLoadingIndicatorNotVisible();
-        Assert.assertEquals(1, findElements(By.className("pong")).size());
+        assertEquals(1, findElements(By.className("pong")).size());
 
         js.click();
         waitUntilLoadingIndicatorVisible();
         waitUntilLoadingIndicatorNotVisible();
-        Assert.assertEquals(2, findElements(By.className("pong")).size());
+        assertEquals(2, findElements(By.className("pong")).size());
     }
 
 }

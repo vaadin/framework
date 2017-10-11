@@ -17,6 +17,7 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
@@ -52,7 +53,7 @@ public class SessionRequestHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
         session.lock();
-        ArrayList<RequestHandler> requestHandlers;
+        List<RequestHandler> requestHandlers;
         try {
             requestHandlers = new ArrayList<>(session.getRequestHandlers());
         } finally {

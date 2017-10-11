@@ -104,6 +104,16 @@ public interface Editor<T> extends Serializable {
     public void cancel();
 
     /**
+     * Edits the selected row
+     *
+     * @param rowNumber
+     *          the row to edit
+     *
+     * @since 8.2
+     */
+    public void editRow(int rowNumber);
+
+    /**
      * Sets the caption of the save button in buffered mode.
      *
      * @param saveCaption

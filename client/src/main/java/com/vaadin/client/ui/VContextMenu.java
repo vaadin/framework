@@ -104,7 +104,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Sets the element from which to build menu
+     * Sets the element from which to build menu.
      *
      * @param ao
      */
@@ -127,8 +127,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         this.left = left;
         this.top = top;
         menu.clearItems();
-        for (int i = 0; i < actions.length; i++) {
-            final Action a = actions[i];
+        for (final Action a : actions) {
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
 

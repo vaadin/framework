@@ -1,8 +1,9 @@
 package com.vaadin.tests.server.component.loginform;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Iterator;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,9 +28,9 @@ public class LoginFormTest {
 
     @Test
     public void defaultCaptions() {
-        Assert.assertEquals("Username", loginForm.getUsernameCaption());
-        Assert.assertEquals("Password", loginForm.getPasswordCaption());
-        Assert.assertEquals("Login", loginForm.getLoginButtonCaption());
+        assertEquals("Username", loginForm.getUsernameCaption());
+        assertEquals("Password", loginForm.getPasswordCaption());
+        assertEquals("Login", loginForm.getLoginButtonCaption());
     }
 
     @Test
@@ -38,9 +39,9 @@ public class LoginFormTest {
         loginForm.setPasswordCaption("p");
         loginForm.setLoginButtonCaption("l");
 
-        Assert.assertEquals("u", loginForm.getUsernameCaption());
-        Assert.assertEquals("p", loginForm.getPasswordCaption());
-        Assert.assertEquals("l", loginForm.getLoginButtonCaption());
+        assertEquals("u", loginForm.getUsernameCaption());
+        assertEquals("p", loginForm.getPasswordCaption());
+        assertEquals("l", loginForm.getLoginButtonCaption());
     }
 
     @Test
@@ -51,9 +52,9 @@ public class LoginFormTest {
         loginForm.setPasswordCaption("p");
         loginForm.setLoginButtonCaption("l");
 
-        Assert.assertEquals("u", loginForm.getUsernameCaption());
-        Assert.assertEquals("p", loginForm.getPasswordCaption());
-        Assert.assertEquals("l", loginForm.getLoginButtonCaption());
+        assertEquals("u", loginForm.getUsernameCaption());
+        assertEquals("p", loginForm.getPasswordCaption());
+        assertEquals("l", loginForm.getLoginButtonCaption());
     }
 
     @Test
@@ -68,9 +69,9 @@ public class LoginFormTest {
         loginForm.setPasswordCaption("p");
         loginForm.setLoginButtonCaption("l");
 
-        Assert.assertEquals("u", loginForm.getUsernameCaption());
-        Assert.assertEquals("p", loginForm.getPasswordCaption());
-        Assert.assertEquals("l", loginForm.getLoginButtonCaption());
+        assertEquals("u", loginForm.getUsernameCaption());
+        assertEquals("p", loginForm.getPasswordCaption());
+        assertEquals("l", loginForm.getLoginButtonCaption());
     }
 
     @Test
@@ -100,8 +101,8 @@ public class LoginFormTest {
         ui.setContent(customForm);
         Iterator<Component> i = ((HasComponents) customForm.iterator().next())
                 .iterator();
-        Assert.assertEquals("Username caption", i.next().getCaption());
-        Assert.assertEquals("Password caption", i.next().getCaption());
-        Assert.assertEquals("Do it", i.next().getCaption());
+        assertEquals("Username caption", i.next().getCaption());
+        assertEquals("Password caption", i.next().getCaption());
+        assertEquals("Do it", i.next().getCaption());
     }
 }

@@ -24,7 +24,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 @ServerClass("com.vaadin.ui.AbstractComponent")
 public class AbstractComponentElement extends AbstractElement {
     /**
-     * Returns the caption of the Component element
+     * Returns the caption of the Component element.
      *
      * @since 8.0
      * @return component caption
@@ -53,7 +53,7 @@ public class AbstractComponentElement extends AbstractElement {
     public boolean isReadOnly() {
         final String READONLY_CSS_CLASS = "v-readonly";
         String readonlyClass = getAttribute("class");
-        // lookin for READONLY_CSS_CLASS string
+        // looking for READONLY_CSS_CLASS string
         String[] cssSelectors = readonlyClass.split("\\s");
         for (String selector : cssSelectors) {
             if (selector.equals(READONLY_CSS_CLASS)) {

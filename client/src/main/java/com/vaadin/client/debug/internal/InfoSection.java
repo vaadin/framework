@@ -33,7 +33,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Information section of the debug window
+ * Information section of the debug window.
  *
  * @since 7.1
  * @author Vaadin Ltd

@@ -27,12 +27,12 @@ public class StyleConstants {
     public static final String HORIZONTAL_SPACING = "hspacing";
 
     /**
-     * Added to all UI components
+     * Added to all UI components.
      */
     public static final String UI_WIDGET = "v-widget";
 
     /**
-     * Added to all layouts to denote they are layouts
+     * Added to all layouts to denote they are layouts.
      */
     public static final String UI_LAYOUT = "v-layout";
 
@@ -47,6 +47,8 @@ public class StyleConstants {
 
     /**
      * Style name and style name prefix for the error indicator element.
+     * 
+     * @since 8.2
      */
     public static final String STYLE_NAME_ERROR_INDICATOR = "v-errorindicator";
 }

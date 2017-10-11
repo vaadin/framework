@@ -21,7 +21,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.renderers.HtmlRendererState;
 
 /**
- * A connector for {@link UnsafeHtmlRenderer}
+ * A connector for {@link UnsafeHtmlRenderer}.
  *
  * @since 8.0
  * @author Vaadin Ltd

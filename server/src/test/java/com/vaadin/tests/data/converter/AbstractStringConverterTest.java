@@ -1,6 +1,8 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.Converter;
@@ -23,8 +25,8 @@ public abstract class AbstractStringConverterTest
     public void testErrorMessage() {
         Result<?> result = getConverter().convertToModel("abc",
                 new ValueContext());
-        Assert.assertTrue(result.isError());
-        Assert.assertEquals(getErrorMessage(), result.getMessage().get());
+        assertTrue(result.isError());
+        assertEquals(getErrorMessage(), result.getMessage().get());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.vaadin.tests.server.componentcontainer;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
@@ -7,7 +8,6 @@ import static org.junit.Assert.fail;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.orderedlayout.FormLayoutState;
@@ -43,8 +43,8 @@ public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
         return getLayout().getComponentCount();
     }
 
-    Component[] children = { new Label("A"), new Label("B"),
-            new Label("C"), new Label("D") };
+    Component[] children = { new Label("A"), new Label("B"), new Label("C"),
+            new Label("D") };
 
     @Test
     public void testConstructorWithComponents() {
@@ -63,7 +63,7 @@ public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
     public void getState_formLayoutHasCustomState() {
         TestFormLayout layout = new TestFormLayout();
         FormLayoutState state = layout.getState();
-        Assert.assertEquals("Unexpected state class", FormLayoutState.class,
+        assertEquals("Unexpected state class", FormLayoutState.class,
                 state.getClass());
     }
 
@@ -71,14 +71,14 @@ public class FormLayoutTest extends AbstractIndexedLayoutTestBase {
     public void getPrimaryStyleName_formLayoutHasCustomPrimaryStyleName() {
         FormLayout layout = new FormLayout();
         FormLayoutState state = new FormLayoutState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, layout.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                layout.getPrimaryStyleName());
     }
 
     @Test
     public void formLayoutStateHasCustomPrimaryStyleName() {
         FormLayoutState state = new FormLayoutState();
-        Assert.assertEquals("Unexpected primary style name", "v-formlayout",
+        assertEquals("Unexpected primary style name", "v-formlayout",
                 state.primaryStyleName);
     }
 

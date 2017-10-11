@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -615,16 +614,16 @@ public class Upload extends AbstractLegacyComponent
     public interface SucceededListener extends Serializable {
 
         /**
-         * Upload successfull..
+         * Upload successful.
          *
          * @param event
-         *            the Upload successfull event.
+         *            the Upload successful event.
          */
         public void uploadSucceeded(SucceededEvent event);
     }
 
     /**
-     * Listener for {@link ChangeEvent}
+     * Listener for {@link ChangeEvent}.
      *
      * @since 7.2
      */
@@ -830,7 +829,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     /**
-     * Adds a filename change event listener
+     * Adds a filename change event listener.
      *
      * @param listener
      *            the Listener to add, not null
@@ -841,7 +840,7 @@ public class Upload extends AbstractLegacyComponent
     }
 
     /**
-     * Removes a filename change event listener
+     * Removes a filename change event listener.
      *
      * @param listener
      *            the listener to be removed
@@ -926,9 +925,7 @@ public class Upload extends AbstractLegacyComponent
         // this is implemented differently than other listeners to maintain
         // backwards compatibility
         if (progressListeners != null) {
-            for (Iterator<ProgressListener> it = progressListeners
-                    .iterator(); it.hasNext();) {
-                ProgressListener l = it.next();
+            for (ProgressListener l : progressListeners) {
                 l.updateProgress(totalBytes, contentLength);
             }
         }
@@ -1051,7 +1048,7 @@ public class Upload extends AbstractLegacyComponent
     @Deprecated
     public interface ProgressListener extends Serializable {
         /**
-         * Updates progress to listener
+         * Updates progress to listener.
          *
          * @param readBytes
          *            bytes transferred

@@ -65,7 +65,7 @@ public class SQLContainer implements Container, Container.Filterable,
     private int pageLength = DEFAULT_PAGE_LENGTH;
     public static final int DEFAULT_PAGE_LENGTH = 100;
 
-    /** Number of items to cache = CACHE_RATIO x pageLength */
+    /** Number of items to cache = CACHE_RATIO x pageLength. */
     public static final int CACHE_RATIO = 2;
 
     /** Amount of cache to overlap with previous page */
@@ -128,7 +128,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Creates and initializes SQLContainer using the given QueryDelegate
+     * Creates and initializes SQLContainer using the given QueryDelegate.
      *
      * @param delegate
      *            QueryDelegate implementation
@@ -313,7 +313,7 @@ public class SQLContainer implements Container, Container.Filterable,
     @Override
     public Collection<?> getItemIds() {
         updateCount();
-        ArrayList<RowId> ids = new ArrayList<RowId>();
+        List<RowId> ids = new ArrayList<RowId>();
         ResultSet rs = null;
         try {
             // Load ALL rows :(
@@ -542,7 +542,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * {@inheritDoc}
      */
     public void removeContainerFilters(Object propertyId) {
-        ArrayList<Filter> toRemove = new ArrayList<Filter>();
+        List<Filter> toRemove = new ArrayList<Filter>();
         for (Filter f : filters) {
             if (f.appliesToProperty(propertyId)) {
                 toRemove.add(f);
@@ -1322,7 +1322,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     private List<RowItem> getFilteredAddedItems() {
-        ArrayList<RowItem> filtered = new ArrayList<RowItem>(addedItems);
+        List<RowItem> filtered = new ArrayList<RowItem>(addedItems);
         if (filters != null && !filters.isEmpty()) {
             for (RowItem item : addedItems) {
                 if (!itemPassesFilters(item)) {
@@ -1460,11 +1460,10 @@ public class SQLContainer implements Container, Container.Filterable,
 
     protected void fireContentsChange() {
         if (itemSetChangeListeners != null) {
-            final Object[] l = itemSetChangeListeners.toArray();
             final Container.ItemSetChangeEvent event = new SQLContainer.ItemSetChangeEvent(
                     this);
-            for (int i = 0; i < l.length; i++) {
-                ((Container.ItemSetChangeListener) l[i])
+            for (Object l : itemSetChangeListeners.toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }
@@ -1493,7 +1492,7 @@ public class SQLContainer implements Container, Container.Filterable,
     /**************************************************/
 
     /**
-     * Adds a RowIdChangeListener to the QueryDelegate
+     * Adds a RowIdChangeListener to the QueryDelegate.
      *
      * @param listener
      */
@@ -1514,7 +1513,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Removes a RowIdChangeListener from the QueryDelegate
+     * Removes a RowIdChangeListener from the QueryDelegate.
      *
      * @param listener
      */
@@ -1684,8 +1683,7 @@ public class SQLContainer implements Container, Container.Filterable,
         return refdCont.getItem(getReferencedItemId(itemId, refdCont));
     }
 
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
     }
 

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -37,7 +38,7 @@ public class ValoDateFieldPopupPositionTest extends DateFieldPopupPositionTest {
         int popupRight = popup.getLocation().getX()
                 + popup.getSize().getWidth();
 
-        Assert.assertTrue(
+        assertTrue(
                 "Calendar popup has wrong X coordinate=" + popupRight
                         + " , left side of the field is " + left,
                 popupRight <= left);

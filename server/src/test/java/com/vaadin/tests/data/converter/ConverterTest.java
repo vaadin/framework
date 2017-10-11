@@ -1,6 +1,7 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.data.Converter;
@@ -26,9 +27,9 @@ public class ConverterTest {
 
     @Test
     public void basicConversion() {
-        Assert.assertEquals("presentation-123",
+        assertEquals("presentation-123",
                 converter.convertToPresentation("123", new ValueContext()));
-        Assert.assertEquals("123",
+        assertEquals("123",
                 converter.convertToModel("presentation-123", new ValueContext())
                         .getOrThrow(msg -> new AssertionError(msg)));
     }

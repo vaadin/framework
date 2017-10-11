@@ -283,7 +283,7 @@ public class Escalator extends Widget
     // todo comments legend
     /*
      * [[optimize]]: There's an opportunity to rewrite the code in such a way
-     * that it _might_ perform better (rememeber to measure, implement,
+     * that it _might_ perform better (remember to measure, implement,
      * re-measure)
      */
     /*
@@ -1124,6 +1124,73 @@ public class Escalator extends Widget
         }
     }
 
+    /**
+     * Helper class that helps to implement the WAI-ARIA functionality
+     * for the Grid and TreeGrid component.
+     * <p>
+     * The following WAI-ARIA attributes are added through this class:
+     *
+     * <ul>
+     *     <li>aria-rowcount (since 8.2)</li>
+     * </ul>
+     *
+     * @since 8.2
+     */
+    public class AriaGridHelper {
+
+        /**
+         * This field contains the total number of rows from the grid
+         * including rows from thead, tbody and tfoot.
+         *
+         * @since 8.2
+         */
+        private int allRows;
+
+        /**
+         * Adds the given numberOfRows to allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows number of rows that were added to the
+         *                     grid
+         *
+         * @since 8.2
+         */
+        public void addRows(int numberOfRows) {
+            allRows += numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Removes the given numberOfRows from allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows number of rows that were removed from
+         *                     the grid
+         *
+         * @since 8.2
+         */
+        public void removeRows(int numberOfRows) {
+            allRows -= numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Sets the aria-rowcount attribute with the current value
+         * of {@link AriaGridHelper#allRows} if the grid is attached
+         * and {@link AriaGridHelper#allRows} > 0.
+         *
+         * @since 8.2
+         */
+        public void updateAriaRowCount() {
+            if (!isAttached() || 0 > allRows) {
+
+                return;
+            }
+
+            getTable().setAttribute("aria-rowcount", String.valueOf(allRows));
+        }
+    }
+
     public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -1150,8 +1217,7 @@ public class Escalator extends Widget
 
         private boolean initialColumnSizesCalculated = false;
 
-        public AbstractRowContainer(
-                final TableSectionElement rowContainerElement) {
+        public AbstractRowContainer(final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
         }
 
@@ -1216,6 +1282,7 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            ariaGridHelper.removeRows(numberOfRows);
 
             if (!isAttached()) {
                 return;
@@ -1340,6 +1407,7 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
+            ariaGridHelper.addRows(numberOfRows);
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -1574,7 +1642,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Gets the child element that is visually at a certain index
+         * Gets the child element that is visually at a certain index.
          *
          * @param index
          *            the index of the element to retrieve
@@ -1740,8 +1808,8 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check whether it,
-         *            or any of its its descendants can be frozen
+         *            the row element to check whether it, or any of its its
+         *            descendants can be frozen
          * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
@@ -2168,8 +2236,7 @@ public class Escalator extends Widget
         /** The height of the combined rows in the DOM. Never negative. */
         private double heightOfSection = 0;
 
-        public AbstractStaticRowContainer(
-                final TableSectionElement headElement) {
+        public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
         }
 
@@ -3882,8 +3949,8 @@ public class Escalator extends Widget
                     insertFirst = true;
                 } else if (insertFirst) {
                     // remove row explicitly to work around an IE11 bug (#9850)
-                    if (BrowserInfo.get().isIE11() && tr
-                            .equals(root.getFirstChildElement())) {
+                    if (BrowserInfo.get().isIE11()
+                            && tr.equals(root.getFirstChildElement())) {
                         root.removeChild(tr);
                     }
                     root.insertFirst(tr);
@@ -4553,11 +4620,11 @@ public class Escalator extends Widget
             }
 
             if (index < 0 || index + numberOfColumns > getColumnCount()) {
-                throw new IndexOutOfBoundsException(
-                        "The given " + "column range (" + index + ".."
-                                + (index + numberOfColumns)
-                                + ") was outside of the current number of columns ("
-                                + getColumnCount() + ")");
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
             }
 
             header.refreshColumns(index, numberOfColumns);
@@ -5054,7 +5121,7 @@ public class Escalator extends Widget
         public Collection<SpacerImpl> getSpacersAfterPx(final double px,
                 final SpacerInclusionStrategy strategy) {
 
-            ArrayList<SpacerImpl> spacers = new ArrayList<>(
+            List<SpacerImpl> spacers = new ArrayList<>(
                     rowIndexToSpacer.values());
 
             for (int i = 0; i < spacers.size(); i++) {
@@ -5594,9 +5661,10 @@ public class Escalator extends Widget
     private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();
     private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
+    private final AriaGridHelper ariaGridHelper = new AriaGridHelper();
+
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
-    private final BodyRowContainerImpl body = new BodyRowContainerImpl(
-            bodyElem);
+    private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem);
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
     /**
@@ -5608,6 +5676,7 @@ public class Escalator extends Widget
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
+    private final Element table;
 
     private final DivElement horizontalScrollbarDeco = DivElement
             .as(DOM.createDiv());
@@ -5662,7 +5731,7 @@ public class Escalator extends Widget
 
         root.appendChild(tableWrapper);
 
-        final Element table = DOM.createTable();
+        table = DOM.createTable();
         tableWrapper.appendChild(table);
 
         table.appendChild(headElem);
@@ -6511,7 +6580,8 @@ public class Escalator extends Widget
         double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle()
-                ? horizontalScrollbar.getScrollbarThickness() : 0;
+                ? horizontalScrollbar.getScrollbarThickness()
+                : 0;
         double spacerHeight = 0; // ignored if HeightMode.ROW
         if (heightMode == HeightMode.UNDEFINED) {
             spacerHeight = body.spacerContainer.getSpacerHeightsSum();
@@ -6648,7 +6718,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Adds a scroll handler to this escalator
+     * Adds a scroll handler to this escalator.
      *
      * @param handler
      *            the scroll handler to add
@@ -6789,6 +6859,16 @@ public class Escalator extends Widget
      */
     public Element getTableWrapper() {
         return tableWrapper;
+    }
+
+    /**
+     * Returns the {@code <table />} element of the grid.
+     *
+     * @return the table element
+     * @since 8.2
+     */
+    public Element getTable() {
+        return table;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {

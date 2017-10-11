@@ -24,8 +24,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -54,7 +54,7 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
     @Test
     @Ignore
     public void memoryTest() throws IOException {
-        // Set breakoint and look memory consuption in Profiler
+        // Set breakpoint and look memory consumption in Profiler
         // Mozilla Firefox doesn't provide memory usage profiler, use chrome.
 
         openTestURL();
@@ -71,12 +71,11 @@ public class MemoryLeakTableTest extends MultiBrowserTest {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             btnDel.click();
         }
-        // Set breakoint and look memory consuption in Profiler
+        // Set breakpoint and look memory consumption in Profiler
         btnAdd = $(ButtonElement.class).get(0);
     }
 

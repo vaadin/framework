@@ -65,7 +65,7 @@ public class CheckBoxGroupTestUI
         options.put("Null Description Generator", item -> null);
         options.put("Default Description Generator", item -> item.toString());
         options.put("Custom Description Generator",
-                item -> item.toString() + " Description");
+                item -> item + " Description");
 
         createSelectAction("Item Description Generator",
                 "Item Description Generator", options, "None",

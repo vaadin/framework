@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -20,8 +21,7 @@ public class RpcInvocationHandlerToStringTest extends MultiBrowserTest {
         $(ButtonElement.class)
                 .caption("Exec " + method + " for an invocation proxy").first()
                 .click();
-        Assert.assertFalse(
-                method + " for invocation proxy caused a notification",
+        assertFalse(method + " for invocation proxy caused a notification",
                 $(NotificationElement.class).exists());
     }
 }

@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -43,7 +44,7 @@ import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
- * Two col Layout that places caption on left col and field on right col
+ * Two col Layout that places caption on left col and field on right col.
  */
 public class VFormLayout extends SimplePanel {
 
@@ -90,8 +91,8 @@ public class VFormLayout extends SimplePanel {
         private static final int COLUMN_ERRORFLAG = 1;
         public static final int COLUMN_WIDGET = 2;
 
-        private HashMap<Widget, Caption> widgetToCaption = new HashMap<>();
-        private HashMap<Widget, ErrorFlag> widgetToError = new HashMap<>();
+        private Map<Widget, Caption> widgetToCaption = new HashMap<>();
+        private Map<Widget, ErrorFlag> widgetToError = new HashMap<>();
 
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
@@ -377,8 +378,8 @@ public class VFormLayout extends SimplePanel {
 
                 // Hide the error indicator from screen reader, as this
                 // information is set directly at the input field
-                Roles.getFormRole()
-                        .setAriaHiddenState(errorIndicatorElement, true);
+                Roles.getFormRole().setAriaHiddenState(errorIndicatorElement,
+                        true);
 
                 ErrorUtil.setErrorLevelStyle(errorIndicatorElement,
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR, errorLevel);

@@ -1,8 +1,9 @@
 package com.vaadin.tests.components.customlayout;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -18,13 +19,13 @@ public class CustomLayoutUpdateCaptionTest extends SingleBrowserTest {
         TextFieldElement tf1 = tfs.get(0);
         TextFieldElement tf2 = tfs.get(1);
 
-        Assert.assertEquals("initial", tf1.getCaption());
-        Assert.assertEquals("initial", tf2.getCaption());
+        assertEquals("initial", tf1.getCaption());
+        assertEquals("initial", tf2.getCaption());
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertEquals("updated", tf1.getCaption());
-        Assert.assertEquals("updated", tf2.getCaption());
+        assertEquals("updated", tf1.getCaption());
+        assertEquals("updated", tf2.getCaption());
 
     }
 }

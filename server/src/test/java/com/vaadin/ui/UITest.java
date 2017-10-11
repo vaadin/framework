@@ -1,5 +1,9 @@
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.lang.ref.WeakReference;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -8,10 +12,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpSession;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -22,7 +23,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedHttpSession;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.util.CurrentInstanceTest;
@@ -135,16 +135,16 @@ public class UITest {
         if (websocketThread.isAlive() || uiDisconnectThread.isAlive()) {
             websocketThread.interrupt();
             uiDisconnectThread.interrupt();
-            Assert.fail("Threads are still running");
+            fail("Threads are still running");
         }
         if (!exceptions.isEmpty()) {
             for (Exception e : exceptions) {
                 e.printStackTrace();
             }
-            Assert.fail("There were exceptions in the threads");
+            fail("There were exceptions in the threads");
         }
 
-        Assert.assertNull(ui.getSession());
+        assertNull(ui.getSession());
 
         // PushConnection is set to null in another thread. We need to wait for
         // that to happen
@@ -155,7 +155,7 @@ public class UITest {
 
             Thread.sleep(500);
         }
-        Assert.assertNull(ui.getPushConnection());
+        assertNull(ui.getPushConnection());
 
     }
 
@@ -178,21 +178,7 @@ public class UITest {
         VaadinServletService service = new VaadinServletService(servlet,
                 deploymentConfiguration);
         MockVaadinSession session = new MockVaadinSession(service);
-        HttpSession mockHttpSession = EasyMock.createMock(HttpSession.class);
-        WrappedHttpSession mockWrappedSession = new WrappedHttpSession(
-                mockHttpSession) {
-            @Override
-            public Object getAttribute(String name) {
-                String lockAttribute = service.getServiceName() + ".lock";
-                if (lockAttribute.equals(name)) {
-                    return session.getLockInstance();
-                } else {
-                    return super.getAttribute(name);
-                }
-            }
-        };
         session.lock();
-        session.refreshTransients(mockWrappedSession, service);
         ui.setSession(session);
         ui.doInit(Mockito.mock(VaadinRequest.class), 1, "foo");
         session.addUI(ui);
@@ -212,7 +198,7 @@ public class UITest {
         CurrentInstanceTest.waitUntilGarbageCollected(contentOnlyOnServer);
         // Should not clean references for connectors available in the browser
         // until the session is unlocked and we know if it has been moved
-        Assert.assertNotNull(contentSentToClient.get());
+        assertNotNull(contentSentToClient.get());
         session.unlock();
         CurrentInstanceTest.waitUntilGarbageCollected(contentSentToClient);
     }

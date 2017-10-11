@@ -83,13 +83,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
 
             return diffsInWorkingTree;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoWorkTreeException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            // TODO Auto-generated catch block
+        } catch (IOException | NoWorkTreeException | GitAPIException e) {
             e.printStackTrace();
         }
         return null;

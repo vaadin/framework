@@ -5,9 +5,15 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -19,7 +25,6 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,7 +61,7 @@ public class SQLContainerTableQueryTest {
                     SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
 
         DataGenerator.addPeopleToDatabase(connectionPool);
@@ -163,7 +168,7 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void propertyIdsAreFetched() {
-        ArrayList<String> propertyIds = new ArrayList<String>(
+        List<String> propertyIds = new ArrayList<String>(
                 (Collection<? extends String>) container
                         .getContainerPropertyIds());
 
@@ -227,9 +232,9 @@ public class SQLContainerTableQueryTest {
             for (Object o : itemIds) {
                 oracle.add(o.toString());
             }
-            Assert.assertArrayEquals(correct, oracle.toArray());
+            assertArrayEquals(correct, oracle.toArray());
         } else {
-            Assert.assertArrayEquals(new Object[] { zero, one, two, three },
+            assertArrayEquals(new Object[] { zero, one, two, three },
                     itemIds.toArray());
         }
     }
@@ -376,10 +381,10 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isFirstId_tableSecondId_returnsFalse() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertFalse(container.isFirstId(
+            assertFalse(container.isFirstId(
                     new RowId(new Object[] { new BigDecimal(1 + offset) })));
         } else {
-            Assert.assertFalse(container
+            assertFalse(container
                     .isFirstId(new RowId(new Object[] { 1 + offset })));
         }
     }
@@ -387,10 +392,10 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isLastId_tableSecondId_returnsFalse() throws SQLException {
         if (SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertFalse(container.isLastId(
+            assertFalse(container.isLastId(
                     new RowId(new Object[] { new BigDecimal(1 + offset) })));
         } else {
-            Assert.assertFalse(
+            assertFalse(
                     container.isLastId(new RowId(new Object[] { 1 + offset })));
         }
     }
@@ -464,7 +469,7 @@ public class SQLContainerTableQueryTest {
         container.setAutoCommit(true);
         assertTrue(container.isAutoCommit());
         container.setAutoCommit(false);
-        Assert.assertFalse(container.isAutoCommit());
+        assertFalse(container.isAutoCommit());
     }
 
     @Test
@@ -521,7 +526,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void addItem_tableAddOneNewItem_returnsItemId() throws SQLException {
         Object itemId = container.addItem();
-        Assert.assertNotNull(itemId);
+        assertNotNull(itemId);
     }
 
     @Test
@@ -529,9 +534,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         container.setAutoCommit(true);
         Object itemId = container.addItem();
-        Assert.assertNotNull(itemId);
+        assertNotNull(itemId);
         assertTrue(itemId instanceof RowId);
-        Assert.assertFalse(itemId instanceof TemporaryRowId);
+        assertFalse(itemId instanceof TemporaryRowId);
     }
 
     @Test
@@ -558,8 +563,8 @@ public class SQLContainerTableQueryTest {
         Object id1 = container.addItem();
         Object id2 = container.addItem();
         assertEquals(size + 2, container.size());
-        Assert.assertNotSame(id1, id2);
-        Assert.assertFalse(id1.equals(id2));
+        assertNotSame(id1, id2);
+        assertFalse(id1.equals(id2));
     }
 
     @Test
@@ -576,7 +581,7 @@ public class SQLContainerTableQueryTest {
         Object lastId = container.lastItemId();
         Object id = container.addItem();
         assertEquals(id, container.lastItemId());
-        Assert.assertNotSame(lastId, container.lastItemId());
+        assertNotSame(lastId, container.lastItemId());
     }
 
     @Test
@@ -590,7 +595,7 @@ public class SQLContainerTableQueryTest {
     public void getItem_tableNewlyAddedItem_returnsNewlyAdded()
             throws SQLException {
         Object id = container.addItem();
-        Assert.assertNotNull(container.getItem(id));
+        assertNotNull(container.getItem(id));
     }
 
     @Test
@@ -634,7 +639,7 @@ public class SQLContainerTableQueryTest {
 
         Object id = garbageContainer.addItem();
 
-        Assert.assertSame(id, garbageContainer.firstItemId());
+        assertSame(id, garbageContainer.firstItemId());
     }
 
     @Test
@@ -681,7 +686,7 @@ public class SQLContainerTableQueryTest {
 
         assertTrue(container.removeItem(id));
 
-        Assert.assertNotSame(id, container.firstItemId());
+        assertNotSame(id, container.firstItemId());
         assertEquals(originalSize - 1, container.size());
     }
 
@@ -689,7 +694,7 @@ public class SQLContainerTableQueryTest {
     public void containsId_tableRemovedItem_returnsFalse() throws SQLException {
         Object id = container.firstItemId();
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.containsId(id));
+        assertFalse(container.containsId(id));
     }
 
     @Test
@@ -699,7 +704,7 @@ public class SQLContainerTableQueryTest {
         int size = container.size();
 
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.containsId(id));
+        assertFalse(container.containsId(id));
         assertEquals(size - 1, container.size());
     }
 
@@ -708,7 +713,7 @@ public class SQLContainerTableQueryTest {
         Object id = container.firstItemId();
 
         assertTrue(container.removeItem(id));
-        Assert.assertNull(container.getItem(id));
+        assertNull(container.getItem(id));
     }
 
     @Test
@@ -716,9 +721,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         Object id = container.addItem();
 
-        Assert.assertNotNull(container.getItem(id));
+        assertNotNull(container.getItem(id));
         assertTrue(container.removeItem(id));
-        Assert.assertNull(container.getItem(id));
+        assertNull(container.getItem(id));
     }
 
     @Test
@@ -728,7 +733,7 @@ public class SQLContainerTableQueryTest {
 
         assertTrue(container.getItemIds().contains(id));
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.getItemIds().contains(id));
+        assertFalse(container.getItemIds().contains(id));
     }
 
     @Test
@@ -738,7 +743,7 @@ public class SQLContainerTableQueryTest {
 
         assertTrue(container.getItemIds().contains(id));
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.getItemIds().contains(id));
+        assertFalse(container.getItemIds().contains(id));
     }
 
     @Test
@@ -747,7 +752,7 @@ public class SQLContainerTableQueryTest {
 
         assertTrue(container.containsId(id));
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.containsId(id));
+        assertFalse(container.containsId(id));
     }
 
     @Test
@@ -757,7 +762,7 @@ public class SQLContainerTableQueryTest {
 
         assertTrue(container.containsId(id));
         assertTrue(container.removeItem(id));
-        Assert.assertFalse(container.containsId(id));
+        assertFalse(container.containsId(id));
     }
 
     @Test
@@ -810,7 +815,7 @@ public class SQLContainerTableQueryTest {
         Object first = container.firstItemId();
 
         assertTrue(container.removeItem(first));
-        Assert.assertNotSame(first, container.firstItemId());
+        assertNotSame(first, container.firstItemId());
     }
 
     @Test
@@ -821,9 +826,9 @@ public class SQLContainerTableQueryTest {
         Object first = garbageContainer.addItem();
         Object second = garbageContainer.addItem();
 
-        Assert.assertSame(first, garbageContainer.firstItemId());
+        assertSame(first, garbageContainer.firstItemId());
         assertTrue(garbageContainer.removeItem(first));
-        Assert.assertSame(second, garbageContainer.firstItemId());
+        assertSame(second, garbageContainer.firstItemId());
     }
 
     @Test
@@ -832,7 +837,7 @@ public class SQLContainerTableQueryTest {
         Object last = container.lastItemId();
 
         assertTrue(container.removeItem(last));
-        Assert.assertNotSame(last, container.lastItemId());
+        assertNotSame(last, container.lastItemId());
     }
 
     @Test
@@ -840,9 +845,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         Object last = container.addItem();
 
-        Assert.assertSame(last, container.lastItemId());
+        assertSame(last, container.lastItemId());
         assertTrue(container.removeItem(last));
-        Assert.assertNotSame(last, container.lastItemId());
+        assertNotSame(last, container.lastItemId());
     }
 
     @Test
@@ -851,7 +856,7 @@ public class SQLContainerTableQueryTest {
         Object first = container.firstItemId();
 
         assertTrue(container.removeItem(first));
-        Assert.assertFalse(container.isFirstId(first));
+        assertFalse(container.isFirstId(first));
     }
 
     @Test
@@ -862,9 +867,9 @@ public class SQLContainerTableQueryTest {
         Object first = garbageContainer.addItem();
         garbageContainer.addItem();
 
-        Assert.assertSame(first, garbageContainer.firstItemId());
+        assertSame(first, garbageContainer.firstItemId());
         assertTrue(garbageContainer.removeItem(first));
-        Assert.assertFalse(garbageContainer.isFirstId(first));
+        assertFalse(garbageContainer.isFirstId(first));
     }
 
     @Test
@@ -873,7 +878,7 @@ public class SQLContainerTableQueryTest {
         Object last = container.lastItemId();
 
         assertTrue(container.removeItem(last));
-        Assert.assertFalse(container.isLastId(last));
+        assertFalse(container.isLastId(last));
     }
 
     @Test
@@ -881,9 +886,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         Object last = container.addItem();
 
-        Assert.assertSame(last, container.lastItemId());
+        assertSame(last, container.lastItemId());
         assertTrue(container.removeItem(last));
-        Assert.assertFalse(container.isLastId(last));
+        assertFalse(container.isLastId(last));
     }
 
     @Test
@@ -910,7 +915,7 @@ public class SQLContainerTableQueryTest {
         Object id = container.getIdByIndex(2);
 
         assertTrue(container.removeItem(id));
-        Assert.assertNotSame(id, container.getIdByIndex(2));
+        assertNotSame(id, container.getIdByIndex(2));
     }
 
     @Test
@@ -921,7 +926,7 @@ public class SQLContainerTableQueryTest {
         int index = container.indexOfId(id);
 
         assertTrue(container.removeItem(id));
-        Assert.assertNotSame(id, container.getIdByIndex(index));
+        assertNotSame(id, container.getIdByIndex(index));
     }
 
     @Test
@@ -967,9 +972,9 @@ public class SQLContainerTableQueryTest {
         container.getContainerProperty(id, NAME).setValue("New Name");
 
         assertTrue(id instanceof TemporaryRowId);
-        Assert.assertSame(id, container.lastItemId());
+        assertSame(id, container.lastItemId());
         container.commit();
-        Assert.assertFalse(container.lastItemId() instanceof TemporaryRowId);
+        assertFalse(container.lastItemId() instanceof TemporaryRowId);
         assertEquals("New Name", container
                 .getContainerProperty(container.lastItemId(), NAME).getValue());
     }
@@ -982,14 +987,14 @@ public class SQLContainerTableQueryTest {
         container.getContainerProperty(id, NAME).setValue("Herbert");
         container.getContainerProperty(id2, NAME).setValue("Larry");
         assertTrue(id2 instanceof TemporaryRowId);
-        Assert.assertSame(id2, container.lastItemId());
+        assertSame(id2, container.lastItemId());
         container.commit();
         Object nextToLast = container.getIdByIndex(container.size() - 2);
 
-        Assert.assertFalse(nextToLast instanceof TemporaryRowId);
+        assertFalse(nextToLast instanceof TemporaryRowId);
         assertEquals("Herbert",
                 container.getContainerProperty(nextToLast, NAME).getValue());
-        Assert.assertFalse(container.lastItemId() instanceof TemporaryRowId);
+        assertFalse(container.lastItemId() instanceof TemporaryRowId);
         assertEquals("Larry", container
                 .getContainerProperty(container.lastItemId(), NAME).getValue());
     }
@@ -1001,7 +1006,7 @@ public class SQLContainerTableQueryTest {
         container.removeItem(last);
         container.commit();
 
-        Assert.assertFalse(last.equals(container.lastItemId()));
+        assertFalse(last.equals(container.lastItemId()));
     }
 
     @Test
@@ -1036,7 +1041,7 @@ public class SQLContainerTableQueryTest {
         assertEquals(size + 1, container.size());
         container.rollback();
         assertEquals(size, container.size());
-        Assert.assertFalse("foo".equals(
+        assertFalse("foo".equals(
                 container.getContainerProperty(container.lastItemId(), NAME)
                         .getValue()));
     }
@@ -1059,7 +1064,7 @@ public class SQLContainerTableQueryTest {
         Object last = container.lastItemId();
         container.getContainerProperty(last, NAME).setValue("foo");
         container.rollback();
-        Assert.assertFalse("foo".equals(
+        assertFalse("foo".equals(
                 container.getContainerProperty(container.lastItemId(), NAME)
                         .getValue()));
     }
@@ -1067,7 +1072,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void itemChangeNotification_table_isModifiedReturnsTrue()
             throws SQLException {
-        Assert.assertFalse(container.isModified());
+        assertFalse(container.isModified());
         RowItem last = (RowItem) container.getItem(container.lastItemId());
         container.itemChangeNotification(last);
         assertTrue(container.isModified());
@@ -1116,21 +1121,21 @@ public class SQLContainerTableQueryTest {
 
     @Test
     public void isModified_tableRemovedItem_returnsTrue() throws SQLException {
-        Assert.assertFalse(container.isModified());
+        assertFalse(container.isModified());
         container.removeItem(container.lastItemId());
         assertTrue(container.isModified());
     }
 
     @Test
     public void isModified_tableAddedItem_returnsTrue() throws SQLException {
-        Assert.assertFalse(container.isModified());
+        assertFalse(container.isModified());
         container.addItem();
         assertTrue(container.isModified());
     }
 
     @Test
     public void isModified_tableChangedItem_returnsTrue() throws SQLException {
-        Assert.assertFalse(container.isModified());
+        assertFalse(container.isModified());
         container.getContainerProperty(container.lastItemId(), NAME)
                 .setValue("foo");
         assertTrue(container.isModified());
@@ -1146,7 +1151,7 @@ public class SQLContainerTableQueryTest {
         assertEquals(3, sortableIds.size());
         if (SQLTestsConstants.db == DB.MSSQL
                 || SQLTestsConstants.db == DB.ORACLE) {
-            Assert.assertFalse(sortableIds.contains("rownum"));
+            assertFalse(sortableIds.contains("rownum"));
         }
     }
 
@@ -1304,21 +1309,20 @@ public class SQLContainerTableQueryTest {
 
         try {
             container.getIdByIndex(4);
-            Assert.fail(
-                    "SQLContainer.getIdByIndex() returned a value for an index beyond the end of the container");
+            fail("SQLContainer.getIdByIndex() returned a value for an index beyond the end of the container");
         } catch (IndexOutOfBoundsException e) {
             // should throw exception - item is filtered out
         }
-        Assert.assertNull(container.nextItemId(container.getIdByIndex(3)));
+        assertNull(container.nextItemId(container.getIdByIndex(3)));
 
-        Assert.assertFalse(container.containsId(id2));
-        Assert.assertFalse(container.getItemIds().contains(id2));
+        assertFalse(container.containsId(id2));
+        assertFalse(container.getItemIds().contains(id2));
 
-        Assert.assertNull(container.getItem(id2));
+        assertNull(container.getItem(id2));
         assertEquals(-1, container.indexOfId(id2));
 
-        Assert.assertNotSame(id2, container.lastItemId());
-        Assert.assertSame(id1, container.lastItemId());
+        assertNotSame(id2, container.lastItemId());
+        assertSame(id1, container.lastItemId());
     }
 
     @Test

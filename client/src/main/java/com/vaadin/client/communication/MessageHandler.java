@@ -144,7 +144,7 @@ public class MessageHandler {
     private int sessionExpirationInterval;
 
     /**
-     * Holds the time spent rendering the last request
+     * Holds the time spent rendering the last request.
      */
     protected int lastProcessingTime;
 
@@ -936,13 +936,13 @@ public class MessageHandler {
                                 Profiler.leave(key);
                             }
                         } else if (legacyConnector == null) {
-                            getLogger().severe(
-                                    "Received update for " + uidl.getTag()
-                                            + ", but there is no such paintable ("
-                                            + connectorId + ") rendered.");
+                            getLogger().severe("Received update for "
+                                    + uidl.getTag()
+                                    + ", but there is no such paintable ("
+                                    + connectorId + ") rendered.");
                         } else {
-                            getLogger()
-                                    .severe("Server sent Vaadin 6 style updates for "
+                            getLogger().severe(
+                                    "Server sent Vaadin 6 style updates for "
                                             + Util.getConnectorString(
                                                     legacyConnector)
                                             + " but this is not a Vaadin 6 Paintable");
@@ -1723,7 +1723,7 @@ public class MessageHandler {
     }
 
     /**
-     * Checks if the first UIDL has been handled
+     * Checks if the first UIDL has been handled.
      *
      * @return true if the initial UIDL has already been processed, false
      *         otherwise
@@ -1777,7 +1777,7 @@ public class MessageHandler {
     }
 
     /**
-     * Unwraps and parses the given JSON, originating from the server
+     * Unwraps and parses the given JSON, originating from the server.
      *
      * @param jsonText
      *            the json from the server
@@ -1811,7 +1811,7 @@ public class MessageHandler {
     }-*/;
 
     /**
-     * Parse the given wrapped JSON, received from the server, to a ValueMap
+     * Parse the given wrapped JSON, received from the server, to a ValueMap.
      *
      * @param wrappedJsonText
      *            the json, wrapped as done by the server

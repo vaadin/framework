@@ -15,9 +15,11 @@
  */
 package com.vaadin.v7.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,17 +54,17 @@ public class LabelDataSourceTest {
     @Test
     public void stringDataSource() {
         label.setPropertyDataSource(stringDataSource);
-        Assert.assertEquals(STRING_DS_VALUE, label.getState().text);
-        Assert.assertEquals(STRING_DS_VALUE, label.getValue());
-        Assert.assertEquals(stringDataSource, label.getPropertyDataSource());
+        assertEquals(STRING_DS_VALUE, label.getState().text);
+        assertEquals(STRING_DS_VALUE, label.getValue());
+        assertEquals(stringDataSource, label.getPropertyDataSource());
         label.setPropertyDataSource(null);
-        Assert.assertEquals(STRING_DS_VALUE, label.getState().text);
-        Assert.assertEquals(STRING_DS_VALUE, label.getValue());
-        Assert.assertEquals(null, label.getPropertyDataSource());
+        assertEquals(STRING_DS_VALUE, label.getState().text);
+        assertEquals(STRING_DS_VALUE, label.getValue());
+        assertEquals(null, label.getPropertyDataSource());
         label.setValue("foo");
-        Assert.assertEquals("foo", label.getState().text);
-        Assert.assertEquals("foo", label.getValue());
-        Assert.assertNull(label.getPropertyDataSource());
+        assertEquals("foo", label.getState().text);
+        assertEquals("foo", label.getValue());
+        assertNull(label.getPropertyDataSource());
 
     }
 
@@ -70,18 +72,18 @@ public class LabelDataSourceTest {
     public void integerDataSourceFi() {
         label.setLocale(new Locale("fi", "FI"));
         label.setPropertyDataSource(integerDataSource);
-        Assert.assertEquals(INTEGER_STRING_VALUE_FI, label.getState().text);
-        Assert.assertEquals(INTEGER_STRING_VALUE_FI, label.getValue());
-        Assert.assertEquals(integerDataSource, label.getPropertyDataSource());
+        assertEquals(INTEGER_STRING_VALUE_FI, label.getState().text);
+        assertEquals(INTEGER_STRING_VALUE_FI, label.getValue());
+        assertEquals(integerDataSource, label.getPropertyDataSource());
     }
 
     @Test
     public void integerDataSourceEn() {
         label.setLocale(new Locale("en", "US"));
         label.setPropertyDataSource(integerDataSource);
-        Assert.assertEquals(INTEGER_STRING_VALUE_EN_US, label.getState().text);
-        Assert.assertEquals(INTEGER_STRING_VALUE_EN_US, label.getValue());
-        Assert.assertEquals(integerDataSource, label.getPropertyDataSource());
+        assertEquals(INTEGER_STRING_VALUE_EN_US, label.getState().text);
+        assertEquals(INTEGER_STRING_VALUE_EN_US, label.getValue());
+        assertEquals(integerDataSource, label.getPropertyDataSource());
     }
 
     @Test
@@ -89,20 +91,20 @@ public class LabelDataSourceTest {
         label.setLocale(new Locale("en", "US"));
         label.setPropertyDataSource(integerDataSource);
         label.setLocale(new Locale("fi", "FI"));
-        Assert.assertEquals(INTEGER_STRING_VALUE_FI, label.getState().text);
-        Assert.assertEquals(INTEGER_STRING_VALUE_FI, label.getValue());
-        Assert.assertEquals(integerDataSource, label.getPropertyDataSource());
+        assertEquals(INTEGER_STRING_VALUE_FI, label.getState().text);
+        assertEquals(INTEGER_STRING_VALUE_FI, label.getValue());
+        assertEquals(integerDataSource, label.getPropertyDataSource());
     }
 
     @Test
     public void setRemoveDataSource() {
         label.setValue("before");
         label.setPropertyDataSource(stringDataSource);
-        Assert.assertEquals(STRING_DS_VALUE, label.getValue());
+        assertEquals(STRING_DS_VALUE, label.getValue());
         label.setPropertyDataSource(null);
-        Assert.assertEquals(STRING_DS_VALUE, label.getValue());
+        assertEquals(STRING_DS_VALUE, label.getValue());
         label.setValue("after");
-        Assert.assertEquals("after", label.getValue());
+        assertEquals("after", label.getValue());
     }
 
     @Test
@@ -113,6 +115,6 @@ public class LabelDataSourceTest {
         UI ui = new MockUI();
         ui.setLocale(Locale.GERMANY);
         ui.setContent(label);
-        Assert.assertEquals(INTEGER_STRING_VALUE_DE, label.getState().text);
+        assertEquals(INTEGER_STRING_VALUE_DE, label.getState().text);
     }
 }

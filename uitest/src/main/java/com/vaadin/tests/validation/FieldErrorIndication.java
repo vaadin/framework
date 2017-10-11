@@ -27,7 +27,6 @@ import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.validator.StringLengthValidator;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.PasswordField;

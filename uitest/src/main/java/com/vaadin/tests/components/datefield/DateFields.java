@@ -13,8 +13,8 @@ import com.vaadin.ui.DateField;
 @SuppressWarnings("serial")
 public class DateFields extends ComponentTestCase<DateField> {
 
-    private static final Locale[] LOCALES = { Locale.US,
-            Locale.TAIWAN, new Locale("fi", "FI") };
+    private static final Locale[] LOCALES = { Locale.US, Locale.TAIWAN,
+            new Locale("fi", "FI") };
 
     @Override
     protected Class<DateField> getTestClass() {
@@ -27,14 +27,14 @@ public class DateFields extends ComponentTestCase<DateField> {
         for (Locale locale : LOCALES) {
             DateField pd = createPopupDateField("Undefined width", "-1",
                     locale);
-            pd.setId("Locale-" + locale.toString() + "-undefined-wide");
+            pd.setId("Locale-" + locale + "-undefined-wide");
             addTestComponent(pd);
             pd = createPopupDateField("500px width", "500px", locale);
-            pd.setId("Locale-" + locale.toString() + "-500px-wide");
+            pd.setId("Locale-" + locale + "-500px-wide");
             addTestComponent(pd);
             pd = createPopupDateField("Initially empty", "", locale);
             pd.setValue(null);
-            pd.setId("Locale-" + locale.toString() + "-initially-empty");
+            pd.setId("Locale-" + locale + "-initially-empty");
             addTestComponent(pd);
         }
 
@@ -42,7 +42,7 @@ public class DateFields extends ComponentTestCase<DateField> {
 
     private DateField createPopupDateField(String caption, String width,
             Locale locale) {
-        DateField pd = new DateField(caption + "(" + locale.toString() + ")");
+        DateField pd = new DateField(caption + "(" + locale + ")");
         pd.setWidth(width);
         pd.setValue(LocalDate.of(1970, 05, 23));
         pd.setLocale(locale);

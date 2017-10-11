@@ -1,15 +1,17 @@
 package com.vaadin.tests.server;
 
-import com.vaadin.server.KeyMapper;
-import org.junit.Test;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+import com.vaadin.server.KeyMapper;
 
 public class KeyMapperTest {
 
@@ -104,8 +106,8 @@ public class KeyMapperTest {
             f1.setAccessible(true);
             f2.setAccessible(true);
 
-            HashMap<?, ?> h1 = (HashMap<?, ?>) f1.get(mapper);
-            HashMap<?, ?> h2 = (HashMap<?, ?>) f2.get(mapper);
+            Map<?, ?> h1 = (HashMap<?, ?>) f1.get(mapper);
+            Map<?, ?> h2 = (HashMap<?, ?>) f2.get(mapper);
 
             assertEquals(i, h1.size());
             assertEquals(i, h2.size());

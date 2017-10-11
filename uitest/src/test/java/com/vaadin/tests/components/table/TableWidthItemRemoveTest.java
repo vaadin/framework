@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -39,7 +40,7 @@ public class TableWidthItemRemoveTest extends MultiBrowserTest {
                 .findElement(By.vaadin("//Table[caption=\"My table\"]"));
         int original_width = table.getSize().getWidth();
         populateButton.click();
-        Assert.assertTrue("Width changed on item add.",
+        assertTrue("Width changed on item add.",
                 original_width == table.getSize().getWidth());
     }
 

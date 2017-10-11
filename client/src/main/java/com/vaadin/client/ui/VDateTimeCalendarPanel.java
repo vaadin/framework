@@ -46,7 +46,7 @@ public class VDateTimeCalendarPanel
     private VTime time;
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */
@@ -61,7 +61,7 @@ public class VDateTimeCalendarPanel
         private ListBox ampm;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public VTime() {
             super();
@@ -209,7 +209,7 @@ public class VDateTimeCalendarPanel
         }
 
         /**
-         * Updates the valus to correspond to the values in value
+         * Updates the value to correspond to the values in value.
          */
         public void updateTimes() {
             if (getDate() == null) {
@@ -316,7 +316,7 @@ public class VDateTimeCalendarPanel
     }
 
     /**
-     * Dispatches an event when the panel when time is changed
+     * Dispatches an event when the panel when time is changed.
      */
     public interface TimeChangeListener {
 

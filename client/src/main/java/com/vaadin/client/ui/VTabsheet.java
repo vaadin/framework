@@ -100,7 +100,7 @@ public class VTabsheet extends VTabsheetBase
     }
 
     /**
-     * Representation of a single "tab" shown in the TabBar
+     * Representation of a single "tab" shown in the TabBar.
      *
      */
     public static class Tab extends SimplePanel implements HasFocusHandlers,
@@ -198,7 +198,7 @@ public class VTabsheet extends VTabsheetBase
         }
 
         /**
-         * Toggles the style names for the Tab
+         * Toggles the style names for the Tab.
          *
          * @param selected
          *            true if the Tab is selected
@@ -828,7 +828,7 @@ public class VTabsheet extends VTabsheetBase
             getCurrentlyDisplayedWidget().getElement().getParentElement()
                     .getStyle().setVisibility(Visibility.HIDDEN);
 
-            getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+            getRpcProxy().setSelected(tabKeys.get(tabIndex));
 
             waitingForResponse = true;
 

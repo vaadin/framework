@@ -4,13 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.vaadin</groupId>
-        <artifactId>vaadin-test</artifactId>
+        <artifactId>vaadin-servlet-containers-test</artifactId>
         <version>8.2-SNAPSHOT</version>
-        <relativePath>../..</relativePath>
     </parent>
     <artifactId>vaadin-test-jsp-integration</artifactId>
     <name>vaadin-test-jsp-integration</name>
     <packaging>war</packaging>
+
+    <properties>
+        <context.path>/</context.path>
+    </properties>
 
     <dependencies>
 

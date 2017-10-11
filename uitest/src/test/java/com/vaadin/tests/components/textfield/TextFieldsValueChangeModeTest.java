@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.textfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -113,7 +114,7 @@ public class TextFieldsValueChangeModeTest extends MultiBrowserTest {
             if (tail != -1) {
                 log = log.substring(0, tail);
             }
-            Assert.assertEquals(expected, log);
+            assertEquals(expected, log);
         }
 
     }

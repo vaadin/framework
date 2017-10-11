@@ -160,7 +160,7 @@ public class CalendarBasicsTest {
         assertEquals(calendar.getInternalCalendar().getTimeZone(),
                 calendar.getTimeZone());
 
-        // One can override the default behaviour by specifying a timezone
+        // One can override the default behavior by specifying a timezone
         TimeZone customTimeZone = TimeZone.getTimeZone("Europe/Helsinki");
         calendar.setTimeZone(customTimeZone);
         assertEquals(customTimeZone, calendar.getTimeZone());
@@ -211,7 +211,7 @@ public class CalendarBasicsTest {
     @Test
     public void isClientChangeAllowed_connectorEnabled() {
         TestCalendar calendar = new TestCalendar(true);
-        Assert.assertTrue(
+        assertTrue(
                 "Calendar with enabled connector doesn't allow client change",
                 calendar.isClientChangeAllowed());
     }

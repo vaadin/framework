@@ -17,6 +17,7 @@ package com.vaadin.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
@@ -36,7 +37,7 @@ public class ConnectorMap {
             .create();
 
     /**
-     * Returns a {@link ServerConnector} by its id
+     * Returns a {@link ServerConnector} by its id.
      *
      * @param connectorId
      *            The connector id
@@ -103,7 +104,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Removes all registered connectors
+     * Removes all registered connectors.
      */
     public void clear() {
         idToComponentDetail.clear();
@@ -196,7 +197,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Gets all registered {@link ComponentConnector} instances
+     * Gets all registered {@link ComponentConnector} instances.
      *
      * @return An array of all registered {@link ComponentConnector} instances
      *
@@ -205,7 +206,7 @@ public class ConnectorMap {
      */
     @Deprecated
     public ComponentConnector[] getComponentConnectors() {
-        ArrayList<ComponentConnector> result = new ArrayList<>();
+        List<ComponentConnector> result = new ArrayList<>();
 
         JsArrayObject<ServerConnector> connectors = getConnectorsAsJsArray();
         int size = connectors.size();
@@ -255,7 +256,7 @@ public class ConnectorMap {
     @Deprecated
     public Collection<? extends ServerConnector> getConnectors() {
         Collection<ComponentDetail> values = idToComponentDetail.values();
-        ArrayList<ServerConnector> arrayList = new ArrayList<>(values.size());
+        List<ServerConnector> arrayList = new ArrayList<>(values.size());
         for (ComponentDetail componentDetail : values) {
             arrayList.add(componentDetail.getConnector());
         }

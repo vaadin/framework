@@ -55,7 +55,7 @@ public class RadioButtonGroupElement extends AbstractSingleSelectElement {
     }
 
     /**
-     * Return value of the selected option in the option group
+     * Return value of the selected option in the option group.
      *
      * @return value of the selected option in the option group
      */
@@ -74,7 +74,7 @@ public class RadioButtonGroupElement extends AbstractSingleSelectElement {
     }
 
     /**
-     * Select option in the option group with the specified value
+     * Select option in the option group with the specified value.
      *
      * @param chars
      *            value of the option in the option group which will be selected

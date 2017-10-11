@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.dom.client.DivElement;
@@ -52,7 +53,7 @@ public class VGridLayout extends ComplexPanel {
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public HashMap<Widget, Cell> widgetToCell = new HashMap<>();
+    public Map<Widget, Cell> widgetToCell = new HashMap<>();
 
     /** For internal use only. May be removed or replaced in the future. */
     public int[] columnWidths;
@@ -112,7 +113,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the column widths measured in pixels
+     * Returns the column widths measured in pixels.
      *
      * @return
      */
@@ -121,7 +122,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the row heights measured in pixels
+     * Returns the row heights measured in pixels.
      *
      * @return
      */
@@ -130,7 +131,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the spacing between the cells horizontally in pixels
+     * Returns the spacing between the cells horizontally in pixels.
      *
      * @return
      */
@@ -139,7 +140,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Returns the spacing between the cells vertically in pixels
+     * Returns the spacing between the cells vertically in pixels.
      *
      * @return
      */

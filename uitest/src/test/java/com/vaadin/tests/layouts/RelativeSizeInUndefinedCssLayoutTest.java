@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.FormLayoutElement;
@@ -29,9 +31,9 @@ public class RelativeSizeInUndefinedCssLayoutTest
     public void relativeSizeInUndefinedCssLayout() {
         openTestURL();
         int w = $(FormLayoutElement.class).first().getSize().getWidth();
-        Assert.assertEquals(w, 520);
+        assertEquals(w, 520);
 
         int w2 = $(TextFieldElement.class).first().getSize().getWidth();
-        Assert.assertTrue(w2 > 400);
+        assertTrue(w2 > 400);
     }
 }

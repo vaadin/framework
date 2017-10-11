@@ -18,6 +18,7 @@ package com.vaadin.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jsoup.nodes.Element;
@@ -43,7 +44,7 @@ public class Flash extends AbstractEmbedded {
     }
 
     /**
-     * Creates a new empty Flash component with the given caption
+     * Creates a new empty Flash component with the given caption.
      *
      * @param caption
      *            The caption for the component
@@ -238,7 +239,7 @@ public class Flash extends AbstractEmbedded {
         super.writeDesign(design, designContext);
 
         // Parameters, in alphabetic order
-        ArrayList<String> paramNames = new ArrayList<>();
+        List<String> paramNames = new ArrayList<>();
         for (String param : getParameterNames()) {
             paramNames.add(param);
         }
