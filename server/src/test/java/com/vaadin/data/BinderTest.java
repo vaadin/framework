@@ -962,6 +962,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Assert.assertEquals(3, item.getAge());
     }
 
+    @Test
     public void two_asRequired_fields_without_initial_values() {
         binder.forField(nameField).asRequired("Empty name").bind(p -> "",
                 (p, s) -> {
