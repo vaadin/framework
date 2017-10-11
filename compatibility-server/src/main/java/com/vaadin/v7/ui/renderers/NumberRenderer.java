@@ -180,9 +180,9 @@ public class NumberRenderer extends AbstractRenderer<Number> {
         } else if (numberFormat != null) {
             stringValue = numberFormat.format(value);
         } else {
-            throw new IllegalStateException(String.format(
-                    "Internal bug: " + "%s is in an illegal state: "
-                            + "[locale: %s, numberFormat: %s, formatString: %s]",
+            throw new IllegalStateException(String.format("Internal bug: "
+                    + "%s is in an illegal state: "
+                    + "[locale: %s, numberFormat: %s, formatString: %s]",
                     getClass().getSimpleName(), locale, numberFormat,
                     formatString));
         }
@@ -193,7 +193,7 @@ public class NumberRenderer extends AbstractRenderer<Number> {
     public String toString() {
         final String fieldInfo;
         if (numberFormat != null) {
-            fieldInfo = "numberFormat: " + numberFormat.toString();
+            fieldInfo = "numberFormat: " + numberFormat;
         } else {
             fieldInfo = "locale: " + locale + ", formatString: " + formatString;
         }

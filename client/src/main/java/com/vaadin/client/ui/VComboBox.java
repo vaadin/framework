@@ -136,7 +136,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
         @Override
         public String getDisplayString() {
-            final StringBuffer sb = new StringBuffer();
+            final StringBuilder sb = new StringBuilder();
             ApplicationConnection client = connector.getConnection();
             final Icon icon = client
                     .getIcon(client.translateVaadinUri(untranslatedIconUri));

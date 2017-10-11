@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.server.StreamResource;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -68,7 +68,7 @@ public class CSSInjectTest extends TestBase {
                                         return new ByteArrayInputStream(
                                                 css.getBytes());
                                     }
-                                }, UUID.randomUUID().toString() + ".css"));
+                                }, UUID.randomUUID() + ".css"));
 
                         cssToInject.setValue("");
                     }

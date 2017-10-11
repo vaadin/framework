@@ -1677,9 +1677,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (grid.selectionColumn != null && grid.selectionColumn
                     .getRenderer() instanceof MultiSelectionRenderer) {
                 grid.refreshBody();
-                CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
+                HeaderCell cell = grid.getDefaultHeaderRow().getCell(grid.selectionColumn);
+                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy provider, then no checkbox
+                    CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
                         .getCell(grid.selectionColumn).getWidget();
-                checkBox.setEnabled(isEnabled);
+                    checkBox.setEnabled(isEnabled);
+                }
             }
         }
 
@@ -3164,8 +3167,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             if (!columns.contains(column)) {
                 throw new IllegalArgumentException(
-                        "Given column is not a column in this grid. "
-                                + column.toString());
+                        "Given column is not a column in this grid. " + column);
             }
 
             if (!column.isSortable()) {
@@ -4081,7 +4083,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         private String createHTML(Column<?, T> column) {
-            final StringBuffer buf = new StringBuffer();
+            final StringBuilder buf = new StringBuilder();
             buf.append("<span class=\"");
             if (column.isHidden()) {
                 buf.append("v-off");
@@ -4724,8 +4726,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             @Override
             public void render(RendererCellReference cell, Object data) {
                 if (!warned && !(data instanceof String)) {
-                    getLogger().warning(Column.this.toString() + ": "
-                            + DEFAULT_RENDERER_WARNING);
+                    getLogger().warning(
+                            Column.this + ": " + DEFAULT_RENDERER_WARNING);
                     warned = true;
                 }
 
@@ -5599,7 +5601,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
             boolean isSelected = hasData && isSelected(rowData);
             if (Grid.this.selectionModel.isSelectionAllowed()) {
-                rowElement.setAttribute("aria-selected", String.valueOf(isSelected));
+                rowElement.setAttribute("aria-selected",
+                        String.valueOf(isSelected));
             } else {
                 rowElement.removeAttribute("aria-selected");
             }
@@ -6318,10 +6321,11 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * Adds the given role as 'role="$param"' to the {@code <table />} element
      * of the grid.
      *
-     * @param role the role param
+     * @param role
+     *            the role param
      * @since 8.2
      */
-    protected void setAriaRole(String role){
+    protected void setAriaRole(String role) {
         escalator.getTable().setAttribute("role", role);
     }
 
@@ -6975,7 +6979,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Gets the {@link Escalator} used by this Grid instnace.
+     * Gets the {@link Escalator} used by this Grid instance.
      *
      * @return the escalator instance, never <code>null</code>
      */

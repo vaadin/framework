@@ -239,7 +239,7 @@ and column.
 
 [source, java]
 ----
-grid.addCellClickListener(event ->
+grid.addItemClickListener(event ->
     Notification.show("Value: " + event.getItem()));
 ----
 

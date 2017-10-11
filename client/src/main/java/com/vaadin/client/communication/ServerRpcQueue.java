@@ -251,7 +251,7 @@ public class ServerRpcQueue {
             String connectorId = invocation.getConnectorId();
             if (!connectorExists(connectorId)) {
                 getLogger().info("Ignoring RPC for removed connector: "
-                        + connectorId + ": " + invocation.toString());
+                        + connectorId + ": " + invocation);
                 continue;
             }
 
@@ -269,8 +269,8 @@ public class ServerRpcQueue {
                     Method method = type.getMethod(invocation.getMethodName());
                     parameterTypes = method.getParameterTypes();
                 } catch (NoDataException e) {
-                    throw new RuntimeException(
-                            "No type data for " + invocation.toString(), e);
+                    throw new RuntimeException("No type data for " + invocation,
+                            e);
                 }
             }
 

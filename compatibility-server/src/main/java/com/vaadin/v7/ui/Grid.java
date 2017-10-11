@@ -5265,13 +5265,11 @@ public class Grid extends AbstractComponent
             addColumnProperty(propertyId, String.class, "");
         } else {
             if (columns.containsKey(propertyId)) {
-                throw new IllegalStateException(
-                        "A column for property id '" + propertyId.toString()
-                                + "' already exists in this grid");
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId + "' already exists in this grid");
             } else {
-                throw new IllegalStateException(
-                        "Property id '" + propertyId.toString()
-                                + "' does not exist in the container");
+                throw new IllegalStateException("Property id '" + propertyId
+                        + "' does not exist in the container");
             }
         }
 

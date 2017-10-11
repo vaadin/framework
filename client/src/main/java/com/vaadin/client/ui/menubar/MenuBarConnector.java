@@ -73,7 +73,7 @@ public class MenuBarConnector extends AbstractComponentConnector
         if (null != getState()
                 && !ComponentStateUtil.isUndefinedWidth(getState())) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
-            StringBuffer itemHTML = new StringBuffer();
+            StringBuilder itemHTML = new StringBuilder();
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 Icon icon = client
@@ -131,7 +131,7 @@ public class MenuBarConnector extends AbstractComponentConnector
                 }
             }
 
-            currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem = currentMenu.addItem(itemHTML, cmd);
             currentItem.updateFromUIDL(item, client);
 
             if (item.getChildCount() > 0) {

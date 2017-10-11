@@ -89,7 +89,7 @@ public class Type {
                 if (i != 0) {
                     string += ',';
                 }
-                string += parameterTypes[i].toString();
+                string += parameterTypes[i];
             }
             string += '>';
         }

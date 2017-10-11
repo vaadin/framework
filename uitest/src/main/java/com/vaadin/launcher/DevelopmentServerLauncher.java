@@ -468,7 +468,7 @@ public class DevelopmentServerLauncher {
 
             System.out.println(thread.getName() + " - " + thread.getState());
             for (StackTraceElement stackTraceElement : stackTraceElements) {
-                System.out.println("    at " + stackTraceElement.toString());
+                System.out.println("    at " + stackTraceElement);
             }
             System.out.println();
         }

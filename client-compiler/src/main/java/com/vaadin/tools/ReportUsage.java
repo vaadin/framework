@@ -144,10 +144,10 @@ public class ReportUsage {
         appendUserAgentProperty(extra, "os.version");
 
         if (extra.length() != 0) {
-            userAgent += " (" + extra.toString() + ")";
+            userAgent += " (" + extra + ")";
         }
 
-        return userAgent.toString();
+        return userAgent;
     }
 
     private static void appendUserAgentProperty(StringBuilder sb,

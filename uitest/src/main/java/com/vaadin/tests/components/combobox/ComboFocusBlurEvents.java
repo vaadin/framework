@@ -24,14 +24,12 @@ public class ComboFocusBlurEvents extends TestBase {
         final ObjectProperty<String> log = new ObjectProperty<>("");
 
         cb.addFocusListener(event -> {
-            log.setValue(log.getValue().toString() + "<br>" + counter
-                    + ": Focus event!");
+            log.setValue(log.getValue() + "<br>" + counter + ": Focus event!");
             counter++;
         });
 
         cb.addBlurListener(event -> {
-            log.setValue(log.getValue().toString() + "<br>" + counter
-                    + ": Blur event!");
+            log.setValue(log.getValue() + "<br>" + counter + ": Blur event!");
             counter++;
         });
 

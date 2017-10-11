@@ -15,11 +15,31 @@
  */
 package com.vaadin.tests.integration.websocket.jsr356;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.Assume;
+
 import com.vaadin.tests.integration.websocket.ServletIntegrationWebsocketIT;
 
 public class ServletIntegrationJSR356WebsocketIT
         extends ServletIntegrationWebsocketIT {
     // Uses the test method declared in the super class
+
+    private static final Set<String> nonJSR356Servers = new HashSet<>();
+
+    static {
+        nonJSR356Servers.add("jetty8");
+        nonJSR356Servers.add("liberty-microprofile");
+    }
+
+    @Override
+    public void setup() throws Exception {
+        Assume.assumeFalse("Jetty 8 does not support JSR356",
+                nonJSR356Servers.contains(System.getProperty("server-name")));
+
+        super.setup();
+    }
 
     @Override
     protected String getTestPath() {

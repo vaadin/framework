@@ -2,7 +2,7 @@ package com.vaadin.data.provider.hierarchical;
 
 import java.io.Serializable;
 
-public class Node implements Serializable{
+public class Node implements Serializable {
 
     private static int counter = 0;
 
@@ -27,7 +27,6 @@ public class Node implements Serializable{
     }
 
     public String toString() {
-        return number + (parent != null ? " [parent: " + parent.toString() + "]"
-                : "");
+        return number + (parent != null ? " [parent: " + parent + "]" : "");
     }
 }

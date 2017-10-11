@@ -505,7 +505,7 @@ public class Label extends AbstractLegacyComponent implements Property<String>,
      */
     private String stripTags(String xml) {
 
-        final StringBuffer res = new StringBuffer();
+        final StringBuilder res = new StringBuilder();
 
         int processed = 0;
         final int xmlLen = xml.length();

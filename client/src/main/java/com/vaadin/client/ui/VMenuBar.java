@@ -220,7 +220,7 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public String buildItemHTML(UIDL item) {
         // Construct html from the text and the optional icon
-        StringBuffer itemHTML = new StringBuffer();
+        StringBuilder itemHTML = new StringBuilder();
         if (item.hasAttribute("separator")) {
             itemHTML.append("<span>---</span>");
         } else {

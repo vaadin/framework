@@ -304,8 +304,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      *         context, runner, application classname
      */
     private static URIS getApplicationRunnerURIs(HttpServletRequest request) {
-        final String[] urlParts = request.getRequestURI().toString()
-                .split("\\/");
+        final String[] urlParts = request.getRequestURI().split("\\/");
         // String runner = null;
         URIS uris = new URIS();
         String applicationClassname = null;
