@@ -141,7 +141,7 @@ public class PushRequestHandler
                 .getAttributeName(vaadinServletConfig.getServletName());
         Object framework = vaadinServletConfig.getServletContext()
                 .getAttribute(attributeName);
-        if (framework != null && framework instanceof AtmosphereFramework) {
+        if (framework instanceof AtmosphereFramework) {
             return (AtmosphereFramework) framework;
         }
 

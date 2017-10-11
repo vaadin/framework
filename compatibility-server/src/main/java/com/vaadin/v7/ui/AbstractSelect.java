@@ -1939,8 +1939,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 if (pids != null) {
                     for (Object id : pids) {
                         Property<?> p = i.getItemProperty(id);
-                        if (p != null
-                                && p instanceof Property.ValueChangeNotifier) {
+                        if (p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
                                     .addValueChangeListener(
                                             getCaptionChangeListener());
@@ -1953,7 +1952,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             case PROPERTY:
                 final Property<?> p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
-                if (p != null && p instanceof Property.ValueChangeNotifier) {
+                if (p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
                             .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
@@ -1964,7 +1963,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             if (getItemIconPropertyId() != null) {
                 final Property p = getContainerProperty(itemId,
                         getItemIconPropertyId());
-                if (p != null && p instanceof Property.ValueChangeNotifier) {
+                if (p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
                             .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
