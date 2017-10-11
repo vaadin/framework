@@ -137,10 +137,12 @@ public class Binder<BEAN> implements Serializable {
          * instance representing the outcome of the validation.
          *
          * @see #validate()
-         * 
+         *
          * @param fireEvent
          *            {@code true} to fire status event; {@code false} to not
          * @return the validation result.
+         *
+         * @since 8.2
          */
         public BindingValidationStatus<TARGET> validate(boolean fireEvent);
 
