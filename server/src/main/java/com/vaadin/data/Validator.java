@@ -187,11 +187,11 @@ public interface Validator<T>
                 if (guard.test(value)) {
                     return ValidationResult.ok();
                 } else {
-                    return ValidationResult.failure(
+                    return ValidationResult.create(
                             errorMessageProvider.apply(context), errorLevel);
                 }
             } catch (Exception e) {
-                return ValidationResult.failure(
+                return ValidationResult.create(
                         errorMessageProvider.apply(context), errorLevel);
             }
         };

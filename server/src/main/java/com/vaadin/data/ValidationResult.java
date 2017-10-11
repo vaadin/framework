@@ -62,14 +62,6 @@ public interface ValidationResult extends Serializable {
         public Optional<ErrorLevel> getErrorLevel() {
             return Optional.ofNullable(errorLevel);
         }
-
-        @Override
-        public boolean isError() {
-            // Info and Warning are not error by default.
-            return errorLevel != null && errorLevel != ErrorLevel.INFO
-                    && errorLevel != ErrorLevel.WARNING;
-        }
-
     }
 
     /**
@@ -85,9 +77,16 @@ public interface ValidationResult extends Serializable {
 
     /**
      * Returns optional error level for this validation result. Error level is
-     * not defined for successful validation results.
+     * not present for successful validation results.
+     * <p>
+     * <strong>Note:</strong> By default {@link ErrorLevel#INFO} and
+     * {@link ErrorLevel#WARNING} are not considered to be blocking the
+     * validation and conversion chain.
      *
-     * @return the error level if present
+     * @see #isError()
+     *
+     * @return optional error level; error level is present for validation
+     *         results that have not passed validation
      * 
      * @since 8.2
      */
@@ -95,11 +94,18 @@ public interface ValidationResult extends Serializable {
 
     /**
      * Checks if the result denotes an error.
+     * <p>
+     * <strong>Note:</strong> By default {@link ErrorLevel#INFO} and
+     * {@link ErrorLevel#WARNING} are not considered to be errors.
      *
      * @return <code>true</code> if the result denotes an error,
      *         <code>false</code> otherwise
      */
-    boolean isError();
+    default boolean isError() {
+        ErrorLevel errorLevel = getErrorLevel().orElse(null);
+        return errorLevel != null && errorLevel != ErrorLevel.INFO
+                && errorLevel != ErrorLevel.WARNING;
+    }
 
     /**
      * Returns a successful result.
@@ -123,27 +129,29 @@ public interface ValidationResult extends Serializable {
      */
     public static ValidationResult error(String errorMessage) {
         Objects.requireNonNull(errorMessage);
-        return failure(errorMessage, ErrorLevel.ERROR);
+        return create(errorMessage, ErrorLevel.ERROR);
     }
 
     /**
-     * Creates the validation result which represent a failure with the given
-     * {@code errorMessage} and {@code errorLevel}. Failures with
-     * {@link ErrorLevel} of {@code INFO} or {@code WARNING} are not considered
-     * blocking failures.
+     * Creates the validation result with the given {@code errorMessage} and
+     * {@code errorLevel}. Results with {@link ErrorLevel} of {@code INFO} or
+     * {@code WARNING} are not errors by default.
+     * 
+     * @see #ok()
+     * @see #error(String)
      *
      * @param errorMessage
      *            error message, not {@code null}
      * @param errorLevel
      *            error level, not {@code null}
-     * @return validation result which represent a failure with the given
-     *         {@code errorMessage} and {@code errorLevel}
+     * @return validation result with the given {@code errorMessage} and
+     *         {@code errorLevel}
      * @throws NullPointerException
      *             if {@code errorMessage} or {@code errorLevel} is {@code null}
-     * 
+     *
      * @since 8.2
      */
-    public static ValidationResult failure(String errorMessage,
+    public static ValidationResult create(String errorMessage,
             ErrorLevel errorLevel) {
         Objects.requireNonNull(errorMessage);
         Objects.requireNonNull(errorLevel);
