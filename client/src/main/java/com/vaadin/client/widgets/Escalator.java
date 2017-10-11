@@ -425,7 +425,7 @@ public class Escalator extends Widget
                         velocity = delta / ellapsed;
                         // if last speed was so low, reset speeds and start
                         // storing again
-                        if (speeds.size() > 0 && !validSpeed(speeds.get(0))) {
+                        if (!speeds.isEmpty() && !validSpeed(speeds.get(0))) {
                             speeds.clear();
                             run = true;
                         }

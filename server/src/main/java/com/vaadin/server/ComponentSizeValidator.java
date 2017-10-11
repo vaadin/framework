@@ -276,7 +276,7 @@ public class ComponentSizeValidator implements Serializable {
                 clientJSON.append(",\"widthMsg\":\"").append(msg).append("\"");
                 printServerError(msg, attributes, true, serverErrorStream);
             }
-            if (subErrors.size() > 0) {
+            if (!subErrors.isEmpty()) {
                 serverErrorStream.println("Sub errors >>");
                 clientJSON.append(", \"subErrors\" : [");
                 boolean first = true;

@@ -337,7 +337,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             List<T> rowsToPush = fetchItemsWithRange(offset, limit);
 
-            if (!initial && !reset && rowsToPush.size() == 0) {
+            if (!initial && !reset && rowsToPush.isEmpty()) {
                 triggerReset = true;
             }
 

@@ -277,7 +277,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
             parameters.add("restartApplication");
         }
 
-        if (parameters.size() > 0) {
+        if (!parameters.isEmpty()) {
             url += "?" + StringUtils.join(parameters, "&");
         }
 

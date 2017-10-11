@@ -490,8 +490,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     }
                 }
 
-                if (!isNullSelectionAllowed()
-                        && acceptedSelections.size() < 1) {
+                if (!isNullSelectionAllowed() && acceptedSelections.isEmpty()) {
                     // empty selection not allowed, keep old value
                     markAsDirty();
                     return;

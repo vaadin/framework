@@ -177,7 +177,7 @@ public class JsonPaintTarget implements PaintTarget {
                     "Attempted to write to a closed PaintTarget.");
         }
 
-        if (openJsonTags.size() > 0) {
+        if (!openJsonTags.isEmpty()) {
             final JsonTag parent = openJsonTags.pop();
 
             String lastTag = "";

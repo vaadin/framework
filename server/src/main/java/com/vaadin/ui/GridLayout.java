@@ -1315,7 +1315,7 @@ public class GridLayout extends AbstractLayout
                 Element col = cols.get(column);
                 Component child = null;
 
-                if (col.children().size() > 0) {
+                if (!col.children().isEmpty()) {
                     Element childElement = col.child(0);
                     child = designContext.readDesign(childElement);
                     alignments.put(child, DesignAttributeHandler

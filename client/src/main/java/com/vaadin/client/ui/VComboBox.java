@@ -1067,7 +1067,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          * Gets the preferred height of the menu including pageItemsCount items.
          */
         String getPreferredHeight(int pageItemsCount) {
-            if (currentSuggestions.size() > 0) {
+            if (!currentSuggestions.isEmpty()) {
                 final int pixels = getPreferredHeight()
                         / currentSuggestions.size() * pageItemsCount;
                 return pixels + "px";
@@ -1260,7 +1260,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          */
         int getItemOffsetHeight() {
             List<MenuItem> items = getItems();
-            return items != null && items.size() > 0
+            return items != null && !items.isEmpty()
                     ? items.get(0).getOffsetHeight()
                     : 0;
         }
@@ -1270,7 +1270,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          */
         int getItemOffsetWidth() {
             List<MenuItem> items = getItems();
-            return items != null && items.size() > 0
+            return items != null && !items.isEmpty()
                     ? items.get(0).getOffsetWidth()
                     : 0;
         }

@@ -1312,7 +1312,7 @@ public class VScrollTable extends FlowPanel
             // that is the same as the previous selection. This prevents
             // unwanted scrolling (#18247).
             boolean rowsUnSelected = removeUnselectedRowKeys(selectedKeys);
-            boolean updateFocus = rowsUnSelected || selectedRowKeys.size() == 0
+            boolean updateFocus = rowsUnSelected || selectedRowKeys.isEmpty()
                     || focusedRow == null;
             if (scrollBody != null) {
                 for (Widget w : scrollBody) {

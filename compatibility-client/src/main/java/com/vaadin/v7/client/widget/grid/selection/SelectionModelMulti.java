@@ -104,7 +104,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
 
     @Override
     public boolean deselectAll() {
-        if (selectedRows.size() > 0) {
+        if (!selectedRows.isEmpty()) {
 
             @SuppressWarnings("unchecked")
             final LinkedHashSet<RowHandle<T>> selectedRowsClone = (LinkedHashSet<RowHandle<T>>) selectedRows
@@ -140,7 +140,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             }
         }
 
-        if (added.size() > 0) {
+        if (!added.isEmpty()) {
             grid.fireEvent(new SelectionEvent<T>(grid, added, null,
                     isBeingBatchSelected()));
 
@@ -164,7 +164,7 @@ public class SelectionModelMulti<T> extends AbstractRowHandleSelectionModel<T>
             }
         }
 
-        if (removed.size() > 0) {
+        if (!removed.isEmpty()) {
             grid.fireEvent(new SelectionEvent<T>(grid, null, removed,
                     isBeingBatchSelected()));
             return true;

@@ -605,7 +605,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             }
         }
 
-        if (!isNullSelectionAllowed() && s.size() < 1) {
+        if (!isNullSelectionAllowed() && s.isEmpty()) {
             // empty selection not allowed, keep old value
             markAsDirty();
             return;
