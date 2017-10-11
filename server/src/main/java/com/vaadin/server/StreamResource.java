@@ -36,12 +36,12 @@ public class StreamResource implements ConnectorResource {
     /**
      * Source stream the downloaded content is fetched from.
      */
-    private StreamSource streamSource = null;
+    private StreamSource streamSource;
 
     /**
      * Explicit mime-type.
      */
-    private String MIMEType = null;
+    private String MIMEType;
 
     /**
      * Filename.
@@ -51,7 +51,7 @@ public class StreamResource implements ConnectorResource {
     /**
      * Default buffer size for this stream resource.
      */
-    private int bufferSize = 0;
+    private int bufferSize;
 
     /**
      * Default cache time for this stream resource.

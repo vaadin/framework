@@ -22,13 +22,12 @@ public class ComboBoxItemIconConnectorResourceTest extends MultiBrowserTest {
 
         cb.openPopup();
 
-        WebElement optionsList = getDriver()
-                .findElement(By.id("VAADIN_COMBOBOX_OPTIONLIST"));
-
         Iterator<String> it = Arrays.asList("fi.gif", "au.gif", "hu.gif")
                 .iterator();
 
-        for (WebElement e : optionsList.findElements(By.className("v-icon"))) {
+        WebElement suggestionPopup = cb.getSuggestionPopup();
+        for (WebElement e : suggestionPopup
+                .findElements(By.className("v-icon"))) {
             String imgSrc = e.getAttribute("src");
             imgSrc = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
 

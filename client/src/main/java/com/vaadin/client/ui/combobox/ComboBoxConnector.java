@@ -330,10 +330,9 @@ public class ComboBoxConnector extends AbstractListingConnector
                 String key = getRowKey(row);
                 String caption = row.getString(DataCommunicatorConstants.NAME);
                 String style = row.getString(ComboBoxConstants.STYLE);
-                String untranslatedIconUri = row
-                        .getString(ComboBoxConstants.ICON);
+                String resourceUrl = getResourceUrl(key);
                 ComboBoxSuggestion suggestion = getWidget().new ComboBoxSuggestion(
-                        key, caption, style, untranslatedIconUri);
+                        key, caption, style, resourceUrl);
                 getWidget().currentSuggestions.add(suggestion);
             } else {
                 // there is not enough options to fill the page

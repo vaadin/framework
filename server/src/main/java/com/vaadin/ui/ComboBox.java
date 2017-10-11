@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -32,6 +33,7 @@ import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.CallbackDataProvider;
 import com.vaadin.data.provider.DataCommunicator;
+import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataKeyMapper;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
@@ -240,21 +242,53 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         registerRpc(rpc);
         registerRpc(new FocusAndBlurServerRpcDecorator(this, this::fireEvent));
 
-        addDataGenerator((T data, JsonObject jsonObject) -> {
-            String caption = getItemCaptionGenerator().apply(data);
-            if (caption == null) {
-                caption = "";
+        addDataGenerator(new DataGenerator<T>() {
+            private Set<String> resourcesSet = new HashSet<>();
+
+            @Override
+            public void generateData(T item, JsonObject jsonObject) {
+                String caption = getItemCaptionGenerator().apply(item);
+                if (caption == null) {
+                    caption = "";
+                }
+                jsonObject.put(DataCommunicatorConstants.NAME, caption);
+                String style = itemStyleGenerator.apply(item);
+                if (style != null) {
+                    jsonObject.put(ComboBoxConstants.STYLE, style);
+                }
+                addItemIcon(item);
+            };
+
+            private void addItemIcon(T item) {
+                Resource icon = getItemIconGenerator().apply(item);
+                if (icon != null) {
+                    String key = itemToKey(item);
+                    setResource(key, icon);
+                    resourcesSet.add(key);
+                }
             }
-            jsonObject.put(DataCommunicatorConstants.NAME, caption);
-            String style = itemStyleGenerator.apply(data);
-            if (style != null) {
-                jsonObject.put(ComboBoxConstants.STYLE, style);
+
+            @Override
+            public void destroyData(T item) {
+                String key = itemToKey(item);
+                if (resourcesSet.contains(key)) {
+                    setResource(key, null);
+                    resourcesSet.remove(key);
+                }
             }
-            Resource icon = getItemIconGenerator().apply(data);
-            if (icon != null) {
-                String iconUrl = ResourceReference
-                        .create(icon, ComboBox.this, itemToKey(data)).getURL();
-                jsonObject.put(ComboBoxConstants.ICON, iconUrl);
+
+            @Override
+            public void destroyAllData() {
+                for (String key : resourcesSet) {
+                    setResource(key, null);
+                }
+                resourcesSet.clear();
+            }
+
+            @Override
+            public void refreshData(T item) {
+                destroyData(item);
+                addItemIcon(item);
             }
         });
     }

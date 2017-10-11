@@ -1,8 +1,10 @@
 package com.vaadin.tests.components.combobox;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
-import com.vaadin.server.FileResource;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
@@ -20,14 +22,21 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
     }
 
     @Override
+    @SuppressWarnings("resource")
     protected void setup(VaadinRequest request) {
         ComboBox<String> cb = new ComboBox<>();
         cb.setItems("Finland", "Australia", "Hungary");
 
         cb.setItemIconGenerator(item -> {
-            return new FileResource(new File(
-                    "src/main/webapp/VAADIN/themes" + "/tests-tickets/icons/"
-                            + item.substring(0, 2).toLowerCase() + ".gif"));
+            try {
+                File file = new File("src/main/webapp/VAADIN/themes"
+                        + "/tests-tickets/icons/"
+                        + item.substring(0, 2).toLowerCase() + ".gif");
+                InputStream is = new FileInputStream(file);
+                return new StreamResource(() -> is, file.getName());
+            } catch (Exception e) {
+                return null;
+            }
         });
 
         cb.setValue("Hungary");
