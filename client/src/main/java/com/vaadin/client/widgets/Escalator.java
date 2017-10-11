@@ -1124,6 +1124,73 @@ public class Escalator extends Widget
         }
     }
 
+    /**
+     * Helper class that helps to implement the WAI-ARIA functionality
+     * for the Grid and TreeGrid component.
+     * <p>
+     * The following WAI-ARIA attributes are added through this class:
+     *
+     * <ul>
+     *     <li>aria-rowcount (since 8.2)</li>
+     * </ul>
+     *
+     * @since 8.2
+     */
+    public class AriaGridHelper {
+
+        /**
+         * This field contains the total number of rows from the grid
+         * including rows from thead, tbody and tfoot.
+         *
+         * @since 8.2
+         */
+        private int allRows;
+
+        /**
+         * Adds the given numberOfRows to allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows number of rows that were added to the
+         *                     grid
+         *
+         * @since 8.2
+         */
+        public void addRows(int numberOfRows) {
+            allRows += numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Removes the given numberOfRows from allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows number of rows that were removed from
+         *                     the grid
+         *
+         * @since 8.2
+         */
+        public void removeRows(int numberOfRows) {
+            allRows -= numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Sets the aria-rowcount attribute with the current value
+         * of {@link AriaGridHelper#allRows} if the grid is attached
+         * and {@link AriaGridHelper#allRows} > 0.
+         *
+         * @since 8.2
+         */
+        public void updateAriaRowCount() {
+            if (!isAttached() || 0 > allRows) {
+
+                return;
+            }
+
+            getTable().setAttribute("aria-rowcount", String.valueOf(allRows));
+        }
+    }
+
     public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -1150,8 +1217,7 @@ public class Escalator extends Widget
 
         private boolean initialColumnSizesCalculated = false;
 
-        public AbstractRowContainer(
-                final TableSectionElement rowContainerElement) {
+        public AbstractRowContainer(final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
         }
 
@@ -1216,6 +1282,7 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            ariaGridHelper.removeRows(numberOfRows);
 
             if (!isAttached()) {
                 return;
@@ -1340,6 +1407,7 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
+            ariaGridHelper.addRows(numberOfRows);
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -2168,8 +2236,7 @@ public class Escalator extends Widget
         /** The height of the combined rows in the DOM. Never negative. */
         private double heightOfSection = 0;
 
-        public AbstractStaticRowContainer(
-                final TableSectionElement headElement) {
+        public AbstractStaticRowContainer(final TableSectionElement headElement) {
             super(headElement);
         }
 
@@ -5594,9 +5661,10 @@ public class Escalator extends Widget
     private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();
     private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
+    private final AriaGridHelper ariaGridHelper = new AriaGridHelper();
+
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
-    private final BodyRowContainerImpl body = new BodyRowContainerImpl(
-            bodyElem);
+    private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem);
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
     /**
@@ -5608,6 +5676,7 @@ public class Escalator extends Widget
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
+    private final Element table;
 
     private final DivElement horizontalScrollbarDeco = DivElement
             .as(DOM.createDiv());
@@ -5662,7 +5731,7 @@ public class Escalator extends Widget
 
         root.appendChild(tableWrapper);
 
-        final Element table = DOM.createTable();
+        table = DOM.createTable();
         tableWrapper.appendChild(table);
 
         table.appendChild(headElem);
@@ -6799,7 +6868,7 @@ public class Escalator extends Widget
      * @since 8.2
      */
     public Element getTable() {
-        return getTableWrapper().getFirstChildElement();
+        return table;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {
