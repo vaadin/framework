@@ -1676,9 +1676,12 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (grid.selectionColumn != null && grid.selectionColumn
                     .getRenderer() instanceof MultiSelectionRenderer) {
                 grid.refreshBody();
-                CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
+                HeaderCell cell = grid.getDefaultHeaderRow().getCell(grid.selectionColumn);
+                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy provider, then no checkbox
+                    CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
                         .getCell(grid.selectionColumn).getWidget();
-                checkBox.setEnabled(isEnabled);
+                    checkBox.setEnabled(isEnabled);
+                }
             }
         }
 
