@@ -247,7 +247,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             String variableName = getResolutionVariable(resolution);
 
             Integer newValue = variables.get(variableName);
-            if (newValue != null && newValue >= 0) {
+            if (newValue != null) {
                 calendarFields.put(resolution, newValue);
             } else {
                 calendarFields.put(resolution,
@@ -368,7 +368,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * override formatting. See Vaadin issue #2200.
      *
      * @param dateFormat
-     *            the dateFormat to set
+     *            the dateFormat to set, can be {@code null}
      *
      * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
      */
@@ -377,8 +377,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Returns a format string used to format date value on client side or null
-     * if default formatting from {@link Component#getLocale()} is used.
+     * Returns a format string used to format date value on client side or
+     * {@code null} if default formatting from {@link Component#getLocale()} is
+     * used.
      *
      * @return the dateFormat
      */

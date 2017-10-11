@@ -27,20 +27,29 @@ import com.vaadin.shared.communication.ServerRpc;
 public interface AbstractDateFieldServerRpc extends ServerRpc {
 
     /**
+     * Updates the typed data string and resolution names and values.
      * 
      * @param newDateString
-     *            Enables analyzing invalid input on the server this variable is
-     *            {@code null} if the date was chosen with popup calendar or
-     *            contains user-typed string
+     *            the value of the text field part. It enables analyzing invalid
+     *            input on the server. {@code null} if the date was chosen with
+     *            popup calendar or contains user-typed string
      * @param invalidDateString
-     *            Whether the last entered date string is invalid or not
+     *            Whether the last date string is invalid or not
      * @param resolutions
-     *            map of resolution name and value
+     *            map of time unit (resolution) name and value, name is the
+     *            lower-case resolution name e.g. "hour", "minute", and value
+     *            can be {@code null}
      */
     void update(String newDateString, boolean invalidDateString,
             Map<String, Integer> resolutions);
 
+    /**
+     * Indicates to the server that the client-side has lost focus.
+     */
     void blur();
 
+    /**
+     * Indicates to the server that the client-side has acquired focus.
+     */
     void focus();
 }

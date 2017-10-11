@@ -46,43 +46,39 @@ public class VDateTimeFieldCalendar extends
 
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
+        DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.YEAR),
+            addBufferedResolution(DateTimeResolution.YEAR,
                     date2.getYear() + 1900);
-            if (getCurrentResolution().compareTo(DateTimeResolution.YEAR) < 0) {
-                rpcResolutions.put(
-                        getResolutionVariable(DateTimeResolution.MONTH),
+            if (resolution.compareTo(DateTimeResolution.YEAR) < 0) {
+                addBufferedResolution(DateTimeResolution.MONTH,
                         date2.getMonth() + 1);
-                if (getCurrentResolution()
-                        .compareTo(DateTimeResolution.MONTH) < 0) {
-                    rpcResolutions.put(
-                            getResolutionVariable(DateTimeResolution.DAY),
+                if (resolution.compareTo(DateTimeResolution.MONTH) < 0) {
+                    addBufferedResolution(DateTimeResolution.DAY,
                             date2.getDate());
-                    if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.DAY) < 0) {
-                        rpcResolutions.put(
-                                getResolutionVariable(DateTimeResolution.HOUR),
+                    if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
+                        addBufferedResolution(DateTimeResolution.HOUR,
                                 date2.getHours());
-                        if (getCurrentResolution()
-                                .compareTo(DateTimeResolution.HOUR) < 0) {
-                            rpcResolutions.put(
-                                    getResolutionVariable(
-                                            DateTimeResolution.MINUTE),
+                        if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
+                            addBufferedResolution(DateTimeResolution.MINUTE,
                                     date2.getMinutes());
-                            if (getCurrentResolution()
+                            if (resolution
                                     .compareTo(DateTimeResolution.MINUTE) < 0) {
-                                rpcResolutions.put(
-                                        getResolutionVariable(
-                                                DateTimeResolution.SECOND),
+                                addBufferedResolution(DateTimeResolution.SECOND,
                                         date2.getSeconds());
                             }
                         }
                     }
                 }
             }
-            sendRPC();
+            sendBufferedValues();
         }
+    }
+
+    private void addBufferedResolution(DateTimeResolution resolution,
+            Integer value) {
+        bufferedResolutions.put(getResolutionVariable(resolution), value);
     }
 
     @Override

@@ -90,17 +90,17 @@ public class VPopupCalendar
         // immediate)
         Date currentDate = getDate();
         if (resolution.compareTo(DateResolution.MONTH) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateResolution.MONTH),
-                    currentDate != null ? currentDate.getMonth() + 1 : -1);
+            bufferedResolutions.put(getResolutionVariable(DateResolution.MONTH),
+                    currentDate != null ? currentDate.getMonth() + 1 : null);
             if (resolution == DateResolution.MONTH) {
-                sendRPC();
+                sendBufferedValues();
             }
         }
         if (resolution.compareTo(DateResolution.DAY) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateResolution.DAY),
-                    currentDate != null ? currentDate.getDate() : -1);
+            bufferedResolutions.put(getResolutionVariable(DateResolution.DAY),
+                    currentDate != null ? currentDate.getDate() : null);
             if (resolution == DateResolution.DAY) {
-                sendRPC();
+                sendBufferedValues();
             }
         }
     }

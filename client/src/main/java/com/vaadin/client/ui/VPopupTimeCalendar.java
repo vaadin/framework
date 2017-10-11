@@ -106,44 +106,36 @@ public class VPopupTimeCalendar extends
     protected void updateDateVariables() {
         super.updateDateVariables();
         DateTimeResolution resolution = getCurrentResolution();
-        // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
         if (resolution.compareTo(DateTimeResolution.MONTH) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
-                    currentDate != null ? currentDate.getMonth() + 1 : -1);
-            if (resolution == DateTimeResolution.MONTH) {
-                sendRPC();
-            }
+            addBufferedResolution(resolution, DateTimeResolution.MONTH,
+                    currentDate != null ? currentDate.getMonth() + 1 : null);
         }
         if (resolution.compareTo(DateTimeResolution.DAY) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.DAY),
-                    currentDate != null ? currentDate.getDate() : -1);
-            if (resolution == DateTimeResolution.DAY) {
-                sendRPC();
-            }
+            addBufferedResolution(resolution, DateTimeResolution.DAY,
+                    currentDate != null ? currentDate.getDate() : null);
         }
         if (resolution.compareTo(DateTimeResolution.HOUR) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
-                    currentDate != null ? currentDate.getHours() : -1);
-            if (resolution == DateTimeResolution.HOUR) {
-                sendRPC();
-            }
+            addBufferedResolution(resolution, DateTimeResolution.HOUR,
+                    currentDate != null ? currentDate.getHours() : null);
         }
         if (resolution.compareTo(DateTimeResolution.MINUTE) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.MINUTE),
-                    currentDate != null ? currentDate.getMinutes() : -1);
-            if (resolution == DateTimeResolution.MINUTE) {
-                sendRPC();
-            }
+            addBufferedResolution(resolution, DateTimeResolution.MINUTE,
+                    currentDate != null ? currentDate.getMinutes() : null);
         }
         if (resolution.compareTo(DateTimeResolution.SECOND) <= 0) {
-            rpcResolutions.put(getResolutionVariable(DateTimeResolution.SECOND),
-                    currentDate != null ? currentDate.getSeconds() : -1);
-            if (resolution == DateTimeResolution.SECOND) {
-                sendRPC();
-            }
+            addBufferedResolution(resolution, DateTimeResolution.SECOND,
+                    currentDate != null ? currentDate.getSeconds() : null);
+        }
+    }
+
+    private void addBufferedResolution(DateTimeResolution currentResolution,
+            DateTimeResolution resolutionToAdd, Integer value) {
+        bufferedResolutions.put(getResolutionVariable(resolutionToAdd), value);
+        if (currentResolution == resolutionToAdd) {
+            sendBufferedValues();
         }
     }
 
@@ -155,15 +147,15 @@ public class VPopupTimeCalendar extends
         DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
-                rpcResolutions.put(
+                bufferedResolutions.put(
                         getResolutionVariable(DateTimeResolution.HOUR),
                         newDate.getHours());
                 if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
-                    rpcResolutions.put(
+                    bufferedResolutions.put(
                             getResolutionVariable(DateTimeResolution.MINUTE),
                             newDate.getMinutes());
                     if (resolution.compareTo(DateTimeResolution.MINUTE) < 0) {
-                        rpcResolutions.put(
+                        bufferedResolutions.put(
                                 getResolutionVariable(
                                         DateTimeResolution.SECOND),
                                 newDate.getSeconds());

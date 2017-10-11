@@ -17,8 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -246,7 +244,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
-                rpcInvalidDateString = true;
+                bufferedInvalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -256,8 +254,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
 
         // always send the date string
-        rpcDateString = text.getText();
-        updateDateVariables(resolutions);
+        bufferedDateString = text.getText();
+        updateDateVariables();
     }
 
     /**
@@ -274,12 +272,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        rpcResolutions.put(
+        bufferedResolutions.put(
                 getResolutionVariable(getResolutions().filter(this::isYear)
                         .findFirst().get()),
-                currentDate != null ? currentDate.getYear() + 1900 : -1);
+                currentDate != null ? currentDate.getYear() + 1900 : null);
         if (isYear(getCurrentResolution())) {
-            sendRPC();
+            sendBufferedValues();
         }
     }
 
@@ -394,12 +392,14 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
         if (getClient() != null && getClient()
                 .hasEventListeners(VAbstractTextualDate.this, eventId)) {
+            // may excessively send events if if focus went to another
+            // sub-component
             if (EventId.FOCUS.equals(eventId)) {
                 rpc.focus();
             } else {
                 rpc.blur();
             }
-            sendRPC();
+            sendBufferedValues();
         }
 
         // Needed for tooltip event handling
@@ -439,9 +439,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Date date = getIsoFormatter().parse(isoDate);
             setDate(date);
         }
-        Map<String, Integer> resolutions = new HashMap<>();
-        updateDateVariables(resolutions);
-        rpc.update(null, false, resolutions);
+        updateDateVariables();
     }
 
     /**

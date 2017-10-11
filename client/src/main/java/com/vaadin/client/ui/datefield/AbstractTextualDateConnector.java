@@ -80,6 +80,7 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
 
         widget.lenient = state.lenient;
 
+        // may be excessively called on every state change
         widget.buildDate();
         // not a FocusWidget -> needs own tabindex handling
         widget.text.setTabIndex(state.tabIndex);

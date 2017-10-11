@@ -64,7 +64,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                  * a day/enter/clicking outside of popup) then the new value is
                  * communicated to the server.
                  */
-                getWidget().sendRPC();
+                getWidget().sendBufferedValues();
             }
         });
     }

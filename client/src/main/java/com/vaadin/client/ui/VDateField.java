@@ -56,12 +56,35 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     protected boolean enabled;
 
     /**
+     * The RPC send calls to the server.
+     * 
      * @since
      */
     public AbstractDateFieldServerRpc rpc;
-    public Map<String, Integer> rpcResolutions = new HashMap<>();
-    protected String rpcDateString;
-    protected boolean rpcInvalidDateString;
+
+    /**
+     * A temporary holder of the time units (resolutions), which would be sent
+     * to the client through {@link #sendBufferedValues()}.
+     * 
+     * @since
+     */
+    protected Map<String, Integer> bufferedResolutions = new HashMap<>();
+
+    /**
+     * A temporary holder of the date string, which would be sent to the client
+     * through {@link #sendBufferedValues()}.
+     * 
+     * @since
+     */
+    protected String bufferedDateString;
+
+    /**
+     * A temporary holder of whether the date string was invalid or not, which
+     * would be sent to the client through {@link #sendBufferedValues()}.
+     * 
+     * @since
+     */
+    protected boolean bufferedInvalidDateString;
 
     /**
      * The date that is displayed the date field before a value is selected. If
@@ -241,12 +264,18 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
         return resolution.name().toLowerCase(Locale.ENGLISH);
     }
 
-    public void sendRPC() {
-        rpc.update(rpcDateString, rpcInvalidDateString,
-                new HashMap<>(rpcResolutions));
-        rpcDateString = null;
-        rpcInvalidDateString = false;
-        rpcResolutions.clear();
+    /**
+     * Sends the {@link #bufferedDateString}, {@link #bufferedInvalidDateString}
+     * and {@link #bufferedResolutions} to the server, and clears their values.
+     * 
+     * @since
+     */
+    public void sendBufferedValues() {
+        rpc.update(bufferedDateString, bufferedInvalidDateString,
+                new HashMap<>(bufferedResolutions));
+        bufferedDateString = null;
+        bufferedInvalidDateString = false;
+        bufferedResolutions.clear();
     }
 
     /**

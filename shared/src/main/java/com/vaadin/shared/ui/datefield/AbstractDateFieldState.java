@@ -65,7 +65,8 @@ public class AbstractDateFieldState extends AbstractFieldState {
     public String locale;
 
     /**
-     * Overridden date format string, can be {@code null}.
+     * Overridden date format string, can be {@code null} if default formatting
+     * of the components locale is used
      * 
      * @since
      */
