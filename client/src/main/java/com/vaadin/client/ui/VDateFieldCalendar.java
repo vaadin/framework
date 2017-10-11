@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.shared.GWT;
@@ -55,21 +54,21 @@ public class VDateFieldCalendar
 
             setCurrentDate((Date) date2.clone());
 
-            Map<String, Integer> resolutions = new HashMap<>();
-            resolutions.put(getResolutionVariable(DateResolution.YEAR),
+            rpcResolutions.put(getResolutionVariable(DateResolution.YEAR),
                     // Java Date uses the year aligned to 1900 (no to zero).
                     // So we should add 1900 to get a correct year aligned to 0.
                     date2.getYear() + 1900);
             if (getCurrentResolution().compareTo(DateResolution.YEAR) < 0) {
-                resolutions.put(getResolutionVariable(DateResolution.MONTH),
+                rpcResolutions.put(getResolutionVariable(DateResolution.MONTH),
                         date2.getMonth() + 1);
                 if (getCurrentResolution()
                         .compareTo(DateResolution.MONTH) < 0) {
-                    resolutions.put(getResolutionVariable(DateResolution.DAY),
+                    rpcResolutions.put(
+                            getResolutionVariable(DateResolution.DAY),
                             date2.getDate());
                 }
             }
-            rpc.update(null, false, resolutions);
+            sendRPC();
         }
     }
 

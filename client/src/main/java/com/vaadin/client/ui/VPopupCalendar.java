@@ -82,19 +82,26 @@ public class VPopupCalendar
     }
 
     @Override
-    protected void updateDateVariables(Map<String, Integer> resolutions) {
-        super.updateDateVariables(resolutions);
+    protected void updateDateVariables() {
+        super.updateDateVariables();
+        DateResolution resolution = getCurrentResolution();
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        if (getCurrentResolution().compareTo(DateResolution.MONTH) <= 0) {
-            resolutions.put(getResolutionVariable(DateResolution.MONTH),
+        if (resolution.compareTo(DateResolution.MONTH) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateResolution.MONTH),
                     currentDate != null ? currentDate.getMonth() + 1 : -1);
+            if (resolution == DateResolution.MONTH) {
+                sendRPC();
+            }
         }
-        if (getCurrentResolution().compareTo(DateResolution.DAY) <= 0) {
-            resolutions.put(getResolutionVariable(DateResolution.DAY),
+        if (resolution.compareTo(DateResolution.DAY) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateResolution.DAY),
                     currentDate != null ? currentDate.getDate() : -1);
+            if (resolution == DateResolution.DAY) {
+                sendRPC();
+            }
         }
     }
 

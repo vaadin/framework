@@ -103,52 +103,67 @@ public class VPopupTimeCalendar extends
     }
 
     @Override
-    protected void updateDateVariables(Map<String, Integer> resolutions) {
-        super.updateDateVariables(resolutions);
+    protected void updateDateVariables() {
+        super.updateDateVariables();
+        DateTimeResolution resolution = getCurrentResolution();
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        if (getCurrentResolution().compareTo(DateTimeResolution.MONTH) <= 0) {
-            resolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
+        if (resolution.compareTo(DateTimeResolution.MONTH) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
                     currentDate != null ? currentDate.getMonth() + 1 : -1);
+            if (resolution == DateTimeResolution.MONTH) {
+                sendRPC();
+            }
         }
-        if (getCurrentResolution().compareTo(DateTimeResolution.DAY) <= 0) {
-            resolutions.put(getResolutionVariable(DateTimeResolution.DAY),
+        if (resolution.compareTo(DateTimeResolution.DAY) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.DAY),
                     currentDate != null ? currentDate.getDate() : -1);
+            if (resolution == DateTimeResolution.DAY) {
+                sendRPC();
+            }
         }
-        if (getCurrentResolution().compareTo(DateTimeResolution.HOUR) <= 0) {
-            resolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
+        if (resolution.compareTo(DateTimeResolution.HOUR) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
                     currentDate != null ? currentDate.getHours() : -1);
+            if (resolution == DateTimeResolution.HOUR) {
+                sendRPC();
+            }
         }
-        if (getCurrentResolution().compareTo(DateTimeResolution.MINUTE) <= 0) {
-            resolutions.put(getResolutionVariable(DateTimeResolution.MINUTE),
+        if (resolution.compareTo(DateTimeResolution.MINUTE) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.MINUTE),
                     currentDate != null ? currentDate.getMinutes() : -1);
+            if (resolution == DateTimeResolution.MINUTE) {
+                sendRPC();
+            }
         }
-        if (getCurrentResolution().compareTo(DateTimeResolution.SECOND) <= 0) {
-            resolutions.put(getResolutionVariable(DateTimeResolution.SECOND),
+        if (resolution.compareTo(DateTimeResolution.SECOND) <= 0) {
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.SECOND),
                     currentDate != null ? currentDate.getSeconds() : -1);
+            if (resolution == DateTimeResolution.SECOND) {
+                sendRPC();
+            }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    protected void fillResolutions(Date newDate,
-            Map<String, Integer> resolutions) {
+    public void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
-        super.fillResolutions(newDate, resolutions);
+        super.updateValue(newDate);
+        DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
-            if (getCurrentResolution().compareTo(DateTimeResolution.DAY) < 0) {
-                resolutions.put(getResolutionVariable(DateTimeResolution.HOUR),
+            if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
+                rpcResolutions.put(
+                        getResolutionVariable(DateTimeResolution.HOUR),
                         newDate.getHours());
-                if (getCurrentResolution()
-                        .compareTo(DateTimeResolution.HOUR) < 0) {
-                    resolutions.put(
+                if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
+                    rpcResolutions.put(
                             getResolutionVariable(DateTimeResolution.MINUTE),
                             newDate.getMinutes());
-                    if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.MINUTE) < 0) {
-                        resolutions.put(
+                    if (resolution.compareTo(DateTimeResolution.MINUTE) < 0) {
+                        rpcResolutions.put(
                                 getResolutionVariable(
                                         DateTimeResolution.SECOND),
                                 newDate.getSeconds());

@@ -56,7 +56,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                 /*
                  * FIXME This is a hack so we do not have to rewrite half of the
                  * datefield so values are not sent while selecting a date
-                 * (#6252).
+                 * (#1399).
                  *
                  * The datefield will now only set the date UIDL variables while
                  * the user is selecting year/month/date/time and not send them
@@ -64,7 +64,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                  * a day/enter/clicking outside of popup) then the new value is
                  * communicated to the server.
                  */
-                getConnection().getServerRpcQueue().flush();
+                getWidget().sendRPC();
             }
         });
     }

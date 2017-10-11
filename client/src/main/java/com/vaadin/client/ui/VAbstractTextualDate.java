@@ -223,7 +223,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        boolean invalidDateString = false;
         if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
@@ -247,7 +246,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
-                invalidDateString = true;
+                rpcInvalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -256,10 +255,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
 
-        Map<String, Integer> resolutions = new HashMap<>();
-        updateDateVariables(resolutions);
         // always send the date string
-        rpc.update(text.getText(), invalidDateString, resolutions);
+        rpcDateString = text.getText();
+        updateDateVariables(resolutions);
     }
 
     /**
@@ -269,19 +267,20 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
      * 
-     * @param resolutions
-     *            The Resolution Map to fill
      * @since
      */
-    protected void updateDateVariables(Map<String, Integer> resolutions) {
+    protected void updateDateVariables() {
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        resolutions.put(
+        rpcResolutions.put(
                 getResolutionVariable(getResolutions().filter(this::isYear)
                         .findFirst().get()),
                 currentDate != null ? currentDate.getYear() + 1900 : -1);
+        if (isYear(getCurrentResolution())) {
+            sendRPC();
+        }
     }
 
     /**
@@ -400,6 +399,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             } else {
                 rpc.blur();
             }
+            sendRPC();
         }
 
         // Needed for tooltip event handling

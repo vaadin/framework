@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -49,31 +48,31 @@ public class VDateTimeFieldCalendar extends
         Date currentDate = getCurrentDate();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            Map<String, Integer> resolutions = new HashMap<>();
-            resolutions.put(getResolutionVariable(DateTimeResolution.YEAR),
+            rpcResolutions.put(getResolutionVariable(DateTimeResolution.YEAR),
                     date2.getYear() + 1900);
             if (getCurrentResolution().compareTo(DateTimeResolution.YEAR) < 0) {
-                resolutions.put(getResolutionVariable(DateTimeResolution.MONTH),
+                rpcResolutions.put(
+                        getResolutionVariable(DateTimeResolution.MONTH),
                         date2.getMonth() + 1);
                 if (getCurrentResolution()
                         .compareTo(DateTimeResolution.MONTH) < 0) {
-                    resolutions.put(
+                    rpcResolutions.put(
                             getResolutionVariable(DateTimeResolution.DAY),
                             date2.getDate());
                     if (getCurrentResolution()
                             .compareTo(DateTimeResolution.DAY) < 0) {
-                        resolutions.put(
+                        rpcResolutions.put(
                                 getResolutionVariable(DateTimeResolution.HOUR),
                                 date2.getHours());
                         if (getCurrentResolution()
                                 .compareTo(DateTimeResolution.HOUR) < 0) {
-                            resolutions.put(
+                            rpcResolutions.put(
                                     getResolutionVariable(
                                             DateTimeResolution.MINUTE),
                                     date2.getMinutes());
                             if (getCurrentResolution()
                                     .compareTo(DateTimeResolution.MINUTE) < 0) {
-                                resolutions.put(
+                                rpcResolutions.put(
                                         getResolutionVariable(
                                                 DateTimeResolution.SECOND),
                                         date2.getSeconds());
@@ -82,7 +81,7 @@ public class VDateTimeFieldCalendar extends
                     }
                 }
             }
-            rpc.update(null, false, resolutions);
+            sendRPC();
         }
     }
 

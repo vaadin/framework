@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -58,6 +59,9 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @since
      */
     public AbstractDateFieldServerRpc rpc;
+    public Map<String, Integer> rpcResolutions = new HashMap<>();
+    protected String rpcDateString;
+    protected boolean rpcInvalidDateString;
 
     /**
      * The date that is displayed the date field before a value is selected. If
@@ -235,6 +239,14 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      */
     public String getResolutionVariable(R resolution) {
         return resolution.name().toLowerCase(Locale.ENGLISH);
+    }
+
+    public void sendRPC() {
+        rpc.update(rpcDateString, rpcInvalidDateString,
+                new HashMap<>(rpcResolutions));
+        rpcDateString = null;
+        rpcInvalidDateString = false;
+        rpcResolutions.clear();
     }
 
     /**

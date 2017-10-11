@@ -221,30 +221,20 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
-        Map<String, Integer> resolutions = new HashMap<>();
-        fillResolutions(newDate, resolutions);
-        rpc.update(null, false, resolutions);
-    }
-
-    /**
-     * @since
-     */
-    protected void fillResolutions(Date newDate,
-            Map<String, Integer> resolutions) {
         Date currentDate = getCurrentDate();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            resolutions.put(
+            rpcResolutions.put(.put(
                     getResolutionVariable(
                             calendar.getResolution(calendar::isYear)),
                     newDate.getYear() + 1900);
             if (!calendar.isYear(getCurrentResolution())) {
-                resolutions.put(
+                rpcResolutions.put(.put(
                         getResolutionVariable(
                                 calendar.getResolution(calendar::isMonth)),
                         newDate.getMonth() + 1);
                 if (!calendar.isMonth(getCurrentResolution())) {
-                    resolutions.put(
+                    rpcResolutions.put(.put(
                             getResolutionVariable(
                                     calendar.getResolution(calendar::isDay)),
                             newDate.getDate());
