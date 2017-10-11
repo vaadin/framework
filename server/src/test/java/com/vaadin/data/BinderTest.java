@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,7 @@ import com.vaadin.data.validator.IntegerRangeValidator;
 import com.vaadin.data.validator.NotEmptyValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.ErrorMessage;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.ui.TextField;
@@ -940,6 +942,24 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
 
         assertEquals("Binding still affects bean even after unbind",
                 ageBeforeUnbind, String.valueOf(item.getAge()));
+    }
+
+    @Test
+    public void info_validator_not_considered_error() {
+        String infoMessage = "Young";
+        binder.forField(ageField)
+                .withConverter(new StringToIntegerConverter("Can't convert"))
+                .withValidator(i -> i > 5, infoMessage, ErrorLevel.INFO)
+                .bind(Person::getAge, Person::setAge);
+
+        binder.setBean(item);
+        ageField.setValue("3");
+        Assert.assertEquals(infoMessage,
+                ageField.getComponentError().getFormattedHtmlMessage());
+        Assert.assertEquals(ErrorLevel.INFO,
+                ageField.getComponentError().getErrorLevel());
+
+        Assert.assertEquals(3, item.getAge());
     }
 
     @Test
