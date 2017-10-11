@@ -1125,7 +1125,10 @@ public class Escalator extends Widget
     }
 
     /**
-     * This class enhance the grid with the following aria attributes:
+     * Helper class that helps to implement the WAI-ARIA functionality
+     * for the Grid and TreeGrid component.
+     * <p>
+     * The following WAI-ARIA attributes are added through this class:
      *
      * <ul>
      *     <li>aria-rowcount (since 8.2)</li>
