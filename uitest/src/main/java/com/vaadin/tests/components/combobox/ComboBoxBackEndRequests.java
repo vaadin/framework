@@ -23,12 +23,12 @@ public class ComboBoxBackEndRequests extends AbstractTestUI {
         int pageLength = DEFAULT_PAGE_LENGTH;
         int items = DEFAULT_NUMBER_OF_ITEMS;
         if (request.getParameter(PAGE_LENGTH_REQUEST_PARAMETER) != null) {
-            pageLength = Integer.parseInt(request
-                    .getParameter(PAGE_LENGTH_REQUEST_PARAMETER).toString());
+            pageLength = Integer.parseInt(
+                    request.getParameter(PAGE_LENGTH_REQUEST_PARAMETER));
         }
         if (request.getParameter(ITEMS_REQUEST_PARAMETER) != null) {
-            items = Integer.parseInt(
-                    request.getParameter(ITEMS_REQUEST_PARAMETER).toString());
+            items = Integer
+                    .parseInt(request.getParameter(ITEMS_REQUEST_PARAMETER));
         }
 
         ComboBox<String> cb = new ComboBox<>();

@@ -156,7 +156,7 @@ public class TestForStyledUpload extends LegacyApplication
     }
 
     public void readState() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
 
         if (up.isUploading()) {
             sb.append("Uploading...");
@@ -293,7 +293,7 @@ public class TestForStyledUpload extends LegacyApplication
 
     private void refreshMemUsage() {
         // memoryStatus.setValue("Not available in Java 1.4");
-        StringBuffer mem = new StringBuffer();
+        StringBuilder mem = new StringBuilder();
         MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
         mem.append("Heap (M):");
         mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);

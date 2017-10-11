@@ -11,6 +11,14 @@
     <name>vaadin-servlet-containers-test</name>
     <packaging>pom</packaging>
 
+    <properties>
+        <server.name>jetty9</server.name>
+        <context.path>/${project.build.finalName}</context.path>
+
+        <!-- Default reference screenshot location, relative to the module path -->
+        <reference.directory>${project.basedir}/../screenshots</reference.directory>
+    </properties>
+
     <modules>
         <module>generic-ui</module>
         <module>generic-tests</module>
@@ -19,6 +27,7 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- Wildfly Configuration. Version selected with wildfly.version -->
                 <plugin>
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
@@ -31,10 +40,6 @@
                                 <goal>start</goal>
                                 <goal>deploy</goal>
                             </goals>
-                            <configuration>
-                                <!-- Context path comes from WAR deployment name -->
-                                <name>demo.war</name>
-                            </configuration>
                         </execution>
                         <execution>
                             <id>stop-wildfly</id>
@@ -45,12 +50,152 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!-- Payara Micro Configuration. Version selected with payara.version -->
+                <plugin>
+                    <groupId>fish.payara.maven.plugins</groupId>
+                    <artifactId>payara-micro-maven-plugin</artifactId>
+                    <version>1.0.0</version>
+                    <executions>
+                        <execution>
+                            <id>start-payara</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>bundle</goal>
+                                <goal>start</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-payara</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <payaraVersion>${payara.version}</payaraVersion>
+                        <useUberJar>true</useUberJar>
+                        <daemon>true</daemon>
+                    </configuration>
+                </plugin>
+
+                <!-- Glassfish Embedded Configuration. -->
+                <plugin>
+                    <groupId>org.glassfish.embedded</groupId>
+                    <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                    <version>4.1.1</version>
+                    <executions>
+                        <execution>
+                            <id>start-glassfish</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start</goal>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-glassfish</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <port>8080</port>
+                    </configuration>
+                </plugin>
+
+                <!-- Generic cargo plugin configuration. Define container to use in submodule. -->
+                <plugin>
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <configuration>
+                        <configuration>
+                            <type>standalone</type>
+                            <home>
+                                ${project.build.directory}/cargo-server
+                            </home>
+                            <properties>
+                                <cargo.servlet.port>8080</cargo.servlet.port>
+                            </properties>
+                        </configuration>
+                        <deployables>
+                            <deployable>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>${project.artifactId}</artifactId>
+                                <type>war</type>
+                                <properties>
+                                    <context>${context.path}</context>
+                                </properties>
+                            </deployable>
+                        </deployables>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>start-cargo-server</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-cargo-server</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- WebSphere Liberty Configuration. Version and profile are configurable with liberty.version and liberty.profile -->
+                <plugin>
+                    <groupId>net.wasdev.wlp.maven.plugins</groupId>
+                    <artifactId>liberty-maven-plugin</artifactId>
+                    <version>2.0</version>
+                    <executions>
+                        <execution>
+                            <id>start-liberty</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>start-server</goal>
+                                <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop-liberty</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>stop-server</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- FIXME: This plug-in should also use port 8080 -->
+                        <appArtifact>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                            <type>${project.packaging}</type>
+                        </appArtifact>
+                        <assemblyArtifact>
+                            <groupId>com.ibm.websphere.appserver.runtime</groupId>
+                            <artifactId>${liberty.profile}</artifactId>
+                            <version>${liberty.version}</version>
+                            <type>zip</type>
+                        </assemblyArtifact>
+                    </configuration>
+                </plugin>
+
+                <!-- Jetty Configuration. Version selected with jetty.version -->
                 <plugin>
                     <groupId>org.eclipse.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <configuration>
                         <webApp>
-                            <contextPath>/demo</contextPath>
+                            <contextPath>${context.path}</contextPath>
                         </webApp>
                     </configuration>
                 </plugin>
@@ -74,6 +219,9 @@
                         <dependenciesToScan>
                             <dependency>${project.groupId}:vaadin-test-server-tests</dependency>
                         </dependenciesToScan>
+                        <systemPropertyVariables>
+                            <deployment.context.path>${context.path}</deployment.context.path>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
@@ -91,11 +239,24 @@
                 <module>karaf</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
+                <module>wildfly8</module>
+                <module>wildfly-swarm</module>
+                <module>jetty8</module>
                 <module>jetty9</module>
+                <module>payara-micro</module>
+                <module>glassfish</module>
+                <!-- TODO: Payara 5 and Glassfish 5 -->
+                <module>tomcat7</module>
+                <module>tomcat80</module>
+                <module>tomcat85</module>
+                <module>tomcat9</module>
+                <module>liberty-javaee</module>
+                <module>liberty-webprofile</module>
+                <module>liberty-microprofile</module>
             </modules>
         </profile>
-        <!-- TODO Remove this when the ant build is no longer used. -->
         <profile>
+            <!-- TODO Remove this when the ant build is no longer used. -->
             <id>ant-test</id>
             <modules>
                 <module>generic</module>
@@ -106,12 +267,44 @@
             <modules>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
+                <module>wildfly8</module>
             </modules>
         </profile>
         <profile>
             <id>jetty</id>
             <modules>
                 <module>jetty9</module>
+                <module>jetty8</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>liberty</id>
+            <modules>
+                <module>liberty-webprofile</module>
+                <module>liberty-javaee</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>glassfish</id>
+            <modules>
+                <module>glassfish</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <modules>
+                <module>tomcat7</module>
+                <module>tomcat80</module>
+                <module>tomcat85</module>
+                <module>tomcat9</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>microprofile</id>
+            <modules>
+                <module>wildfly-swarm</module>
+                <module>payara-micro</module>
+                <module>liberty-microprofile</module>
             </modules>
         </profile>
     </profiles>

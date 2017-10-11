@@ -33,8 +33,8 @@ import com.vaadin.ui.LegacyComponent;
  * @author Vaadin Ltd.
  * @since 3.0
  * @deprecated As of 7.0. Only provided to ease porting of Vaadin 6 components.
- *             Do not implement this directly, implement {@link LegacyComponent}
- *             .
+ *             Do not implement this directly, implement
+ *             {@link LegacyComponent}.
  */
 @Deprecated
 public interface VariableOwner extends Serializable {

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import com.vaadin.shared.ui.ui.UIState.LocaleData;
 
 /**
- * Date / time etc. localisation service for all widgets. Caches all loaded
+ * Date / time etc. localization service for all widgets. Caches all loaded
  * locales as JSONObjects.
  *
  * @author Vaadin Ltd.

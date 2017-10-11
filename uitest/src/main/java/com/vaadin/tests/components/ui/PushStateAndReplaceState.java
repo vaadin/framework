@@ -40,7 +40,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         addComponent(replace);
 
         addComponent(createButton("test", "Move to ./test",
-                Page.getCurrent().getLocation().toString() + "/test"));
+                Page.getCurrent().getLocation() + "/test"));
         addComponent(createButton("X", "Move to X", "X"));
         addComponent(createButton("root_X", "Move to /X", "/X"));
     }
@@ -67,7 +67,7 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 
     private void updateLabel() {
         URI location = getPage().getLocation();
-        locationLabel.setValue("Current Location: " + location.toString());
+        locationLabel.setValue("Current Location: " + location);
     }
 
     @Override

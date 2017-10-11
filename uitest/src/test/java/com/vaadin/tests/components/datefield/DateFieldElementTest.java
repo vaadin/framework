@@ -53,8 +53,7 @@ public class DateFieldElementTest extends SingleBrowserTest {
     }
 
     private void assertServerValue(String id, LocalDate testDateTime) {
-        assertEquals(id + " value set to " + testDateTime.toString(),
-                getLogRow(0));
+        assertEquals(id + " value set to " + testDateTime, getLogRow(0));
 
     }
 

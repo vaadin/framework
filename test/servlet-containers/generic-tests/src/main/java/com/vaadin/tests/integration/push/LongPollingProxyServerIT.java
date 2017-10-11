@@ -84,7 +84,8 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
 
     @Override
     protected String getContextPath() {
-        return "/" + path + "/demo";
+        // Prefix with the context path with the parameter
+        return "/" + path + super.getContextPath();
     }
 
     @Override

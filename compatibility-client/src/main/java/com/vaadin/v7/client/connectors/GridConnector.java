@@ -471,8 +471,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 } else {
                     getLogger().warning(
                             "Visibility changed for a unknown column type in Grid: "
-                                    + column.toString() + ", type "
-                                    + column.getClass());
+                                    + column + ", type " + column.getClass());
                 }
             }
         }

@@ -137,10 +137,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        List<ValidationResult> errors =
-                getFieldValidationErrors().stream()
-                        .map(s -> s.getResult().get())
-                        .collect(Collectors.toList());
+        List<ValidationResult> errors = getFieldValidationErrors().stream()
+                .map(s -> s.getResult().get()).collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }

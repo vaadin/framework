@@ -465,7 +465,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
 
     private String modifyWhereClause(Object... keys) {
         // Build the where rules for the provided keys
-        StringBuffer where = new StringBuffer();
+        StringBuilder where = new StringBuilder();
         for (int ix = 0; ix < primaryKeyColumns.size(); ix++) {
             where.append(QueryBuilder.quote(primaryKeyColumns.get(ix)));
             if (keys[ix] == null) {

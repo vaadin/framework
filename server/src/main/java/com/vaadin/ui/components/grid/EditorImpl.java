@@ -267,6 +267,43 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
         rpc.cancel();
     }
 
+    /**
+     * Opens the editor interface for the provided row. Scrolls the Grid to
+     * bring the row to view if it is not already visible.
+     *
+     * Note that any cell content rendered by a WidgetRenderer will not be
+     * visible in the editor row.
+     *
+     * @param rowNumber
+     *             the row number of the edited item
+     * @throws IllegalStateException
+     *             if the editor is not enabled or already editing a different item
+     *             in buffered mode
+     * @throws IllegalArgumentException
+     *             if the {@code rowNumber} is not in the backing data provider
+     * @see #setEnabled(boolean)
+     */
+    public void editRow(int rowNumber)
+            throws IllegalStateException, IllegalArgumentException {
+        if (!isEnabled()) {
+            throw new IllegalStateException("Item editor is not enabled");
+        }
+        T beanToEdit = getParent().getDataCommunicator().
+            fetchItemsWithRange(rowNumber, 1).
+            stream().findFirst().orElseThrow(() -> new IllegalArgumentException(
+                "Row number " + rowNumber+ "did not yield any item from data provider"));
+        if (!beanToEdit.equals(edited)) {
+            if (isBuffered() && edited != null) {
+                throw new IllegalStateException("Editing item " + beanToEdit
+                    + " failed. Item editor is already editing item "
+                    + edited);
+            } else {
+                rpc.bind(rowNumber);
+            }
+        }
+
+    }
+
     private void doCancel(boolean afterBeingSaved) {
         T editedBean = edited;
         doClose();

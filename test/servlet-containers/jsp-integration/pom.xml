@@ -11,6 +11,10 @@
     <name>vaadin-test-jsp-integration</name>
     <packaging>war</packaging>
 
+    <properties>
+        <context.path>/</context.path>
+    </properties>
+
     <dependencies>
 
         <dependency>

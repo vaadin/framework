@@ -226,8 +226,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                 e1.printStackTrace();
                 VerticalLayout lo = new VerticalLayout();
                 lo.addComponent(new Label(
-                        "Cannot create application / custom component: "
-                                + e1.toString()));
+                        "Cannot create application / custom component: " + e1));
 
                 Link l = new Link("Try opening via app runner",
                         new ExternalResource("../run/" + c.getName()));

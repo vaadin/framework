@@ -152,7 +152,7 @@ public class VAccordion extends VTabsheetBase {
             addStyleDependentName("loading");
 
             connector.getRpcProxy(TabsheetServerRpc.class)
-                    .setSelected(tabKeys.get(index).toString());
+                    .setSelected(tabKeys.get(index));
         }
     }
 

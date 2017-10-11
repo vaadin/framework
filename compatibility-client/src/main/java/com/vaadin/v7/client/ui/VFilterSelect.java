@@ -136,7 +136,7 @@ public class VFilterSelect extends Composite
 
         @Override
         public String getDisplayString() {
-            final StringBuffer sb = new StringBuffer();
+            final StringBuilder sb = new StringBuilder();
             final Icon icon = client
                     .getIcon(client.translateVaadinUri(untranslatedIconUri));
             if (icon != null) {

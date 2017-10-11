@@ -452,7 +452,7 @@ public class SerializerTest extends AbstractReindeerTestUI {
             @Override
             public void sendWrappedGenerics(
                     Map<Set<SimpleTestBean>, Map<Integer, List<SimpleTestBean>>> generics) {
-                log.log("sendWrappedGenerics: " + generics.toString());
+                log.log("sendWrappedGenerics: " + generics);
             }
 
             @Override

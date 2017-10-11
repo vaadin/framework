@@ -3987,7 +3987,7 @@ public class VScrollTable extends FlowPanel
 
             @Override
             public String getHTML() {
-                final StringBuffer buf = new StringBuffer();
+                final StringBuilder buf = new StringBuilder();
                 buf.append("<span class=\"");
                 if (collapsed) {
                     buf.append("v-off");
