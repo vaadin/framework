@@ -20,10 +20,6 @@ import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.testbench.elements.PanelElement;
 import com.vaadin.testbench.parallel.Browser;
 
-/**
- * @author Vaadin Ltd
- *
- */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class VaadinSpringBootSmokeIT extends TestBenchTestCase {
