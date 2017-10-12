@@ -247,8 +247,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                     int cellCount = days.getCellCount(i);
                     for (int j = 0; j < cellCount; j++) {
                         Widget widget = days.getWidget(i, j);
-                        if (widget != null
-                                && widget instanceof VAbstractCalendarPanel.Day) {
+                        if (widget instanceof VAbstractCalendarPanel.Day) {
                             Day curday = (Day) widget;
                             if (curday.getDate().equals(date)) {
                                 curday.addStyleDependentName(CN_FOCUSED);
@@ -358,8 +357,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             int cellCount = days.getCellCount(i);
             for (int j = 0; j < cellCount; j++) {
                 Widget widget = days.getWidget(i, j);
-                if (widget != null
-                        && widget instanceof VAbstractCalendarPanel.Day) {
+                if (widget instanceof VAbstractCalendarPanel.Day) {
                     Day curday = (Day) widget;
                     if (curday.getDate().equals(date)) {
                         curday.addStyleDependentName(CN_SELECTED);

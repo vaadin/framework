@@ -215,7 +215,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         variables = (Map<String, Object>) variables.get("tra");
 
         Transferable transferable = null;
-        if (sourceComponent != null && sourceComponent instanceof DragSource) {
+        if (sourceComponent instanceof DragSource) {
             transferable = ((DragSource) sourceComponent)
                     .getTransferable(variables);
         }

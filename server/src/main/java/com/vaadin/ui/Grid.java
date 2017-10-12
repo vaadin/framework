@@ -1966,7 +1966,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             // Remove old renderer
             Connector oldRenderer = getState().renderer;
-            if (oldRenderer != null && oldRenderer instanceof Extension) {
+            if (oldRenderer instanceof Extension) {
                 removeExtension((Extension) oldRenderer);
             }
 
