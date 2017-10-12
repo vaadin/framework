@@ -53,17 +53,15 @@ public class VDateFieldCalendar
         DateResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            bufferedResolutions.put(getResolutionVariable(DateResolution.YEAR),
+            bufferedResolutions.put(DateResolution.YEAR.name(),
                     // Java Date uses the year aligned to 1900 (no to zero).
                     // So we should add 1900 to get a correct year aligned to 0.
                     date2.getYear() + 1900);
             if (resolution.compareTo(DateResolution.YEAR) < 0) {
-                bufferedResolutions.put(
-                        getResolutionVariable(DateResolution.MONTH),
+                bufferedResolutions.put(DateResolution.MONTH.name(),
                         date2.getMonth() + 1);
                 if (resolution.compareTo(DateResolution.MONTH) < 0) {
-                    bufferedResolutions.put(
-                            getResolutionVariable(DateResolution.DAY),
+                    bufferedResolutions.put(DateResolution.DAY.name(),
                             date2.getDate());
                 }
             }

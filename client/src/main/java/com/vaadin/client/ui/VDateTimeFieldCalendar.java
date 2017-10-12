@@ -78,7 +78,7 @@ public class VDateTimeFieldCalendar extends
 
     private void addBufferedResolution(DateTimeResolution resolution,
             Integer value) {
-        bufferedResolutions.put(getResolutionVariable(resolution), value);
+        bufferedResolutions.put(resolution.name(), value);
     }
 
     @Override

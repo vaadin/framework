@@ -232,18 +232,15 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
             bufferedResolutions.put(
-                    getResolutionVariable(
-                            calendar.getResolution(calendar::isYear)),
+                    calendar.getResolution(calendar::isYear).name(),
                     newDate.getYear() + 1900);
             if (!calendar.isYear(resolution)) {
                 bufferedResolutions.put(
-                        getResolutionVariable(
-                                calendar.getResolution(calendar::isMonth)),
+                        calendar.getResolution(calendar::isMonth).name(),
                         newDate.getMonth() + 1);
                 if (!calendar.isMonth(resolution)) {
                     bufferedResolutions.put(
-                            getResolutionVariable(
-                                    calendar.getResolution(calendar::isDay)),
+                            calendar.getResolution(calendar::isDay).name(),
                             newDate.getDate());
                 }
             }

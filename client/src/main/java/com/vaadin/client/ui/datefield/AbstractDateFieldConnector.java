@@ -42,8 +42,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         VDateField<R> widget = getWidget();
         Map<String, Integer> stateResolutions = getState().resolutions;
         Optional<R> newResolution = widget.getResolutions()
-                .filter(res -> stateResolutions
-                        .containsKey(widget.getResolutionVariable(res)))
+                .filter(res -> stateResolutions.containsKey(res.name()))
                 .findFirst();
 
         widget.setCurrentResolution(newResolution.orElse(null));
@@ -55,10 +54,9 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         Stream<R> resolutions = widget.getResolutions();
         R resolution = widget.getCurrentResolution();
         return resolutions.collect(Collectors.toMap(Function.identity(),
-                v -> v == null ? null
-                        : (resolution.compareTo(v) <= 0)
-                                ? stateResolutions
-                                        .get(widget.getResolutionVariable(v))
+                res -> res == null ? null
+                        : (resolution.compareTo(res) <= 0)
+                                ? stateResolutions.get(res.name())
                                 : null));
     }
 
@@ -74,10 +72,9 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         Stream<R> resolutions = getWidget().getResolutions();
         R resolution = getWidget().getCurrentResolution();
         return resolutions.collect(Collectors.toMap(Function.identity(),
-                v -> v == null ? null
-                        : (resolution.compareTo(v) <= 0)
-                                ? stateResolutions.get("default-"
-                                        + getWidget().getResolutionVariable(v))
+                res -> res == null ? null
+                        : (resolution.compareTo(res) <= 0)
+                                ? stateResolutions.get("default-" + res.name())
                                 : null));
     }
 

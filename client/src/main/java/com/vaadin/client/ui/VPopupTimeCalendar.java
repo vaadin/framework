@@ -134,7 +134,7 @@ public class VPopupTimeCalendar extends
 
     private void addBufferedResolution(DateTimeResolution resolutionToAdd,
             Integer value) {
-        bufferedResolutions.put(getResolutionVariable(resolutionToAdd), value);
+        bufferedResolutions.put(resolutionToAdd.name(), value);
     }
 
     @Override
@@ -145,17 +145,14 @@ public class VPopupTimeCalendar extends
         DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
-                bufferedResolutions.put(
-                        getResolutionVariable(DateTimeResolution.HOUR),
+                bufferedResolutions.put(DateTimeResolution.HOUR.name(),
                         newDate.getHours());
                 if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
-                    bufferedResolutions.put(
-                            getResolutionVariable(DateTimeResolution.MINUTE),
+                    bufferedResolutions.put(DateTimeResolution.MINUTE.name(),
                             newDate.getMinutes());
                     if (resolution.compareTo(DateTimeResolution.MINUTE) < 0) {
                         bufferedResolutions.put(
-                                getResolutionVariable(
-                                        DateTimeResolution.SECOND),
+                                DateTimeResolution.SECOND.name(),
                                 newDate.getSeconds());
                     }
                 }

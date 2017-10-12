@@ -273,8 +273,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         // immediate)
         Date currentDate = getDate();
         bufferedResolutions.put(
-                getResolutionVariable(getResolutions().filter(this::isYear)
-                        .findFirst().get()),
+                getResolutions().filter(this::isYear).findFirst().get().name(),
                 currentDate != null ? currentDate.getYear() + 1900 : null);
         if (isYear(getCurrentResolution())) {
             sendBufferedValues();

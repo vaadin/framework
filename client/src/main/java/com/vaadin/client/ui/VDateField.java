@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -264,7 +265,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @return the resolution variable name
      */
     public String getResolutionVariable(R resolution) {
-        return resolution.name();
+        return resolution.name().toLowerCase(Locale.ENGLISH);
     }
 
     /**
