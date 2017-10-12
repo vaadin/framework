@@ -110,33 +110,31 @@ public class VPopupTimeCalendar extends
         // immediate)
         Date currentDate = getDate();
         if (resolution.compareTo(DateTimeResolution.MONTH) <= 0) {
-            addBufferedResolution(resolution, DateTimeResolution.MONTH,
+            addBufferedResolution(DateTimeResolution.MONTH,
                     currentDate != null ? currentDate.getMonth() + 1 : null);
         }
         if (resolution.compareTo(DateTimeResolution.DAY) <= 0) {
-            addBufferedResolution(resolution, DateTimeResolution.DAY,
+            addBufferedResolution(DateTimeResolution.DAY,
                     currentDate != null ? currentDate.getDate() : null);
         }
         if (resolution.compareTo(DateTimeResolution.HOUR) <= 0) {
-            addBufferedResolution(resolution, DateTimeResolution.HOUR,
+            addBufferedResolution(DateTimeResolution.HOUR,
                     currentDate != null ? currentDate.getHours() : null);
         }
         if (resolution.compareTo(DateTimeResolution.MINUTE) <= 0) {
-            addBufferedResolution(resolution, DateTimeResolution.MINUTE,
+            addBufferedResolution(DateTimeResolution.MINUTE,
                     currentDate != null ? currentDate.getMinutes() : null);
         }
         if (resolution.compareTo(DateTimeResolution.SECOND) <= 0) {
-            addBufferedResolution(resolution, DateTimeResolution.SECOND,
+            addBufferedResolution(DateTimeResolution.SECOND,
                     currentDate != null ? currentDate.getSeconds() : null);
         }
+        sendBufferedValues();
     }
 
-    private void addBufferedResolution(DateTimeResolution currentResolution,
-            DateTimeResolution resolutionToAdd, Integer value) {
+    private void addBufferedResolution(DateTimeResolution resolutionToAdd,
+            Integer value) {
         bufferedResolutions.put(getResolutionVariable(resolutionToAdd), value);
-        if (currentResolution == resolutionToAdd) {
-            sendBufferedValues();
-        }
     }
 
     @Override

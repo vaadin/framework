@@ -92,17 +92,12 @@ public class VPopupCalendar
         if (resolution.compareTo(DateResolution.MONTH) <= 0) {
             bufferedResolutions.put(getResolutionVariable(DateResolution.MONTH),
                     currentDate != null ? currentDate.getMonth() + 1 : null);
-            if (resolution == DateResolution.MONTH) {
-                sendBufferedValues();
-            }
         }
         if (resolution.compareTo(DateResolution.DAY) <= 0) {
             bufferedResolutions.put(getResolutionVariable(DateResolution.DAY),
                     currentDate != null ? currentDate.getDate() : null);
-            if (resolution == DateResolution.DAY) {
-                sendBufferedValues();
-            }
         }
+        sendBufferedValues();
     }
 
     @Override

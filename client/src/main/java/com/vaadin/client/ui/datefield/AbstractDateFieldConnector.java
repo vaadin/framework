@@ -104,17 +104,15 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         widget.setEnabled(isEnabled());
 
         final String locale = getState().locale;
-        if (locale != null) {
-            try {
-                widget.dts.setLocale(locale);
-                widget.setCurrentLocale(locale);
-            } catch (final LocaleNotLoadedException e) {
-                widget.setCurrentLocale(widget.dts.getLocale());
-                VConsole.error("Tried to use an unloaded locale \"" + locale
-                        + "\". Using default locale ("
-                        + widget.getCurrentLocale() + ").");
-                VConsole.error(e);
-            }
+        try {
+            widget.dts.setLocale(locale);
+            widget.setCurrentLocale(locale);
+        } catch (final LocaleNotLoadedException e) {
+            widget.setCurrentLocale(widget.dts.getLocale());
+            VConsole.error("Tried to use an unloaded locale \"" + locale
+                    + "\". Using default locale (" + widget.getCurrentLocale()
+                    + ").");
+            VConsole.error(e);
         }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601

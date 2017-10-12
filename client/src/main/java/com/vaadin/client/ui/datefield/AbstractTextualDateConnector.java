@@ -74,7 +74,7 @@ public abstract class AbstractTextualDateConnector<R extends Enum<R>>
             // force recreating format string
             widget.setFormatString(null);
         }
-        if (state.format != null) {
+        if (state.format != widget.getFormatString()) {
             widget.setFormatString(state.format);
         }
 

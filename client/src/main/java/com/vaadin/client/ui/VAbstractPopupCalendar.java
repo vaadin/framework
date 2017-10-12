@@ -217,6 +217,14 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         closeCalendarPanel();
     }
 
+    /**
+     * Changes the current date, and updates the
+     * {@link VDateField#bufferedResolutions}, possibly
+     * {@link VDateField#sendBufferedValues()} to the server if needed
+     * 
+     * @param newDate
+     *            the new {@code Date} to update
+     */
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();

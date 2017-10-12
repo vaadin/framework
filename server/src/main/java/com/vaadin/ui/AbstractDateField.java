@@ -228,7 +228,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
 
-        updateLocale(getLocale());
+        Locale locale = getLocale();
+        getState().locale = locale == null ? null : locale.toString();
     }
 
     /**
@@ -413,17 +414,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         getState().timeZoneJSON = timeZoneJSON;
     }
 
-    private void updateLocale(Locale locale) {
-        getState().locale = locale == null ? null : locale.toString();
-    }
-
     @Override
     public void setLocale(Locale locale) {
         Locale oldLocale = getLocale();
         if (locale != oldLocale
                 || (locale != null && !locale.equals(oldLocale))) {
             updateTimeZoneJSON(getZoneId(), locale);
-            updateLocale(locale);
         }
         super.setLocale(locale);
     }

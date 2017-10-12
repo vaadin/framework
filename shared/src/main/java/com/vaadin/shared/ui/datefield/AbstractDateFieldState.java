@@ -66,7 +66,7 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * Overridden date format string, can be {@code null} if default formatting
-     * of the components locale is used
+     * of the components locale is used.
      * 
      * @since
      */
@@ -81,6 +81,9 @@ public class AbstractDateFieldState extends AbstractFieldState {
 
     /**
      * The map of {@code Resolution}s which are currently used by the component.
+     *
+     * The key the the lower-case resolution name e.g. "hour", "minute", and
+     * value can be {@code null}
      * 
      * @since
      */

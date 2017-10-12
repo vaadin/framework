@@ -104,7 +104,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return the format string
      */
-    protected String getFormatString() {
+    public String getFormatString() {
         if (formatStr == null) {
             setFormatString(createFormatString());
         }

@@ -64,14 +64,14 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * A temporary holder of the time units (resolutions), which would be sent
-     * to the client through {@link #sendBufferedValues()}.
+     * to the server through {@link #sendBufferedValues()}.
      * 
      * @since
      */
     protected Map<String, Integer> bufferedResolutions = new HashMap<>();
 
     /**
-     * A temporary holder of the date string, which would be sent to the client
+     * A temporary holder of the date string, which would be sent to the server
      * through {@link #sendBufferedValues()}.
      * 
      * @since
@@ -80,7 +80,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * A temporary holder of whether the date string was invalid or not, which
-     * would be sent to the client through {@link #sendBufferedValues()}.
+     * would be sent to the server through {@link #sendBufferedValues()}.
      * 
      * @since
      */

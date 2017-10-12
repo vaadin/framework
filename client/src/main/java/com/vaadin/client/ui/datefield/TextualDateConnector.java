@@ -58,8 +58,8 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
                  * datefield so values are not sent while selecting a date
                  * (#1399).
                  *
-                 * The datefield will now only set the date UIDL variables while
-                 * the user is selecting year/month/date/time and not send them
+                 * The datefield will now only set the date variables while the
+                 * user is selecting year/month/date/time and not send them
                  * directly. Only when the user closes the popup (by clicking on
                  * a day/enter/clicking outside of popup) then the new value is
                  * communicated to the server.
