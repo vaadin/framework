@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
+import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
@@ -57,6 +58,7 @@ class RootPathUI extends AbstractSpringUI {
     }
 }
 
+@PushStateNavigation
 @SpringUI(path = SubPathUI.SUBPATH)
 class SubPathUI extends AbstractSpringUI {
 
@@ -127,6 +129,12 @@ abstract class AbstractSpringUI extends UI {
         return button;
     }
 
+    @Override
+    public String getUiRootPath() {
+        // FIXME: Should be handled by Spring plug-in
+        return super.getUiRootPath() + "/"
+                + getClass().getAnnotation(SpringUI.class).path();
+    }
 }
 
 @SpringView(name = DefaultView.VIEW_NAME)

@@ -21,9 +21,7 @@ import com.vaadin.testbench.parallel.Browser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class VaadinSpringBootNavigatorIT extends TestBenchTestCase {
-
-    private static final String VIEW_SEPARATOR = "#!";
+public class VaadinSpringBootURIFragmentNavigatorIT extends TestBenchTestCase {
 
     @Rule
     public ScreenshotOnFailureRule screenshotRule = new ScreenshotOnFailureRule(
@@ -41,35 +39,19 @@ public class VaadinSpringBootNavigatorIT extends TestBenchTestCase {
     }
 
     @Test
-    public void testRootPathUINavigation() {
-        currentUIPath = "http://localhost:" + port + "/";
+    public void testUINavigation() {
+        currentUIPath = "http://localhost:" + port + DemoApplication.CONTEXT
+                + "/" + getPath();
 
         runNavigationTestPattern();
     }
 
     @Test
-    public void testSubPathUINavigation() {
-        currentUIPath = "http://localhost:" + port + "/" + SubPathUI.SUBPATH
-                + "/";
-
-        runNavigationTestPattern();
-    }
-
-    @Test
-    public void testRootPathNotDefaultView() {
-        currentUIPath = "http://localhost:" + port + "/";
-        getDriver().navigate()
-                .to(currentUIPath + VIEW_SEPARATOR + ViewScopedView.VIEW_NAME);
-
-        verifyViewScopeViewOpen();
-    }
-
-    @Test
-    public void testSubPathNotDefaultView() {
-        currentUIPath = "http://localhost:" + port + "/" + SubPathUI.SUBPATH
-                + "/";
-        getDriver().navigate()
-                .to(currentUIPath + VIEW_SEPARATOR + ViewScopedView.VIEW_NAME);
+    public void testNotDefaultView() {
+        currentUIPath = "http://localhost:" + port + DemoApplication.CONTEXT
+                + "/" + getPath();
+        getDriver().navigate().to(
+                currentUIPath + getViewSeparator() + ViewScopedView.VIEW_NAME);
 
         verifyViewScopeViewOpen();
     }
@@ -86,7 +68,7 @@ public class VaadinSpringBootNavigatorIT extends TestBenchTestCase {
         verifyViewScopeViewOpen();
 
         openView(DefaultView.VIEW_NAME);
-        verifyDefaultViewOpen(VIEW_SEPARATOR);
+        verifyDefaultViewOpen(getViewSeparator());
 
         getDriver().navigate().back();
         verifyViewScopeViewOpen();
@@ -111,12 +93,13 @@ public class VaadinSpringBootNavigatorIT extends TestBenchTestCase {
 
     private void verifyViewScopeViewOpen() {
         verifyViewOpen(ViewScopedView.VIEW_NAME);
-        verifyURL(currentUIPath + VIEW_SEPARATOR + ViewScopedView.VIEW_NAME);
+        verifyURL(
+                currentUIPath + getViewSeparator() + ViewScopedView.VIEW_NAME);
     }
 
     private void verifyUIScopedViewOpen() {
         verifyViewOpen(UIScopedView.VIEW_NAME);
-        verifyURL(currentUIPath + VIEW_SEPARATOR + UIScopedView.VIEW_NAME);
+        verifyURL(currentUIPath + getViewSeparator() + UIScopedView.VIEW_NAME);
     }
 
     private void verifyViewOpen(String viewName) {
@@ -136,4 +119,11 @@ public class VaadinSpringBootNavigatorIT extends TestBenchTestCase {
         $(ButtonElement.class).id(viewName + "-button").click();
     }
 
+    protected String getPath() {
+        return "";
+    }
+
+    protected String getViewSeparator() {
+        return "#!";
+    }
 }
