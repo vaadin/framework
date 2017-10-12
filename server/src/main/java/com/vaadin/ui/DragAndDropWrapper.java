@@ -272,7 +272,7 @@ public class DragAndDropWrapper extends CustomComponent
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
-        if (receivers != null && receivers.size() > 0) {
+        if (receivers != null && !receivers.isEmpty()) {
             for (Iterator<Entry<String, ProxyReceiver>> it = receivers
                     .entrySet().iterator(); it.hasNext();) {
                 Entry<String, ProxyReceiver> entry = it.next();

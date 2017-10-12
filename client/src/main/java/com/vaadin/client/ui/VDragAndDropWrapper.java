@@ -248,7 +248,7 @@ public class VDragAndDropWrapper extends VCustomComponent
             @Override
             public void execute() {
                 if (!uploading) {
-                    if (fileIds.size() > 0) {
+                    if (!fileIds.isEmpty()) {
 
                         uploading = true;
                         final Integer fileId = fileIds.remove(0);

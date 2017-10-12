@@ -107,7 +107,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         selectors.append('.').append(primaryStyle);
 
         if (target.getState().styles != null
-                && target.getState().styles.size() > 0) {
+                && !target.getState().styles.isEmpty()) {
             for (String style : target.getState().styles) {
                 selectors.append(",.").append(style);
                 selectors.append(",.").append(primaryStyle).append('.')

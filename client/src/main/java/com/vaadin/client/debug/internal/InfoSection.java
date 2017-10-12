@@ -142,7 +142,7 @@ public class InfoSection implements Section {
         clear();
         List<ApplicationConnection> apps = ApplicationConfiguration
                 .getRunningApplications();
-        if (apps.size() == 0) {
+        if (apps.isEmpty()) {
             // try again in a while
             refresher.schedule(1000);
         } else {

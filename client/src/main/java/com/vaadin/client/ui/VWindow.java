@@ -327,7 +327,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static VWindow getTopmostWindow() {
-        if (windowOrder.size() > 0) {
+        if (!windowOrder.isEmpty()) {
             return windowOrder.get(windowOrder.size() - 1);
         }
         return null;

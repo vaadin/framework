@@ -2846,7 +2846,7 @@ public class Grid extends AbstractComponent
             protected void readDesign(Element cellElement,
                     DesignContext designContext) {
                 if (!cellElement.hasAttr("plain-text")) {
-                    if (cellElement.children().size() > 0
+                    if (!cellElement.children().isEmpty()
                             && cellElement.child(0).tagName().contains("-")) {
                         setComponent(
                                 designContext.readDesign(cellElement.child(0)));
@@ -3124,7 +3124,7 @@ public class Grid extends AbstractComponent
          */
         protected void readDesign(Element tableSectionElement,
                 DesignContext designContext) throws DesignException {
-            while (rows.size() > 0) {
+            while (!rows.isEmpty()) {
                 removeRow(0);
             }
 
@@ -7504,7 +7504,7 @@ public class Grid extends AbstractComponent
                     "selection-mode", attrs, SelectionMode.class));
         }
 
-        if (design.children().size() > 0) {
+        if (!design.children().isEmpty()) {
             if (design.children().size() > 1
                     || !design.child(0).tagName().equals("table")) {
                 throw new DesignException(

@@ -226,7 +226,7 @@ public class TreeTable extends Table implements Hierarchical {
 
         @Override
         public Object lastItemId() {
-            if (getPreOrder().size() > 0) {
+            if (!getPreOrder().isEmpty()) {
                 return getPreOrder().get(getPreOrder().size() - 1);
             } else {
                 return null;

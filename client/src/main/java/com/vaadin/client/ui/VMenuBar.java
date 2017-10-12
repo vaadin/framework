@@ -1116,7 +1116,7 @@ public class VMenuBar extends SimpleFocusablePanel
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
         if ((getItems().size() > 1 || (collapsedRootItems != null
-                && collapsedRootItems.getItems().size() > 0))
+                && !collapsedRootItems.getItems().isEmpty()))
                 && getElement().getStyle().getProperty("width") != null
                 && moreItem != null) {
 
@@ -1144,7 +1144,7 @@ public class VMenuBar extends SimpleFocusablePanel
                 }
                 int widthReduced = 0;
 
-                while (widthReduced < widthNeeded && getItems().size() > 0) {
+                while (widthReduced < widthNeeded && !getItems().isEmpty()) {
                     // Move last root menu item to collapsed menu
                     CustomMenuItem collapse = getItems()
                             .get(getItems().size() - 1);
@@ -1152,21 +1152,21 @@ public class VMenuBar extends SimpleFocusablePanel
                     removeItem(collapse);
                     collapsedRootItems.addItem(collapse, 0);
                 }
-            } else if (collapsedRootItems.getItems().size() > 0) {
+            } else if (!collapsedRootItems.getItems().isEmpty()) {
                 // Space available for items: expand first items from collapsed
                 // menu
                 int widthAvailable = diff + moreItemWidth;
                 int widthGrowth = 0;
 
                 while (widthAvailable > widthGrowth
-                        && collapsedRootItems.getItems().size() > 0) {
+                        && !collapsedRootItems.getItems().isEmpty()) {
                     // Move first item from collapsed menu to the root menu
                     CustomMenuItem expand = collapsedRootItems.getItems()
                             .get(0);
                     collapsedRootItems.removeItem(expand);
                     addItem(expand);
                     widthGrowth += expand.getOffsetWidth();
-                    if (collapsedRootItems.getItems().size() > 0) {
+                    if (!collapsedRootItems.getItems().isEmpty()) {
                         widthAvailable -= moreItemWidth;
                     }
                     if (widthGrowth > widthAvailable) {
@@ -1177,7 +1177,7 @@ public class VMenuBar extends SimpleFocusablePanel
                     }
                 }
             }
-            if (collapsedRootItems.getItems().size() > 0) {
+            if (!collapsedRootItems.getItems().isEmpty()) {
                 addItem(moreItem);
             }
         }

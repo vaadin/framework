@@ -297,7 +297,7 @@ public class AbstractSingleSelectTest {
     }
 
     private void verifyValueChanges() {
-        if (oldSelections.size() > 0) {
+        if (!oldSelections.isEmpty()) {
             assertEquals(null, oldSelections.get(0));
             assertEquals(selectionChanges.size(), oldSelections.size());
             for (int i = 0; i < oldSelections.size() - 1; i++) {

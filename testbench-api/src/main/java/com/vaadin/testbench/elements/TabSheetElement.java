@@ -32,8 +32,8 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     // a locator that does not lead to selecting tabs from a contained inner
     // TabSheet (#13735)
-    protected org.openqa.selenium.By byTabCell = By
-            .xpath("./div/table/tbody/tr/td[contains(normalize-space(concat(' ', @class, ' ')),"
+    protected org.openqa.selenium.By byTabCell = By.xpath(
+            "./div/table/tbody/tr/td[contains(normalize-space(concat(' ', @class, ' ')),"
                     + "normalize-space(' v-tabsheet-tabitem '))]");
     private static org.openqa.selenium.By byCaption = By
             .className("v-captiontext");
@@ -109,14 +109,14 @@ public class TabSheetElement extends AbstractComponentContainerElement {
     private void openTab(WebElement tabCell) {
         // Open the tab by clicking its caption text if it exists.
         List<WebElement> tabCaptions = tabCell.findElements(byCaption);
-        if (tabCaptions.size() > 0) {
+        if (!tabCaptions.isEmpty()) {
             tabCaptions.get(0).click();
             return;
         }
         // If no caption text was found, click the icon of the tab.
         List<WebElement> tabIcons = tabCell
                 .findElements(By.className("v-icon"));
-        if (tabIcons.size() > 0) {
+        if (!tabIcons.isEmpty()) {
             tabIcons.get(0).click();
             return;
         }
@@ -201,7 +201,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
      */
     private String getTabCaption(WebElement tabCell) {
         List<WebElement> captionElements = tabCell.findElements(byCaption);
-        if (captionElements.size() == 0) {
+        if (captionElements.isEmpty()) {
             return null;
         } else {
             return captionElements.get(0).getText();

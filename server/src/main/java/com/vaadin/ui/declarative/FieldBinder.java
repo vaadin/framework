@@ -91,7 +91,7 @@ public class FieldBinder implements Serializable {
                 throw new FieldBindingException("Could not get field value", e);
             }
         }
-        if (unboundFields.size() > 0) {
+        if (!unboundFields.isEmpty()) {
             getLogger().severe(
                     "Found unbound fields in component root :" + unboundFields);
         }

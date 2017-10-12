@@ -83,17 +83,17 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
         Set<ComponentConnector> zeroWidthComponents = new HashSet<>();
         findZeroSizeComponents(zeroHeightComponents, zeroWidthComponents,
                 ac.getUIConnector());
-        if (zeroHeightComponents.size() > 0 || zeroWidthComponents.size() > 0) {
+        if (!zeroHeightComponents.isEmpty() || !zeroWidthComponents.isEmpty()) {
             add(new HTML("<h4> Client side notifications</h4>"
                     + " <em>The following relative sized components were "
                     + "rendered to a zero size container on the client side."
                     + " Note that these are not necessarily invalid "
                     + "states, but reported here as they might be.</em>"));
-            if (zeroHeightComponents.size() > 0) {
+            if (!zeroHeightComponents.isEmpty()) {
                 add(new HTML("<p><strong>Vertically zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroHeightComponents, ac);
             }
-            if (zeroWidthComponents.size() > 0) {
+            if (!zeroWidthComponents.isEmpty()) {
                 add(new HTML(
                         "<p><strong>Horizontally zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroWidthComponents, ac);

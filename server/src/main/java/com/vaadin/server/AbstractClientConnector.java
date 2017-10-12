@@ -515,7 +515,7 @@ public abstract class AbstractClientConnector
 
         Collection<Extension> extensions = connector.getExtensions();
         boolean hasComponents = connector instanceof HasComponents;
-        boolean hasExtensions = extensions.size() > 0;
+        boolean hasExtensions = !extensions.isEmpty();
         if (!hasComponents && !hasExtensions) {
             // If has neither component nor extensions, return immutable empty
             // list as iterable.
