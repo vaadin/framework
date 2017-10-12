@@ -435,17 +435,17 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         for (R res : getResolutionsHigherOrEqualTo(getResolution())) {
             String variableName = getResolutionVariable(res);
 
-            int value = getValuePart(currentDate, res);
+            Integer value = getValuePart(currentDate, res);
             resolutions.put(variableName, value);
 
-            int defaultValuePart = getValuePart(defaultValue, res);
+            Integer defaultValuePart = getValuePart(defaultValue, res);
             resolutions.put("default-" + variableName, defaultValuePart);
         }
     }
 
-    private int getValuePart(T date, R resolution) {
+    private Integer getValuePart(T date, R resolution) {
         if (date == null) {
-            return -1;
+            return null;
         }
         return getDatePart(date, resolution);
     }
@@ -766,7 +766,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     protected abstract Date convertToDate(T date);
 
     private String getResolutionVariable(R resolution) {
-        return resolution.name().toLowerCase(Locale.ENGLISH);
+        return resolution.name();
     }
 
     @SuppressWarnings("unchecked")

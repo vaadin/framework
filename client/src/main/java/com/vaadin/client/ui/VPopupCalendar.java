@@ -52,7 +52,7 @@ public class VPopupCalendar
     }
 
     public static Date makeDate(Map<DateResolution, Integer> dateValues) {
-        if (dateValues.get(DateResolution.YEAR) == -1) {
+        if (dateValues.get(DateResolution.YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);

@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -65,6 +64,10 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /**
      * A temporary holder of the time units (resolutions), which would be sent
      * to the server through {@link #sendBufferedValues()}.
+     * 
+     * The key is the resolution name e.g. "HOUR", "MINUTE".
+     * 
+     * The value can be {@code null}.
      * 
      * @since
      */
@@ -261,7 +264,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @return the resolution variable name
      */
     public String getResolutionVariable(R resolution) {
-        return resolution.name().toLowerCase(Locale.ENGLISH);
+        return resolution.name();
     }
 
     /**

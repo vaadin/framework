@@ -59,7 +59,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
                         res -> (resolution.compareTo(res) <= 0)
                                 ? stateResolutions
                                         .get(widget.getResolutionVariable(res))
-                                : -1));
+                                : null));
     }
 
     /**
@@ -77,7 +77,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
                 res -> (resolution.compareTo(res) <= 0)
                         ? stateResolutions.get("default-"
                                 + getWidget().getResolutionVariable(res))
-                        : -1));
+                        : null));
     }
 
     @SuppressWarnings("unchecked")

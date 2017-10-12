@@ -82,8 +82,10 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * The map of {@code Resolution}s which are currently used by the component.
      *
-     * The key the the lower-case resolution name e.g. "hour", "minute", and
-     * value can be {@code null}
+     * The key is the resolution name e.g. "HOUR", "MINUTE", with possibly
+     * prefixed by "default-".
+     * 
+     * The value can be {@code null}
      * 
      * @since
      */

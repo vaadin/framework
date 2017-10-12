@@ -61,7 +61,7 @@ public class VPopupTimeCalendar extends
     }
 
     public static Date makeDate(Map<DateTimeResolution, Integer> dateValues) {
-        if (dateValues.get(DateTimeResolution.YEAR) == -1) {
+        if (dateValues.get(DateTimeResolution.YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
