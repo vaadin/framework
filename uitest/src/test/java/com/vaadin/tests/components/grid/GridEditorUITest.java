@@ -15,9 +15,6 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -90,7 +87,6 @@ public class GridEditorUITest extends MultiBrowserTest {
 
         saveEditor();
 
-        assertThat(headerCell.getAttribute("class"),
-                not(containsString("sort-")));
+        assertFalse(headerCell.getAttribute("class").contains("sort-"));
     }
 }

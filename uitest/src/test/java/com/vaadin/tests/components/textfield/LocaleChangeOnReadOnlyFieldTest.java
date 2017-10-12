@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.textfield;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -16,10 +15,10 @@ public class LocaleChangeOnReadOnlyFieldTest extends MultiBrowserTest {
         openTestURL();
 
         TextFieldElement textField = $(TextFieldElement.class).first();
-        assertThat(textField.getValue(), is("1,024,000"));
+        assertEquals("1,024,000", textField.getValue());
 
         $(ButtonElement.class).caption("Change Locale").first().click();
-        assertThat(textField.getValue(), is("1.024.000"));
+        assertEquals("1.024.000", textField.getValue());
     }
 
 }

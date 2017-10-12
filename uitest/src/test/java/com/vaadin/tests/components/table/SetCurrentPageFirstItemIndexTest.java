@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Ignore;
@@ -54,7 +53,7 @@ public class SetCurrentPageFirstItemIndexTest extends MultiBrowserTest {
             TableElement table = $(TableElement.class).first();
             TestBenchElement cell = table.getCell(index, 0);
 
-            assertThat(cell.getText(), is(Integer.toString(index + 1)));
+            assertEquals(Integer.toString(index + 1), cell.getText());
         } catch (NoSuchElementException e) {
             fail(String.format("Can't locate row for index: %s", index));
         }

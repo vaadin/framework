@@ -1,8 +1,7 @@
 package com.vaadin.server;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -39,7 +38,7 @@ public class VaadinPortletRequestTest {
 
         String value = sut.getPortletPreference("foo");
 
-        assertThat(value, is("bar"));
+        assertEquals("bar", value);
     }
 
     @Test

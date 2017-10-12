@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertThat(errors, empty());
+        assertTrue(errors.isEmpty());
     }
 
     @Test
@@ -39,7 +38,7 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertThat(errors, empty());
+        assertTrue(errors.isEmpty());
 
         assertPopupClosed(combobox);
     }
@@ -56,15 +55,14 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertThat(errors, empty());
+        assertTrue(errors.isEmpty());
         assertPopupClosed(combobox);
     }
 
     private void assertPopupClosed(ComboBoxElement combobox) {
         org.openqa.selenium.By bySuggestionPopup = By.vaadin("#popup");
 
-        assertThat("ComboBox popup should not be open",
+        assertTrue("ComboBox popup should not be open",
                 combobox.findElements(bySuggestionPopup).isEmpty());
-
     }
 }

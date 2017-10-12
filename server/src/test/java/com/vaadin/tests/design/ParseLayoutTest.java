@@ -16,12 +16,8 @@
 package com.vaadin.tests.design;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -66,23 +62,22 @@ public class ParseLayoutTest {
     public void buttonWithIdIsParsed() {
         Component button = ctx.getComponentByLocalId("firstButton");
 
-        assertThat(ctx.getComponentByCaption("Native click me"), is(button));
-        assertThat(button.getCaption(), is("Native click me"));
+        assertEquals(button, ctx.getComponentByCaption("Native click me"));
+        assertEquals("Native click me", button.getCaption());
     }
 
     @Test
     public void buttonWithIdAndLocalIdIsParsed() {
         Component button = ctx.getComponentById("secondButton");
 
-        assertThat(ctx.getComponentByCaption("Another button"), is(button));
-        assertThat(ctx.getComponentByLocalId("localID"), is(button));
-        assertThat(button.getCaption(), is("Another button"));
+        assertEquals(button, ctx.getComponentByCaption("Another button"));
+        assertEquals(button, ctx.getComponentByLocalId("localID"));
+        assertEquals("Another button", button.getCaption());
     }
 
     @Test
     public void buttonWithoutIdsIsParsed() {
-        assertThat(ctx.getComponentByCaption("Yet another button"),
-                is(not(nullValue())));
+        assertNotNull(ctx.getComponentByCaption("Yet another button"));
     }
 
     @Test
@@ -176,7 +171,7 @@ public class ParseLayoutTest {
 
         VerticalLayout vlayout = (VerticalLayout) root;
 
-        assertThat(vlayout.getComponentCount(), is(3));
+        assertEquals(3, vlayout.getComponentCount());
     }
 
     @Test
@@ -185,14 +180,14 @@ public class ParseLayoutTest {
         VerticalLayout vlayout = (VerticalLayout) root;
         HorizontalLayout hlayout = (HorizontalLayout) vlayout.getComponent(0);
 
-        assertThat(hlayout.getComponentCount(), is(5));
-        assertThat(hlayout.getComponent(0).getCaption(), is("FooBar"));
-        assertThat(hlayout.getComponent(1).getCaption(), is("Native click me"));
-        assertThat(hlayout.getComponent(2).getCaption(), is("Another button"));
-        assertThat(hlayout.getComponent(3).getCaption(),
-                is("Yet another button"));
-        assertThat(hlayout.getComponent(4).getCaption(), is("Click me"));
-        assertThat(hlayout.getComponent(4).getWidth(), is(150f));
+        assertEquals(5, hlayout.getComponentCount());
+        assertEquals("FooBar", hlayout.getComponent(0).getCaption());
+        assertEquals("Native click me", hlayout.getComponent(1).getCaption());
+        assertEquals("Another button", hlayout.getComponent(2).getCaption());
+        assertEquals("Yet another button",
+                hlayout.getComponent(3).getCaption());
+        assertEquals("Click me", hlayout.getComponent(4).getCaption());
+        assertEquals(150f, hlayout.getComponent(4).getWidth(), 0);
 
         // Check the remaining two components of the vertical layout
         assertTextField(vlayout);
@@ -207,14 +202,14 @@ public class ParseLayoutTest {
     private void assertTextField(VerticalLayout vlayout) {
         TextField tf = (TextField) vlayout.getComponent(1);
 
-        assertThat(tf.getCaption(), is("Text input"));
+        assertEquals("Text input", tf.getCaption());
     }
 
     private void assertPasswordField(VerticalLayout layout) {
         PasswordField pf = (PasswordField) layout.getComponent(2);
 
-        assertThat(pf.getCaption(), is("Password field"));
-        assertThat(pf.getWidth(), is(300f));
-        assertThat(pf.getHeight(), is(200f));
+        assertEquals("Password field", pf.getCaption());
+        assertEquals(300f, pf.getWidth(), 0);
+        assertEquals(200f, pf.getHeight(), 0);
     }
 }

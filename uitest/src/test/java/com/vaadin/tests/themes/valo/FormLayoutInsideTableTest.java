@@ -1,7 +1,6 @@
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -12,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class FormLayoutInsideTableTest extends MultiBrowserTest {
+
     @Test
     public void nestedItemHasBorderTop() {
         openTestURL();
@@ -22,6 +22,6 @@ public class FormLayoutInsideTableTest extends MultiBrowserTest {
 
         WebElement td = secondNestedRow.findElement(By.tagName("td"));
 
-        assertThat(td.getCssValue("border-top-width"), is("1px"));
+        assertEquals("1px", td.getCssValue("border-top-width"));
     }
 }

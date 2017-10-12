@@ -1,7 +1,6 @@
 package com.vaadin.tests.themes.base;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -20,7 +19,7 @@ public class DisabledMenuBarItemTest extends MultiBrowserTest {
         WebElement element = driver
                 .findElement(By.className("v-menubar-menuitem-disabled"));
 
-        assertThat(element.getCssValue("opacity"), is("0.5"));
+        assertEquals("0.5", element.getCssValue("opacity"));
 
         compareScreen("transparent");
     }

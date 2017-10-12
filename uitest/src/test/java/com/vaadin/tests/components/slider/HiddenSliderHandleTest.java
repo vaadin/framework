@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.slider;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -32,7 +32,7 @@ public class HiddenSliderHandleTest extends MultiBrowserTest {
     public void handleIsAccessible() throws IOException {
         openTestURL();
 
-        assertThat(getSliderHandle().isDisplayed(), is(true));
+        assertTrue(getSliderHandle().isDisplayed());
     }
 
     private WebElement getSliderHandle() {

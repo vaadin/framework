@@ -2,8 +2,7 @@ package com.vaadin.tests.components.textarea;
 
 import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAHEIGHT;
 import static com.vaadin.tests.components.textarea.TextAreaSizeResetted.TEXTAREAWIDTH;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -52,8 +51,8 @@ public class TextAreaSizeResettedTest extends MultiBrowserTest {
         // polling, which should trigger a resize.
         waitUntilPollingOccurs();
 
-        assertThat(getTextAreaHeight(), is(TEXTAREAHEIGHT + OFFSET));
-        assertThat(getTextAreaWidth(), is(TEXTAREAWIDTH + OFFSET));
+        assertEquals(TEXTAREAHEIGHT + OFFSET, getTextAreaHeight());
+        assertEquals(TEXTAREAWIDTH + OFFSET, getTextAreaWidth());
 
         waitUntilPollingOccurs();
     }
@@ -64,10 +63,10 @@ public class TextAreaSizeResettedTest extends MultiBrowserTest {
 
     private void resizeAndAssertTextAreaTo(int size, int offset) {
         // Sanity check
-        assertThat(getTextAreaHeight(), is(size));
+        assertEquals(size, getTextAreaHeight());
         resizeTextAreaBy(offset);
 
-        assertThat(getTextAreaHeight(), is(size + offset));
+        assertEquals(size + offset, getTextAreaHeight());
     }
 
     private void resizeTextAreaBy(int offset) {
@@ -86,8 +85,8 @@ public class TextAreaSizeResettedTest extends MultiBrowserTest {
 
         changeHeightTo(TEXTAREAHEIGHT + OFFSET + OFFSET);
 
-        assertThat(getTextAreaWidth(), is(TEXTAREAWIDTH + OFFSET));
-        assertThat(getTextAreaHeight(), is(TEXTAREAHEIGHT + OFFSET + OFFSET));
+        assertEquals(TEXTAREAWIDTH + OFFSET, getTextAreaWidth());
+        assertEquals(TEXTAREAHEIGHT + OFFSET + OFFSET, getTextAreaHeight());
     }
 
     private void changeHeightTo(int offset) {

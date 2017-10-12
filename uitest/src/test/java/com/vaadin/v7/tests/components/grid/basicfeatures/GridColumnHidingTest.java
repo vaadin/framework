@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -123,8 +122,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
         assertEquals(2, columnIndex);
-        assertEquals(false, userOriginated);
-        assertEquals(true, hidden);
+        assertFalse(userOriginated);
+        assertTrue(hidden);
 
         toggleHideColumnAPI(2);
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
@@ -139,8 +138,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(2, counter);
         assertEquals(2, columnIndex);
-        assertEquals(false, userOriginated);
-        assertEquals(false, hidden);
+        assertFalse(userOriginated);
+        assertFalse(hidden);
     }
 
     @Test
@@ -166,8 +165,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(1, counter);
         assertEquals(2, columnIndex);
-        assertEquals(true, userOriginated);
-        assertEquals(true, hidden);
+        assertTrue(userOriginated);
+        assertTrue(hidden);
 
         getColumnHidingToggle(2).click();
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
@@ -182,8 +181,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         assertNotNull("no event fired", webElement);
         assertEquals(2, counter);
         assertEquals(2, columnIndex);
-        assertEquals(true, userOriginated);
-        assertEquals(false, hidden);
+        assertTrue(userOriginated);
+        assertFalse(hidden);
     }
 
     @Test
@@ -827,20 +826,17 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         selectMenuPath("Component", "Row details", "Toggle details for...",
                 "Row 1");
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(1, 2, 3, 4);
-        assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
 
         toggleHideColumnAPI(0);
 
         assertColumnHeaderOrder(0, 1, 2, 3, 4);
-        assertNotNull("Details not found",
-                getGridElement().getDetails(1));
+        assertNotNull("Details not found", getGridElement().getDetails(1));
     }
 
     @Test
@@ -884,17 +880,13 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHideColumnAPI(1);
 
         getGridElement().scrollToRow(500);
-        assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        assertEquals("(500, 2)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 2)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(1);
 
-        assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
     }
 
     @Test
@@ -902,26 +894,20 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
         toggleHidableColumnAPI(0);
         toggleHidableColumnAPI(1);
 
-        assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        assertEquals("(500, 2)",
-                getGridElement().getCell(500, 0).getText());
-        assertEquals("(500, 3)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 2)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 3)", getGridElement().getCell(500, 1).getText());
 
         toggleHideColumnAPI(0);
         toggleHideColumnAPI(1);
 
-        assertEquals("(500, 0)",
-                getGridElement().getCell(500, 0).getText());
-        assertEquals("(500, 1)",
-                getGridElement().getCell(500, 1).getText());
+        assertEquals("(500, 0)", getGridElement().getCell(500, 0).getText());
+        assertEquals("(500, 1)", getGridElement().getCell(500, 1).getText());
     }
 
     private void loadSpannedCellsFixture() {

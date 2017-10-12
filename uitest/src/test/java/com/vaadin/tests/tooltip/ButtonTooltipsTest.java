@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.tooltip;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -46,8 +45,7 @@ public class ButtonTooltipsTest extends TooltipTest {
         checkTooltip(buttonTwo, ButtonTooltips.shortDescription);
         moveMouseTo(buttonOne, 5, 5);
         sleep(100);
-        assertThat(getTooltipElement().getSize().getWidth(), is(originalWidth));
-        assertThat(getTooltipElement().getSize().getHeight(),
-                is(originalHeight));
+        assertEquals(originalWidth, getTooltipElement().getSize().getWidth());
+        assertEquals(originalHeight, getTooltipElement().getSize().getHeight());
     }
 }

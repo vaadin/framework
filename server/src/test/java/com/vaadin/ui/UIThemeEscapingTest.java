@@ -15,9 +15,9 @@
  */
 package com.vaadin.ui;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +79,7 @@ public class UIThemeEscapingTest {
     public void dangerousCharactersAreRemoved() {
         ui.setTheme("a<å(_\"$");
 
-        assertThat(ui.getTheme(), is("aå_$"));
+        assertEquals("aå_$", ui.getTheme());
     }
 
     @Test
@@ -88,7 +88,7 @@ public class UIThemeEscapingTest {
 
         ui.setTheme(null);
 
-        assertThat(ui.getTheme(), is(nullValue()));
+        assertNull(ui.getTheme());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UIThemeEscapingTest {
 
         initUiWithTheme("bar");
 
-        assertThat(ui.getTheme(), is("bar"));
+        assertEquals("bar", ui.getTheme());
     }
 
     @Test
@@ -106,6 +106,6 @@ public class UIThemeEscapingTest {
 
         initUiWithTheme(null);
 
-        assertThat(ui.getTheme(), is(nullValue()));
+        assertNull(ui.getTheme());
     }
 }

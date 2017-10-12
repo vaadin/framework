@@ -324,7 +324,7 @@ public class GridSingleSelectionModelTest {
 
         assertEquals(grid, event.get().getComponent());
         assertEquals(value, event.get().getValue());
-        assertEquals(null, event.get().getOldValue());
+        assertNull(event.get().getOldValue());
         assertTrue(event.get().isUserOriginated());
     }
 

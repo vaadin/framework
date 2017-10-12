@@ -1,7 +1,6 @@
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -34,27 +33,27 @@ public class WindowTitleOverflowTest extends MultiBrowserTest {
     public void headerMarginIsCorrectForResizable() {
         openWindow("Open Resizable");
 
-        assertThat(getWindowHeaderMarginRight(), is("74px"));
+        assertEquals("74px", getWindowHeaderMarginRight());
     }
 
     @Test
     public void headerMarginIsCorrectForClosable() {
         openWindow("Open Closable");
 
-        assertThat(getWindowHeaderMarginRight(), is("37px"));
+        assertEquals("37px", getWindowHeaderMarginRight());
     }
 
     @Test
     public void headerMarginIsCorrectForResizableAndClosable() {
         openWindow("Open Resizable and Closable");
 
-        assertThat(getWindowHeaderMarginRight(), is("74px"));
+        assertEquals("74px", getWindowHeaderMarginRight());
     }
 
     @Test
     public void headerMarginIsCorrectForNonResizableAndNonClosable() {
         openWindow("Open Non-Resizable and Non-Closable");
 
-        assertThat(getWindowHeaderMarginRight(), is("12px"));
+        assertEquals("12px", getWindowHeaderMarginRight());
     }
 }

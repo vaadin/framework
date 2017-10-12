@@ -17,6 +17,7 @@
 package com.vaadin.v7.tests.data.converter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Locale;
 
@@ -85,7 +86,7 @@ public class AnyEnumToStringConverterTest {
 
     @Test
     public void nullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertNull(converter.convertToModel(null, null, null));
     }
 
     @Test

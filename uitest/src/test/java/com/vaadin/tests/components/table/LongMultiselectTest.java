@@ -1,7 +1,6 @@
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -10,8 +9,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class LongMultiselectTest extends MultiBrowserTest {
@@ -38,9 +37,9 @@ public class LongMultiselectTest extends MultiBrowserTest {
         $(ButtonElement.class).first().click();
 
         TableElement table = getTable();
-        assertThat(table.getCell(LASTSELECTEDROW, 1).getText(), is("updated"));
-        assertThat(table.getCell(LASTSELECTEDROW - 1, 1).getText(),
-                is("updated"));
+        assertEquals("updated", table.getCell(LASTSELECTEDROW, 1).getText());
+        assertEquals("updated",
+                table.getCell(LASTSELECTEDROW - 1, 1).getText());
     }
 
     private void selectRows() {

@@ -1,7 +1,5 @@
 package com.vaadin.tests.components.datefield;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -19,8 +17,8 @@ public class DateFieldElementTest extends SingleBrowserTest {
     public void dateFieldElementIsLocated() {
         openTestURL();
 
-        assertThat($(DateFieldElement.class).all().size(), is(3));
-        assertThat($(InlineDateFieldElement.class).all().size(), is(1));
+        assertEquals(3, $(DateFieldElement.class).all().size());
+        assertEquals(1, $(InlineDateFieldElement.class).all().size());
     }
 
     @Test

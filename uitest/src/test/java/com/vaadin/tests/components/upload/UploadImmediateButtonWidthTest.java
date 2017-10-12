@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.upload;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -49,11 +48,11 @@ public abstract class UploadImmediateButtonWidthTest extends MultiBrowserTest {
 
     @Test
     public void immediateButtonWithPixelWidth() {
-        assertThat(getButtonWidth("upload1"), is(300.0));
+        assertEquals(300.0, getButtonWidth("upload1"), 0);
     }
 
     @Test
     public void immediateButtonWithPercentageWidth() {
-        assertThat(getButtonWidth("upload2"), is(250.0));
+        assertEquals(250.0, getButtonWidth("upload2"), 0);
     }
 }

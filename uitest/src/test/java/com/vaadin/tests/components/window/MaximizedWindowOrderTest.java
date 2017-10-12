@@ -1,13 +1,12 @@
 package com.vaadin.tests.components.window;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.WindowElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class MaximizedWindowOrderTest extends MultiBrowserTest {
@@ -44,11 +43,11 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         WindowElement maximizedWindow = openMaximizedWindow();
         WindowElement anotherWindow = openAnotherWindow();
 
-        assertThat(anotherWindow.getCssValue("z-index"),
-                is(greaterThan(maximizedWindow.getCssValue("z-index"))));
+        assertTrue(anotherWindow.getCssValue("z-index")
+                .compareTo(maximizedWindow.getCssValue("z-index")) > 1);
 
-        assertThat(getMaximizedWindow().getCssValue("z-index"), is("10000"));
-        assertThat(getAnotherWindow().getCssValue("z-index"), is("10001"));
+        assertEquals("10000", getMaximizedWindow().getCssValue("z-index"));
+        assertEquals("10001", getAnotherWindow().getCssValue("z-index"));
     }
 
     @Test
@@ -64,7 +63,7 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         anotherWindow.move(10, 20);
         maximizedWindow.maximize();
 
-        assertThat(maximizedWindow.getCssValue("z-index"),
-                is(greaterThan(anotherWindow.getCssValue("z-index"))));
+        assertTrue(maximizedWindow.getCssValue("z-index")
+                .compareTo(anotherWindow.getCssValue("z-index")) > 1);
     }
 }

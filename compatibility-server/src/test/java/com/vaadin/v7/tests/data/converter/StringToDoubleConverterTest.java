@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.data.converter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -12,12 +13,12 @@ public class StringToDoubleConverterTest {
 
     @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Double.class, null));
+        assertNull(converter.convertToModel(null, Double.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Double.class, null));
+        assertNull(converter.convertToModel("", Double.class, null));
     }
 
     @Test

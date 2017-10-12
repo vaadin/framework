@@ -1,8 +1,7 @@
 package com.vaadin.tests.themes.valo;
 
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -31,8 +30,8 @@ public class ModalWindowTest extends SingleBrowserTest {
         WebElement modalityCurtain = findElement(
                 By.className("v-window-modalitycurtain"));
 
-        assertThat(modalityCurtain.getCssValue("-webkit-animation-name"),
-                is("none"));
+        assertEquals("none",
+                modalityCurtain.getCssValue("-webkit-animation-name"));
     }
 
     @Test

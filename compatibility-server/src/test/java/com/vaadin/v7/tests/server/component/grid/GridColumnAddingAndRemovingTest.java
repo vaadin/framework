@@ -73,11 +73,11 @@ public class GridColumnAddingAndRemovingTest {
         Property<?> property = container
                 .getContainerProperty(container.firstItemId(), "bar");
         assertEquals(property.getType(), Integer.class);
-        assertEquals(null, property.getValue());
+        assertNull(property.getValue());
         property = container.getContainerProperty(container.firstItemId(),
                 "baz");
         assertEquals(property.getType(), Double.class);
-        assertEquals(null, property.getValue());
+        assertNull(property.getValue());
     }
 
     @Test(expected = IllegalStateException.class)

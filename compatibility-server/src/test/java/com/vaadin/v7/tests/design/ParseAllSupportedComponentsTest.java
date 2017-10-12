@@ -15,10 +15,7 @@
  */
 package com.vaadin.v7.tests.design;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.FileNotFoundException;
 
@@ -39,7 +36,7 @@ public class ParseAllSupportedComponentsTest {
         DesignContext ctx = Design.read(
                 getClass().getResourceAsStream("all-components.html"), null);
 
-        assertThat(ctx, is(not(nullValue())));
-        assertThat(ctx.getRootComponent(), is(not(nullValue())));
+        assertNotNull(ctx);
+        assertNotNull(ctx.getRootComponent());
     }
 }

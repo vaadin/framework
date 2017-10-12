@@ -1,7 +1,6 @@
 package com.vaadin.tests.tooltip;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -17,9 +16,8 @@ public class MenuBarTooltipTest extends MultiBrowserTest {
 
     @Test
     public void toolTipShouldBeOnTopOfMenuItem() {
-        String[] themes = { ValoTheme.THEME_NAME,
-                Reindeer.THEME_NAME, Runo.THEME_NAME,
-                ChameleonTheme.THEME_NAME };
+        String[] themes = { ValoTheme.THEME_NAME, Reindeer.THEME_NAME,
+                Runo.THEME_NAME, ChameleonTheme.THEME_NAME };
 
         for (String theme : themes) {
             assertZIndices(theme);
@@ -31,9 +29,8 @@ public class MenuBarTooltipTest extends MultiBrowserTest {
 
         $(MenuBarElement.class).first().clickItem("Menu item");
 
-        assertThat(String.format("Invalid z-index for theme %s.", theme),
-                getZIndex("v-tooltip"),
-                greaterThan(getZIndex("v-menubar-popup")));
+        assertTrue(String.format("Invalid z-index for theme %s.", theme),
+                getZIndex("v-tooltip") > getZIndex("v-menubar-popup"));
     }
 
     private int getZIndex(String className) {

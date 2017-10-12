@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests.components;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -46,12 +45,11 @@ public class AbstractOrderedLayoutWithCaptionsTest extends MultiBrowserTest {
                 .parseInt(paddingTop.substring(0, paddingTop.length() - 2));
         List<WebElement> children = getDriver()
                 .findElements(By.cssSelector(".v-panel-content .v-slot"));
-        assertThat(children.size(), is(3));
+        assertEquals(3, children.size());
 
         Integer neededHeight = children.get(0).getSize().getHeight()
                 + children.get(2).getSize().getHeight();
 
-        assertThat(neededHeight, is(lessThanOrEqualTo(paddingHeight)));
-
+        assertTrue(neededHeight <= paddingHeight);
     }
 }

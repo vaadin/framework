@@ -15,10 +15,8 @@
  */
 package com.vaadin.tests.design.nested;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.jsoup.nodes.Attributes;
@@ -68,13 +66,13 @@ public class WriteNestedTemplatesTest {
     @Test
     public void rootCaptionIsWritten() {
         assertTrue(design.hasAttr("caption"));
-        assertThat(design.attr("caption"), is("root caption"));
+        assertEquals("root caption", design.attr("caption"));
     }
 
     @Test
     public void childCaptionIsWritten() {
         assertTrue(design.child(0).hasAttr("caption"));
-        assertThat(design.child(0).attr("caption"), is("child caption"));
+        assertEquals("child caption", design.child(0).attr("caption"));
     }
 
     // The default caption is read from child template
@@ -88,6 +86,6 @@ public class WriteNestedTemplatesTest {
 
     @Test
     public void childDesignChildrenIsNotWrittenInRootTemplate() {
-        assertThat(design.child(0).children().size(), is(0));
+        assertEquals(0, design.child(0).children().size());
     }
 }

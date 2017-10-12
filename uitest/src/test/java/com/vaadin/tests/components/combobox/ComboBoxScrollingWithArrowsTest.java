@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -69,7 +68,7 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
             dropDownComboBox.sendKeys(Keys.DOWN);
         }
 
-        assertThat(getSelectedItemText(), is("item " + PAGESIZE)); // item 10
+        assertEquals("item " + PAGESIZE, getSelectedItemText()); // item 10
     }
 
     private String getSelectedItemText() {
@@ -90,8 +89,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
         waitUntilNextPageIsVisible();
         dropDownComboBox.sendKeys(Keys.UP);
 
-        assertThat(getSelectedItemText(), is("item " + (PAGESIZE - 1))); // item
-                                                                         // 9
+        assertEquals("item " + (PAGESIZE - 1), getSelectedItemText()); // item
+                                                                       // 9
     }
 
     private void waitUntilNextPageIsVisible() {

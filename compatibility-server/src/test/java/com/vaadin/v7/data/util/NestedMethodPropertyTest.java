@@ -311,9 +311,9 @@ public class NestedMethodPropertyTest {
 
         Address address3 = null;
         addressProperty.setValue(address3);
-        assertEquals(null, addressProperty.getValue());
+        assertNull(addressProperty.getValue());
         streetProperty.setValue("Ruukinkatu");
-        assertEquals(null, streetProperty.getValue());
+        assertNull(streetProperty.getValue());
     }
 
     @Test

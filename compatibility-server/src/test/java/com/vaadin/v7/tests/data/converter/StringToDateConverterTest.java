@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.data.converter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 import java.util.Locale;
@@ -15,12 +16,12 @@ public class StringToDateConverterTest {
 
     @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Date.class, null));
+        assertNull(converter.convertToModel(null, Date.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Date.class, null));
+        assertNull(converter.convertToModel("", Date.class, null));
     }
 
     @Test

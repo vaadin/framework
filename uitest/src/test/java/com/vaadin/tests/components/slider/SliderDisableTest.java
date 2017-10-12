@@ -15,10 +15,9 @@
  */
 package com.vaadin.tests.components.slider;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -38,17 +37,17 @@ public class SliderDisableTest extends MultiBrowserTest {
 
         moveSlider(112);
         String expectedPosition = getSliderHandlePosition();
-        assertThat(expectedPosition, is(not(originalPosition)));
+        assertNotEquals(originalPosition, expectedPosition);
 
         hitButton("disableButton");
 
         assertSliderIsDisabled();
-        assertThat(getSliderHandlePosition(), is(expectedPosition));
+        assertEquals(expectedPosition, getSliderHandlePosition());
     }
 
     private void assertSliderIsDisabled() {
         WebElement slider = driver.findElement(By.className("v-slider"));
-        assertThat(slider.getAttribute("class"), containsString("v-disabled"));
+        assertTrue(slider.getAttribute("class").contains("v-disabled"));
     }
 
     private void moveSlider(int offset) {

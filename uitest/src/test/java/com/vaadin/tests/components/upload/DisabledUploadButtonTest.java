@@ -1,8 +1,7 @@
 package com.vaadin.tests.components.upload;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -37,10 +36,10 @@ public class DisabledUploadButtonTest extends MultiBrowserTest {
 
     @Test
     public void buttonIsDisabled() {
-        assertThat(getUploadButtonClass(), not(containsString("v-disabled")));
+        assertFalse(getUploadButtonClass().contains("v-disabled"));
 
         clickButton("Set disabled");
 
-        assertThat(getUploadButtonClass(), containsString("v-disabled"));
+        assertTrue(getUploadButtonClass().contains("v-disabled"));
     }
 }

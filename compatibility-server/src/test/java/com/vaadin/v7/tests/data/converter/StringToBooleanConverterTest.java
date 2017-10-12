@@ -2,6 +2,7 @@ package com.vaadin.v7.tests.data.converter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
@@ -39,12 +40,12 @@ public class StringToBooleanConverterTest {
 
     @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Boolean.class, null));
+        assertNull(converter.convertToModel(null, Boolean.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Boolean.class, null));
+        assertNull(converter.convertToModel("", Boolean.class, null));
     }
 
     @Test

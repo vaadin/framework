@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -85,10 +84,10 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
         int initialHeight = getContextMenuHeight();
 
         resizeViewPortHeightTo(initialHeight - 10);
-        assertThat(getContextMenuHeight(), lessThan(initialHeight));
+        assertTrue(getContextMenuHeight() < initialHeight);
 
         resizeViewPortHeightTo(initialHeight + 100);
-        assertThat(getContextMenuHeight(), is(initialHeight));
+        assertEquals(initialHeight, getContextMenuHeight());
     }
 
     @Test
@@ -98,8 +97,8 @@ public class ContextMenuSizeTest extends MultiBrowserTest {
 
         resizeViewPortHeightTo(y + height - 10);
 
-        assertThat(getContextMenuY(), lessThan(y));
-        assertThat(getContextMenuHeight(), is(height));
+        assertTrue(getContextMenuY() < y);
+        assertEquals(height, getContextMenuHeight());
     }
 
 }

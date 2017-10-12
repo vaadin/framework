@@ -15,16 +15,15 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class UpdateTableWhenUnfocusedTest extends MultiBrowserTest {
@@ -45,9 +44,9 @@ public class UpdateTableWhenUnfocusedTest extends MultiBrowserTest {
 
         int newButtonLocation = button.getLocation().getY();
 
-        assertThat(
+        assertEquals(
                 "Button location has changed after table refresh, window has scrolled and it shouldn't have",
-                newButtonLocation, is(buttonLocation));
+                buttonLocation, newButtonLocation);
 
     }
 }

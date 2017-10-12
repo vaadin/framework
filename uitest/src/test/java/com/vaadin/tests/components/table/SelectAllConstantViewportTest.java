@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
@@ -26,8 +25,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class SelectAllConstantViewportTest extends MultiBrowserTest {
@@ -56,7 +55,6 @@ public class SelectAllConstantViewportTest extends MultiBrowserTest {
         checkbox.click(5, 5);
         int newRowLocation = row.getLocation().getY();
 
-        assertThat(newRowLocation, is(rowLocation));
-
+        assertEquals(rowLocation, newRowLocation);
     }
 }

@@ -16,9 +16,9 @@
 package com.vaadin.tests.design.nested;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class NestedCustomLayoutsTest {
         Design.write(rootLayout, out);
         Document doc = Jsoup.parse(out.toString(UTF_8.name()));
 
-        assertThat(doc.head().child(0).attr("name"), is("package-mapping"));
-        assertThat(doc.head().child(0).attr("content"), is(PACKAGE_MAPPING));
+        assertEquals("package-mapping", doc.head().child(0).attr("name"));
+        assertEquals(PACKAGE_MAPPING, doc.head().child(0).attr("content"));
         assertChildrenCount(doc);
     }
 
@@ -84,11 +84,11 @@ public class NestedCustomLayoutsTest {
 
     private void assertChildrenCount(Document doc) {
         Element rootNode = doc.body().child(0);
-        assertThat(rootNode.children().size(), greaterThan(0));
+        assertFalse(rootNode.children().isEmpty());
 
         for (Element child : rootNode.children()) {
             // make sure that the nested custom layouts do not render children
-            assertThat(child.children().size(), is(0));
+            assertTrue(child.children().isEmpty());
         }
     }
 }

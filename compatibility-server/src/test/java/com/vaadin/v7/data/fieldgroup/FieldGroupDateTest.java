@@ -17,6 +17,7 @@ package com.vaadin.v7.data.fieldgroup;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 
@@ -91,9 +92,8 @@ public class FieldGroupDateTest {
         assertEquals(new Date(2011, 6, 8), sqlDate.getValue());
 
         fieldGroup.clear();
-        assertEquals(null, javaDate.getValue());
-        assertEquals(null, sqlDate.getValue());
-
+        assertNull(javaDate.getValue());
+        assertNull(sqlDate.getValue());
     }
 
 }

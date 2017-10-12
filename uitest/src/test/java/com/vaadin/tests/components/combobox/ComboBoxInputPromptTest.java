@@ -15,16 +15,15 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxInputPromptTest extends MultiBrowserTest {
@@ -37,20 +36,20 @@ public class ComboBoxInputPromptTest extends MultiBrowserTest {
         ComboBoxElement disabledComboBox = getComboBoxWithCaption("Disabled");
         ComboBoxElement readOnlyComboBox = getComboBoxWithCaption("Read-only");
 
-        assertThat(getInputPromptValue(normalComboBox),
-                is("Normal input prompt"));
-        assertThat(getInputPromptValue(disabledComboBox), isEmptyString());
-        assertThat(getInputPromptValue(readOnlyComboBox), isEmptyString());
+        assertEquals("Normal input prompt",
+                getInputPromptValue(normalComboBox));
+        assertTrue(getInputPromptValue(disabledComboBox).isEmpty());
+        assertTrue(getInputPromptValue(readOnlyComboBox).isEmpty());
 
         toggleDisabledAndReadonly();
-        assertThat(getInputPromptValue(disabledComboBox),
-                is("Disabled input prompt"));
-        assertThat(getInputPromptValue(readOnlyComboBox),
-                is("Read-only input prompt"));
+        assertEquals("Disabled input prompt",
+                getInputPromptValue(disabledComboBox));
+        assertEquals("Read-only input prompt",
+                getInputPromptValue(readOnlyComboBox));
 
         toggleDisabledAndReadonly();
-        assertThat(getInputPromptValue(disabledComboBox), isEmptyString());
-        assertThat(getInputPromptValue(readOnlyComboBox), isEmptyString());
+        assertTrue(getInputPromptValue(disabledComboBox).isEmpty());
+        assertTrue(getInputPromptValue(readOnlyComboBox).isEmpty());
     }
 
     private void toggleDisabledAndReadonly() {

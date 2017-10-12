@@ -18,8 +18,6 @@ package com.vaadin.v7.tests.server.component.grid;
 import static org.easymock.EasyMock.and;
 import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.isA;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -351,7 +349,7 @@ public class GridColumnsTest {
     public void testDefaultColumnHidingToggleCaption() {
         Column firstColumn = grid.getColumns().get(0);
         firstColumn.setHeaderCaption("headerCaption");
-        assertEquals(null, firstColumn.getHidingToggleCaption());
+        assertNull(firstColumn.getHidingToggleCaption());
     }
 
     @Test
@@ -399,7 +397,7 @@ public class GridColumnsTest {
 
         firstColumn.setHeaderCaption("text");
 
-        assertThat(firstColumn.getHeaderCaption(), is("text"));
+        assertEquals("text", firstColumn.getHeaderCaption());
     }
 
     @Test
@@ -408,7 +406,7 @@ public class GridColumnsTest {
 
         grid.getDefaultHeaderRow().getCell("column0").setHtml("<b>html</b>");
 
-        assertThat(firstColumn.getHeaderCaption(), is("Column0"));
+        assertEquals("Column0", firstColumn.getHeaderCaption());
     }
 
     @Test(expected = IllegalStateException.class)

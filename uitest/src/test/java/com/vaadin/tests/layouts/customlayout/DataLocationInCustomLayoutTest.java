@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.layouts.customlayout;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -31,9 +30,8 @@ public class DataLocationInCustomLayoutTest extends SingleBrowserTest {
 
         // We don't use TestBench's ElementQuery here because we need to check
         // the DOM for buttons existence.
-        assertThat(
+        assertEquals(1,
                 driver.findElements(By.id(DataLocationInCustomLayout.BUTTON_ID))
-                        .size(),
-                is(1));
+                        .size());
     }
 }

@@ -15,8 +15,7 @@
  */
 package com.vaadin.server;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +60,7 @@ public class VaadinPortletTest {
 
         VaadinPortletRequest request = createRequest();
 
-        assertThat(request, instanceOf(VaadinGateInRequest.class));
+        assertTrue(request instanceof VaadinGateInRequest);
     }
 
     @Test
@@ -70,7 +69,7 @@ public class VaadinPortletTest {
 
         VaadinPortletRequest request = createRequest();
 
-        assertThat(request, instanceOf(VaadinLiferayRequest.class));
+        assertTrue(request instanceof VaadinLiferayRequest);
     }
 
     @Test
@@ -79,7 +78,7 @@ public class VaadinPortletTest {
 
         VaadinPortletRequest request = createRequest();
 
-        assertThat(request, instanceOf(VaadinWebSpherePortalRequest.class));
+        assertTrue(request instanceof VaadinWebSpherePortalRequest);
     }
 
     @Test
@@ -88,7 +87,7 @@ public class VaadinPortletTest {
 
         VaadinPortletRequest request = createRequest();
 
-        assertThat(request, instanceOf(VaadinPortletRequest.class));
+        assertTrue(request instanceof VaadinPortletRequest);
     }
 
 }

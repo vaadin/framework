@@ -3,6 +3,7 @@ package com.vaadin.v7.data.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -163,11 +164,11 @@ public class HierarchicalContainerTest
         HierarchicalContainer c = new HierarchicalContainer();
 
         c.addItem("root");
-        assertEquals(false, c.hasChildren("root"));
+        assertFalse(c.hasChildren("root"));
 
         c.addItem("child");
         c.setParent("child", "root");
-        assertEquals(true, c.hasChildren("root"));
+        assertTrue(c.hasChildren("root"));
 
         c.removeItem("child");
         assertFalse(c.containsId("child"));
@@ -182,11 +183,11 @@ public class HierarchicalContainerTest
         HierarchicalContainer c = new HierarchicalContainer();
 
         c.addItem("root");
-        assertEquals(false, c.hasChildren("root"));
+        assertFalse(c.hasChildren("root"));
 
         c.addItem("child");
         c.setParent("child", "root");
-        assertEquals(true, c.hasChildren("root"));
+        assertTrue(c.hasChildren("root"));
 
         // Dummy filter that does not remove any items
         c.addContainerFilter(new Filter() {

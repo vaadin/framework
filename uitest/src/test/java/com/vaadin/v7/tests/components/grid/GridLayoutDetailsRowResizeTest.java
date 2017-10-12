@@ -15,9 +15,7 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -100,7 +98,7 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
         List<ButtonElement> buttons = $(ButtonElement.class)
                 .caption("Toggle visibility").all();
-        assertThat("Unexpected amount of details rows.", buttons.size(), is(3));
+        assertEquals("Unexpected amount of details rows.", 3, buttons.size());
 
         Map<ButtonElement, Integer> positions = new LinkedHashMap<ButtonElement, Integer>();
         Map<Integer, ButtonElement> ordered = new TreeMap<Integer, ButtonElement>();
@@ -124,11 +122,11 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
         for (Entry<Integer, ButtonElement> entry : ordered.entrySet()) {
             ++i;
             ButtonElement button = entry.getValue();
-            assertThat(
+            assertEquals(
                     String.format("Unexpected button position: details row %s.",
                             i),
-                    (double) button.getLocation().getY(),
-                    closeTo(positions.get(button) + (i * labelHeight), 1d));
+                    positions.get(button) + (i * labelHeight),
+                    (double) button.getLocation().getY(), 1);
         }
 
         // toggle the contents
@@ -138,23 +136,22 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
         // assert original positions back
         for (ButtonElement button : buttons) {
-            assertThat(String.format("Unexpected button position."),
-                    (double) button.getLocation().getY(),
-                    closeTo(positions.get(button), 1d));
+            assertEquals(String.format("Unexpected button position."),
+                    positions.get(button), (double) button.getLocation().getY(),
+                    1);
         }
     }
 
     private void assertLabelHeight(String id, double expectedHeight) {
         // 1px leeway for calculations
-        assertThat("Unexpected label height.",
-                (double) $(LabelElement.class).id(id).getSize().height,
-                closeTo(expectedHeight, 1d));
+        assertEquals("Unexpected label height.", expectedHeight,
+                (double) $(LabelElement.class).id(id).getSize().height, 1);
     }
 
     private void assertDetailsRowHeight(int layoutHeight) {
         // check that details row height matches layout height (1px leeway)
         WebElement detailsRow = findElement(By.className("v-grid-spacer"));
-        assertThat("Unexpected details row height", (double) layoutHeight,
-                closeTo(detailsRow.getSize().height, 1d));
+        assertEquals("Unexpected details row height",
+                detailsRow.getSize().height, (double) layoutHeight, 1);
     }
 }

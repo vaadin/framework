@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.data.converter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -49,7 +50,7 @@ public class StringToEnumConverterTest {
 
     @Test
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", Enum.class, null));
+        assertNull(converter.convertToModel("", Enum.class, null));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class StringToEnumConverterTest {
 
     @Test
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, Enum.class, null));
+        assertNull(converter.convertToModel(null, Enum.class, null));
     }
 
     @Test

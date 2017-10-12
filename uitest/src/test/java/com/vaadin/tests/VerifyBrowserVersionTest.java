@@ -15,9 +15,8 @@
  */
 package com.vaadin.tests;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -46,10 +45,10 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
                     + desiredCapabilities.getVersion();
         }
 
-        assertThat(userAgent, containsString(browserIdentifier));
+        assertTrue(userAgent.contains(browserIdentifier));
 
-        assertThat(vaadinElementById("touchDevice").getText(),
-                is("Touch device? No"));
+        assertEquals("Touch device? No",
+                vaadinElementById("touchDevice").getText());
     }
 
     private String getExpectedUserAgentString(DesiredCapabilities dCap) {

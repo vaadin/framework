@@ -331,7 +331,7 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         binder.setBean(namelessPerson);
 
         assertTrue(nullTextField.isEmpty());
-        assertEquals(null, namelessPerson.getFirstName());
+        assertNull(namelessPerson.getFirstName());
 
         // Change value, see that textfield is not empty and bean is updated.
         nullTextField.setValue("");

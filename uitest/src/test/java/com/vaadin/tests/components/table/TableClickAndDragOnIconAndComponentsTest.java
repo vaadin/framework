@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
         clickOnTextField(2);
         assertThatFocusTextFieldHasText("foo 2foo");
 
-        assertThat(getSelectedRowTextValue(), is(1));
+        assertEquals(1, getSelectedRowTextValue());
     }
 
     @Test
@@ -59,7 +58,7 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
 
         clickOnReadOnlyTextField(2);
 
-        assertThat(getSelectedRowTextValue(), is(2));
+        assertEquals(2, getSelectedRowTextValue());
     }
 
     @Test
@@ -68,7 +67,7 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
 
         clickOnLabel(2);
 
-        assertThat(getSelectedRowTextValue(), is(2));
+        assertEquals(2, getSelectedRowTextValue());
     }
 
     @Test
@@ -77,7 +76,7 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
 
         clickOnEmbeddedIcon(2);
 
-        assertThat(getSelectedRowTextValue(), is(2));
+        assertEquals(2, getSelectedRowTextValue());
     }
 
     @Test
@@ -86,8 +85,8 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
 
         moveRow(0, 3);
 
-        assertThat(getSelectedRowTextValue(), is(1));
-        assertThat(getSelectedRowIndex(), is(0));
+        assertEquals(1, getSelectedRowTextValue());
+        assertEquals(0, getSelectedRowIndex());
     }
 
     @Test
@@ -96,15 +95,15 @@ public class TableClickAndDragOnIconAndComponentsTest extends MultiBrowserTest {
 
         moveRow(1, 4);
 
-        assertThat(getSelectedRowTextValue(), is(1));
-        assertThat(getSelectedRowIndex(), is(4));
+        assertEquals(1, getSelectedRowTextValue());
+        assertEquals(4, getSelectedRowIndex());
     }
 
     private void assertThatFocusTextFieldHasText(String text) {
         List<WebElement> focused = getTable()
                 .findElements(By.className("v-textfield-focus"));
 
-        assertThat(focused.get(0).getAttribute("value"), is(text));
+        assertEquals(text, focused.get(0).getAttribute("value"));
     }
 
     private int getSelectedRowTextValue() {

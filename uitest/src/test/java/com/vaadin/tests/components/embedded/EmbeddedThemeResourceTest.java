@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.embedded;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -72,10 +71,10 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
         assertFalse(
                 "ThemeResource image source uses default theme instead of set theme.",
                 initial.contains("/reindeer/"));
-        assertThat(
+        assertEquals(
                 "Embedded and Image aren't using the same source for the image despite sharing the ThemeResource.",
-                embedded.findElement(By.tagName("img")).getAttribute("src"),
-                is(initial));
+                initial,
+                embedded.findElement(By.tagName("img")).getAttribute("src"));
     }
 
     @Test
@@ -106,10 +105,10 @@ public class EmbeddedThemeResourceTest extends SingleBrowserTest {
 
         assertTrue("ThemeResource image source didn't update correctly.",
                 image.getAttribute("src").contains("/reindeer/"));
-        assertThat(
+        assertEquals(
                 "Embedded and Image aren't using the same source for the image despite sharing the ThemeResource.",
-                embedded.findElement(By.tagName("img")).getAttribute("src"),
-                is(image.getAttribute("src")));
+                image.getAttribute("src"),
+                embedded.findElement(By.tagName("img")).getAttribute("src"));
     }
 
 }

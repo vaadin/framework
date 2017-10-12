@@ -15,8 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
 
         Long scrollPosition = getWindowsScrollPosition();
 
-        assertThat("Scroll position should be greater than 100 (it was "
+        assertTrue("Scroll position should be greater than 100 (it was "
                 + scrollPosition + ")", scrollPosition > 100);
 
         TableElement table = $(TableElement.class).first();
@@ -77,7 +77,7 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
 
         Long scrollPosition2 = getWindowsScrollPosition();
 
-        assertThat(
+        assertTrue(
                 "Scroll position should stay about the same. Old was "
                         + scrollPosition + " and new one " + scrollPosition2,
                 Math.abs(scrollPosition - scrollPosition2) < 10);

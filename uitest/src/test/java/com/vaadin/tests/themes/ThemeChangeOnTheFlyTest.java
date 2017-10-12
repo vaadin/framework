@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.themes;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -94,7 +93,7 @@ public class ThemeChangeOnTheFlyTest extends MultiBrowserTest {
                 By.xpath("//div[contains(@class,'v-overlay-container')]"));
         String overlayClass = overlayContainerDiv.getAttribute("class").trim();
 
-        assertThat(overlayClass, containsString(theme));
+        assertTrue(overlayClass.contains(theme));
     }
 
 }

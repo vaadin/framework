@@ -15,8 +15,7 @@
  */
 package com.vaadin.tests.components.ui;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -38,10 +37,9 @@ public class UnnecessaryPaddingInResponsiveUITest extends SingleBrowserTest {
 
         String paddingTop = ui.getCssValue("padding-top");
 
-        Integer paddingHeight = Integer
+        int paddingHeight = Integer
                 .parseInt(paddingTop.substring(0, paddingTop.length() - 2));
 
-        assertThat(paddingHeight, equalTo(0));
-
+        assertEquals(0, paddingHeight);
     }
 }
