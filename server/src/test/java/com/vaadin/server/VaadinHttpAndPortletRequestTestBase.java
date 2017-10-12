@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
@@ -125,7 +126,7 @@ public abstract class VaadinHttpAndPortletRequestTestBase<T extends VaadinHttpAn
 
     @Test
     public void parameterMapIsFetchedFromServletRequest() {
-        Map expectedParameterMap = mock(Map.class);
+        Map<String, String[]> expectedParameterMap = new HashMap<>();
         when(servletRequest.getParameterMap()).thenReturn(expectedParameterMap);
 
         Map<String, String[]> actualParameterMap = sut.getParameterMap();
