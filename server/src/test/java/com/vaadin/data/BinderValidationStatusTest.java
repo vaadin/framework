@@ -256,8 +256,8 @@ public class BinderValidationStatusTest
         assertFalse(r.getMessage().isPresent());
         assertEquals(ageField, r.getField());
 
-        assertEquals(0, status.getBeanValidationResults().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationResults().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
 
         nameField.setValue("foo");
         ageField.setValue("");
@@ -282,8 +282,8 @@ public class BinderValidationStatusTest
         assertEquals("Value must be a number", r.getMessage().get());
         assertEquals(ageField, r.getField());
 
-        assertEquals(0, status.getBeanValidationResults().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationResults().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
 
         statusCapture.set(null);
         // binding validations pass, binder validation fails
@@ -292,11 +292,11 @@ public class BinderValidationStatusTest
 
         status = statusCapture.get();
         bindingStatuses = status.getFieldValidationStatuses();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(2, bindingStatuses.size());
 
-        assertEquals(0, status.getBeanValidationResults().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationResults().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
     }
 
     @Test
@@ -347,8 +347,8 @@ public class BinderValidationStatusTest
         assertFalse(r.getMessage().isPresent());
         assertEquals(ageField, r.getField());
 
-        assertEquals(0, status.getBeanValidationResults().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationResults().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
 
         nameField.setValue("foo");
         ageField.setValue("");
@@ -373,8 +373,8 @@ public class BinderValidationStatusTest
         assertEquals("Value must be a number", r.getMessage().get());
         assertEquals(ageField, r.getField());
 
-        assertEquals(0, status.getBeanValidationResults().size());
-        assertEquals(0, status.getBeanValidationErrors().size());
+        assertTrue(status.getBeanValidationResults().isEmpty());
+        assertTrue(status.getBeanValidationErrors().isEmpty());
 
         statusCapture.set(null);
         // binding validations pass, binder validation fails
@@ -383,7 +383,7 @@ public class BinderValidationStatusTest
 
         status = statusCapture.get();
         bindingStatuses = status.getFieldValidationStatuses();
-        assertEquals(0, status.getFieldValidationErrors().size());
+        assertTrue(status.getFieldValidationErrors().isEmpty());
         assertEquals(2, bindingStatuses.size());
 
         assertEquals(1, status.getBeanValidationResults().size());

@@ -86,6 +86,6 @@ public class WriteNestedTemplatesTest {
 
     @Test
     public void childDesignChildrenIsNotWrittenInRootTemplate() {
-        assertEquals(0, design.child(0).children().size());
+        assertTrue(design.child(0).children().isEmpty());
     }
 }

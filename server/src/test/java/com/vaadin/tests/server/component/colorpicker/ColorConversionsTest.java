@@ -49,9 +49,9 @@ public class ColorConversionsTest {
 
         rgb = Color.HSLtoRGB(50, 100, 0);
         c = new Color(rgb);
-        assertEquals(0, c.getRed(), 0);
-        assertEquals(0, c.getGreen(), 0);
-        assertEquals(0, c.getBlue(), 0);
+        assertEquals(0, c.getRed());
+        assertEquals(0, c.getGreen());
+        assertEquals(0, c.getBlue());
         assertEquals("#000000", c.getCSS());
     }
 }

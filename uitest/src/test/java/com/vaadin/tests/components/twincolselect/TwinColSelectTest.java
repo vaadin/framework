@@ -214,7 +214,7 @@ public class TwinColSelectTest extends MultiBrowserTest {
     }
 
     private void assertNothingSelected() {
-        assertEquals(0, getTwinColSelect().getValues().size());
+        assertTrue(getTwinColSelect().getValues().isEmpty());
     }
 
     @Override

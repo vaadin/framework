@@ -96,7 +96,7 @@ public class TreeDataProviderTest
     public void treeData_set_parent() {
         StrBean item1 = rootData.get(0);
         StrBean item2 = rootData.get(1);
-        assertEquals(0, data.getChildren(item2).size());
+        assertTrue(data.getChildren(item2).isEmpty());
         assertEquals(10, data.getRootItems().size());
 
         // Move item1 as item2's child
@@ -107,7 +107,7 @@ public class TreeDataProviderTest
 
         // Move back to root
         data.setParent(item1, null);
-        assertEquals(0, data.getChildren(item2).size());
+        assertTrue(data.getChildren(item2).isEmpty());
         assertEquals(10, data.getRootItems().size());
     }
 

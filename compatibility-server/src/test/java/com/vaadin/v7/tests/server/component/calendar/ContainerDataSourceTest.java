@@ -230,7 +230,7 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
 
         // Add an event
         BasicEvent event = new BasicEvent("Test", "Test", start);
@@ -257,7 +257,7 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
 
         // Add an event
         CalendarEvent event = new BasicEvent("Test", "Test", start);
@@ -270,7 +270,7 @@ public class ContainerDataSourceTest {
         calendar.removeEvent(event);
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
     }
 
     @Test
@@ -287,7 +287,7 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
 
         // Add an event
         BasicEvent event = new BasicEvent("Test", "Test", start);
@@ -315,7 +315,7 @@ public class ContainerDataSourceTest {
         Date end = cal.getTime();
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
 
         // Add an event
         BasicEvent event = new BasicEvent("Test", "Test", start);
@@ -329,7 +329,7 @@ public class ContainerDataSourceTest {
         calendar.removeEvent(event);
 
         // Ensure no events
-        assertEquals(0, calendar.getEvents(start, end).size());
+        assertTrue(calendar.getEvents(start, end).isEmpty());
     }
 
     @Test

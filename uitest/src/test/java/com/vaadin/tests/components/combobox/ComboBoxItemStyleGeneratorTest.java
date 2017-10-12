@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.combobox;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class ComboBoxItemStyleGeneratorTest extends SingleBrowserTest {
         selectMenuPath("Component", "Features", "Item style generator", "-");
 
         boldItems = findElements(By.className("v-filterselect-item-bold"));
-        assertEquals(0, boldItems.size());
+        assertTrue(boldItems.isEmpty());
     }
 
     @Override

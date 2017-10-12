@@ -283,7 +283,7 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
     }
 
     private void assertNothingSelected() {
-        assertEquals(0, getSelectedValues().size());
+        assertTrue(getSelectedValues().isEmpty());
     }
 
     protected void assertItems(int count, String suffix) {

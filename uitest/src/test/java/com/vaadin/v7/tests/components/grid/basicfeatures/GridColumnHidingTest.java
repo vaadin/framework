@@ -853,7 +853,7 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
 
         clickSidebarOpenButton();
         // All columns hidden
-        assertEquals(0, getGridHeaderRowCells().size());
+        assertTrue(getGridHeaderRowCells().isEmpty());
         clickSidebarOpenButton();
         for (int i = 0; i < colCount; i++) {
             getColumnHidingToggle(i).click();

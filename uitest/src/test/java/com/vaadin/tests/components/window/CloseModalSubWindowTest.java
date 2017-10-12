@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.window;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class CloseModalSubWindowTest extends MultiBrowserTest {
         // assert that there's no sub-windows open
         List<WebElement> subWindows = getDriver()
                 .findElements(By.id(CloseModalSubWindow.SUB_WINDOW));
-        assertEquals(0, subWindows.size());
+        assertTrue(subWindows.isEmpty());
 
         // click the first delete button
         getFirstDeteleButton(0).click();
@@ -60,12 +61,12 @@ public class CloseModalSubWindowTest extends MultiBrowserTest {
         // assert that there's no sub-windows open
         subWindows = getDriver()
                 .findElements(By.id(CloseModalSubWindow.SUB_WINDOW));
-        assertEquals(0, subWindows.size());
+        assertTrue(subWindows.isEmpty());
 
         // assert that there's no button with 'del-btn0' id anymore
         buttons = getDriver()
                 .findElements(By.id(CloseModalSubWindow.DELETE_BUTTON + "0"));
-        assertEquals(0, buttons.size());
+        assertTrue(buttons.isEmpty());
     }
 
     private WebElement getFirstDeteleButton(int index) {

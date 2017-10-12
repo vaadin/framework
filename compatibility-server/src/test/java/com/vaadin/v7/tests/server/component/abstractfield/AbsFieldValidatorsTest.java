@@ -26,7 +26,7 @@ public class AbsFieldValidatorsTest {
     @Test
     public void testAddValidator() {
         assertNotNull(field.getValidators());
-        assertEquals(0, field.getValidators().size());
+        assertTrue(field.getValidators().isEmpty());
 
         field.addValidator(validator);
         assertEquals(1, field.getValidators().size());
@@ -51,7 +51,7 @@ public class AbsFieldValidatorsTest {
 
         field.removeValidator(validator2);
         assertNotNull(field.getValidators());
-        assertEquals(0, field.getValidators().size());
+        assertTrue(field.getValidators().isEmpty());
         assertFalse(field.getValidators().contains(validator));
         assertFalse(field.getValidators().contains(validator2));
     }
@@ -63,7 +63,7 @@ public class AbsFieldValidatorsTest {
 
         field.removeAllValidators();
         assertNotNull(field.getValidators());
-        assertEquals(0, field.getValidators().size());
+        assertTrue(field.getValidators().isEmpty());
         assertFalse(field.getValidators().contains(validator));
         assertFalse(field.getValidators().contains(validator2));
     }

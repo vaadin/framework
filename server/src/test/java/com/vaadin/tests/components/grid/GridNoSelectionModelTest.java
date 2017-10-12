@@ -2,6 +2,7 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -37,13 +38,13 @@ public class GridNoSelectionModelTest {
         model.select(PERSON_A);
 
         assertFalse(model.isSelected(PERSON_A));
-        assertEquals(0, model.getSelectedItems().size());
+        assertTrue(model.getSelectedItems().isEmpty());
         assertEquals(Optional.empty(), model.getFirstSelectedItem());
 
         model.select(PERSON_B);
 
         assertFalse(model.isSelected(PERSON_B));
-        assertEquals(0, model.getSelectedItems().size());
+        assertTrue(model.getSelectedItems().isEmpty());
         assertEquals(Optional.empty(), model.getFirstSelectedItem());
     }
 

@@ -261,7 +261,7 @@ public class BinderConverterValidatorTest
 
         List<BindingValidationStatus<?>> errors = binder.validate()
                 .getFieldValidationErrors();
-        assertEquals(0, errors.size());
+        assertTrue(errors.isEmpty());
     }
 
     @Test

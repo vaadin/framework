@@ -16,6 +16,7 @@
 package com.vaadin.tests.server.component.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -167,7 +168,7 @@ public class GridCustomPropertySetTest {
     @Test
     public void customPropertySet() {
         GridWithCustomPropertySet customGrid = new GridWithCustomPropertySet();
-        assertEquals(0, customGrid.getColumns().size());
+        assertTrue(customGrid.getColumns().isEmpty());
 
         Column<MyBeanWithoutGetters, Integer> numberColumn = (Column<MyBeanWithoutGetters, Integer>) customGrid
                 .addColumn("numbah");
