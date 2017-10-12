@@ -56,16 +56,16 @@ public class VPopupCalendar
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        int year = dateValues.get(DateResolution.YEAR);
-        if (year >= 0) {
+        Integer year = dateValues.get(DateResolution.YEAR);
+        if (year != null) {
             date.setYear(year - 1900);
         }
-        int month = dateValues.get(DateResolution.MONTH);
-        if (month >= 0) {
+        Integer month = dateValues.get(DateResolution.MONTH);
+        if (month != null) {
             date.setMonth(month - 1);
         }
-        int day = dateValues.get(DateResolution.DAY);
-        if (day >= 0) {
+        Integer day = dateValues.get(DateResolution.DAY);
+        if (day != null) {
             date.setDate(day);
         }
         return date;

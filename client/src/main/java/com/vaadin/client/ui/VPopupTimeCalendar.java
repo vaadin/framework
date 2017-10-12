@@ -65,28 +65,28 @@ public class VPopupTimeCalendar extends
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        int year = dateValues.get(DateTimeResolution.YEAR);
-        if (year >= 0) {
+        Integer year = dateValues.get(DateTimeResolution.YEAR);
+        if (year != null) {
             date.setYear(year - 1900);
         }
-        int month = dateValues.get(DateTimeResolution.MONTH);
-        if (month >= 0) {
+        Integer month = dateValues.get(DateTimeResolution.MONTH);
+        if (month != null) {
             date.setMonth(month - 1);
         }
-        int day = dateValues.get(DateTimeResolution.DAY);
-        if (day >= 0) {
+        Integer day = dateValues.get(DateTimeResolution.DAY);
+        if (day != null) {
             date.setDate(day);
         }
-        int hour = dateValues.get(DateTimeResolution.HOUR);
-        if (hour >= 0) {
+        Integer hour = dateValues.get(DateTimeResolution.HOUR);
+        if (hour != null) {
             date.setHours(hour);
         }
-        int minute = dateValues.get(DateTimeResolution.MINUTE);
-        if (minute >= 0) {
+        Integer minute = dateValues.get(DateTimeResolution.MINUTE);
+        if (minute != null) {
             date.setMinutes(minute);
         }
-        int second = dateValues.get(DateTimeResolution.SECOND);
-        if (second >= 0) {
+        Integer second = dateValues.get(DateTimeResolution.SECOND);
+        if (second != null) {
             date.setSeconds(second);
         }
         return date;

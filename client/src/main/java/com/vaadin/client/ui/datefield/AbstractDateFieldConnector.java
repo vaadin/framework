@@ -54,11 +54,11 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         Map<String, Integer> stateResolutions = getState().resolutions;
         Stream<R> resolutions = widget.getResolutions();
         R resolution = widget.getCurrentResolution();
-        return resolutions
-                .collect(Collectors.toMap(Function.identity(),
-                        res -> (resolution.compareTo(res) <= 0)
+        return resolutions.collect(Collectors.toMap(Function.identity(),
+                v -> v == null ? null
+                        : (resolution.compareTo(v) <= 0)
                                 ? stateResolutions
-                                        .get(widget.getResolutionVariable(res))
+                                        .get(widget.getResolutionVariable(v))
                                 : null));
     }
 
@@ -74,10 +74,11 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         Stream<R> resolutions = getWidget().getResolutions();
         R resolution = getWidget().getCurrentResolution();
         return resolutions.collect(Collectors.toMap(Function.identity(),
-                res -> (resolution.compareTo(res) <= 0)
-                        ? stateResolutions.get("default-"
-                                + getWidget().getResolutionVariable(res))
-                        : null));
+                v -> v == null ? null
+                        : (resolution.compareTo(v) <= 0)
+                                ? stateResolutions.get("default-"
+                                        + getWidget().getResolutionVariable(v))
+                                : null));
     }
 
     @SuppressWarnings("unchecked")
