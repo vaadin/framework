@@ -80,6 +80,19 @@
             <artifactId>vaadin-icons</artifactId>
         </dependency>
 
+        <!-- GWT Elemental -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-elemental</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Jsoup for BootstrapHandler -->
         <dependency>
             <groupId>org.jsoup</groupId>

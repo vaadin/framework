@@ -21,12 +21,6 @@
         <!-- Project modules -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>vaadin-shared</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>vaadin-server</artifactId>
             <version>${project.version}</version>
             <exclusions>
