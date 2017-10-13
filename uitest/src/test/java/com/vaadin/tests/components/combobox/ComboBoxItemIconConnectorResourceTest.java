@@ -26,6 +26,10 @@ public class ComboBoxItemIconConnectorResourceTest extends MultiBrowserTest {
                 .iterator();
 
         WebElement suggestionPopup = cb.getSuggestionPopup();
+
+        waitUntil(driver -> !suggestionPopup
+                .findElements(By.className("v-icon")).isEmpty());
+
         for (WebElement e : suggestionPopup
                 .findElements(By.className("v-icon"))) {
             String imgSrc = e.getAttribute("src");
