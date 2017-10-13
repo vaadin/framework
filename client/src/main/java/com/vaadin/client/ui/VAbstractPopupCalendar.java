@@ -79,16 +79,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /** For internal use only. May be removed or replaced in the future. */
     public boolean parsable = true;
 
-    private boolean open = false;
+    private boolean open;
 
     /*
      * #14857: If calendarToggle button is clicked when calendar popup is
      * already open we should prevent calling openCalendarPanel() in onClick,
      * since we don't want to reopen it again right after it closes.
      */
-    private boolean preventOpenPopupCalendar = false;
-    private boolean cursorOverCalendarToggleButton = false;
-    private boolean toggleButtonClosesWithGuarantee = false;
+    private boolean preventOpenPopupCalendar;
+    private boolean cursorOverCalendarToggleButton;
+    private boolean toggleButtonClosesWithGuarantee;
 
     private boolean textFieldEnabled = true;
 
@@ -217,25 +217,31 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         closeCalendarPanel();
     }
 
+    /**
+     * Changes the current date, and updates the
+     * {@link VDateField#bufferedResolutions}, possibly
+     * {@link VDateField#sendBufferedValues()} to the server if needed
+     * 
+     * @param newDate
+     *            the new {@code Date} to update
+     */
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
+        R resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(
-                            calendar.getResolution(calendar::isYear)),
-                    newDate.getYear() + 1900, false);
-            if (!calendar.isYear(getCurrentResolution())) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(
-                                calendar.getResolution(calendar::isMonth)),
-                        newDate.getMonth() + 1, false);
-                if (!calendar.isMonth(getCurrentResolution())) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(
-                                    calendar.getResolution(calendar::isDay)),
-                            newDate.getDate(), false);
+            bufferedResolutions.put(
+                    calendar.getResolution(calendar::isYear).name(),
+                    newDate.getYear() + 1900);
+            if (!calendar.isYear(resolution)) {
+                bufferedResolutions.put(
+                        calendar.getResolution(calendar::isMonth).name(),
+                        newDate.getMonth() + 1);
+                if (!calendar.isMonth(resolution)) {
+                    bufferedResolutions.put(
+                            calendar.getResolution(calendar::isDay).name(),
+                            newDate.getDate());
                 }
             }
         }

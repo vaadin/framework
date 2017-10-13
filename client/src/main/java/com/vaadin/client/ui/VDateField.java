@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -25,6 +26,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
  * A very base widget class for a date field.
@@ -54,21 +56,56 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     protected boolean enabled;
 
     /**
+     * The RPC send calls to the server.
+     * 
+     * @since
+     */
+    public AbstractDateFieldServerRpc rpc;
+
+    /**
+     * A temporary holder of the time units (resolutions), which would be sent
+     * to the server through {@link #sendBufferedValues()}.
+     * 
+     * The key is the resolution name e.g. "HOUR", "MINUTE".
+     * 
+     * The value can be {@code null}.
+     * 
+     * @since
+     */
+    protected Map<String, Integer> bufferedResolutions = new HashMap<>();
+
+    /**
+     * A temporary holder of the date string, which would be sent to the server
+     * through {@link #sendBufferedValues()}.
+     * 
+     * @since
+     */
+    protected String bufferedDateString;
+
+    /**
+     * A temporary holder of whether the date string was invalid or not, which
+     * would be sent to the server through {@link #sendBufferedValues()}.
+     * 
+     * @since
+     */
+    protected boolean bufferedInvalidDateString;
+
+    /**
      * The date that is displayed the date field before a value is selected. If
      * null, display the current date.
      */
-    private Date defaultDate = null;
+    private Date defaultDate;
 
     /**
      * The date that is selected in the date field. Null if an invalid date is
      * specified.
      */
-    private Date date = null;
+    private Date date;
 
     /** For internal use only. May be removed or replaced in the future. */
     public DateTimeService dts;
 
-    protected boolean showISOWeekNumbers = false;
+    protected boolean showISOWeekNumbers;
 
     public VDateField(R resolution) {
         setStyleName(CLASSNAME);
@@ -229,6 +266,20 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      */
     public String getResolutionVariable(R resolution) {
         return resolution.name().toLowerCase(Locale.ENGLISH);
+    }
+
+    /**
+     * Sends the {@link #bufferedDateString}, {@link #bufferedInvalidDateString}
+     * and {@link #bufferedResolutions} to the server, and clears their values.
+     * 
+     * @since
+     */
+    public void sendBufferedValues() {
+        rpc.update(bufferedDateString, bufferedInvalidDateString,
+                new HashMap<>(bufferedResolutions));
+        bufferedDateString = null;
+        bufferedInvalidDateString = false;
+        bufferedResolutions.clear();
     }
 
     /**

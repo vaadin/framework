@@ -35,7 +35,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 @SuppressWarnings("deprecation")
 public class DateTimeService {
 
-    private String currentLocale;
+    private String locale;
 
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
@@ -44,7 +44,7 @@ public class DateTimeService {
      * Creates a new date time service with the application default locale.
      */
     public DateTimeService() {
-        currentLocale = LocaleService.getDefaultLocale();
+        locale = LocaleService.getDefaultLocale();
     }
 
     /**
@@ -59,20 +59,19 @@ public class DateTimeService {
     }
 
     public void setLocale(String locale) throws LocaleNotLoadedException {
-        if (LocaleService.getAvailableLocales().contains(locale)) {
-            currentLocale = locale;
-        } else {
+        if (!LocaleService.getAvailableLocales().contains(locale)) {
             throw new LocaleNotLoadedException(locale);
         }
+        this.locale = locale;
     }
 
     public String getLocale() {
-        return currentLocale;
+        return locale;
     }
 
     public String getMonth(int month) {
         try {
-            return LocaleService.getMonthNames(currentLocale)[month];
+            return LocaleService.getMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getMonth", e);
             return null;
@@ -81,7 +80,7 @@ public class DateTimeService {
 
     public String getShortMonth(int month) {
         try {
-            return LocaleService.getShortMonthNames(currentLocale)[month];
+            return LocaleService.getShortMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortMonth", e);
             return null;
@@ -90,7 +89,7 @@ public class DateTimeService {
 
     public String getDay(int day) {
         try {
-            return LocaleService.getDayNames(currentLocale)[day];
+            return LocaleService.getDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getDay", e);
             return null;
@@ -99,7 +98,7 @@ public class DateTimeService {
 
     public String getShortDay(int day) {
         try {
-            return LocaleService.getShortDayNames(currentLocale)[day];
+            return LocaleService.getShortDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortDay", e);
             return null;
@@ -108,7 +107,7 @@ public class DateTimeService {
 
     public int getFirstDayOfWeek() {
         try {
-            return LocaleService.getFirstDayOfWeek(currentLocale);
+            return LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getFirstDayOfWeek", e);
             return 0;
@@ -117,7 +116,7 @@ public class DateTimeService {
 
     public boolean isTwelveHourClock() {
         try {
-            return LocaleService.isTwelveHourClock(currentLocale);
+            return LocaleService.isTwelveHourClock(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in isTwelveHourClock", e);
             return false;
@@ -126,7 +125,7 @@ public class DateTimeService {
 
     public String getClockDelimeter() {
         try {
-            return LocaleService.getClockDelimiter(currentLocale);
+            return LocaleService.getClockDelimiter(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getClockDelimiter", e);
             return ":";
@@ -137,7 +136,7 @@ public class DateTimeService {
 
     public String[] getAmPmStrings() {
         try {
-            return LocaleService.getAmPmStrings(currentLocale);
+            return LocaleService.getAmPmStrings(locale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
             getLogger().log(Level.SEVERE,
@@ -151,7 +150,7 @@ public class DateTimeService {
                 date.getMonth(), 1);
         int firstDay;
         try {
-            firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
+            firstDay = LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
                     e);

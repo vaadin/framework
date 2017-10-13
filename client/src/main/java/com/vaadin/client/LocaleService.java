@@ -42,7 +42,7 @@ public class LocaleService {
         if (cache.containsKey(key)) {
             cache.remove(key);
         }
-        getLogger().fine("Received locale data for " + localeData.name);
+        getLogger().fine("Received locale data for " + key);
         cache.put(key, localeData);
         if (cache.size() == 1) {
             setDefaultLocale(key);

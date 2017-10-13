@@ -50,25 +50,22 @@ public class VDateFieldCalendar
 
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
+        DateResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.YEAR),
+            bufferedResolutions.put(DateResolution.YEAR.name(),
                     // Java Date uses the year aligned to 1900 (no to zero).
                     // So we should add 1900 to get a correct year aligned to 0.
-                    date2.getYear() + 1900, false);
-            if (getCurrentResolution().compareTo(DateResolution.YEAR) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateResolution.MONTH),
-                        date2.getMonth() + 1, false);
-                if (getCurrentResolution()
-                        .compareTo(DateResolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(DateResolution.DAY),
-                            date2.getDate(), false);
+                    date2.getYear() + 1900);
+            if (resolution.compareTo(DateResolution.YEAR) < 0) {
+                bufferedResolutions.put(DateResolution.MONTH.name(),
+                        date2.getMonth() + 1);
+                if (resolution.compareTo(DateResolution.MONTH) < 0) {
+                    bufferedResolutions.put(DateResolution.DAY.name(),
+                            date2.getDate());
                 }
             }
-            getClient().sendPendingVariableChanges();
+            sendBufferedValues();
         }
     }
 
