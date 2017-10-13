@@ -459,9 +459,10 @@
                         </dependency>
                     </dependencies>
                     <configuration>
+                        <propertyExpansion>config_loc=../checkstyle</propertyExpansion>
                         <configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
                         <headerLocation>../checkstyle/header</headerLocation>
-                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation>
+<!--                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation> -->
                         <encoding>UTF-8</encoding>
                         <consoleOutput>false</consoleOutput>
                         <failsOnError>false</failsOnError>
