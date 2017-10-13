@@ -44,7 +44,7 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         WindowElement anotherWindow = openAnotherWindow();
 
         assertTrue(anotherWindow.getCssValue("z-index")
-                .compareTo(maximizedWindow.getCssValue("z-index")) > 1);
+                .compareTo(maximizedWindow.getCssValue("z-index")) > 0);
 
         assertEquals("10000", getMaximizedWindow().getCssValue("z-index"));
         assertEquals("10001", getAnotherWindow().getCssValue("z-index"));
@@ -64,6 +64,6 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         maximizedWindow.maximize();
 
         assertTrue(maximizedWindow.getCssValue("z-index")
-                .compareTo(anotherWindow.getCssValue("z-index")) > 1);
+                .compareTo(anotherWindow.getCssValue("z-index")) > 0);
     }
 }
