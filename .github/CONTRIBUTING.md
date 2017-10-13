@@ -4,17 +4,19 @@
 
 ### Making your PR
 
-A new Pull Request should start by forking the Vaadin Framework project (or checking that your fork is up-to-date). 
+A new pull request should start by forking the Vaadin Framework project (or checking that your fork is up-to-date).
 
-Unless issue is specific to a single version of the Framework, you should always aim to make the patch on top of the `master` branch.
+Unless the issue is specific to a single version of the Framework, you should always aim to make the patch on top of the `master` branch.
 
-In your repo, make a new branch from `master`. Make your code changes in that branch, and once you're done make a Pull Request to the `vaadin/framework` branch `master`.
+In your repo, make a new branch from `master`. Make your code changes in that branch, and once you're done make a pull request to the `vaadin/framework` branch `master`.
+
+The contributor should make sure the "Allow edits from maintainers" checkbox on the pull request page is checked. This makes sure that minor fixes, like typos, can be done without bothering the contributor.
 
 ### Getting feedback and responding to it
 
-Once the Pull Request has been opened, it will be reviewed by the development team behind Vaadin Framework. We pay close attention to the readability of the code as well as documentation and correctness.
+Once the pull request has been opened, it will be reviewed by the development team behind Vaadin Framework. We pay close attention to the readability of the code as well as documentation and correctness.
 
-If this was your first Pull Request to the Vaadin repository, you will also have to sign our CLA. This needs to be done with the same user you use to make the commits. If you're using multiple e-mails and GitHub users, each will need to sign the CLA.
+If this was your first pull request to the Vaadin repository, you will also have to sign our CLA. This needs to be done with the same user you use to make the commits. If you're using multiple e-mails and GitHub users, each will need to sign the CLA.
 
 ## Issues
 
