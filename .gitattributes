@@ -13,6 +13,7 @@
 *.css text
 *.scss text
 *.md text
+*.properties text
 
 # To be verified
 *.graffle binary
