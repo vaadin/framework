@@ -459,7 +459,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <propertyExpansion>config_loc=../checkstyle</propertyExpansion>
+                        <propertyExpansion>config_loc=${basedir}/../checkstyle</propertyExpansion>
                         <configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
                         <headerLocation>../checkstyle/header</headerLocation>
 <!--                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation> -->
