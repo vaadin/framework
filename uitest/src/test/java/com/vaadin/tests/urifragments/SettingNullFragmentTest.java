@@ -18,9 +18,7 @@ package com.vaadin.tests.urifragments;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -54,17 +52,13 @@ public class SettingNullFragmentTest extends MultiBrowserTest {
     private void assertFragment(String fragment) {
         final String expectedText = fragment;
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                String currentURL = getDriver().getCurrentUrl();
-                String currentURIFragment = "";
-                if (currentURL.contains("#") && !currentURL.endsWith("#")) {
-                    currentURIFragment = currentURL.split("#")[1];
-                }
-                return expectedText.equals(currentURIFragment);
+        waitUntil(input -> {
+            String currentURL = getDriver().getCurrentUrl();
+            String currentURIFragment = "";
+            if (currentURL.contains("#") && !currentURL.endsWith("#")) {
+                currentURIFragment = currentURL.split("#")[1];
             }
+            return expectedText.equals(currentURIFragment);
         });
     }
 

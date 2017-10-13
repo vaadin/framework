@@ -9,10 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
@@ -98,12 +96,7 @@ public class TextAreaSizeResettedTest extends MultiBrowserTest {
     private void waitUntilPollingOccurs() {
         final String timestamp = getPollTimestamp();
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return !timestamp.equals(getPollTimestamp());
-            }
-        });
+        waitUntil(input -> !timestamp.equals(getPollTimestamp()));
     }
 
     private String getPollTimestamp() {

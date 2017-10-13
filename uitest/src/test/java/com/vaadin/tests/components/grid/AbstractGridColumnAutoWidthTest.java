@@ -97,10 +97,8 @@ public abstract class AbstractGridColumnAutoWidthTest extends MultiBrowserTest {
         WebElement loadingIndicator = findElement(
                 By.className("v-loading-indicator"));
         Pattern pattern = Pattern.compile("display: *none;");
-        waitUntil(driver -> {
-            return pattern.matcher(loadingIndicator.getAttribute("style"))
-                    .find();
-        });
+        waitUntil(driver -> pattern
+                .matcher(loadingIndicator.getAttribute("style")).find());
         compareScreen("grid-v8-initialRender");
     }
 

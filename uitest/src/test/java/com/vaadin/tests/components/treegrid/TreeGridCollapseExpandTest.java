@@ -3,8 +3,6 @@ package com.vaadin.tests.components.treegrid;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.TreeGridElement;
 import com.vaadin.tests.tb3.SingleBrowserTestPhantomJS2;
@@ -52,11 +50,6 @@ public class TreeGridCollapseExpandTest extends SingleBrowserTestPhantomJS2 {
     }
 
     private void waitUntilRowCountEquals(int expectedCount) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return grid.getRowCount() == expectedCount;
-            }
-        });
+        waitUntil(input -> grid.getRowCount() == expectedCount);
     }
 }

@@ -19,9 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -38,14 +36,10 @@ public class NotificationDelayTest extends MultiBrowserTest {
 
         assertTrue("No notification found", hasNotification());
 
-        waitUntil(new ExpectedCondition<Boolean>() {
+        waitUntil(input -> {
+            new Actions(getDriver()).moveByOffset(10, 10).perform();
 
-            @Override
-            public Boolean apply(WebDriver input) {
-                new Actions(getDriver()).moveByOffset(10, 10).perform();
-
-                return !hasNotification();
-            }
+            return !hasNotification();
         });
     }
 
