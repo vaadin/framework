@@ -2585,7 +2585,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     private String minifyFieldName(String fieldName) {
-        return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
+        return fieldName.toLowerCase(Locale.ROOT).replace("_", "");
     }
 
     private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {

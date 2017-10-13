@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.Locale;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
@@ -320,7 +322,7 @@ public class VDragAndDropManager {
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
                             if (typeInt == -1 && event.getNativeEvent()
-                                    .getType().toLowerCase()
+                                    .getType().toLowerCase(Locale.ROOT)
                                     .contains("pointer")) {
                                 /*
                                  * Ignore PointerEvents since IE10 and IE11 send
@@ -372,8 +374,8 @@ public class VDragAndDropManager {
                                 int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(
                                                 event.getNativeEvent());
-                                if (Math.abs(
-                                        startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                if (Math.abs(startX
+                                        - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
                                         || Math.abs(startY
                                                 - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
                                     ensureDeferredRegistrationCleanup();
@@ -516,9 +518,9 @@ public class VDragAndDropManager {
         }
 
         /*
-         * Remove class name indicating drag source when server visit is done
-         * if server visit was not initiated. Otherwise it will be removed once
-         * the server visit is done.
+         * Remove class name indicating drag source when server visit is done if
+         * server visit was not initiated. Otherwise it will be removed once the
+         * server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {
             removeActiveDragSourceStyleName(

@@ -18,6 +18,8 @@ package com.vaadin.v7.tests.components.grid.basicfeatures.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -64,8 +66,8 @@ public class GridStaticSectionComponentTest extends GridBasicFeaturesTest {
         assertTrue("No notifications should've been shown",
                 !$(NotificationElement.class).exists());
         assertEquals("Header should've been reverted back to text header",
-                "text header",
-                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+                "text header", getGridElement().getHeaderCell(0, 1).getText()
+                        .toLowerCase(Locale.ROOT));
     }
 
 }

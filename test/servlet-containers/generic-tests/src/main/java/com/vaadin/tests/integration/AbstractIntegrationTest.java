@@ -3,6 +3,7 @@ package com.vaadin.tests.integration;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,10 +82,10 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
 
     protected void compareScreen(String identifier) throws IOException {
         String refFileName = identifier + "-"
-                + getDesiredCapabilities().getBrowserName().toLowerCase()
+                + getDesiredCapabilities().getBrowserName().toLowerCase(Locale.ROOT)
                 + ".png";
         String errorFileName = identifier + "-"
-                + getDesiredCapabilities().getBrowserName().toLowerCase() + "-"
+                + getDesiredCapabilities().getBrowserName().toLowerCase(Locale.ROOT) + "-"
                 + System.getProperty("server-name") + "["
                 + getClass().getSimpleName() + "].png";
         File referenceFile = ImageFileUtil

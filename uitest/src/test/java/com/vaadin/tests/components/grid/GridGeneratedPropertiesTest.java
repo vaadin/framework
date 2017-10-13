@@ -19,6 +19,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -35,7 +37,7 @@ public class GridGeneratedPropertiesTest extends MultiBrowserTest {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
         assertEquals("Miles header wasn't present.", "miles",
-                grid.getHeaderCell(0, 2).getText().toLowerCase());
+                grid.getHeaderCell(0, 2).getText().toLowerCase(Locale.ROOT));
     }
 
     @Test

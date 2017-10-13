@@ -63,7 +63,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         String protocol = value.split("://")[0];
         try {
             ResourceConverterByProtocol converter = ResourceConverterByProtocol
-                    .valueOf(protocol.toUpperCase(Locale.ENGLISH));
+                    .valueOf(protocol.toUpperCase(Locale.ROOT));
             return Result.ok(converter.parse(value));
         } catch (IllegalArgumentException iae) {
             return Result.error("Unrecognized protocol: " + protocol);

@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.orderedlayout;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -345,8 +346,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
             return CaptionPosition.TOP;
         }
         String captionClass = matcher.getGroup(1);
-        CaptionPosition captionPosition = CaptionPosition
-                .valueOf(CaptionPosition.class, captionClass.toUpperCase());
+        CaptionPosition captionPosition = CaptionPosition.valueOf(
+                CaptionPosition.class, captionClass.toUpperCase(Locale.ROOT));
         return captionPosition;
     }
 

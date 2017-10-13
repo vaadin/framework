@@ -18,6 +18,7 @@ package com.vaadin.v7.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -556,8 +557,8 @@ public abstract class AbstractColorPicker extends AbstractLegacyComponent
             setColor(new Color(Integer.parseInt(hexColor, 16)));
         }
         if (design.hasAttr("popup-style")) {
-            setPopupStyle(PopupStyle.valueOf(
-                    "POPUP_" + attributes.get("popup-style").toUpperCase()));
+            setPopupStyle(PopupStyle.valueOf("POPUP_"
+                    + attributes.get("popup-style").toUpperCase(Locale.ROOT)));
         }
         if (design.hasAttr("position")) {
             String[] position = attributes.get("position").split(",");

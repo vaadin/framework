@@ -18,6 +18,7 @@ package com.vaadin.tests.components.grid;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class GridMultiSelectionScrollBarTest extends MultiBrowserTest {
 
         assertTrue("Horizontal scrollbar should not be visible.",
                 $(GridElement.class).first().getHorizontalScroller()
-                        .getAttribute("style").toLowerCase()
+                        .getAttribute("style").toLowerCase(Locale.ROOT)
                         .contains("display: none;"));
 
         // Just to make sure nothing odd happened.

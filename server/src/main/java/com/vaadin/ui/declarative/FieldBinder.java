@@ -104,7 +104,7 @@ public class FieldBinder implements Serializable {
     private void resolveFields(Class<?> classWithFields) {
         for (Field memberField : getFields(classWithFields)) {
             if (Component.class.isAssignableFrom(memberField.getType())) {
-                fieldMap.put(memberField.getName().toLowerCase(Locale.ENGLISH),
+                fieldMap.put(memberField.getName().toLowerCase(Locale.ROOT),
                         memberField);
             }
         }
@@ -180,7 +180,7 @@ public class FieldBinder implements Serializable {
                 return false;
             }
             // validate that the field can be found
-            Field field = fieldMap.get(fieldName.toLowerCase(Locale.ENGLISH));
+            Field field = fieldMap.get(fieldName.toLowerCase(Locale.ROOT));
             if (field == null) {
                 getLogger()
                         .fine("No field was found by identifier " + identifier);

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -204,7 +205,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
          * Reindeer has a CSS text transformation that changes the casing so
          * that we can't rely on it being what we set
          */
-        assertEquals("header (0,0)", textCell.getText().toLowerCase());
+        assertEquals("header (0,0)",
+                textCell.getText().toLowerCase(Locale.ROOT));
 
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 1);
         assertTrue(widgetCell.isElementPresent(By.className("gwt-HTML")));
@@ -235,7 +237,8 @@ public class GridHeaderTest extends GridStaticSectionTest {
          * Reindeer has a CSS text transformation that changes the casing so
          * that we can't rely on it being what we set
          */
-        assertEquals("text header", textCell.getText().toLowerCase());
+        assertEquals("text header",
+                textCell.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -249,7 +252,7 @@ public class GridHeaderTest extends GridStaticSectionTest {
 
         new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("clicked", button.getText().toLowerCase());
+        assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -264,11 +267,11 @@ public class GridHeaderTest extends GridStaticSectionTest {
         GridCellElement widgetCell = getGridElement().getHeaderCell(0, 0);
         WebElement button = widgetCell.findElement(By.className("gwt-Button"));
 
-        assertNotEquals("clicked", button.getText().toLowerCase());
+        assertNotEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
 
         new Actions(getDriver()).moveToElement(button, 5, 5).click().perform();
 
-        assertEquals("clicked", button.getText().toLowerCase());
+        assertEquals("clicked", button.getText().toLowerCase(Locale.ROOT));
     }
 
     private void assertHeaderCount(int count) {

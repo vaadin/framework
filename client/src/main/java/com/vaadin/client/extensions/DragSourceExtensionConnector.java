@@ -16,6 +16,7 @@
 package com.vaadin.client.extensions;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -362,10 +363,10 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     .trim();
             return Integer.parseInt(x);
         } catch (NumberFormatException nfe) {
-            Logger.getLogger(DragSourceExtensionConnector.class.getName())
-                    .info("Unable to parse \"transform: translate(...)\" matrix "
-                            + n + ". value from computed style, matrix \""
-                            + matrix + "\", drag image might not be visible");
+            Logger.getLogger(DragSourceExtensionConnector.class.getName()).info(
+                    "Unable to parse \"transform: translate(...)\" matrix " + n
+                            + ". value from computed style, matrix \"" + matrix
+                            + "\", drag image might not be visible");
         }
         return 0;
     }
@@ -489,7 +490,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             assert dropEffect != null : "Drop effect should never be null";
 
             sendDragEndEventToServer(nativeEvent,
-                    DropEffect.valueOf(dropEffect.toUpperCase()));
+                    DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)));
         }
     }
 

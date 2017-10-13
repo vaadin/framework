@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.sqlcontainer.RowItem;
@@ -478,7 +479,7 @@ public class FreeformQuery extends AbstractTransactionalQuery
             }
         }
         // Is there already a WHERE clause in the query string?
-        int index = queryString.toLowerCase().indexOf("where ");
+        int index = queryString.toLowerCase(Locale.ROOT).indexOf("where ");
         if (index > -1) {
             // Rewrite the where clause
             return queryString.substring(0, index) + "WHERE " + where + " AND "

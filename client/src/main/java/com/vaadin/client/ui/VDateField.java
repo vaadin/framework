@@ -265,7 +265,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @return the resolution variable name
      */
     public String getResolutionVariable(R resolution) {
-        return resolution.name().toLowerCase(Locale.ENGLISH);
+        return resolution.name().toLowerCase(Locale.ROOT);
     }
 
     /**

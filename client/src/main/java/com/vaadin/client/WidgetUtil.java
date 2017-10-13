@@ -18,6 +18,7 @@ package com.vaadin.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -1894,7 +1895,7 @@ public class WidgetUtil {
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
                 String className = prefix + "-"
-                        + errorLevelValue.toString().toLowerCase();
+                        + errorLevelValue.toString().toLowerCase(Locale.ROOT);
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {

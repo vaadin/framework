@@ -1,5 +1,7 @@
 package com.vaadin.tests.themes;
 
+import java.util.Locale;
+
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
@@ -125,7 +127,7 @@ public class ButtonsTest extends com.vaadin.server.LegacyApplication {
             } else {
                 b = new Button(style + " style");
             }
-            b.setStyleName(style.toLowerCase());
+            b.setStyleName(style.toLowerCase(Locale.ROOT));
             if (icon) {
                 b.setIcon(new ThemeResource("../runo/icons/"
                         + (largeIcons ? "64" : "16") + "/document.png"));

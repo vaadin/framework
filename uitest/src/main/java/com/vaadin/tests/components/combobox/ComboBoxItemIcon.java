@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.combobox;
 
+import java.util.Locale;
+
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
@@ -21,8 +23,9 @@ public class ComboBoxItemIcon extends TestBase {
         {
             ComboBox<String> cb = new ComboBox<>();
             cb.setItems("FI", "SE");
-            cb.setItemIconGenerator(item -> new ThemeResource(
-                    "../tests-tickets/icons/" + item.toLowerCase() + ".gif"));
+            cb.setItemIconGenerator(
+                    item -> new ThemeResource("../tests-tickets/icons/"
+                            + item.toLowerCase(Locale.ROOT) + ".gif"));
 
             addComponent(cb);
         }
@@ -31,7 +34,8 @@ public class ComboBoxItemIcon extends TestBase {
             cb.setItems("Finland", "Australia", "Hungary");
             cb.setItemIconGenerator(
                     item -> new ThemeResource("../tests-tickets/icons/"
-                            + item.substring(0, 2).toLowerCase() + ".gif"));
+                            + item.substring(0, 2).toLowerCase(Locale.ROOT)
+                            + ".gif"));
 
             cb.setValue("Hungary");
             addComponent(cb);

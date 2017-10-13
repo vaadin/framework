@@ -61,7 +61,7 @@ public class RichTextAreaDeclarativeTest
         int timeout = 67;
         String design = String.format(
                 "<%s value-change-mode='%s' value-change-timeout='%d'/>",
-                getComponentTag(), mode.name().toLowerCase(Locale.ENGLISH),
+                getComponentTag(), mode.name().toLowerCase(Locale.ROOT),
                 timeout);
 
         RichTextArea component = new RichTextArea();

@@ -74,7 +74,7 @@ public class CustomLayoutTest {
             field = list.get(0);
         } else {
             for (Field fld : list) {
-                if (fld.getName().toLowerCase(Locale.ENGLISH)
+                if (fld.getName().toLowerCase(Locale.ROOT)
                         .startsWith("buffer")) {
                     field = fld;
                     break;

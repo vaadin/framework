@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Locale;
 
 /**
  * This class opens default browser for DemoLauncher class. Default browser is
@@ -40,7 +41,7 @@ public class BrowserLauncher {
         boolean started = false;
 
         final String os = System.getProperty("os.name", "windows")
-                .toLowerCase();
+                .toLowerCase(Locale.ROOT);
 
         // Linux
         if (os.indexOf("linux") >= 0) {

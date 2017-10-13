@@ -17,6 +17,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -672,11 +673,11 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected void deEmphasis(boolean doLayout) {
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedVDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedVDrop.toString().toLowerCase(Locale.ROOT),
                     false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedHDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedHDrop.toString().toLowerCase(Locale.ROOT),
                     false);
         }
         if (doLayout) {
@@ -692,10 +693,10 @@ public class VDragAndDropWrapper extends VCustomComponent
         deEmphasis(false);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                + verticalDropLocation.toString().toLowerCase(), true);
-        VDragAndDropWrapper.setStyleName(getElement(),
-                OVER_STYLE + "-"
-                        + horizontalDropLocation.toString().toLowerCase(),
+                + verticalDropLocation.toString().toLowerCase(Locale.ROOT),
+                true);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                + horizontalDropLocation.toString().toLowerCase(Locale.ROOT),
                 true);
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;
