@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.datefield.DateResolution.DAY;
+import static com.vaadin.shared.ui.datefield.DateResolution.MONTH;
+import static com.vaadin.shared.ui.datefield.DateResolution.YEAR;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -32,7 +36,7 @@ public class VPopupCalendar
         extends VAbstractPopupCalendar<VDateCalendarPanel, DateResolution> {
 
     public VPopupCalendar() {
-        super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);
+        super(GWT.create(VDateCalendarPanel.class), YEAR);
     }
 
     @Override
@@ -47,24 +51,23 @@ public class VPopupCalendar
 
     @Override
     public void setCurrentResolution(DateResolution resolution) {
-        super.setCurrentResolution(
-                resolution == null ? DateResolution.YEAR : resolution);
+        super.setCurrentResolution(resolution == null ? YEAR : resolution);
     }
 
     public static Date makeDate(Map<DateResolution, Integer> dateValues) {
-        if (dateValues.get(DateResolution.YEAR) == null) {
+        if (dateValues.get(YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        Integer year = dateValues.get(DateResolution.YEAR);
+        Integer year = dateValues.get(YEAR);
         if (year != null) {
             date.setYear(year - 1900);
         }
-        Integer month = dateValues.get(DateResolution.MONTH);
+        Integer month = dateValues.get(MONTH);
         if (month != null) {
             date.setMonth(month - 1);
         }
-        Integer day = dateValues.get(DateResolution.DAY);
+        Integer day = dateValues.get(DAY);
         if (day != null) {
             date.setDate(day);
         }
@@ -73,7 +76,7 @@ public class VPopupCalendar
 
     @Override
     public boolean isYear(DateResolution resolution) {
-        return DateResolution.YEAR.equals(resolution);
+        return YEAR.equals(resolution);
     }
 
     @Override
@@ -84,18 +87,15 @@ public class VPopupCalendar
     @Override
     protected void updateDateVariables() {
         super.updateDateVariables();
-        DateResolution resolution = getCurrentResolution();
-        // Update variables
-        // (only the smallest defining resolution needs to be
-        // immediate)
         Date currentDate = getDate();
-        if (resolution.compareTo(DateResolution.MONTH) <= 0) {
-            bufferedResolutions.put(DateResolution.MONTH.name(),
-                    currentDate != null ? currentDate.getMonth() + 1 : null);
-        }
-        if (resolution.compareTo(DateResolution.DAY) <= 0) {
-            bufferedResolutions.put(DateResolution.DAY.name(),
-                    currentDate != null ? currentDate.getDate() : null);
+        if (currentDate != null) {
+            DateResolution resolution = getCurrentResolution();
+            if (resolution.compareTo(MONTH) <= 0) {
+                bufferedResolutions.put(MONTH, currentDate.getMonth() + 1);
+            }
+            if (resolution.compareTo(DAY) <= 0) {
+                bufferedResolutions.put(DAY, currentDate.getDate());
+            }
         }
         sendBufferedValues();
     }
@@ -103,10 +103,10 @@ public class VPopupCalendar
     @Override
     protected String cleanFormat(String format) {
         // Remove unnecessary d & M if resolution is too low
-        if (getCurrentResolution().compareTo(DateResolution.DAY) > 0) {
+        if (getCurrentResolution().compareTo(DAY) > 0) {
             format = format.replaceAll("d", "");
         }
-        if (getCurrentResolution().compareTo(DateResolution.MONTH) > 0) {
+        if (getCurrentResolution().compareTo(MONTH) > 0) {
             format = format.replaceAll("M", "");
         }
         return super.cleanFormat(format);

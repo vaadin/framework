@@ -91,7 +91,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * The internal error message of the component.
      */
-    private ErrorMessage componentError = null;
+    private ErrorMessage componentError;
 
     /**
      * Locale of this component.

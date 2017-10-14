@@ -243,8 +243,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 VConsole.log(e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
-                // this is a hack that may eventually be removed
-                bufferedInvalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -268,13 +266,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @since
      */
     protected void updateDateVariables() {
-        // Update variables
-        // (only the smallest defining resolution needs to be
-        // immediate)
         Date currentDate = getDate();
-        bufferedResolutions.put(
-                getResolutions().filter(this::isYear).findFirst().get().name(),
-                currentDate != null ? currentDate.getYear() + 1900 : null);
+        if (currentDate != null) {
+            bufferedResolutions.put(
+                    getResolutions().filter(this::isYear).findFirst().get(),
+                    currentDate.getYear() + 1900);
+        }
         if (isYear(getCurrentResolution())) {
             sendBufferedValues();
         }
