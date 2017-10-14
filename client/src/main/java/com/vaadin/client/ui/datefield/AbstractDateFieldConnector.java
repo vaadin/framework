@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.datefield;
 
+import java.time.DayOfWeek;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -54,10 +55,9 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
         Stream<R> resolutions = widget.getResolutions();
         R resolution = widget.getCurrentResolution();
         return resolutions.collect(Collectors.toMap(Function.identity(),
-                res -> res == null ? null
-                        : (resolution.compareTo(res) <= 0)
-                                ? stateResolutions.get(res.name())
-                                : null));
+                res -> resolution.compareTo(res) <= 0
+                        ? stateResolutions.get(res.name())
+                        : null));
     }
 
     /**
@@ -68,14 +68,14 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      * @since
      */
     protected Map<R, Integer> getDefaultValues() {
+        VDateField<R> widget = getWidget();
         Map<String, Integer> stateResolutions = getState().resolutions;
-        Stream<R> resolutions = getWidget().getResolutions();
-        R resolution = getWidget().getCurrentResolution();
+        Stream<R> resolutions = widget.getResolutions();
+        R resolution = widget.getCurrentResolution();
         return resolutions.collect(Collectors.toMap(Function.identity(),
-                res -> res == null ? null
-                        : (resolution.compareTo(res) <= 0)
-                                ? stateResolutions.get("default-" + res.name())
-                                : null));
+                res -> resolution.compareTo(res) <= 0
+                        ? stateResolutions.get("default-" + res.name())
+                        : null));
     }
 
     @SuppressWarnings("unchecked")
@@ -115,8 +115,8 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
-        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers
-                && widget.dts.getFirstDayOfWeek() == 1);
+        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers && widget.dts
+                .getFirstDayOfWeek() == DayOfWeek.MONDAY.getValue());
 
         // Remove old stylename that indicates current resolution
         setWidgetStyleName(widget.getStylePrimaryName() + "-"

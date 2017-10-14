@@ -85,8 +85,8 @@ public class VPopupCalendar
     }
 
     @Override
-    protected void updateDateVariables() {
-        super.updateDateVariables();
+    protected void updateBufferedResolutions() {
+        super.updateBufferedResolutions();
         Date currentDate = getDate();
         if (currentDate != null) {
             DateResolution resolution = getCurrentResolution();
@@ -97,7 +97,6 @@ public class VPopupCalendar
                 bufferedResolutions.put(DAY, currentDate.getDate());
             }
         }
-        sendBufferedValues();
     }
 
     @Override

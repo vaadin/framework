@@ -253,11 +253,13 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
         // always send the date string
         bufferedDateString = text.getText();
-        updateDateVariables();
+        updateBufferedResolutions();
+        sendBufferedValues();
     }
 
     /**
-     * Updates variables to send a response to the server.
+     * Updates {@link #updateBufferedResolutions()} to send a response to the
+     * server.
      * <p>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
@@ -265,15 +267,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * 
      * @since
      */
-    protected void updateDateVariables() {
+    protected void updateBufferedResolutions() {
         Date currentDate = getDate();
         if (currentDate != null) {
             bufferedResolutions.put(
                     getResolutions().filter(this::isYear).findFirst().get(),
                     currentDate.getYear() + 1900);
-        }
-        if (isYear(getCurrentResolution())) {
-            sendBufferedValues();
         }
     }
 
@@ -435,7 +434,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Date date = getIsoFormatter().parse(isoDate);
             setDate(date);
         }
-        updateDateVariables();
+        updateBufferedResolutions();
+        sendBufferedValues();
     }
 
     /**

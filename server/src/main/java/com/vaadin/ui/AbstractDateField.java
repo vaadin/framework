@@ -78,8 +78,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         @Override
         public void update(String newDateString,
                 Map<String, Integer> resolutions) {
-            Set<String> resolutionNames = getResolutions()
-                    .map(AbstractDateField.this::getResolutionVariable)
+            Set<String> resolutionNames = getResolutions().map(Enum::name)
                     .collect(Collectors.toSet());
             resolutionNames.retainAll(resolutions.keySet());
             if (!isReadOnly()
@@ -255,9 +254,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         for (R resolution : getResolutionsHigherOrEqualTo(getResolution())) {
             // Only handle what the client is allowed to send. The same
             // resolutions that are painted
-            String variableName = getResolutionVariable(resolution);
+            String resolutionName = resolution.name();
 
-            Integer newValue = resolutions.get(variableName);
+            Integer newValue = resolutions.get(resolutionName);
             if (newValue == null) {
                 newValue = getDatePart(oldDate, resolution);
             }
@@ -440,14 +439,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
         // Only paint variables for the resolution and up, e.g. Resolution DAY
         // paints DAY,MONTH,YEAR
-        for (R res : getResolutionsHigherOrEqualTo(getResolution())) {
-            String variableName = getResolutionVariable(res);
+        for (R resolution : getResolutionsHigherOrEqualTo(getResolution())) {
+            String resolutionName = resolution.name();
 
-            Integer value = getValuePart(currentDate, res);
-            resolutions.put(variableName, value);
+            Integer value = getValuePart(currentDate, resolution);
+            resolutions.put(resolutionName, value);
 
-            Integer defaultValuePart = getValuePart(defaultValue, res);
-            resolutions.put("default-" + variableName, defaultValuePart);
+            Integer defaultValuePart = getValuePart(defaultValue, resolution);
+            resolutions.put("default-" + resolutionName, defaultValuePart);
         }
     }
 
@@ -772,10 +771,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return converted date of type {@code Date}
      */
     protected abstract Date convertToDate(T date);
-
-    private String getResolutionVariable(R resolution) {
-        return resolution.name();
-    }
 
     @SuppressWarnings("unchecked")
     private Stream<R> getResolutions() {

@@ -262,8 +262,8 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     /**
-     * Sends the {@link #bufferedDateString}, {@link #bufferedInvalidDateString}
-     * and {@link #bufferedResolutions} to the server, and clears their values.
+     * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
+     * the server, and clears their values.
      * 
      * @since
      */
