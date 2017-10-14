@@ -50,6 +50,11 @@ public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
         protected Date convertToDate(LocalDateTime date) {
             return null;
         }
+
+        @Override
+        protected String formatDate(LocalDateTime value) {
+            return null;
+        }
     }
 
     @Test
