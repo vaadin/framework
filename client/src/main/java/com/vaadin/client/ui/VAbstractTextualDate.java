@@ -121,16 +121,15 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     protected String createFormatString() {
         if (isYear(getCurrentResolution())) {
             return "yyyy"; // force full year
-        } else {
-            try {
-                String frmString = LocaleService.getDateFormat(currentLocale);
-                return cleanFormat(frmString);
-            } catch (LocaleNotLoadedException e) {
-                // TODO should die instead? Can the component survive
-                // without format string?
-                VConsole.error(e);
-                return null;
-            }
+        }
+        try {
+            String frmString = LocaleService.getDateFormat(currentLocale);
+            return cleanFormat(frmString);
+        } catch (LocaleNotLoadedException e) {
+            // TODO should die instead? Can the component survive
+            // without format string?
+            VConsole.error(e);
+            return null;
         }
     }
 
@@ -428,12 +427,13 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @since 8.1
      */
     public void setISODate(String isoDate) {
+        Date date;
         if (isoDate == null) {
-            setDate(null);
+            date = null;
         } else {
-            Date date = getIsoFormatter().parse(isoDate);
-            setDate(date);
+            date = getIsoFormatter().parse(isoDate);
         }
+        setDate(date);
         updateBufferedResolutions();
         sendBufferedValues();
     }
@@ -451,16 +451,14 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         Date date = getDate();
         if (date == null) {
             return null;
-        } else {
-            return getIsoFormatter().format(date);
         }
+        return getIsoFormatter().format(date);
     }
 
     private DateTimeFormat getIsoFormatter() {
         if (supportsTime()) {
             return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
-        } else {
-            return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
         }
+        return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
     }
 }

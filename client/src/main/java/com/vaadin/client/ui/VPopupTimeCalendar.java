@@ -55,9 +55,8 @@ public class VPopupTimeCalendar extends
     public String resolutionAsString() {
         if (getCurrentResolution().compareTo(DAY) >= 0) {
             return getResolutionVariable(getCurrentResolution());
-        } else {
-            return "full";
         }
+        return "full";
     }
 
     @Override
@@ -154,37 +153,35 @@ public class VPopupTimeCalendar extends
     protected String createFormatString() {
         if (isYear(getCurrentResolution())) {
             return "yyyy"; // force full year
-        } else {
-
-            try {
-                String frmString = LocaleService.getDateFormat(currentLocale);
-                frmString = cleanFormat(frmString);
-                // String delim = LocaleService
-                // .getClockDelimiter(currentLocale);
-                if (getCurrentResolution().compareTo(HOUR) <= 0) {
-                    if (dts.isTwelveHourClock()) {
-                        frmString += " hh";
-                    } else {
-                        frmString += " HH";
-                    }
-                    if (getCurrentResolution().compareTo(MINUTE) <= 0) {
-                        frmString += ":mm";
-                        if (getCurrentResolution().compareTo(SECOND) <= 0) {
-                            frmString += ":ss";
-                        }
-                    }
-                    if (dts.isTwelveHourClock()) {
-                        frmString += " aaa";
+        }
+        try {
+            String frmString = LocaleService.getDateFormat(currentLocale);
+            frmString = cleanFormat(frmString);
+            // String delim = LocaleService
+            // .getClockDelimiter(currentLocale);
+            if (getCurrentResolution().compareTo(HOUR) <= 0) {
+                if (dts.isTwelveHourClock()) {
+                    frmString += " hh";
+                } else {
+                    frmString += " HH";
+                }
+                if (getCurrentResolution().compareTo(MINUTE) <= 0) {
+                    frmString += ":mm";
+                    if (getCurrentResolution().compareTo(SECOND) <= 0) {
+                        frmString += ":ss";
                     }
                 }
-
-                return frmString;
-            } catch (LocaleNotLoadedException e) {
-                // TODO should die instead? Can the component survive
-                // without format string?
-                VConsole.error(e);
-                return null;
+                if (dts.isTwelveHourClock()) {
+                    frmString += " aaa";
+                }
             }
+
+            return frmString;
+        } catch (LocaleNotLoadedException e) {
+            // TODO should die instead? Can the component survive
+            // without format string?
+            VConsole.error(e);
+            return null;
         }
     }
 

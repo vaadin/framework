@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.datefield;
 
-import java.time.DayOfWeek;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -115,8 +114,8 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
-        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers && widget.dts
-                .getFirstDayOfWeek() == DayOfWeek.MONDAY.getValue());
+        widget.setShowISOWeekNumbers(getState().showISOWeekNumbers
+                && widget.dts.getFirstDayOfWeek() == 1);
 
         // Remove old stylename that indicates current resolution
         setWidgetStyleName(widget.getStylePrimaryName() + "-"
