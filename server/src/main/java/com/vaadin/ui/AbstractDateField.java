@@ -692,27 +692,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
 
-        String parseErrorMessage;
         if (result.isError()) {
-            parseErrorMessage = getDateOutOfRangeMessage();
-        } else {
-            parseErrorMessage = currentParseErrorMessage;
+            currentParseErrorMessage = getDateOutOfRangeMessage();
         }
-        setCurrentParseErrorMessage(parseErrorMessage);
 
-        updateResolutions();
-    }
+        getState().parsable = currentParseErrorMessage == null;
 
-    private void setCurrentParseErrorMessage(String parseErrorMessage) {
-        currentParseErrorMessage = parseErrorMessage;
-        getState().parsable = parseErrorMessage == null;
         ErrorMessage errorMessage;
-        if (parseErrorMessage == null) {
+        if (currentParseErrorMessage == null) {
             errorMessage = null;
         } else {
             errorMessage = new UserError(currentParseErrorMessage);
         }
         setComponentError(errorMessage);
+
+        updateResolutions();
     }
 
     /**

@@ -23,6 +23,8 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -35,11 +37,9 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
     public void testEnableParentLayout() {
         openTestURL();
 
-        WebElement button = driver.findElement(By.className("v-button"));
-        button.click();
+        ButtonElement button = $(ButtonElement.class).first();
 
-        WebElement textField = driver
-                .findElement(By.className("v-datefield-textfield"));
+        DateFieldElement textField = $(DateFieldElement.class).first();
         textField.click();
 
         assertFalse(
@@ -67,8 +67,7 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
                 textField.getAttribute("value"));
 
         dataFieldButton.click();
-        dataFieldButton.click();// Requires two clicks because of error message.
-                                // TODO fix
+
         assertFalse("Unexpected disabled element found",
                 isElementPresent(By.className("v-disabled")));
 
