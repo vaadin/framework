@@ -105,6 +105,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
                 if (hasChanges) {
                     dateString = newDateString;
+                    currentParseErrorMessage = null;
                     if (newDateString == null || newDateString.isEmpty()) {
                         setValue(newDate, true);
                     } else {
@@ -116,8 +117,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             });
                             if (parsedDate.isError()) {
                                 dateString = null;
-                                setCurrentParseErrorMessage(parsedDate
-                                        .getMessage().orElse("Parsing error"));
+                                currentParseErrorMessage = parsedDate
+                                        .getMessage().orElse("Parsing error");
                                 setValue(null, true);
                             }
                         } else {
