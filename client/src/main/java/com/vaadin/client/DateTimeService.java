@@ -96,6 +96,13 @@ public class DateTimeService {
         }
     }
 
+    /**
+     * Returns the localized short name of the specified day.
+     * 
+     * @param day
+     *            the day, {@code 0} is {@code SUNDAY}
+     * @return the localized short name
+     */
     public String getShortDay(int day) {
         try {
             return LocaleService.getShortDayNames(locale)[day];
@@ -105,6 +112,11 @@ public class DateTimeService {
         }
     }
 
+    /**
+     * Returns the first day of the week, according to the used Locale.
+     * 
+     * @return the localized first day of the week, {@code 0} is {@code SUNDAY}
+     */
     public int getFirstDayOfWeek() {
         try {
             return LocaleService.getFirstDayOfWeek(locale);
@@ -114,6 +126,12 @@ public class DateTimeService {
         }
     }
 
+    /**
+     * Returns whether the locale has twelve hour, or twenty four hour clock.
+     * 
+     * @return {@code true} if the locale has twelve hour clock, {@code false}
+     *         for twenty four clock
+     */
     public boolean isTwelveHourClock() {
         try {
             return LocaleService.isTwelveHourClock(locale);
@@ -145,9 +163,16 @@ public class DateTimeService {
         }
     }
 
-    public int getStartWeekDay(Date date) {
-        final Date dateForFirstOfThisMonth = new Date(date.getYear(),
-                date.getMonth(), 1);
+    /**
+     * Returns the first day of week of the specified {@code month}.
+     * 
+     * @param month
+     *            the month, not {@code null}
+     * @return the first day of week,
+     */
+    public int getStartWeekDay(Date month) {
+        final Date dateForFirstOfThisMonth = new Date(month.getYear(),
+                month.getMonth(), 1);
         int firstDay;
         try {
             firstDay = LocaleService.getFirstDayOfWeek(locale);
@@ -158,7 +183,7 @@ public class DateTimeService {
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
         if (start < 0) {
-            start = 6;
+            start += 7;
         }
         return start;
     }
