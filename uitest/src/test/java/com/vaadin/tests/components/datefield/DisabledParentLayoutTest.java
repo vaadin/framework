@@ -24,7 +24,6 @@ import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
-import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -38,8 +37,10 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
         openTestURL();
 
         ButtonElement button = $(ButtonElement.class).first();
+        button.click();
 
-        DateFieldElement textField = $(DateFieldElement.class).first();
+        WebElement textField = driver
+                .findElement(By.className("v-datefield-textfield"));
         textField.click();
 
         assertFalse(
