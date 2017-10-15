@@ -2,6 +2,7 @@ package com.vaadin.tests.components.datefield;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
 
@@ -26,5 +27,20 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
         $(ButtonElement.class).first().click();
 
         assertFalse(dateField.getValue().endsWith(invalidSuffix));
+    }
+
+    @Test
+    public void clearAfterBeingInvalid() {
+        openTestURL();
+
+        DateFieldElement dateField = $(DateFieldElement.class).first();
+        dateField.setDate(LocalDate.now().minus(5, DAYS));
+
+        String invalidSuffix = "abc";
+        dateField.setValue(dateField.getValue() + invalidSuffix);
+
+        $(ButtonElement.class).get(1).click();
+
+        assertTrue(dateField.getValue().isEmpty());
     }
 }

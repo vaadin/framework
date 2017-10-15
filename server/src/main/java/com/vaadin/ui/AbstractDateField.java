@@ -48,6 +48,7 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
@@ -95,9 +96,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 if ("".equals(newDateString)) {
 
                     newDate = null;
-                    // TODO check if the following 2 lines are necessary
-                    hasChanges = !getState(false).parsable;
-                    setCurrentParseErrorMessage(null);
                 } else {
                     newDate = reconstructDateFromFields(resolutions, oldDate);
                 }
@@ -108,27 +106,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 if (hasChanges) {
                     dateString = newDateString;
                     if (newDateString == null || newDateString.isEmpty()) {
-                        setCurrentParseErrorMessage(null);
-                        setComponentError(null);
                         setValue(newDate, true);
                     } else {
                         if (invalidDateString) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
                             parsedDate.ifOk(v -> {
-                                setCurrentParseErrorMessage(null);
                                 setValue(v, true);
                             });
                             if (parsedDate.isError()) {
                                 dateString = null;
-                                setCurrentParseErrorMessage(parsedDate.getMessage()
-                                        .orElse("Parsing error"));
-                                setComponentError(
-                                        new UserError(getParseErrorMessage()));
                                 setValue(null, true);
+                                setCurrentParseErrorMessage(parsedDate
+                                        .getMessage().orElse("Parsing error"));
                             }
                         } else {
-                            setCurrentParseErrorMessage(null);
                             setValue(newDate, true);
                         }
                     }
@@ -697,23 +689,28 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                                           // validator?
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
-        if (result.isError()) {
-            setCurrentParseErrorMessage(getDateOutOfRangeMessage());
-        } else if (value != null) {
-            setCurrentParseErrorMessage(null);
-        }
 
-        if (currentParseErrorMessage == null) {
-            setComponentError(null);
+        String parseErrorMessage;
+        if (result.isError()) {
+            parseErrorMessage = getDateOutOfRangeMessage();
         } else {
-            setComponentError(new UserError(currentParseErrorMessage));
+            parseErrorMessage = null;
         }
+        setCurrentParseErrorMessage(parseErrorMessage);
+
         updateResolutions();
     }
 
     private void setCurrentParseErrorMessage(String parseErrorMessage) {
         currentParseErrorMessage = parseErrorMessage;
         getState().parsable = parseErrorMessage == null;
+        ErrorMessage errorMessage;
+        if (parseErrorMessage == null) {
+            errorMessage = null;
+        } else {
+            errorMessage = new UserError(currentParseErrorMessage);
+        }
+        setComponentError(errorMessage);
     }
 
     /**
