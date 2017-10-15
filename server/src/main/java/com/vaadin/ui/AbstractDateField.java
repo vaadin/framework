@@ -116,9 +116,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                             });
                             if (parsedDate.isError()) {
                                 dateString = null;
-                                setValue(null, true);
                                 setCurrentParseErrorMessage(parsedDate
                                         .getMessage().orElse("Parsing error"));
+                                setValue(null, true);
                             }
                         } else {
                             setValue(newDate, true);
@@ -513,6 +513,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
+        currentParseErrorMessage = null;
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
@@ -694,7 +695,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         if (result.isError()) {
             parseErrorMessage = getDateOutOfRangeMessage();
         } else {
-            parseErrorMessage = null;
+            parseErrorMessage = currentParseErrorMessage;
         }
         setCurrentParseErrorMessage(parseErrorMessage);
 
