@@ -112,9 +112,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         if (invalidDateString) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
-                            parsedDate.ifOk(v -> {
-                                setValue(v, true);
-                            });
+                            parsedDate.ifOk(v -> setValue(v, true));
                             if (parsedDate.isError()) {
                                 dateString = null;
                                 currentParseErrorMessage = parsedDate

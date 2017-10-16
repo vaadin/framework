@@ -8,11 +8,15 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateFieldElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
+
+    private static final org.openqa.selenium.By ERROR_INDICATOR_BY = By
+            .className("v-errorindicator");
 
     @Test
     public void setValueAfterBeingInvalid() {
@@ -20,13 +24,16 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
 
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.setDate(LocalDate.now().minus(5, DAYS));
+        assertNoErrorIndicator();
 
         String invalidSuffix = "abc";
         dateField.setValue(dateField.getValue() + invalidSuffix);
+        assertErrorIndicator();
 
-        $(ButtonElement.class).first().click();
+        $(ButtonElement.class).caption("Today").first().click();
 
         assertFalse(dateField.getValue().endsWith(invalidSuffix));
+        assertNoErrorIndicator();
     }
 
     @Test
@@ -35,12 +42,23 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
 
         DateFieldElement dateField = $(DateFieldElement.class).first();
         dateField.setDate(LocalDate.now().minus(5, DAYS));
+        assertNoErrorIndicator();
 
         String invalidSuffix = "abc";
         dateField.setValue(dateField.getValue() + invalidSuffix);
+        assertErrorIndicator();
 
-        $(ButtonElement.class).get(1).click();
+        $(ButtonElement.class).caption("Clear").first().click();
 
         assertTrue(dateField.getValue().isEmpty());
+        assertNoErrorIndicator();
+    }
+
+    private void assertErrorIndicator() {
+        assertElementPresent(ERROR_INDICATOR_BY);
+    }
+
+    private void assertNoErrorIndicator() {
+        assertElementNotPresent(ERROR_INDICATOR_BY);
     }
 }
