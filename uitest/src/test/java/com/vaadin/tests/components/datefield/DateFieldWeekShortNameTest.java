@@ -15,6 +15,7 @@ public class DateFieldWeekShortNameTest extends MultiBrowserTest {
 
     @Test
     public void ar() {
+        // Sat, Sun, Mon, Tue, Wed, Thu, Fri
         String[] shortWeekDays = { "س", "ح", "ن", "ث", "ر", "خ", "ج" };
         test(0, 30, shortWeekDays);
     }
