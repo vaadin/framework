@@ -117,7 +117,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                 dateString = null;
                                 currentParseErrorMessage = parsedDate
                                         .getMessage().orElse("Parsing error");
-                                setValue(null, true);
+
+                                if (!isDifferentValue(null)) {
+                                    doSetValue(null);
+                                } else {
+                                    setValue(null, true);
+                                }
                             }
                         } else {
                             setValue(newDate, true);

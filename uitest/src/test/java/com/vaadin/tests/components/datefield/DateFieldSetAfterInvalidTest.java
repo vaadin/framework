@@ -18,6 +18,8 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
     private static final org.openqa.selenium.By ERROR_INDICATOR_BY = By
             .className("v-errorindicator");
 
+    private static String INVALID_TEXT = "abc";
+
     @Test
     public void setValueAfterBeingInvalid() {
         openTestURL();
@@ -26,13 +28,12 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
         dateField.setDate(LocalDate.now().minus(5, DAYS));
         assertNoErrorIndicator();
 
-        String invalidSuffix = "abc";
-        dateField.setValue(dateField.getValue() + invalidSuffix);
+        dateField.setValue(dateField.getValue() + INVALID_TEXT);
         assertErrorIndicator();
 
         $(ButtonElement.class).caption("Today").first().click();
 
-        assertFalse(dateField.getValue().endsWith(invalidSuffix));
+        assertFalse(dateField.getValue().endsWith(INVALID_TEXT));
         assertNoErrorIndicator();
     }
 
@@ -44,14 +45,25 @@ public class DateFieldSetAfterInvalidTest extends MultiBrowserTest {
         dateField.setDate(LocalDate.now().minus(5, DAYS));
         assertNoErrorIndicator();
 
-        String invalidSuffix = "abc";
-        dateField.setValue(dateField.getValue() + invalidSuffix);
+        dateField.setValue(dateField.getValue() + INVALID_TEXT);
         assertErrorIndicator();
 
         $(ButtonElement.class).caption("Clear").first().click();
 
         assertTrue(dateField.getValue().isEmpty());
         assertNoErrorIndicator();
+
+        dateField.setValue(INVALID_TEXT);
+        assertErrorIndicator();
+    }
+
+    @Test
+    public void invalidTypedText() {
+        openTestURL();
+
+        DateFieldElement dateField = $(DateFieldElement.class).first();
+        dateField.setValue(INVALID_TEXT);
+        assertErrorIndicator();
     }
 
     private void assertErrorIndicator() {
