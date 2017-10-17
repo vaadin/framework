@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -53,14 +51,7 @@ public class UriFragmentTest extends MultiBrowserTest {
 
     private void assertFragment(String fragment) {
         final String expectedText = "Current URI fragment: " + fragment;
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return expectedText.equals(getFragmentLabelValue());
-            }
-        });
-
+        waitUntil(input -> expectedText.equals(getFragmentLabelValue()));
     }
 
     private void navigateToEmptyFragment() {

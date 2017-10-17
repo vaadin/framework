@@ -21,13 +21,11 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -65,12 +63,7 @@ public class TableColumnResizeContentsWidthTest extends MultiBrowserTest {
     }
 
     private void waitUntilTextFieldWidthIs(final int width) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                return getTextFieldWidth() == width;
-            }
-        });
+        waitUntil(input -> getTextFieldWidth() == width);
     }
 
     private int getTextFieldWidth() {

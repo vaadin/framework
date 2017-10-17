@@ -783,10 +783,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Print weekday names
         final int firstDay = getDateTimeService().getFirstDayOfWeek();
         for (int i = 0; i < 7; i++) {
-            int day = i + firstDay;
-            if (day > 6) {
-                day = 0;
-            }
+            int day = (i + firstDay) % 7;
             if (isBelowMonth(getResolution())) {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + getDateTimeService().getShortDay(day) + "</strong>");

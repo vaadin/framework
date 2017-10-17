@@ -697,8 +697,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
-        if (visibleChildMenu != null
-                && !(visibleChildMenu == item.getSubMenu())) {
+        if (visibleChildMenu != null && visibleChildMenu != item.getSubMenu()) {
             popup.hide();
         }
     }
