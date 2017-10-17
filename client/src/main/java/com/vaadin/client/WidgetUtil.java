@@ -1872,6 +1872,19 @@ public class WidgetUtil {
     }
 
     /**
+     * Returns whether the given object is a string.
+     *
+     * @param obj
+     *         the object of which the type is examined
+     * @return {@code true} if the given object is a string, {@code false}
+     * otherwise
+     * @since
+     */
+    public static native boolean isString(Object obj) /*-{
+        return typeof obj === 'string' || obj instanceof String;
+    }-*/;
+
+    /**
      * Utility methods for displaying error message on components.
      *
      * @since 8.2

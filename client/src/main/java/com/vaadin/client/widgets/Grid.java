@@ -7549,7 +7549,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // Also check whether className is indeed a string. For
                 // SVGElement it may be of type SVGAnimatedString.
                 // https://developer.mozilla.org/en-US/docs/Web/API/Element/className#Notes
-                if (isString(className) && className
+                if (WidgetUtil.isString(className) && className
                         .contains(getStylePrimaryName() + "-spacer")) {
                     return true;
                 }
@@ -9334,8 +9334,4 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public Optional<SelectionColumn> getSelectionColumn() {
         return Optional.ofNullable(selectionColumn);
     }
-
-    private native boolean isString(Object obj) /*-{
-        return typeof obj === 'string' || obj instanceof String;
-    }-*/;
 }
