@@ -6316,8 +6316,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Adds the given role as 'role="$param"' to the
-     * <code>&lt;table /&gt;</code> element of the grid.
+     * Adds the given role as 'role="$param"' to the <code>&lt;table&gt;</code>
+     * element of the grid.
      *
      * @param role
      *            the role param
