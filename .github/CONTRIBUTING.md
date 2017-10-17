@@ -1,5 +1,9 @@
 # Vaadin Framework Contribution Guidelines
 
+## Project setup
+
+See the repository [root level README](https://github.com/vaadin/framework/blob/master/README.md) for instructions on setting up the environment to keep up the formatting and code style.
+
 ## Pull Requests
 
 ### Making your PR
@@ -26,3 +30,5 @@ For bugs, please provide at minimum the following information:
 - Vaadin version
 - Description of the bug
 - If possible, minimal reproducible example
+
+We use the label `good first issue` to mark easy issues to get started with. The list is available [here](https://github.com/vaadin/framework/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
