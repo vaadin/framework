@@ -38,6 +38,7 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
 
         // default grid should contain at least one of each role
         String gridHtml = grid.getHTML();
+        System.err.println(">Debug Grid html: "+ gridHtml);
         assertTrue("Grid should contains a role=\"rowheader\"", gridHtml.contains("role=\"rowheader\""));
         assertTrue("Grid should contains a role=\"columnheader\"", gridHtml.contains("role=\"columnheader\""));
         assertTrue("Grid should contains a role=\"row\"", gridHtml.contains("role=\"row\""));
