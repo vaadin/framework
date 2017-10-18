@@ -6843,10 +6843,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Returns the {@code
-     * 
-    <table />
-     * } element of the grid.
+     * Returns the {@code <table />} element of the grid.
      *
      * @return the table element
      * @since 8.2
