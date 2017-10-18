@@ -1032,14 +1032,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * (for example when updating cell values) we only get one actual
              * refresh in the end.
              */
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-                @Override
-                public void execute() {
+            Scheduler.get().scheduleFinally(() -> {
                     if (markAsDirty) {
                         markAsDirty = false;
                         getGrid().refreshFooter();
-                    }
                 }
             });
         }
@@ -1675,10 +1671,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 grid.refreshBody();
                 HeaderCell cell = grid.getDefaultHeaderRow()
                         .getCell(grid.selectionColumn);
-                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy
-                                                                   // provider,
-                                                                   // then no
-                                                                   // checkbox
+                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy provider, then no checkbox
                     CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
                             .getCell(grid.selectionColumn).getWidget();
                     checkBox.setEnabled(isEnabled);
@@ -3865,16 +3858,16 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             && event.getKeyCode() == KeyCodes.KEY_ENTER) {
                         final MenuItem item = getSelectedItem();
                         super.onBrowserEvent(event);
-                        Scheduler.get().scheduleDeferred(() -> {
-                            selectItem(item);
-                            focus();
-                        });
+                        Scheduler.get()
+                                .scheduleDeferred(() -> {
+                                    selectItem(item);
+                                    focus();
+                                });
 
                     } else {
                         super.onBrowserEvent(event);
                     }
                 }
-
             };
             KeyDownHandler keyDownHandler = new KeyDownHandler() {
 
@@ -4058,14 +4051,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private MenuItem createToggle(final Column<?, T> column) {
             MenuItem toggle = new MenuItem(createHTML(column), true,
-                    new ScheduledCommand() {
-
-                        @Override
-                        public void execute() {
-                            hidingColumn = true;
-                            column.setHidden(!column.isHidden(), true);
-                            hidingColumn = false;
-                        }
+                    () -> {
+                        hidingColumn = true;
+                        column.setHidden(!column.isHidden(), true);
+                        hidingColumn = false;
                     });
             toggle.addStyleName("column-hiding-toggle");
             columnToHidingToggleMap.put(column, toggle);
@@ -6309,7 +6298,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Adds the given role as 'role="$param"' to the {@code <table />} element
-	 * of the grid.
+     * of the grid.
      *
      * @param role
      *            the role param
@@ -8897,10 +8886,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         /*
          * Delay calculation to be deferred so Escalator can do it's magic.
          */
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
+        Scheduler.get().scheduleFinally(() -> {
                 if (escalator
                         .getInnerWidth() != autoColumnWidthsRecalculator.lastCalculatedInnerWidth) {
                     recalculateColumnWidths();
@@ -8916,7 +8902,6 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 // off-by-one error which occurs when the user scrolls all the
                 // way to the bottom.
                 refreshBody();
-            }
         });
     }
 
