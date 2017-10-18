@@ -9,8 +9,6 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.AlwaysLockedVaadinSession;
-import com.vaadin.ui.HasComponents.ComponentAttachEvent;
-import com.vaadin.ui.HasComponents.ComponentDetachEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -222,8 +220,7 @@ public class AttachDetachWindowTest {
 
         final boolean[] eventFired = new boolean[1];
         ui.addComponentAttachListener(
-                (ComponentAttachEvent event) -> eventFired[0] = event
-                        .getAttachedComponent().equals(window));
+                e -> eventFired[0] = e.getAttachedComponent().equals(window));
         ui.addWindow(window);
         assertTrue("Attach event is not fired for added window", eventFired[0]);
     }
@@ -235,8 +232,7 @@ public class AttachDetachWindowTest {
 
         final boolean[] eventFired = new boolean[1];
         ui.addComponentDetachListener(
-                (ComponentDetachEvent event) -> eventFired[0] = event
-                        .getDetachedComponent().equals(window));
+                e -> eventFired[0] = e.getDetachedComponent().equals(window));
         ui.addWindow(window);
         ui.removeWindow(window);
 

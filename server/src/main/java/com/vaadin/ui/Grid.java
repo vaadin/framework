@@ -403,12 +403,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * grid.addContextClickListener(event -&gt; Notification.show(
      *         ((GridContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
      * </pre>
-     * 
+     *
      * @param <T>
      *            the grid bean type
      */
@@ -3017,7 +3017,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Note that all header, body and footer rows get the same height if
      * explicitly set. In automatic mode, each section is calculated separately
      * based on an empty row of that type.
-     * 
+     *
      * @see #setBodyRowHeight(double)
      * @see #setHeaderRowHeight(double)
      * @see #setFooterRowHeight(double)
@@ -3035,7 +3035,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the height of a body row. If -1 (default), the row height is
      * calculated based on the theme for an empty row before the Grid is
      * displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      * @since 8.2
@@ -3292,10 +3292,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Header in this Grid.
-     * 
+     *
      * @param headerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setHeaderVisible(boolean headerVisible) {
@@ -3304,9 +3304,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Header in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isHeaderVisible() {
@@ -3465,10 +3465,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Footer in this Grid.
-     * 
+     *
      * @param footerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setFooterVisible(boolean footerVisible) {
@@ -3477,9 +3477,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Footer in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isFooterVisible() {
@@ -4570,12 +4570,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the comparator based on column sorting information.
      */
     protected SerializableComparator<T> createSortingComparator() {
-        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) ->
         /*
          * thenComparing is defined to return a serializable comparator as long
          * as both original comparators are also serializable
          */
+        BinaryOperator<SerializableComparator<T>> operator = (comparator1,
+                comparator2) ->
         comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))

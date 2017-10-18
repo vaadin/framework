@@ -72,8 +72,9 @@ public class DropTargetExtension<T extends AbstractComponent>
      * {@link #onDrop(List, Map, DropEffect, MouseEventDetails)} instead.
      */
     protected void registerDropTargetRpc() {
-        registerRpc((DropTargetRpc) (types, data, dropEffect,
-                mouseEventDetails) -> onDrop(types, data,
+        registerRpc(
+                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) ->
+                onDrop(types, data,
                         DropEffect.valueOf(dropEffect.toUpperCase()),
                         mouseEventDetails));
     }
@@ -83,16 +84,15 @@ public class DropTargetExtension<T extends AbstractComponent>
      * Fires the {@link DropEvent}.
      *
      * @param types
-     *            List of data types from {@code DataTransfer.types} object.
+     *         List of data types from {@code DataTransfer.types} object.
      * @param data
-     *            Map containing all types and corresponding data from the
-     *            {@code
+     *         Map containing all types and corresponding data from the {@code
      *         DataTransfer} object.
      * @param dropEffect
-     *            the drop effect
+     *         the drop effect
      * @param mouseEventDetails
-     *            mouse event details object containing information about the
-     *            drop event
+     *         mouse event details object containing information about the drop
+     *         event
      */
     protected void onDrop(List<String> types, Map<String, String> data,
             DropEffect dropEffect, MouseEventDetails mouseEventDetails) {
@@ -164,12 +164,13 @@ public class DropTargetExtension<T extends AbstractComponent>
      *
      * <pre>
      * target.setDropCriterion(
-     *         // If dragged source contains a URL, allow it to be dropped
-     *         "if (event.dataTransfer.types.includes('text/uri-list')) {"
-     *                 + "    return true;" + "}" +
+     *     // If dragged source contains a URL, allow it to be dropped
+     *     "if (event.dataTransfer.types.includes('text/uri-list')) {" +
+     *     "    return true;" +
+     *     "}" +
      *
-     *                 // Otherwise cancel the event
-     *                 "return false;");
+     *     // Otherwise cancel the event
+     *     "return false;");
      * </pre>
      *
      * @param criteriaScript
@@ -201,17 +202,17 @@ public class DropTargetExtension<T extends AbstractComponent>
      * if the value of the payload and the value given here are equal.
      * <p>
      * Note that calling this method will overwrite the previously set criteria.
-     * To set multiple criteria, call the
-     * {@link #setDropCriteria(Criterion.Match, Criterion...)} method.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
      * <p>
-     * To handle more complex criteria, define a custom script with
-     * {@link #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
      * criterion and the criteria script are passed.
      *
      * @param key
-     *            key of the payload to be compared
+     *         key of the payload to be compared
      * @param value
-     *            value to be compared to the payload's value
+     *         value to be compared to the payload's value
      * @see DragSourceExtension#setPayload(String, String)
      */
     public void setDropCriterion(String key, String value) {
@@ -226,19 +227,19 @@ public class DropTargetExtension<T extends AbstractComponent>
      * operator holds.
      * <p>
      * Note that calling this method will overwrite the previously set criteria.
-     * To set multiple criteria, call the
-     * {@link #setDropCriteria(Criterion.Match, Criterion...)} method.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
      * <p>
-     * To handle more complex criteria, define a custom script with
-     * {@link #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
      * criterion and the criteria script are passed.
      *
      * @param key
-     *            key of the payload to be compared
+     *         key of the payload to be compared
      * @param operator
-     *            comparison operator to be used
+     *         comparison operator to be used
      * @param value
-     *            value to be compared to the payload's value
+     *         value to be compared to the payload's value
      * @see DragSourceExtension#setPayload(String, int)
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
@@ -255,19 +256,19 @@ public class DropTargetExtension<T extends AbstractComponent>
      * operator holds.
      * <p>
      * Note that calling this method will overwrite the previously set criteria.
-     * To set multiple criteria, call the
-     * {@link #setDropCriteria(Criterion.Match, Criterion...)} method.
+     * To set multiple criteria, call the {@link #setDropCriteria(Criterion.Match,
+     * Criterion...)} method.
      * <p>
-     * To handle more complex criteria, define a custom script with
-     * {@link #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
      * criterion and the criteria script are passed.
      *
      * @param key
-     *            key of the payload to be compared
+     *         key of the payload to be compared
      * @param operator
-     *            comparison operator to be used
+     *         comparison operator to be used
      * @param value
-     *            value to be compared to the payload's value
+     *         value to be compared to the payload's value
      * @see DragSourceExtension#setPayload(String, double)
      */
     public void setDropCriterion(String key, ComparisonOperator operator,
@@ -286,17 +287,18 @@ public class DropTargetExtension<T extends AbstractComponent>
      * compared to the value of the criterion using the criterion's operator
      * holds.
      * <p>
-     * Note that calling this method will overwrite the previously set criteria.
+     * Note that calling this method will overwrite the previously set
+     * criteria.
      * <p>
-     * To handle more complex criteria, define a custom script with
-     * {@link #setDropCriteriaScript(String)}. Drop will be allowed if both this
+     * To handle more complex criteria, define a custom script with {@link
+     * #setDropCriteriaScript(String)}. Drop will be allowed if both this
      * criterion and the criteria script are passed.
      *
      * @param match
-     *            defines whether any or all of the given criteria should match
-     *            to allow drop on this drop target
+     *         defines whether any or all of the given criteria should match to
+     *         allow drop on this drop target
      * @param criteria
-     *            criteria to be compared to the payload
+     *         criteria to be compared to the payload
      */
     public void setDropCriteria(Criterion.Match match, Criterion... criteria) {
         getState().criteriaMatch = match;
