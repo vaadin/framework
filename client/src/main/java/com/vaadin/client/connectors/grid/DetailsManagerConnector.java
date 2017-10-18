@@ -137,22 +137,17 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         private ScheduledCommand createResizeCommand(final int rowIndex,
                 final Element element) {
-            return new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    // It should not be possible to get here without calculating
-                    // the spacerCellBorderHeights or without having the details
-                    // row open, nor for this command to be triggered while
-                    // layout is running, but it's safer to check anyway.
-                    if (spacerCellBorderHeights != null
-                            && !getLayoutManager().isLayoutRunning()
-                            && getDetailsComponentConnectorId(
-                                    rowIndex) != null) {
-                        double height = getLayoutManager().getOuterHeightDouble(
-                                element) + spacerCellBorderHeights;
-                        getWidget().setDetailsHeight(rowIndex, height);
-                    }
+            return () -> {
+                // It should not be possible to get here without calculating
+                // the spacerCellBorderHeights or without having the details
+                // row open, nor for this command to be triggered while
+                // layout is running, but it's safer to check anyway.
+                if (spacerCellBorderHeights != null
+                        && !getLayoutManager().isLayoutRunning()
+                        && getDetailsComponentConnectorId(rowIndex) != null) {
+                    double height = getLayoutManager().getOuterHeightDouble(
+                            element) + spacerCellBorderHeights;
+                    getWidget().setDetailsHeight(rowIndex, height);
                 }
             };
         }

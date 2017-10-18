@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.List;
 
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
 import com.google.gwt.event.dom.client.ScrollEvent;
@@ -97,14 +96,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     private TouchScrollHandler touchScrollHandler;
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    performSizeCheck();
-                }
-
-            });
+            () -> performSizeCheck());
 
     private Element storedFocus;
 

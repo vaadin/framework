@@ -948,14 +948,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
              * (for example when updating cell values) we only get one actual
              * refresh in the end.
              */
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    if (markAsDirty) {
-                        markAsDirty = false;
-                        getGrid().refreshHeader();
-                    }
+            Scheduler.get().scheduleFinally(() -> {
+                if (markAsDirty) {
+                    markAsDirty = false;
+                    getGrid().refreshHeader();
                 }
             });
         }
@@ -1677,10 +1673,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (grid.selectionColumn != null && grid.selectionColumn
                     .getRenderer() instanceof MultiSelectionRenderer) {
                 grid.refreshBody();
-                HeaderCell cell = grid.getDefaultHeaderRow().getCell(grid.selectionColumn);
-                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy provider, then no checkbox
+                HeaderCell cell = grid.getDefaultHeaderRow()
+                        .getCell(grid.selectionColumn);
+                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy
+                                                                   // provider,
+                                                                   // then no
+                                                                   // checkbox
                     CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
-                        .getCell(grid.selectionColumn).getWidget();
+                            .getCell(grid.selectionColumn).getWidget();
                     checkBox.setEnabled(isEnabled);
                 }
             }
@@ -3865,15 +3865,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             && event.getKeyCode() == KeyCodes.KEY_ENTER) {
                         final MenuItem item = getSelectedItem();
                         super.onBrowserEvent(event);
-                        Scheduler.get()
-                                .scheduleDeferred(new ScheduledCommand() {
-
-                                    @Override
-                                    public void execute() {
-                                        selectItem(item);
-                                        focus();
-                                    }
-                                });
+                        Scheduler.get().scheduleDeferred(() -> {
+                            selectItem(item);
+                            focus();
+                        });
 
                     } else {
                         super.onBrowserEvent(event);
@@ -4013,13 +4008,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             super.onAttach();
             // make sure the button will get correct height if the button should
             // be visible when the grid is rendered the first time.
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    setHeightToHeaderCellHeight();
-                }
-            });
+            Scheduler.get()
+                    .scheduleDeferred(() -> setHeightToHeaderCellHeight());
         }
 
         @Override
@@ -6318,8 +6308,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     }
 
     /**
-     * Adds the given role as 'role="$param"' to the {@code <table />} element
-     * of the grid.
+     * Adds the given role as 'role="$param"' to the {@code
+     *
+    <table />
+     * } element of the grid.
      *
      * @param role
      *            the role param
@@ -6439,7 +6431,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
     /**
      * Request delayed refresh of all body rows.
-     * 
+     *
      * @since 8.1
      */
     public void requestRefreshBody() {
@@ -8209,13 +8201,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     public HandlerRegistration addDataAvailableHandler(
             final DataAvailableHandler handler) {
         // Deferred call to handler with current row range
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (!dataSource.isWaitingForData()) {
-                    handler.onDataAvailable(
-                            new DataAvailableEvent(currentDataAvailable));
-                }
+        Scheduler.get().scheduleFinally(() -> {
+            if (!dataSource.isWaitingForData()) {
+                handler.onDataAvailable(
+                        new DataAvailableEvent(currentDataAvailable));
             }
         });
         return addHandler(handler, DataAvailableEvent.TYPE);

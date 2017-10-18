@@ -28,7 +28,6 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -203,13 +202,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public int bringToFrontSequence = -1;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    updateContentsSize();
-                }
-            });
+            () -> updateContentsSize());
 
     public VWindow() {
         super(false, false); // no autohide, not modal
