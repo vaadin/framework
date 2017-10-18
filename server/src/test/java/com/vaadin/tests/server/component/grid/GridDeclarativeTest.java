@@ -57,8 +57,7 @@ import com.vaadin.ui.declarative.DesignException;
  * @author Vaadin Ltd
  *
  */
-public class GridDeclarativeTest
-        extends AbstractListingDeclarativeTest<Grid<Person>> {
+public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
 
     @Test
     public void gridAttributes() {
@@ -491,13 +490,13 @@ public class GridDeclarativeTest
     @Test
     public void testReadEmptyGrid() {
         String design = "<vaadin-grid />";
-        testRead(design, new Grid<Person>(), false);
+        testRead(design, new Grid<String>(), false);
     }
 
     @Test
     public void testEmptyGrid() {
         String design = "<vaadin-grid></vaadin-grid>";
-        Grid<Person> expected = new Grid<>();
+        Grid<String> expected = new Grid<>();
         testWrite(design, expected);
         testRead(design, expected, true);
     }
@@ -505,16 +504,17 @@ public class GridDeclarativeTest
     @Test(expected = DesignException.class)
     public void testMalformedGrid() {
         String design = "<vaadin-grid><vaadin-label /></vaadin-grid>";
-        testRead(design, new Grid<Person>());
+        testRead(design, new Grid<String>());
     }
 
     @Test(expected = DesignException.class)
     public void testGridWithNoColGroup() {
         String design = "<vaadin-grid><table><thead><tr><th>Foo</tr></thead></table></vaadin-grid>";
-        testRead(design, new Grid<Person>());
+        testRead(design, new Grid<String>());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testHtmlEntitiesinGridHeaderFooter() {
         String id = "> id";
         String plainText = "plain-text";
@@ -585,20 +585,22 @@ public class GridDeclarativeTest
 
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Grid<Person> testRead(String design, Grid<Person> expected) {
+    public Grid<?> testRead(String design, Grid expected) {
         return testRead(design, expected, false);
     }
 
     @Override
-    public Grid<Person> testRead(String design, Grid<Person> expected,
-            boolean retestWrite) {
+    @SuppressWarnings("rawtypes")
+    public Grid<?> testRead(String design, Grid expected, boolean retestWrite) {
         return testRead(design, expected, retestWrite, false);
     }
 
-    public Grid<Person> testRead(String design, Grid<Person> expected,
-            boolean retestWrite, boolean writeData) {
-        Grid<Person> actual = super.testRead(design, expected);
+    @SuppressWarnings("rawtypes")
+    public Grid<?> testRead(String design, Grid expected, boolean retestWrite,
+            boolean writeData) {
+        Grid<?> actual = super.testRead(design, expected);
 
         compareGridColumns(expected, actual);
         compareHeaders(expected, actual);
@@ -723,9 +725,8 @@ public class GridDeclarativeTest
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    protected Class<? extends Grid<Person>> getComponentClass() {
-        return (Class<? extends Grid<Person>>) Grid.class;
+    protected Class<? extends Grid> getComponentClass() {
+        return Grid.class;
     }
 
     @Override
@@ -762,6 +763,7 @@ public class GridDeclarativeTest
                 getComponentTag() , beanClassName, getComponentTag());
         //@formatter:on
 
+        @SuppressWarnings("unchecked")
         Grid<Person> grid = read(design);
         assertEquals(beanClass, grid.getBeanType());
 
@@ -777,7 +779,7 @@ public class GridDeclarativeTest
         Person testPerson = new Person("the first", "the last", "The email", 64,
                 Sex.MALE, new Address("the street", 12313, "The city",
                         Country.SOUTH_AFRICA));
-
+        @SuppressWarnings("unchecked")
         Grid<Person> readGrid = read(design);
 
         assertColumns(11, grid.getColumns(), readGrid.getColumns(), testPerson);
@@ -814,6 +816,7 @@ public class GridDeclarativeTest
                         column.getValueProvider().apply(testPerson));
             }
         }
+
     }
 
     @Test
@@ -826,7 +829,7 @@ public class GridDeclarativeTest
         Person testPerson = new Person("the first", "the last", "The email", 64,
                 Sex.MALE, new Address("the street", 12313, "The city",
                         Country.SOUTH_AFRICA));
-
+        @SuppressWarnings("unchecked")
         Grid<Person> readGrid = read(design);
 
         assertColumns(0, grid.getColumns(), readGrid.getColumns(), testPerson);
@@ -849,7 +852,7 @@ public class GridDeclarativeTest
         Person testPerson = new Person("the first", "the last", "The email", 64,
                 Sex.MALE, new Address("the street", 12313, "The city",
                         Country.SOUTH_AFRICA));
-
+        @SuppressWarnings("unchecked")
         Grid<Person> readGrid = read(design);
 
         assertColumns(1, grid.getColumns(), readGrid.getColumns(), testPerson);
@@ -875,12 +878,13 @@ public class GridDeclarativeTest
         Person testPerson = new Person("the first", "the last", "The email", 64,
                 Sex.MALE, new Address("the street", 12313, "The city",
                         Country.SOUTH_AFRICA));
-
+        @SuppressWarnings("unchecked")
         Grid<Person> readGrid = read(design);
 
         assertColumns(12, grid.getColumns(), readGrid.getColumns(), testPerson);
         // First and last name should not be mapped to anything but should exist
         assertNull(readGrid.getColumns().get(11).getValueProvider()
                 .apply(testPerson));
+
     }
 }
