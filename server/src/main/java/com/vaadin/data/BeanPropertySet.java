@@ -242,8 +242,8 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              *            The maximum amount of nesting levels for
              *            sub-properties.
              * @param ignorePackageNamesStartingWith
-             *            Ignore package names that start with this string, e.g.
-             *            "java.lang".
+             *            Ignore package names that start with this string, for
+             *            example "java.lang".
              */
             public PropertyFilterDefinition(int maxNestingDepth,
                     List<String> ignorePackageNamesStartingWith) {
@@ -301,9 +301,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          * @param descriptor
          *            property descriptor
          * @param useLongFormName
-         *            use format grandparent.parent.property for name if true,
-         *            needed when creating nested definitions recursively like
-         *            in findNestedDefinitions
+         *            use format grandparent.parent.property for name if
+         *            {@code true}, needed when creating nested definitions
+         *            recursively like in findNestedDefinitions
          * @since
          */
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,

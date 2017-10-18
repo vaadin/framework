@@ -358,11 +358,13 @@ public class BinderInstanceFieldTest {
 
         binder.setBean(person);
 
-        Assert.assertEquals(person.getAddress().getStreetAddress(),
+        Assert.assertEquals("Reading nested properties bound using annotation",
+                person.getAddress().getStreetAddress(),
                 form.streetAddressField.getValue());
 
         form.streetAddressField.setValue("Bar ave.");
-        Assert.assertEquals(form.streetAddressField.getValue(),
+        Assert.assertEquals("Changing nested properties bound using annotation",
+                form.streetAddressField.getValue(),
                 person.getAddress().getStreetAddress());
     }
 
@@ -405,13 +407,17 @@ public class BinderInstanceFieldTest {
 
         binder.setBean(couple);
 
-        Assert.assertEquals(couple.first.getAddress().getStreetAddress(),
+        Assert.assertEquals("Binding deep nested properties using annotation",
+                couple.first.getAddress().getStreetAddress(),
                 form.firstStreetField.getValue());
-        Assert.assertEquals(couple.second.getAddress().getStreetAddress(),
+        Assert.assertEquals(
+                "Binding parallel deep nested properties using annotation",
+                couple.second.getAddress().getStreetAddress(),
                 form.secondStreetField.getValue());
 
         form.firstStreetField.setValue(second.getAddress().getStreetAddress());
-        Assert.assertEquals(form.firstStreetField.getValue(),
+        Assert.assertEquals("Updating value in deep nested properties",
+                form.firstStreetField.getValue(),
                 first.getAddress().getStreetAddress());
 
     }
@@ -461,9 +467,13 @@ public class BinderInstanceFieldTest {
         Assert.assertEquals(child.getName(), form.childName.getValue());
         Assert.assertEquals(grandchild.getName(),
                 form.grandchildName.getValue());
-        Assert.assertNotNull(form.eighthLevelGrandchildName);
+        Assert.assertNotNull(
+                "Reading nested properties within default supported nested depth (max 10 levels)",
+                form.eighthLevelGrandchildName);
         // only 10 levels of nesting properties are scanned by default
-        Assert.assertNull(form.distantGreatGrandchildName);
+        Assert.assertNull(
+                "By default, only 10 levels of nesting properties are scanned.",
+                form.distantGreatGrandchildName);
     }
 
     @Test
