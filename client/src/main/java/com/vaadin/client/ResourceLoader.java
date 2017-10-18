@@ -397,7 +397,7 @@ public class ResourceLoader {
 
     private static native int getStyleSheetLength(String url)
     /*-{
-        for(var i = 0; i < $doc.styleSheets.length; i++) {
+        for (var i = 0; i < $doc.styleSheets.length; i++) {
             if ($doc.styleSheets[i].href === url) {
                 var sheet = $doc.styleSheets[i];
                 try {

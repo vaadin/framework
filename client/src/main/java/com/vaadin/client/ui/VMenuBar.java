@@ -1649,12 +1649,10 @@ public class VMenuBar extends SimpleFocusablePanel
     private native String getText(Element element)
     /*-{
         var n = element.childNodes.length;
-        if(n > 0){
+        if (n > 0) {
             return element.childNodes[n - 1].nodeValue;
         }
-        else{
-            return "";
-        }
+        return "";
     }-*/;
 
     private Element getLastChildElement(CustomMenuItem item) {

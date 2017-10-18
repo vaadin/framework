@@ -874,11 +874,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private static native boolean isDebugAvailable()
     /*-{
-        if($wnd.vaadin.debug) {
-            return true;
-        } else {
-            return false;
-        }
+        return $wnd.vaadin.debug;
     }-*/;
 
     /**

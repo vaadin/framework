@@ -193,7 +193,7 @@ public class VPopupView extends HTML
 
     private static native void nativeBlur(Element e)
     /*-{
-        if(e && e.blur) {
+        if (e && e.blur) {
             e.blur();
         }
     }-*/;

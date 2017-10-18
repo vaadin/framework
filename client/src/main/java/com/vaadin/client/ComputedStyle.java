@@ -41,15 +41,15 @@ public class ComputedStyle {
 
     private static native JavaScriptObject getComputedStyle(Element elem)
     /*-{
-      if(elem.nodeType != 1) {
+      if (elem.nodeType != 1) {
           return {};
       }
-
-      if($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
+    
+      if ($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
           return $wnd.document.defaultView.getComputedStyle(elem, null);
       }
-
-      if(elem.currentStyle) {
+    
+      if (elem.currentStyle) {
           return elem.currentStyle;
       }
     }-*/;
@@ -66,58 +66,58 @@ public class ComputedStyle {
     /*-{
         var cs = this.@com.vaadin.client.ComputedStyle::computedStyle;
         var elem = this.@com.vaadin.client.ComputedStyle::elem;
-
+    
         // Border values need to be checked separately. The width might have a
         // meaningful value even if the border style is "none". In that case the
         // value should be 0.
-        if(name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
+        if (name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
             var borderStyleProp = name.substring(0,name.length-5) + "Style";
-            if(cs.getPropertyValue)
+            if (cs.getPropertyValue)
                 var borderStyle = cs.getPropertyValue(borderStyleProp);
             else // IE
                 var borderStyle = cs[borderStyleProp];
-            if(borderStyle == "none")
+            if (borderStyle == "none")
                 return "0px";
         }
-
-        if(cs.getPropertyValue) {
-
+    
+        if (cs.getPropertyValue) {
+    
             // Convert name to dashed format
             name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
             var ret = cs.getPropertyValue(name);
-
+    
         } else {
-
+    
             var ret = cs[name];
             var style = elem.style;
-
+    
             // From the awesome hack by Dean Edwards
             // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-
+    
             // If we're not dealing with a regular pixel number
             // but a number that has a weird ending, we need to convert it to pixels
                 if ( !/^\d+(px)?$/i.test( ret ) && /^\d/.test( ret ) ) {
                     // Remember the original values
                     var left = style.left, rsLeft = elem.runtimeStyle.left;
-
+    
                     // Put in the new values to get a computed value out
                     elem.runtimeStyle.left = cs.left;
                     style.left = ret || 0;
                     ret = style.pixelLeft + "px";
-
+    
                     // Revert the changed values
                     style.left = left;
                     elem.runtimeStyle.left = rsLeft;
                 }
-
+    
         }
-
+    
         // Normalize margin values. This is not totally valid, but in most cases
         // it is what the user wants to know.
-        if(name.indexOf("margin") > -1 && ret == "auto") {
+        if (name.indexOf("margin") > -1 && ret == "auto") {
             return "0px";
         }
-
+    
         // Some browsers return undefined width and height values as "auto", so
         // we need to retrieve those ourselves.
         if (name == "width" && ret == "auto") {
@@ -125,9 +125,9 @@ public class ComputedStyle {
         } else if (name == "height" && ret == "auto") {
             ret = elem.clientHeight + "px";
         }
-
+    
         return ret;
-
+    
     }-*/;
 
     /**

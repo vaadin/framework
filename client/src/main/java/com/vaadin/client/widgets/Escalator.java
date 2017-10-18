@@ -761,13 +761,13 @@ public class Escalator extends Widget
         
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
-                if(e.deltaMode === 1) {
+                if (e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
         
                 // Other delta modes aren't supported
-                if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
+                if ((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
         
                     // Print warning message
@@ -1125,13 +1125,13 @@ public class Escalator extends Widget
     }
 
     /**
-     * Helper class that helps to implement the WAI-ARIA functionality
-     * for the Grid and TreeGrid component.
+     * Helper class that helps to implement the WAI-ARIA functionality for the
+     * Grid and TreeGrid component.
      * <p>
      * The following WAI-ARIA attributes are added through this class:
      *
      * <ul>
-     *     <li>aria-rowcount (since 8.2)</li>
+     * <li>aria-rowcount (since 8.2)</li>
      * </ul>
      *
      * @since 8.2
@@ -1139,8 +1139,8 @@ public class Escalator extends Widget
     public class AriaGridHelper {
 
         /**
-         * This field contains the total number of rows from the grid
-         * including rows from thead, tbody and tfoot.
+         * This field contains the total number of rows from the grid including
+         * rows from thead, tbody and tfoot.
          *
          * @since 8.2
          */
@@ -1150,8 +1150,8 @@ public class Escalator extends Widget
          * Adds the given numberOfRows to allRows and calls
          * {@link #updateAriaRowCount()}.
          *
-         * @param numberOfRows number of rows that were added to the
-         *                     grid
+         * @param numberOfRows
+         *            number of rows that were added to the grid
          *
          * @since 8.2
          */
@@ -1164,8 +1164,8 @@ public class Escalator extends Widget
          * Removes the given numberOfRows from allRows and calls
          * {@link #updateAriaRowCount()}.
          *
-         * @param numberOfRows number of rows that were removed from
-         *                     the grid
+         * @param numberOfRows
+         *            number of rows that were removed from the grid
          *
          * @since 8.2
          */
@@ -1175,9 +1175,9 @@ public class Escalator extends Widget
         }
 
         /**
-         * Sets the aria-rowcount attribute with the current value
-         * of {@link AriaGridHelper#allRows} if the grid is attached
-         * and {@link AriaGridHelper#allRows} > 0.
+         * Sets the aria-rowcount attribute with the current value of
+         * {@link AriaGridHelper#allRows} if the grid is attached and
+         * {@link AriaGridHelper#allRows} > 0.
          *
          * @since 8.2
          */
@@ -1217,7 +1217,8 @@ public class Escalator extends Widget
 
         private boolean initialColumnSizesCalculated = false;
 
-        public AbstractRowContainer(final TableSectionElement rowContainerElement) {
+        public AbstractRowContainer(
+                final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
         }
 
@@ -2236,7 +2237,8 @@ public class Escalator extends Widget
         /** The height of the combined rows in the DOM. Never negative. */
         private double heightOfSection = 0;
 
-        public AbstractStaticRowContainer(final TableSectionElement headElement) {
+        public AbstractStaticRowContainer(
+                final TableSectionElement headElement) {
             super(headElement);
         }
 
@@ -5664,7 +5666,8 @@ public class Escalator extends Widget
     private final AriaGridHelper ariaGridHelper = new AriaGridHelper();
 
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
-    private final BodyRowContainerImpl body = new BodyRowContainerImpl(bodyElem);
+    private final BodyRowContainerImpl body = new BodyRowContainerImpl(
+            bodyElem);
     private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
     /**
@@ -6862,7 +6865,9 @@ public class Escalator extends Widget
     }
 
     /**
-     * Returns the {@code <table />} element of the grid.
+     * Returns the {@code 
+     * <table />
+     * } element of the grid.
      *
      * @return the table element
      * @since 8.2

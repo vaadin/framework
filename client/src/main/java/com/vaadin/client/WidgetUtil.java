@@ -60,7 +60,7 @@ public class WidgetUtil {
      */
     public static native void browserDebugger()
     /*-{
-        if($wnd.console)
+        if ($wnd.console)
             debugger;
     }-*/;
 
@@ -112,7 +112,7 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        if(el != null && el.nodeType == 3) {
+        if (el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
         return el;
@@ -680,7 +680,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
-         if(heightPx == 'auto'){
+         if (heightPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -700,7 +700,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
-         if(widthPx == 'auto'){
+         if (widthPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }

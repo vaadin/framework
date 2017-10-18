@@ -43,7 +43,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
             + "    _handleProtocol = function(a,message) {return message;};"
             + "    var response = {partialMessage: ''};\n"
             + "    var messages = [];\n"
-            + "    for(var i = 0; i < data.length; i++) {\n"
+            + "    for (var i = 0; i < data.length; i++) {\n"
             + "        if (!_trackMessageSize(data[i], request, response))\n"
             + "            messages = messages.concat(response.messages);\n"
             + "    }\n"
