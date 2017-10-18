@@ -23,9 +23,7 @@ public class ButtonClickTest {
     public void clickDetachedButton() {
         Button b = new Button();
         AtomicInteger counter = new AtomicInteger(0);
-        b.addClickListener((ClickEvent event) -> {
-            counter.incrementAndGet();
-        });
+        b.addClickListener((ClickEvent event) -> counter.incrementAndGet());
 
         b.click();
         assertEquals(1, counter.get());
@@ -65,8 +63,6 @@ public class ButtonClickTest {
 
     private void addClickListener(Button b) {
         clicked = false;
-        b.addClickListener((ClickEvent ev) -> {
-            clicked = true;
-        });
+        b.addClickListener((ClickEvent ev) -> clicked = true);
     }
 }

@@ -120,9 +120,8 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
             // Must wait until iframe is attached to be able to access body
             BodyElement rtaBody = IFrameElement.as(rta.getElement())
                     .getContentDocument().getBody();
-            addInputListener(rtaBody, event -> {
-                inputHandlers.forEach(handler -> handler.execute());
-            });
+            addInputListener(rtaBody, event -> inputHandlers
+                    .forEach(handler -> handler.execute()));
         });
 
         formatter = new VRichTextToolbar(rta);

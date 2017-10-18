@@ -836,9 +836,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = getId();
             if (id == null) {
                 return Stream.empty();
-            } else {
-                return Stream.of(new QuerySortOrder(id, direction));
             }
+            return Stream.of(new QuerySortOrder(id, direction));
         };
 
         private SerializableComparator<T> comparator;
@@ -3651,7 +3650,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         "setColumnOrder should not be called "
                                 + "with columns that are not in the grid.");
             }
-
         });
 
         List<String> stateColumnOrder = getState().columnOrder;
@@ -4573,13 +4571,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     protected SerializableComparator<T> createSortingComparator() {
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> {
-            /*
-             * thenComparing is defined to return a serializable comparator as
-             * long as both original comparators are also serializable
-             */
-            return comparator1.thenComparing(comparator2)::compare;
-        };
+                comparator2) ->
+        /*
+         * thenComparing is defined to return a serializable comparator as long
+         * as both original comparators are also serializable
+         */
+        comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);

@@ -64,9 +64,9 @@ public class TreeGridConnector extends GridConnector {
     }
 
     public TreeGridConnector() {
-        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> {
-            getWidget().focusCell(rowIndex, cellIndex);
-        });
+        registerRpc(FocusRpc.class, (rowIndex, cellIndex) -> 
+            getWidget().focusCell(rowIndex, cellIndex)
+        );
     }
 
     private String hierarchyColumnId;

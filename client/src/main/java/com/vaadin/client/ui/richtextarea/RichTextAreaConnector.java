@@ -54,9 +54,8 @@ public class RichTextAreaConnector extends AbstractFieldConnector
                 flush();
             }
         });
-        getWidget().addInputHandler(() -> {
-            valueChangeHandler.scheduleValueChange();
-        });
+        getWidget().addInputHandler(
+                () -> valueChangeHandler.scheduleValueChange());
 
         registerRpc(RichTextAreaClientRpc.class,
                 new RichTextAreaClientRpcImpl());

@@ -29,9 +29,7 @@ public abstract class AbstractListingTestUI<T extends AbstractListing<Object>>
         options.put("100000", 100000);
 
         createSelectAction("Items", "Data provider", options, "20",
-                (c, number, data) -> {
-                    c.setItems(createItems(number));
-                });
+                (c, number, data) -> c.setItems(createItems(number)));
     }
 
     protected Object[] createItems(int number) {

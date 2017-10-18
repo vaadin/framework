@@ -120,10 +120,8 @@ public class Navigator implements Serializable {
                 popStateListenerRegistration = null;
             }
             if (navigator != null) {
-                popStateListenerRegistration = ui.getPage()
-                        .addPopStateListener(e -> {
-                            navigator.navigateTo(getState());
-                        });
+                popStateListenerRegistration = ui.getPage().addPopStateListener(
+                        e -> navigator.navigateTo(getState()));
             }
         }
 
@@ -700,10 +698,8 @@ public class Navigator implements Serializable {
      *            parameters passed in the navigation state to the view
      */
     protected void navigateTo(View view, String viewName, String parameters) {
-        runAfterLeaveConfirmation(() -> {
-            performNavigateTo(view, viewName, parameters);
-        });
-
+        runAfterLeaveConfirmation(
+                () -> performNavigateTo(view, viewName, parameters));
     }
 
     /**

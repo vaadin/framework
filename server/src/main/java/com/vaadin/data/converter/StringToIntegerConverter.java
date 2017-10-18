@@ -85,18 +85,16 @@ public class StringToIntegerConverter
         return n.flatMap(number -> {
             if (number == null) {
                 return Result.ok(null);
-            } else {
-                int intValue = number.intValue();
-                if (intValue == number.longValue()) {
-                    // If the value of n is outside the range of long, the
-                    // return value of longValue() is either Long.MIN_VALUE or
-                    // Long.MAX_VALUE. The/ above comparison promotes int to
-                    // long and thus does not need to consider wrap-around.
-                    return Result.ok(intValue);
-                } else {
-                    return Result.error(getErrorMessage());
-                }
             }
+            int intValue = number.intValue();
+            if (intValue == number.longValue()) {
+                // If the value of n is outside the range of long, the
+                // return value of longValue() is either Long.MIN_VALUE or
+                // Long.MAX_VALUE. The/ above comparison promotes int to
+                // long and thus does not need to consider wrap-around.
+                return Result.ok(intValue);
+            }
+            return Result.error(getErrorMessage());
         });
     }
 

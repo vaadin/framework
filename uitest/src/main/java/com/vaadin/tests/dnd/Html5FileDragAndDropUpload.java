@@ -39,69 +39,75 @@ public class Html5FileDragAndDropUpload extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
 
-        Grid<FileParameters> grid = new Grid<>("Drop files or text on the Grid");
+        Grid<FileParameters> grid = new Grid<>(
+                "Drop files or text on the Grid");
         grid.addColumn(FileParameters::getName).setCaption("File name");
         grid.addColumn(FileParameters::getSize).setCaption("File size");
         grid.addColumn(FileParameters::getMime).setCaption("Mime type");
 
         List<FileParameters> gridItems = new ArrayList<>();
 
-        new FileDropTarget<Grid<FileParameters>>(grid, event -> {
-            event.getFiles().forEach(html5File -> {
-                if (html5File.getFileSize() > FILE_SIZE_LIMIT) {
-                    Notification.show(html5File.getFileName()
-                            + " is too large (max 5 MB)");
-                    return;
-                }
-
-                html5File.setStreamVariable(new StreamVariable() {
-                    @Override
-                    public OutputStream getOutputStream() {
-                        return new OutputStream() {
-                            @Override
-                            public void write(int b) throws IOException {
-                                // NOP
-                            }
-                        };
+        new FileDropTarget<Grid<FileParameters>>(grid,
+                event -> event.getFiles().forEach(html5File -> {
+                    if (html5File.getFileSize() > FILE_SIZE_LIMIT) {
+                        Notification.show(html5File.getFileName()
+                                + " is too large (max 5 MB)");
+                        return;
                     }
 
-                    @Override
-                    public boolean listenProgress() {
-                        return true;
-                    }
+                    html5File.setStreamVariable(new StreamVariable() {
+                        @Override
+                        public OutputStream getOutputStream() {
+                            return new OutputStream() {
+                                @Override
+                                public void write(int b) throws IOException {
+                                    // NOP
+                                }
+                            };
+                        }
 
-                    @Override
-                    public void onProgress(StreamingProgressEvent event) {
-                        log("Progress, bytesReceived=" + event
-                                .getBytesReceived());
-                    }
+                        @Override
+                        public boolean listenProgress() {
+                            return true;
+                        }
 
-                    @Override
-                    public void streamingStarted(StreamingStartEvent event) {
-                        log("Stream started, fileName=" + event.getFileName());
-                    }
+                        @Override
+                        public void onProgress(StreamingProgressEvent event) {
+                            log("Progress, bytesReceived="
+                                    + event.getBytesReceived());
+                        }
 
-                    @Override
-                    public void streamingFinished(StreamingEndEvent event) {
-                        gridItems.add(new FileParameters(event.getFileName(),
-                                event.getContentLength(), event.getMimeType()));
-                        grid.setItems(gridItems);
+                        @Override
+                        public void streamingStarted(
+                                StreamingStartEvent event) {
+                            log("Stream started, fileName="
+                                    + event.getFileName());
+                        }
 
-                        log("Stream finished, fileName=" + event.getFileName());
-                    }
+                        @Override
+                        public void streamingFinished(StreamingEndEvent event) {
+                            gridItems
+                                    .add(new FileParameters(event.getFileName(),
+                                            event.getContentLength(),
+                                            event.getMimeType()));
+                            grid.setItems(gridItems);
 
-                    @Override
-                    public void streamingFailed(StreamingErrorEvent event) {
-                        log("Stream failed, fileName=" + event.getFileName());
-                    }
+                            log("Stream finished, fileName="
+                                    + event.getFileName());
+                        }
 
-                    @Override
-                    public boolean isInterrupted() {
-                        return false;
-                    }
-                });
-            });
-        });
+                        @Override
+                        public void streamingFailed(StreamingErrorEvent event) {
+                            log("Stream failed, fileName="
+                                    + event.getFileName());
+                        }
+
+                        @Override
+                        public boolean isInterrupted() {
+                            return false;
+                        }
+                    });
+                }));
 
         GridDropTarget<FileParameters> dropTarget = new GridDropTarget<>(grid,
                 DropMode.ON_TOP);
