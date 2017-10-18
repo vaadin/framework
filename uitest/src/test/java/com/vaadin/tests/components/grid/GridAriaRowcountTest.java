@@ -36,6 +36,13 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
 
         grid = $(GridElement.class).first();
 
+        // default grid should contain at least one of each role
+        String gridHtml = grid.getHTML();
+        assertTrue("Grid should contain a role=\"rowheader\"", gridHtml.contains("role=\"rowheader\""));
+        assertTrue("Grid should contain a role=\"columnheader\"", gridHtml.contains("role=\"columnheader\""));
+        assertTrue("Grid should contain a role=\"row\"", gridHtml.contains("role=\"row\""));
+        assertTrue("Grid should contain a role=\"gridcell\"", gridHtml.contains("role=\"gridcell\""));
+
         // default with 1 header row and 2 body rows.
         assertTrue("Grid should have 3 rows", containsRows(3));
 
