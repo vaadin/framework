@@ -29,7 +29,10 @@ public class GridSvgInCell extends AbstractTestUI {
 
         DataObject data = new DataObject();
         data.setSvg(
-                "<svg width=\"100%\" height=\"20px\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><polygon id=\"bar_background_blue\" stroke=\"gray\" fill=\"#D6D6D6\" points=\"0 0,59 0,66 7,59 14,0 14\"></polygon><rect id=\"bar_blue\" x=\"1\" y=\"1\" width=\"0px\" height=\"13\" fill=\"#7298C0\"></rect></svg>");
+            "<svg width=\"100%\" height=\"20px\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
+                + "<polygon id=\"bar_background_blue\" stroke=\"gray\" fill=\"#D6D6D6\" points=\"0 0,59 0,66 7,59 14,0 14\"></polygon>"
+                + "<rect id=\"bar_blue\" x=\"1\" y=\"1\" width=\"0px\" height=\"13\" fill=\"#7298C0\"></rect>"
+                + "</svg>");
         grid.setItems(data);
 
         addComponent(grid);
