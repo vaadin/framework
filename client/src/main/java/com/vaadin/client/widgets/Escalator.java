@@ -1138,6 +1138,11 @@ public class Escalator extends Widget
      */
     public class AriaGridHelper {
 
+        public static final String GRID_ROLE_ROW="row";
+        public static final String GRID_ROLE_ROWHEADER="rowheader";
+        public static final String GRID_ROLE_CELL="gridcell";
+        public static final String GRID_ROLE_COLUMNHEADER="columnheader";
+
         /**
          * This field contains the total number of rows from the grid
          * including rows from thead, tbody and tfoot.
@@ -1191,25 +1196,27 @@ public class Escalator extends Widget
         }
 
         /**
-         * Sets the role attribute 'row' to the given rowElement.
+         * Sets the role attribute '$attr' to the given rowElement.
          *
          * @param rowElement row that should get the role attribute
+         * @param attr       attribute to be added
          *
          * @since 8.2
          */
-        public void updateRoleRow(final TableRowElement rowElement) {
-            rowElement.setAttribute("role", "row");
+        public void updateRoleRow(final TableRowElement rowElement, String attr) {
+            rowElement.setAttribute("role", attr);
         }
 
         /**
-         * Sets the role attribute 'gridcell' to the given cellElement.
+         * Sets the role attribute '$attr' to the given cellElement.
          *
          * @param cellElement cell that should get the role attribute
+         * @param attr        attribute to be added
          *
          * @since 8.2
          */
-        public void updateRoleCell(final TableCellElement cellElement) {
-            cellElement.setAttribute("role", "gridcell");
+        public void updateRoleCell(final TableCellElement cellElement, String attr) {
+            cellElement.setAttribute("role", attr);
         }
     }
 
@@ -1260,6 +1267,34 @@ public class Escalator extends Widget
          * @see #createCellElement(double)
          */
         protected abstract String getCellElementTagName();
+
+        /**
+         * Gets the role attribute of an element to represent a cell in a row.
+         * <p>
+         * Usually {@link AriaGridHelper#GRID_ROLE_CELL} except for a cell in
+         * the header.
+         *
+         * @return the role attribute for the element to represent cells
+         *
+         * @since 8.2
+         */
+        protected String getCellElementRole() {
+            return AriaGridHelper.GRID_ROLE_CELL;
+        }
+
+        /**
+         * Gets the role attribute of an element to represent a row in a grid.
+         * <p>
+         * Usually {@link AriaGridHelper#GRID_ROLE_ROW} except for a row in
+         * the header.
+         *
+         * @return the role attribute for the element to represent rows
+         *
+         * @since 8.2
+         */
+        protected String getRowElementRole() {
+            return AriaGridHelper.GRID_ROLE_ROW;
+        }
 
         @Override
         public EscalatorUpdater getEscalatorUpdater() {
@@ -1499,7 +1534,7 @@ public class Escalator extends Widget
                 final TableRowElement tr = TableRowElement.as(DOM.createTR());
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
-                ariaGridHelper.updateRoleRow(tr);
+                ariaGridHelper.updateRoleRow(tr, getRowElementRole());
 
                 for (int col = 0; col < columnConfiguration
                         .getColumnCount(); col++) {
@@ -1507,7 +1542,7 @@ public class Escalator extends Widget
                             .getColumnWidthActual(col);
                     final TableCellElement cellElem = createCellElement(colWidth);
                     tr.appendChild(cellElem);
-                    ariaGridHelper.updateRoleCell(cellElem);
+                    ariaGridHelper.updateRoleCell(cellElem, getCellElementRole());
 
                     // Set stylename and position if new cell is frozen
                     if (col < columnConfiguration.frozenColumns) {
@@ -2443,6 +2478,16 @@ public class Escalator extends Widget
         @Override
         protected String getCellElementTagName() {
             return "th";
+        }
+
+        @Override
+        protected String getRowElementRole() {
+            return AriaGridHelper.GRID_ROLE_ROWHEADER;
+        }
+
+        @Override
+        protected String getCellElementRole() {
+            return AriaGridHelper.GRID_ROLE_COLUMNHEADER;
         }
 
         @Override
