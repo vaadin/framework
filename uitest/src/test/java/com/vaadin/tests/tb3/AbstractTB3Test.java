@@ -416,30 +416,6 @@ public abstract class AbstractTB3Test extends ParallelTest {
     }
 
     /**
-     * Waits up to 10s for the given condition to become true. Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition) {
-        waitUntil(condition, 10);
-    }
-
-    /**
-     * Waits the given number of seconds for the given condition to become true.
-     * Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition,
-            long timeoutInSeconds) {
-        new WebDriverWait(driver, timeoutInSeconds).until(condition);
-    }
-
-    /**
      * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
