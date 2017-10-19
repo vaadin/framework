@@ -1138,12 +1138,6 @@ public class Escalator extends Widget
      */
     public class AriaGridHelper {
 
-        public static final String GRID_ROLE_ROW="row";
-        public static final String GRID_ROLE_ROWHEADER="rowheader";
-        public static final String GRID_ROLE_ROWGROUP="rowgroup";
-        public static final String GRID_ROLE_CELL="gridcell";
-        public static final String GRID_ROLE_COLUMNHEADER="columnheader";
-
         /**
          * This field contains the total number of rows from the grid
          * including rows from thead, tbody and tfoot.
@@ -1197,15 +1191,46 @@ public class Escalator extends Widget
         }
 
         /**
-         * Sets the role attribute '$attr' to the given element.
+         * Sets the role attribute {@code roleName} to the given element.
          *
          * @param element     element that should get the role attribute
-         * @param attr        attribute to be added
+         * @param roleName    roleName to be added
          *
-         * @since 8.2
+         * @since
          */
-        public void updateRole(final Element element, String attr) {
-            element.setAttribute("role", attr);
+        public void updateRole(final Element element, AriaGridRoles roleName) {
+            element.setAttribute("role", roleName.getRoleName());
+        }
+    }
+
+    /**
+     * Holds the currently used aria roles within the grid for rows and cells.
+     *
+     * @since
+     */
+    private enum AriaGridRoles {
+
+        ROW("row"),
+        ROWHEADER("rowheader"),
+        ROWGROUP("rowgroup"),
+        GRIDCELL("gridcell"),
+        COLUMNHEADER("columnheader");
+
+        private final String roleName;
+
+
+        AriaGridRoles(String roleName) {
+            this.roleName = roleName;
+        }
+
+        /**
+         * Returns the roleName used within the role attribute
+         * of rows and cells.
+         *
+         * @return String roleName to be used as role attribute
+         */
+        public String getRoleName() {
+            return roleName;
         }
     }
 
@@ -1237,7 +1262,7 @@ public class Escalator extends Widget
 
         public AbstractRowContainer(final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
-            ariaGridHelper.updateRole(root, AriaGridHelper.GRID_ROLE_ROWGROUP);
+            ariaGridHelper.updateRole(root, AriaGridRoles.ROWGROUP);
         }
 
         @Override
@@ -1261,29 +1286,29 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a cell in a row.
          * <p>
-         * Usually {@link AriaGridHelper#GRID_ROLE_CELL} except for a cell in
+         * Usually {@link AriaGridRoles#GRIDCELL} except for a cell in
          * the header.
          *
          * @return the role attribute for the element to represent cells
          *
-         * @since 8.2
+         * @since
          */
-        protected String getCellElementRole() {
-            return AriaGridHelper.GRID_ROLE_CELL;
+        protected AriaGridRoles getCellElementRole() {
+            return AriaGridRoles.GRIDCELL;
         }
 
         /**
          * Gets the role attribute of an element to represent a row in a grid.
          * <p>
-         * Usually {@link AriaGridHelper#GRID_ROLE_ROW} except for a row in
+         * Usually {@link AriaGridRoles#ROW} except for a row in
          * the header.
          *
          * @return the role attribute for the element to represent rows
          *
-         * @since 8.2
+         * @since
          */
-        protected String getRowElementRole() {
-            return AriaGridHelper.GRID_ROLE_ROW;
+        protected AriaGridRoles getRowElementRole() {
+            return AriaGridRoles.ROW;
         }
 
         @Override
@@ -2470,13 +2495,13 @@ public class Escalator extends Widget
         }
 
         @Override
-        protected String getRowElementRole() {
-            return AriaGridHelper.GRID_ROLE_ROWHEADER;
+        protected AriaGridRoles getRowElementRole() {
+            return AriaGridRoles.ROWHEADER;
         }
 
         @Override
-        protected String getCellElementRole() {
-            return AriaGridHelper.GRID_ROLE_COLUMNHEADER;
+        protected AriaGridRoles getCellElementRole() {
+            return AriaGridRoles.COLUMNHEADER;
         }
 
         @Override
