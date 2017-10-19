@@ -68,11 +68,11 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
 
         dataFieldButton.click();
 
+        waitUntil(
+                driver -> isElementPresent(By.className("v-datefield-popup")));
+
         assertFalse("Unexpected disabled element found",
                 isElementPresent(By.className("v-disabled")));
-
-        assertTrue("Date popup is not opened after click to its button",
-                isElementPresent(By.className("v-datefield-popup")));
     }
 
 }
