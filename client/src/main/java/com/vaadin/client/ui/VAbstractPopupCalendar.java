@@ -22,8 +22,6 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -65,7 +63,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
-        implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+        implements Field, Orphanable, CloseHandler<PopupPanel>, SubPartAware {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
@@ -80,6 +78,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     public boolean parsable = true;
 
     private boolean open;
+
+    private boolean willBeOrphan;
+    private boolean calendarToggleWhenOrphaned;
 
     /*
      * #14857: If calendarToggle button is clicked when calendar popup is
@@ -104,7 +105,13 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         super(resolution);
 
         calendarToggle.setText("");
-        calendarToggle.addClickHandler(this);
+        calendarToggle.addClickHandler(e -> {
+            if (willBeOrphan) {
+                calendarToggleWhenOrphaned = true;
+            } else {
+                doCalendarToggle();
+            }
+        });
 
         calendarToggle.addDomHandler(new MouseOverHandler() {
             @Override
@@ -220,8 +227,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /**
      * Changes the current date, and updates the
      * {@link VDateField#bufferedResolutions}, possibly
-     * {@link VDateField#sendBufferedValues()} to the server if needed
-     * 
+     * {@link VDateField#sendBufferedValues()} to the server if needed.
+     *
      * @param newDate
      *            the new {@code Date} to update
      */
@@ -412,16 +419,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt.event
-     * .dom.client.ClickEvent)
-     */
-    @Override
-    public void onClick(ClickEvent event) {
-        if (event.getSource() == calendarToggle && isEnabled()) {
+    private void doCalendarToggle() {
+        if (isEnabled()) {
             if (open) {
                 closeCalendarPanel();
             } else if (!preventOpenPopupCalendar) {
@@ -735,4 +734,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @Override
+    public void beforeOrphaned() {
+        willBeOrphan = true;
+    }
+
+    @Override
+    public void afterAdoption() {
+        willBeOrphan = false;
+        if (calendarToggleWhenOrphaned) {
+            doCalendarToggle();
+        }
+    }
 }
