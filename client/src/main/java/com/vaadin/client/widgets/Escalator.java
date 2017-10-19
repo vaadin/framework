@@ -1532,8 +1532,6 @@ public class Escalator extends Widget
                             .getColumnWidthActual(col);
                     final TableCellElement cellElem = createCellElement(colWidth);
                     tr.appendChild(cellElem);
-                    ariaGridHelper.updateRole(cellElem, getCellElementRole());
-
                     // Set stylename and position if new cell is frozen
                     if (col < columnConfiguration.frozenColumns) {
                         cellElem.addClassName("frozen");
@@ -1681,6 +1679,7 @@ public class Escalator extends Widget
                 cellElem.getStyle().setWidth(width, Unit.PX);
             }
             cellElem.addClassName(getStylePrimaryName() + "-cell");
+            ariaGridHelper.updateRole(cellElem, getCellElementRole());
             return cellElem;
         }
 
