@@ -1004,9 +1004,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return false;
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         private static int compareComparables(Object a, Object b) {
-            return ((Comparator<Object>) Comparator
+            return ((Comparator) Comparator
                     .nullsLast(Comparator.naturalOrder())).compare(a, b);
         }
 
