@@ -1132,6 +1132,7 @@ public class Escalator extends Widget
      *
      * <ul>
      *     <li>aria-rowcount (since 8.2)</li>
+     *     <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
      * </ul>
      *
      * @since 8.2
@@ -1191,7 +1192,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Sets the role attribute {@code roleName} to the given element.
+         * Sets the {@code role} attribute to the given element.
          *
          * @param element     element that should get the role attribute
          * @param role        role to be added
@@ -1199,7 +1200,7 @@ public class Escalator extends Widget
          * @since
          */
         public void updateRole(final Element element, AriaGridRole role) {
-            element.setAttribute("role", role.getRoleName());
+            element.setAttribute("role", role.getName());
         }
     }
 
@@ -1208,7 +1209,7 @@ public class Escalator extends Widget
      *
      * @since
      */
-    private enum AriaGridRole {
+    public enum AriaGridRole {
 
         ROW("row"),
         ROWHEADER("rowheader"),
@@ -1216,21 +1217,20 @@ public class Escalator extends Widget
         GRIDCELL("gridcell"),
         COLUMNHEADER("columnheader");
 
-        private final String roleName;
+        private final String name;
 
 
-        AriaGridRole(String roleName) {
-            this.roleName = roleName;
+        AriaGridRole(String name) {
+            this.name = name;
         }
 
         /**
-         * Returns the roleName used within the role attribute
-         * of rows and cells.
+         * Return the name of the {@link AriaGridRole}.
          *
-         * @return String roleName to be used as role attribute
+         * @return String name to be used as role attribute
          */
-        public String getRoleName() {
-            return roleName;
+        public String getName() {
+            return name;
         }
     }
 
