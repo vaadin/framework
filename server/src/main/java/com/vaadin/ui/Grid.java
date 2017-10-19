@@ -403,12 +403,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * grid.addContextClickListener(event -&gt; Notification.show(
      *         ((GridContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
      * </pre>
-     * 
+     *
      * @param <T>
      *            the grid bean type
      */
@@ -836,9 +836,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = getId();
             if (id == null) {
                 return Stream.empty();
-            } else {
-                return Stream.of(new QuerySortOrder(id, direction));
             }
+            return Stream.of(new QuerySortOrder(id, direction));
         };
 
         private SerializableComparator<T> comparator;
@@ -977,10 +976,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private static int compareMaybeComparables(Object a, Object b) {
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
-            } else {
-                return compareComparables(Objects.toString(a, ""),
-                        Objects.toString(b, ""));
             }
+            return compareComparables(Objects.toString(a, ""),
+                    Objects.toString(b, ""));
         }
 
         private static boolean hasCommonComparableBaseType(Object a, Object b) {
@@ -1008,7 +1006,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         @SuppressWarnings("unchecked")
         private static int compareComparables(Object a, Object b) {
-            return ((Comparator) Comparator
+            return ((Comparator<Object>) Comparator
                     .nullsLast(Comparator.naturalOrder())).compare(a, b);
         }
 
@@ -1020,20 +1018,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (valueA instanceof Comparable
                     && valueA.getClass().isInstance(valueB)) {
                 return ((Comparable<Number>) valueA).compareTo(valueB);
-            } else if (valueA.equals(valueB)) {
-                return 0;
-            } else {
-                // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(valueA.longValue(),
-                        valueB.longValue());
-                if (compare == 0) {
-                    // This might still produce 0 even though the values are not
-                    // equals, but there's nothing more we can do about that
-                    compare = Double.compare(valueA.doubleValue(),
-                            valueB.doubleValue());
-                }
-                return compare;
             }
+            if (valueA.equals(valueB)) {
+                return 0;
+            }
+            // Fall back to comparing based on potentially truncated values
+            int compare = Long.compare(valueA.longValue(), valueB.longValue());
+            if (compare == 0) {
+                // This might still produce 0 even though the values are not
+                // equals, but there's nothing more we can do about that
+                compare = Double.compare(valueA.doubleValue(),
+                        valueB.doubleValue());
+            }
+            return compare;
         }
 
         @SuppressWarnings("unchecked")
@@ -2721,6 +2718,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param column
      *            the column to remove
+     *
+     * @throws IllegalArgumentException
+     *             if the column is not a valid one
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
@@ -2738,6 +2738,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (displayIndex < getFrozenColumnCount()) {
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
+        } else {
+            throw new IllegalStateException("Invalid column");
         }
     }
 
@@ -2935,10 +2937,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (rows <= 0.0d) {
             throw new IllegalArgumentException(
                     "More than zero rows must be shown.");
-        } else if (Double.isInfinite(rows)) {
+        }
+        if (Double.isInfinite(rows)) {
             throw new IllegalArgumentException(
                     "Grid doesn't support infinite heights");
-        } else if (Double.isNaN(rows)) {
+        }
+        if (Double.isNaN(rows)) {
             throw new IllegalArgumentException("NaN is not a valid row count");
         }
         getState().heightMode = HeightMode.ROW;
@@ -3018,7 +3022,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Note that all header, body and footer rows get the same height if
      * explicitly set. In automatic mode, each section is calculated separately
      * based on an empty row of that type.
-     * 
+     *
      * @see #setBodyRowHeight(double)
      * @see #setHeaderRowHeight(double)
      * @see #setFooterRowHeight(double)
@@ -3036,7 +3040,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the height of a body row. If -1 (default), the row height is
      * calculated based on the theme for an empty row before the Grid is
      * displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      * @since 8.2
@@ -3293,10 +3297,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Header in this Grid.
-     * 
+     *
      * @param headerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setHeaderVisible(boolean headerVisible) {
@@ -3305,9 +3309,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Header in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isHeaderVisible() {
@@ -3466,10 +3470,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Footer in this Grid.
-     * 
+     *
      * @param footerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setFooterVisible(boolean footerVisible) {
@@ -3478,9 +3482,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Footer in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isFooterVisible() {
@@ -3763,7 +3767,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         } else {
             addExtension(selectionModel);
         }
-
     }
 
     /**
@@ -4269,7 +4272,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         SelectionMode selectionMode = getSelectionMode();
         if (SelectionMode.SINGLE.equals(selectionMode)) {
             return asSingleSelect().isReadOnly();
-        } else if (SelectionMode.MULTI.equals(selectionMode)) {
+        }
+        if (SelectionMode.MULTI.equals(selectionMode)) {
             return asMultiSelect().isReadOnly();
         }
         return false;

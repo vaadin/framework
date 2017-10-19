@@ -76,9 +76,9 @@ public class GridTest {
 
     @Test
     public void testCreateGridWithDataCommunicator() {
-        DataCommunicator specificDataCommunicator = new DataCommunicator<>();
+        DataCommunicator<String> specificDataCommunicator = new DataCommunicator<>();
 
-        TestGrid<String> grid = new TestGrid(String.class,
+        TestGrid<String> grid = new TestGrid<>(String.class,
                 specificDataCommunicator);
 
         assertEquals(specificDataCommunicator, grid.getDataCommunicator());
@@ -652,9 +652,8 @@ public class GridTest {
     }
 
     private static Method findDataGeneratorGetterMethod() {
-        Method getter;
         try {
-            getter = Column.class.getDeclaredMethod("getDataGenerator",
+            Method getter = Column.class.getDeclaredMethod("getDataGenerator",
                     new Class<?>[] {});
             getter.setAccessible(true);
             return getter;
@@ -662,5 +661,13 @@ public class GridTest {
             throw new AssertionFailedError(
                     "Cannot get DataGenerator from Column");
         }
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void removeColumnToThrowForInvalidColumn() {
+        Grid<Person> grid1 = new Grid<>();
+        Grid<Person> grid2 = new Grid<>();
+        Column<Person, ?> column1 = grid1.addColumn(ValueProvider.identity());
+        grid2.removeColumn(column1);
     }
 }
