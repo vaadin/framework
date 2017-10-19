@@ -1194,12 +1194,12 @@ public class Escalator extends Widget
          * Sets the role attribute {@code roleName} to the given element.
          *
          * @param element     element that should get the role attribute
-         * @param roleName    roleName to be added
+         * @param role        role to be added
          *
          * @since
          */
-        public void updateRole(final Element element, AriaGridRoles roleName) {
-            element.setAttribute("role", roleName.getRoleName());
+        public void updateRole(final Element element, AriaGridRole role) {
+            element.setAttribute("role", role.getRoleName());
         }
     }
 
@@ -1208,7 +1208,7 @@ public class Escalator extends Widget
      *
      * @since
      */
-    private enum AriaGridRoles {
+    private enum AriaGridRole {
 
         ROW("row"),
         ROWHEADER("rowheader"),
@@ -1219,7 +1219,7 @@ public class Escalator extends Widget
         private final String roleName;
 
 
-        AriaGridRoles(String roleName) {
+        AriaGridRole(String roleName) {
             this.roleName = roleName;
         }
 
@@ -1262,7 +1262,7 @@ public class Escalator extends Widget
 
         public AbstractRowContainer(final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
-            ariaGridHelper.updateRole(root, AriaGridRoles.ROWGROUP);
+            ariaGridHelper.updateRole(root, AriaGridRole.ROWGROUP);
         }
 
         @Override
@@ -1286,29 +1286,29 @@ public class Escalator extends Widget
         /**
          * Gets the role attribute of an element to represent a cell in a row.
          * <p>
-         * Usually {@link AriaGridRoles#GRIDCELL} except for a cell in
+         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in
          * the header.
          *
          * @return the role attribute for the element to represent cells
          *
          * @since
          */
-        protected AriaGridRoles getCellElementRole() {
-            return AriaGridRoles.GRIDCELL;
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.GRIDCELL;
         }
 
         /**
          * Gets the role attribute of an element to represent a row in a grid.
          * <p>
-         * Usually {@link AriaGridRoles#ROW} except for a row in
+         * Usually {@link AriaGridRole#ROW} except for a row in
          * the header.
          *
          * @return the role attribute for the element to represent rows
          *
          * @since
          */
-        protected AriaGridRoles getRowElementRole() {
-            return AriaGridRoles.ROW;
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROW;
         }
 
         @Override
@@ -2495,13 +2495,13 @@ public class Escalator extends Widget
         }
 
         @Override
-        protected AriaGridRoles getRowElementRole() {
-            return AriaGridRoles.ROWHEADER;
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROWHEADER;
         }
 
         @Override
-        protected AriaGridRoles getCellElementRole() {
-            return AriaGridRoles.COLUMNHEADER;
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.COLUMNHEADER;
         }
 
         @Override
