@@ -23,7 +23,7 @@ import com.vaadin.ui.Component;
 
 /**
  *
- * A criterion that ensures the drag source is the same as drop target. Eg.
+ * A criterion that ensures the drag source is the same as drop target. E.g.
  * {code Tree} or {@code Table} could support only re-ordering of items, but no
  * {@link Transferable}s coming outside.
  * <p>
