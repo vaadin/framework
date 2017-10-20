@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -66,13 +67,13 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * A temporary holder of the time units (resolutions), which would be sent
      * to the server through {@link #sendBufferedValues()}.
      * 
-     * The key is the resolution name e.g. "HOUR", "MINUTE".
+     * The key is the resolution.
      * 
      * The value can be {@code null}.
      * 
      * @since
      */
-    protected Map<String, Integer> bufferedResolutions = new HashMap<>();
+    protected Map<R, Integer> bufferedResolutions = new HashMap<>();
 
     /**
      * A temporary holder of the date string, which would be sent to the server
@@ -81,14 +82,6 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * @since
      */
     protected String bufferedDateString;
-
-    /**
-     * A temporary holder of whether the date string was invalid or not, which
-     * would be sent to the server through {@link #sendBufferedValues()}.
-     * 
-     * @since
-     */
-    protected boolean bufferedInvalidDateString;
 
     /**
      * The date that is displayed the date field before a value is selected. If
@@ -269,16 +262,16 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     /**
-     * Sends the {@link #bufferedDateString}, {@link #bufferedInvalidDateString}
-     * and {@link #bufferedResolutions} to the server, and clears their values.
+     * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
+     * the server, and clears their values.
      * 
      * @since
      */
     public void sendBufferedValues() {
-        rpc.update(bufferedDateString, bufferedInvalidDateString,
-                new HashMap<>(bufferedResolutions));
+        rpc.update(bufferedDateString,
+                bufferedResolutions.entrySet().stream().collect(Collectors
+                        .toMap(e -> e.getKey().name(), e -> e.getValue())));
         bufferedDateString = null;
-        bufferedInvalidDateString = false;
         bufferedResolutions.clear();
     }
 
