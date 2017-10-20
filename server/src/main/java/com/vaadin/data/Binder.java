@@ -603,6 +603,7 @@ public class Binder<BEAN> implements Serializable {
          * field's value is not equal to what {@link HasValue#getEmptyValue()}
          * returns</li>
          * </ol>
+         * <p>
          * For localizing the error message, use
          * {@link #asRequired(ErrorMessageProvider)}.
          *
@@ -626,11 +627,13 @@ public class Binder<BEAN> implements Serializable {
          * field's value is not equal to what {@link HasValue#getEmptyValue()}
          * returns</li>
          * </ol>
+         * <p>
          * For setting an error message, use {@link #asRequired(String)}.
          * <p>
          * For localizing the error message, use
          * {@link #asRequired(ErrorMessageProvider)}.
          *
+         * @see #asRequired(String)
          * @see #asRequired(ErrorMessageProvider)
          * @see HasValue#setRequiredIndicatorVisible(boolean)
          * @see HasValue#isEmpty()
