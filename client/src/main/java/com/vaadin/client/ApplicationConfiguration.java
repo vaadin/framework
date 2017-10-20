@@ -31,7 +31,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -465,21 +464,15 @@ public class ApplicationConfiguration implements EntryPoint {
      *            element into which the application should be rendered.
      */
     public static void startApplication(final String applicationId) {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        Scheduler.get().scheduleDeferred(() -> {
+            Profiler.enter("ApplicationConfiguration.startApplication");
+            ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
+            ApplicationConnection a = GWT.create(ApplicationConnection.class);
+            a.init(widgetSet, appConf);
+            runningApplications.add(a);
+            Profiler.leave("ApplicationConfiguration.startApplication");
 
-            @Override
-            public void execute() {
-                Profiler.enter("ApplicationConfiguration.startApplication");
-                ApplicationConfiguration appConf = getConfigFromDOM(
-                        applicationId);
-                ApplicationConnection a = GWT
-                        .create(ApplicationConnection.class);
-                a.init(widgetSet, appConf);
-                runningApplications.add(a);
-                Profiler.leave("ApplicationConfiguration.startApplication");
-
-                a.start();
-            }
+            a.start();
         });
     }
 
@@ -874,11 +867,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     private static native boolean isDebugAvailable()
     /*-{
-        if($wnd.vaadin.debug) {
-            return true;
-        } else {
-            return false;
-        }
+        return $wnd.vaadin.debug;
     }-*/;
 
     /**

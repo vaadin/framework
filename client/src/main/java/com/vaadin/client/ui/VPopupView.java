@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -193,7 +192,7 @@ public class VPopupView extends HTML
 
     private static native void nativeBlur(Element e)
     /*-{
-        if(e && e.blur) {
+        if (e && e.blur) {
             e.blur();
         }
     }-*/;
@@ -326,16 +325,13 @@ public class VPopupView extends HTML
              * could be no shortcutActionHandler set yet. So let's postpone
              * search of shortcutActionHandler.
              */
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    try {
-                        if (shortcutActionHandler == null) {
-                            shortcutActionHandler = findShortcutActionHandler();
-                        }
-                    } finally {
-                        popupShowInProgress = false;
+            Scheduler.get().scheduleDeferred(() -> {
+                try {
+                    if (shortcutActionHandler == null) {
+                        shortcutActionHandler = findShortcutActionHandler();
                     }
+                } finally {
+                    popupShowInProgress = false;
                 }
             });
         }

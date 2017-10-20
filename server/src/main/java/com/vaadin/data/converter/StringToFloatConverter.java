@@ -70,9 +70,8 @@ public class StringToFloatConverter
         return n.map(number -> {
             if (number == null) {
                 return null;
-            } else {
-                return number.floatValue();
             }
+            return number.floatValue();
         });
     }
 

@@ -278,9 +278,8 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                 WidgetUtil.getRelativeX(draggedElement, dragStartEvent)
                         - transformXOffset,
                 WidgetUtil.getRelativeY(draggedElement, dragStartEvent));
-        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-            clonedElement.removeFromParent();
-        }, clonedElement);
+        AnimationScheduler.get().requestAnimationFrame(
+                timestamp -> clonedElement.removeFromParent(), clonedElement);
     }
 
     /**
@@ -394,9 +393,11 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
             return;
         }
         style.clearProperty("transform");
-        AnimationScheduler.get().requestAnimationFrame(timestamp -> {
-            draggedElement.getStyle().setProperty("transform", transition);
-        }, draggedElement);
+        AnimationScheduler.get()
+                .requestAnimationFrame(
+                        timestamp -> draggedElement.getStyle()
+                                .setProperty("transform", transition),
+                        draggedElement);
     }
 
     /**

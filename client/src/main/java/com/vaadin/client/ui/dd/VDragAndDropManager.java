@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -495,18 +494,13 @@ public class VDragAndDropManager {
                             .getTransferable().getDragSource();
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
-                    Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
-                        @Override
-                        public boolean execute() {
-                            if (!client.getMessageSender().hasActiveRequest()) {
-                                removeActiveDragSourceStyleName(dragSource);
-                                return false;
-                            }
-                            return true;
+                    Scheduler.get().scheduleFixedDelay(() -> {
+                        if (!client.getMessageSender().hasActiveRequest()) {
+                            removeActiveDragSourceStyleName(dragSource);
+                            return false;
                         }
-
+                        return true;
                     }, 30);
-
                 }
             } else {
                 currentDropHandler.dragLeave(currentDrag);

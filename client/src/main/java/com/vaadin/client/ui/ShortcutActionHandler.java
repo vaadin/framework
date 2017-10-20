@@ -150,14 +150,14 @@ public class ShortcutActionHandler {
 
     private static native void blur(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.blur();
        }
     }-*/;
 
     private static native void focus(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.focus();
        }
     }-*/;

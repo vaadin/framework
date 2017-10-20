@@ -246,7 +246,7 @@ public class JavaScriptRendererConnector
             /*-{
                 var rawEvents = wrapper.getConsumedEvents();
                 var events = [];
-                for(var i = 0; i < rawEvents.length; i++) {
+                for (var i = 0; i < rawEvents.length; i++) {
                   events[i] = ""+rawEvents[i];
                 }
                 return events;

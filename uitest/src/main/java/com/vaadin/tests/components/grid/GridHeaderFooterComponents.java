@@ -115,10 +115,9 @@ public class GridHeaderFooterComponents extends AbstractTestUIWithLog {
         TextField filterField = new TextField();
         filterField.setWidth("8em");
         filterField.setValue("Filter: " + pid);
-        filterField.addValueChangeListener(listener -> {
-            log("value change for field in " + pid + " to "
-                    + listener.getValue());
-        });
+        filterField.addValueChangeListener(
+                listener -> log("value change for field in " + pid + " to "
+                        + listener.getValue()));
         return filterField;
     }
 
