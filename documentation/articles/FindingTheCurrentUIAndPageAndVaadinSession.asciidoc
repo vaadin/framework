@@ -52,7 +52,7 @@ resize listener can be added like this:
 
 [source,java]
 ....
-javaPage.getCurrent().addBrowserWindowResizeListener(
+Page.getCurrent().addBrowserWindowResizeListener(
   new Page.BrowserWindowResizeListener() {
     @Override
     public void browserWindowResized(BrowserWindowResizeEvent event) {
