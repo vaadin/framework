@@ -1125,10 +1125,8 @@ public class Escalator extends Widget
 
         /**
          * The table section element ({@code <thead>}, {@code <tbody>} or
-         * {@code <tfoot>}) the rows (i.e. {@code
-         *
-        <tr>
-         * } tags) are contained in.
+         * {@code <tfoot>}) the rows (i.e. <code>&lt;tr&gt;</code> tags) are
+         * contained in.
          */
         protected final TableSectionElement root;
 

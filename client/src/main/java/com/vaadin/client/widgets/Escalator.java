@@ -1198,10 +1198,8 @@ public class Escalator extends Widget
 
         /**
          * The table section element ({@code <thead>}, {@code <tbody>} or
-         * {@code <tfoot>}) the rows (i.e. {@code
-         *
-        <tr>
-         * } tags) are contained in.
+         * {@code <tfoot>}) the rows (i.e. <code>&lt;tr&gt;</code> tags) are
+         * contained in.
          */
         protected final TableSectionElement root;
 
@@ -6843,7 +6841,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Returns the {@code <table />} element of the grid.
+     * Returns the <code>&lt;table&gt;</code> element of the grid.
      *
      * @return the table element
      * @since 8.2
