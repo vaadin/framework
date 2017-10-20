@@ -48,52 +48,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;<<<<<<< typos
-189
- 
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-190
- 
-                    @Override
-191
- 
-                    public void execute() {
-192
- 
-                        // Only notify user if we're still running and not e.g.
-193
- 
-                        // navigating away (#12298)
-194
- 
-                        if (getConnection().isApplicationRunning()) {
-195
- 
-                            if (sessionExpired) {
-196
- 
-                                getConnection().showSessionExpiredError(null);
-197
- 
-                            } else {
-198
- 
-                                getState().enabled = false;
-199
- 
-                                updateEnabledState(getState().enabled);
-200
- 
-                            }
-201
- 
-                            getConnection().setApplicationRunning(false);
-202
- 
-=======
-203
- 
-
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
