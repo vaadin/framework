@@ -602,7 +602,6 @@ public class DateTimeService {
         }
 
         return date;
-
     }
 
     private static Logger getLogger() {

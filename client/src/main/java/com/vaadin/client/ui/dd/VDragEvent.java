@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Document;
@@ -257,7 +258,7 @@ public class VDragEvent {
 
         syncContent(element, cloneNode);
         if (BrowserInfo.get().isIE()) {
-            if (cloneNode.getTagName().toLowerCase().equals("tr")) {
+            if (cloneNode.getTagName().toLowerCase(Locale.ROOT).equals("tr")) {
                 TableElement table = Document.get().createTableElement();
                 TableSectionElement tbody = Document.get().createTBodyElement();
                 table.appendChild(tbody);

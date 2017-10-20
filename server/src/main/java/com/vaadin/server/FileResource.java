@@ -124,8 +124,8 @@ public class FileResource implements ConnectorResource {
     /**
      * Sets the length of cache expiration time. This gives the adapter the
      * possibility cache streams sent to the client. The caching may be made in
-     * adapter or at the client if the client supports caching. Zero or negavive
-     * value disbales the caching of this stream.
+     * adapter or at the client if the client supports caching. Zero or negative
+     * value disables the caching of this stream.
      *
      * @param cacheTime
      *            the cache time in milliseconds.

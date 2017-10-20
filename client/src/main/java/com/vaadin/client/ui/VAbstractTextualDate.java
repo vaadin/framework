@@ -121,16 +121,15 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     protected String createFormatString() {
         if (isYear(getCurrentResolution())) {
             return "yyyy"; // force full year
-        } else {
-            try {
-                String frmString = LocaleService.getDateFormat(currentLocale);
-                return cleanFormat(frmString);
-            } catch (LocaleNotLoadedException e) {
-                // TODO should die instead? Can the component survive
-                // without format string?
-                VConsole.error(e);
-                return null;
-            }
+        }
+        try {
+            String frmString = LocaleService.getDateFormat(currentLocale);
+            return cleanFormat(frmString);
+        } catch (LocaleNotLoadedException e) {
+            // TODO should die instead? Can the component survive
+            // without format string?
+            VConsole.error(e);
+            return null;
         }
     }
 
@@ -203,7 +202,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
     /**
      * Sets the time zone for the field.
-     * 
+     *
      * @param timeZone
      *            the new time zone to use
      * @since 8.2
@@ -243,8 +242,6 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 VConsole.log(e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
-                // this is a hack that may eventually be removed
-                bufferedInvalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -255,28 +252,40 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
         // always send the date string
         bufferedDateString = text.getText();
-        updateDateVariables();
+        updateAndSendBufferedValues();
     }
 
     /**
-     * Updates variables to send a response to the server.
+     * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
+     * then {@link #sendBufferedValues() sends} the values to the server.
+     *
+     * @since
+     */
+    protected final void updateAndSendBufferedValues() {
+        updateBufferedResolutions();
+        sendBufferedValues();
+    }
+
+    /**
+     * Updates {@link VDateField#bufferedResolutions bufferedResolutions} before
+     * sending a response to the server.
      * <p>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
-     * 
+     *
+     * <p>
+     * Note that this method should not send the buffered values, but use
+     * {@link #updateAndSendBufferedValues()} instead
+     *
      * @since
      */
-    protected void updateDateVariables() {
-        // Update variables
-        // (only the smallest defining resolution needs to be
-        // immediate)
+    protected void updateBufferedResolutions() {
         Date currentDate = getDate();
-        bufferedResolutions.put(
-                getResolutions().filter(this::isYear).findFirst().get().name(),
-                currentDate != null ? currentDate.getYear() + 1900 : null);
-        if (isYear(getCurrentResolution())) {
-            sendBufferedValues();
+        if (currentDate != null) {
+            bufferedResolutions.put(
+                    getResolutions().filter(this::isYear).findFirst().get(),
+                    currentDate.getYear() + 1900);
         }
     }
 
@@ -432,13 +441,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @since 8.1
      */
     public void setISODate(String isoDate) {
-        if (isoDate == null) {
-            setDate(null);
-        } else {
-            Date date = getIsoFormatter().parse(isoDate);
-            setDate(date);
+        Date date = null;
+        if (isoDate != null) {
+            date = getIsoFormatter().parse(isoDate);
         }
-        updateDateVariables();
+        setDate(date);
+        updateAndSendBufferedValues();
     }
 
     /**
@@ -454,16 +462,14 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         Date date = getDate();
         if (date == null) {
             return null;
-        } else {
-            return getIsoFormatter().format(date);
         }
+        return getIsoFormatter().format(date);
     }
 
     private DateTimeFormat getIsoFormatter() {
         if (supportsTime()) {
             return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
-        } else {
-            return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
         }
+        return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
     }
 }

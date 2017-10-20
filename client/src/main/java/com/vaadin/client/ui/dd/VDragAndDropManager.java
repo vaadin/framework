@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.Locale;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -319,7 +321,7 @@ public class VDragAndDropManager {
                                 NativePreviewEvent event) {
                             int typeInt = event.getTypeInt();
                             if (typeInt == -1 && event.getNativeEvent()
-                                    .getType().toLowerCase()
+                                    .getType().toLowerCase(Locale.ROOT)
                                     .contains("pointer")) {
                                 /*
                                  * Ignore PointerEvents since IE10 and IE11 send

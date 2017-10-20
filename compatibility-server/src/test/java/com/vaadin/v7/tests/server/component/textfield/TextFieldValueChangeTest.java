@@ -53,7 +53,7 @@ public class TextFieldValueChangeTest
      * but don't fire value change events twice if value has only changed once.
      *
      *
-     * TODO make test field type agnostic (eg. combobox)
+     * TODO make test field type agnostic (e.g. combobox)
      */
     @Test
     public void testValueChangeEventPropagationWithReadThrough() {
@@ -87,7 +87,7 @@ public class TextFieldValueChangeTest
      * Value change events from property should not propagate if read through is
      * false. Execpt when the property is being set.
      *
-     * TODO make test field type agnostic (eg. combobox)
+     * TODO make test field type agnostic (e.g. combobox)
      */
     @Test
     public void testValueChangePropagationWithReadThroughOff() {

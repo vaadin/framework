@@ -16,6 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.shared.Registration;
@@ -30,7 +31,7 @@ import com.vaadin.ui.TreeGrid;
  * counterpart of GridDropTargetExtensionConnector.
  *
  * @param <T>
- *         Type of the TreeGrid bean.
+ *            Type of the TreeGrid bean.
  * @author Vaadin Ltd
  * @since 8.1
  */
@@ -41,22 +42,22 @@ public class TreeGridDropTarget<T> extends GridDropTarget<T> {
      * drop.
      *
      * @param target
-     *         TreeGrid to be extended.
+     *            TreeGrid to be extended.
      * @param dropMode
-     *         Drop mode that describes the allowed drop locations within the
-     *         TreeGrid's row.
+     *            Drop mode that describes the allowed drop locations within the
+     *            TreeGrid's row.
      */
     public TreeGridDropTarget(TreeGrid<T> target, DropMode dropMode) {
         super(target, dropMode);
     }
 
     /**
-     * Attaches drop listener for the current drop target. {@link
-     * TreeGridDropListener#drop(TreeGridDropEvent)} is called when drop event
-     * happens on the client side.
+     * Attaches drop listener for the current drop target.
+     * {@link TreeGridDropListener#drop(TreeGridDropEvent)} is called when drop
+     * event happens on the client side.
      *
      * @param listener
-     *         Listener to handle drop event.
+     *            Listener to handle drop event.
      * @return Handle to be used to remove this listener.
      */
     public Registration addTreeGridDropListener(
@@ -79,7 +80,7 @@ public class TreeGridDropTarget<T> extends GridDropTarget<T> {
 
             TreeGridDropEvent<T> event = new TreeGridDropEvent<>(getParent(),
                     dataPreserveOrder,
-                    DropEffect.valueOf(dropEffect.toUpperCase()),
+                    DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)),
                     getUI().getActiveDragSource(), dropTargetRow, dropLocation,
                     mouseEventDetails, depth, collapsed);
 

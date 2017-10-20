@@ -83,7 +83,7 @@ public class ComputedStyle {
         if (cs.getPropertyValue) {
 
             // Convert name to dashed format
-            name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+            name = name.replace(/([A-Z])/g, "-$1").toLowerCase('en');
             var ret = cs.getPropertyValue(name);
 
         } else {
@@ -263,7 +263,7 @@ public class ComputedStyle {
      *
      * @param String
      *            a value starting with a number
-     * @return int the value from the string before any non-numeric characters.
+     * @return the value from the string before any non-numeric characters.
      *         If the value cannot be parsed to a number, returns 0.
      */
     private static native int parseIntNative(final String value)

@@ -54,7 +54,7 @@ public class PropertyValueChange extends TestBase {
             l.setValue(String.valueOf(getMultipliedValue(integer)));
 
             // we must hook value change listener to ensure updates in all use
-            // cases (eg. edit mode)
+            // cases (e.g. edit mode)
             if (integer instanceof Property.ValueChangeNotifier) {
                 Property.ValueChangeNotifier notifier = (Property.ValueChangeNotifier) integer;
                 notifier.addListener(new ValueChangeListener() {

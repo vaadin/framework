@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.Locale;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -174,7 +176,7 @@ public class DragAndDropHandler {
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
                         final int typeInt = event.getTypeInt();
                         if (typeInt == -1 && event.getNativeEvent().getType()
-                                .toLowerCase().contains("pointer")) {
+                                .toLowerCase(Locale.ROOT).contains("pointer")) {
                             /*
                              * Ignore PointerEvents since IE10 and IE11 send
                              * also MouseEvents for backwards compatibility.

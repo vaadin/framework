@@ -18,6 +18,7 @@ package com.vaadin.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -1427,7 +1428,7 @@ public class WidgetUtil {
     /**
      * Wrap a css size value and its unit and translate back and forth to the
      * string representation.<br/>
-     * Eg. 50%, 123px, ...
+     * E.g. 50%, 123px, ...
      *
      * @since 7.2.6
      * @author Vaadin Ltd
@@ -1866,6 +1867,19 @@ public class WidgetUtil {
     }
 
     /**
+     * Returns whether the given object is a string.
+     *
+     * @param obj
+     *            the object of which the type is examined
+     * @return {@code true} if the object is a string; {@code false} if not
+     * @since
+     */
+    public static native boolean isString(Object obj)
+    /*-{
+        return typeof obj === 'string' || obj instanceof String;
+    }-*/;
+
+    /**
      * Utility methods for displaying error message on components.
      *
      * @since 8.2
@@ -1888,7 +1902,7 @@ public class WidgetUtil {
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
                 String className = prefix + "-"
-                        + errorLevelValue.toString().toLowerCase();
+                        + errorLevelValue.toString().toLowerCase(Locale.ROOT);
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {

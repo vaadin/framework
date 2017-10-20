@@ -15,6 +15,13 @@
  */
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.DAY;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.HOUR;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.MINUTE;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.MONTH;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.SECOND;
+import static com.vaadin.shared.ui.datefield.DateTimeResolution.YEAR;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -36,8 +43,7 @@ public class VPopupTimeCalendar extends
         VAbstractPopupCalendar<VDateTimeCalendarPanel, DateTimeResolution> {
 
     public VPopupTimeCalendar() {
-        super(GWT.create(VDateTimeCalendarPanel.class),
-                DateTimeResolution.MINUTE);
+        super(GWT.create(VDateTimeCalendarPanel.class), MINUTE);
     }
 
     @Override
@@ -47,45 +53,43 @@ public class VPopupTimeCalendar extends
 
     @Override
     public String resolutionAsString() {
-        if (getCurrentResolution().compareTo(DateTimeResolution.DAY) >= 0) {
+        if (getCurrentResolution().compareTo(DAY) >= 0) {
             return getResolutionVariable(getCurrentResolution());
-        } else {
-            return "full";
         }
+        return "full";
     }
 
     @Override
     public void setCurrentResolution(DateTimeResolution resolution) {
-        super.setCurrentResolution(
-                resolution == null ? DateTimeResolution.MINUTE : resolution);
+        super.setCurrentResolution(resolution == null ? MINUTE : resolution);
     }
 
     public static Date makeDate(Map<DateTimeResolution, Integer> dateValues) {
-        if (dateValues.get(DateTimeResolution.YEAR) == null) {
+        if (dateValues.get(YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        Integer year = dateValues.get(DateTimeResolution.YEAR);
+        Integer year = dateValues.get(YEAR);
         if (year != null) {
             date.setYear(year - 1900);
         }
-        Integer month = dateValues.get(DateTimeResolution.MONTH);
+        Integer month = dateValues.get(MONTH);
         if (month != null) {
             date.setMonth(month - 1);
         }
-        Integer day = dateValues.get(DateTimeResolution.DAY);
+        Integer day = dateValues.get(DAY);
         if (day != null) {
             date.setDate(day);
         }
-        Integer hour = dateValues.get(DateTimeResolution.HOUR);
+        Integer hour = dateValues.get(HOUR);
         if (hour != null) {
             date.setHours(hour);
         }
-        Integer minute = dateValues.get(DateTimeResolution.MINUTE);
+        Integer minute = dateValues.get(MINUTE);
         if (minute != null) {
             date.setMinutes(minute);
         }
-        Integer second = dateValues.get(DateTimeResolution.SECOND);
+        Integer second = dateValues.get(SECOND);
         if (second != null) {
             date.setSeconds(second);
         }
@@ -94,7 +98,7 @@ public class VPopupTimeCalendar extends
 
     @Override
     public boolean isYear(DateTimeResolution resolution) {
-        return DateTimeResolution.YEAR.equals(resolution);
+        return YEAR.equals(resolution);
     }
 
     @Override
@@ -103,38 +107,27 @@ public class VPopupTimeCalendar extends
     }
 
     @Override
-    protected void updateDateVariables() {
-        super.updateDateVariables();
-        DateTimeResolution resolution = getCurrentResolution();
-        // (only the smallest defining resolution needs to be
-        // immediate)
+    protected void updateBufferedResolutions() {
+        super.updateBufferedResolutions();
         Date currentDate = getDate();
-        if (resolution.compareTo(DateTimeResolution.MONTH) <= 0) {
-            addBufferedResolution(DateTimeResolution.MONTH,
-                    currentDate != null ? currentDate.getMonth() + 1 : null);
+        if (currentDate != null) {
+            DateTimeResolution resolution = getCurrentResolution();
+            if (resolution.compareTo(MONTH) <= 0) {
+                bufferedResolutions.put(MONTH, currentDate.getMonth() + 1);
+            }
+            if (resolution.compareTo(DAY) <= 0) {
+                bufferedResolutions.put(DAY, currentDate.getDate());
+            }
+            if (resolution.compareTo(HOUR) <= 0) {
+                bufferedResolutions.put(HOUR, currentDate.getHours());
+            }
+            if (resolution.compareTo(MINUTE) <= 0) {
+                bufferedResolutions.put(MINUTE, currentDate.getMinutes());
+            }
+            if (resolution.compareTo(SECOND) <= 0) {
+                bufferedResolutions.put(SECOND, currentDate.getSeconds());
+            }
         }
-        if (resolution.compareTo(DateTimeResolution.DAY) <= 0) {
-            addBufferedResolution(DateTimeResolution.DAY,
-                    currentDate != null ? currentDate.getDate() : null);
-        }
-        if (resolution.compareTo(DateTimeResolution.HOUR) <= 0) {
-            addBufferedResolution(DateTimeResolution.HOUR,
-                    currentDate != null ? currentDate.getHours() : null);
-        }
-        if (resolution.compareTo(DateTimeResolution.MINUTE) <= 0) {
-            addBufferedResolution(DateTimeResolution.MINUTE,
-                    currentDate != null ? currentDate.getMinutes() : null);
-        }
-        if (resolution.compareTo(DateTimeResolution.SECOND) <= 0) {
-            addBufferedResolution(DateTimeResolution.SECOND,
-                    currentDate != null ? currentDate.getSeconds() : null);
-        }
-        sendBufferedValues();
-    }
-
-    private void addBufferedResolution(DateTimeResolution resolutionToAdd,
-            Integer value) {
-        bufferedResolutions.put(resolutionToAdd.name(), value);
     }
 
     @Override
@@ -144,16 +137,12 @@ public class VPopupTimeCalendar extends
         super.updateValue(newDate);
         DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
-            if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
-                bufferedResolutions.put(DateTimeResolution.HOUR.name(),
-                        newDate.getHours());
-                if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
-                    bufferedResolutions.put(DateTimeResolution.MINUTE.name(),
-                            newDate.getMinutes());
-                    if (resolution.compareTo(DateTimeResolution.MINUTE) < 0) {
-                        bufferedResolutions.put(
-                                DateTimeResolution.SECOND.name(),
-                                newDate.getSeconds());
+            if (resolution.compareTo(DAY) < 0) {
+                bufferedResolutions.put(HOUR, newDate.getHours());
+                if (resolution.compareTo(HOUR) < 0) {
+                    bufferedResolutions.put(MINUTE, newDate.getMinutes());
+                    if (resolution.compareTo(MINUTE) < 0) {
+                        bufferedResolutions.put(SECOND, newDate.getSeconds());
                     }
                 }
             }
@@ -164,50 +153,45 @@ public class VPopupTimeCalendar extends
     protected String createFormatString() {
         if (isYear(getCurrentResolution())) {
             return "yyyy"; // force full year
-        } else {
-
-            try {
-                String frmString = LocaleService.getDateFormat(currentLocale);
-                frmString = cleanFormat(frmString);
-                // String delim = LocaleService
-                // .getClockDelimiter(currentLocale);
-                if (getCurrentResolution()
-                        .compareTo(DateTimeResolution.HOUR) <= 0) {
-                    if (dts.isTwelveHourClock()) {
-                        frmString += " hh";
-                    } else {
-                        frmString += " HH";
-                    }
-                    if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.MINUTE) <= 0) {
-                        frmString += ":mm";
-                        if (getCurrentResolution()
-                                .compareTo(DateTimeResolution.SECOND) <= 0) {
-                            frmString += ":ss";
-                        }
-                    }
-                    if (dts.isTwelveHourClock()) {
-                        frmString += " aaa";
+        }
+        try {
+            String frmString = LocaleService.getDateFormat(currentLocale);
+            frmString = cleanFormat(frmString);
+            // String delim = LocaleService
+            // .getClockDelimiter(currentLocale);
+            if (getCurrentResolution().compareTo(HOUR) <= 0) {
+                if (dts.isTwelveHourClock()) {
+                    frmString += " hh";
+                } else {
+                    frmString += " HH";
+                }
+                if (getCurrentResolution().compareTo(MINUTE) <= 0) {
+                    frmString += ":mm";
+                    if (getCurrentResolution().compareTo(SECOND) <= 0) {
+                        frmString += ":ss";
                     }
                 }
-
-                return frmString;
-            } catch (LocaleNotLoadedException e) {
-                // TODO should die instead? Can the component survive
-                // without format string?
-                VConsole.error(e);
-                return null;
+                if (dts.isTwelveHourClock()) {
+                    frmString += " aaa";
+                }
             }
+
+            return frmString;
+        } catch (LocaleNotLoadedException e) {
+            // TODO should die instead? Can the component survive
+            // without format string?
+            VConsole.error(e);
+            return null;
         }
     }
 
     @Override
     protected String cleanFormat(String format) {
         // Remove unnecessary d & M if resolution is too low
-        if (getCurrentResolution().compareTo(DateTimeResolution.DAY) > 0) {
+        if (getCurrentResolution().compareTo(DAY) > 0) {
             format = format.replaceAll("d", "");
         }
-        if (getCurrentResolution().compareTo(DateTimeResolution.MONTH) > 0) {
+        if (getCurrentResolution().compareTo(MONTH) > 0) {
             format = format.replaceAll("M", "");
         }
         return super.cleanFormat(format);

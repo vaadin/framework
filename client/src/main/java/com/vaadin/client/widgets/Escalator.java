@@ -1131,7 +1131,8 @@ public class Escalator extends Widget
      * The following WAI-ARIA attributes are added through this class:
      *
      * <ul>
-     * <li>aria-rowcount (since 8.2)</li>
+     *     <li>aria-rowcount (since 8.2)</li>
+     *     <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
      * </ul>
      *
      * @since 8.2
@@ -1189,6 +1190,48 @@ public class Escalator extends Widget
 
             getTable().setAttribute("aria-rowcount", String.valueOf(allRows));
         }
+
+        /**
+         * Sets the {@code role} attribute to the given element.
+         *
+         * @param element     element that should get the role attribute
+         * @param role        role to be added
+         *
+         * @since
+         */
+        public void updateRole(final Element element, AriaGridRole role) {
+            element.setAttribute("role", role.getName());
+        }
+    }
+
+    /**
+     * Holds the currently used aria roles within the grid for rows and cells.
+     *
+     * @since
+     */
+    public enum AriaGridRole {
+
+        ROW("row"),
+        ROWHEADER("rowheader"),
+        ROWGROUP("rowgroup"),
+        GRIDCELL("gridcell"),
+        COLUMNHEADER("columnheader");
+
+        private final String name;
+
+
+        AriaGridRole(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Return the name of the {@link AriaGridRole}.
+         *
+         * @return String name to be used as role attribute
+         */
+        public String getName() {
+            return name;
+        }
     }
 
     public abstract class AbstractRowContainer implements RowContainer {
@@ -1218,6 +1261,7 @@ public class Escalator extends Widget
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
+            ariaGridHelper.updateRole(root, AriaGridRole.ROWGROUP);
         }
 
         @Override
@@ -1237,6 +1281,34 @@ public class Escalator extends Widget
          * @see #createCellElement(double)
          */
         protected abstract String getCellElementTagName();
+
+        /**
+         * Gets the role attribute of an element to represent a cell in a row.
+         * <p>
+         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in
+         * the header.
+         *
+         * @return the role attribute for the element to represent cells
+         *
+         * @since
+         */
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.GRIDCELL;
+        }
+
+        /**
+         * Gets the role attribute of an element to represent a row in a grid.
+         * <p>
+         * Usually {@link AriaGridRole#ROW} except for a row in
+         * the header.
+         *
+         * @return the role attribute for the element to represent rows
+         *
+         * @since
+         */
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROW;
+        }
 
         @Override
         public EscalatorUpdater getEscalatorUpdater() {
@@ -1476,15 +1548,14 @@ public class Escalator extends Widget
                 final TableRowElement tr = TableRowElement.as(DOM.createTR());
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
+                ariaGridHelper.updateRole(tr, getRowElementRole());
 
                 for (int col = 0; col < columnConfiguration
                         .getColumnCount(); col++) {
                     final double colWidth = columnConfiguration
                             .getColumnWidthActual(col);
-                    final TableCellElement cellElem = createCellElement(
-                            colWidth);
+                    final TableCellElement cellElem = createCellElement(colWidth);
                     tr.appendChild(cellElem);
-
                     // Set stylename and position if new cell is frozen
                     if (col < columnConfiguration.frozenColumns) {
                         cellElem.addClassName("frozen");
@@ -1632,6 +1703,7 @@ public class Escalator extends Widget
                 cellElem.getStyle().setWidth(width, Unit.PX);
             }
             cellElem.addClassName(getStylePrimaryName() + "-cell");
+            ariaGridHelper.updateRole(cellElem, getCellElementRole());
             return cellElem;
         }
 
@@ -2414,6 +2486,16 @@ public class Escalator extends Widget
         @Override
         protected String getCellElementTagName() {
             return "th";
+        }
+
+        @Override
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROWHEADER;
+        }
+
+        @Override
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.COLUMNHEADER;
         }
 
         @Override

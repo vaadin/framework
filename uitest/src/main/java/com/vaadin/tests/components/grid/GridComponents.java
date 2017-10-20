@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -54,7 +55,7 @@ public class GridComponents extends AbstractTestUIWithLog {
                     e -> Notification.show(
                             "Clicked button on row for: " + string,
                             Type.WARNING_MESSAGE));
-            button.setId(string.replace(' ', '_').toLowerCase());
+            button.setId(string.replace(' ', '_').toLowerCase(Locale.ROOT));
             return button;
         }, new ComponentRenderer()).setId("button").setCaption("Button");
         // make sure the buttons and focus outlines fit completely in a row

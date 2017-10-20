@@ -82,9 +82,9 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                         + "<th plain-text column-ids='id'>Id</th></tr>"
                         + "</thead></table></%s>",
                 getComponentTag(),
-                heightMode.toString().toLowerCase(Locale.ENGLISH),
+                heightMode.toString().toLowerCase(Locale.ROOT),
                 frozenColumns, heightByRows,
-                SelectionMode.MULTI.toString().toLowerCase(Locale.ENGLISH),
+                SelectionMode.MULTI.toString().toLowerCase(Locale.ROOT),
                 getComponentTag());
 
         testRead(design, grid);

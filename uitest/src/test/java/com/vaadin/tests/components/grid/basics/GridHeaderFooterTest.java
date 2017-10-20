@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
@@ -157,7 +158,8 @@ public class GridHeaderFooterTest extends GridBasicsTest {
                 "Text Header");
         GridCellElement textCell = getGridElement().getHeaderCell(0, 2);
 
-        assertEquals("text header", textCell.getText().toLowerCase());
+        assertEquals("text header",
+                textCell.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -180,16 +182,16 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertTrue("No notifications should've been shown",
                 !$(NotificationElement.class).exists());
         assertEquals("Header should've been reverted back to text header",
-                "text header",
-                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+                "text header", getGridElement().getHeaderCell(0, 1).getText()
+                        .toLowerCase(Locale.ROOT));
     }
 
     @Test
     public void testColumnHidingToggleCaption_settingWidgetToHeader_toggleCaptionStays() {
         toggleColumnHidable(1);
         getSidebarOpenButton().click();
-        assertEquals("column 1",
-                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
+                .toLowerCase(Locale.ROOT));
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
 
         selectMenuPath("Component", "Columns", "Column 1", "Header Type",
@@ -218,7 +220,8 @@ public class GridHeaderFooterTest extends GridBasicsTest {
                 "Text Footer");
         GridCellElement textCell = getGridElement().getFooterCell(0, 2);
 
-        assertEquals("text footer", textCell.getText().toLowerCase());
+        assertEquals("text footer",
+                textCell.getText().toLowerCase(Locale.ROOT));
     }
 
     @Test
@@ -241,16 +244,16 @@ public class GridHeaderFooterTest extends GridBasicsTest {
         assertTrue("No notifications should've been shown",
                 !$(NotificationElement.class).exists());
         assertEquals("Footer should've been reverted back to text footer",
-                "text footer",
-                getGridElement().getFooterCell(0, 1).getText().toLowerCase());
+                "text footer", getGridElement().getFooterCell(0, 1).getText()
+                        .toLowerCase(Locale.ROOT));
     }
 
     @Test
     public void testColumnHidingToggleCaption_settingWidgetToFooter_toggleCaptionStays() {
         toggleColumnHidable(1);
         getSidebarOpenButton().click();
-        assertEquals("column 1",
-                getGridElement().getHeaderCell(0, 1).getText().toLowerCase());
+        assertEquals("column 1", getGridElement().getHeaderCell(0, 1).getText()
+                .toLowerCase(Locale.ROOT));
         assertEquals("Column 1", getColumnHidingToggle(1).getText());
 
         selectMenuPath("Component", "Columns", "Column 1", "Footer Type",

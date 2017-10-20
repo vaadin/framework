@@ -29,7 +29,7 @@ class ComponentDetail {
     }
 
     /**
-     * Returns a TooltipInfo assosiated with Component. If element is given,
+     * Returns a TooltipInfo associated with Component. If element is given,
      * returns an additional TooltipInfo.
      *
      * @param key

@@ -336,9 +336,7 @@ public abstract class AbstractConnector
                         OnStateChangeMethod method = propertyMethods.get(j);
 
                         if (invokedMethods.add(method)) {
-
                             method.invoke(stateChangeEvent);
-
                         }
                     }
                 }
@@ -361,7 +359,6 @@ public abstract class AbstractConnector
             VConsole.log(
                     "Unregistered connector " + Util.getConnectorString(this));
         }
-
     }
 
     /**
@@ -447,11 +444,7 @@ public abstract class AbstractConnector
             return false;
         }
 
-        if (getParent() == null) {
-            return true;
-        } else {
-            return getParent().isEnabled();
-        }
+        return getParent() == null || getParent().isEnabled();
     }
 
     @Override
@@ -474,21 +467,20 @@ public abstract class AbstractConnector
      * Gets the URL for a resource that has been added by the server-side
      * connector using
      * {@link com.vaadin.terminal.AbstractClientConnector#setResource(String, com.vaadin.terminal.Resource)}
-     * with the same key. <code>null</code> is returned if no corresponding
-     * resource is found.
+     * with the same key. {@code null} is returned if no corresponding resource
+     * is found.
      *
      * @param key
      *            a string identifying the resource.
-     * @return the resource URL as a string, or <code>null</code> if no
-     *         corresponding resource is found.
+     * @return the resource URL as a string, or {@code null} if no corresponding
+     *         resource is found.
      */
     public String getResourceUrl(String key) {
         URLReference urlReference = getState().resources.get(key);
         if (urlReference == null) {
             return null;
-        } else {
-            return urlReference.getURL();
         }
+        return urlReference.getURL();
     }
 
     /*

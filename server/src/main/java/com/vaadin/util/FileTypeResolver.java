@@ -19,6 +19,7 @@ package com.vaadin.util;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -270,7 +271,8 @@ public class FileTypeResolver implements Serializable {
             }
 
             // Return type from extension map, if found
-            final String type = EXT_TO_MIME_MAP.get(ext.toLowerCase());
+            final String type = EXT_TO_MIME_MAP
+                    .get(ext.toLowerCase(Locale.ROOT));
             if (type != null) {
                 return type;
             }
@@ -358,7 +360,7 @@ public class FileTypeResolver implements Serializable {
      *            the new mime-type for <code>extension</code>.
      */
     public static void addExtension(String extension, String MIMEType) {
-        EXT_TO_MIME_MAP.put(extension.toLowerCase(), MIMEType);
+        EXT_TO_MIME_MAP.put(extension.toLowerCase(Locale.ROOT), MIMEType);
     }
 
     /**
