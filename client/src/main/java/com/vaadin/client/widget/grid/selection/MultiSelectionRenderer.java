@@ -626,8 +626,8 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
-        // won't implement ordinal numbers here, this should be a temp fix.
-        checkBox.setText("Selects the " + getDOMRowIndex(cell) + " row.");
+        // this should be a temp fix.
+        checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
     }
 
