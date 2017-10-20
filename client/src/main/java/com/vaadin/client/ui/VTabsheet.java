@@ -563,13 +563,8 @@ public class VTabsheet extends VTabsheetBase
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
 
             // Scroll the tab into view if it is not already, after layout
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getTabsheet()
-                            .scrollIntoView(getTab(tabsheet.activeTabIndex));
-                }
-            });
+            Scheduler.get().scheduleFinally(() -> getTabsheet()
+                    .scrollIntoView(getTab(tabsheet.activeTabIndex)));
         }
 
         public Tab navigateTab(int fromIndex, int toIndex) {

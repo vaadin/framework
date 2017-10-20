@@ -186,10 +186,9 @@ public interface Validator<T>
             try {
                 if (guard.test(value)) {
                     return ValidationResult.ok();
-                } else {
-                    return ValidationResult.create(
-                            errorMessageProvider.apply(context), errorLevel);
                 }
+                return ValidationResult.create(
+                        errorMessageProvider.apply(context), errorLevel);
             } catch (Exception e) {
                 return ValidationResult.create(
                         errorMessageProvider.apply(context), errorLevel);

@@ -36,9 +36,9 @@ public class GridRefreshWithGetId extends AbstractTestUI {
         }
 
         /**
-         * The class intentionally has strange {@code hashCode()} and {@code equals()}
-         * implementation to ensure if {@code Grid} relies on bean id rather than on
-         * bean hashcode/equals identification.
+         * The class intentionally has strange {@code hashCode()} and
+         * {@code equals()} implementation to ensure if {@code Grid} relies on
+         * bean id rather than on bean hashcode/equals identification.
          *
          * {@see Object.equals}
          */
@@ -58,9 +58,9 @@ public class GridRefreshWithGetId extends AbstractTestUI {
         }
 
         /**
-         * The class intentionally has strange {@code hashCode()} and {@code equals()}
-         * implementation to ensure if {@code Grid} relies on bean id rather than on
-         * bean hashcode/equals identification.
+         * The class intentionally has strange {@code hashCode()} and
+         * {@code equals()} implementation to ensure if {@code Grid} relies on
+         * bean id rather than on bean hashcode/equals identification.
          *
          * {@see Object.hashCode}
          */
@@ -94,9 +94,7 @@ public class GridRefreshWithGetId extends AbstractTestUI {
         grid.setDataProvider(dataProvider);
         addComponent(grid);
 
-        grid.addColumn(myObject -> {
-            return myObject.getName();
-        });
+        grid.addColumn(TestObject::getName);
 
         Button button = new Button("Change green to black");
         button.addClickListener(event1 -> {

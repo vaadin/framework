@@ -20,31 +20,27 @@ public class DateTimeFieldElementUI extends AbstractReindeerTestUIWithLog {
     protected void setup(VaadinRequest request) {
         log.setNumberLogRows(false);
         DateTimeField df = new DateTimeField();
-        df.addValueChangeListener(event -> {
-            log("Default date field value set to " + event.getValue());
-        });
+        df.addValueChangeListener(event -> log(
+                "Default date field value set to " + event.getValue()));
         addComponent(df);
         InlineDateTimeField inlineDateTimeField = new InlineDateTimeField();
-        inlineDateTimeField.addValueChangeListener(event -> {
-            log("Default inline date field value set to " + event.getValue());
-        });
+        inlineDateTimeField.addValueChangeListener(event -> log(
+                "Default inline date field value set to " + event.getValue()));
         addComponent(inlineDateTimeField);
 
         DateTimeField finnishDateTimeField = new DateTimeField("Finnish");
         finnishDateTimeField.setId("fi");
         finnishDateTimeField.setLocale(new Locale("fi", "FI"));
         finnishDateTimeField.setValue(TEST_DATE_TIME);
-        finnishDateTimeField.addValueChangeListener(event -> {
-            log("Finnish date field value set to " + event.getValue());
-        });
+        finnishDateTimeField.addValueChangeListener(event -> log(
+                "Finnish date field value set to " + event.getValue()));
         addComponent(finnishDateTimeField);
         DateTimeField usDateTimeField = new DateTimeField("US");
         usDateTimeField.setId("us");
         usDateTimeField.setLocale(Locale.US);
         usDateTimeField.setValue(TEST_DATE_TIME);
-        usDateTimeField.addValueChangeListener(event -> {
-            log("US date field value set to " + event.getValue());
-        });
+        usDateTimeField.addValueChangeListener(
+                event -> log("US date field value set to " + event.getValue()));
         addComponent(usDateTimeField);
     }
 

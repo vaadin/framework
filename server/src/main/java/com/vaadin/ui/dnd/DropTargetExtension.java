@@ -24,10 +24,10 @@ import java.util.Objects;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
-import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.DropTargetRpc;
 import com.vaadin.shared.ui.dnd.DropTargetState;
+import com.vaadin.shared.ui.dnd.criteria.ComparisonOperator;
 import com.vaadin.shared.ui.dnd.criteria.Criterion;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.dnd.event.DropEvent;
@@ -73,11 +73,10 @@ public class DropTargetExtension<T extends AbstractComponent>
      */
     protected void registerDropTargetRpc() {
         registerRpc(
-                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) -> {
-                    onDrop(types, data,
-                            DropEffect.valueOf(dropEffect.toUpperCase()),
-                            mouseEventDetails);
-                });
+                (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) ->
+                onDrop(types, data,
+                        DropEffect.valueOf(dropEffect.toUpperCase()),
+                        mouseEventDetails));
     }
 
     /**

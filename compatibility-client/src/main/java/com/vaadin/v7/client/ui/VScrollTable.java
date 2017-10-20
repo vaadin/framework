@@ -8220,7 +8220,7 @@ public class VScrollTable extends FlowPanel
      */
     private static native JavaScriptObject getPreventTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     public void triggerLazyColumnAdjustment(boolean now) {

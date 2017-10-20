@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
@@ -66,12 +65,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    imagesLoaded();
-                }
-            });
+            () -> imagesLoaded());
 
     /**
      * This method should be used only by Client object as only one per client

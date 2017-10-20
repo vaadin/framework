@@ -548,9 +548,9 @@ public class ApplicationConnection implements HasHandlers {
      * attaching js functions responsibility to create the variable like this:
      *
      * <code><pre>
-     * if(!vaadin.postRequestHooks) {vaadin.postRequestHooks = new Object();}
+     * if (!vaadin.postRequestHooks) {vaadin.postRequestHooks = new Object();}
      * postRequestHooks.myHook = function(appId) {
-     *          if(appId == "MyAppOfInterest") {
+     *          if (appId == "MyAppOfInterest") {
      *                  // do the staff you need on xhr activity
      *          }
      * }

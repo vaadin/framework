@@ -17,7 +17,6 @@ package com.vaadin.client.ui.dd;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.NativeEvent;
@@ -372,8 +371,8 @@ public class VDragAndDropManager {
                                 int currentY = WidgetUtil
                                         .getTouchOrMouseClientY(
                                                 event.getNativeEvent());
-                                if (Math.abs(
-                                        startX - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
+                                if (Math.abs(startX
+                                        - currentX) > MINIMUM_DISTANCE_TO_START_DRAG
                                         || Math.abs(startY
                                                 - currentY) > MINIMUM_DISTANCE_TO_START_DRAG) {
                                     ensureDeferredRegistrationCleanup();
@@ -493,18 +492,13 @@ public class VDragAndDropManager {
                             .getTransferable().getDragSource();
                     final ApplicationConnection client = currentDropHandler
                             .getApplicationConnection();
-                    Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
-                        @Override
-                        public boolean execute() {
-                            if (!client.getMessageSender().hasActiveRequest()) {
-                                removeActiveDragSourceStyleName(dragSource);
-                                return false;
-                            }
-                            return true;
+                    Scheduler.get().scheduleFixedDelay(() -> {
+                        if (!client.getMessageSender().hasActiveRequest()) {
+                            removeActiveDragSourceStyleName(dragSource);
+                            return false;
                         }
-
+                        return true;
                     }, 30);
-
                 }
             } else {
                 currentDropHandler.dragLeave(currentDrag);
@@ -516,9 +510,9 @@ public class VDragAndDropManager {
         }
 
         /*
-         * Remove class name indicating drag source when server visit is done
-         * if server visit was not initiated. Otherwise it will be removed once
-         * the server visit is done.
+         * Remove class name indicating drag source when server visit is done if
+         * server visit was not initiated. Otherwise it will be removed once the
+         * server visit is done.
          */
         if (!sendTransferableToServer && currentDrag != null) {
             removeActiveDragSourceStyleName(

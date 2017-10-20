@@ -72,7 +72,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         var target = $wnd;
         var parts = name.split('.');
     
-        for(var i = 0; i < parts.length - 1; i++) {
+        for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
                 target[part] = {};
@@ -95,7 +95,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         var target = $wnd;
         var parts = name.split('.');
     
-        for(var i = 0; i < parts.length - 1; i++) {
+        for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
                 $wnd.console.log(part,'not defined in',target);
@@ -111,7 +111,7 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
 
     private static native void eval(String script)
     /*-{
-        if(script) {
+        if (script) {
             (new $wnd.Function(script)).apply($wnd);
         }
     }-*/;
