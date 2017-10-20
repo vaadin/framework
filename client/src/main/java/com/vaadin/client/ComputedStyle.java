@@ -83,7 +83,7 @@ public class ComputedStyle {
         if (cs.getPropertyValue) {
 
             // Convert name to dashed format
-            name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+            name = name.replace(/([A-Z])/g, "-$1").toLowerCase('en');
             var ret = cs.getPropertyValue(name);
 
         } else {

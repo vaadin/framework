@@ -17,6 +17,7 @@ package com.vaadin.v7.client.ui.combobox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -202,8 +203,9 @@ public class ComboBoxConnector extends AbstractFieldConnector
             }
         }
 
-        if ((getWidget().waitingForFilteringResponse && getWidget().lastFilter
-                .toLowerCase().equals(uidl.getStringVariable("filter")))
+        if ((getWidget().waitingForFilteringResponse
+                && getWidget().lastFilter.toLowerCase(Locale.ROOT)
+                        .equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
 
             getWidget().suggestionPopup.showSuggestions(

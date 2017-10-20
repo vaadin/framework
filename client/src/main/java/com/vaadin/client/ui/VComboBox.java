@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.google.gwt.animation.client.AnimationScheduler;
@@ -1164,8 +1165,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     // TODO try to select the new value if it matches what was
                     // sent for V7 compatibility
                 }
-            } else if (item != null && !"".equals(lastFilter) && item.getText()
-                    .toLowerCase().contains(lastFilter.toLowerCase())) {
+            } else if (item != null && !"".equals(lastFilter)
+                    && item.getText().toLowerCase(Locale.ROOT)
+                            .contains(lastFilter.toLowerCase(Locale.ROOT))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection

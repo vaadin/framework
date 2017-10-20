@@ -18,6 +18,7 @@ package com.vaadin.ui.dnd;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -75,7 +76,7 @@ public class DropTargetExtension<T extends AbstractComponent>
         registerRpc(
                 (DropTargetRpc) (types, data, dropEffect, mouseEventDetails) ->
                 onDrop(types, data,
-                        DropEffect.valueOf(dropEffect.toUpperCase()),
+                        DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)),
                         mouseEventDetails));
     }
 

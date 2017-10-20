@@ -28,6 +28,7 @@ import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -559,13 +560,13 @@ public class TableQuery extends AbstractTransactionalQuery
                         null);
                 if (!tables.next()) {
                     String catalog = (catalogName != null)
-                            ? catalogName.toUpperCase()
+                            ? catalogName.toUpperCase(Locale.ROOT)
                             : null;
                     String schema = (schemaName != null)
-                            ? schemaName.toUpperCase()
+                            ? schemaName.toUpperCase(Locale.ROOT)
                             : null;
                     tables = dbmd.getTables(catalog, schema,
-                            tableName.toUpperCase(), null);
+                            tableName.toUpperCase(Locale.ROOT), null);
                     if (!tables.next()) {
                         throw new IllegalArgumentException(
                                 "Table with the name \"" + getFullTableName()
@@ -573,7 +574,7 @@ public class TableQuery extends AbstractTransactionalQuery
                     } else {
                         catalogName = catalog;
                         schemaName = schema;
-                        tableName = tableName.toUpperCase();
+                        tableName = tableName.toUpperCase(Locale.ROOT);
                     }
                 }
                 tables.close();

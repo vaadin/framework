@@ -26,6 +26,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -131,8 +132,9 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     protected static DesiredCapabilities getRunLocallyCapabilities() {
         VaadinBrowserFactory factory = new VaadinBrowserFactory();
         try {
-            return factory.create(Browser.valueOf(properties
-                    .getProperty(RUN_LOCALLY_PROPERTY).toUpperCase()));
+            return factory.create(
+                    Browser.valueOf(properties.getProperty(RUN_LOCALLY_PROPERTY)
+                            .toUpperCase(Locale.ROOT)));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.err.println("Falling back to FireFox");

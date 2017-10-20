@@ -64,7 +64,7 @@ public class CSSRule {
     if (!$doc.styleSheets)
     return null;
     
-    selector = selector.toLowerCase();
+    selector = selector.toLowerCase('en');
     
     var allMatches = [];
     
@@ -87,7 +87,7 @@ public class CSSRule {
     for (var i=0; i<j; i++) {
         var r = theRules[i];
         if (r.type == 1 || sheet.imports) {
-            var selectors = r.selectorText.toLowerCase().split(",");
+            var selectors = r.selectorText.toLowerCase('en').split(",");
             var n = selectors.length;
             for (var m=0; m<n; m++) {
                 if (selectors[m].replace(/^\s+|\s+$/g, "") == selector) {

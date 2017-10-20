@@ -15,6 +15,8 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.util.Locale;
+
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -69,7 +71,7 @@ public class AbstractComponentElement extends AbstractElement {
         String[] styles = style.split(";");
         for (String stylePart : styles) {
             // IE8 has uppercased styles
-            String lowercasePart = stylePart.toLowerCase();
+            String lowercasePart = stylePart.toLowerCase(Locale.ROOT);
             if (lowercasePart.startsWith(styleName + ":")) {
                 return lowercasePart.substring(styleName.length() + 1).trim();
             }

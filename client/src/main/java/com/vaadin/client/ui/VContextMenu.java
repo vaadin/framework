@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import java.util.Locale;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -287,7 +289,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
-            while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
+            while (e != null
+                    && !e.getTagName().toLowerCase(Locale.ROOT).equals("tr")) {
                 e = e.getParentElement();
                 // ApplicationConnection.getConsole().log("Found row");
             }

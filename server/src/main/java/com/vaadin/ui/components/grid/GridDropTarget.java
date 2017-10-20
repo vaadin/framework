@@ -16,6 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.shared.Registration;
@@ -156,7 +157,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
             GridDropEvent<T> event = new GridDropEvent<>(getParent(),
                     dataPreserveOrder,
-                    DropEffect.valueOf(dropEffect.toUpperCase()),
+                    DropEffect.valueOf(dropEffect.toUpperCase(Locale.ROOT)),
                     getUI().getActiveDragSource(), dropTargetRow, dropLocation,
                     mouseEventDetails);
 

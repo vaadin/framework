@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
@@ -271,7 +272,7 @@ public class VCustomLayout extends ComplexPanel {
         scripts = "";
         int endOfPrevScript = 0;
         int nextPosToCheck = 0;
-        String lc = html.toLowerCase();
+        String lc = html.toLowerCase(Locale.ROOT);
         String res = "";
         int scriptStart = lc.indexOf("<script", nextPosToCheck);
         while (scriptStart > 0) {
@@ -286,7 +287,7 @@ public class VCustomLayout extends ComplexPanel {
 
         // Extract body
         html = res;
-        lc = html.toLowerCase();
+        lc = html.toLowerCase(Locale.ROOT);
         int startOfBody = lc.indexOf("<body");
         if (startOfBody < 0) {
             res = html;

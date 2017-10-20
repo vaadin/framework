@@ -69,7 +69,7 @@ public class GridValueProvider {
                 upperCasePerson);
 
         persons.addFilter(col.getValueProvider(),
-                value -> value.toUpperCase(Locale.ENGLISH).equals(value));
+                value -> value.toUpperCase(Locale.ROOT).equals(value));
 
         List<Person> queryPersons = persons.fetch(new Query<>())
                 .collect(Collectors.toList());
