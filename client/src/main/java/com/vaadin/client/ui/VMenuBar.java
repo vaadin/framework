@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -107,13 +106,7 @@ public class VMenuBar extends SimpleFocusablePanel
     public boolean enabled = true;
 
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    iLayout(true);
-                }
-            });
+            () -> iLayout(true));
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean openRootOnHover;

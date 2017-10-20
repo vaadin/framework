@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -90,15 +89,10 @@ public class VSlider extends SimpleFocusablePanel
     /* Temporary dragging/animation variables */
     private boolean dragging = false;
 
-    private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    fireValueChanged();
-                    acceleration = 1;
-                }
-            });
+    private VLazyExecutor delayedValueUpdater = new VLazyExecutor(100, () -> {
+        fireValueChanged();
+        acceleration = 1;
+    });
 
     public VSlider() {
         super();
