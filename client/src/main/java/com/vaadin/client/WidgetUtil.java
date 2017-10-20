@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -60,7 +59,7 @@ public class WidgetUtil {
      */
     public static native void browserDebugger()
     /*-{
-        if($wnd.console)
+        if ($wnd.console)
             debugger;
     }-*/;
 
@@ -112,7 +111,7 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        if(el != null && el.nodeType == 3) {
+        if (el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
         return el;
@@ -680,7 +679,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
-         if(heightPx == 'auto'){
+         if (heightPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -700,7 +699,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
-         if(widthPx == 'auto'){
+         if (widthPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -1151,19 +1150,14 @@ public class WidgetUtil {
             ((Focusable) targetWidget).focus();
         }
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                try {
-                    target.dispatchEvent(createMouseDownEvent);
-                    target.dispatchEvent(createMouseUpEvent);
-                    target.dispatchEvent(createMouseClickEvent);
-                } catch (Exception e) {
-                }
-
+        Scheduler.get().scheduleDeferred(() -> {
+            try {
+                target.dispatchEvent(createMouseDownEvent);
+                target.dispatchEvent(createMouseUpEvent);
+                target.dispatchEvent(createMouseClickEvent);
+            } catch (Exception e) {
             }
         });
-
     }
 
     /**

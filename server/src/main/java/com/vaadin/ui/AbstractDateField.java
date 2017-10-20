@@ -48,6 +48,7 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
@@ -95,10 +96,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                 if ("".equals(newDateString)) {
 
                     newDate = null;
-                    // TODO check if the following 3 lines are necessary
-                    hasChanges = !getState(false).parsable;
-                    getState().parsable = true;
-                    currentParseErrorMessage = null;
                 } else {
                     newDate = reconstructDateFromFields(resolutions, oldDate);
                 }
@@ -108,32 +105,26 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
                 if (hasChanges) {
                     dateString = newDateString;
+                    currentParseErrorMessage = null;
                     if (newDateString == null || newDateString.isEmpty()) {
-                        getState().parsable = true;
-                        currentParseErrorMessage = null;
-                        setComponentError(null);
                         setValue(newDate, true);
                     } else {
                         if (invalidDateString) {
                             Result<T> parsedDate = handleUnparsableDateString(
                                     dateString);
-                            parsedDate.ifOk(v -> {
-                                getState().parsable = true;
-                                currentParseErrorMessage = null;
-                                setValue(v, true);
-                            });
+                            parsedDate.ifOk(v -> setValue(v, true));
                             if (parsedDate.isError()) {
                                 dateString = null;
-                                getState().parsable = false;
                                 currentParseErrorMessage = parsedDate
                                         .getMessage().orElse("Parsing error");
-                                setComponentError(
-                                        new UserError(getParseErrorMessage()));
-                                setValue(null, true);
+
+                                if (!isDifferentValue(null)) {
+                                    doSetValue(null);
+                                } else {
+                                    setValue(null, true);
+                                }
                             }
                         } else {
-                            getState().parsable = true;
-                            currentParseErrorMessage = null;
                             setValue(newDate, true);
                         }
                     }
@@ -526,6 +517,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
+        currentParseErrorMessage = null;
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
@@ -702,14 +694,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                                                           // validator?
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
+
         if (result.isError()) {
             currentParseErrorMessage = getDateOutOfRangeMessage();
         }
+
+        getState().parsable = currentParseErrorMessage == null;
+
+        ErrorMessage errorMessage;
         if (currentParseErrorMessage == null) {
-            setComponentError(null);
+            errorMessage = null;
         } else {
-            setComponentError(new UserError(currentParseErrorMessage));
+            errorMessage = new UserError(currentParseErrorMessage);
         }
+        setComponentError(errorMessage);
+
         updateResolutions();
     }
 

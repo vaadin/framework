@@ -76,10 +76,10 @@ import com.vaadin.ui.declarative.DesignContext;
 public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
 
     private CssLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
-            Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(CssLayout.this, mouseDetails,
-                clickedConnector));
-    };
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(CssLayout.this, mouseDetails,
+                            clickedConnector));
+
     /**
      * Custom layout slots containing the components.
      */

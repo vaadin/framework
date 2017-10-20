@@ -53,7 +53,7 @@ public class ArraySerializer extends JsonSerializer {
         }
         w.println(";");
 
-        w.println("for(int i = 0 ; i < value.length; i++) {");
+        w.println("for (int i = 0 ; i < value.length; i++) {");
         w.indent();
 
         JType componentType = arrayType.getComponentType();

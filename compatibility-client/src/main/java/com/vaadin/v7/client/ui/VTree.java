@@ -1970,7 +1970,7 @@ public class VTree extends FocusElementPanel
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     /**

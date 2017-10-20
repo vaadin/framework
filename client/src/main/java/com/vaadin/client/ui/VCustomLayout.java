@@ -196,7 +196,7 @@ public class VCustomLayout extends ComplexPanel {
     private native boolean uriEndsWithSlash()
     /*-{
         var path =  $wnd.location.pathname;
-        if(path.charAt(path.length - 1) == "/")
+        if (path.charAt(path.length - 1) == "/")
             return true;
         return false;
     }-*/;
@@ -428,7 +428,7 @@ public class VCustomLayout extends ComplexPanel {
      */
     public native boolean iLayoutJS(com.google.gwt.user.client.Element el)
     /*-{
-        if(el && el.iLayoutJS) {
+        if (el && el.iLayoutJS) {
             try {
                 el.iLayoutJS();
                 return true;

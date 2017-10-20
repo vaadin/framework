@@ -49,7 +49,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
     public native JsArrayString getKeys()
     /*-{
         var keys = [];
-        for(var key in this) {
+        for (var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 keys.push(key);
             }
@@ -60,7 +60,7 @@ public final class FastStringMap<T> extends JavaScriptObject {
     public native int size()
     /*-{
         var size = 0;
-        for(var key in this) {
+        for (var key in this) {
             if (Object.hasOwnProperty.call(this, key)) {
                 size++;
             }

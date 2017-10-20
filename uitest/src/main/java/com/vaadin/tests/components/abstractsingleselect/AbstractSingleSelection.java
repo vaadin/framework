@@ -25,9 +25,9 @@ public class AbstractSingleSelection extends AbstractTestUI {
         componentSelect.setItemCaptionGenerator(Class::getSimpleName);
 
         componentSelect.setEmptySelectionAllowed(false);
-        componentSelect.addValueChangeListener(singleSelectClass -> {
-            createComponent(singleSelectClass.getValue());
-        });
+        componentSelect
+                .addValueChangeListener(singleSelectClass -> createComponent(
+                        singleSelectClass.getValue()));
 
         addComponent(componentSelect);
         addComponent(component); // This will be replaced in createComponent

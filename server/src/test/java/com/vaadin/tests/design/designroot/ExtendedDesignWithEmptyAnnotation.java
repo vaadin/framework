@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.design.designroot;
 
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
@@ -29,12 +28,8 @@ public class ExtendedDesignWithEmptyAnnotation
         customField.setPlaceholder("Something");
         addComponent(customField);
 
-        ok.addClickListener((ClickEvent event) -> {
-            Notification.show("OK");
-        });
+        ok.addClickListener(e -> Notification.show("OK"));
 
-        CaNCEL.addClickListener((ClickEvent event) -> {
-            Notification.show("cancel");
-        });
+        CaNCEL.addClickListener(e -> Notification.show("cancel"));
     }
 }

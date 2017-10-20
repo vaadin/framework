@@ -378,10 +378,10 @@ public class GridBasics extends AbstractTestUIWithLog {
                 3.67, 4.00, 4.33, 4.67)
                 .forEach(d -> addGridMethodMenu(heightByRows,
                         df.format(d) + " rows", d, grid::setHeightByRows));
-        sizeMenu.addItem("HeightMode Row", item -> {
-            grid.setHeightMode(
-                    item.isChecked() ? HeightMode.ROW : HeightMode.CSS);
-        }).setCheckable(true);
+        sizeMenu.addItem("HeightMode Row",
+                item -> grid.setHeightMode(
+                        item.isChecked() ? HeightMode.ROW : HeightMode.CSS))
+                .setCheckable(true);
 
         MenuItem heightMenu = sizeMenu.addItem("Height", null);
         Stream.of(50, 100, 200, 400).map(i -> i + "px").forEach(
@@ -514,7 +514,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 sg -> grid.getColumns().forEach(c -> c.setStyleGenerator(t -> {
                     if (t.getRowNumber() % 4 == 1) {
                         return null;
-                    } else if (t.getRowNumber() % 4 == 3
+                    }
+                    if (t.getRowNumber() % 4 == 3
                             && c.getCaption().equals("Column 1")) {
                         return null;
                     }
@@ -539,9 +540,8 @@ public class GridBasics extends AbstractTestUIWithLog {
                 grid.getSelectionModel().select(item);
             }
         });
-        rowMenu.addItem("Deselect all", menuItem -> {
-            grid.getSelectionModel().deselectAll();
-        });
+        rowMenu.addItem("Deselect all",
+                menuItem -> grid.getSelectionModel().deselectAll());
 
         MenuItem rowHeight = rowMenu.addItem("Body Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
@@ -559,9 +559,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                             .addSingleSelectionListener(this::onSingleSelect);
             grid.asSingleSelect().setReadOnly(isUserSelectionDisallowed);
         });
-        selectionModelItem.addItem("multi", menuItem -> {
-            switchToMultiSelect();
-        });
+        selectionModelItem.addItem("multi", menuItem -> switchToMultiSelect());
         selectionModelItem.addItem("none", menuItem -> {
             selectionListenerRegistration.remove();
             grid.setSelectionMode(SelectionMode.NONE);
@@ -629,24 +627,18 @@ public class GridBasics extends AbstractTestUIWithLog {
                 row.getCell(column).setText("Header cell " + i++);
             }
         });
-        headerMenu.addItem("Remove first header row", menuItem -> {
-            grid.removeHeaderRow(0);
-        });
-        headerMenu.addItem("Set first row as default", menuItem -> {
-            grid.setDefaultHeaderRow(grid.getHeaderRow(0));
-        });
-        headerMenu.addItem("Set no default row", menuItem -> {
-            grid.setDefaultHeaderRow(null);
-        });
-        headerMenu.addItem("Merge Header Cells [0,0..1]", menuItem -> {
-            mergeHeaderСells(0, "0+1", 0, 1);
-        });
-        headerMenu.addItem("Merge Header Cells [1,1..3]", menuItem -> {
-            mergeHeaderСells(1, "1+2+3", 1, 2, 3);
-        });
-        headerMenu.addItem("Merge Header Cells [0,6..7]", menuItem -> {
-            mergeHeaderСells(0, "6+7", 6, 7);
-        });
+        headerMenu.addItem("Remove first header row",
+                menuItem -> grid.removeHeaderRow(0));
+        headerMenu.addItem("Set first row as default",
+                menuItem -> grid.setDefaultHeaderRow(grid.getHeaderRow(0)));
+        headerMenu.addItem("Set no default row",
+                menuItem -> grid.setDefaultHeaderRow(null));
+        headerMenu.addItem("Merge Header Cells [0,0..1]",
+                menuItem -> mergeHeaderСells(0, "0+1", 0, 1));
+        headerMenu.addItem("Merge Header Cells [1,1..3]",
+                menuItem -> mergeHeaderСells(1, "1+2+3", 1, 2, 3));
+        headerMenu.addItem("Merge Header Cells [0,6..7]",
+                menuItem -> mergeHeaderСells(0, "6+7", 6, 7));
 
         MenuItem rowHeight = headerMenu.addItem("Header Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,
@@ -702,18 +694,14 @@ public class GridBasics extends AbstractTestUIWithLog {
                 row.getCell(column).setText("Footer cell " + i++);
             }
         });
-        footerMenu.addItem("Remove first footer row", menuItem -> {
-            grid.removeFooterRow(0);
-        });
-        footerMenu.addItem("Merge Footer Cells [0,0..1]", menuItem -> {
-            mergeFooterСells(0, "0+1", 0, 1);
-        });
-        footerMenu.addItem("Merge Footer Cells [1,1..3]", menuItem -> {
-            mergeFooterСells(1, "1+2+3", 1, 2, 3);
-        });
-        footerMenu.addItem("Merge Footer Cells [0,6..7]", menuItem -> {
-            mergeFooterСells(0, "6+7", 6, 7);
-        });
+        footerMenu.addItem("Remove first footer row",
+                menuItem -> grid.removeFooterRow(0));
+        footerMenu.addItem("Merge Footer Cells [0,0..1]",
+                menuItem -> mergeFooterСells(0, "0+1", 0, 1));
+        footerMenu.addItem("Merge Footer Cells [1,1..3]",
+                menuItem -> mergeFooterСells(1, "1+2+3", 1, 2, 3));
+        footerMenu.addItem("Merge Footer Cells [0,6..7]",
+                menuItem -> mergeFooterСells(0, "6+7", 6, 7));
 
         MenuItem rowHeight = footerMenu.addItem("Footer Row Height", null);
         Stream.of(-1, 20, 50, 100).forEach(i -> rowHeight.addItem("" + i,

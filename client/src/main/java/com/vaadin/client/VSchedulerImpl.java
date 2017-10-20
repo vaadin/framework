@@ -29,17 +29,10 @@ public class VSchedulerImpl extends SchedulerImpl {
     public void scheduleDeferred(ScheduledCommand cmd) {
         deferredCommandTrackers++;
         super.scheduleDeferred(cmd);
-        super.scheduleDeferred(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                deferredCommandTrackers--;
-            }
-        });
+        super.scheduleDeferred(() -> deferredCommandTrackers--);
     }
 
     public boolean hasWorkQueued() {
-        boolean hasWorkQueued = (deferredCommandTrackers != 0);
-        return hasWorkQueued;
+        return deferredCommandTrackers != 0;
     }
 }

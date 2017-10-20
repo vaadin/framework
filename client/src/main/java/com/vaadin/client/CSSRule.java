@@ -42,13 +42,13 @@ public class CSSRule {
     private native void fetchRule(final String selector, final boolean deep)
     /*-{
     var sheets = $doc.styleSheets;
-    for(var i = 0; i < sheets.length; i++) {
-    var sheet = sheets[i];
-    if(sheet.href && sheet.href.indexOf("VAADIN/themes")>-1) {
-    // $entry not needed as function is not exported
-    this.@com.vaadin.client.CSSRule::rules = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet, selector, deep);
-    return;
-    }
+    for (var i = 0; i < sheets.length; i++) {
+        var sheet = sheets[i];
+        if (sheet.href && sheet.href.indexOf("VAADIN/themes")>-1) {
+            // $entry not needed as function is not exported
+            this.@com.vaadin.client.CSSRule::rules = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet, selector, deep);
+            return;
+        }
     }
     this.@com.vaadin.client.CSSRule::rules = [];
     }-*/;
@@ -61,7 +61,7 @@ public class CSSRule {
             final JavaScriptObject sheet, final String selector,
             final boolean deep)
     /*-{
-    if(!$doc.styleSheets)
+    if (!$doc.styleSheets)
     return null;
     
     selector = selector.toLowerCase();
@@ -69,38 +69,38 @@ public class CSSRule {
     var allMatches = [];
     
     // IE handles imported sheet differently
-    if(deep && sheet.imports && sheet.imports.length > 0) {
-    for(var i=0; i < sheet.imports.length; i++) {
-    // $entry not needed as function is not exported
-    var imports = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet.imports[i], selector, deep);
-    allMatches.concat(imports);
-    }
+    if (deep && sheet.imports && sheet.imports.length > 0) {
+        for (var i=0; i < sheet.imports.length; i++) {
+            // $entry not needed as function is not exported
+            var imports = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(sheet.imports[i], selector, deep);
+            allMatches.concat(imports);
+        }
     }
     
     var theRules = new Array();
     if (sheet.cssRules)
-    theRules = sheet.cssRules
+        theRules = sheet.cssRules
     else if (sheet.rules)
-    theRules = sheet.rules
+        theRules = sheet.rules
     
     var j = theRules.length;
-    for(var i=0; i<j; i++) {
-    var r = theRules[i];
-    if(r.type == 1 || sheet.imports) {
-    var selectors = r.selectorText.toLowerCase().split(",");
-    var n = selectors.length;
-    for(var m=0; m<n; m++) {
-    if(selectors[m].replace(/^\s+|\s+$/g, "") == selector) {
-    allMatches.unshift(r);
-    break; // No need to loop other selectors for this rule
-    }
-    }
-    } else if(deep && r.type == 3) {
-    // Search @import stylesheet
-    // $entry not needed as function is not exported
-    var imports = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(r.styleSheet, selector, deep);
-    allMatches = allMatches.concat(imports);
-    }
+    for (var i=0; i<j; i++) {
+        var r = theRules[i];
+        if (r.type == 1 || sheet.imports) {
+            var selectors = r.selectorText.toLowerCase().split(",");
+            var n = selectors.length;
+            for (var m=0; m<n; m++) {
+                if (selectors[m].replace(/^\s+|\s+$/g, "") == selector) {
+                    allMatches.unshift(r);
+                    break; // No need to loop other selectors for this rule
+                }
+            }
+        } else if (deep && r.type == 3) {
+            // Search @import stylesheet
+            // $entry not needed as function is not exported
+            var imports = @com.vaadin.client.CSSRule::searchForRule(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;Z)(r.styleSheet, selector, deep);
+            allMatches = allMatches.concat(imports);
+        }
     }
     
     return allMatches;
@@ -116,11 +116,11 @@ public class CSSRule {
     public native String getPropertyValue(final String propertyName)
     /*-{
     var j = this.@com.vaadin.client.CSSRule::rules.length;
-    for(var i=0; i<j; i++) {
-    // $entry not needed as function is not exported
-    var value = this.@com.vaadin.client.CSSRule::rules[i].style[propertyName];
-    if(value)
-    return value;
+    for (var i=0; i<j; i++) {
+        // $entry not needed as function is not exported
+        var value = this.@com.vaadin.client.CSSRule::rules[i].style[propertyName];
+        if (value)
+            return value;
     }
     return null;
     }-*/;

@@ -46,7 +46,6 @@ public class GridScrollToLineWhileResizing extends AbstractReindeerTestUI {
         });
 
         vsp.setFirstComponent(grid);
-
     }
 
     @Override
