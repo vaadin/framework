@@ -27,17 +27,17 @@ public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String internalId;
-    public boolean sortable;
-    public boolean editable;
+    public boolean sortable = false;
+    public boolean editable = false;
 
     /** The caption for the column hiding toggle. */
     public String hidingToggleCaption;
 
     /** Whether this column is currently hidden. */
-    public boolean hidden;
+    public boolean hidden = false;
 
     /** Whether the column can be hidden by the user. */
-    public boolean hidable;
+    public boolean hidable = false;
 
     /**
      * Column width in pixels. Default column width is
@@ -66,7 +66,7 @@ public class ColumnState extends AbstractGridExtensionState {
     public Connector renderer;
     /**
      * Whether the contents define the minimum width for this column.
-     * 
+     *
      * @since 8.1
      */
     public boolean minimumWidthFromContent = true;
