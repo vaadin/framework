@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.WidgetUtil;
 
@@ -43,12 +42,7 @@ public class WidgetUtilTestWidget extends Widget {
         root.addClassName("v-widget-util-test");
         setElement(root);
 
-        addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                showSizes();
-            }
-        }, ClickEvent.getType());
+        addDomHandler(e -> showSizes(), ClickEvent.getType());
     }
 
     public void construct(boolean inline) {

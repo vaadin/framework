@@ -2048,12 +2048,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     ClickEvent.getType());
             selectedItemIcon.addDomHandler(VComboBox.this,
                     MouseDownEvent.getType());
-            selectedItemIcon.addDomHandler(new LoadHandler() {
-                @Override
-                public void onLoad(LoadEvent event) {
-                    afterSelectedItemIconChange();
-                }
-            }, LoadEvent.getType());
+            selectedItemIcon.addDomHandler(e -> afterSelectedItemIconChange(),
+                    LoadEvent.getType());
             panel.insert(selectedItemIcon, 0);
             afterSelectedItemIconChange();
         }

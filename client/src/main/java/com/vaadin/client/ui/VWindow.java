@@ -48,7 +48,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -434,35 +433,29 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         // Handlers to Prevent tab to leave the window
         // and backspace to cause browser navigation
-        topEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        topEventBlocker = e -> {
+            NativeEvent nativeEvent = e.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
 
-        bottomEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && !nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        bottomEventBlocker = e -> {
+            NativeEvent nativeEvent = e.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && !nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
     }

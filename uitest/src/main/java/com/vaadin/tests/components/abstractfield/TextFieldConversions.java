@@ -2,8 +2,6 @@ package com.vaadin.tests.components.abstractfield;
 
 import java.util.Date;
 
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.UserError;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
@@ -41,12 +39,7 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
 
         tf = new TextField("TextField");
         addComponent(tf);
-        tf.setErrorHandler(new ErrorHandler() {
-
-            @Override
-            public void error(ErrorEvent event) {
-                tf.setComponentError(new UserError("Invalid value"));
-            }
-        });
+        tf.setErrorHandler(
+                e -> tf.setComponentError(new UserError("Invalid value")));
     }
 }

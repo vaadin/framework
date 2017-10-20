@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -104,12 +101,9 @@ public class HierarchyPanel extends FlowPanel {
         if (children == null || children.isEmpty()) {
             // Leaf node, just add a label
             Label label = new Label(connectorString);
-            label.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    Highlight.showOnly(connector);
-                    showServerDebugInfo(connector);
-                }
+            label.addClickHandler(e -> {
+                Highlight.showOnly(connector);
+                showServerDebugInfo(connector);
             });
             widget = label;
         } else {
@@ -132,12 +126,7 @@ public class HierarchyPanel extends FlowPanel {
 
         if (widget instanceof HasDoubleClickHandlers) {
             HasDoubleClickHandlers has = (HasDoubleClickHandlers) widget;
-            has.addDoubleClickHandler(new DoubleClickHandler() {
-                @Override
-                public void onDoubleClick(DoubleClickEvent event) {
-                    fireSelectEvent(connector);
-                }
-            });
+            has.addDoubleClickHandler(e -> fireSelectEvent(connector));
         }
 
         return widget;

@@ -26,7 +26,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.AtmospherePushConnection.AtmosphereResponse;
 import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
@@ -94,19 +93,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         this.connection = connection;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
-                new ApplicationStoppedHandler() {
-                    @Override
-                    public void onApplicationStopped(
-                            ApplicationStoppedEvent event) {
-                        if (isReconnecting()) {
-                            giveUp();
-                        }
-                        if (scheduledReconnect != null
-                                && scheduledReconnect.isRunning()) {
-                            scheduledReconnect.cancel();
-                        }
+                e -> {
+                    if (isReconnecting()) {
+                        giveUp();
                     }
-
+                    if (scheduledReconnect != null
+                            && scheduledReconnect.isRunning()) {
+                        scheduledReconnect.cancel();
+                    }
                 });
 
         // Allow dialog to cache needed resources to make them available when we

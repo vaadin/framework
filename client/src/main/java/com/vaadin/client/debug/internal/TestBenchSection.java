@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -110,21 +108,11 @@ public class TestBenchSection implements Section {
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        find.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleFind();
-            }
-        });
+        find.addClickHandler(e -> toggleFind());
 
         controls.add(clear);
         clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        clear.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                clearResults();
-            }
-        });
+        clear.addClickHandler(e -> clearResults());
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-testbench");
         content.add(selectorPanel);

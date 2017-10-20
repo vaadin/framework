@@ -487,30 +487,27 @@ public class MultiSelectionRenderer<T>
         /** The registration info for {@link #scrollPreviewHandler} */
         private HandlerRegistration handlerRegistration;
 
-        private final NativePreviewHandler scrollPreviewHandler = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(final NativePreviewEvent event) {
-                if (autoScroller == null) {
-                    stop();
-                    return;
-                }
+        private final NativePreviewHandler scrollPreviewHandler = e -> {
+            if (autoScroller == null) {
+                stop();
+                return;
+            }
 
-                final NativeEvent nativeEvent = event.getNativeEvent();
-                int pageY = 0;
-                int pageX = 0;
-                switch (event.getTypeInt()) {
-                case Event.ONMOUSEMOVE:
-                case Event.ONTOUCHMOVE:
-                    pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
-                    pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
-                    autoScroller.updatePointerCoords(pageX, pageY);
-                    break;
-                case Event.ONMOUSEUP:
-                case Event.ONTOUCHEND:
-                case Event.ONTOUCHCANCEL:
-                    stop();
-                    break;
-                }
+            final NativeEvent nativeEvent = e.getNativeEvent();
+            int pageY = 0;
+            int pageX = 0;
+            switch (e.getTypeInt()) {
+            case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
+                pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
+                pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
+                autoScroller.updatePointerCoords(pageX, pageY);
+                break;
+            case Event.ONMOUSEUP:
+            case Event.ONTOUCHEND:
+            case Event.ONTOUCHCANCEL:
+                stop();
+                break;
             }
         };
 

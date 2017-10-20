@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
@@ -79,8 +78,6 @@ import com.vaadin.v7.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyDownHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyPressHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyUpHandler;
-import com.vaadin.v7.client.widget.grid.events.ScrollEvent;
-import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.None;
 import com.vaadin.v7.client.widgets.Grid;
@@ -450,14 +447,10 @@ public class GridBasicClientFeaturesWidget
                 if (scrollHandler != null) {
                     return;
                 }
-                scrollHandler = grid.addScrollHandler(new ScrollHandler() {
-                    @Override
-                    public void onScroll(ScrollEvent event) {
-                        @SuppressWarnings("hiding")
-                        final Grid<?> grid = (Grid<?>) event.getSource();
-                        label.setText("scrollTop: " + grid.getScrollTop()
-                                + ", scrollLeft: " + grid.getScrollLeft());
-                    }
+                scrollHandler = grid.addScrollHandler(e -> {
+                    final Grid<?> grid = (Grid<?>) e.getSource();
+                    label.setText("scrollTop: " + grid.getScrollTop()
+                            + ", scrollLeft: " + grid.getScrollLeft());
                 });
             }
         }, listenersPath);
@@ -526,26 +519,22 @@ public class GridBasicClientFeaturesWidget
         addMenuCommand("Add context menu listener", new ScheduledCommand() {
 
             HandlerRegistration handler = null;
-            ContextMenuHandler contextMenuHandler = new ContextMenuHandler() {
-
-                @Override
-                public void onContextMenu(ContextMenuEvent event) {
-                    event.preventDefault();
-                    final String location;
-                    EventCellReference<?> cellRef = grid.getEventCell();
-                    if (cellRef.isHeader()) {
-                        location = "header";
-                    } else if (cellRef.isBody()) {
-                        location = "body";
-                    } else if (cellRef.isFooter()) {
-                        location = "footer";
-                    } else {
-                        location = "somewhere";
-                    }
-
-                    getLogger().info("Prevented opening a context menu in grid "
-                            + location);
+            ContextMenuHandler contextMenuHandler = e -> {
+                e.preventDefault();
+                final String location;
+                EventCellReference<?> cellRef = grid.getEventCell();
+                if (cellRef.isHeader()) {
+                    location = "header";
+                } else if (cellRef.isBody()) {
+                    location = "body";
+                } else if (cellRef.isFooter()) {
+                    location = "footer";
+                } else {
+                    location = "somewhere";
                 }
+
+                getLogger().info(
+                        "Prevented opening a context menu in grid " + location);
             };
 
             @Override
@@ -913,13 +902,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Header");
-                    button.addClickHandler(new ClickHandler() {
-
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            button.setText("Clicked");
-                        }
-                    });
+                    button.addClickHandler(e -> button.setText("Clicked"));
                     grid.getHeaderRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
@@ -942,13 +925,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Footer");
-                    button.addClickHandler(new ClickHandler() {
-
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            button.setText("Clicked");
-                        }
-                    });
+                    button.addClickHandler(e -> button.setText("Clicked"));
                     grid.getFooterRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
@@ -1459,12 +1436,7 @@ public class GridBasicClientFeaturesWidget
 
                         final Label label = new Label("Row: " + rowIndex + ".");
                         Button button = new Button("Button",
-                                new ClickHandler() {
-                                    @Override
-                                    public void onClick(ClickEvent event) {
-                                        label.setText("clicked");
-                                    }
-                                });
+                                (ClickHandler) e -> label.setText("clicked"));
 
                         panel.add(label);
                         panel.add(button);

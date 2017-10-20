@@ -24,24 +24,18 @@ public class ResponseWritingErrorHandling extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        ErrorHandler errorHandler = new ErrorHandler() {
-            @Override
-            public void error(com.vaadin.server.ErrorEvent event) {
-                String message = event.getThrowable().getMessage();
-                log(message);
-            }
+        ErrorHandler errorHandler = e -> {
+            String message = e.getThrowable().getMessage();
+            log(message);
         };
 
         Button button = new Button("Throw in beforeClientResponse") {
             private boolean throwInBeforeClientResponse = false;
             {
-                addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        throwInBeforeClientResponse = true;
-                        // Make sure beforeClientResponse is called
-                        markAsDirty();
-                    }
+                addClickListener(e -> {
+                    throwInBeforeClientResponse = true;
+                    // Make sure beforeClientResponse is called
+                    markAsDirty();
                 });
             }
 

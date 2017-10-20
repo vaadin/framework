@@ -20,8 +20,6 @@ import java.util.Date;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -179,17 +177,12 @@ public class VDateTimeCalendarPanel
             updateTimes();
 
             ListBox lastDropDown = getLastDropDown();
-            lastDropDown.addKeyDownHandler(new KeyDownHandler() {
-                @Override
-                public void onKeyDown(KeyDownEvent event) {
-                    boolean shiftKey = event.getNativeEvent().getShiftKey();
-                    if (shiftKey) {
-                        return;
-                    } else {
-                        int nativeKeyCode = event.getNativeKeyCode();
-                        if (nativeKeyCode == KeyCodes.KEY_TAB) {
-                            onTabOut(event);
-                        }
+            lastDropDown.addKeyDownHandler(e -> {
+                boolean shiftKey = e.getNativeEvent().getShiftKey();
+                if (!shiftKey) {
+                    int nativeKeyCode = e.getNativeKeyCode();
+                    if (nativeKeyCode == KeyCodes.KEY_TAB) {
+                        onTabOut(e);
                     }
                 }
             });
