@@ -390,8 +390,12 @@ public class GridTest {
     @Test
     public void removeColumnByColumn_alreadyRemoved() {
         grid.removeColumn(fooColumn);
-        // Questionable that this doesn't throw, but that's a separate ticket...
-        grid.removeColumn(fooColumn);
+        try {
+            grid.removeColumn(fooColumn);
+            fail("Should have thrown an IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
 
         assertEquals(Arrays.asList(lengthColumn, objectColumn, randomColumn),
                 grid.getColumns());
@@ -663,7 +667,7 @@ public class GridTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void removeColumnToThrowForInvalidColumn() {
         Grid<Person> grid1 = new Grid<>();
         Grid<Person> grid2 = new Grid<>();

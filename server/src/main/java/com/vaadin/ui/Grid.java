@@ -2739,7 +2739,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
         } else {
-            throw new IllegalStateException("Invalid column");
+            throw new IllegalArgumentException("Invalid column");
         }
     }
 
