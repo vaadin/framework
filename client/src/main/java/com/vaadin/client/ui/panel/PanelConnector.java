@@ -173,9 +173,10 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
         getWidget().contentNode.setTabIndex(getState().tabIndex);
     }
 
-    /***
+    /**
      * Detects if caption div should be visible.
-     * @return true if caption div should be shown
+     *
+     * @return {@code true} if caption div should be shown
      */
     protected boolean hasCaption() {
         return getState().caption != null && !getState().caption.isEmpty();
