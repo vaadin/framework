@@ -345,8 +345,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
     private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
-         var j;
-         for(j in $wnd.vaadin.vaadinConfigurations) {
+         for (var j in $wnd.vaadin.vaadinConfigurations) {
             // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }

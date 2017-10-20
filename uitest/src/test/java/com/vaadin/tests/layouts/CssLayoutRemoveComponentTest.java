@@ -29,7 +29,7 @@ public class CssLayoutRemoveComponentTest extends SingleBrowserTestPhantomJS2 {
         openTestURL();
 
         String script = "document.mutationEventCount = 0;"
-                + "var observer = new MutationObserver(function(mutations){"
+                + "var observer = new MutationObserver(function(mutations) {"
                 + "mutations.forEach(function(mutation) { document.mutationEventCount += mutation.removedNodes.length; });"
                 + "});"
                 + "observer.observe(arguments[0].parentNode, { childList: true });";
