@@ -4867,7 +4867,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         }
 
         /**
-         * Sets a header aria-label for this column.
+         * Sets the header aria-label for this column.
          *
          * @param caption
          *            The header aria-label for this column

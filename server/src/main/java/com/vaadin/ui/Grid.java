@@ -1210,7 +1210,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @since
          */
         public Column<T, V> setAssistiveCaption(String caption) {
-            if (Objects.equals(caption, getState(false).assistiveCaption)) {
+            if (Objects.equals(caption, getAssistiveCaption())) {
                 return this;
             }
             getState().assistiveCaption = caption;

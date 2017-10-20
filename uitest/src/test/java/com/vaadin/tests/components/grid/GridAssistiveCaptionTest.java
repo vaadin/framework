@@ -33,7 +33,7 @@ public class GridAssistiveCaptionTest extends SingleBrowserTest {
         openTestURL();
 
         GridElement.GridCellElement headerCell = $(GridElement.class).first()
-                .getHeaderCell(0, 1);
+                .getHeaderCell(0, 0);
 
         // default grid has no aria-label
         assertNull("Column should not contain aria-label",
