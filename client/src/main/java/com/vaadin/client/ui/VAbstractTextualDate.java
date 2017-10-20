@@ -202,7 +202,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
     /**
      * Sets the time zone for the field.
-     * 
+     *
      * @param timeZone
      *            the new time zone to use
      * @since 8.2
@@ -252,18 +252,32 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
         // always send the date string
         bufferedDateString = text.getText();
+        updateAndSendBufferedValues();
+    }
+
+    /**
+     * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
+     * then {@link #sendBufferedValues() sends} the values to the server.
+     *
+     * @since
+     */
+    protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
         sendBufferedValues();
     }
 
     /**
-     * Updates {@link #updateBufferedResolutions()} to send a response to the
-     * server.
+     * Updates {@link VDateField#bufferedResolutions bufferedResolutions} before
+     * sending a response to the server.
      * <p>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
-     * 
+     *
+     * <p>
+     * Note that this method should not send the buffered values, but use
+     * {@link #updateAndSendBufferedValues()} instead
+     *
      * @since
      */
     protected void updateBufferedResolutions() {
@@ -427,15 +441,12 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * @since 8.1
      */
     public void setISODate(String isoDate) {
-        Date date;
-        if (isoDate == null) {
-            date = null;
-        } else {
+        Date date = null;
+        if (isoDate != null) {
             date = getIsoFormatter().parse(isoDate);
         }
         setDate(date);
-        updateBufferedResolutions();
-        sendBufferedValues();
+        updateAndSendBufferedValues();
     }
 
     /**

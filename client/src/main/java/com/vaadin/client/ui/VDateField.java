@@ -67,13 +67,13 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * A temporary holder of the time units (resolutions), which would be sent
      * to the server through {@link #sendBufferedValues()}.
      * 
-     * The key is the resolution name e.g. "HOUR", "MINUTE".
+     * The key is the resolution.
      * 
      * The value can be {@code null}.
      * 
      * @since
      */
-    protected Map<Enum<?>, Integer> bufferedResolutions = new HashMap<>();
+    protected Map<R, Integer> bufferedResolutions = new HashMap<>();
 
     /**
      * A temporary holder of the date string, which would be sent to the server
