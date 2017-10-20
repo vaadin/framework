@@ -84,13 +84,12 @@ public class StringToBigIntegerConverter
                 .map(number -> {
                     if (number == null) {
                         return null;
-                    } else {
-                        // Empty value will be a BigInteger
-                        if (number instanceof BigInteger) {
-                            return (BigInteger) number;
-                        }
-                        return ((BigDecimal) number).toBigInteger();
                     }
+                    // Empty value will be a BigInteger
+                    if (number instanceof BigInteger) {
+                        return (BigInteger) number;
+                    }
+                    return ((BigDecimal) number).toBigInteger();
                 });
     }
 

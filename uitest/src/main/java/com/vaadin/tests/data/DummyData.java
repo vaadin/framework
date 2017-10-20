@@ -98,16 +98,13 @@ public class DummyData extends AbstractTestUIWithLog {
 
         HorizontalLayout controls = new HorizontalLayout();
         addComponent(controls);
-        controls.addComponent(new Button("Select Foo 20", e -> {
-            dummy.setValue("Foo " + 20);
-        }));
-        controls.addComponent(new Button("Reset data provider", e -> {
-            dummy.setDataProvider(new LoggingDataProvider(items));
-        }));
-        controls.addComponent(new Button("Remove all data", e -> {
-            dummy.setDataProvider(
-                    new LoggingDataProvider(Collections.emptyList()));
-        }));
+        controls.addComponent(
+                new Button("Select Foo 20", e -> dummy.setValue("Foo " + 20)));
+        controls.addComponent(new Button("Reset data provider",
+                e -> dummy.setDataProvider(new LoggingDataProvider(items))));
+        controls.addComponent(
+                new Button("Remove all data", e -> dummy.setDataProvider(
+                        new LoggingDataProvider(Collections.emptyList()))));
         addComponent(dummy);
     }
 }

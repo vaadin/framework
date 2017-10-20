@@ -492,9 +492,7 @@ public class ResourceLoader {
      */
     protected void runWhenHtmlImportsReady(Runnable runnable) {
         if (GWT.isClient() && supportsHtmlWhenReady()) {
-            addHtmlImportsReadyHandler(() -> {
-                runnable.run();
-            });
+            addHtmlImportsReadyHandler(() -> runnable.run());
         } else {
             runnable.run();
         }

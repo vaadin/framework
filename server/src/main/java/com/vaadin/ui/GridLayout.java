@@ -77,10 +77,10 @@ public class GridLayout extends AbstractLayout
         Layout.MarginHandler, LayoutClickNotifier {
 
     private GridLayoutServerRpc rpc = (MouseEventDetails mouseDetails,
-            Connector clickedConnector) -> {
-        fireEvent(LayoutClickEvent.createEvent(GridLayout.this, mouseDetails,
-                clickedConnector));
-    };
+            Connector clickedConnector) -> fireEvent(
+                    LayoutClickEvent.createEvent(GridLayout.this, mouseDetails,
+                            clickedConnector));
+
     /**
      * Cursor X position: this is where the next component with unspecified x,y
      * is inserted

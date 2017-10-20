@@ -254,7 +254,8 @@ public class GridConnector extends AbstractListingConnector
         getWidget().setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
-                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE)
+                    : null;
         });
         getWidget().setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
@@ -401,10 +402,9 @@ public class GridConnector extends AbstractListingConnector
 
     private void updateStaticRow(RowState rowState,
             Grid.StaticSection.StaticRow row) {
-        rowState.cells.forEach((columnId, cellState) -> {
-            updateStaticCellFromState(row.getCell(getColumn(columnId)),
-                    cellState);
-        });
+        rowState.cells
+                .forEach((columnId, cellState) -> updateStaticCellFromState(
+                        row.getCell(getColumn(columnId)), cellState));
         for (Map.Entry<CellState, Set<String>> cellGroupEntry : rowState.cellGroups
                 .entrySet()) {
             Set<String> group = cellGroupEntry.getValue();
