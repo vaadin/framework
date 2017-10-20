@@ -32,7 +32,7 @@ public class ButtonClick extends AbstractReindeerTestUI {
         final VerticalLayout rootLayout = new VerticalLayout();
         final Label statusLabel = new Label("Test initialized");
         rootLayout.addComponent(new Button("Click here", e ->
-        statusLabel.setValue(SUCCESS_TEXT)));
+            statusLabel.setValue(SUCCESS_TEXT)));
         Button visitLocation = new Button("Drag here", e ->
                 statusLabel.setValue(WRONG_BUTTON_TEXT)
         );

@@ -42,14 +42,14 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
         Button sessionExpired = new Button("Session expired");
         addComponent(sessionExpired);
         sessionExpired.addClickListener(e ->
-        showCriticalNotification(systemMessages.getSessionExpiredCaption(),
+            showCriticalNotification(systemMessages.getSessionExpiredCaption(),
                 systemMessages.getSessionExpiredMessage(), getDetailsMessage(),
                 systemMessages.getSessionExpiredURL()));
 
         Button authenticationError = new Button("Authentication error");
         addComponent(authenticationError);
         authenticationError.addClickListener(e ->
-        showCriticalNotification(systemMessages.getAuthenticationErrorCaption(),
+            showCriticalNotification(systemMessages.getAuthenticationErrorCaption(),
                 systemMessages.getAuthenticationErrorMessage(),
                 getDetailsMessage(),
                 systemMessages.getAuthenticationErrorURL()));
@@ -57,7 +57,7 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
         Button communicationError = new Button("Communication error");
         addComponent(communicationError);
         communicationError.addClickListener(e ->
-        showCriticalNotification(systemMessages.getCommunicationErrorCaption(),
+            showCriticalNotification(systemMessages.getCommunicationErrorCaption(),
                 systemMessages.getCommunicationErrorMessage(),
                 getDetailsMessage(),
                 systemMessages.getCommunicationErrorURL()));
@@ -65,7 +65,7 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
         Button internalError = new Button("Internal error");
         addComponent(internalError);
         internalError.addClickListener(e ->
-        showCriticalNotification(systemMessages.getInternalErrorCaption(),
+            showCriticalNotification(systemMessages.getInternalErrorCaption(),
                 systemMessages.getInternalErrorMessage(), getDetailsMessage(),
                 systemMessages.getInternalErrorURL()));
 

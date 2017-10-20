@@ -261,7 +261,7 @@ public class JavaScriptConnectorHelper {
             LayoutManager layoutManager = LayoutManager
                     .get(connector.getConnection());
             listener = e ->
-            invokeElementResizeCallback(e.getElement(), callbackFunction);
+                invokeElementResizeCallback(e.getElement(), callbackFunction);
             layoutManager.addElementResizeListener(element, listener);
             elementListeners.put(callbackFunction, listener);
         }
