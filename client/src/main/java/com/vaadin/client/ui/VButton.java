@@ -32,8 +32,8 @@ import com.vaadin.client.Util;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 
-public class VButton extends FocusWidget implements ClickHandler,
-        HasErrorIndicatorElement {
+public class VButton extends FocusWidget
+        implements ClickHandler, HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -458,15 +458,15 @@ public class VButton extends FocusWidget implements ClickHandler,
          var ret = 0;
 
         var sides = ["Right","Left"];
-        for(var i=0; i<2; i++) {
+        for (var i=0; i<2; i++) {
             var side = sides[i];
             var value;
             // Border -------------------------------------------------------
-            if(elem.currentStyle["border"+side+"Style"] != "none") {
+            if (elem.currentStyle["border"+side+"Style"] != "none") {
                 value = elem.currentStyle["border"+side+"Width"];
                 if ( !/^\d+(px)?$/i.test( value ) && /^\d/.test( value ) ) {
                     ret += convertToPixel(elem, value);
-                } else if(value.length > 2) {
+                } else if (value.length > 2) {
                     ret += parseInt(value.substr(0, value.length-2));
                 }
             }
@@ -475,7 +475,7 @@ public class VButton extends FocusWidget implements ClickHandler,
             value = elem.currentStyle["padding"+side];
             if ( !/^\d+(px)?$/i.test( value ) && /^\d/.test( value ) ) {
                 ret += convertToPixel(elem, value);
-            } else if(value.length > 2) {
+            } else if (value.length > 2) {
                 ret += parseInt(value.substr(0, value.length-2));
             }
         }

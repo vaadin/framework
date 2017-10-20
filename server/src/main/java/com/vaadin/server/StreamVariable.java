@@ -25,7 +25,7 @@ import java.io.Serializable;
  * browsers to the server without consuming large amounts of memory.
  * <p>
  * Note, writing to the {@link OutputStream} is not synchronized by the terminal
- * (to avoid stalls in other operations when eg. streaming to a slow network
+ * (to avoid stalls in other operations when e.g. streaming to a slow network
  * service or file system). If UI is changed as a side effect of writing to the
  * output stream, developer must handle synchronization manually.
  * <p>

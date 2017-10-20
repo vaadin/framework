@@ -21,12 +21,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -258,12 +258,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -1027,20 +1027,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             implements SubPartAware, LoadHandler {
 
         private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(
-                100, new ScheduledCommand() {
-
-                    @Override
-                    public void execute() {
-                        debug("VComboBox.SM: delayedImageLoadExecutioner()");
-                        if (suggestionPopup.isVisible()
-                                && suggestionPopup.isAttached()) {
-                            setWidth("");
-                            getElement().getFirstChildElement().getStyle()
-                                    .clearWidth();
-                            suggestionPopup
-                                    .setPopupPositionAndShow(suggestionPopup);
-                        }
-
+                100, () -> {
+                    debug("VComboBox.SM: delayedImageLoadExecutioner()");
+                    if (suggestionPopup.isVisible()
+                            && suggestionPopup.isAttached()) {
+                        setWidth("");
+                        getElement().getFirstChildElement().getStyle()
+                                .clearWidth();
+                        suggestionPopup
+                                .setPopupPositionAndShow(suggestionPopup);
                     }
                 });
 
@@ -1170,8 +1165,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     // TODO try to select the new value if it matches what was
                     // sent for V7 compatibility
                 }
-            } else if (item != null && !"".equals(lastFilter) && item.getText()
-                    .toLowerCase().contains(lastFilter.toLowerCase())) {
+            } else if (item != null && !"".equals(lastFilter)
+                    && item.getText().toLowerCase(Locale.ROOT)
+                            .contains(lastFilter.toLowerCase(Locale.ROOT))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection
@@ -2446,12 +2442,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
      */
     public native int minWidth(String captions)
     /*-{
-        if(!captions || captions.length <= 0)
+        if (!captions || captions.length <= 0)
                 return 0;
         captions = captions.split("|");
         var d = $wnd.document.createElement("div");
         var html = "";
-        for(var i=0; i < captions.length; i++) {
+        for (var i=0; i < captions.length; i++) {
                 html += "<div>" + captions[i] + "</div>";
                 // TODO apply same CSS classname as in suggestionmenu
         }

@@ -91,7 +91,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * The internal error message of the component.
      */
-    private ErrorMessage componentError = null;
+    private ErrorMessage componentError;
 
     /**
      * Locale of this component.
@@ -1388,10 +1388,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // called if there are no listeners on the server-side. A client-side
         // connector can override this and use a different RPC channel.
         if (getRpcManager(ContextClickRpc.class.getName()) == null) {
-            registerRpc((ContextClickRpc) (MouseEventDetails details) -> {
-                fireEvent(
-                        new ContextClickEvent(AbstractComponent.this, details));
-            });
+            registerRpc(
+                    (ContextClickRpc) (MouseEventDetails details) -> fireEvent(
+                            new ContextClickEvent(AbstractComponent.this,
+                                    details)));
         }
 
         return addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,

@@ -143,7 +143,7 @@ public class SharedUtil implements Serializable {
         String[] parts = upperCaseUnderscoreString.replaceFirst("^_*", "")
                 .split("_");
         for (int i = 0; i < parts.length; i++) {
-            parts[i] = capitalize(parts[i].toLowerCase(Locale.ENGLISH));
+            parts[i] = capitalize(parts[i].toLowerCase(Locale.ROOT));
         }
         return join(parts, " ");
     }
@@ -186,10 +186,10 @@ public class SharedUtil implements Serializable {
         }
 
         if (string.length() <= 1) {
-            return string.toUpperCase(Locale.ENGLISH);
+            return string.toUpperCase(Locale.ROOT);
         }
 
-        return string.substring(0, 1).toUpperCase(Locale.ENGLISH)
+        return string.substring(0, 1).toUpperCase(Locale.ROOT)
                 + string.substring(1);
     }
 

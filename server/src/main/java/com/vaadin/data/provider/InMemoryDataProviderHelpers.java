@@ -46,9 +46,8 @@ public class InMemoryDataProviderHelpers {
         UI currentUi = UI.getCurrent();
         if (currentUi != null) {
             return currentUi.getLocale();
-        } else {
-            return Locale.getDefault();
         }
+        return Locale.getDefault();
     };
 
     /**

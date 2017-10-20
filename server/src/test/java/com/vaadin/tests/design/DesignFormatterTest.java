@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.junit.Before;
@@ -290,9 +291,9 @@ public class DesignFormatterTest {
                 formatter.format(new ThemeResource(themePath)));
 
         assertEquals(fontAwesomeUrl, formatter.format(FontAwesome.AMBULANCE));
-        assertEquals(someOtherFontUrl.toLowerCase(),
+        assertEquals(someOtherFontUrl.toLowerCase(Locale.ROOT),
                 formatter.format(new GenericFontIcon("SomeOther", 0xf0f9))
-                        .toLowerCase());
+                        .toLowerCase(Locale.ROOT));
 
         assertEquals(fileSystemPath,
                 formatter.format(new FileResource(new File(fileSystemPath))));

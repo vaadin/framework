@@ -149,9 +149,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     private void generateDragData(T item, JsonObject jsonObject) {
         JsonObject generatedValues = Json.createObject();
 
-        generatorFunctions.forEach((type, generator) -> {
-            generatedValues.put(type, generator.apply(item));
-        });
+        generatorFunctions.forEach((type, generator) -> generatedValues
+                .put(type, generator.apply(item)));
 
         jsonObject.put(GridDragSourceState.JSONKEY_DRAG_DATA, generatedValues);
     }

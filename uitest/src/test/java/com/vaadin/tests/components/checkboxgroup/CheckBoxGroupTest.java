@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
@@ -260,11 +261,11 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         for (int i = 0; i < optionsCssClasses.size(); i++) {
             String cssClassList = optionsCssClasses.get(i);
             if (i == 10) {
-                assertTrue("10th item should be disabled",
-                        cssClassList.toLowerCase().contains("disabled"));
+                assertTrue("10th item should be disabled", cssClassList
+                        .toLowerCase(Locale.ROOT).contains("disabled"));
             } else {
-                assertFalse("Only 10th item should be disabled",
-                        cssClassList.toLowerCase().contains("disabled"));
+                assertFalse("Only 10th item should be disabled", cssClassList
+                        .toLowerCase(Locale.ROOT).contains("disabled"));
             }
         }
     }

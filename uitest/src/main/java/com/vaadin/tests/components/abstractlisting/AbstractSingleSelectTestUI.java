@@ -45,9 +45,7 @@ public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<
         options.put("Item 100", "Item 100");
 
         createSelectAction("Select", "Selection", options, "None",
-                (component, selected, data) -> {
-                    component.setValue(selected);
-                });
+                (component, selected, data) -> component.setValue(selected));
     }
 
 }

@@ -165,7 +165,7 @@ Since version 8.0, Vaadin Framework includes only one built-in theme:
 
 * [literal]#++valo++#, the primary theme since Vaadin 7.3
 
-The following legacy themes can be found in the [filename]#vaadin-compability-themes.jar# package
+The following legacy themes can be found in the [filename]#vaadin-compatibility-themes.jar# package
 for easier migrating from framework version 7 to 8:
 
 * [literal]#++reindeer++#, the primary theme in Vaadin 6 and 7

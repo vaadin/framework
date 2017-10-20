@@ -147,7 +147,7 @@ public class VUpload extends SimplePanel {
             @Override
             public void onClick(ClickEvent event) {
                 if (isImmediateMode()) {
-                    // fire click on upload (eg. focused button and hit space)
+                    // fire click on upload (e.g. focused button and hit space)
                     fireNativeClick(fu.getElement());
                 } else {
                     submit();
@@ -270,8 +270,10 @@ public class VUpload extends SimplePanel {
                         if (isAttached()) {
                             // no need to call poll() if component is already
                             // detached #8728
-                            ((UploadConnector) ConnectorMap.get(client).getConnector(VUpload.this))
-                                .getRpcProxy(UploadServerRpc.class).poll();
+                            ((UploadConnector) ConnectorMap.get(client)
+                                    .getConnector(VUpload.this))
+                                            .getRpcProxy(UploadServerRpc.class)
+                                            .poll();
                         }
                     }
 
@@ -290,40 +292,34 @@ public class VUpload extends SimplePanel {
         });
     }
 
-    ScheduledCommand startUploadCmd = new ScheduledCommand() {
+    ScheduledCommand startUploadCmd = () -> {
+        element.submit();
+        submitted = true;
 
-        @Override
-        public void execute() {
-            element.submit();
-            submitted = true;
+        disableUpload();
 
-            disableUpload();
-
-            /*
-             * Visit server a moment after upload has started to see possible
-             * changes from UploadStarted event. Will be cleared on complete.
-             *
-             * Must get the id here as the upload can finish before the timer
-             * expires and in that case nextUploadId has been updated and is
-             * wrong.
-             */
-            final int thisUploadId = nextUploadId;
-            t = new Timer() {
-                @Override
-                public void run() {
-                    // Only visit the server if the upload has not already
-                    // finished
-                    if (thisUploadId == nextUploadId) {
-                        VConsole.log(
-                                "Visiting server to see if upload started event changed UI.");
-                        client.updateVariable(paintableId, "pollForStart",
-                                thisUploadId, true);
-                    }
+        /*
+         * Visit server a moment after upload has started to see possible
+         * changes from UploadStarted event. Will be cleared on complete.
+         *
+         * Must get the id here as the upload can finish before the timer
+         * expires and in that case nextUploadId has been updated and is wrong.
+         */
+        final int thisUploadId = nextUploadId;
+        t = new Timer() {
+            @Override
+            public void run() {
+                // Only visit the server if the upload has not already
+                // finished
+                if (thisUploadId == nextUploadId) {
+                    VConsole.log(
+                            "Visiting server to see if upload started event changed UI.");
+                    client.updateVariable(paintableId, "pollForStart",
+                            thisUploadId, true);
                 }
-            };
-            t.schedule(800);
-        }
-
+            }
+        };
+        t.schedule(800);
     };
 
     /** For internal use only. May be removed or replaced in the future. */

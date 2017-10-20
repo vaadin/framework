@@ -1,5 +1,7 @@
 package com.vaadin.v7.tests.components.textfield;
 
+import java.util.Locale;
+
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -108,7 +110,7 @@ public class TextChangeEvents2 extends TestBase {
 
                 @Override
                 public void textChange(TextChangeEvent event) {
-                    tf.setValue(event.getText().toUpperCase());
+                    tf.setValue(event.getText().toUpperCase(Locale.ROOT));
                 }
             });
 
@@ -122,8 +124,8 @@ public class TextChangeEvents2 extends TestBase {
         }
 
         {
-            final TextField[] tfs = { new TextField(),
-                    new TextField(), new TextField(), new TextField() };
+            final TextField[] tfs = { new TextField(), new TextField(),
+                    new TextField(), new TextField() };
             HorizontalLayout hl = new HorizontalLayout();
             hl.setCaption("Blää");
             getLayout().addComponent(hl);

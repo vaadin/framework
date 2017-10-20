@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
@@ -186,20 +185,17 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         registerRpc(UIClientRpc.class, new UIClientRpc() {
             @Override
             public void uiClosed(final boolean sessionExpired) {
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        // Only notify user if we're still running and not eg.
-                        // navigating away (#12298)
-                        if (getConnection().isApplicationRunning()) {
-                            if (sessionExpired) {
-                                getConnection().showSessionExpiredError(null);
-                            } else {
-                                getState().enabled = false;
-                                updateEnabledState(getState().enabled);
-                            }
-                            getConnection().setApplicationRunning(false);
+                Scheduler.get().scheduleDeferred(() -> {
+                    // Only notify user if we're still running and not e.g.
+                    // navigating away (#12298)
+                    if (getConnection().isApplicationRunning()) {
+                        if (sessionExpired) {
+                            getConnection().showSessionExpiredError(null);
+                        } else {
+                            getState().enabled = false;
+                            updateEnabledState(getState().enabled);
                         }
+                        getConnection().setApplicationRunning(false);
                     }
                 });
             }
@@ -445,12 +441,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getWidget().sendClientResized();
-                }
-            });
+            Scheduler.get()
+                    .scheduleDeferred(() -> getWidget().sendClientResized());
         }
     }
 

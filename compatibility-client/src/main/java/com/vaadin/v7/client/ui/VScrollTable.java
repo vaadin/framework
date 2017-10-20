@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -5904,8 +5905,8 @@ public class VScrollTable extends FlowPanel
 
                 TooltipInfo info = null;
                 final Element targetTdOrTr = getTdOrTr(target);
-                if (targetTdOrTr != null && "td"
-                        .equals(targetTdOrTr.getTagName().toLowerCase())) {
+                if (targetTdOrTr != null && "td".equals(
+                        targetTdOrTr.getTagName().toLowerCase(Locale.ROOT))) {
                     TableCellElement td = (TableCellElement) targetTdOrTr
                             .cast();
                     info = cellToolTips.get(td);
@@ -7593,7 +7594,7 @@ public class VScrollTable extends FlowPanel
                         && row.rowKey == lastEmphasized.overkey) {
                     String stylename = ROWSTYLEBASE
                             + lastEmphasized.dropLocation.toString()
-                                    .toLowerCase();
+                                    .toLowerCase(Locale.ROOT);
                     VScrollTableRow.setStyleName(row.getElement(), stylename,
                             false);
                     lastEmphasized = null;
@@ -7614,8 +7615,8 @@ public class VScrollTable extends FlowPanel
             for (Widget w : scrollBody.renderedRows) {
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (details != null && details.overkey == row.rowKey) {
-                    String stylename = ROWSTYLEBASE
-                            + details.dropLocation.toString().toLowerCase();
+                    String stylename = ROWSTYLEBASE + details.dropLocation
+                            .toString().toLowerCase(Locale.ROOT);
                     VScrollTableRow.setStyleName(row.getElement(), stylename,
                             true);
                     lastEmphasized = details;
@@ -8220,7 +8221,7 @@ public class VScrollTable extends FlowPanel
      */
     private static native JavaScriptObject getPreventTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     public void triggerLazyColumnAdjustment(boolean now) {

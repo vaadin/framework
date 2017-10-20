@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.vaadin.server.ExternalResource;
@@ -180,8 +181,9 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
-                                    if (string.toLowerCase()
-                                            .contains(fragment.toLowerCase())) {
+                                    if (string.toLowerCase(Locale.ROOT)
+                                            .contains(fragment.toLowerCase(
+                                                    Locale.ROOT))) {
                                         menu.setValue(c);
                                         mainLayout.setSplitPosition(0);
                                         return;

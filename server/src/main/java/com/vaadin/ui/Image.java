@@ -33,9 +33,9 @@ import com.vaadin.shared.ui.image.ImageState;
 @SuppressWarnings("serial")
 public class Image extends AbstractEmbedded {
 
-    protected ImageServerRpc rpc = (MouseEventDetails mouseDetails) -> {
-        fireEvent(new ClickEvent(Image.this, mouseDetails));
-    };
+    protected ImageServerRpc rpc = (
+            MouseEventDetails mouseDetails) -> fireEvent(
+                    new ClickEvent(Image.this, mouseDetails));
 
     /**
      * Creates a new empty Image.

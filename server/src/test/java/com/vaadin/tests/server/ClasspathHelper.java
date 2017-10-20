@@ -69,7 +69,7 @@ public class ClasspathHelper {
                         .map(path -> getClassFromFile(path,
                                 classesRoot.toPath()))
                         .filter(Objects::nonNull).collect(Collectors.toList());
-            } else if (classesRoot.getName().toLowerCase(Locale.ENGLISH)
+            } else if (classesRoot.getName().toLowerCase(Locale.ROOT)
                     .endsWith(".jar")) {
                 URI uri = URI.create("jar:" + classesRoot.toURI());
                 FileSystem fileSystem;

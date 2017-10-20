@@ -33,15 +33,13 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
      *            the value of the text field part. It enables analyzing invalid
      *            input on the server. {@code null} if the date was chosen with
      *            popup calendar or contains user-typed string
-     * @param invalidDateString
-     *            Whether the last date string is invalid or not
      * @param resolutions
-     *            map of time unit (resolution) name and value, name is the
-     *            lower-case resolution name e.g. "hour", "minute", and value
-     *            can be {@code null}
+     *            map of time unit (resolution) name and value, the key is the
+     *            resolution name e.g. "HOUR", "MINUTE", the value can be
+     *            {@code null}. If the map is empty, that means the
+     *            {@code newDateString} is invalid
      */
-    void update(String newDateString, boolean invalidDateString,
-            Map<String, Integer> resolutions);
+    void update(String newDateString, Map<String, Integer> resolutions);
 
     /**
      * Indicates to the server that the client-side has lost focus.

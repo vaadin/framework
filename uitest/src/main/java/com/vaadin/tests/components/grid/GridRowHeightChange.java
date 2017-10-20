@@ -46,9 +46,8 @@ public class GridRowHeightChange extends AbstractReindeerTestUI {
                 "Theme selector", themes);
         themeSelector.setSelectedItem("reindeer");
         themeSelector.setEmptySelectionAllowed(false);
-        themeSelector.addValueChangeListener(event -> {
-            setTheme(event.getValue());
-        });
+        themeSelector
+                .addValueChangeListener(event -> setTheme(event.getValue()));
 
         VerticalLayout layout = new VerticalLayout();
         layout.setSpacing(true);

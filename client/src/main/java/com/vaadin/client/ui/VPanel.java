@@ -175,7 +175,7 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
     }
 
     /**
-     * Ensures the panel is scrollable eg. after style name changes.
+     * Ensures the panel is scrollable e.g. after style name changes.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */

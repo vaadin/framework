@@ -146,7 +146,7 @@ public class VUpload extends SimplePanel {
             @Override
             public void onClick(ClickEvent event) {
                 if (immediate) {
-                    // fire click on upload (eg. focused button and hit space)
+                    // fire click on upload (e.g. focused button and hit space)
                     fireNativeClick(fu.getElement());
                 } else {
                     submit();

@@ -63,7 +63,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
         String protocol = value.split("://")[0];
         try {
             ResourceConverterByProtocol converter = ResourceConverterByProtocol
-                    .valueOf(protocol.toUpperCase(Locale.ENGLISH));
+                    .valueOf(protocol.toUpperCase(Locale.ROOT));
             return Result.ok(converter.parse(value));
         } catch (IllegalArgumentException iae) {
             return Result.error("Unrecognized protocol: " + protocol);
@@ -140,7 +140,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             @Override
             public Resource parse(String value) {
                 // Deprecated, 7.4 syntax is
-                // font://"+FontAwesome.valueOf(foo) eg. "font://AMBULANCE"
+                // font://"+FontAwesome.valueOf(foo) e.g. "font://AMBULANCE"
                 final String iconName = value.split("://", 2)[1];
                 return FontAwesome.valueOf(iconName);
             }

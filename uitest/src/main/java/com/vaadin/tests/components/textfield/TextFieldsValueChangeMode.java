@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.textfield;
 
+import java.util.Locale;
+
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -29,7 +31,7 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
 
     private Component createFields(Class<?> fieldClass) {
         VerticalLayout vl = new VerticalLayout();
-        String id = fieldClass.getSimpleName().toLowerCase();
+        String id = fieldClass.getSimpleName().toLowerCase(Locale.ROOT);
         try {
             AbstractField<String> f = (AbstractField<String>) fieldClass
                     .newInstance();

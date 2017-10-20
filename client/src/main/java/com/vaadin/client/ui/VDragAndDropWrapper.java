@@ -17,6 +17,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -122,7 +123,7 @@ public class VDragAndDropWrapper extends VCustomComponent
                 if (getConnector().isEnabled()
                         && startDrag(event.getNativeEvent())) {
                     /*
-                     * Dont let eg. panel start scrolling.
+                     * Don't let e.g. panel start scrolling.
                      */
                     event.stopPropagation();
                 }
@@ -466,11 +467,11 @@ public class VDragAndDropWrapper extends VCustomComponent
 
         public final native void postFile(VHtml5File file)
         /*-{
-        
+
             this.setRequestHeader('Content-Type', 'multipart/form-data');
             // Seems like IE10 will loose the file if we don't keep a reference to it...
             this.fileBeingUploaded = file;
-        
+
             this.send(file);
         }-*/;
 
@@ -626,19 +627,19 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected native void hookHtml5Events(com.google.gwt.user.client.Element el)
     /*-{
             var me = this;
-    
+
             el.addEventListener("dragenter",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragleave",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("dragover",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
-    
+
             el.addEventListener("drop",  $entry(function(ev) {
                 return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
@@ -672,11 +673,11 @@ public class VDragAndDropWrapper extends VCustomComponent
     protected void deEmphasis(boolean doLayout) {
         if (emphasizedVDrop != null) {
             VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedVDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedVDrop.toString().toLowerCase(Locale.ROOT),
                     false);
-            VDragAndDropWrapper.setStyleName(getElement(),
-                    OVER_STYLE + "-" + emphasizedHDrop.toString().toLowerCase(),
+            VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                    + emphasizedHDrop.toString().toLowerCase(Locale.ROOT),
                     false);
         }
         if (doLayout) {
@@ -692,10 +693,10 @@ public class VDragAndDropWrapper extends VCustomComponent
         deEmphasis(false);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE, true);
         VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
-                + verticalDropLocation.toString().toLowerCase(), true);
-        VDragAndDropWrapper.setStyleName(getElement(),
-                OVER_STYLE + "-"
-                        + horizontalDropLocation.toString().toLowerCase(),
+                + verticalDropLocation.toString().toLowerCase(Locale.ROOT),
+                true);
+        VDragAndDropWrapper.setStyleName(getElement(), OVER_STYLE + "-"
+                + horizontalDropLocation.toString().toLowerCase(Locale.ROOT),
                 true);
         emphasizedVDrop = verticalDropLocation;
         emphasizedHDrop = horizontalDropLocation;

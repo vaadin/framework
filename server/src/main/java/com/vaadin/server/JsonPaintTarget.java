@@ -26,6 +26,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -289,7 +290,7 @@ public class JsonPaintTarget implements PaintTarget {
                     for (int k = 0; k < 4 - ss.length(); k++) {
                         sb.append('0');
                     }
-                    sb.append(ss.toUpperCase());
+                    sb.append(ss.toUpperCase(Locale.ROOT));
                 } else {
                     sb.append(ch);
                 }

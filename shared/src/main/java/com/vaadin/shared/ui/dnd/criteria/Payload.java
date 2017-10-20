@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.dnd.criteria;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Stores key/value pairs and the value type. Payload is set in
@@ -53,11 +54,11 @@ public class Payload implements Serializable {
      * Creates a payload object.
      *
      * @param key
-     *         key of the payload
+     *            key of the payload
      * @param value
-     *         value of the payload
+     *            value of the payload
      * @param valueType
-     *         type of the payload value
+     *            type of the payload value
      */
     public Payload(String key, String value, ValueType valueType) {
         this.key = key;
@@ -99,8 +100,8 @@ public class Payload implements Serializable {
      * @return the string representation of this payload
      */
     public String getPayloadString() {
-        return ITEM_PREFIX + ":" + valueType.name().toLowerCase() + ":" + key
-                + ":" + value;
+        return ITEM_PREFIX + ":" + valueType.name().toLowerCase(Locale.ROOT)
+                + ":" + key + ":" + value;
     }
 
     /**
@@ -108,7 +109,7 @@ public class Payload implements Serializable {
      * string.
      *
      * @param payloadString
-     *         string that represents a payload object
+     *            string that represents a payload object
      * @return a payload object represented by the given string
      */
     public static Payload parse(String payloadString) {
@@ -122,6 +123,6 @@ public class Payload implements Serializable {
         // Create payload object of the given parts. Value type is converted to
         // upper case to match the enum's case.
         return new Payload(parts[2], parts[3],
-                ValueType.valueOf(parts[1].toUpperCase()));
+                ValueType.valueOf(parts[1].toUpperCase(Locale.ROOT)));
     }
 }

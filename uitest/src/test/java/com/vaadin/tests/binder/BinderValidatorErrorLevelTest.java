@@ -1,6 +1,7 @@
 package com.vaadin.tests.binder;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,20 +23,23 @@ public class BinderValidatorErrorLevelTest extends SingleBrowserTest {
 
             // Screenshot the whole slot
             compareScreen(textField.findElement(By.xpath("..")),
-                    l.name().toLowerCase());
+                    l.name().toLowerCase(Locale.ROOT));
 
             Assert.assertTrue("Error style for " + l.name() + " not present",
-                    textField.getAttribute("class").contains(
-                            "v-textfield-error-" + l.name().toLowerCase()));
+                    textField.getAttribute("class")
+                            .contains("v-textfield-error-"
+                                    + l.name().toLowerCase(Locale.ROOT)));
             textField.setValue("long enough text");
             Assert.assertFalse("Error style for " + l.name() + " still present",
-                    textField.getAttribute("class").contains(
-                            "v-textfield-error-" + l.name().toLowerCase()));
+                    textField.getAttribute("class")
+                            .contains("v-textfield-error-"
+                                    + l.name().toLowerCase(Locale.ROOT)));
             textField.setValue("foo");
             Assert.assertTrue(
                     "Error style for " + l.name() + " should be present again.",
-                    textField.getAttribute("class").contains(
-                            "v-textfield-error-" + l.name().toLowerCase()));
+                    textField.getAttribute("class")
+                            .contains("v-textfield-error-"
+                                    + l.name().toLowerCase(Locale.ROOT)));
         }
     }
 }

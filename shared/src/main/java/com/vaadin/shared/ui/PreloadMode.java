@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui;
 
+import java.util.Locale;
+
 /**
  * Enumeration that provides a hint to the browser how media should be
  * preloaded.
@@ -44,6 +46,6 @@ public enum PreloadMode {
      * @return corresponding preload attribute value string
      */
     public String getValue() {
-        return name().toLowerCase();
+        return name().toLowerCase(Locale.ROOT);
     }
 }

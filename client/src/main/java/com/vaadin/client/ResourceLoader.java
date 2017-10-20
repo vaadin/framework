@@ -397,7 +397,7 @@ public class ResourceLoader {
 
     private static native int getStyleSheetLength(String url)
     /*-{
-        for(var i = 0; i < $doc.styleSheets.length; i++) {
+        for (var i = 0; i < $doc.styleSheets.length; i++) {
             if ($doc.styleSheets[i].href === url) {
                 var sheet = $doc.styleSheets[i];
                 try {
@@ -492,9 +492,7 @@ public class ResourceLoader {
      */
     protected void runWhenHtmlImportsReady(Runnable runnable) {
         if (GWT.isClient() && supportsHtmlWhenReady()) {
-            addHtmlImportsReadyHandler(() -> {
-                runnable.run();
-            });
+            addHtmlImportsReadyHandler(() -> runnable.run());
         } else {
             runnable.run();
         }

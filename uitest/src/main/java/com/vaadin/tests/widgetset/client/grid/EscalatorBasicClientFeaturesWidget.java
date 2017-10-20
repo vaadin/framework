@@ -317,118 +317,73 @@ public class EscalatorBasicClientFeaturesWidget
 
     private void createFrozenMenu() {
         String[] menupath = { FEATURES_MENU, "Frozen columns" };
-        addMenuCommand("Freeze 1 column", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getColumnConfiguration().setFrozenColumnCount(1);
-            }
-        }, menupath);
-        addMenuCommand("Freeze 0 columns", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getColumnConfiguration().setFrozenColumnCount(0);
-            }
-        }, menupath);
+        addMenuCommand("Freeze 1 column", () -> escalator
+                .getColumnConfiguration().setFrozenColumnCount(1), menupath);
+        addMenuCommand("Freeze 0 columns", () -> escalator
+                .getColumnConfiguration().setFrozenColumnCount(0), menupath);
     }
 
     private void createColspanMenu() {
         String[] menupath = { FEATURES_MENU, "Column spanning" };
-        addMenuCommand("Apply normal colspan", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                colspan = Colspan.NORMAL;
-                refreshEscalator();
-            }
+        addMenuCommand("Apply normal colspan", () -> {
+            colspan = Colspan.NORMAL;
+            refreshEscalator();
         }, menupath);
-        addMenuCommand("Apply crazy colspan", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                colspan = Colspan.CRAZY;
-                refreshEscalator();
-            }
+        addMenuCommand("Apply crazy colspan", () -> {
+            colspan = Colspan.CRAZY;
+            refreshEscalator();
         }, menupath);
-        addMenuCommand("Apply no colspan", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                colspan = Colspan.NONE;
-                refreshEscalator();
-            }
+        addMenuCommand("Apply no colspan", () -> {
+            colspan = Colspan.NONE;
+            refreshEscalator();
         }, menupath);
     }
 
     private void createColumnsAndRowsMenu() {
         String[] menupath = { COLUMNS_AND_ROWS_MENU };
-        addMenuCommand("Add one of each row", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertRows(escalator.getHeader(), 0, 1);
-                insertRows(escalator.getBody(), 0, 1);
-                insertRows(escalator.getFooter(), 0, 1);
-            }
+        addMenuCommand("Add one of each row", () -> {
+            insertRows(escalator.getHeader(), 0, 1);
+            insertRows(escalator.getBody(), 0, 1);
+            insertRows(escalator.getFooter(), 0, 1);
         }, menupath);
-        addMenuCommand("Remove one of each row", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                removeRows(escalator.getHeader(), 0, 1);
-                removeRows(escalator.getBody(), 0, 1);
-                removeRows(escalator.getFooter(), 0, 1);
-            }
+        addMenuCommand("Remove one of each row", () -> {
+            removeRows(escalator.getHeader(), 0, 1);
+            removeRows(escalator.getBody(), 0, 1);
+            removeRows(escalator.getFooter(), 0, 1);
         }, menupath);
     }
 
     private void createGeneralMenu() {
         String[] menupath = { GENERAL_MENU };
 
-        addMenuCommand("Detach Escalator", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.removeFromParent();
+        addMenuCommand("Detach Escalator", () -> escalator.removeFromParent(),
+                menupath);
+
+        addMenuCommand("Attach Escalator", () -> {
+            if (!escalator.isAttached()) {
+                addNorth(escalator, 500);
             }
         }, menupath);
 
-        addMenuCommand("Attach Escalator", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (!escalator.isAttached()) {
-                    addNorth(escalator, 500);
-                }
-            }
-        }, menupath);
+        addMenuCommand("Clear (columns, then rows)", () -> resetColRow(),
+                menupath);
+        addMenuCommand("Clear (rows, then columns)", () -> resetRowCol()
 
-        addMenuCommand("Clear (columns, then rows)", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                resetColRow();
-            }
+                , menupath);
+        addMenuCommand("Populate Escalator (columns, then rows)", () -> {
+            resetColRow();
+            insertColumns(0, 10);
+            insertRows(escalator.getHeader(), 0, 1);
+            insertRows(escalator.getBody(), 0, 100);
+            insertRows(escalator.getFooter(), 0, 1);
         }, menupath);
-        addMenuCommand("Clear (rows, then columns)", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                resetRowCol();
-            }
+        addMenuCommand("Populate Escalator (rows, then columns)", () -> {
+            resetColRow();
+            insertRows(escalator.getHeader(), 0, 1);
+            insertRows(escalator.getBody(), 0, 100);
+            insertRows(escalator.getFooter(), 0, 1);
+            insertColumns(0, 10);
         }, menupath);
-        addMenuCommand("Populate Escalator (columns, then rows)",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        resetColRow();
-                        insertColumns(0, 10);
-                        insertRows(escalator.getHeader(), 0, 1);
-                        insertRows(escalator.getBody(), 0, 100);
-                        insertRows(escalator.getFooter(), 0, 1);
-                    }
-                }, menupath);
-        addMenuCommand("Populate Escalator (rows, then columns)",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        resetColRow();
-                        insertRows(escalator.getHeader(), 0, 1);
-                        insertRows(escalator.getBody(), 0, 100);
-                        insertRows(escalator.getFooter(), 0, 1);
-                        insertColumns(0, 10);
-                    }
-                }, menupath);
 
         createSizeMenu();
     }
@@ -447,77 +402,43 @@ public class EscalatorBasicClientFeaturesWidget
     private void addSizeMenuItem(final String size, final String direction,
             String[] menupath) {
         final String title = (size != null ? size : "undefined");
-        addMenuCommand(title + " " + direction, new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (direction.equals("height")) {
-                    escalator.setHeight(size);
-                } else {
-                    escalator.setWidth(size);
-                }
+        addMenuCommand(title + " " + direction, () -> {
+            if (direction.equals("height")) {
+                escalator.setHeight(size);
+            } else {
+                escalator.setWidth(size);
             }
         }, menupath);
     }
 
     private void createColumnMenu() {
         String[] menupath = { COLUMNS_AND_ROWS_MENU, "Columns" };
-        addMenuCommand("Add one column to beginning", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertColumns(0, 1);
-            }
-        }, menupath);
-        addMenuCommand("Add one column to end", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertColumns(
-                        escalator.getColumnConfiguration().getColumnCount(), 1);
-            }
-        }, menupath);
-        addMenuCommand("Add ten columns", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertColumns(0, 10);
-            }
-        }, menupath);
+        addMenuCommand("Add one column to beginning", () -> insertColumns(0, 1),
+                menupath);
+        addMenuCommand("Add one column to end",
+                () -> insertColumns(
+                        escalator.getColumnConfiguration().getColumnCount(), 1),
+                menupath);
+        addMenuCommand("Add ten columns", () -> insertColumns(0, 10), menupath);
         addMenuCommand("Remove one column from beginning",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        removeColumns(0, 1);
-                    }
-                }, menupath);
-        addMenuCommand("Remove one column from end", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                removeColumns(
+                () -> removeColumns(0, 1), menupath);
+        addMenuCommand("Remove one column from end",
+                () -> removeColumns(
                         escalator.getColumnConfiguration().getColumnCount() - 1,
-                        1);
-            }
-        }, menupath);
+                        1),
+                menupath);
 
-        addMenuCommand("Refresh first column", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getColumnConfiguration().refreshColumns(0, 1);
-            }
-        }, menupath);
+        addMenuCommand("Refresh first column",
+                () -> escalator.getColumnConfiguration().refreshColumns(0, 1),
+                menupath);
 
         addMenuCommand("Resize first column to max width",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        escalator.getColumnConfiguration().setColumnWidth(0,
-                                -1);
-                    }
-                }, menupath);
+                () -> escalator.getColumnConfiguration().setColumnWidth(0, -1),
+                menupath);
 
-        addMenuCommand("Resize first column to 100 px", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getColumnConfiguration().setColumnWidth(0, 100);
-            }
-        }, menupath);
+        addMenuCommand("Resize first column to 100 px",
+                () -> escalator.getColumnConfiguration().setColumnWidth(0, 100),
+                menupath);
     }
 
     private void createHeaderRowsMenu() {
@@ -534,124 +455,71 @@ public class EscalatorBasicClientFeaturesWidget
         String[] menupath = { COLUMNS_AND_ROWS_MENU, "Body Rows" };
         createRowsMenu(escalator.getBody(), menupath);
 
-        addMenuCommand("Add 5 rows to top", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertRows(escalator.getBody(), 0, 5);
-            }
-        }, menupath);
-        addMenuCommand("Add 22 rows to top", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertRows(escalator.getBody(), 0, 22);
-            }
-        }, menupath);
-        addMenuCommand("Add 50 rows to top", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                insertRows(escalator.getBody(), 0, 50);
-            }
-        }, menupath);
-        addMenuCommand("Remove 5 rows from bottom", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                removeRows(escalator.getBody(),
-                        escalator.getBody().getRowCount() - 5, 5);
-            }
-        }, menupath);
-        addMenuCommand("Remove 50 rows from bottom", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                removeRows(escalator.getBody(),
-                        escalator.getBody().getRowCount() - 50, 50);
-            }
-        }, menupath);
-        addMenuCommand("Remove 15 rows from middle", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                removeRows(escalator.getBody(), 3, 15);
-            }
-        }, menupath);
+        addMenuCommand("Add 5 rows to top",
+                () -> insertRows(escalator.getBody(), 0, 5), menupath);
+        addMenuCommand("Add 22 rows to top",
+                () -> insertRows(escalator.getBody(), 0, 22), menupath);
+        addMenuCommand("Add 50 rows to top",
+                () -> insertRows(escalator.getBody(), 0, 50), menupath);
+        addMenuCommand("Remove 5 rows from bottom",
+                () -> removeRows(escalator.getBody(),
+                        escalator.getBody().getRowCount() - 5, 5),
+                menupath);
+        addMenuCommand("Remove 50 rows from bottom",
+                () -> removeRows(escalator.getBody(),
+                        escalator.getBody().getRowCount() - 50, 50),
+                menupath);
+        addMenuCommand("Remove 15 rows from middle",
+                () -> removeRows(escalator.getBody(), 3, 15), menupath);
         addMenuCommand("Remove 50 rows from almost bottom",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        removeRows(escalator.getBody(),
-                                escalator.getBody().getRowCount() - 60, 50);
-                    }
-                }, menupath);
-        addMenuCommand("Remove all, insert 30 and scroll 40px",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        removeRows(escalator.getBody(), 0,
-                                escalator.getBody().getRowCount());
-                        insertRows(escalator.getBody(), 0, 30);
-                        escalator.setScrollTop(40);
-                    }
-                }, menupath);
+                () -> removeRows(escalator.getBody(),
+                        escalator.getBody().getRowCount() - 60, 50),
+                menupath);
+        addMenuCommand("Remove all, insert 30 and scroll 40px", () -> {
+            removeRows(escalator.getBody(), 0,
+                    escalator.getBody().getRowCount());
+            insertRows(escalator.getBody(), 0, 30);
+            escalator.setScrollTop(40);
+        }, menupath);
 
         String[] scrollToRowMenuPath = new String[menupath.length + 1];
         System.arraycopy(menupath, 0, scrollToRowMenuPath, 0, menupath.length);
         scrollToRowMenuPath[scrollToRowMenuPath.length - 1] = "Scroll to...";
         for (int i = 0; i < 100; i += 25) {
             final int rowIndex = i;
-            addMenuCommand("Row " + i, new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    escalator.scrollToRow(rowIndex, ScrollDestination.ANY, 0);
-                }
-            }, scrollToRowMenuPath);
+            addMenuCommand("Row " + i, () -> escalator.scrollToRow(rowIndex,
+                    ScrollDestination.ANY, 0), scrollToRowMenuPath);
         }
 
-        addMenuCommand("Set 20px default height", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getBody().setDefaultRowHeight(20);
-            }
-        }, menupath);
+        addMenuCommand("Set 20px default height",
+                () -> escalator.getBody().setDefaultRowHeight(20), menupath);
     }
 
     private void createRowsMenu(final RowContainer container,
             String[] menupath) {
-        addMenuCommand("Add one row to beginning", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                int offset = 0;
-                int number = 1;
-                insertRows(container, offset, number);
-            }
+        addMenuCommand("Add one row to beginning", () -> {
+            int offset = 0;
+            int number = 1;
+            insertRows(container, offset, number);
         }, menupath);
-        addMenuCommand("Add one row to end", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                int offset = container.getRowCount();
-                int number = 1;
-                insertRows(container, offset, number);
-            }
+        addMenuCommand("Add one row to end", () -> {
+            int offset = container.getRowCount();
+            int number = 1;
+            insertRows(container, offset, number);
         }, menupath);
-        addMenuCommand("Remove one row from beginning", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                int offset = 0;
-                int number = 1;
-                removeRows(container, offset, number);
-            }
+        addMenuCommand("Remove one row from beginning", () -> {
+            int offset = 0;
+            int number = 1;
+            removeRows(container, offset, number);
         }, menupath);
-        addMenuCommand("Remove one row from end", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                int offset = container.getRowCount() - 1;
-                int number = 1;
-                removeRows(container, offset, number);
-            }
+        addMenuCommand("Remove one row from end", () -> {
+            int offset = container.getRowCount() - 1;
+            int number = 1;
+            removeRows(container, offset, number);
         }, menupath);
-        addMenuCommand("Remove all rows", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                if (container.getRowCount() > 0) {
-                    removeRows(container, 0, container.getRowCount());
-                }
+        addMenuCommand("Remove all rows", () -> {
+            if (container.getRowCount() > 0) {
+                removeRows(container, 0, container.getRowCount());
             }
         }, menupath);
     }
@@ -685,10 +553,8 @@ public class EscalatorBasicClientFeaturesWidget
             }
         }, menupath);
 
-        addMenuCommand("Focusable Updater", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getBody().setSpacerUpdater(new SpacerUpdater() {
+        addMenuCommand("Focusable Updater",
+                () -> escalator.getBody().setSpacerUpdater(new SpacerUpdater() {
                     @Override
                     public void init(Spacer spacer) {
                         spacer.getElement().appendChild(DOM.createInputText());
@@ -698,9 +564,7 @@ public class EscalatorBasicClientFeaturesWidget
                     public void destroy(Spacer spacer) {
                         spacer.getElement().removeAllChildren();
                     }
-                });
-            }
-        }, menupath);
+                }), menupath);
 
         createSpacersMenuForRow(-1, menupath);
         createSpacersMenuForRow(1, menupath);
@@ -711,38 +575,17 @@ public class EscalatorBasicClientFeaturesWidget
     private void createSpacersMenuForRow(final int rowIndex,
             String[] menupath) {
         menupath = new String[] { menupath[0], menupath[1], "Row " + rowIndex };
-        addMenuCommand("Set 100px", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getBody().setSpacer(rowIndex, 100);
-            }
-        }, menupath);
-        addMenuCommand("Set 50px", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getBody().setSpacer(rowIndex, 50);
-            }
-        }, menupath);
-        addMenuCommand("Remove", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.getBody().setSpacer(rowIndex, -1);
-            }
-        }, menupath);
-        addMenuCommand("Scroll here (ANY, 0)", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                escalator.scrollToSpacer(rowIndex, ScrollDestination.ANY, 0);
-            }
-        }, menupath);
-        addMenuCommand("Scroll here row+spacer below (ANY, 0)",
-                new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        escalator.scrollToRowAndSpacer(rowIndex,
-                                ScrollDestination.ANY, 0);
-                    }
-                }, menupath);
+        addMenuCommand("Set 100px",
+                () -> escalator.getBody().setSpacer(rowIndex, 100), menupath);
+        addMenuCommand("Set 50px",
+                () -> escalator.getBody().setSpacer(rowIndex, 50), menupath);
+        addMenuCommand("Remove",
+                () -> escalator.getBody().setSpacer(rowIndex, -1), menupath);
+        addMenuCommand("Scroll here (ANY, 0)", () -> escalator
+                .scrollToSpacer(rowIndex, ScrollDestination.ANY, 0), menupath);
+        addMenuCommand("Scroll here row+spacer below (ANY, 0)", () -> escalator
+                .scrollToRowAndSpacer(rowIndex, ScrollDestination.ANY, 0),
+                menupath);
     }
 
     private void insertRows(final RowContainer container, int offset,

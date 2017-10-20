@@ -53,9 +53,8 @@ public class Panel extends AbstractSingleComponentContainer
      */
     protected ActionManager actionManager;
 
-    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> {
-        fireEvent(new ClickEvent(Panel.this, mouseDetails));
-    };
+    private PanelServerRpc rpc = (MouseEventDetails mouseDetails) -> fireEvent(
+            new ClickEvent(Panel.this, mouseDetails));
 
     /**
      * Creates a new empty panel.

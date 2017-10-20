@@ -77,7 +77,7 @@ public class ParameterizedTB3Runner extends TB3Runner {
             // getThemes -> setTheme
             String setter = "set" + m.getName().substring("get".length());
             setter = setter.substring(0, setter.length() - 1);
-            // property = property.substring(0, 1).toLowerCase()
+            // property = property.substring(0, 1).toLowerCase(Locale.ROOT)
             // + property.substring(1);
 
             Method setterMethod;

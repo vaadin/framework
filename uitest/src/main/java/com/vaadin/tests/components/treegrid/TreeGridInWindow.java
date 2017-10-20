@@ -26,9 +26,8 @@ public class TreeGridInWindow extends AbstractTestUI {
 
         Window window = new Window("Window", treeGrid);
 
-        Button openWindow = new Button("Open window", event -> {
-            UI.getCurrent().addWindow(window);
-        });
+        Button openWindow = new Button("Open window",
+                event -> UI.getCurrent().addWindow(window));
 
         getLayout().addComponent(openWindow);
     }

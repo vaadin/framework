@@ -97,7 +97,7 @@ public class BrowserInfo {
 
     private native boolean detectTouchDevice()
     /*-{
-        try { document.createEvent("TouchEvent");return true;} catch(e){return false;};
+        try { document.createEvent("TouchEvent");return true;} catch(e) {return false;};
     }-*/;
 
     private native boolean detectChromeTouchDevice()

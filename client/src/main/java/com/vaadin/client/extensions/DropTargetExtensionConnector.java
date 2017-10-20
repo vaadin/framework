@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -219,7 +220,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             DataTransfer.DropEffect dropEffect = DataTransfer.DropEffect
                     // the valueOf() needs to have equal string and name()
                     // doesn't return in all upper case
-                    .valueOf(getState().dropEffect.name().toUpperCase());
+                    .valueOf(getState().dropEffect.name()
+                            .toUpperCase(Locale.ROOT));
             event.getDataTransfer().setDropEffect(dropEffect);
         }
     }
@@ -283,13 +285,13 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
             JsArrayString typesJsArray = getTypes(
                     nativeEvent.getDataTransfer());
 
-            /* Handle event if transfer doesn't contain files.
+            /*
+             * Handle event if transfer doesn't contain files.
              *
              * Spec: "Dragging files can currently only happen from outside a
              * browsing context, for example from a file system manager
-             * application."
-             * Thus there cannot be at the same time both files and other data
-             * dragged
+             * application." Thus there cannot be at the same time both files
+             * and other data dragged
              */
             if (!containsFiles(typesJsArray)) {
                 nativeEvent.preventDefault();
@@ -304,7 +306,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                 }
 
                 sendDropEventToServer(types, data, DragSourceExtensionConnector
-                        .getDropEffect(nativeEvent.getDataTransfer()), nativeEvent);
+                        .getDropEffect(nativeEvent.getDataTransfer()),
+                        nativeEvent);
             }
 
         }
@@ -332,8 +335,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
         }
 
         // Execute criterion defined via API
-        if (allowed && getState().criteria != null && !getState().criteria
-                .isEmpty()) {
+        if (allowed && getState().criteria != null
+                && !getState().criteria.isEmpty()) {
 
             // Collect payload data types
             Set<Payload> payloadSet = new HashSet<>();
@@ -370,7 +373,7 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
      * https://html.spec.whatwg.org/multipage/interaction.html#the-datatransfer-interface:dom-datatransfer-types-2
      *
      * @param types
-     *         Array of data types.
+     *            Array of data types.
      * @return {@code} true if given array contains {@code "Files"}, {@code
      * false} otherwise.
      */
@@ -403,8 +406,8 @@ public class DropTargetExtensionConnector extends AbstractExtensionConnector {
                 .buildMouseEventDetails(dropEvent, getDropTargetElement());
 
         // Send data to server with RPC
-        getRpcProxy(DropTargetRpc.class)
-                .drop(types, data, dropEffect, mouseEventDetails);
+        getRpcProxy(DropTargetRpc.class).drop(types, data, dropEffect,
+                mouseEventDetails);
     }
 
     /**

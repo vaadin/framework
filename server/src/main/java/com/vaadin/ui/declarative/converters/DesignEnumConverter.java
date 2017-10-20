@@ -53,7 +53,7 @@ public class DesignEnumConverter<T extends Enum>
         }
         try {
             T result = (T) Enum.valueOf(type,
-                    value.toUpperCase(Locale.ENGLISH));
+                    value.toUpperCase(Locale.ROOT));
             return Result.ok(result);
         } catch (Exception e) {
             return Result.error(e.getMessage());
@@ -66,7 +66,7 @@ public class DesignEnumConverter<T extends Enum>
             return null;
         }
 
-        return value.name().toLowerCase(Locale.ENGLISH);
+        return value.name().toLowerCase(Locale.ROOT);
     }
 
 }
