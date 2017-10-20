@@ -403,12 +403,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * grid.addContextClickListener(event -&gt; Notification.show(
      *         ((GridContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
      * </pre>
-     * 
+     *
      * @param <T>
      *            the grid bean type
      */
@@ -513,7 +513,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid<?> source, Column<?, ?> column,
@@ -836,9 +836,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             String id = getId();
             if (id == null) {
                 return Stream.empty();
-            } else {
-                return Stream.of(new QuerySortOrder(id, direction));
             }
+            return Stream.of(new QuerySortOrder(id, direction));
         };
 
         private SerializableComparator<T> comparator;
@@ -1726,8 +1725,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
-         *            user via UI interaction
+         *            <code>true</code> if the column may be hidable by the user
+         *            via UI interaction
          * @return this column
          */
         public Column<T, V> setHidable(boolean hidable) {
@@ -1966,7 +1965,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
             // Remove old renderer
             Connector oldRenderer = getState().renderer;
-            if (oldRenderer != null && oldRenderer instanceof Extension) {
+            if (oldRenderer instanceof Extension) {
                 removeExtension((Extension) oldRenderer);
             }
 
@@ -2277,7 +2276,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @since 8.0.7
      */
     protected Grid(Class<T> beanType, DataCommunicator<T> dataCommunicator) {
-        this(BeanPropertySet.get(beanType));
+        this(BeanPropertySet.get(beanType), dataCommunicator);
         this.beanType = beanType;
     }
 
@@ -2420,7 +2419,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Creates a new {@code Grid} using the given caption
+     * Creates a new {@code Grid} using the given caption.
      *
      * @param caption
      *            the caption of the grid
@@ -2432,7 +2431,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given caption and
-     * {@code DataProvider}
+     * {@code DataProvider}.
      *
      * @param caption
      *            the caption of the grid
@@ -2445,7 +2444,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     }
 
     /**
-     * Creates a new {@code Grid} using the given {@code DataProvider}
+     * Creates a new {@code Grid} using the given {@code DataProvider}.
      *
      * @param dataProvider
      *            the data provider, not {@code null}
@@ -2457,7 +2456,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Creates a new {@code Grid} using the given caption and collection of
-     * items
+     * items.
      *
      * @param caption
      *            the caption of the grid
@@ -2540,9 +2539,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         if (!renderer.getPresentationType()
                 .isAssignableFrom(definition.getType())) {
-            throw new IllegalArgumentException(renderer.toString()
-                    + " cannot be used with a property of type "
-                    + definition.getType().getName());
+            throw new IllegalArgumentException(
+                    renderer + " cannot be used with a property of type "
+                            + definition.getType().getName());
         }
 
         @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -3018,7 +3017,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Note that all header, body and footer rows get the same height if
      * explicitly set. In automatic mode, each section is calculated separately
      * based on an empty row of that type.
-     * 
+     *
      * @see #setBodyRowHeight(double)
      * @see #setHeaderRowHeight(double)
      * @see #setFooterRowHeight(double)
@@ -3036,7 +3035,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * Sets the height of a body row. If -1 (default), the row height is
      * calculated based on the theme for an empty row before the Grid is
      * displayed.
-     * 
+     *
      * @param rowHeight
      *            The height of a row in pixels or -1 for automatic calculation
      * @since 8.2
@@ -3293,10 +3292,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Header in this Grid.
-     * 
+     *
      * @param headerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setHeaderVisible(boolean headerVisible) {
@@ -3305,9 +3304,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Header in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isHeaderVisible() {
@@ -3466,10 +3465,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the visibility of the Footer in this Grid.
-     * 
+     *
      * @param footerVisible
      *            {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public void setFooterVisible(boolean footerVisible) {
@@ -3478,9 +3477,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Gets the visibility of the Footer in this Grid.
-     * 
+     *
      * @return {@code true} if visible; {@code false} if not
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isFooterVisible() {
@@ -3623,13 +3622,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 .forEach(this::removeColumn);
     }
 
-    private String getIdentifier(Column<T, ?> column) {
-        return columnKeys.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(column))
-                .map(entry -> entry.getKey()).findFirst()
-                .orElse(getGeneratedIdentifier());
-    }
-
     private String getGeneratedIdentifier() {
         String columnId = "" + counter;
         counter++;
@@ -3658,7 +3650,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                         "setColumnOrder should not be called "
                                 + "with columns that are not in the grid.");
             }
-
         });
 
         List<String> stateColumnOrder = getState().columnOrder;
@@ -3996,7 +3987,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param row
      *            zero based index of the item to scroll to in the current view.
      * @throws IllegalArgumentException
-     *             if the provided id is not recognized by the data source.
+     *             if the provided row is outside the item range
      */
     public void scrollTo(int row) throws IllegalArgumentException {
         scrollTo(row, ScrollDestination.ANY);
@@ -4020,7 +4011,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Objects.requireNonNull(destination,
                 "ScrollDestination can not be null");
 
-        if (row > getDataProvider().size(new Query())) {
+        if (row > getDataCommunicator().getDataProviderSize()) {
             throw new IllegalArgumentException("Row outside dataProvider size");
         }
 
@@ -4266,7 +4257,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
     protected T deserializeDeclarativeRepresentation(String item) {
         if (item == null) {
             return super.deserializeDeclarativeRepresentation(
-                    new String(UUID.randomUUID().toString()));
+                    UUID.randomUUID().toString());
         }
         return super.deserializeDeclarativeRepresentation(new String(item));
     }
@@ -4370,8 +4361,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @param providers
      *            list of {@link DeclarativeValueProvider}s to store the data of
      *            each column to
-     *
-     * @since 8.1
      */
     protected void readData(Element body,
             List<DeclarativeValueProvider<T>> providers) {
@@ -4581,14 +4570,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      * @return the comparator based on column sorting information.
      */
     protected SerializableComparator<T> createSortingComparator() {
+        /*
+         * thenComparing is defined to return a serializable comparator as long
+         * as both original comparators are also serializable
+         */
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) -> {
-            /*
-             * thenComparing is defined to return a serializable comparator as
-             * long as both original comparators are also serializable
-             */
-            return comparator1.thenComparing(comparator2)::compare;
-        };
+                comparator2) ->
+        comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);

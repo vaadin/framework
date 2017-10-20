@@ -24,22 +24,22 @@ public class AbstractFieldElementSetValueReadOnly extends AbstractTestUI {
     private AbstractField<?>[] fields = { new TextArea(), new TextField(),
             new DateField(), new PasswordField(), new CheckBox(),
             new RichTextArea(), new Slider() };
-    private AbstractMultiSelect<?>[] multiSelects = { new ListSelect(),
-            new CheckBoxGroup(), new TwinColSelect() };
-    private AbstractSingleSelect<?>[] singleSelects = { new ComboBox(),
-            new NativeSelect(), new RadioButtonGroup() };
+    private AbstractMultiSelect<?>[] multiSelects = { new ListSelect<Object>(),
+            new CheckBoxGroup<Object>(), new TwinColSelect<Object>() };
+    private AbstractSingleSelect<?>[] singleSelects = { new ComboBox<Object>(),
+            new NativeSelect<Object>(), new RadioButtonGroup<Object>() };
 
     @Override
     protected void setup(VaadinRequest request) {
-        for (AbstractField field : fields) {
+        for (AbstractField<?> field : fields) {
             field.setReadOnly(true);
             addComponent(field);
         }
-        for (AbstractMultiSelect multiSelect : multiSelects) {
+        for (AbstractMultiSelect<?> multiSelect : multiSelects) {
             multiSelect.setReadOnly(true);
             addComponent(multiSelect);
         }
-        for (AbstractSingleSelect singleSelect : singleSelects) {
+        for (AbstractSingleSelect<?> singleSelect : singleSelects) {
             singleSelect.setReadOnly(true);
             addComponent(singleSelect);
         }

@@ -42,7 +42,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
 
     /**
      * Creates converter with default string representations - "true" and
-     * "false"
+     * "false".
      *
      */
     public StringToBooleanConverter() {

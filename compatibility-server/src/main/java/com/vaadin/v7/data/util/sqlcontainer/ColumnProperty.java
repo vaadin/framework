@@ -18,7 +18,6 @@ package com.vaadin.v7.data.util.sqlcontainer;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.logging.Logger;
 
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.converter.Converter.ConversionException;
@@ -30,10 +29,11 @@ import com.vaadin.v7.data.util.converter.Converter.ConversionException;
  *
  * Note that depending on the QueryDelegate in use this does not necessarily map
  * into an actual column in a database table.
+ * 
  * @deprecated As of 8.0, no replacement available.
  */
 @Deprecated
-final public class ColumnProperty implements Property {
+public final class ColumnProperty implements Property {
     private static final long serialVersionUID = -3694463129581802457L;
 
     private RowItem owner;
@@ -257,10 +257,6 @@ final public class ColumnProperty implements Property {
 
     // LegacyPropertyHelper has been removed in Vaadin 8
 
-    private static Logger getLogger() {
-        return Logger.getLogger(ColumnProperty.class.getName());
-    }
-
     public void setOwner(RowItem owner) {
         if (owner == null) {
             throw new IllegalArgumentException("Owner can not be set to null.");
@@ -298,11 +294,8 @@ final public class ColumnProperty implements Property {
     public boolean isPersistent() {
         if (isVersionColumn()) {
             return false;
-        } else if (isReadOnlyChangeAllowed() && !isReadOnly()) {
-            return true;
-        } else {
-            return false;
         }
+        return isReadOnlyChangeAllowed() && !isReadOnly();
     }
 
     /**

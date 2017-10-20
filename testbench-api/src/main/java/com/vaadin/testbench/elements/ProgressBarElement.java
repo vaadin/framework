@@ -24,7 +24,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class ProgressBarElement extends AbstractFieldElement {
 
     /**
-     * Retrns the value of the progress bar
+     * Returns the value of the progress bar.
      * 
      * @return
      */

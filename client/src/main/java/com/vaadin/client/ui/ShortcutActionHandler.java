@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -53,7 +52,7 @@ public class ShortcutActionHandler {
 
         /**
          * Returns the ShortCutActionHandler currently used or null if there is
-         * currently no shortcutactionhandler
+         * currently no shortcutactionhandler.
          */
         ShortcutActionHandler getShortcutActionHandler();
     }
@@ -82,9 +81,8 @@ public class ShortcutActionHandler {
      */
     public void updateActionMap(UIDL c) {
         actions.clear();
-        final Iterator<?> it = c.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : c) {
+            final UIDL action = (UIDL) child;
 
             int[] modifiers = null;
             if (action.hasAttribute("mk")) {
@@ -101,17 +99,15 @@ public class ShortcutActionHandler {
 
     public void handleKeyboardEvent(final Event event,
             ComponentConnector target) {
-        final int modifiers = KeyboardListenerCollection
-                .getKeyboardModifiers(event);
         final char keyCode = (char) DOM.eventGetKeyCode(event);
         if (keyCode == 0) {
             return;
         }
+        final int modifiers = KeyboardListenerCollection
+                .getKeyboardModifiers(event);
         final ShortcutKeyCombination kc = new ShortcutKeyCombination(keyCode,
                 modifiers);
-        final Iterator<ShortcutAction> it = actions.iterator();
-        while (it.hasNext()) {
-            final ShortcutAction a = it.next();
+        for (final ShortcutAction a : actions) {
             if (a.getShortcutCombination().equals(kc)) {
                 fireAction(event, a, target);
                 break;
@@ -154,14 +150,14 @@ public class ShortcutActionHandler {
 
     private static native void blur(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.blur();
        }
     }-*/;
 
     private static native void focus(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.focus();
        }
     }-*/;
@@ -191,8 +187,8 @@ class ShortcutKeyCombination {
 
         modifiersMask = 0;
         if (modifiers != null) {
-            for (int i = 0; i < modifiers.length; i++) {
-                switch (modifiers[i]) {
+            for (int modifier : modifiers) {
+                switch (modifier) {
                 case ALT:
                     modifiersMask = modifiersMask
                             | KeyboardListener.MODIFIER_ALT;

@@ -29,7 +29,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,7 +86,7 @@ public class WidgetSetBuilder {
             try (PrintStream printStream = new PrintStream(
                     new FileOutputStream(widgetsetFile))) {
                 printStream.print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                        + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN\" \"http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd\">\n");
+                        + "<!DOCTYPE module PUBLIC \"-//Google Inc.//DTD Google Web Toolkit 2.8.1//EN\" \"http://gwtproject.org/doctype/2.8.1/gwt-module.dtd\">\n");
                 printStream.print("<module>\n");
                 printStream.print("    <!--\n"
                         + "     Uncomment the following to compile the widgetset for one browser only.\n\n"
@@ -116,9 +115,7 @@ public class WidgetSetBuilder {
                     content);
 
             // add widgetsets that do not exist
-            Iterator<String> i = availableWidgetSets.keySet().iterator();
-            while (i.hasNext()) {
-                String ws = i.next();
+            for (String ws : availableWidgetSets.keySet()) {
                 if (ws.equals(widgetset)) {
                     // do not inherit the module itself
                     continue;

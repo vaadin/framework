@@ -1,9 +1,11 @@
 package com.vaadin.tests.server.component.menubar;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,7 +83,7 @@ public class MenuBarIdsTest implements Command {
     private static void assertUniqueIds(Set<Object> ids, MenuItem item) {
         int id = item.getId();
         System.out.println("Item " + item.getText() + ", id: " + id);
-        Assert.assertFalse(ids.contains(id));
+        assertFalse(ids.contains(id));
         ids.add(id);
         if (item.getChildren() != null) {
             for (MenuItem subItem : item.getChildren()) {
@@ -92,8 +94,7 @@ public class MenuBarIdsTest implements Command {
 
     @Override
     public void menuSelected(MenuItem selectedItem) {
-        Assert.assertNull(
-                "lastSelectedItem was not cleared before selecting an item",
+        assertNull("lastSelectedItem was not cleared before selecting an item",
                 lastSelectedItem);
 
         lastSelectedItem = selectedItem;

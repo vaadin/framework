@@ -75,7 +75,6 @@ public class GridDetailsLayoutExpand extends SimpleGridUI {
             final Person itemId = event.getItem();
             grid.setDetailsVisible(itemId, !grid.isDetailsVisible(itemId));
         });
-
     }
 
     @Override

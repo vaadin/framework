@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -33,7 +34,7 @@ public class GridEditorCustomFieldTest extends MultiBrowserTest {
     public void testCustomFieldWorksInEditorRow() {
         openTestURL();
         GridElement grid = $(GridElement.class).first();
-        Assert.assertEquals("Stockholm", grid.getCell(0, 2).getText());
+        assertEquals("Stockholm", grid.getCell(0, 2).getText());
         grid.getCell(0, 1).doubleClick();
         GridEditorElement editor = grid.getEditor();
         TestBenchElement customField = editor.getField(2);
@@ -41,7 +42,7 @@ public class GridEditorCustomFieldTest extends MultiBrowserTest {
         ComboBoxElement comboBox = customField.$(ComboBoxElement.class).first();
         comboBox.selectByText("Oslo");
         editor.save();
-        Assert.assertEquals("Oslo", grid.getCell(0, 2).getText());
+        assertEquals("Oslo", grid.getCell(0, 2).getText());
 
     }
 

@@ -15,10 +15,14 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class CustomFieldTest {
@@ -54,10 +58,10 @@ public class CustomFieldTest {
         // iterator() can't do it even though it should...
         field.getContent();
         Iterator<Component> iterator = field.iterator();
-        Assert.assertNotNull(iterator);
-        Assert.assertTrue(iterator.hasNext());
-        Assert.assertEquals(field.button, iterator.next());
-        Assert.assertFalse(iterator.hasNext());
+        assertNotNull(iterator);
+        assertTrue(iterator.hasNext());
+        assertEquals(field.button, iterator.next());
+        assertFalse(iterator.hasNext());
         iterator.next();
     }
 }

@@ -17,7 +17,6 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
-import java.util.Iterator;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
@@ -81,7 +80,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Blur listener that listens to blur event from the panel
+     * Blur listener that listens to blur event from the panel.
      */
     public interface FocusOutListener {
         /**
@@ -99,7 +98,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Dispatches an event when the panel when time is changed
+     * Dispatches an event when the panel when time is changed.
      */
     public interface TimeChangeListener {
 
@@ -239,7 +238,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            one of the days currently visible.
      */
     private void focusDay(Date date) {
-        // Only used when calender body is present
+        // Only used when calendar body is present
         if (resolution.getCalendarField() > Resolution.MONTH
                 .getCalendarField()) {
             if (focusedDay != null) {
@@ -450,7 +449,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         updateControlButtonRangeStyles(needsMonth);
 
         final String monthName = needsMonth
-                ? getDateTimeService().getMonth(displayedMonth.getMonth()) : "";
+                ? getDateTimeService().getMonth(displayedMonth.getMonth())
+                : "";
         final int year = displayedMonth.getYear() + 1900;
 
         getFlexCellFormatter().setStyleName(0, 2,
@@ -1183,38 +1183,27 @@ public class VCalendarPanel extends FocusableFlexTable implements
         // Ctrl and Shift selection not supported
         if (ctrl || shift) {
             return false;
-        }
-
-        else if (keycode == getPreviousKey()) {
+        } else if (keycode == getPreviousKey()) {
             focusNextYear(10); // Add 10 years
             return true;
-        }
-
-        else if (keycode == getForwardKey()) {
+        } else if (keycode == getForwardKey()) {
             focusNextYear(1); // Add 1 year
             return true;
-        }
-
-        else if (keycode == getNextKey()) {
+        } else if (keycode == getNextKey()) {
             focusPreviousYear(10); // Subtract 10 years
             return true;
-        }
-
-        else if (keycode == getBackwardKey()) {
+        } else if (keycode == getBackwardKey()) {
             focusPreviousYear(1); // Subtract 1 year
             return true;
-
         } else if (keycode == getSelectKey()) {
             value = (Date) focusedDate.clone();
             onSubmit();
             return true;
-
         } else if (keycode == getResetKey()) {
             // Restore showing value the selected value
             focusedDate.setTime(value.getTime());
             renderCalendar();
             return true;
-
         } else if (keycode == getCloseKey()) {
             // TODO fire listener, on users responsibility??
 
@@ -1225,7 +1214,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handle the keyboard navigation when the resolution is set to MONTH
+     * Handle the keyboard navigation when the resolution is set to MONTH.
      *
      * @param keycode
      *            The keycode to handle
@@ -1281,7 +1270,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handle keyboard navigation what the resolution is set to DAY
+     * Handle keyboard navigation what the resolution is set to DAY.
      *
      * @param keycode
      *            The keycode to handle
@@ -1387,7 +1376,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Handles the keyboard navigation
+     * Handles the keyboard navigation.
      *
      * @param keycode
      *            The key code that was pressed
@@ -1402,30 +1391,21 @@ public class VCalendarPanel extends FocusableFlexTable implements
             boolean shift) {
         if (!isEnabled() || isReadonly()) {
             return false;
-        }
-
-        else if (resolution == Resolution.YEAR) {
+        } else if (resolution == Resolution.YEAR) {
             return handleNavigationYearMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.MONTH) {
+        } else if (resolution == Resolution.MONTH) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
-        }
-
-        else if (resolution == Resolution.DAY) {
+        } else if (resolution == Resolution.DAY) {
+            return handleNavigationDayMode(keycode, ctrl, shift);
+        } else {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
-
-        else {
-            return handleNavigationDayMode(keycode, ctrl, shift);
-        }
-
     }
 
     /**
      * Returns the reset key which will reset the calendar to the previous
-     * selection. By default this is backspace but it can be overriden to change
-     * the key to whatever you want.
+     * selection. By default this is backspace but it can be overridden to
+     * change the key to whatever you want.
      *
      * @return
      */
@@ -1652,7 +1632,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */
@@ -1667,7 +1647,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         private ListBox ampm;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public VTime() {
             super();
@@ -1819,7 +1799,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         /**
-         * Updates the valus to correspond to the values in value
+         * Updates the value to correspond to the values in value.
          */
         public void updateTimes() {
             if (value == null) {
@@ -1975,7 +1955,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * The submit listener is called when the user selects a value from the
-     * calender either by clicking the day or selects it by keyboard.
+     * calendar either by clicking the day or selects it by keyboard.
      *
      * @param submitListener
      *            The listener to trigger
@@ -2005,7 +1985,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * Returns the submit listener that listens to selection made from the panel
+     * Returns the submit listener that listens to selection made from the
+     * panel.
      *
      * @return The listener or NULL if no listener has been set
      */
@@ -2158,9 +2139,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     .parseInt(subPart.substring(SUBPART_DAY.length()));
             Date date = new Date(displayedMonth.getYear(),
                     displayedMonth.getMonth(), dayOfMonth);
-            Iterator<Widget> iter = days.iterator();
-            while (iter.hasNext()) {
-                Widget w = iter.next();
+            for (Widget w : days) {
                 if (w instanceof Day) {
                     Day day = (Day) w;
                     if (day.getDate().equals(date)) {
@@ -2236,7 +2215,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * and it depends on the current resolution, what is considered inside the
      * range.
      *
-     * @param startDate
+     * @param newRangeStart
      *            - the allowed range's start date
      */
     public void setRangeStart(Date newRangeStart) {
@@ -2255,7 +2234,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Sets the end range for this component. The end range is inclusive, and it
      * depends on the current resolution, what is considered inside the range.
      *
-     * @param endDate
+     * @param newRangeEnd
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date newRangeEnd) {

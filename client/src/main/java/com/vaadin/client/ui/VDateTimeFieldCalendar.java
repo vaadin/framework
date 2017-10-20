@@ -46,44 +46,39 @@ public class VDateTimeFieldCalendar extends
 
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
+        DateTimeResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateTimeResolution.YEAR),
-                    date2.getYear() + 1900, false);
-            if (getCurrentResolution().compareTo(DateTimeResolution.YEAR) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateTimeResolution.MONTH),
-                        date2.getMonth() + 1, false);
-                if (getCurrentResolution()
-                        .compareTo(DateTimeResolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(DateTimeResolution.DAY),
-                            date2.getDate(), false);
-                    if (getCurrentResolution()
-                            .compareTo(DateTimeResolution.DAY) < 0) {
-                        getClient().updateVariable(getId(),
-                                getResolutionVariable(DateTimeResolution.HOUR),
-                                date2.getHours(), false);
-                        if (getCurrentResolution()
-                                .compareTo(DateTimeResolution.HOUR) < 0) {
-                            getClient().updateVariable(getId(),
-                                    getResolutionVariable(
-                                            DateTimeResolution.MINUTE),
-                                    date2.getMinutes(), false);
-                            if (getCurrentResolution()
+            addBufferedResolution(DateTimeResolution.YEAR,
+                    date2.getYear() + 1900);
+            if (resolution.compareTo(DateTimeResolution.YEAR) < 0) {
+                addBufferedResolution(DateTimeResolution.MONTH,
+                        date2.getMonth() + 1);
+                if (resolution.compareTo(DateTimeResolution.MONTH) < 0) {
+                    addBufferedResolution(DateTimeResolution.DAY,
+                            date2.getDate());
+                    if (resolution.compareTo(DateTimeResolution.DAY) < 0) {
+                        addBufferedResolution(DateTimeResolution.HOUR,
+                                date2.getHours());
+                        if (resolution.compareTo(DateTimeResolution.HOUR) < 0) {
+                            addBufferedResolution(DateTimeResolution.MINUTE,
+                                    date2.getMinutes());
+                            if (resolution
                                     .compareTo(DateTimeResolution.MINUTE) < 0) {
-                                getClient().updateVariable(getId(),
-                                        getResolutionVariable(
-                                                DateTimeResolution.SECOND),
-                                        date2.getSeconds(), false);
+                                addBufferedResolution(DateTimeResolution.SECOND,
+                                        date2.getSeconds());
                             }
                         }
                     }
                 }
             }
-            getClient().sendPendingVariableChanges();
+            sendBufferedValues();
         }
+    }
+
+    private void addBufferedResolution(DateTimeResolution resolution,
+            Integer value) {
+        bufferedResolutions.put(resolution.name(), value);
     }
 
     @Override

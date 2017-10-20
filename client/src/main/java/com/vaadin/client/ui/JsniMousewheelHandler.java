@@ -19,7 +19,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.widgets.Escalator;
 
 /**
  * A mousewheel handling class to get around the limits of
@@ -27,7 +26,7 @@ import com.vaadin.client.widgets.Escalator;
  *
  * For internal use only. May be removed or replaced in the future.
  *
- * @see Escalator.JsniWorkaround
+ * @see com.vaadin.client.widgets.JsniWorkaround JsniWorkaround
  */
 // FIXME remove the copy in v7 package
 abstract class JsniMousewheelHandler {

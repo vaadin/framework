@@ -30,7 +30,8 @@ import java.util.Locale;
  * @author Vaadin Ltd
  * @since 7.4
  *
- * @deprecated As of 8.0, no direct replacement available, see {@link com.vaadin.data.converter.StringToIntegerConverter}
+ * @deprecated As of 8.0, no direct replacement available, see
+ *             {@link com.vaadin.data.converter.StringToIntegerConverter}
  */
 @Deprecated
 public class StringToShortConverter
@@ -39,7 +40,7 @@ public class StringToShortConverter
     /**
      * Returns the format used by
      * {@link #convertToPresentation(Short, Class, Locale)} and
-     * {@link #convertToModel(String, Class, Locale)}
+     * {@link #convertToModel(String, Class, Locale)}.
      *
      * @param locale
      *            The locale to use

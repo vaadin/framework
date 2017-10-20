@@ -17,13 +17,12 @@ package com.vaadin.v7.data.util;
 
 import java.util.Collection;
 
-import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
 
 /**
  * A wrapper class for adding external ordering to containers not implementing
- * the {@link Container.Ordered} interface while retaining {@link Hierarchical}
- * features.
+ * the {@link com.vaadin.v7.data.Container.Ordered Container.Ordered}
+ * interface while retaining {@link Hierarchical} features.
  *
  * @see ContainerOrderedWrapper
  *

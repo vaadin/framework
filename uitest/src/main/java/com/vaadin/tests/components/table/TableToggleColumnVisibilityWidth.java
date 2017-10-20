@@ -56,10 +56,9 @@ public class TableToggleColumnVisibilityWidth extends AbstractReindeerTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 if (detailed) {
-                    table.setVisibleColumns(new Object[] { "Name" });
+                    table.setVisibleColumns("Name");
                 } else {
-                    table.setVisibleColumns(
-                            new Object[] { "Name", "Last Name" });
+                    table.setVisibleColumns("Name", "Last Name");
                 }
                 detailed = !detailed;
             }

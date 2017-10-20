@@ -89,7 +89,7 @@ public class UidlWriter implements Serializable {
         getLogger().log(Level.FINE, "* Creating response to client");
 
         while (true) {
-            ArrayList<ClientConnector> connectorsToProcess = new ArrayList<>();
+            List<ClientConnector> connectorsToProcess = new ArrayList<>();
             for (ClientConnector c : uiConnectorTracker
                     .getDirtyVisibleConnectors()) {
                 if (!processedConnectors.contains(c)) {
@@ -138,7 +138,8 @@ public class UidlWriter implements Serializable {
 
             int syncId = service.getDeploymentConfiguration()
                     .isSyncIdCheckEnabled()
-                            ? uiConnectorTracker.getCurrentSyncId() : -1;
+                            ? uiConnectorTracker.getCurrentSyncId()
+                            : -1;
             writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID + "\": "
                     + syncId + ", ");
             if (repaintAll) {
@@ -321,6 +322,7 @@ public class UidlWriter implements Serializable {
             writePerformanceData(ui, writer);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
+            uiConnectorTracker.cleanConnectorMap(true);
         }
     }
 

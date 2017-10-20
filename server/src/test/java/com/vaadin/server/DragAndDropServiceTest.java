@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,6 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.dd.DropHandler;
@@ -64,9 +65,9 @@ public class DragAndDropServiceTest {
                 EasyMock.createMock(VaadinSession.class));
         service.changeVariables(null, variables);
 
-        Assert.assertTrue("isConnectorEnabled() method is not called",
+        assertTrue("isConnectorEnabled() method is not called",
                 isConnectorEnabledCalled[0]);
-        Assert.assertTrue("No warning on drop from disabled source",
+        assertTrue("No warning on drop from disabled source",
                 levels.contains(Level.WARNING));
 
     }
@@ -89,9 +90,9 @@ public class DragAndDropServiceTest {
                 EasyMock.createMock(VaadinSession.class));
         service.changeVariables(null, variables);
 
-        Assert.assertTrue("isConnectorEnabled() method is not called",
+        assertTrue("isConnectorEnabled() method is not called",
                 target.isConnectorEnabledCalled());
-        Assert.assertTrue("No warning on drop to disabled target",
+        assertTrue("No warning on drop to disabled target",
                 levels.contains(Level.WARNING));
 
     }

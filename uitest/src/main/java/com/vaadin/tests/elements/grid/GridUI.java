@@ -26,10 +26,8 @@ public class GridUI extends AbstractTestUI {
         row.getCell(column).setText("extra row");
         grid.addColumn(Item::getBar).setCaption("bar");
 
-        grid.setDetailsGenerator(item -> {
-            return new Label(
-                    "Foo = " + item.getFoo() + " Bar = " + item.getBar());
-        });
+        grid.setDetailsGenerator(item -> new Label(
+                "Foo = " + item.getFoo() + " Bar = " + item.getBar()));
         grid.addItemClickListener(event -> {
             if (event.getMouseEventDetails().isDoubleClick()) {
                 grid.setDetailsVisible(event.getItem(),

@@ -89,7 +89,7 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
         panelBLayout.addComponent(layoutB);
 
         // Create grid layout
-        final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+        final int gridSize = (int) Math.sqrt(componentCountC);
         VerticalLayout panelGLayout = new VerticalLayout();
         panelGLayout.setMargin(true);
         final Panel panelG = new Panel("Panel containing grid layout ("
@@ -178,21 +178,24 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             panelLayout.addComponent(new Label(
                     "Panel is a container for other components, by default it draws a frame around it's "
                             + "extremities and may have a caption to clarify the nature of the contained components' purpose."
-                            + " Panel contains an layout where the actual contained components are added, "
+                            + " Panel contains a layout where the actual contained components are added, "
                             + "this layout may be switched on the fly."));
             ((Panel) result).setWidth("250px");
             break;
         case 6:
             // Datefield
             result = new TestDateField();
-            ((AbstractDateField<LocalDate, DateResolution>) result).setStyleName("calendar");
-            ((AbstractDateField<LocalDate, DateResolution>) result).setValue(LocalDate.now());
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setStyleName("calendar");
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         case 7:
             // Datefield
             result = new TestDateField();
-            ((AbstractDateField<LocalDate, DateResolution>) result).setValue(LocalDate.now());
+            ((AbstractDateField<LocalDate, DateResolution>) result)
+                    .setValue(LocalDate.now());
             result.setCaption("Calendar component " + caption);
             break;
         }

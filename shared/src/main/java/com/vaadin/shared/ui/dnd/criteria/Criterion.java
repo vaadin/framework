@@ -62,13 +62,13 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Creates a criterion object with the default comparison operator {@link
-     * ComparisonOperator#EQUALS}.
+     * Creates a criterion object with the default comparison operator
+     * {@link ComparisonOperator#EQUALS}.
      *
      * @param key
-     *         key of the payload to be compared
+     *            key of the payload to be compared
      * @param value
-     *         value of the payload to be compared
+     *            value of the payload to be compared
      */
     public Criterion(String key, String value) {
         this(key, ComparisonOperator.EQUALS, value, Payload.ValueType.STRING);
@@ -78,11 +78,11 @@ public class Criterion implements Serializable {
      * Creates a criterion object.
      *
      * @param key
-     *         key of the payload to be compared
+     *            key of the payload to be compared
      * @param operator
-     *         comparison operator
+     *            comparison operator
      * @param value
-     *         value of the payload to be compared
+     *            value of the payload to be compared
      */
     public Criterion(String key, ComparisonOperator operator, int value) {
         this(key, operator, String.valueOf(value), Payload.ValueType.INTEGER);
@@ -92,11 +92,11 @@ public class Criterion implements Serializable {
      * Creates a criterion object.
      *
      * @param key
-     *         key of the payload to be compared
+     *            key of the payload to be compared
      * @param operator
-     *         comparison operator
+     *            comparison operator
      * @param value
-     *         value of the payload to be compared
+     *            value of the payload to be compared
      */
     public Criterion(String key, ComparisonOperator operator, double value) {
         this(key, operator, String.valueOf(value), Payload.ValueType.DOUBLE);
@@ -106,13 +106,13 @@ public class Criterion implements Serializable {
      * Creates a criterion object.
      *
      * @param key
-     *         key of the payload to be compared
+     *            key of the payload to be compared
      * @param operator
-     *         comparison operator
+     *            comparison operator
      * @param value
-     *         value of the payload to be compared
+     *            value of the payload to be compared
      * @param valueType
-     *         type of the payload to be compared
+     *            type of the payload to be compared
      */
     private Criterion(String key, ComparisonOperator operator, String value,
             Payload.ValueType valueType) {
@@ -123,7 +123,7 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Gets the key of the payload to be compared
+     * Gets the key of the payload to be compared.
      *
      * @return key of the payload to be compared
      */
@@ -132,7 +132,7 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Gets the value of the payload to be compared
+     * Gets the value of the payload to be compared.
      *
      * @return value of the payload to be compared
      */
@@ -141,7 +141,7 @@ public class Criterion implements Serializable {
     }
 
     /**
-     * Gets the type of the payload value to be compared
+     * Gets the type of the payload value to be compared.
      *
      * @return type of the payload value to be compared
      */
@@ -165,15 +165,17 @@ public class Criterion implements Serializable {
      * and value type.
      *
      * @param payloadCollection
-     *         collection of payloads to compare the criterion against
+     *            collection of payloads to compare the criterion against
      * @return {@code false} if there exists a payload in the collection with
-     * the same key and value type and it doesn't match the criterion, {@code
+     *         the same key and value type and it doesn't match the criterion,
+     *         {@code
      * true} otherwise
      */
     public boolean resolve(Collection<Payload> payloadCollection) {
         Optional<Payload> payload = payloadCollection.stream()
-                .filter(p -> p.getKey().equals(key) && p.getValueType()
-                        .equals(valueType)).findAny();
+                .filter(p -> p.getKey().equals(key)
+                        && p.getValueType().equals(valueType))
+                .findAny();
 
         return payload.map(this::compareCriterionValue).orElse(true);
     }

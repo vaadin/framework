@@ -29,12 +29,12 @@ import com.vaadin.shared.ui.dnd.criteria.Criterion;
  */
 public class DropTargetState extends SharedState {
     /**
-     * {@code DataTransfer.dropEffect} parameter for the drag event
+     * {@code DataTransfer.dropEffect} parameter for the drag event.
      */
     public DropEffect dropEffect;
 
     /**
-     * Criteria script to allow drop event on the element
+     * Criteria script to allow drop event on the element.
      */
     public String criteriaScript;
 
@@ -45,7 +45,7 @@ public class DropTargetState extends SharedState {
 
     /**
      * Declares whether any or all of the given criteria should match the
-     * payload
+     * payload.
      */
     public Criterion.Match criteriaMatch = Criterion.Match.ANY;
 }

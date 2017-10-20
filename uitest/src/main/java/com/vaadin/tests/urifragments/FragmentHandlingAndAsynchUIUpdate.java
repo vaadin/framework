@@ -1,7 +1,5 @@
 package com.vaadin.tests.urifragments;
 
-import java.util.Iterator;
-
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
@@ -62,12 +60,10 @@ public class FragmentHandlingAndAsynchUIUpdate extends AbstractTestUIWithLog {
                     return;
                 }
 
-                Iterator<Component> it = getLayout().iterator();
                 final String frag = event.getUriFragment().substring(4);
 
                 Component fragComp = null;
-                while (it.hasNext()) {
-                    Component comp = it.next();
+                for (Component comp : getLayout()) {
                     if (comp.getId() != null && comp instanceof Label
                             && comp.getId().equals(frag)) {
                         fragComp = comp;

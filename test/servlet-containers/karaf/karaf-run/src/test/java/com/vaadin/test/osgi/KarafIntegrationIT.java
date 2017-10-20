@@ -15,15 +15,20 @@
  */
 package com.vaadin.test.osgi;
 
-import com.vaadin.testbench.TestBenchTestCase;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.base.Predicate;
+import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.testbench.elements.TextFieldElement;
 
 public class KarafIntegrationIT extends TestBenchTestCase {
 
@@ -31,11 +36,10 @@ public class KarafIntegrationIT extends TestBenchTestCase {
     private static final String APP1_URL = URL_PREFIX + "myapp1";
     private static final String APP2_URL = URL_PREFIX + "myapp2";
 
-
     @Test
     public void testApp1() {
         runBasicTest(APP1_URL, "bar");
-        //App theme should make a button pink
+        // App theme should make a button pink
         WebElement element = getDriver().findElement(By.className("v-button"));
         String buttonColor = element.getCssValue("color");
         assertEquals("rgba(255, 128, 128, 1)", buttonColor);
@@ -48,12 +52,15 @@ public class KarafIntegrationIT extends TestBenchTestCase {
 
     private void runBasicTest(String app1Url, String text) {
         getDriver().navigate().to(app1Url);
+        Predicate<WebDriver> isTrue = driver -> isElementPresent(
+                TextFieldElement.class);
+        new WebDriverWait(getDriver(), 5000).until(isTrue);
         getDriver().findElement(By.className("v-textfield")).sendKeys(text);
         getDriver().findElement(By.className("v-button")).click();
-        String foundText = getDriver().findElement(By.className("v-label")).getText();
+        String foundText = getDriver().findElement(By.className("v-label"))
+                .getText();
         assertEquals("Thanks " + text + ", it works!", foundText);
     }
-
 
     @Before
     public void setup() {

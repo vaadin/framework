@@ -46,18 +46,18 @@ public class HiddenColumnsExpandRatios extends TestBase {
             public void buttonClick(ClickEvent event) {
                 table.setWidth("100px");
                 table.setWidth("800px");
-                table.setVisibleColumns(new Object[] { "foo", "bar", "baz" });
+                table.setVisibleColumns("foo", "bar", "baz");
             }
         }));
     }
 
     private String genValue() {
         Random rnd = new Random();
-        StringBuffer str = new StringBuffer("");
-        String[] strings = new String[] { "foo", "bar", "baz" };
+        StringBuilder str = new StringBuilder();
+        String[] strings = { "foo", "bar", "baz" };
         for (int i = 0; i < 5; i++) {
             str.append(strings[Math.abs(rnd.nextInt() % strings.length)])
-                    .append(" ");
+                    .append(' ');
         }
         return str.toString();
     }

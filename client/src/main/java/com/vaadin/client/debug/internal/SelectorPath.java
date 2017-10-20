@@ -80,7 +80,7 @@ public class SelectorPath {
         String tmpPath = path;
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             tmpPath = tmpPath.substring(1, tmpPath.lastIndexOf(')'));
             if (tmpPath.contains("#")) {
                 // FIXME: SubParts should be handled.
@@ -168,7 +168,7 @@ public class SelectorPath {
     }
 
     /**
-     * Returns the name of the component described by given query fragment
+     * Returns the name of the component described by given query fragment.
      *
      * @param fragment
      *            Query fragment

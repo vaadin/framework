@@ -89,7 +89,7 @@ public class BeanItemContainerFilteringTest extends TestBase {
                 container.removeAllContainerFilters();
                 if (event.getValue()) {
                     container.addContainerFilter("value",
-                            filterString.getValue().toString(), false, false);
+                            filterString.getValue(), false, false);
                 }
             });
             vl.addComponent(cb);
@@ -143,8 +143,7 @@ public class BeanItemContainerFilteringTest extends TestBase {
                     new Button.ClickListener() {
                         @Override
                         public void buttonClick(ClickEvent event) {
-                            int index = Integer
-                                    .parseInt(position.getValue().toString());
+                            int index = Integer.parseInt(position.getValue());
                             TestBean bean = new TestBean(
                                     "addItemAt() " + nextToAdd,
                                     "value " + nextToAdd);

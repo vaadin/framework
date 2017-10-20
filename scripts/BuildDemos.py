@@ -23,6 +23,14 @@ demos = {
 #	"my-demo" : ("my_demo_url_or_path", "my-demo-dev-branch")
 }
 
+# List of built archetypes
+archetypes = [
+	"vaadin-archetype-widget",
+	"vaadin-archetype-application",
+	"vaadin-archetype-application-example",
+	"vaadin-archetype-application-multimodule"
+]
+
 status_dump = {"messages": []}
 
 def dump_status(error_occurred):
@@ -32,55 +40,78 @@ def dump_status(error_occurred):
 def log_status(log_string):
 	status_dump["messages"].append(log_string)
 	print(log_string)
+	sys.stdout.flush()
 
 def checkout(folder, url, repoBranch = "master"):
 	Repo.clone_from(url, join(resultPath, folder), branch = repoBranch)
 
 if __name__ == "__main__":
-	# Do imports.	
+	# Do imports.
 	try:
 		from git import Repo
 	except:
 		log_status("BuildDemos depends on gitpython. Install it with `pip install gitpython`")
 		dump_status(True)
 		sys.exit(1)
-	from BuildHelpers import updateRepositories, mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, mavenInstall, resultPath, readPomFile, parser, dockerWrap
+	from BuildHelpers import mavenValidate, copyWarFiles, getLogFile, removeDir, getArgs, resultPath, parser, dockerWrap, generateArchetype
 	from DeployHelpers import deployWar
 	# Add command line agrument for ignoring failing demos
 	parser.add_argument("--ignore", type=str, help="Ignored demos", default="")
+
+	# Control to skip demos and archetypes
+	parser.add_argument("--skipDemos", action="store_true", help="Skip building demos")
+	parser.add_argument("--skipArchetypes", action="store_true", help="Skip building archetypes")
+
 	args = getArgs()
 	demosFailed = False
 	ignoredDemos = args.ignore.split(",")
 	wars = []
 
-	for demo in demos:
-		print("Validating demo %s" % (demo))
-		try:
-			repo = demos[demo]
-			if (isinstance(repo, tuple)):
-				checkout(demo, repo[0], repo[1])
-			else:
-				checkout(demo, repo)
-			if hasattr(args, "fwRepo") and args.fwRepo is not None:
-				updateRepositories(join(resultPath, demo), args.fwRepo)
-			if hasattr(args, "pluginRepo") and args.pluginRepo is not None:
-				updateRepositories(join(resultPath, demo), args.pluginRepo, postfix="plugin")
-			mavenValidate(demo, logFile=getLogFile(demo))
-			wars.extend(copyWarFiles(demo))
-			log_status("%s demo validation succeeded!" % (demo))
-		except Exception as e:
-			log_status("%s demo validation failed: %s" % (demo, e))
-			if demo not in ignoredDemos:
-				demosFailed = True
-		except EnvironmentError as e:
-			log_status("%s demo validation failed: %s" % (demo, e))
-			if demo not in ignoredDemos:
-				demosFailed = True
-		try:
-			removeDir(demo)
-		except:
-			pass
-		print("")
+	if not args.skipDemos:
+		for demo in demos:
+			print("Validating demo %s" % (demo))
+			try:
+				repo = demos[demo]
+				if (isinstance(repo, tuple)):
+					checkout(demo, repo[0], repo[1])
+				else:
+					checkout(demo, repo)
+				mavenValidate(demo, logFile=getLogFile(demo))
+				wars.extend(copyWarFiles(demo))
+				log_status("%s demo validation succeeded!" % (demo))
+			except Exception as e:
+				log_status("%s demo validation failed: %s" % (demo, e))
+				if demo not in ignoredDemos:
+					demosFailed = True
+			except EnvironmentError as e:
+				log_status("%s demo validation failed: %s" % (demo, e))
+				if demo not in ignoredDemos:
+					demosFailed = True
+			try:
+				removeDir(demo)
+			except:
+				pass
+			log_status("")
+
+	if not args.skipArchetypes:
+		for archetype in archetypes:
+			artifactId = "test-%s-%s" % (archetype, args.version.replace(".", "-"))
+			try:
+				log = getLogFile(archetype)
+				generateArchetype(archetype, artifactId, args.pluginRepo, log)
+				mavenValidate(artifactId, logFile=log)
+				wars.extend(copyWarFiles(artifactId, name=archetype))
+				log_status("%s validation succeeded!" % (archetype))
+			except Exception as e:
+				print("Archetype %s build failed:" % (archetype), e)
+				if archetype not in ignoredDemos:
+					demosFailed = True
+	
+			try:
+				removeDir(artifactId)
+			except:
+				pass
+			log_status("")
 
 	if args.deploy_mode:
 		for war in wars:

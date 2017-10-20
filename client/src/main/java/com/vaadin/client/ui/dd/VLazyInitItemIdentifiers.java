@@ -54,8 +54,8 @@ public class VLazyInitItemIdentifiers extends VAcceptCriterion {
                     hashSet = new HashSet<>();
                     String[] stringArrayAttribute = response
                             .getStringArrayAttribute("allowedIds");
-                    for (int i = 0; i < stringArrayAttribute.length; i++) {
-                        hashSet.add(stringArrayAttribute[i]);
+                    for (String attribute : stringArrayAttribute) {
+                        hashSet.add(attribute);
                     }
                     loaded = true;
                     if (accepted) {

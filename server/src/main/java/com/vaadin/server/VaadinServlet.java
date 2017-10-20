@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +47,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -200,32 +203,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws ServletException {
         CurrentInstance.clearAll();
         super.init(servletConfig);
-        Properties initParameters = new Properties();
-
-        readUiFromEnclosingClass(initParameters);
-
-        readConfigurationAnnotation(initParameters);
-
-        // Read default parameters from server.xml
-        final ServletContext context = servletConfig.getServletContext();
-        for (final Enumeration<String> e = context.getInitParameterNames(); e
-                .hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name, context.getInitParameter(name));
-        }
-
-        // Override with application config from web.xml
-        for (final Enumeration<String> e = servletConfig
-                .getInitParameterNames(); e.hasMoreElements();) {
-            final String name = e.nextElement();
-            initParameters.setProperty(name,
-                    servletConfig.getInitParameter(name));
-        }
-
-        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(
-                initParameters);
         try {
-            servletService = createServletService(deploymentConfiguration);
+            servletService = createServletService();
         } catch (ServiceException e) {
             throw new ServletException("Could not initialize VaadinServlet", e);
         }
@@ -321,11 +300,96 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Intended to be used by dependency injection
+     * frameworks.
+     *
+     * @return the created deployment configuration
+     *
+     * @throws ServletException
+     *             if construction of the {@link Properties} for
+     *             {@link #createDeploymentConfiguration(Properties)} fails
+     *
+     * @since 8.2
+     */
+    protected DeploymentConfiguration createDeploymentConfiguration()
+            throws ServletException {
+        Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
+
+        readConfigurationAnnotation(initParameters);
+
+        // Read default parameters from server.xml
+        final ServletContext context = getServletConfig().getServletContext();
+        for (final Enumeration<String> e = context.getInitParameterNames(); e
+                .hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name, context.getInitParameter(name));
+        }
+
+        // Override with application config from web.xml
+        for (final Enumeration<String> e = getServletConfig()
+                .getInitParameterNames(); e.hasMoreElements();) {
+            final String name = e.nextElement();
+            initParameters.setProperty(name,
+                    getServletConfig().getInitParameter(name));
+        }
+
+        return createDeploymentConfiguration(initParameters);
+    }
+
+    /**
+     * Creates a deployment configuration to be used for the creation of a
+     * {@link VaadinService}. Override this if you want to override certain
+     * properties.
+     *
+     * @param initParameters
+     *            the context-param and init-param values as properties
+     * @return the created deployment configuration
+     *
+     * @since 7.0.0
+     */
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
+    /**
+     * Creates a vaadin servlet service. This method functions as a layer of
+     * indirection between {@link #init(ServletConfig)} and
+     * {@link #createServletService(DeploymentConfiguration)} so dependency
+     * injection frameworks can call {@link #createDeploymentConfiguration()}
+     * when creating a vaadin servlet service lazily.
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServletException
+     *             if creating a deployment configuration fails
+     * @throws ServiceException
+     *             if creating the vaadin servlet service fails
+     *
+     * @since 8.2
+     */
+    protected VaadinServletService createServletService()
+            throws ServletException, ServiceException {
+        return createServletService(createDeploymentConfiguration());
+    }
+
+    /**
+     * Creates a vaadin servlet service.
+     *
+     * @param deploymentConfiguration
+     *            the deployment configuration to be used
+     *
+     * @return the created vaadin servlet service
+     *
+     * @throws ServiceException
+     *             if creating the vaadin servlet service fails
+     *
+     * @since 7.0.0
+     */
     protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration)
             throws ServiceException {
@@ -411,7 +475,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 location.length() - lastPathParameter.length());
 
         if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
-                && "".equals(request.getServletPath())
+                && request.getServletPath().isEmpty()
                 && !location.endsWith("/")) {
             /*
              * Path info is for the root but request URI doesn't end with a
@@ -471,7 +535,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Create a Vaadin request for a http servlet request. This method can be
+     * Creates a Vaadin request for a http servlet request. This method can be
      * overridden if the Vaadin request should have special properties.
      *
      * @param request
@@ -606,7 +670,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         final OutputStream out = response.getOutputStream();
         try ( // Set the response type
                 PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(out, "UTF-8")))) {
+                        new OutputStreamWriter(out, UTF_8)))) {
             outWriter.print(output);
             outWriter.flush();
         }
@@ -958,7 +1022,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void streamContent(HttpServletResponse response, InputStream is)
             throws IOException {
         final OutputStream os = response.getOutputStream();
-        final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
+        final byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         int bytes;
         while ((bytes = is.read(buffer)) >= 0) {
             os.write(buffer, 0, bytes);
@@ -1335,7 +1399,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 + request.getServerName()
                 + (request.isSecure() && request.getServerPort() == 443
                         || !request.isSecure() && request.getServerPort() == 80
-                                ? "" : ":" + request.getServerPort())
+                                ? ""
+                                : ":" + request.getServerPort())
                 + request.getRequestURI());
         String servletPath = "";
         if (request
@@ -1351,7 +1416,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             servletPath = request.getContextPath() + request.getServletPath();
         }
 
-        if (servletPath.length() == 0
+        if (servletPath.isEmpty()
                 || servletPath.charAt(servletPath.length() - 1) != '/') {
             servletPath += "/";
         }
@@ -1449,7 +1514,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 safe.append("&#");
                 safe.append((int) c);
-                safe.append(";");
+                safe.append(';');
             }
         }
 

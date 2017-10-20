@@ -45,8 +45,7 @@ public class KeyControl extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table1.getValue();
-                selected1
-                        .setValue(value.toString() + " TOTAL: " + value.size());
+                selected1.setValue(value + " TOTAL: " + value.size());
             }
         });
 
@@ -93,7 +92,7 @@ public class KeyControl extends TestBase {
             public void valueChange(ValueChangeEvent event) {
                 @SuppressWarnings("unchecked")
                 Set<String> value = (Set<String>) table3.getValue();
-                selected3.setValue(value.size() == 0 ? "No selected items"
+                selected3.setValue(value.isEmpty() ? "No selected items"
                         : value + ": Total " + value.size() + " items");
             }
         });

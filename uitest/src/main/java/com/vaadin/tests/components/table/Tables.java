@@ -855,7 +855,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 "Multi - ctrl/shift", new Command<T, SelectMode>() {
 
                     @Override
-                    public void execute(Table t, SelectMode value,
+                    public void execute(T t, SelectMode value,
                             Object data) {
                         switch (value) {
                         case NONE:

@@ -15,11 +15,12 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,10 +40,14 @@ public class ConnectorResourceHandlerTest {
 
         request = control.createMock(VaadinRequest.class);
         response = control.createMock(VaadinResponse.class);
+        DeploymentConfiguration dc = control
+                .createMock(DeploymentConfiguration.class);
         VaadinService service = control.createMock(VaadinService.class);
 
         EasyMock.expect(request.getPathInfo())
                 .andReturn("/APP/connector/0/1/2");
+        EasyMock.expect(request.getParameter("v-loc"))
+                .andReturn("http://localhost/");
 
         control.replay();
 
@@ -53,13 +58,14 @@ public class ConnectorResourceHandlerTest {
             protected void init(VaadinRequest request) {
             }
         };
-        ui.doInit(request, 0, "");
 
         session.lock();
         try {
+            session.setConfiguration(dc);
             session.setCommunicationManager(
                     new LegacyCommunicationManager(session));
             ui.setSession(session);
+            ui.doInit(request, 0, "");
             session.addUI(ui);
         } finally {
             session.unlock();
@@ -90,7 +96,7 @@ public class ConnectorResourceHandlerTest {
         }
 
         ConnectorResourceHandler handler = new ConnectorResourceHandler();
-        Assert.assertTrue(handler.handleRequest(session, request, response));
+        assertTrue(handler.handleRequest(session, request, response));
 
         EasyMock.verify(errorHandler);
     }

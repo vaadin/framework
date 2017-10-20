@@ -6,8 +6,7 @@
     <parent>
         <artifactId>vaadin-test-karaf</artifactId>
         <groupId>com.vaadin</groupId>
-        <relativePath>..</relativePath>
-        <version>8.1-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-karaf-bundle2</artifactId>
     <packaging>jar</packaging>
@@ -44,7 +43,8 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-osgi-integration</artifactId>
-            <version>8.1.0.beta1</version>
+            <!-- TODO: Add this to BOM and remove version here -->
+            <version>${vaadin.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -85,7 +85,6 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>process-resources</phase>

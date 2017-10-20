@@ -166,7 +166,7 @@ public class AtmospherePushConnection implements PushConnection {
             try {
                 Writer writer = new StringWriter();
                 new UidlWriter().write(getUI(), writer, async);
-                sendMessage("for(;;);[{" + writer.toString() + "}]");
+                sendMessage("for(;;);[{" + writer + "}]");
             } catch (Exception e) {
                 throw new RuntimeException("Push failed", e);
             }
@@ -230,8 +230,8 @@ public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Associates this {@link AtmospherePushConnection} with the given
-     * {@link AtmosphereResource} representing an established push connection. If
-     * already connected, calls {@link #disconnect()} first. If there is a
+     * {@link AtmosphereResource} representing an established push connection.
+     * If already connected, calls {@link #disconnect()} first. If there is a
      * deferred push, carries it out via the new connection.
      *
      * @since 7.2

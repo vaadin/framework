@@ -15,29 +15,31 @@
  */
 package com.vaadin.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.data.HasValue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 public class TextAreaConstructorTest {
 
     @Test
     public void initiallyEmpty() {
         TextArea textArea = new TextArea();
-        Assert.assertTrue(textArea.isEmpty());
+        assertTrue(textArea.isEmpty());
     }
 
     @Test
     public void testValueConstructor_emptyAfterClear() {
         TextArea textArea = new TextArea(null, "foobar");
-        Assert.assertFalse(textArea.isEmpty());
+        assertFalse(textArea.isEmpty());
 
         textArea.clear();
-        Assert.assertTrue(textArea.isEmpty());
+        assertTrue(textArea.isEmpty());
     }
 
     @Test

@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.1-SNAPSHOT</version>
+    <version>8.2-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -27,7 +27,7 @@
         <liferay.portal-kernel.version>2.0.0</liferay.portal-kernel.version>
 
         <vaadin.gwt.version>2.8.1</vaadin.gwt.version>
-        <vaadin.plugin.version>8.1-SNAPSHOT</vaadin.plugin.version>
+        <vaadin.plugin.version>8.2-SNAPSHOT</vaadin.plugin.version>
 
         <!-- Used in OSGi manifests -->
         <javax.validation.version>1.0.0.GA</javax.validation.version>
@@ -414,7 +414,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.10</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <outputDirectory>${dependency.unpack.directory}</outputDirectory>
                         <overWriteReleases>false</overWriteReleases>
@@ -424,7 +424,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.4.0</version>
+                    <version>1.6.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -438,7 +438,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>com.vaadin</groupId>
@@ -459,9 +459,10 @@
                         </dependency>
                     </dependencies>
                     <configuration>
+                        <propertyExpansion>config_loc=${basedir}/../checkstyle</propertyExpansion>
                         <configLocation>../checkstyle/vaadin-checkstyle.xml</configLocation>
                         <headerLocation>../checkstyle/header</headerLocation>
-                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation>
+<!--                        <suppressionsLocation>../checkstyle/suppressions.xml</suppressionsLocation> -->
                         <encoding>UTF-8</encoding>
                         <consoleOutput>false</consoleOutput>
                         <failsOnError>false</failsOnError>
@@ -521,6 +522,11 @@
                             </pluginExecutions>
                         </lifecycleMappingMetadata>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>3.3.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

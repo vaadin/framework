@@ -441,10 +441,10 @@ public class VBrowserDetailsUserAgentParserTest {
     @Test
     public void checkFFsupportedVersions() {
         VBrowserDetails details = new VBrowserDetails(FIREFOX_40B11_WIN);
-        Assert.assertTrue(details.isTooOldToFunctionProperly());
+        assertTrue(details.isTooOldToFunctionProperly());
 
         details = new VBrowserDetails(FIREFOX_SUPPORTED);
-        Assert.assertFalse(details.isTooOldToFunctionProperly());
+        assertFalse(details.isTooOldToFunctionProperly());
     }
 
     /*
@@ -634,7 +634,7 @@ public class VBrowserDetailsUserAgentParserTest {
         assertFalse(browserDetails.isIOS());
         assertFalse(browserDetails.isAndroid());
         assertFalse(browserDetails.isChromeOS());
-        Assert.assertEquals(isWindowsPhone, browserDetails.isWindowsPhone());
+        assertEquals(isWindowsPhone, browserDetails.isWindowsPhone());
     }
 
     private void assertLinux(VBrowserDetails browserDetails) {

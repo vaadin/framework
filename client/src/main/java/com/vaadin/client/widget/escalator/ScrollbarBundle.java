@@ -54,39 +54,34 @@ public abstract class ScrollbarBundle implements DeferredWorker {
             .isNativelySupported();
 
     private class ScrollEventFirer {
-        private final ScheduledCommand fireEventCommand = new ScheduledCommand() {
-            @Override
-            public void execute() {
+        private final ScheduledCommand fireEventCommand = () -> {
+            /*
+             * Some kind of native-scroll-event related asynchronous problem
+             * occurs here (at least on desktops) where the internal bookkeeping
+             * isn't up to date with the real scroll position. The weird thing
+             * is, that happens only once, and if you drag scrollbar fast
+             * enough. After it has failed once, it never fails again.
+             *
+             * Theory: the user drags the scrollbar, and this command is
+             * executed before the browser has a chance to fire a scroll event
+             * (which normally would correct this situation). This would explain
+             * why slow scrolling doesn't trigger the problem, while fast
+             * scrolling does.
+             *
+             * To make absolutely sure that we have the latest scroll position,
+             * let's update the internal value.
+             *
+             * This might lead to a slight performance hit (on my computer it
+             * was never more than 3ms on either of Chrome 38 or Firefox 31). It
+             * also _slightly_ counteracts the purpose of the internal
+             * bookkeeping. But since getScrollPos is called 3 times (on one
+             * direction) per scroll loop, it's still better to have take this
+             * small penalty than removing it altogether.
+             */
+            updateScrollPosFromDom();
 
-                /*
-                 * Some kind of native-scroll-event related asynchronous problem
-                 * occurs here (at least on desktops) where the internal
-                 * bookkeeping isn't up to date with the real scroll position.
-                 * The weird thing is, that happens only once, and if you drag
-                 * scrollbar fast enough. After it has failed once, it never
-                 * fails again.
-                 *
-                 * Theory: the user drags the scrollbar, and this command is
-                 * executed before the browser has a chance to fire a scroll
-                 * event (which normally would correct this situation). This
-                 * would explain why slow scrolling doesn't trigger the problem,
-                 * while fast scrolling does.
-                 *
-                 * To make absolutely sure that we have the latest scroll
-                 * position, let's update the internal value.
-                 *
-                 * This might lead to a slight performance hit (on my computer
-                 * it was never more than 3ms on either of Chrome 38 or Firefox
-                 * 31). It also _slightly_ counteracts the purpose of the
-                 * internal bookkeeping. But since getScrollPos is called 3
-                 * times (on one direction) per scroll loop, it's still better
-                 * to have take this small penalty than removing it altogether.
-                 */
-                updateScrollPosFromDom();
-
-                getHandlerManager().fireEvent(new ScrollEvent());
-                isBeingFired = false;
-            }
+            getHandlerManager().fireEvent(new ScrollEvent());
+            isBeingFired = false;
         };
 
         private boolean isBeingFired;
@@ -169,7 +164,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         /**
-         * Checks whether the scroll handle is currently visible or not
+         * Checks whether the scroll handle is currently visible or not.
          *
          * @return <code>true</code> if the scroll handle is currently visible.
          *         <code>false</code> if not.
@@ -205,7 +200,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see VerticalScrollbarBundle#getElement()
      */
-    public final static class VerticalScrollbarBundle extends ScrollbarBundle {
+    public static final class VerticalScrollbarBundle extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -275,7 +270,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle
+    public static final class HorizontalScrollbarBundle
             extends ScrollbarBundle {
 
         @Override
@@ -373,7 +368,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract String internalGetScrollSize();
 
     /**
-     * Sets the primary style name
+     * Sets the primary style name.
      *
      * @param primaryStyleName
      *            The primary style name to use
@@ -496,7 +491,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract void internalForceScrollbar(boolean enable);
 
     /**
-     * Gets the length of the scrollbar
+     * Gets the length of the scrollbar.
      *
      * @return the length of the scrollbar in pixels
      */
@@ -778,7 +773,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * In other words, this method checks whether the contents is larger than
      * can visually fit in the element.
      *
-     * @return <code>true</code> iff the scrollbar's handle is visible
+     * @return <code>true</code> if the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
         return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
@@ -876,7 +871,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Checks whether the scrollbar bundle is locked or not.
      *
-     * @return <code>true</code> iff the scrollbar bundle is locked
+     * @return <code>true</code> if the scrollbar bundle is locked
      */
     public boolean isLocked() {
         return isLocked;

@@ -37,16 +37,16 @@ import com.vaadin.v7.ui.Tree;
  */
 public class TestForTrees extends CustomComponent implements Handler {
 
-    private static final String[] firstnames = new String[] { "John", "Mary",
+    private static final String[] firstnames = { "John", "Mary",
             "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
 
-    private static final String[] lastnames = new String[] { "Torvalds",
+    private static final String[] lastnames = { "Torvalds",
             "Smith", "Jones", "Beck", "Sheridan", "Picard", "Hill", "Fielding",
             "Einstein" };
 
     private final VerticalLayout main = new VerticalLayout();
 
-    private final Action[] actions = new Action[] { new Action("edit"),
+    private final Action[] actions = { new Action("edit"),
             new Action("delete") };
 
     private VerticalLayout al;

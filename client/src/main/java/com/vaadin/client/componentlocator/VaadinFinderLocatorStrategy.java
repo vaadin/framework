@@ -118,7 +118,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             path.add(pathFragment);
         }
 
-        if (path.size() == 0) {
+        if (path.isEmpty()) {
             // If we didn't find a single element, return null..
             return null;
         }
@@ -277,7 +277,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     public List<Element> getElementsByPath(String path) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
@@ -347,7 +347,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             Element root) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
@@ -424,7 +424,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             ComponentConnector root, Element actualRoot) {
         String[] pathComponents = path.split(SUBPART_SEPARATOR);
         List<ComponentConnector> connectors;
-        if (pathComponents[0].length() > 0) {
+        if (!pathComponents[0].isEmpty()) {
             connectors = findConnectorsByPath(pathComponents[0],
                     Arrays.asList(root));
         } else {
@@ -557,7 +557,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     private List<ComponentConnector> collectPotentialMatches(
             ComponentConnector parent, String pathFragment,
             boolean collectRecursively) {
-        ArrayList<ComponentConnector> potentialMatches = new ArrayList<>();
+        List<ComponentConnector> potentialMatches = new ArrayList<>();
         String widgetName = getWidgetName(pathFragment);
         // Special case when searching for UIElement.
         if (LocatorUtil.isUIElement(pathFragment)) {
@@ -617,7 +617,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         List<Integer> widgetTags = new ArrayList<>();
         widgetTags.addAll(getTags(widgetName));
 
-        if (widgetTags.size() == 0) {
+        if (widgetTags.isEmpty()) {
             widgetTags.addAll(getTags("com.vaadin.ui." + widgetName));
         }
 
@@ -631,7 +631,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             final String simpleName = getSimpleClassName(name);
             final String fullName = getFullClassName(name);
 
-            if (widgetTags.size() > 0) {
+            if (!widgetTags.isEmpty()) {
                 Integer[] foundTags = client.getConfiguration()
                         .getTagsForServerSideClassName(fullName);
                 for (int tag : foundTags) {

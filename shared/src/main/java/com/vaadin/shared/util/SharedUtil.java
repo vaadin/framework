@@ -93,13 +93,10 @@ public class SharedUtil implements Serializable {
         } else if (!Character.isUpperCase(camelCaseString.charAt(i - 1))) {
             // Word ends if previous char wasn't upper case
             return true;
-        } else if (i + 1 < camelCaseString.length()
-                && !Character.isUpperCase(camelCaseString.charAt(i + 1))) {
-            // Word ends if next char isn't upper case
-            return true;
-        } else {
-            return false;
         }
+        // Word ends if next char isn't upper case
+        return i + 1 < camelCaseString.length()
+                && !Character.isUpperCase(camelCaseString.charAt(i + 1));
     }
 
     /**
@@ -151,16 +148,6 @@ public class SharedUtil implements Serializable {
         return join(parts, " ");
     }
 
-    private static boolean isAllUpperCase(String string) {
-        for (int i = 0; i < string.length(); i++) {
-            char c = string.charAt(i);
-            if (!Character.isUpperCase(c) && !Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Joins the words in the input array together into a single string by
      * inserting the separator string between each word.
@@ -177,8 +164,8 @@ public class SharedUtil implements Serializable {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < parts.length; i++) {
-            sb.append(parts[i]);
+        for (String part : parts) {
+            sb.append(part);
             sb.append(separator);
         }
         return sb.substring(0, sb.length() - separator.length());
@@ -186,7 +173,7 @@ public class SharedUtil implements Serializable {
 
     /**
      * Capitalizes the first character in the given string in a way suitable for
-     * use in code (methods, properties etc)
+     * use in code (methods, properties etc).
      *
      * @since 7.4
      * @param string
@@ -199,7 +186,7 @@ public class SharedUtil implements Serializable {
         }
 
         if (string.length() <= 1) {
-            return string.toUpperCase();
+            return string.toUpperCase(Locale.ENGLISH);
         }
 
         return string.substring(0, 1).toUpperCase(Locale.ENGLISH)
@@ -243,12 +230,12 @@ public class SharedUtil implements Serializable {
      * @param uri
      *            The uri to which the parameters should be added.
      * @param extraParams
-     *            One or more parameters in the format "a=b" or "c=d&amp;e=f". An
-     *            empty string is allowed but will not modify the url.
+     *            One or more parameters in the format "a=b" or "c=d&amp;e=f".
+     *            An empty string is allowed but will not modify the url.
      * @return The modified URI with the get parameters in extraParams added.
      */
     public static String addGetParameters(String uri, String extraParams) {
-        if (extraParams == null || extraParams.length() == 0) {
+        if (extraParams == null || extraParams.isEmpty()) {
             return uri;
         }
         // RFC 3986: The query component is indicated by the first question

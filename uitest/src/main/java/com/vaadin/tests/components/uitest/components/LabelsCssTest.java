@@ -20,7 +20,7 @@ public class LabelsCssTest extends GridLayout {
         setColumns(5);
 
         createLabelWith(null, "Default empty label", null, null);
-        createLabelWith(null, "Label with icon", null, parent.ICON_URL);
+        createLabelWith(null, "Label with icon", null, TestSampler.ICON_URL);
         Label l = createLabelWith("The caption", "With caption and tooltip",
                 null, null);
         l.setDescription("The tooltip");

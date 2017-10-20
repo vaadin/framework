@@ -98,7 +98,7 @@ public class VPopupCalendar extends VTextualDate
 
     private Label selectedDate;
 
-    private Element descriptionForAssisitveDevicesElement;
+    private Element descriptionForAssistiveDevicesElement;
 
     public VPopupCalendar() {
         super();
@@ -129,15 +129,15 @@ public class VPopupCalendar extends VTextualDate
 
         add(calendarToggle);
 
-        // Description of the usage of the widget for assisitve device users
-        descriptionForAssisitveDevicesElement = DOM.createDiv();
-        descriptionForAssisitveDevicesElement.setInnerText(
+        // Description of the usage of the widget for assistive device users
+        descriptionForAssistiveDevicesElement = DOM.createDiv();
+        descriptionForAssistiveDevicesElement.setInnerText(
                 PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
-        AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
+        AriaHelper.ensureHasId(descriptionForAssistiveDevicesElement);
         Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
-                Id.of(descriptionForAssisitveDevicesElement));
+                Id.of(descriptionForAssistiveDevicesElement));
         AriaHelper.setVisibleForAssistiveDevicesOnly(
-                descriptionForAssisitveDevicesElement, true);
+                descriptionForAssistiveDevicesElement, true);
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setParentField(this);
@@ -207,13 +207,13 @@ public class VPopupCalendar extends VTextualDate
     protected void onAttach() {
         super.onAttach();
         DOM.appendChild(RootPanel.get().getElement(),
-                descriptionForAssisitveDevicesElement);
+                descriptionForAssistiveDevicesElement);
     }
 
     @Override
     protected void onDetach() {
         super.onDetach();
-        descriptionForAssisitveDevicesElement.removeFromParent();
+        descriptionForAssistiveDevicesElement.removeFromParent();
         closeCalendarPanel();
     }
 
@@ -313,7 +313,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Set correct tab index for disabled text field in IE as the value set in
      * setTextFieldEnabled(...) gets overridden in
-     * TextualDateConnection.updateFromUIDL(...)
+     * TextualDateConnection.updateFromUIDL(...).
      *
      * @since 7.3.1
      */
@@ -390,7 +390,7 @@ public class VPopupCalendar extends VTextualDate
     }
 
     /**
-     * Opens the calendar panel popup
+     * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
 
@@ -468,7 +468,7 @@ public class VPopupCalendar extends VTextualDate
     /**
      * Sets the content of a special field for assistive devices, so that they
      * can recognize the change and inform the user (reading out in case of
-     * screen reader)
+     * screen reader).
      *
      * @param selectedDate
      *            Date that is currently selected
@@ -531,7 +531,7 @@ public class VPopupCalendar extends VTextualDate
     }
 
     /**
-     * Closes the open popup panel
+     * Closes the open popup panel.
      */
     public void closeCalendarPanel() {
         if (open) {
@@ -571,7 +571,7 @@ public class VPopupCalendar extends VTextualDate
      */
     public void setDescriptionForAssistiveDevices(
             String descriptionForAssistiveDevices) {
-        descriptionForAssisitveDevicesElement
+        descriptionForAssistiveDevicesElement
                 .setInnerText(descriptionForAssistiveDevices);
     }
 
@@ -582,7 +582,7 @@ public class VPopupCalendar extends VTextualDate
      * @return String with the description
      */
     public String getDescriptionForAssistiveDevices() {
-        return descriptionForAssisitveDevicesElement.getInnerText();
+        return descriptionForAssistiveDevicesElement.getInnerText();
     }
 
     /**

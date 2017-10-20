@@ -17,10 +17,10 @@ package com.vaadin.client.debug.internal;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -133,7 +133,7 @@ public final class VDebugWindow extends VOverlay {
     protected SimplePanel content = new SimplePanel();
 
     // sections
-    protected ArrayList<Section> sections = new ArrayList<>();
+    protected List<Section> sections = new ArrayList<>();
 
     // handles resize/move
     protected HandlerRegistration mouseDownHandler = null;
@@ -705,29 +705,26 @@ public final class VDebugWindow extends VOverlay {
          * Finalize initialization when all entry points have had the chance to
          * e.g. register new sections.
          */
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                readStoredState();
+        Scheduler.get().scheduleFinally(() -> {
+            readStoredState();
 
-                Window.addResizeHandler(
-                        new com.google.gwt.event.logical.shared.ResizeHandler() {
+            Window.addResizeHandler(
+                    new com.google.gwt.event.logical.shared.ResizeHandler() {
 
-                            Timer t = new Timer() {
-                                @Override
-                                public void run() {
-                                    applyPositionAndSize();
-                                }
-                            };
-
+                        Timer t = new Timer() {
                             @Override
-                            public void onResize(ResizeEvent event) {
-                                t.cancel();
-                                // TODO less
-                                t.schedule(1000);
+                            public void run() {
+                                applyPositionAndSize();
                             }
-                        });
-            }
+                        };
+
+                        @Override
+                        public void onResize(ResizeEvent event) {
+                            t.cancel();
+                            // TODO less
+                            t.schedule(1000);
+                        }
+                    });
         });
     }
 
@@ -747,7 +744,7 @@ public final class VDebugWindow extends VOverlay {
     }
 
     /**
-     * Called when a response is received
+     * Called when a response is received.
      *
      * @param ac
      * @param uidl
@@ -786,12 +783,11 @@ public final class VDebugWindow extends VOverlay {
     protected class Menu extends VOverlay {
         FlowPanel content = new FlowPanel();
 
-        DebugButton[] sizes = new DebugButton[] {
-                new DebugButton(null, "Small", "A"),
+        DebugButton[] sizes = { new DebugButton(null, "Small", "A"),
                 new DebugButton(null, "Medium", "A"),
                 new DebugButton(null, "Large", "A") };
 
-        DebugButton[] modes = new DebugButton[] {
+        DebugButton[] modes = {
                 new DebugButton(Icon.DEVMODE_OFF,
                         "Debug only (causes page reload)"),
                 new DebugButton(Icon.DEVMODE_ON,
@@ -843,8 +839,7 @@ public final class VDebugWindow extends VOverlay {
                 }
             };
             modes[getDevMode()].setActive(true);
-            for (int i = 0; i < modes.length; i++) {
-                Button b = modes[i];
+            for (Button b : modes) {
                 b.addClickHandler(modeHandler);
                 mode.add(b);
             }

@@ -30,7 +30,7 @@ public class ColumnCollapsingAndColumnExpansion
         table.addActionHandler(new Handler() {
 
             final Action H = new Action("Toggle Col2");
-            final Action[] actions = new Action[] { H };
+            final Action[] actions = { H };
 
             @Override
             public Action[] getActions(Object target, Object sender) {

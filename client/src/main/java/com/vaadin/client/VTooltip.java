@@ -47,6 +47,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
 
 /**
+ * A tooltip used by components.
+ *
  * TODO open for extension
  */
 public class VTooltip extends VOverlay {
@@ -123,8 +125,6 @@ public class VTooltip extends VOverlay {
     /**
      * Initialize the tooltip overlay for assistive devices.
      *
-     * @param info
-     *            with the content of the tooltip
      * @since 7.2.4
      */
     public void initializeAssistiveTooltips() {
@@ -140,6 +140,7 @@ public class VTooltip extends VOverlay {
                 && !info.getErrorMessage().isEmpty()) {
             em.setVisible(true);
             em.updateMessage(info.getErrorMessage());
+            em.updateErrorLevel(info.getErrorLevel());
         } else {
             em.setVisible(false);
         }
@@ -367,8 +368,10 @@ public class VTooltip extends VOverlay {
                     if (roomBelow > heightNeeded) {
                         y = roomAbove;
                     } else {
-                        y = roomAbove - offsetHeight - (currentElement != null
-                                ? currentElement.getOffsetHeight() : 0);
+                        y = roomAbove - offsetHeight
+                                - (currentElement != null
+                                        ? currentElement.getOffsetHeight()
+                                        : 0);
                     }
 
                     if (y + offsetHeight - Window.getScrollTop() > Window
@@ -461,6 +464,7 @@ public class VTooltip extends VOverlay {
     @Override
     public void hide() {
         em.updateMessage("");
+        em.updateErrorLevel(null);
         description.setHTML("");
 
         updatePosition(null, true);
@@ -503,7 +507,7 @@ public class VTooltip extends VOverlay {
     }
 
     /**
-     * Replace current open tooltip with new content
+     * Replace current open tooltip with new content.
      */
     public void replaceCurrentTooltip() {
         if (closing) {
@@ -617,7 +621,7 @@ public class VTooltip extends VOverlay {
             Element element = Element.as(event.getEventTarget());
 
             // We can ignore move event if it's handled by move or over already
-            if (currentElement == element && handledByFocus == true) {
+            if (currentElement == element && handledByFocus) {
                 return;
             }
 

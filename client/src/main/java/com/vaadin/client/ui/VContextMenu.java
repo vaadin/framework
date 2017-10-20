@@ -17,7 +17,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
@@ -66,19 +65,11 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    imagesLoaded();
-                }
-            });
+            () -> imagesLoaded());
 
     /**
      * This method should be used only by Client object as only one per client
      * should exists. Request an instance via client.getContextMenu();
-     *
-     * @param cli
-     *            to be set as an owner of menu
      */
     public VContextMenu() {
         super(true, false);
@@ -107,7 +98,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     }
 
     /**
-     * Sets the element from which to build menu
+     * Sets the element from which to build menu.
      *
      * @param ao
      */
@@ -130,8 +121,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         this.left = left;
         this.top = top;
         menu.clearItems();
-        for (int i = 0; i < actions.length; i++) {
-            final Action a = actions[i];
+        for (final Action a : actions) {
             menu.addItem(new MenuItem(a.getHTML(), true, a));
         }
 
@@ -297,12 +287,9 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
-            {
-                while (e != null
-                        && !e.getTagName().toLowerCase().equals("tr")) {
-                    e = e.getParentElement();
-                    // ApplicationConnection.getConsole().log("Found row");
-                }
+            while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
+                e = e.getParentElement();
+                // ApplicationConnection.getConsole().log("Found row");
             }
             com.google.gwt.dom.client.TableSectionElement parentElement = (TableSectionElement) e
                     .getParentElement();

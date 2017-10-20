@@ -15,9 +15,10 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Properties;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -105,7 +106,6 @@ public class BootstrapHandlerTest {
         Mockito.when(session.getBrowser()).thenReturn(browser);
         Mockito.when(session.getConfiguration()).thenReturn(configuration);
 
-        Assert.assertEquals(expectedUrl,
-                resolver.resolveVaadinUri(frontendUrl));
+        assertEquals(expectedUrl, resolver.resolveVaadinUri(frontendUrl));
     }
 }

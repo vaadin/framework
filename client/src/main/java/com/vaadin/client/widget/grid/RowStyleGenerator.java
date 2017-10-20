@@ -18,12 +18,13 @@ package com.vaadin.client.widget.grid;
 import java.io.Serializable;
 
 /**
- * Callback interface for generating custom style names for data rows
+ * Callback interface for generating custom style names for data rows.
  *
  * @author Vaadin Ltd
  * @param <T>
  *            the row type of the target grid
- * @see Grid#setRowStyleGenerator(RowStyleGenerator)
+ * @see com.vaadin.client.widgets.Grid#setRowStyleGenerator(RowStyleGenerator)
+ *      Grid#setRowStyleGenerator(RowStyleGenerator)
  * @since 7.4
  */
 public interface RowStyleGenerator<T> extends Serializable {

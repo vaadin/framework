@@ -1,6 +1,8 @@
 package com.vaadin.tests.server.componentcontainer;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+
 import org.junit.Test;
 
 import com.vaadin.ui.Button;
@@ -46,30 +48,30 @@ public class HorizontalLayoutTest extends AbstractIndexedLayoutTestBase {
 
         layout.addComponentsAndExpand(b1, b2);
 
-        Assert.assertEquals(3, layout.getComponentCount());
+        assertEquals(3, layout.getComponentCount());
 
-        Assert.assertSame(b3, layout.getComponent(0));
-        Assert.assertSame(b1, layout.getComponent(1));
-        Assert.assertSame(b2, layout.getComponent(2));
+        assertSame(b3, layout.getComponent(0));
+        assertSame(b1, layout.getComponent(1));
+        assertSame(b2, layout.getComponent(2));
 
-        Assert.assertEquals(0, layout.getExpandRatio(b3), 0);
-        Assert.assertEquals(1, layout.getExpandRatio(b1), 0);
-        Assert.assertEquals(1, layout.getExpandRatio(b2), 0);
+        assertEquals(0, layout.getExpandRatio(b3), 0);
+        assertEquals(1, layout.getExpandRatio(b1), 0);
+        assertEquals(1, layout.getExpandRatio(b2), 0);
 
-        Assert.assertEquals(-1, b3.getWidth(), 0);
-        Assert.assertEquals(100, b1.getWidth(), 0);
-        Assert.assertEquals(100, b2.getWidth(), 0);
+        assertEquals(-1, b3.getWidth(), 0);
+        assertEquals(100, b1.getWidth(), 0);
+        assertEquals(100, b2.getWidth(), 0);
     }
 
     @Test
     public void addAndExpand_undefinedHeightUpdated() {
         HorizontalLayout layout = getLayout();
 
-        Assert.assertEquals(-1, layout.getWidth(), 0);
+        assertEquals(-1, layout.getWidth(), 0);
 
         layout.addComponentsAndExpand();
 
-        Assert.assertEquals(100, layout.getWidth(), 0);
+        assertEquals(100, layout.getWidth(), 0);
     }
 
     @Test
@@ -80,7 +82,7 @@ public class HorizontalLayoutTest extends AbstractIndexedLayoutTestBase {
 
         layout.addComponentsAndExpand();
 
-        Assert.assertEquals(150, layout.getWidth(), 0);
+        assertEquals(150, layout.getWidth(), 0);
     }
 
 }

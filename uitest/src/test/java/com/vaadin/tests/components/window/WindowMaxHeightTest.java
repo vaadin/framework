@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 
@@ -29,8 +30,7 @@ public class WindowMaxHeightTest extends SingleBrowserTest {
         openTestURL();
         WindowElement window = $(WindowElement.class).first();
         Dimension size = window.getSize();
-        Assert.assertTrue(
-                "Window should be 200-250px high, was " + size.getHeight(),
+        assertTrue("Window should be 200-250px high, was " + size.getHeight(),
                 size.getHeight() < 250);
     }
 }

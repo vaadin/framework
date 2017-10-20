@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -144,14 +145,14 @@ public class GridHeaderStyleNamesTest extends SingleBrowserTest {
     private void assertHasStyleName(String message, WebElement element,
             String stylename) {
         if (!hasCssClass(element, stylename)) {
-            Assert.fail(message);
+            fail(message);
         }
     }
 
     private void assertHasNotStyleName(String message, WebElement element,
             String stylename) {
         if (hasCssClass(element, stylename)) {
-            Assert.fail(message);
+            fail(message);
         }
     }
 

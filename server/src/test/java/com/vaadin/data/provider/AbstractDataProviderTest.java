@@ -15,10 +15,13 @@
  */
 package com.vaadin.data.provider;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.Registration;
@@ -53,12 +56,12 @@ public class AbstractDataProviderTest {
         TestDataProvider dataProvider = new TestDataProvider();
         AtomicReference<DataChangeEvent<Object>> event = new AtomicReference<>();
         dataProvider.addDataProviderListener(ev -> {
-            Assert.assertNull(event.get());
+            assertNull(event.get());
             event.set(ev);
         });
         dataProvider.refreshAll();
-        Assert.assertNotNull(event.get());
-        Assert.assertEquals(dataProvider, event.get().getSource());
+        assertNotNull(event.get());
+        assertEquals(dataProvider, event.get().getSource());
     }
 
     @Test
@@ -69,6 +72,6 @@ public class AbstractDataProviderTest {
                 .addDataProviderListener(ev -> event.set(ev));
         registration.remove();
         dataProvider.refreshAll();
-        Assert.assertNull(event.get());
+        assertNull(event.get());
     }
 }

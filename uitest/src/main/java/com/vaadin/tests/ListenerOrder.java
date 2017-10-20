@@ -1,7 +1,7 @@
 package com.vaadin.tests;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -24,7 +24,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
 
     Select s1;
 
-    HashMap<String, Integer> buttonListeners = new HashMap<>();
+    Map<String, Integer> buttonListeners = new HashMap<>();
 
     @Override
     public void init() {
@@ -89,10 +89,8 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         s1.addListener((ValueChangeListener) this);
 
         Item i = s1.getItem("second");
-        for (Iterator<?> it = i.getItemPropertyIds().iterator(); it
-                .hasNext();) {
-            Object o = it.next();
-            System.out.println("[" + o + "]");
+        for (Object id : i.getItemPropertyIds()) {
+            System.out.println("[" + id + "]");
         }
 
     }

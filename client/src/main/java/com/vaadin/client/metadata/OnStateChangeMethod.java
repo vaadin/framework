@@ -25,7 +25,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 
 /**
  * Encapsulates the data that the widgetset compiler generates for supporting a
- * connector method annotated with {@link OnStateChange}
+ * connector method annotated with {@link OnStateChange}.
  *
  * @since 7.2
  * @author Vaadin Ltd

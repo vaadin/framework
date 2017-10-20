@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -44,10 +43,11 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Utility methods which are related to client side code only
+ * Utility methods which are related to client side code only.
  */
 public class WidgetUtil {
 
@@ -59,13 +59,13 @@ public class WidgetUtil {
      */
     public static native void browserDebugger()
     /*-{
-        if($wnd.console)
+        if ($wnd.console)
             debugger;
     }-*/;
 
     /**
      * Redirects the browser to the given url or refreshes the page if url is
-     * null
+     * null.
      *
      * @since 7.6
      * @param url
@@ -111,7 +111,7 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        if(el != null && el.nodeType == 3) {
+        if (el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
         return el;
@@ -280,7 +280,7 @@ public class WidgetUtil {
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
-        if (height.equals("")) {
+        if (height.isEmpty()) {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
@@ -307,7 +307,7 @@ public class WidgetUtil {
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
@@ -417,7 +417,7 @@ public class WidgetUtil {
     }
 
     /**
-     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}.
      *
      * @since 7.2.6
      * @param elem
@@ -679,7 +679,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
-         if(heightPx == 'auto'){
+         if (heightPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -699,7 +699,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
-         if(widthPx == 'auto'){
+         if (widthPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -769,11 +769,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
-            if (overflow.equals("auto") || overflow.equals("scroll")) {
-                return true;
-            } else {
-                return false;
-            }
+            return overflow.equals("auto") || overflow.equals("scroll");
         } else {
             return false;
         }
@@ -794,7 +790,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-    
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -809,7 +805,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-    
+
      }-*/;
 
     /**
@@ -823,7 +819,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-    
+
         }
     }-*/;
 
@@ -832,10 +828,11 @@ public class WidgetUtil {
      * DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W} but returns {@code C}.
-     * This may also be the case with other Composite-like classes that hijack
-     * the event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W} but returns {@code C}. This may also be
+     * the case with other Composite-like classes that hijack the event handling
+     * of their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -851,11 +848,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      * <p>
      * Only accepts the exact class {@code class1} if not null.
      *
@@ -875,11 +873,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -930,7 +929,7 @@ public class WidgetUtil {
     }
 
     /**
-     * Force webkit to redraw an element
+     * Force webkit to redraw an element.
      *
      * @param element
      *            The element that should be redrawn
@@ -938,7 +937,7 @@ public class WidgetUtil {
     public static void forceWebkitRedraw(Element element) {
         Style style = element.getStyle();
         String s = style.getProperty("webkitTransform");
-        if (s == null || s.length() == 0) {
+        if (s == null || s.isEmpty()) {
             style.setProperty("webkitTransform", "scale(1)");
         } else {
             style.setProperty("webkitTransform", "");
@@ -1151,19 +1150,14 @@ public class WidgetUtil {
             ((Focusable) targetWidget).focus();
         }
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                try {
-                    target.dispatchEvent(createMouseDownEvent);
-                    target.dispatchEvent(createMouseUpEvent);
-                    target.dispatchEvent(createMouseClickEvent);
-                } catch (Exception e) {
-                }
-
+        Scheduler.get().scheduleDeferred(() -> {
+            try {
+                target.dispatchEvent(createMouseDownEvent);
+                target.dispatchEvent(createMouseUpEvent);
+                target.dispatchEvent(createMouseClickEvent);
+            } catch (Exception e) {
             }
         });
-
     }
 
     /**
@@ -1171,17 +1165,17 @@ public class WidgetUtil {
      *
      * @return The active element or null if no active element could be found.
      */
-    public native static Element getFocusedElement()
+    public static native Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-    
+
        return null;
      }-*/;
 
     /**
-     * Gets currently focused element and checks if it's editable
+     * Gets currently focused element and checks if it's editable.
      *
      * @since 7.4
      *
@@ -1247,11 +1241,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1260,12 +1254,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-    
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1273,7 +1267,7 @@ public class WidgetUtil {
 
     /**
      * Checks if the given event is either a touch event or caused by the left
-     * mouse button
+     * mouse button.
      *
      * @param event
      * @return true if the event is a touch event or caused by the left mouse
@@ -1319,7 +1313,7 @@ public class WidgetUtil {
      *
      * @since 7.3
      */
-    public native static void setSelectionRange(Element elem, int pos,
+    public static native void setSelectionRange(Element elem, int pos,
             int length, String direction)
     /*-{
        try {
@@ -1336,10 +1330,10 @@ public class WidgetUtil {
      * @param e
      *            element for enabling or disabling text selection
      * @param enable
-     *            <code>true</code> if selection is enabled; </code>false</code>
+     *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
-    public native static void setTextSelectionEnabled(Element e, boolean enable)
+    public static native void setTextSelectionEnabled(Element e, boolean enable)
     /*-{
         if (!enable) {
             e.ondrag = function () { return false; };
@@ -1357,7 +1351,7 @@ public class WidgetUtil {
      *
      * @since 7.6
      */
-    public native static void clearTextSelection()
+    public static native void clearTextSelection()
     /*-{
         if ($wnd.getSelection) {
             $wnd.getSelection().removeAllRanges();
@@ -1481,7 +1475,7 @@ public class WidgetUtil {
             }
 
             s = s.trim();
-            if ("".equals(s)) {
+            if (s.isEmpty()) {
                 return null;
             }
 
@@ -1567,6 +1561,15 @@ public class WidgetUtil {
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (int) value;
+            result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+            return result;
         }
 
         /**
@@ -1705,7 +1708,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-    
+
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1860,5 +1863,49 @@ public class WidgetUtil {
     public static int getRelativeY(Element element, NativeEvent event) {
         int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
         return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
+    }
+
+    /**
+     * Utility methods for displaying error message on components.
+     *
+     * @since 8.2
+     */
+    public static class ErrorUtil {
+
+        /**
+         * Sets the error level style name for the given element and removes all
+         * previously applied error level style names. The style name has the
+         * {@code prefix-errorLevel} format.
+         *
+         * @param element
+         *            element to apply the style name to
+         * @param prefix
+         *            part of the style name before the error level string
+         * @param errorLevel
+         *            error level for which the style will be applied
+         */
+        public static void setErrorLevelStyle(Element element, String prefix,
+                ErrorLevel errorLevel) {
+            for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
+                String className = prefix + "-"
+                        + errorLevelValue.toString().toLowerCase();
+                if (errorLevel == errorLevelValue) {
+                    element.addClassName(className);
+                } else {
+                    element.removeClassName(className);
+                }
+            }
+        }
+
+        /**
+         * Creates an element to use by widgets as an error indicator.
+         *
+         * @return the error indicator element
+         */
+        public static Element createErrorIndicatorElement() {
+            Element indicator = DOM.createSpan();
+            indicator.setClassName(StyleConstants.STYLE_NAME_ERROR_INDICATOR);
+            return indicator;
+        }
     }
 }

@@ -27,7 +27,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.v7.client.ui.VCalendar;
 
 /**
- * Internally used class by the Calendar
+ * Internally used class by the Calendar.
  *
  * since 7.1
  */

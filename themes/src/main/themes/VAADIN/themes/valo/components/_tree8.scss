@@ -61,4 +61,20 @@
     border-color: transparent;
     box-shadow: inset 0 0 0 1px valo-font-color($tree-sel-bg);
   }
+
+  // Scroll bar
+  .#{$primary-stylename}-scroller-vertical {
+    border: none;
+  }
+
+  .#{$primary-stylename}-scroller-horizontal {
+    border: none;
+  }
+
+  .#{$primary-stylename}-header-deco,
+  .#{$primary-stylename}-footer-deco,
+  .#{$primary-stylename}-horizontal-scrollbar-deco {
+    border: none;
+    background: transparent;
+  }
 }

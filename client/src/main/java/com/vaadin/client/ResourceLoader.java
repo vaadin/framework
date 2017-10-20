@@ -141,7 +141,7 @@ public class ResourceLoader {
         for (int i = 0; i < scripts.getLength(); i++) {
             ScriptElement element = ScriptElement.as(scripts.getItem(i));
             String src = element.getSrc();
-            if (src != null && src.length() != 0) {
+            if (src != null && !src.isEmpty()) {
                 loadedResources.add(src);
             }
         }
@@ -152,18 +152,18 @@ public class ResourceLoader {
             String rel = linkElement.getRel();
             String href = linkElement.getHref();
             if ("stylesheet".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
             if ("import".equalsIgnoreCase(rel) && href != null
-                    && href.length() != 0) {
+                    && !href.isEmpty()) {
                 loadedResources.add(href);
             }
         }
     }
 
     /**
-     * Returns the default ResourceLoader
+     * Returns the default ResourceLoader.
      *
      * @return the default ResourceLoader
      */
@@ -397,7 +397,7 @@ public class ResourceLoader {
 
     private static native int getStyleSheetLength(String url)
     /*-{
-        for(var i = 0; i < $doc.styleSheets.length; i++) {
+        for (var i = 0; i < $doc.styleSheets.length; i++) {
             if ($doc.styleSheets[i].href === url) {
                 var sheet = $doc.styleSheets[i];
                 try {
@@ -405,12 +405,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-
+    
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-
+    
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
@@ -492,9 +492,7 @@ public class ResourceLoader {
      */
     protected void runWhenHtmlImportsReady(Runnable runnable) {
         if (GWT.isClient() && supportsHtmlWhenReady()) {
-            addHtmlImportsReadyHandler(() -> {
-                runnable.run();
-            });
+            addHtmlImportsReadyHandler(() -> runnable.run());
         } else {
             runnable.run();
         }

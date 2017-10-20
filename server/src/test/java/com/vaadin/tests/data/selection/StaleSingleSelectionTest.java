@@ -1,10 +1,12 @@
 package com.vaadin.tests.data.selection;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -29,10 +31,10 @@ public class StaleSingleSelectionTest
         dataProvider.refreshItem(replacement);
 
         assertIsStale(toReplace);
-        Assert.assertFalse("Selection should not contain stale values",
+        assertFalse("Selection should not contain stale values",
                 dataProvider.isStale(select.getValue()));
 
-        Assert.assertEquals("Selected item id did not match original.",
+        assertEquals("Selected item id did not match original.",
                 toReplace.getId(), dataProvider.getId(select.getValue()));
     }
 

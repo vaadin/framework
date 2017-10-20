@@ -42,9 +42,9 @@ public class SelectorPredicate {
     }
 
     /**
-     * Generate a list of predicates from a single predicate string
+     * Generates a list of predicates from a single predicate string.
      *
-     * @param str
+     * @param path
      *            a comma separated string of predicates
      * @return a List of Predicate objects
      */
@@ -52,7 +52,7 @@ public class SelectorPredicate {
         List<SelectorPredicate> predicates = new ArrayList<>();
 
         String predicateStr = extractPredicateString(path);
-        if (null == predicateStr || predicateStr.length() == 0) {
+        if (null == predicateStr || predicateStr.isEmpty()) {
             return predicates;
         }
 

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
@@ -90,8 +90,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     private CalendarServerRpc rpc = RpcProxy.create(CalendarServerRpc.class,
             this);
 
-    private final HashMap<String, String> actionMap = new HashMap<String, String>();
-    private HashMap<Object, String> tooltips = new HashMap<Object, String>();
+    private final Map<String, String> actionMap = new HashMap<String, String>();
+    private Map<Object, String> tooltips = new HashMap<Object, String>();
 
     private static final String DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG = "-ac";
 
@@ -134,7 +134,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
     /**
      * Registers listeners on the calendar so server can be notified of the
-     * events
+     * events.
      */
     protected void registerListeners() {
         getWidget().setListener(new DateClickListener() {
@@ -185,7 +185,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                 if (hasEventListener(CalendarEventId.EVENTMOVE)) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(DateUtil.formatClientSideDate(event.getStart()));
-                    sb.append("-");
+                    sb.append('-');
                     sb.append(DateUtil
                             .formatClientSideTime(event.getStartTime()));
                     rpc.eventMove(event.getIndex(), sb.toString());
@@ -200,7 +200,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
                     buffer.append(
                             DateUtil.formatClientSideDate(event.getStart()));
-                    buffer.append("-");
+                    buffer.append('-');
                     buffer.append(DateUtil
                             .formatClientSideTime(event.getStartTime()));
 
@@ -209,7 +209,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                     buffer = new StringBuilder();
                     buffer.append(
                             DateUtil.formatClientSideDate(event.getEnd()));
-                    buffer.append("-");
+                    buffer.append('-');
                     buffer.append(
                             DateUtil.formatClientSideTime(event.getEndTime()));
 
@@ -393,9 +393,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Iterator<Object> childIterator = uidl.getChildIterator();
-        while (childIterator.hasNext()) {
-            UIDL child = (UIDL) childIterator.next();
+        for (Object c : uidl) {
+            UIDL child = (UIDL) c;
             if (DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG.equals(child.getTag())) {
                 if (getWidget().getDropHandler() == null) {
                     getWidget().setDropHandler(showingMonthView()
@@ -410,7 +409,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Returns the ApplicationConnection used to connect to the server side
+     * Returns the ApplicationConnection used to connect to the server side.
      */
     @Override
     public ApplicationConnection getClient() {
@@ -584,7 +583,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the original action ID that was passed in from the shared state
+     * Get the original action ID that was passed in from the shared state.
      *
      * @since 7.1.2
      * @param actionKey
@@ -596,7 +595,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the text that is displayed for a context menu item
+     * Get the text that is displayed for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -607,7 +606,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the icon url for a context menu item
+     * Get the icon url for a context menu item.
      *
      * @param actionKey
      *            The unique action key
@@ -618,7 +617,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the start date for an action item
+     * Get the start date for an action item.
      *
      * @param actionKey
      *            The unique action key
@@ -633,7 +632,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
     }
 
     /**
-     * Get the end date for an action item
+     * Get the end date for an action item.
      *
      * @param actionKey
      *            The unique action key

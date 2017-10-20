@@ -18,6 +18,7 @@ package com.vaadin.ui.components.grid;
 import java.lang.reflect.Method;
 
 import com.vaadin.event.ConnectorEventListener;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Drop listener for HTML5 drop on a Grid row.
@@ -31,8 +32,8 @@ import com.vaadin.event.ConnectorEventListener;
 @FunctionalInterface
 public interface GridDragEndListener<T> extends ConnectorEventListener {
 
-    static final Method DRAG_END_METHOD = GridDragEndListener.class
-            .getDeclaredMethods()[0];
+    static final Method DRAG_END_METHOD = ReflectTools
+            .getMethod(GridDragEndListener.class);
 
     /**
      * Invoked when the user has dropped the dragged grid rows, or canceled the

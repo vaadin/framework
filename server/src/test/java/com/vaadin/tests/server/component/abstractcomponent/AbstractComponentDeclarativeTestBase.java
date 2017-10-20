@@ -24,11 +24,11 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.declarative.DesignContext;
@@ -212,7 +212,7 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
     }
 
     @Test
-    public void sizeUnderfinedDeserialization()
+    public void sizeUndefinedDeserialization()
             throws InstantiationException, IllegalAccessException {
         String design = String.format("<%s/>", getComponentTag());
 
@@ -237,7 +237,7 @@ public abstract class AbstractComponentDeclarativeTestBase<T extends AbstractCom
     }
 
     @Test
-    public void widthUnderfinedDeserialization()
+    public void widthUndefinedDeserialization()
             throws InstantiationException, IllegalAccessException {
         String design = String.format("<%s/>", getComponentTag());
 

@@ -76,11 +76,11 @@ public class TestForContainerFilterable extends CustomComponent {
             @Override
             public void buttonClick(ClickEvent event) {
                 ic.removeAllContainerFilters();
-                if (fooFilter.getValue().length() > 0) {
+                if (!fooFilter.getValue().isEmpty()) {
                     ic.addContainerFilter("foo", fooFilter.getValue(), false,
                             false);
                 }
-                if (barFilter.getValue().length() > 0) {
+                if (!barFilter.getValue().isEmpty()) {
                     ic.addContainerFilter("bar", barFilter.getValue(), true,
                             true);
                 }
@@ -100,7 +100,7 @@ public class TestForContainerFilterable extends CustomComponent {
 
     private String randomWord() {
         int len = (int) (Math.random() * 4);
-        final StringBuffer buf = new StringBuffer();
+        final StringBuilder buf = new StringBuilder();
         while (len-- >= 0) {
             buf.append(parts[(int) (Math.random() * parts.length)]);
         }

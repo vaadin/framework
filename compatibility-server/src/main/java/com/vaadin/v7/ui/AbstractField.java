@@ -21,11 +21,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
@@ -436,7 +434,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -452,9 +450,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * @param newFieldValue
      *            the New value of the field.
      * @param repaintIsNotNeeded
-     *            True iff caller is sure that repaint is not needed.
+     *            True if caller is sure that repaint is not needed.
      * @param ignoreReadOnly
-     *            True iff if the read-only check should be ignored
+     *            True if the read-only check should be ignored
      * @throws Property.ReadOnlyException
      * @throws Converter.ConversionException
      * @throws InvalidValueException
@@ -652,9 +650,8 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             final Collection<Validator> validators = ((Validatable) dataSource)
                     .getValidators();
             if (validators != null) {
-                for (final Iterator<Validator> i = validators.iterator(); i
-                        .hasNext();) {
-                    addValidator(i.next());
+                for (final Validator v : validators) {
+                    addValidator(v);
                 }
             }
         }
@@ -996,7 +993,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      * Fields allow invalid values by default. In most cases this is wanted,
      * because the field otherwise visually forget the user input immediately.
      *
-     * @return true iff the invalid values are allowed.
+     * @return true if invalid values are allowed.
      * @see Validatable#isInvalidAllowed()
      */
     @Override
@@ -1077,9 +1074,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             VALUE_CHANGE_METHOD = Property.ValueChangeListener.class
                     .getDeclaredMethod("valueChange",
                             new Class[] { Property.ValueChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in AbstractField");
         }
     }
@@ -1150,9 +1147,9 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
             READ_ONLY_STATUS_CHANGE_METHOD = Property.ReadOnlyStatusChangeListener.class
                     .getDeclaredMethod("readOnlyStatusChange", new Class[] {
                             Property.ReadOnlyStatusChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in AbstractField");
         }
     }
@@ -1766,16 +1763,11 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
         super.writeDesign(design, designContext);
-        AbstractField def = (AbstractField) designContext
-                .getDefaultInstance(this);
+        AbstractField<?> def = designContext.getDefaultInstance(this);
         Attributes attr = design.attributes();
         // handle readonly
         DesignAttributeHandler.writeAttribute("readonly", attr,
                 super.isReadOnly(), def.isReadOnly(), Boolean.class,
                 designContext);
-    }
-
-    private static final Logger getLogger() {
-        return Logger.getLogger(AbstractField.class.getName());
     }
 }

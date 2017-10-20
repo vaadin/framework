@@ -47,8 +47,9 @@ import com.vaadin.ui.declarative.DesignAttributeHandler;
 @SuppressWarnings("serial")
 public class DesignResourceConverter implements Converter<String, Resource> {
 
-    private static final Map<Integer, VaadinIcons> CODE_POINTS =
-            Arrays.stream(VaadinIcons.values()).collect(Collectors.toMap(VaadinIcons::getCodepoint, icon -> icon));
+    private static final Map<Integer, VaadinIcons> CODE_POINTS = Arrays
+            .stream(VaadinIcons.values())
+            .collect(Collectors.toMap(VaadinIcons::getCodepoint, icon -> icon));
 
     @Override
     public Result<Resource> convertToModel(String value, ValueContext context) {
@@ -115,7 +116,9 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                     return CODE_POINTS.get(codepoint);
                 }
 
-                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { //Left for compatibility
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left
+                                                                        // for
+                                                                        // compatibility
                     return FontAwesome.fromCodepoint(codepoint);
                 }
                 // all vaadin icons should have a codepoint
@@ -144,9 +147,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
 
             @Override
             public String format(Resource value) {
-                throw new UnsupportedOperationException(
-                        "Use " + ResourceConverterByProtocol.FONTICON.toString()
-                                + " instead");
+                throw new UnsupportedOperationException("Use "
+                        + ResourceConverterByProtocol.FONTICON + " instead");
             }
         },
         FILE {
@@ -168,7 +170,8 @@ public class DesignResourceConverter implements Converter<String, Resource> {
 
         };
 
-        public static final String VAADIN_ICONS_NAME = VaadinIcons.ABACUS.getFontFamily();
+        public static final String VAADIN_ICONS_NAME = VaadinIcons.ABACUS
+                .getFontFamily();
 
         @Override
         public Resource parse(String value) {

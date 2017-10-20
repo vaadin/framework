@@ -15,13 +15,13 @@
  */
 package com.vaadin.server.communication;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,20 +56,19 @@ public class MetadataWriterTest {
     @Test
     public void writeAsyncTag() throws Exception {
         new MetadataWriter().write(ui, writer, false, true, messages);
-        Assert.assertEquals("{\"async\":true}", writer.getBuffer().toString());
+        assertEquals("{\"async\":true}", writer.getBuffer().toString());
     }
 
     @Test
     public void writeRepaintTag() throws Exception {
         new MetadataWriter().write(ui, writer, true, false, messages);
-        Assert.assertEquals("{\"repaintAll\":true}",
-                writer.getBuffer().toString());
+        assertEquals("{\"repaintAll\":true}", writer.getBuffer().toString());
     }
 
     @Test
     public void writeRepaintAndAsyncTag() throws Exception {
         new MetadataWriter().write(ui, writer, true, true, messages);
-        Assert.assertEquals("{\"repaintAll\":true, \"async\":true}",
+        assertEquals("{\"repaintAll\":true, \"async\":true}",
                 writer.getBuffer().toString());
     }
 
@@ -78,7 +77,7 @@ public class MetadataWriterTest {
         disableSessionExpirationMessages(messages);
 
         new MetadataWriter().write(ui, writer, false, false, messages);
-        Assert.assertEquals("{}", writer.getBuffer().toString());
+        assertEquals("{}", writer.getBuffer().toString());
     }
 
     @Test
@@ -89,8 +88,7 @@ public class MetadataWriterTest {
         disableSessionExpirationMessages(messages);
 
         new MetadataWriter().write(ui, writer, false, false, messages);
-        Assert.assertEquals(
-                "{\"timedRedirect\":{\"interval\":15,\"url\":\"\"}}",
+        assertEquals("{\"timedRedirect\":{\"interval\":15,\"url\":\"\"}}",
                 writer.getBuffer().toString());
     }
 
@@ -102,7 +100,7 @@ public class MetadataWriterTest {
         disableSessionExpirationMessages(messages);
 
         new MetadataWriter().write(ui, writer, false, true, messages);
-        Assert.assertEquals(
+        assertEquals(
                 "{\"async\":true,\"timedRedirect\":{\"interval\":15,\"url\":\"\"}}",
                 writer.getBuffer().toString());
     }

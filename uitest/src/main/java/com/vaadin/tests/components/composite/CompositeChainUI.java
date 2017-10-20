@@ -46,10 +46,8 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         addComponent(container);
 
         Button updateCaption = new Button("Update caption");
-        updateCaption.addClickListener(e -> {
-            innermostComponent
-                    .setCaption(innermostComponent.getCaption() + " - updated");
-        });
+        updateCaption.addClickListener(e -> innermostComponent
+                .setCaption(innermostComponent.getCaption() + " - updated"));
         addComponent(updateCaption);
         Button replaceWithAnotherComposite = new Button(
                 "Replace with another Composite", e -> {
@@ -82,10 +80,9 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         String msg = component.getClass().getSimpleName();
         if (component instanceof HasComponents) {
 
-            Iterator<Component> iterator = ((HasComponents) component)
-                    .iterator();
-            if (iterator.hasNext()) {
-                Component content = iterator.next();
+            Iterator<Component> it = ((HasComponents) component).iterator();
+            if (it.hasNext()) {
+                Component content = it.next();
                 if (content != null) {
                     msg += " -> " + getHierarchy(content);
                 }

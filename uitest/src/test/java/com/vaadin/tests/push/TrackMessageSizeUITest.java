@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.parallel.TestCategory;
@@ -26,7 +27,7 @@ public class TrackMessageSizeUITest extends MultiBrowserTest {
     @Test
     public void runTests() {
         openTestURL();
-        Assert.assertEquals("1. All tests run",
+        assertEquals("1. All tests run",
                 vaadinElementById("Log_row_0").getText());
     }
 }

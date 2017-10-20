@@ -16,10 +16,11 @@
 package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
@@ -42,28 +43,28 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         ButtonElement toggleAgeColumn = $(ButtonElement.class).get(1);
         ButtonElement toggleEmailColumn = $(ButtonElement.class).get(2);
 
-        Assert.assertEquals("Foo", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Maya", grid.getCell(1, 0).getText());
-        Assert.assertEquals("46", grid.getCell(0, 1).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 2).getText());
+        assertEquals("Foo", grid.getCell(0, 0).getText());
+        assertEquals("Maya", grid.getCell(1, 0).getText());
+        assertEquals("46", grid.getCell(0, 1).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 2).getText());
 
         toggleAgeColumn.click();
-        Assert.assertEquals("Foo", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Maya", grid.getCell(1, 0).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
+        assertEquals("Foo", grid.getCell(0, 0).getText());
+        assertEquals("Maya", grid.getCell(1, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
 
         toggleNameColumn.click();
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 0).getText());
 
         toggleEmailColumn.click();
-        Assert.assertFalse(isElementPresent(By.className("v-grid-cell")));
+        assertFalse(isElementPresent(By.className("v-grid-cell")));
 
         toggleAgeColumn.click();
         toggleNameColumn.click();
         toggleEmailColumn.click();
-        Assert.assertEquals("Foo", grid.getCell(0, 0).getText());
-        Assert.assertEquals("46", grid.getCell(0, 1).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 2).getText());
+        assertEquals("Foo", grid.getCell(0, 0).getText());
+        assertEquals("46", grid.getCell(0, 1).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 2).getText());
     }
 
     @Test
@@ -73,19 +74,19 @@ public class GridColumnHidingTest extends MultiBrowserTest {
 
         getSidebarOpenButton(grid).click();
         getColumnHidingToggle(grid, "custom age column caption").click();
-        Assert.assertEquals("Foo", grid.getCell(0, 0).getText());
-        Assert.assertEquals("Maya", grid.getCell(1, 0).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
-        Assert.assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
+        assertEquals("Foo", grid.getCell(0, 0).getText());
+        assertEquals("Maya", grid.getCell(1, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
+        assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
 
         getColumnHidingToggle(grid, "Name").click();
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 0).getText());
 
         getColumnHidingToggle(grid, "custom age column caption").click();
-        Assert.assertEquals("46", grid.getCell(0, 0).getText());
-        Assert.assertEquals("18", grid.getCell(1, 0).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
-        Assert.assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
+        assertEquals("46", grid.getCell(0, 0).getText());
+        assertEquals("18", grid.getCell(1, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
+        assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
     }
 
     @Test
@@ -101,10 +102,10 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         // Show from server
         $(ButtonElement.class).caption("server side toggle age column").first()
                 .click();
-        Assert.assertEquals("46", grid.getCell(0, 0).getText());
-        Assert.assertEquals("18", grid.getCell(1, 0).getText());
-        Assert.assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
-        Assert.assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
+        assertEquals("46", grid.getCell(0, 0).getText());
+        assertEquals("18", grid.getCell(1, 0).getText());
+        assertEquals("yeah@cool.com", grid.getCell(0, 1).getText());
+        assertEquals("maya@foo.bar", grid.getCell(1, 1).getText());
     }
 
     @Test
@@ -115,19 +116,19 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         ButtonElement toggleNameColumn = $(ButtonElement.class).get(0);
         ButtonElement toggleAgeColumn = $(ButtonElement.class).get(1);
 
-        Assert.assertEquals("visibility change label", isHiddenLabel.getText());
+        assertEquals("visibility change label", isHiddenLabel.getText());
         toggleNameColumn.click();
-        Assert.assertEquals("true", isHiddenLabel.getText());
+        assertEquals("true", isHiddenLabel.getText());
         toggleAgeColumn.click();
-        Assert.assertEquals("true", isHiddenLabel.getText());
+        assertEquals("true", isHiddenLabel.getText());
         toggleAgeColumn.click();
-        Assert.assertEquals("false", isHiddenLabel.getText());
+        assertEquals("false", isHiddenLabel.getText());
 
         getSidebarOpenButton(grid).click();
         getColumnHidingToggle(grid, "Name").click();
-        Assert.assertEquals("false", isHiddenLabel.getText());
+        assertEquals("false", isHiddenLabel.getText());
         getColumnHidingToggle(grid, "custom age column caption").click();
-        Assert.assertEquals("true", isHiddenLabel.getText());
+        assertEquals("true", isHiddenLabel.getText());
         getSidebarOpenButton(grid).click();
     }
 
@@ -137,9 +138,9 @@ public class GridColumnHidingTest extends MultiBrowserTest {
         GridElement grid = $(GridElement.class).first();
         getSidebarOpenButton(grid).click();
         List<WebElement> elements = getColumnHidingToggles(grid);
-        Assert.assertEquals(2, elements.size());
-        Assert.assertTrue("Name".equals(elements.get(0).getText()));
-        Assert.assertTrue(
+        assertEquals(2, elements.size());
+        assertTrue("Name".equals(elements.get(0).getText()));
+        assertTrue(
                 "custom age column caption".equals(elements.get(1).getText()));
     }
 

@@ -16,12 +16,12 @@
 package com.vaadin.tests.contextclick;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Point;
@@ -87,10 +87,8 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         Point l = component.getLocation();
 
         Matcher matcher = defaultLog.matcher(getLogRow(0));
-        Assert.assertTrue(
-                "Log row content did not match default listener output: "
-                        + getLogRow(0),
-                matcher.find());
+        assertTrue("Log row content did not match default listener output: "
+                + getLogRow(0), matcher.find());
 
         int xCoord = Integer.parseInt(matcher.group(1));
         int yCoord = Integer.parseInt(matcher.group(2));
@@ -98,11 +96,11 @@ public abstract class AbstractContextClickTest extends MultiBrowserTest {
         int xExpected = l.getX() + x;
         int yExpected = l.getY() + y;
 
-        Assert.assertTrue(
+        assertTrue(
                 "X Coordinate differs too much from expected. Expected: "
                         + xExpected + ", actual: " + xCoord,
                 Math.abs(xExpected - xCoord) <= 1);
-        Assert.assertTrue(
+        assertTrue(
                 "Y Coordinate differs too much from expected. Expected: "
                         + yExpected + ", actual: " + yCoord,
                 Math.abs(yExpected - yCoord) <= 1);

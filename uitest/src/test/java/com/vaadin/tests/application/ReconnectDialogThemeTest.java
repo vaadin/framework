@@ -15,13 +15,15 @@
  */
 package com.vaadin.tests.application;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
@@ -46,18 +48,11 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
         ButtonElement helloButton = $(ButtonElement.class).caption("Say hello")
                 .first();
         helloButton.click();
-        Assert.assertEquals("1. Hello from the server", getLogRow(0));
+        assertEquals("1. Hello from the server", getLogRow(0));
         disconnectProxy();
         helloButton.click();
         testBench().disableWaitForVaadin();
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                boolean present = isElementPresent(reconnectDialogBy);
-                return present;
-            }
-        });
+        waitUntil(driver -> isElementPresent(reconnectDialogBy));
 
         WebElement dialog = findElement(reconnectDialogBy);
         WebElement spinner = dialog.findElement(By.className("spinner"));
@@ -130,7 +125,7 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
                 }
             }
         }
-        Assert.fail(message);
+        fail(message);
 
     }
 

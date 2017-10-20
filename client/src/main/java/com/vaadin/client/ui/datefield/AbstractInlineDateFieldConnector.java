@@ -39,33 +39,6 @@ import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends AbstractDateFieldConnector<R> {
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().calendarPanel
-                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
-        getWidget().calendarPanel
-                .setDateTimeService(getWidget().getDateTimeService());
-        getWidget().calendarPanel
-                .setResolution(getWidget().getCurrentResolution());
-        Date currentDate = getWidget().getCurrentDate();
-        if (currentDate != null) {
-            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
-        } else {
-            getWidget().calendarPanel.setDate(null);
-        }
-
-        updateListeners();
-
-        // Update possible changes
-        getWidget().calendarPanel.renderCalendar();
-    }
-
     /**
      * Updates listeners registered (or register them) for the widget based on
      * the current resolution.
@@ -108,6 +81,24 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
         getWidget().setTabIndex(getState().tabIndex);
         getWidget().calendarPanel.setRangeStart(getState().rangeStart);
         getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
+
+        getWidget().calendarPanel
+                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
+        getWidget().calendarPanel
+                .setDateTimeService(getWidget().getDateTimeService());
+        getWidget().calendarPanel
+                .setResolution(getWidget().getCurrentResolution());
+        Date currentDate = getWidget().getCurrentDate();
+        if (currentDate != null) {
+            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
+        } else {
+            getWidget().calendarPanel.setDate(null);
+        }
+
+        updateListeners();
+
+        // Update possible changes
+        getWidget().calendarPanel.renderCalendar();
     }
 
     @Override

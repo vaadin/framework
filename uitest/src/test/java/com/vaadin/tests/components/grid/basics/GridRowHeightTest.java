@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.grid.basics;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 
 public class GridRowHeightTest extends GridBasicsTest {
@@ -11,7 +13,7 @@ public class GridRowHeightTest extends GridBasicsTest {
 
         int initialHeaderHeight = getHeaderHeight();
 
-        Assert.assertNotEquals("Header height should not be 50px initially", 50,
+        assertNotEquals("Header height should not be 50px initially", 50,
                 initialHeaderHeight);
 
         selectMenuPath("Component", "Body rows", "Body Row Height", "" + 100);
@@ -50,11 +52,11 @@ public class GridRowHeightTest extends GridBasicsTest {
 
     private void checkRowHeights(int expectedHeaderHeight,
             int expectedBodyRowHeight, int expectedFooterHeight) {
-        Assert.assertEquals("Header height does not match expected value",
+        assertEquals("Header height does not match expected value",
                 expectedHeaderHeight, getHeaderHeight());
-        Assert.assertEquals("Body row height does not match expected value",
+        assertEquals("Body row height does not match expected value",
                 expectedBodyRowHeight, getBodyRowHeight());
-        Assert.assertEquals("Footer height does not match expected value",
+        assertEquals("Footer height does not match expected value",
                 expectedFooterHeight, getFooterHeight());
     }
 

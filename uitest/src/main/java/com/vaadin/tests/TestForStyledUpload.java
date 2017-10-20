@@ -156,17 +156,17 @@ public class TestForStyledUpload extends LegacyApplication
     }
 
     public void readState() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
 
         if (up.isUploading()) {
             sb.append("Uploading...");
             sb.append(up.getBytesRead());
-            sb.append("/");
+            sb.append('/');
             sb.append(up.getUploadSize());
-            sb.append(" ");
+            sb.append(' ');
             sb.append(Math.round(
                     100 * up.getBytesRead() / (double) up.getUploadSize()));
-            sb.append("%");
+            sb.append('%');
         } else {
             sb.append("Idle");
         }
@@ -220,10 +220,8 @@ public class TestForStyledUpload extends LegacyApplication
             try {
                 file = File.createTempFile(tempFileName, null);
             } catch (final IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
         }
 
         public void cancel() {
@@ -239,7 +237,6 @@ public class TestForStyledUpload extends LegacyApplication
                 stream = new FileInputStream(file);
                 return stream;
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -255,7 +252,6 @@ public class TestForStyledUpload extends LegacyApplication
             try {
                 return new FileOutputStream(file);
             } catch (final FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return null;
@@ -297,14 +293,13 @@ public class TestForStyledUpload extends LegacyApplication
 
     private void refreshMemUsage() {
         // memoryStatus.setValue("Not available in Java 1.4");
-        StringBuffer mem = new StringBuffer();
+        StringBuilder mem = new StringBuilder();
         MemoryMXBean mmBean = ManagementFactory.getMemoryMXBean();
         mem.append("Heap (M):");
         mem.append(mmBean.getHeapMemoryUsage().getUsed() / 1048576);
         mem.append(" | Non-Heap (M):");
         mem.append(mmBean.getNonHeapMemoryUsage().getUsed() / 1048576);
         memoryStatus.setValue(mem.toString());
-
     }
 
     @Override
@@ -319,7 +314,6 @@ public class TestForStyledUpload extends LegacyApplication
         setTheme("runo");
         w.addComponent(main);
         setMainWindow(w);
-
     }
 
 }

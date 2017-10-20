@@ -17,8 +17,6 @@ package com.vaadin.v7.tests.server.component.grid.declarative;
 
 import java.util.List;
 
-import org.junit.Assert;
-
 import com.vaadin.tests.design.DeclarativeTestBase;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.Column;
@@ -54,31 +52,31 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
     }
 
     private void compareHeaders(Grid expected, Grid actual) {
-        Assert.assertEquals("Different header row count",
-                expected.getHeaderRowCount(), actual.getHeaderRowCount());
+        assertEquals("Different header row count", expected.getHeaderRowCount(),
+                actual.getHeaderRowCount());
         for (int i = 0; i < expected.getHeaderRowCount(); ++i) {
             HeaderRow expectedRow = expected.getHeaderRow(i);
             HeaderRow actualRow = actual.getHeaderRow(i);
 
             if (expectedRow.equals(expected.getDefaultHeaderRow())) {
-                Assert.assertEquals("Different index for default header row",
+                assertEquals("Different index for default header row",
                         actual.getDefaultHeaderRow(), actualRow);
             }
 
             for (Column c : expected.getColumns()) {
-                String baseError = "Difference when comparing cell for "
-                        + c.toString() + " on header row " + i + ": ";
+                String baseError = "Difference when comparing cell for " + c
+                        + " on header row " + i + ": ";
                 Object propertyId = c.getPropertyId();
                 HeaderCell expectedCell = expectedRow.getCell(propertyId);
                 HeaderCell actualCell = actualRow.getCell(propertyId);
 
                 switch (expectedCell.getCellType()) {
                 case TEXT:
-                    Assert.assertEquals(baseError + "Text content",
+                    assertEquals(baseError + "Text content",
                             expectedCell.getText(), actualCell.getText());
                     break;
                 case HTML:
-                    Assert.assertEquals(baseError + "HTML content",
+                    assertEquals(baseError + "HTML content",
                             expectedCell.getHtml(), actualCell.getHtml());
                     break;
                 case WIDGET:
@@ -92,26 +90,26 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
     }
 
     private void compareFooters(Grid expected, Grid actual) {
-        Assert.assertEquals("Different footer row count",
-                expected.getFooterRowCount(), actual.getFooterRowCount());
+        assertEquals("Different footer row count", expected.getFooterRowCount(),
+                actual.getFooterRowCount());
         for (int i = 0; i < expected.getFooterRowCount(); ++i) {
             FooterRow expectedRow = expected.getFooterRow(i);
             FooterRow actualRow = actual.getFooterRow(i);
 
             for (Column c : expected.getColumns()) {
-                String baseError = "Difference when comparing cell for "
-                        + c.toString() + " on footer row " + i + ": ";
+                String baseError = "Difference when comparing cell for " + c
+                        + " on footer row " + i + ": ";
                 Object propertyId = c.getPropertyId();
                 FooterCell expectedCell = expectedRow.getCell(propertyId);
                 FooterCell actualCell = actualRow.getCell(propertyId);
 
                 switch (expectedCell.getCellType()) {
                 case TEXT:
-                    Assert.assertEquals(baseError + "Text content",
+                    assertEquals(baseError + "Text content",
                             expectedCell.getText(), actualCell.getText());
                     break;
                 case HTML:
-                    Assert.assertEquals(baseError + "HTML content",
+                    assertEquals(baseError + "HTML content",
                             expectedCell.getHtml(), actualCell.getHtml());
                     break;
                 case WIDGET:
@@ -127,7 +125,7 @@ public class GridDeclarativeTestBase extends DeclarativeTestBase<Grid> {
     private void compareGridColumns(Grid expected, Grid actual) {
         List<Column> columns = expected.getColumns();
         List<Column> actualColumns = actual.getColumns();
-        Assert.assertEquals("Different amount of columns", columns.size(),
+        assertEquals("Different amount of columns", columns.size(),
                 actualColumns.size());
         for (int i = 0; i < columns.size(); ++i) {
             Column col1 = columns.get(i);

@@ -1,6 +1,9 @@
 package com.vaadin.tests.elements.link;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,12 +22,11 @@ public class LinkUITest extends MultiBrowserTest {
     @Test
     public void testLinkClick() {
         String currentUrl = getDriver().getCurrentUrl();
-        Assert.assertTrue(
-                "Current URL " + currentUrl + " should end with LinkUI?",
+        assertTrue("Current URL " + currentUrl + " should end with LinkUI?",
                 currentUrl.endsWith("LinkUI"));
         link.click();
         currentUrl = getDriver().getCurrentUrl();
-        Assert.assertFalse(
+        assertFalse(
                 "Current URL " + currentUrl + " should not end with LinkUI?",
                 currentUrl.endsWith("LinkUI"));
 
@@ -32,7 +34,7 @@ public class LinkUITest extends MultiBrowserTest {
 
     @Test
     public void getLinkCaption() {
-        Assert.assertEquals("server root", link.getCaption());
+        assertEquals("server root", link.getCaption());
     }
 
 }

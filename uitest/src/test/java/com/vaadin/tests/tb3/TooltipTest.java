@@ -16,10 +16,13 @@
 
 package com.vaadin.tests.tb3;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.junit.Assert;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -62,19 +65,16 @@ public abstract class TooltipTest extends MultiBrowserTest {
     protected void checkTooltip(String value) throws Exception {
         WebElement body = findElement(By.cssSelector("body"));
         WebElement tooltip = getTooltip();
-        Assert.assertEquals(value, tooltip.getText());
-        Assert.assertTrue("Tooltip overflowed to the left",
+        assertEquals(value, tooltip.getText());
+        assertTrue("Tooltip overflowed to the left",
                 tooltip.getLocation().getX() >= 0);
-        Assert.assertTrue("Tooltip overflowed up",
-                tooltip.getLocation().getY() >= 0);
-        Assert.assertTrue("Tooltip overflowed to the right",
+        assertTrue("Tooltip overflowed up", tooltip.getLocation().getY() >= 0);
+        assertTrue("Tooltip overflowed to the right",
                 tooltip.getLocation().getX()
                         + tooltip.getSize().getWidth() < body.getSize()
                                 .getWidth());
-        Assert.assertTrue("Tooltip overflowed down",
-                tooltip.getLocation().getY()
-                        + tooltip.getSize().getHeight() < body.getSize()
-                                .getHeight());
+        assertTrue("Tooltip overflowed down", tooltip.getLocation().getY()
+                + tooltip.getSize().getHeight() < body.getSize().getHeight());
 
     }
 
@@ -91,14 +91,13 @@ public abstract class TooltipTest extends MultiBrowserTest {
     protected void checkTooltipNotPresent() throws Exception {
         try {
             WebElement tooltip = getTooltip();
-            if (!"".equals(tooltip.getText())
+            if (!tooltip.getText().isEmpty()
                     || tooltip.getLocation().getX() > -999) {
-                Assert.fail("Found tooltip that shouldn't be visible: "
+                fail("Found tooltip that shouldn't be visible: "
                         + tooltip.getText() + " at " + tooltip.getLocation());
             }
         } catch (NoSuchElementException e) {
-            Assert.fail(
-                    "Tooltip element was removed completely, causing extra events to accessibility tools");
+            fail("Tooltip element was removed completely, causing extra events to accessibility tools");
         }
     }
 

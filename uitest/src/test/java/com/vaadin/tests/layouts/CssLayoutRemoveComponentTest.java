@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -28,7 +29,7 @@ public class CssLayoutRemoveComponentTest extends SingleBrowserTestPhantomJS2 {
         openTestURL();
 
         String script = "document.mutationEventCount = 0;"
-                + "var observer = new MutationObserver(function(mutations){"
+                + "var observer = new MutationObserver(function(mutations) {"
                 + "mutations.forEach(function(mutation) { document.mutationEventCount += mutation.removedNodes.length; });"
                 + "});"
                 + "observer.observe(arguments[0].parentNode, { childList: true });";
@@ -40,7 +41,7 @@ public class CssLayoutRemoveComponentTest extends SingleBrowserTestPhantomJS2 {
 
         Long mutationEvents = (Long) executeScript(
                 "return document.mutationEventCount;");
-        Assert.assertEquals(
+        assertEquals(
                 "Parent should only have two mutation events (remove field and its caption)",
                 2, mutationEvents.intValue());
     }

@@ -11,7 +11,7 @@ import com.vaadin.ui.ComboBox;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class ComboBoxVaadinIcons extends AbstractTestUI {
 
-    public static final VaadinIcons[] icons = new VaadinIcons[] {
+    public static final VaadinIcons[] icons = {
             VaadinIcons.AMBULANCE, VaadinIcons.PAPERPLANE,
             VaadinIcons.AIRPLANE };
 

@@ -159,11 +159,12 @@ public class ListSorter<T> {
 
                     if (result != 0) {
                         return o.getDirection() == SortDirection.ASCENDING
-                                ? result : -result;
+                                ? result
+                                : -result;
                     }
                 }
 
-                if (order.size() > 0) {
+                if (!order.isEmpty()) {
                     return order.get(0)
                             .getDirection() == SortDirection.ASCENDING
                                     ? a.hashCode() - b.hashCode()

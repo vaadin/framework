@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import com.vaadin.shared.ui.ui.UIState.LocaleData;
 
 /**
- * Date / time etc. localisation service for all widgets. Caches all loaded
+ * Date / time etc. localization service for all widgets. Caches all loaded
  * locales as JSONObjects.
  *
  * @author Vaadin Ltd.
@@ -42,7 +42,7 @@ public class LocaleService {
         if (cache.containsKey(key)) {
             cache.remove(key);
         }
-        getLogger().fine("Received locale data for " + localeData.name);
+        getLogger().fine("Received locale data for " + key);
         cache.put(key, localeData);
         if (cache.size() == 1) {
             setDefaultLocale(key);

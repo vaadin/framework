@@ -15,10 +15,9 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
@@ -170,7 +169,7 @@ public class FocusableScrollPanel extends SimpleFocusablePanel
     public void setScrollPosition(int position) {
         if (BrowserInfo.get().isAndroidWithBrokenScrollTop()
                 && BrowserInfo.get().requiresTouchScrollDelegate()) {
-            ArrayList<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
+            List<com.google.gwt.dom.client.Element> elements = TouchScrollDelegate
                     .getElements(getElement());
             for (com.google.gwt.dom.client.Element el : elements) {
                 final Style style = el.getStyle();
@@ -185,22 +184,18 @@ public class FocusableScrollPanel extends SimpleFocusablePanel
 
     @Override
     public void onScroll(ScrollEvent event) {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                focusElement.getStyle().setTop(getScrollPosition(), Unit.PX);
-                focusElement.getStyle().setLeft(getHorizontalScrollPosition(),
-                        Unit.PX);
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            focusElement.getStyle().setTop(getScrollPosition(), Unit.PX);
+            focusElement.getStyle().setLeft(getHorizontalScrollPosition(),
+                    Unit.PX);
         });
     }
 
     public com.google.gwt.user.client.Element getFocusElement() {
         if (useFakeFocusElement()) {
             return focusElement.cast();
-        } else {
-            return getElement();
         }
+        return getElement();
     }
 
 }

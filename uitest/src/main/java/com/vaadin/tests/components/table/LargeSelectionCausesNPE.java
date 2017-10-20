@@ -85,9 +85,8 @@ public class LargeSelectionCausesNPE extends TestBase {
             table.setColumnCollapsingAllowed(true);
 
             // set column headers
-            table.setVisibleColumns(new String[] { CODE, NAME, ID });
-            table.setColumnHeaders(
-                    new String[] { "DummyCode", "DummyName", "DummyId" });
+            table.setVisibleColumns(CODE, NAME, ID);
+            table.setColumnHeaders("DummyCode", "DummyName", "DummyId");
 
             // Column alignment
             table.setColumnAlignment(ID, Align.CENTER);
@@ -110,7 +109,7 @@ public class LargeSelectionCausesNPE extends TestBase {
                 // in multiselect mode, a Set of itemIds is returned,
                 // in singleselect mode the itemId is returned directly
                 Set<?> value = (Set<?>) event.getProperty().getValue();
-                if (null == value || value.size() == 0) {
+                if (null == value || value.isEmpty()) {
                     selected.setValue("No selection");
                 } else {
                     selected.setValue("Selected: " + table.getValue());

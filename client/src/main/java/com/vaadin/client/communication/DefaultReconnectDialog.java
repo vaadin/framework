@@ -16,7 +16,6 @@
 package com.vaadin.client.communication;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
@@ -32,7 +31,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VOverlay;
 
 /**
- * The default implementation of the reconnect dialog
+ * The default implementation of the reconnect dialog.
  *
  * @since 7.6
  * @author Vaadin Ltd
@@ -113,15 +112,10 @@ public class DefaultReconnectDialog extends VOverlay
         getElement().getStyle().setVisibility(Visibility.HIDDEN);
         setStyleName(STYLE_RECONNECTING, true);
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                getElement().getStyle().setVisibility(Visibility.VISIBLE);
-                setStyleName(STYLE_RECONNECTING, false);
-                hide();
-
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            getElement().getStyle().setVisibility(Visibility.VISIBLE);
+            setStyleName(STYLE_RECONNECTING, false);
+            hide();
         });
     }
 }

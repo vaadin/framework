@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.formlayout;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -47,11 +48,11 @@ public class FormLayoutClickListenerTest extends MultiBrowserTest {
                 element.getLocation().getY() + 2).click().build().perform();
         waitForLogRowUpdate();
 
-        Assert.assertEquals("Source component for click event must be form",
+        assertEquals("Source component for click event must be form",
                 "3. Source component: form", getLogRow(0));
-        Assert.assertEquals("Clicked component for click event must be null",
+        assertEquals("Clicked component for click event must be null",
                 "2. Clicked component: null", getLogRow(1));
-        Assert.assertEquals("Child component for click event must be null",
+        assertEquals("Child component for click event must be null",
                 "1. Child component: null", getLogRow(2));
     }
 
@@ -60,11 +61,11 @@ public class FormLayoutClickListenerTest extends MultiBrowserTest {
         findElement(By.id("label")).click();
         waitForLogRowUpdate();
 
-        Assert.assertEquals("Source component for click event must be form",
+        assertEquals("Source component for click event must be form",
                 "3. Source component: form", getLogRow(0));
-        Assert.assertEquals("Clicked component for click event must be label",
+        assertEquals("Clicked component for click event must be label",
                 "2. Clicked component: label", getLogRow(1));
-        Assert.assertEquals("Child component for click event must be label",
+        assertEquals("Child component for click event must be label",
                 "1. Child component: label", getLogRow(2));
     }
 

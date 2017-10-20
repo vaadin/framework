@@ -35,14 +35,14 @@ public class WindowElement extends PanelElement {
     private static final String CLOSE_BOX_CLASS = "v-window-closebox";
 
     /**
-     * Clicks the close button of the window
+     * Clicks the close button of the window.
      */
     public void close() {
         getCloseButton().click();
     }
 
     /**
-     * Clicks the restore button of the window
+     * Clicks the restore button of the window.
      */
     public void restore() {
         if (isMaximized()) {
@@ -54,14 +54,14 @@ public class WindowElement extends PanelElement {
     }
 
     /**
-     * Check if this window is currently maximized
+     * Check if this window is currently maximized.
      */
     public boolean isMaximized() {
         return isElementPresent(By.className(RESTORE_BOX_CLASS));
     }
 
     /**
-     * Clicks the maximize button of the window
+     * Clicks the maximize button of the window.
      */
     public void maximize() {
         if (!isMaximized()) {

@@ -244,13 +244,13 @@ public class LogSection implements Section {
     /**
      * Sets the log row limit.
      *
-     * @param limit
+     * @param limit The limit
      */
     public void setLimit(int limit) {
         this.limit = limit;
         applyLimit();
 
-        // TODO shoud be persisted
+        // TODO should be persisted
     }
 
     /**

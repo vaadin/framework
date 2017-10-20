@@ -27,9 +27,9 @@ import java.io.IOException;
 public interface SessionExpiredHandler extends RequestHandler {
 
     /**
-     * Called when the a session expiration has occured and a notification needs
-     * to be sent to the user. If a response is written, this method should
-     * return <code>true</code> to indicate that no more
+     * Called when the a session expiration has occurred and a notification
+     * needs to be sent to the user. If a response is written, this method
+     * should return <code>true</code> to indicate that no more
      * {@link SessionExpiredHandler} handlers should be invoked for the request.
      *
      * @param request

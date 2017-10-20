@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 
@@ -41,7 +42,7 @@ public class ComboBoxClickIconTest extends MultiBrowserTest {
         clickElement(getDriver().findElement(By.className("v-filterselect"))
                 .findElement(By.className("v-icon")));
 
-        Assert.assertTrue("Unable to find menu items in combobox popup",
+        assertTrue("Unable to find menu items in combobox popup",
                 isElementPresent(By.className("gwt-MenuItem")));
     }
 

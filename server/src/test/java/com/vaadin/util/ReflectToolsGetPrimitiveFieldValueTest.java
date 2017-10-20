@@ -2,6 +2,8 @@ package com.vaadin.util;
 
 import static org.junit.Assert.assertFalse;
 
+import java.lang.reflect.Field;
+
 import org.junit.Test;
 
 public class ReflectToolsGetPrimitiveFieldValueTest {
@@ -13,7 +15,7 @@ public class ReflectToolsGetPrimitiveFieldValueTest {
 
         MyClass myInstance = new MyClass();
 
-        java.lang.reflect.Field memberField;
+        Field memberField;
         Object fieldValue = false;
         try {
             memberField = myInstance.getClass().getField("field");

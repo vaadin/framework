@@ -1,11 +1,11 @@
 package com.vaadin.v7.data.util.sqlcontainer;
 
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import org.junit.Assert;
 
 import com.vaadin.v7.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
@@ -50,7 +50,7 @@ public class DataGenerator {
         statement.close();
         statement = conn.createStatement();
         ResultSet rs = statement.executeQuery("select * from PEOPLE");
-        Assert.assertTrue(rs.next());
+        assertTrue(rs.next());
         statement.close();
         conn.commit();
         connectionPool.releaseConnection(conn);
@@ -102,7 +102,7 @@ public class DataGenerator {
         statement.close();
         statement = conn.createStatement();
         ResultSet rs = statement.executeQuery("select * from VERSIONED");
-        Assert.assertTrue(rs.next());
+        assertTrue(rs.next());
         statement.close();
         conn.commit();
         connectionPool.releaseConnection(conn);

@@ -50,7 +50,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
          * contained in given uidl node
          */
         if (!uidl.getTag().equals("-ac")) {
-            Iterator<Object> childIterator = uidl.getChildIterator();
+            Iterator<Object> childIterator = uidl.iterator();
             while (!uidl.getTag().equals("-ac") && childIterator.hasNext()) {
                 uidl = (UIDL) childIterator.next();
             }
@@ -113,7 +113,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      *
      * @param drag
      */
-    abstract protected void dragAccepted(VDragEvent drag);
+    protected abstract void dragAccepted(VDragEvent drag);
 
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
         Command checkCriteria = new Command() {

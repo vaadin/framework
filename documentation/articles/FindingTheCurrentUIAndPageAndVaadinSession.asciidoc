@@ -1,0 +1,65 @@
+---
+title: Finding The Current UI And Page And Vaadin Session
+order: 18
+layout: page
+---
+
+[[finding-the-current-ui-and-page-and-vaadin-session]]
+Finding the current UI and page and vaadin session
+--------------------------------------------------
+There are many cases where you need a reference to the active `UI`, `Page`
+or `VaadinServiceSession`, for instance for showing notifications in a
+click listener. It is possible to get a reference to the component from
+the event and then a reference from the component to the UI but Vaadin
+also offers an easier way through two static methods:
+
+[source,java]
+....
+UI.getCurrent()
+Page.getCurrent()
+VaadinSession.getCurrent()
+....
+
+For example when you want to show the name of the current UI class:
+
+[source,java]
+....
+Button helloButton = new Button("Say Hello");
+    helloButton.addClickListener(new ClickListener() {
+        @Override
+        public void buttonClick(ClickEvent event) {
+            Notification.show("This UI is "
+                    + UI.getCurrent().getClass().getSimpleName());
+        }
+    });
+....
+
+Similarly for `VaadinServiceSession`, for instance to find out if the
+application is running in production mode:
+
+[source,java]
+....
+public void buttonClick(ClickEvent event) {
+    String msg = "Running in ";
+    msg += VaadinSession.getCurrent().getConfiguration()
+            .isProductionMode() ? "production" : "debug";
+    Notification.show(msg);
+}
+....
+
+And finally similarly for `Page`. For instance adding a browser window
+resize listener can be added like this:
+
+[source,java]
+....
+javaPage.getCurrent().addBrowserWindowResizeListener(
+  new Page.BrowserWindowResizeListener() {
+    @Override
+    public void browserWindowResized(BrowserWindowResizeEvent event) {
+      Notification.show("Browser resized to " + event.getWidth() + "x" + event.getHeight());
+    }
+});
+....
+
+*Note* that these are based on `ThreadLocal` so they won't work in a
+background thread (or otherwise outside the standard request scope).

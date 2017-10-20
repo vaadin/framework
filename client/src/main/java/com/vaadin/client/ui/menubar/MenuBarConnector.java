@@ -73,7 +73,7 @@ public class MenuBarConnector extends AbstractComponentConnector
         if (null != getState()
                 && !ComponentStateUtil.isUndefinedWidth(getState())) {
             UIDL moreItemUIDL = options.getChildUIDL(0);
-            StringBuffer itemHTML = new StringBuffer();
+            StringBuilder itemHTML = new StringBuilder();
 
             if (moreItemUIDL.hasAttribute("icon")) {
                 Icon icon = client
@@ -100,7 +100,7 @@ public class MenuBarConnector extends AbstractComponentConnector
         }
 
         UIDL uidlItems = uidl.getChildUIDL(1);
-        Iterator<Object> itr = uidlItems.getChildIterator();
+        Iterator<Object> itr = uidlItems.iterator();
         Stack<Iterator<Object>> iteratorStack = new Stack<>();
         Stack<VMenuBar> menuStack = new Stack<>();
         VMenuBar currentMenu = getWidget();
@@ -131,13 +131,13 @@ public class MenuBarConnector extends AbstractComponentConnector
                 }
             }
 
-            currentItem = currentMenu.addItem(itemHTML.toString(), cmd);
+            currentItem = currentMenu.addItem(itemHTML, cmd);
             currentItem.updateFromUIDL(item, client);
 
             if (item.getChildCount() > 0) {
                 menuStack.push(currentMenu);
                 iteratorStack.push(itr);
-                itr = item.getChildIterator();
+                itr = item.iterator();
                 currentMenu = new VMenuBar(true, currentMenu);
                 client.getVTooltip().connectHandlersToWidget(currentMenu);
                 // this is the top-level style that also propagates to items -
@@ -167,11 +167,10 @@ public class MenuBarConnector extends AbstractComponentConnector
                 itr = iteratorStack.pop();
                 currentMenu = menuStack.pop();
             }
-        } // while
+        }
 
         getLayoutManager().setNeedsHorizontalLayout(this);
-
-    }// updateFromUIDL
+    }
 
     @Override
     public VMenuBar getWidget() {

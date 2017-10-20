@@ -46,7 +46,7 @@ public class LocaleService implements Serializable {
     private final LocaleServiceState state;
 
     /**
-     * Creates a LocaleService bound to the given UI
+     * Creates a LocaleService bound to the given UI.
      *
      * @since 7.1
      * @param ui
@@ -58,7 +58,7 @@ public class LocaleService implements Serializable {
     }
 
     /**
-     * Retrieves the UI this service is bound to
+     * Retrieves the UI this service is bound to.
      *
      * @since 7.1
      * @return the UI for this service
@@ -110,7 +110,7 @@ public class LocaleService implements Serializable {
     }
 
     /**
-     * Creates a LocaleData instance for transportation to the client
+     * Creates a LocaleData instance for transportation to the client.
      *
      * @since 7.1
      * @param locale
@@ -152,7 +152,7 @@ public class LocaleService implements Serializable {
         /*
          * First day of week (0 = sunday, 1 = monday)
          */
-        final java.util.Calendar cal = new GregorianCalendar(locale);
+        final Calendar cal = new GregorianCalendar(locale);
         localeData.firstDayOfWeek = cal.getFirstDayOfWeek() - 1;
 
         /*

@@ -152,7 +152,7 @@ public class VAccordion extends VTabsheetBase {
             addStyleDependentName("loading");
 
             connector.getRpcProxy(TabsheetServerRpc.class)
-                    .setSelected(tabKeys.get(index).toString());
+                    .setSelected(tabKeys.get(index));
         }
     }
 
@@ -209,7 +209,7 @@ public class VAccordion extends VTabsheetBase {
         }
 
         /**
-         * Returns caption width including padding
+         * Returns caption width including padding.
          *
          * @return
          */
@@ -364,8 +364,10 @@ public class VAccordion extends VTabsheetBase {
             caption.updateCaptionWithoutOwner(tabState.caption,
                     !tabState.enabled, hasAttribute(tabState.description),
                     hasAttribute(tabState.componentError),
+                    tabState.componentErrorLevel,
                     connector.getResourceUrl(
-                            ComponentConstants.ICON_RESOURCE + tabState.key));
+                            ComponentConstants.ICON_RESOURCE + tabState.key),
+                    tabState.iconAltText);
         }
 
         private boolean hasAttribute(String string) {
@@ -376,13 +378,13 @@ public class VAccordion extends VTabsheetBase {
          * Updates a tabs stylename from the child UIDL
          *
          * @param uidl
-         *            The child uidl of the tab
+         *            The child UIDL of the tab
          */
         private void updateTabStyleName(String newStyleName) {
-            if (newStyleName != null && newStyleName.length() != 0) {
+            if (newStyleName != null && !newStyleName.isEmpty()) {
                 if (!newStyleName.equals(styleName)) {
                     // If we have a new style name
-                    if (styleName != null && styleName.length() != 0) {
+                    if (styleName != null && !styleName.isEmpty()) {
                         // Remove old style name if present
                         removeStyleDependentName(styleName);
                     }

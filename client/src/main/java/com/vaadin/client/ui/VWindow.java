@@ -28,7 +28,6 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -80,7 +79,7 @@ import com.vaadin.shared.ui.window.WindowRole;
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
-    private static ArrayList<VWindow> windowOrder = new ArrayList<>();
+    private static List<VWindow> windowOrder = new ArrayList<>();
 
     private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
@@ -203,13 +202,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public int bringToFrontSequence = -1;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    updateContentsSize();
-                }
-            });
+            () -> updateContentsSize());
 
     public VWindow() {
         super(false, false); // no autohide, not modal
@@ -307,12 +300,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void doFireOrderEvent() {
-        ArrayList<VWindow> list = new ArrayList<>();
+        List<VWindow> list = new ArrayList<>();
         list.add(this);
         fireOrderEvent(list);
     }
 
-    private static void fireOrderEvent(ArrayList<VWindow> windows) {
+    private static void fireOrderEvent(List<VWindow> windows) {
         WINDOW_ORDER_HANDLER
                 .fireEvent(new WindowOrderEvent(new ArrayList<>(windows)));
     }
@@ -327,7 +320,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static VWindow getTopmostWindow() {
-        if (windowOrder.size() > 0) {
+        if (!windowOrder.isEmpty()) {
             return windowOrder.get(windowOrder.size() - 1);
         }
         return null;
@@ -571,8 +564,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 }
             }
         });
-        for (int i = 0; i < array.length; i++) {
-            VWindow w = array[i];
+        for (VWindow w : array) {
             if (w.bringToFrontSequence != -1 || w.vaadinModality) {
                 w.bringToFront(false);
                 w.bringToFrontSequence = -1;
@@ -701,7 +693,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // hanging.
         windowOrder.remove(curIndex);
         // Update the z-indices of any remaining windows
-        ArrayList<VWindow> update = new ArrayList<>(
+        List<VWindow> update = new ArrayList<>(
                 windowOrder.size() - curIndex + 1);
         update.add(this);
         while (curIndex < windowOrder.size()) {
@@ -1204,7 +1196,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the width to the contents
         getElement().getStyle().setProperty("width", width);
         // Update v-has-width in case undefined window is resized
-        setStyleName("v-has-width", width != null && width.length() > 0);
+        setStyleName("v-has-width", width != null && !width.isEmpty());
     }
 
     @Override
@@ -1212,7 +1204,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the height to the contents
         getElement().getStyle().setProperty("height", height);
         // Update v-has-height in case undefined window is resized
-        setStyleName("v-has-height", height != null && height.length() > 0);
+        setStyleName("v-has-height", height != null && !height.isEmpty());
     }
 
     private void onDragEvent(Event event) {

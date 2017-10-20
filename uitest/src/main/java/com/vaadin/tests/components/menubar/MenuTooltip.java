@@ -19,7 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 /**
@@ -53,17 +52,6 @@ public class MenuTooltip extends AbstractReindeerTestUI {
         item.addItem("Item 4", null).setDescription("TOOLTIP 4");
 
         return menu;
-    }
-
-    private Command buildCommand() {
-        Command command = new Command() {
-
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-
-            }
-        };
-        return command;
     }
 
     /*

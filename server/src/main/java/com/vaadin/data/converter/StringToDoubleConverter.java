@@ -72,9 +72,8 @@ public class StringToDoubleConverter
         return n.map(number -> {
             if (number == null) {
                 return null;
-            } else {
-                return number.doubleValue();
             }
+            return number.doubleValue();
         });
     }
 

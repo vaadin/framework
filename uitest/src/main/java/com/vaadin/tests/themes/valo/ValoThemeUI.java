@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
@@ -133,7 +132,7 @@ public class ValoThemeUI extends UI {
         navigator.addView("dragging", Dragging.class);
 
         String f = Page.getCurrent().getUriFragment();
-        if (f == null || f.equals("")) {
+        if (f == null || f.isEmpty()) {
             navigator.navigateTo("common");
         }
 
@@ -146,15 +145,12 @@ public class ValoThemeUI extends UI {
 
             @Override
             public void afterViewChange(ViewChangeEvent event) {
-                for (Iterator<Component> it = menuItemsLayout.iterator(); it
-                        .hasNext();) {
-                    it.next().removeStyleName("selected");
+                for (Component c : menuItemsLayout) {
+                    c.removeStyleName("selected");
                 }
                 for (Entry<String, String> item : menuItems.entrySet()) {
                     if (event.getViewName().equals(item.getKey())) {
-                        for (Iterator<Component> it = menuItemsLayout
-                                .iterator(); it.hasNext();) {
-                            Component c = it.next();
+                        for (Component c : menuItemsLayout) {
                             if (c.getCaption() != null && c.getCaption()
                                     .startsWith(item.getValue())) {
                                 c.addStyleName("selected");
@@ -376,7 +372,7 @@ public class ValoThemeUI extends UI {
         private final Action ACTION_ONE = new Action("Action One");
         private final Action ACTION_TWO = new Action("Action Two");
         private final Action ACTION_THREE = new Action("Action Three");
-        private final Action[] ACTIONS = new Action[] { ACTION_ONE, ACTION_TWO,
+        private final Action[] ACTIONS = { ACTION_ONE, ACTION_TWO,
                 ACTION_THREE };
 
         @Override

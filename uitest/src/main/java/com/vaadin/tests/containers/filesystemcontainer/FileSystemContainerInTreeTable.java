@@ -3,6 +3,7 @@ package com.vaadin.tests.containers.filesystemcontainer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
@@ -47,7 +48,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
             treeTable.setHeight("550px");
             treeTable.setContainerDataSource(fsc);
             treeTable.setItemIconPropertyId(FilesystemContainer.PROPERTY_ICON);
-            treeTable.setVisibleColumns(new String[] { "Name" });
+            treeTable.setVisibleColumns("Name");
             treeTable.setColumnWidth("Name", 400);
             treeTable.addListener(new ExpandListener() {
 
@@ -120,7 +121,7 @@ public class FileSystemContainerInTreeTable extends TestBase {
         if (c instanceof Container.Indexed) {
             return ((Container.Indexed) source).indexOfId(itemId);
         } else {
-            ArrayList<Object> list = new ArrayList<>(source.getItemIds());
+            List<Object> list = new ArrayList<>(source.getItemIds());
             return list.indexOf(itemId);
         }
     }

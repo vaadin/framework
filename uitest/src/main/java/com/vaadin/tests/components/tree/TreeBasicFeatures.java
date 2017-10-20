@@ -29,7 +29,7 @@ import com.vaadin.ui.VerticalLayout;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
-    public static final double[] ROW_HEIGHTS = new double[] { 35.5d, 72.78d };
+    public static final double[] ROW_HEIGHTS = { 35.5d, 72.78d };
 
     private Tree<HierarchicalTestBean> tree;
     private TreeDataProvider<HierarchicalTestBean> inMemoryDataProvider;
@@ -67,7 +67,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Component createMenu() {
         MenuBar menu = new MenuBar();
-        menu.setErrorHandler(error -> log("Exception occured, "
+        menu.setErrorHandler(error -> log("Exception occurred, "
                 + error.getThrowable().getClass().getName() + ": "
                 + error.getThrowable().getMessage()));
         MenuItem componentMenu = menu.addItem("Component", null);
@@ -111,7 +111,8 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         componentMenu
                 .addItem("Style Generator",
                         menuItem -> tree.setStyleGenerator(menuItem.isChecked()
-                                ? t -> "level" + t.getDepth() : t -> null))
+                                ? t -> "level" + t.getDepth()
+                                : t -> null))
                 .setCheckable(true);
 
         return menu;
@@ -148,12 +149,10 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void createDescriptionMenu(MenuItem descriptionMenu) {
-        descriptionMenu.addItem("No Description", menu -> {
-            tree.setItemDescriptionGenerator(t -> null);
-        });
-        descriptionMenu.addItem("String.valueOf", menu -> {
-            tree.setItemDescriptionGenerator(String::valueOf);
-        });
+        descriptionMenu.addItem("No Description",
+                menu -> tree.setItemDescriptionGenerator(t -> null));
+        descriptionMenu.addItem("String.valueOf",
+                menu -> tree.setItemDescriptionGenerator(String::valueOf));
     }
 
     private void createContentModeMenu(MenuItem contentModeMenu) {

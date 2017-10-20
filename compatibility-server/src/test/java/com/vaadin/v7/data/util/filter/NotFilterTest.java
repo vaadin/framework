@@ -1,6 +1,9 @@
 package com.vaadin.v7.data.util.filter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Filter;
@@ -17,10 +20,10 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
         Filter origFilter = new SameItemFilter(item1);
         Filter filter = new Not(origFilter);
 
-        Assert.assertTrue(origFilter.passesFilter(null, item1));
-        Assert.assertFalse(origFilter.passesFilter(null, item2));
-        Assert.assertFalse(filter.passesFilter(null, item1));
-        Assert.assertTrue(filter.passesFilter(null, item2));
+        assertTrue(origFilter.passesFilter(null, item1));
+        assertFalse(origFilter.passesFilter(null, item2));
+        assertFalse(filter.passesFilter(null, item1));
+        assertTrue(filter.passesFilter(null, item2));
     }
 
     @Test
@@ -28,10 +31,10 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
         Filter filterA = new Not(new SameItemFilter(item1, "a"));
         Filter filterB = new Not(new SameItemFilter(item1, "b"));
 
-        Assert.assertTrue(filterA.appliesToProperty("a"));
-        Assert.assertFalse(filterA.appliesToProperty("b"));
-        Assert.assertFalse(filterB.appliesToProperty("a"));
-        Assert.assertTrue(filterB.appliesToProperty("b"));
+        assertTrue(filterA.appliesToProperty("a"));
+        assertFalse(filterA.appliesToProperty("b"));
+        assertFalse(filterB.appliesToProperty("a"));
+        assertTrue(filterB.appliesToProperty("b"));
     }
 
     @Test
@@ -42,13 +45,13 @@ public class NotFilterTest extends AbstractFilterTestBase<Not> {
         Filter filter2 = new Not(new SameItemFilter(item2));
 
         // equals()
-        Assert.assertEquals(filter1, filter1b);
-        Assert.assertFalse(filter1.equals(filter2));
-        Assert.assertFalse(filter1.equals(origFilter));
-        Assert.assertFalse(filter1.equals(new And()));
+        assertEquals(filter1, filter1b);
+        assertFalse(filter1.equals(filter2));
+        assertFalse(filter1.equals(origFilter));
+        assertFalse(filter1.equals(new And()));
 
         // hashCode()
-        Assert.assertEquals(filter1.hashCode(), filter1b.hashCode());
+        assertEquals(filter1.hashCode(), filter1b.hashCode());
     }
 
 }

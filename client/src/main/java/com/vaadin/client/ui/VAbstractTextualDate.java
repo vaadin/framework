@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.ui.TextBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
@@ -65,10 +66,13 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     public boolean lenient;
 
-    private final String TEXTFIELD_ID = "field";
+    private static final String TEXTFIELD_ID = "field";
 
     /** For internal use only. May be removed or replaced in the future. */
     private String formatStr;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    private TimeZone timeZone;
 
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
@@ -100,7 +104,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      *
      * @return the format string
      */
-    protected String getFormatString() {
+    public String getFormatString() {
         if (formatStr == null) {
             setFormatString(createFormatString());
         }
@@ -134,8 +138,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Sets the date format string to use for the text field.
      *
      * @param formatString
-     *            the format string to use, or null to force re-creating the
-     *            format string from the locale the next time it is needed
+     *            the format string to use, or {@code null} to force re-creating
+     *            the format string from the locale the next time it is needed
      * @since 8.1
      */
     public void setFormatString(String formatString) {
@@ -177,7 +181,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         String formatString = getFormatString();
         if (currentDate != null) {
             dateText = getDateTimeService().formatDate(currentDate,
-                    formatString);
+                    formatString, timeZone);
         } else {
             dateText = "";
         }
@@ -195,7 +199,17 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             Roles.getTextboxRole()
                     .removeAriaReadonlyProperty(text.getElement());
         }
+    }
 
+    /**
+     * Sets the time zone for the field.
+     * 
+     * @param timeZone
+     *            the new time zone to use
+     * @since 8.2
+     */
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     @Override
@@ -207,7 +221,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     @Override
     @SuppressWarnings("deprecation")
     public void onChange(ChangeEvent event) {
-        if (!text.getText().equals("")) {
+        if (!text.getText().isEmpty()) {
             try {
                 String enteredDate = text.getText();
 
@@ -220,7 +234,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                     // FIXME: Add a description/example here of when this is
                     // needed
                     text.setValue(getDateTimeService().formatDate(getDate(),
-                            getFormatString()), false);
+                            getFormatString(), timeZone), false);
                 }
 
                 // remove possibly added invalid value indication
@@ -230,8 +244,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
-                getClient().updateVariable(getId(), "lastInvalidDateString",
-                        text.getText(), false);
+                bufferedInvalidDateString = true;
                 setDate(null);
             }
         } else {
@@ -239,10 +252,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             // remove possibly added invalid value indication
             removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
         }
-        // always send the date string
-        getClient().updateVariable(getId(), "dateString", text.getText(),
-                false);
 
+        // always send the date string
+        bufferedDateString = text.getText();
         updateDateVariables();
     }
 
@@ -252,17 +264,20 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * The method can be overridden by subclasses to provide a custom logic for
      * date variables to avoid overriding the {@link #onChange(ChangeEvent)}
      * method.
+     * 
+     * @since
      */
     protected void updateDateVariables() {
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        getClient().updateVariable(getId(),
-                getResolutionVariable(getResolutions().filter(this::isYear)
-                        .findFirst().get()),
-                currentDate != null ? currentDate.getYear() + 1900 : -1,
-                isYear(getCurrentResolution()));
+        bufferedResolutions.put(
+                getResolutions().filter(this::isYear).findFirst().get().name(),
+                currentDate != null ? currentDate.getYear() + 1900 : null);
+        if (isYear(getCurrentResolution())) {
+            sendBufferedValues();
+        }
     }
 
     /**
@@ -376,7 +391,14 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         }
         if (getClient() != null && getClient()
                 .hasEventListeners(VAbstractTextualDate.this, eventId)) {
-            getClient().updateVariable(getId(), eventId, "", true);
+            // may excessively send events if if focus went to another
+            // sub-component
+            if (EventId.FOCUS.equals(eventId)) {
+                rpc.focus();
+            } else {
+                rpc.blur();
+            }
+            sendBufferedValues();
         }
 
         // Needed for tooltip event handling

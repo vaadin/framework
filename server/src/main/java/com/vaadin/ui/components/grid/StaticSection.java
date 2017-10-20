@@ -591,7 +591,7 @@ public abstract class StaticSection<ROW extends StaticSection.StaticRow<?>>
         protected void readDesign(Element cellElement,
                 DesignContext designContext) {
             if (!cellElement.hasAttr("plain-text")) {
-                if (cellElement.children().size() > 0
+                if (!cellElement.children().isEmpty()
                         && cellElement.child(0).tagName().contains("-")) {
                     setComponent(
                             designContext.readDesign(cellElement.child(0)));

@@ -55,7 +55,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
     final String eventListenerString = "Component.Listener feedback: ";
     Label eventListenerFeedback = new Label(
-            eventListenerString + " <no events occured>");
+            eventListenerString + " <no events occurred>");
     int count = 0;
 
     public TestCaptionWrapper() {
@@ -120,7 +120,8 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(layout, button);
         button.addListener(this);
 
-        final AbstractDateField<?, ?> df = new TestDateField("DateField " + count++);
+        final AbstractDateField<?, ?> df = new TestDateField(
+                "DateField " + count++);
         test(layout, df);
 
         final CheckBox cb = new CheckBox("Checkbox " + count++);
@@ -215,7 +216,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
     @Override
     public void componentEvent(Event event) {
         final String feedback = eventListenerString + " source="
-                + event.getSource() + ", toString()=" + event.toString();
+                + event.getSource() + ", toString()=" + event;
         System.out.println("eventListenerFeedback: " + feedback);
         eventListenerFeedback.setValue(feedback);
     }

@@ -90,20 +90,20 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("1. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("1. Selected: Optional[Item 4]", getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals("2. Selected: Optional[Item 2]", getLogRow(0));
+        assertEquals("2. Selected: Optional[Item 2]", getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("3. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("3. Selected: Optional[Item 4]", getLogRow(0));
     }
 
     @Test
     public void disabled_clickToSelect() {
         selectMenuPath("Component", "State", "Enabled");
 
-        Assert.assertTrue(getSelect().findElements(By.tagName("input")).stream()
+        assertTrue(getSelect().findElements(By.tagName("input")).stream()
                 .allMatch(element -> element.getAttribute("disabled") != null));
 
         selectMenuPath("Component", "Listeners", "Selection listener");
@@ -111,13 +111,13 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         String lastLogRow = getLogRow(0);
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals(lastLogRow, getLogRow(0));
+        assertEquals(lastLogRow, getLogRow(0));
     }
 
     @Test
@@ -132,7 +132,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         assertEquals(20, icons.size());
 
         for (int i = 0; i < icons.size(); i++) {
-            Assert.assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
+            assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
         }
     }
@@ -147,13 +147,13 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Enabled");
 
         getSelect().selectByText("Item 5");
-        Assert.assertEquals("3. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("3. Selected: Optional[Item 5]", getLogRow(0));
 
         getSelect().selectByText("Item 2");
-        Assert.assertEquals("4. Selected: Optional[Item 2]", getLogRow(0));
+        assertEquals("4. Selected: Optional[Item 2]", getLogRow(0));
 
         getSelect().selectByText("Item 4");
-        Assert.assertEquals("5. Selected: Optional[Item 4]", getLogRow(0));
+        assertEquals("5. Selected: Optional[Item 4]", getLogRow(0));
     }
 
     @Test
@@ -168,7 +168,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Item Caption Generator",
                 "Item Caption Generator", "Null Caption Generator");
         for (String text : getSelect().getOptions()) {
-            Assert.assertEquals("", text);
+            assertEquals("", text);
         }
     }
 
@@ -177,16 +177,16 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Listeners", "Selection listener");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("2. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("2. Selected: Optional[Item 5]", getLogRow(0));
         assertSelected("Item 5");
 
         selectMenuPath("Component", "Selection", "Toggle Item 1");
-        Assert.assertEquals("4. Selected: Optional[Item 1]", getLogRow(0));
+        assertEquals("4. Selected: Optional[Item 1]", getLogRow(0));
         // DOM order
         assertSelected("Item 1");
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
-        Assert.assertEquals("6. Selected: Optional[Item 5]", getLogRow(0));
+        assertEquals("6. Selected: Optional[Item 5]", getLogRow(0));
         assertSelected("Item 5");
     }
 
@@ -199,7 +199,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
         label = (TestBenchElement) findElements(By.tagName("label")).get(5);
         label.showTooltip();
-        Assert.assertEquals("Tooltip should contain the same text as caption",
+        assertEquals("Tooltip should contain the same text as caption",
                 label.getText(), getTooltipElement().getText());
 
         selectMenuPath("Component", "Item Description Generator",
@@ -207,13 +207,13 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
         label = (TestBenchElement) findElements(By.tagName("label")).get(5);
         label.showTooltip();
-        Assert.assertEquals("Tooltip should contain caption + ' Description'",
+        assertEquals("Tooltip should contain caption + ' Description'",
                 label.getText() + " Description",
                 getTooltipElement().getText());
     }
 
     private void assertSelected(String expectedSelection) {
-        Assert.assertEquals(expectedSelection, getSelect().getValue());
+        assertEquals(expectedSelection, getSelect().getValue());
     }
 
     @Override

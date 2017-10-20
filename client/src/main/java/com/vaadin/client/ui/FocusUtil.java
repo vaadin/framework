@@ -23,14 +23,13 @@ import com.google.gwt.user.client.ui.Widget;
  * {@link Focusable}.
  *
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.3
  *
  */
 public class FocusUtil {
 
     /**
-     * Sets the access key property
+     * Sets the access key property.
      *
      * @param focusable
      *            The widget for which we want to set the access key.
@@ -49,7 +48,7 @@ public class FocusUtil {
      *
      * @param focusable
      *            the widget to focus/unfocus
-     * @param focused
+     * @param focus
      *            whether this widget should take focus or release it
      */
     public static void setFocus(Widget focusable, boolean focus) {

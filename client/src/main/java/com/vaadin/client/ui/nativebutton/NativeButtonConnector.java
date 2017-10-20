@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.nativebutton;
 
-import com.google.gwt.user.client.DOM;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -54,23 +53,6 @@ public class NativeButtonConnector extends AbstractComponentConnector {
 
         // Set text
         VCaption.setCaptionText(getWidget(), getState());
-
-        // handle error
-        if (null != getState().errorMessage) {
-            if (getWidget().errorIndicatorElement == null) {
-                getWidget().errorIndicatorElement = DOM.createSpan();
-                getWidget().errorIndicatorElement
-                        .setClassName("v-errorindicator");
-            }
-            getWidget().getElement().insertBefore(
-                    getWidget().errorIndicatorElement,
-                    getWidget().captionElement);
-
-        } else if (getWidget().errorIndicatorElement != null) {
-            getWidget().getElement()
-                    .removeChild(getWidget().errorIndicatorElement);
-            getWidget().errorIndicatorElement = null;
-        }
 
         if (getWidget().icon != null) {
             getWidget().getElement().removeChild(getWidget().icon.getElement());

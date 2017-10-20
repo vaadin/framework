@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.tabsheet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -24,15 +25,13 @@ public class FirstTabNotVisibleWhenTabsheetNotClippedTest
                 .findElement(By.className("v-tabsheet-tabitemcell-first"));
         String caption = firstTab.findElement(By.className("v-captiontext"))
                 .getText();
-        Assert.assertEquals("Tab with -first style should be Tab 1", "Tab 1",
-                caption);
+        assertEquals("Tab with -first style should be Tab 1", "Tab 1", caption);
 
         toggleNotClipped.click();
         firstTab = notClippedTabSheet
                 .findElement(By.className("v-tabsheet-tabitemcell-first"));
         caption = firstTab.findElement(By.className("v-captiontext")).getText();
-        Assert.assertEquals("Tab with -first style should be Tab 0", "Tab 0",
-                caption);
+        assertEquals("Tab with -first style should be Tab 0", "Tab 0", caption);
     }
 
     @Test

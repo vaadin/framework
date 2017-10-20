@@ -99,7 +99,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
      * Returns the JsonObject used to populate the CheckBox widget that contains
      * given Element.
      *
-     * @since
+     * @since 8.2
      * @param element
      *            the element to search for
      * @return the related JsonObject; {@code null} if not found
@@ -124,7 +124,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         }
 
         String iconUrl = item.getString(ListingJsonConstants.JSONKEY_ITEM_ICON);
-        if (iconUrl != null && iconUrl.length() != 0) {
+        if (iconUrl != null && !iconUrl.isEmpty()) {
             Icon icon = client.getIcon(iconUrl);
             itemHtml = icon.getElement().getString() + itemHtml;
         }

@@ -59,13 +59,13 @@
 
         <p>
             Vaadin Framework @version@ is a
-            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below.
+<!--            maintenance release that includes a number of bug fixes, as listed in the <a href="#changelog">change log</a> below. -->
 <!--            feature release that includes -->
-<!--            pre-release for evaluating -->
-<!--            a number of new features and bug fixes, as listed in the <a
+                pre-release for evaluating
+                a number of new features and bug fixes, as listed in the <a
                 href="#enhancements">list of enhancements</a> and <a
-                href="#changelog">change log</a> below. -->
-<!--		The API in this beta version is not considered final and may change based on your feedback. -->
+                href="#changelog">change log</a> below.
+		The API in this alpha version is not considered final and may change based on your feedback.
 	</p>
 
         <!-- ================================================================ -->
@@ -83,42 +83,49 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Components In Grid</li>
-            <li>HTML5 Drag and Drop support</li>
-            <li>TreeGrid, Tree and HierarchicalDataProvider</li>
-            <li>Improved OSGi Support</li>
+            <li>Separate row heights for header, body and footer in Grid</li>
+            <li>Support for item descriptions (tooltips) in CheckBoxGroup, RadioButtonGroup and Tree</li>
+            <li>Binder supports removing bindings</li>
+            <li>Binding builder methods do not have to be chained</li>
+            <li>Bean validation failures will revert changes in Binder</li>
+            <li>Notification supports CloseListener</li>
+            <li>Tree now has methods to scroll it programmatically</li>
+            <li>The browser time zone can be obtained from WebBrowser if the browser supports it</li>
+            <li>AbstractDateField now supports formatting of time zone information</li>
+            <li>PushState based navigation support</li>
+            <li>Grid WAI-ARIA support has been improved (aria-sort added)</li>
+            <li>Client side ErrorLevel support</li>
+            <li>VaadinService, VaadinServlet and VaadinServletService have protected no-args constructors to make DI integrations simpler</li>
         </ul>
 
         </p>
 
         <p>
-            For enhancements introduced in Vaadin Framework 8.0, see the <a
-                href="http://vaadin.com/download/release/8.0/8.0.0/release-notes.html">Release
-                Notes for Vaadin Framework 8.0.0</a>.
+            For enhancements introduced in Vaadin Framework 8.1, see the <a
+                href="http://vaadin.com/download/release/8.1/8.1.0/release-notes.html">Release
+                Notes for Vaadin Framework 8.1.0</a>.
             For migrating from previous framework versions, see <a href="#incompatible">the list of incompatible changes</a> and <a href="#migrating">how to migrate
             to Vaadin Framework 8</a>.
         </p>
 
         <h2 id="incompatible">Incompatible or Behavior-altering Changes in @version-minor@</h2>
-        
-        <li>The <tt>TreeGrid</tt> component replaces <tt>TreeTable</tt> component</li>
-        <li>The <tt>Tree</tt> component replaces old <tt>Tree</tt> component</li>
-        <li>The <tt>HierarchicalDataProvider</tt> interface replaces <tt>Container.Hierarchical</tt> and <<tt>TreeDataProvider</tt> replaces <tt>HierarchicalContainer</tt></li>
-        <li>The <tt>DragSourceExtension</tt> and <tt>DropTargetExtension</tt> extensions replace the old DnD features</li>
-        <li>OSGi bundle manifests of Vaadin Framework JARs no longer export <tt>/VAADIN</tt>, and there are new mechanisms for publishing static resources for OSGi</li>
-        <li>Tooltip styles for <tt>ContentMode.PREFORMATTED</tt> have been changed in all built-in themes to use the application font and allow long lines to wrap to multiple lines.</li>
-        <li><tt>Grid.Column</tt> now extends <tt>AbstractExtension</tt> instead of <tt>AbstractGridExtension</tt> to hide data generator specific API.</li>
-        <li><tt>DataCommunicator</tt>, <tt>DataKeyMapper</tt> and <tt>KeyMapper</tt> public APIs have some minor changes for better bean identification.</li>
-        <li><tt>Grid.createColumn</tt> now has one more parameter <tt>presentationProvider</tt>.</li>
-        <li>Valo link and (native) button styles are no longer global but only apply to the corresponding components when the mix-in is included.</li>
-        <li>The <tt>View</tt> interface now has additional methods and default implementations for them.</li>
-        <li>The <tt>HasValue</tt> interface now has an additional method <tt>getDefaultValidator()</tt> with a default implementation.</li>
-        <li><tt>TreeGrid.createColumn()</tt> has an additional parameter.</li>
-        <li><tt>LocalDateTimeToDateConverter</tt> now uses <tt>ZoneId</tt> instead of <tt>ZoneOffset</tt>.</li>
-        <li><tt>FontAwesome</tt> icon alignment in <tt>ComboBox</tt> has changed in the theme.</li>
-        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has replaced by three variables.</li>
 
-        <h2>For incompatible or behaviour-altering changes in 8.0, please see <a href="https://vaadin.com/download/release/8.0/8.0.0/release-notes.html#incompatible">8.0 release notes</a></h2>
+        <li>Row height in <tt>Grid</tt> is replaced with separate header, body and footer row heights</li>
+        <li><tt>GridState</tt> variable <tt>rowHeight</tt> has been replaced by three variables.</li>
+        <li><tt>Button</tt> has a new constructor that may cause constructor calls with null as first parameter to be ambiguous.</li>
+        <li><tt>DataCommunicator</tt> methods <tt>getDataProviderSize</tt> and <tt>fetchItemsWithRange</tt> are now <tt>public</tt>, not <tt>protected</tt>.</li>
+        <li><tt>Binder</tt> method <tt>getBindings</tt> now returns a Collection, not a Set.</li>
+        <li><tt>Binder</tt> protected method <tt>handleError</tt> now takes a <tt>ValidationResult</tt>, not <tt>String</tt>.</li>
+        <li><tt>BindingBuilder</tt> now works like a proper builder. Adding a converter will not mark Binding as <tt>bound</tt> allowing chaining to the same object.</li>
+        <li><tt>ErrorLevel</tt> is removed from <tt>ErrorMessage</tt> and now <tt>com.vaadin.shared.ui.ErrorLevel</tt> should be used.</li>
+        <li>Error indicators are now <tt>&lt;span class="v-errorindicator"&gt;&lt;/span&gt;</tt> elements.</li>
+        <li><tt>Embedded</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
+        <li><tt>Notification</tt> method <tt>show</tt> returns <tt>Notification</tt>, instead of <tt>void</tt>.</li>
+        <li><tt>SharedState</tt> field <tt>registeredEventListeners</tt> is a <tt>Map</tt> instead of <tt>Set</tt>.</li>
+        <li>The client side <tt>SelectionModel</tt> interface has a new method <tt>isMultiSelectionAllowed</tt>.</li>
+        <li><tt>AbstractDateField</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
+
+        <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>

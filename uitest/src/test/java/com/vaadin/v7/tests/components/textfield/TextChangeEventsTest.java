@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.components.textfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.TextAreaElement;
@@ -16,14 +17,14 @@ public class TextChangeEventsTest extends SingleBrowserTest {
         TextAreaElement taDefault = $(TextAreaElement.class)
                 .caption("Default text area").first();
         taDefault.sendKeys("abc");
-        Assert.assertEquals(
+        assertEquals(
                 "1. Text change event for Default text area, text content currently:'abc' Cursor at index:3",
                 getLogRow(0));
 
         TextAreaElement taTimeout = $(TextAreaElement.class)
                 .caption("Timeout 3s").first();
         taTimeout.sendKeys("abc");
-        Assert.assertEquals(
+        assertEquals(
                 "2. Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3",
                 getLogRow(0));
 
@@ -36,21 +37,21 @@ public class TextChangeEventsTest extends SingleBrowserTest {
         TextFieldElement tfDefault = $(TextFieldElement.class)
                 .caption("Default").first();
         tfDefault.sendKeys("abc");
-        Assert.assertEquals(
+        assertEquals(
                 "1. Text change event for Default, text content currently:'abc' Cursor at index:3",
                 getLogRow(0));
 
         TextFieldElement tfEager = $(TextFieldElement.class).caption("Eager")
                 .first();
         tfEager.sendKeys("abc");
-        Assert.assertEquals(
+        assertEquals(
                 "2. Text change event for Eager, text content currently:'abc' Cursor at index:3",
                 getLogRow(0));
 
         TextFieldElement tfTimeout = $(TextFieldElement.class)
                 .caption("Timeout 3s").first();
         tfTimeout.sendKeys("abc");
-        Assert.assertEquals(
+        assertEquals(
                 "3. Text change event for Timeout 3s, text content currently:'abc' Cursor at index:3",
                 getLogRow(0));
 

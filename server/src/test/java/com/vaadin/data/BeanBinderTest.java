@@ -1,7 +1,9 @@
 package com.vaadin.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,7 +16,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +26,7 @@ import com.vaadin.tests.data.bean.BeanToValidate;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.TextField;
 
+@SuppressWarnings("unused")
 public class BeanBinderTest
         extends BinderTestBase<Binder<BeanToValidate>, BeanToValidate> {
 
@@ -409,7 +411,7 @@ public class BeanBinderTest
         binder.bind(field, "firstname");
         binder.setBean(bean);
 
-        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
 
@@ -423,7 +425,7 @@ public class BeanBinderTest
         binder.bind(field, "age");
         binder.setBean(bean);
 
-        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
 
@@ -437,7 +439,7 @@ public class BeanBinderTest
         binder.bind(field, "lastname");
         binder.setBean(bean);
 
-        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
 
@@ -452,7 +454,7 @@ public class BeanBinderTest
         binder.bind(field, "subfield.name");
         binder.setBean(bean);
 
-        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
 
@@ -469,7 +471,7 @@ public class BeanBinderTest
         binder.bind(field, "subfield.subsub.value");
         binder.setBean(bean);
 
-        Assert.assertTrue(field.isRequiredIndicatorVisible());
+        assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
     }
 
@@ -483,9 +485,9 @@ public class BeanBinderTest
         RequiredConstraints bean = new RequiredConstraints();
         bean.setSubfield(new SubConstraint());
         binder.setBean(bean);
-        Assert.assertFalse(binder.validate().isOk());
+        assertFalse(binder.validate().isOk());
         field.setValue("overfive");
-        Assert.assertTrue(binder.validate().isOk());
+        assertTrue(binder.validate().isOk());
     }
 
     @Test
@@ -501,9 +503,9 @@ public class BeanBinderTest
         subfield.setSubsub(new SubSubConstraint());
         binder.setBean(bean);
 
-        Assert.assertFalse(binder.validate().isOk());
+        assertFalse(binder.validate().isOk());
         field.setValue("overtencharacters");
-        Assert.assertTrue(binder.validate().isOk());
+        assertTrue(binder.validate().isOk());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {

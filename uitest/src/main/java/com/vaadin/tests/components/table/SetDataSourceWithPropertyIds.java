@@ -27,7 +27,7 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
     }
 
     private static final String TABLE_NAME = "JOBS";
-    private static final String[] PK_COLUMN_NAMES = new String[] { "JOB_ID" };
+    private static final String[] PK_COLUMN_NAMES = { "JOB_ID" };
     private static final String SEQUENCE_NAME = "";
     private static final String VERSION_COLUMN_NAME = "";
 
@@ -69,10 +69,10 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
         jobContainer.addAll(getBeanList());
         try {
             table.setContainerDataSource(jobContainer);
-            table.setVisibleColumns(new String[] { "jobId" });
+            table.setVisibleColumns("jobId");
             label.setValue("no Exception");
         } catch (CacheUpdateException e) {
-            ArrayList<String> propertyIds = new ArrayList<>();
+            List<String> propertyIds = new ArrayList<>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
             label.setValue("Exception caught");

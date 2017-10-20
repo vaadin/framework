@@ -1,13 +1,14 @@
 package com.vaadin.tests.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
 public class TestClickListener implements Button.ClickListener {
 
-    private static final HashMap<String, Integer> buttonListeners = new HashMap<>();
+    private static final Map<String, Integer> buttonListeners = new HashMap<>();
 
     String name = "";
     int count = 0;

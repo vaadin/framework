@@ -21,12 +21,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
@@ -75,7 +74,6 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -138,7 +136,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         @Override
         public void onWindowOrderChange(WindowOrderEvent event) {
             VWindow[] windows = event.getWindows();
-            HashMap<Integer, Connector> orders = new HashMap<>();
+            Map<Integer, Connector> orders = new HashMap<>();
             boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
             for (VWindow window : windows) {
                 Connector connector = Util.findConnectorFor(window);
@@ -187,20 +185,17 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         registerRpc(UIClientRpc.class, new UIClientRpc() {
             @Override
             public void uiClosed(final boolean sessionExpired) {
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        // Only notify user if we're still running and not eg.
-                        // navigating away (#12298)
-                        if (getConnection().isApplicationRunning()) {
-                            if (sessionExpired) {
-                                getConnection().showSessionExpiredError(null);
-                            } else {
-                                getState().enabled = false;
-                                updateEnabledState(getState().enabled);
-                            }
-                            getConnection().setApplicationRunning(false);
+                Scheduler.get().scheduleDeferred(() -> {
+                    // Only notify user if we're still running and not eg.
+                    // navigating away (#12298)
+                    if (getConnection().isApplicationRunning()) {
+                        if (sessionExpired) {
+                            getConnection().showSessionExpiredError(null);
+                        } else {
+                            getState().enabled = false;
+                            updateEnabledState(getState().enabled);
                         }
+                        getConnection().setApplicationRunning(false);
                     }
                 });
             }
@@ -376,12 +371,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                             getWidget().id, client);
                 }
                 getWidget().actionHandler.updateActionMap(childUidl);
-            } else if (tag == "notifications") {
-                for (final Iterator<?> it = childUidl.getChildIterator(); it
-                        .hasNext();) {
-                    final UIDL notification = (UIDL) it.next();
-                    VNotification.showNotification(client, notification);
-                }
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -413,8 +402,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        getLogger()
-                                .severe("Server is trying to set focus to the widget of connector "
+                        getLogger().severe(
+                                "Server is trying to set focus to the widget of connector "
                                         + Util.getConnectorString(connector)
                                         + " but it is not focusable. The widget should implement either "
                                         + com.google.gwt.user.client.ui.Focusable.class
@@ -439,23 +428,21 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_PUSH_STATE)) {
-            Browser.getWindow().getHistory().pushState(null, "",
+            Browser.getWindow().getHistory().pushState(null,
+                    getState().pageState.title,
                     uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE));
         }
         if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
-            Browser.getWindow().getHistory().replaceState(null, "", uidl
-                    .getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE));
+            Browser.getWindow().getHistory().replaceState(null,
+                    getState().pageState.title, uidl.getStringAttribute(
+                            UIConstants.ATTRIBUTE_REPLACE_STATE));
         }
 
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getWidget().sendClientResized();
-                }
-            });
+            Scheduler.get()
+                    .scheduleDeferred(() -> getWidget().sendClientResized());
         }
     }
 
@@ -471,8 +458,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         /*
          * Search the UIDL stream for CSS resources and strings to be injected.
          */
-        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
-            UIDL cssInjectionsUidl = (UIDL) it.next();
+        for (Object child : uidl) {
+            UIDL cssInjectionsUidl = (UIDL) child;
 
             // Check if we have resources to inject
             if (cssInjectionsUidl.getTag().equals("css-resource")) {
@@ -486,9 +473,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getHead().appendChild(link);
                 // Check if we have CSS string to inject
             } else if (cssInjectionsUidl.getTag().equals("css-string")) {
-                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
-                        .hasNext();) {
-                    StyleInjector.injectAtEnd((String) it2.next());
+                for (Object c : cssInjectionsUidl) {
+                    StyleInjector.injectAtEnd((String) c);
                     StyleInjector.flush();
                 }
             }
@@ -657,7 +643,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Checks if the given sub window is a child of this UI Connector
+     * Checks if the given sub window is a child of this UI Connector.
      *
      * @deprecated Should be replaced by a more generic mechanism for getting
      *             non-ComponentConnector children
@@ -676,7 +662,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      * @return
      */
     public List<WindowConnector> getSubWindows() {
-        ArrayList<WindowConnector> windows = new ArrayList<>();
+        List<WindowConnector> windows = new ArrayList<>();
         for (ComponentConnector child : getChildComponents()) {
             if (child instanceof WindowConnector) {
                 windows.add((WindowConnector) child);
@@ -879,7 +865,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Invokes the layout analyzer on the server
+     * Invokes the layout analyzer on the server.
      *
      * @since 7.1
      */
@@ -948,7 +934,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Loads the new theme and removes references to the old theme
+     * Loads the new theme and removes references to the old theme.
      *
      * @since 7.4.3
      * @param oldTheme
@@ -1158,7 +1144,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Returns the name of the theme currently in used by the UI
+     * Returns the name of the theme currently in used by the UI.
      *
      * @since 7.3
      * @return the theme name used by this UI
@@ -1223,8 +1209,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return window1.getWindowOrder() > window2.getWindowOrder() ? 1 : -1;
         }
 
-        ArrayList<VWindow> getWindows() {
-            ArrayList<VWindow> result = new ArrayList<>();
+        List<VWindow> getWindows() {
+            List<VWindow> result = new ArrayList<>();
             result.addAll(windows);
             Collections.sort(result, this);
             return result;

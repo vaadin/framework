@@ -40,7 +40,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
     List<ComponentConnector> childComponents;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public CustomFieldConnector() {
         addConnectorHierarchyChangeHandler(this);

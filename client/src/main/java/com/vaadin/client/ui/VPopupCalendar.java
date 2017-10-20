@@ -52,20 +52,20 @@ public class VPopupCalendar
     }
 
     public static Date makeDate(Map<DateResolution, Integer> dateValues) {
-        if (dateValues.get(DateResolution.YEAR) == -1) {
+        if (dateValues.get(DateResolution.YEAR) == null) {
             return null;
         }
         Date date = new Date(2000 - 1900, 0, 1);
-        int year = dateValues.get(DateResolution.YEAR);
-        if (year >= 0) {
+        Integer year = dateValues.get(DateResolution.YEAR);
+        if (year != null) {
             date.setYear(year - 1900);
         }
-        int month = dateValues.get(DateResolution.MONTH);
-        if (month >= 0) {
+        Integer month = dateValues.get(DateResolution.MONTH);
+        if (month != null) {
             date.setMonth(month - 1);
         }
-        int day = dateValues.get(DateResolution.DAY);
-        if (day >= 0) {
+        Integer day = dateValues.get(DateResolution.DAY);
+        if (day != null) {
             date.setDate(day);
         }
         return date;
@@ -84,22 +84,20 @@ public class VPopupCalendar
     @Override
     protected void updateDateVariables() {
         super.updateDateVariables();
+        DateResolution resolution = getCurrentResolution();
         // Update variables
         // (only the smallest defining resolution needs to be
         // immediate)
         Date currentDate = getDate();
-        if (getCurrentResolution().compareTo(DateResolution.MONTH) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.MONTH),
-                    currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    getCurrentResolution() == DateResolution.MONTH);
+        if (resolution.compareTo(DateResolution.MONTH) <= 0) {
+            bufferedResolutions.put(DateResolution.MONTH.name(),
+                    currentDate != null ? currentDate.getMonth() + 1 : null);
         }
-        if (getCurrentResolution().compareTo(DateResolution.DAY) <= 0) {
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.DAY),
-                    currentDate != null ? currentDate.getDate() : -1,
-                    getCurrentResolution() == DateResolution.DAY);
+        if (resolution.compareTo(DateResolution.DAY) <= 0) {
+            bufferedResolutions.put(DateResolution.DAY.name(),
+                    currentDate != null ? currentDate.getDate() : null);
         }
+        sendBufferedValues();
     }
 
     @Override

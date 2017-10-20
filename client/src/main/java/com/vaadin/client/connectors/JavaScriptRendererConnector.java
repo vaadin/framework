@@ -17,6 +17,7 @@ package com.vaadin.client.connectors;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -65,7 +66,7 @@ public class JavaScriptRendererConnector
     private static native JavaScriptObject createCellReferenceWrapper()
     /*-{
         var reference = {};
-
+    
         var setProperty = function(name, getter, setter) {
             var descriptor = {
                 get: getter
@@ -75,25 +76,25 @@ public class JavaScriptRendererConnector
             }
             Object.defineProperty(reference, name, descriptor);
         };
-
+    
         setProperty("element", function() {
             return reference.target.@CellReference::getElement()();
         }, null);
-
+    
         setProperty("rowIndex", function() {
             return reference.target.@CellReference::getRowIndex()();
         }, null);
-
+    
         setProperty("columnIndex", function() {
             return reference.target.@CellReference::getColumnIndex()();
         }, null);
-
+    
         setProperty("colSpan", function() {
             return reference.target.@RendererCellReference::getColSpan()();
         }, function(colSpan) {
             reference.target.@RendererCellReference::setColSpan(*)(colSpan);
         });
-
+    
         return reference;
     }-*/;
 
@@ -232,7 +233,7 @@ public class JavaScriptRendererConnector
                     JsArrayString events = getConsumedEvents(
                             helper.getConnectorWrapper());
 
-                    ArrayList<String> list = new ArrayList<>(events.length());
+                    List<String> list = new ArrayList<>(events.length());
                     for (int i = 0; i < events.length(); i++) {
                         list.add(events.get(i));
                     }
@@ -247,7 +248,7 @@ public class JavaScriptRendererConnector
             /*-{
                 var rawEvents = wrapper.getConsumedEvents();
                 var events = [];
-                for(var i = 0; i < rawEvents.length; i++) {
+                for (var i = 0; i < rawEvents.length; i++) {
                   events[i] = ""+rawEvents[i];
                 }
                 return events;

@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import com.vaadin.data.provider.DataProvider;
-
 import java.util.Collection;
 
 import com.vaadin.data.provider.ListDataProvider;

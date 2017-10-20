@@ -18,8 +18,6 @@ package com.vaadin.tests.components.ui;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -69,12 +67,7 @@ public class UIAccessTest extends MultiBrowserTest {
     }
 
     private void waitForLogToContainText(final String text) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                return logContainsText(text);
-            }
-        });
+        waitUntil(input -> logContainsText(text));
     }
 
     @Test

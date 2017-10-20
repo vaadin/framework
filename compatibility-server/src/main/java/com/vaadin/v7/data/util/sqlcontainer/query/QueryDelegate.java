@@ -94,9 +94,8 @@ public interface QueryDelegate extends Serializable {
      * decides how to identify whether to store a new row or update an existing
      * one.
      *
-     * @param columnToValueMap
-     *            A map containing the values for all columns to be stored or
-     *            updated.
+     * @param row
+     *            The row to be stored or updated.
      * @return the number of affected rows in the database table
      * @throws UnsupportedOperationException
      *             if the implementation is read only.

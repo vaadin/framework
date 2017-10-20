@@ -106,7 +106,7 @@ public class Profiler {
         }
 
         /**
-         * Gets the name of the node
+         * Gets the name of the node.
          *
          * @return the name of the node
          */
@@ -137,7 +137,7 @@ public class Profiler {
 
         /**
          * Gets the total time spent in this node, including time spent in sub
-         * nodes
+         * nodes.
          *
          * @return the total time spent, in milliseconds
          */
@@ -147,7 +147,7 @@ public class Profiler {
 
         /**
          * Gets the minimum time spent for one invocation of this node,
-         * including time spent in sub nodes
+         * including time spent in sub nodes.
          *
          * @return the time spent for the fastest invocation, in milliseconds
          */
@@ -157,7 +157,7 @@ public class Profiler {
 
         /**
          * Gets the maximum time spent for one invocation of this node,
-         * including time spent in sub nodes
+         * including time spent in sub nodes.
          *
          * @return the time spent for the slowest invocation, in milliseconds
          */
@@ -166,7 +166,7 @@ public class Profiler {
         }
 
         /**
-         * Gets the number of times this node has been entered
+         * Gets the number of times this node has been entered.
          *
          * @return the number of times the node has been entered
          */
@@ -176,7 +176,7 @@ public class Profiler {
 
         /**
          * Gets the total time spent in this node, excluding time spent in sub
-         * nodes
+         * nodes.
          *
          * @return the total time spent, in milliseconds
          */
@@ -189,24 +189,12 @@ public class Profiler {
         }
 
         /**
-         * Gets the child nodes of this node
+         * Gets the child nodes of this node.
          *
          * @return a collection of child nodes
          */
         public Collection<Node> getChildren() {
             return Collections.unmodifiableCollection(children.values());
-        }
-
-        private void buildRecursiveString(StringBuilder builder,
-                String prefix) {
-            if (getName() != null) {
-                String msg = getStringRepresentation(prefix);
-                builder.append(msg + '\n');
-            }
-            String childPrefix = prefix + "*";
-            for (Node node : children.values()) {
-                node.buildRecursiveString(builder, childPrefix);
-            }
         }
 
         @Override
@@ -396,7 +384,7 @@ public class Profiler {
         return RELATIVE_TIME_SUPPLIER.getRelativeTime();
     }
 
-    private static native final void logGwtEvent(String name, String type)
+    private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
             evtGroup: @com.vaadin.client.Profiler::evtGroup,
@@ -549,7 +537,7 @@ public class Profiler {
         Map<String, Node> totals = new HashMap<>();
         rootNode.sumUpTotals(totals);
 
-        ArrayList<Node> totalList = new ArrayList<>(totals.values());
+        List<Node> totalList = new ArrayList<>(totals.values());
         Collections.sort(totalList, new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
@@ -581,14 +569,14 @@ public class Profiler {
         if (isEnabled()) {
             double now = Duration.currentTimeMillis();
 
-            String[] keys = new String[] { "navigationStart",
-                    "unloadEventStart", "unloadEventEnd", "redirectStart",
-                    "redirectEnd", "fetchStart", "domainLookupStart",
-                    "domainLookupEnd", "connectStart", "connectEnd",
-                    "requestStart", "responseStart", "responseEnd",
-                    "domLoading", "domInteractive",
-                    "domContentLoadedEventStart", "domContentLoadedEventEnd",
-                    "domComplete", "loadEventStart", "loadEventEnd" };
+            String[] keys = { "navigationStart", "unloadEventStart",
+                    "unloadEventEnd", "redirectStart", "redirectEnd",
+                    "fetchStart", "domainLookupStart", "domainLookupEnd",
+                    "connectStart", "connectEnd", "requestStart",
+                    "responseStart", "responseEnd", "domLoading",
+                    "domInteractive", "domContentLoadedEventStart",
+                    "domContentLoadedEventEnd", "domComplete", "loadEventStart",
+                    "loadEventEnd" };
 
             LinkedHashMap<String, Double> timings = new LinkedHashMap<>();
 

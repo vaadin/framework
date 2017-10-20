@@ -176,7 +176,7 @@ public class MonthGrid extends FocusableGrid implements KeyDownHandler {
     }
 
     /**
-     * Disable or enable possibility to select ranges
+     * Disable or enable possibility to select ranges.
      */
     public void setRangeSelect(boolean b) {
         rangeSelectDisabled = !b;

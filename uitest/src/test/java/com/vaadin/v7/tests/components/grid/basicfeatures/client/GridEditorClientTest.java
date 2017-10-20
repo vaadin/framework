@@ -41,9 +41,9 @@ import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicFeatures;
 
 public class GridEditorClientTest extends GridBasicClientFeaturesTest {
 
-    private static final String[] EDIT_ROW_100 = new String[] { "Component",
+    private static final String[] EDIT_ROW_100 = { "Component",
             "Editor", "Edit row 100" };
-    private static final String[] EDIT_ROW_5 = new String[] { "Component",
+    private static final String[] EDIT_ROW_5 = { "Component",
             "Editor", "Edit row 5" };
 
     @Before

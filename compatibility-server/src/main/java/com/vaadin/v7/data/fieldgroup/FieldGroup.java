@@ -40,10 +40,10 @@ import com.vaadin.v7.ui.Field;
  * FieldGroup provides an easy way of binding fields to data and handling
  * commits of these fields.
  * <p>
- * The functionality of FieldGroup is similar to {@link Form} but
- * {@link FieldGroup} does not handle layouts in any way. The typical use case
- * is to create a layout outside the FieldGroup and then use FieldGroup to bind
- * the fields to a data source.
+ * The functionality of FieldGroup is similar to {@link com.vaadin.v7.ui.Form
+ * Form} but {@link FieldGroup} does not handle layouts in any way. The typical
+ * use case is to create a layout outside the FieldGroup and then use FieldGroup
+ * to bind the fields to a data source.
  * </p>
  * <p>
  * {@link FieldGroup} is not a UI component so it cannot be added to a layout.
@@ -65,7 +65,7 @@ public class FieldGroup implements Serializable {
     private boolean enabled = true;
     private boolean readOnly = false;
 
-    private HashMap<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
+    private Map<Object, Field<?>> propertyIdToField = new HashMap<Object, Field<?>>();
     private LinkedHashMap<Field<?>, Object> fieldToPropertyId = new LinkedHashMap<Field<?>, Object>();
     private List<CommitHandler> commitHandlers = new ArrayList<CommitHandler>();
 
@@ -536,7 +536,7 @@ public class FieldGroup implements Serializable {
 
     /**
      * Exception which wraps InvalidValueExceptions from all invalid fields in a
-     * FieldGroup
+     * FieldGroup.
      *
      * @since 7.4
      */
@@ -648,7 +648,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the field that is bound to the given property id
+     * Returns the field that is bound to the given property id.
      *
      * @param propertyId
      *            The property id to use to lookup the field
@@ -660,7 +660,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the property id that is bound to the given field
+     * Returns the property id that is bound to the given field.
      *
      * @param field
      *            The field to use to lookup the property id
@@ -748,7 +748,7 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * FIXME javadoc
+     * The commit event.
      *
      */
     @Deprecated
@@ -760,7 +760,7 @@ public class FieldGroup implements Serializable {
         }
 
         /**
-         * Returns the field binder that this commit relates to
+         * Returns the field binder that this commit relates to.
          *
          * @return The FieldBinder that is being committed.
          */
@@ -1120,7 +1120,7 @@ public class FieldGroup implements Serializable {
         }
 
         /**
-         * Returns the field group where the exception occurred
+         * Returns the field group where the exception occurred.
          *
          * @since 7.4
          * @return the field group
@@ -1258,7 +1258,7 @@ public class FieldGroup implements Serializable {
      */
     protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
             Class searchClass) {
-        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
+        List<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
 
         while (searchClass != null) {
             for (java.lang.reflect.Field memberField : searchClass

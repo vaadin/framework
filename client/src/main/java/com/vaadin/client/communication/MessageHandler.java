@@ -31,7 +31,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
@@ -144,7 +143,7 @@ public class MessageHandler {
     private int sessionExpirationInterval;
 
     /**
-     * Holds the time spent rendering the last request
+     * Holds the time spent rendering the last request.
      */
     protected int lastProcessingTime;
 
@@ -229,7 +228,7 @@ public class MessageHandler {
      * Handles a received UIDL JSON text, parsing it, and passing it on to the
      * appropriate handlers, while logging timing information.
      *
-     * @param jsonText
+     * @param json
      *            The JSON to handle
      */
     public void handleMessage(final ValueMap json) {
@@ -574,12 +573,9 @@ public class MessageHandler {
                 ConnectorBundleLoader.get().ensureDeferredBundleLoaded();
 
                 if (Profiler.isEnabled()) {
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            Profiler.logTimings();
-                            Profiler.reset();
-                        }
+                    Scheduler.get().scheduleDeferred(() -> {
+                        Profiler.logTimings();
+                        Profiler.reset();
                     });
                 }
             }
@@ -936,13 +932,13 @@ public class MessageHandler {
                                 Profiler.leave(key);
                             }
                         } else if (legacyConnector == null) {
-                            getLogger().severe(
-                                    "Received update for " + uidl.getTag()
-                                            + ", but there is no such paintable ("
-                                            + connectorId + ") rendered.");
+                            getLogger().severe("Received update for "
+                                    + uidl.getTag()
+                                    + ", but there is no such paintable ("
+                                    + connectorId + ") rendered.");
                         } else {
-                            getLogger()
-                                    .severe("Server sent Vaadin 6 style updates for "
+                            getLogger().severe(
+                                    "Server sent Vaadin 6 style updates for "
                                             + Util.getConnectorString(
                                                     legacyConnector)
                                             + " but this is not a Vaadin 6 Paintable");
@@ -1613,7 +1609,7 @@ public class MessageHandler {
         }
     }
 
-    private static native final int calculateBootstrapTime()
+    private static final native int calculateBootstrapTime()
     /*-{
         if ($wnd.performance && $wnd.performance.timing) {
             return (new Date).getTime() - $wnd.performance.timing.responseStart;
@@ -1723,7 +1719,7 @@ public class MessageHandler {
     }
 
     /**
-     * Checks if the first UIDL has been handled
+     * Checks if the first UIDL has been handled.
      *
      * @return true if the initial UIDL has already been processed, false
      *         otherwise
@@ -1777,7 +1773,7 @@ public class MessageHandler {
     }
 
     /**
-     * Unwraps and parses the given JSON, originating from the server
+     * Unwraps and parses the given JSON, originating from the server.
      *
      * @param jsonText
      *            the json from the server
@@ -1811,7 +1807,7 @@ public class MessageHandler {
     }-*/;
 
     /**
-     * Parse the given wrapped JSON, received from the server, to a ValueMap
+     * Parse the given wrapped JSON, received from the server, to a ValueMap.
      *
      * @param wrappedJsonText
      *            the json, wrapped as done by the server

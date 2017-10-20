@@ -15,13 +15,11 @@
  */
 package com.vaadin.client;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -311,9 +309,7 @@ public class VUIDLBrowser extends SimpleTree {
                 // Ignored, no variables
             }
 
-            final Iterator<Object> i = uidl.getChildIterator();
-            while (i.hasNext()) {
-                final Object child = i.next();
+            for (final Object child : uidl) {
                 try {
                     add(new UIDLItem((UIDL) child));
                 } catch (final Exception e) {
@@ -322,12 +318,8 @@ public class VUIDLBrowser extends SimpleTree {
             }
             if (highlightedPid != null && highlightedPid.equals(uidl.getId())) {
                 getElement().getStyle().setBackgroundColor("#fdd");
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        getElement().scrollIntoView();
-                    }
-                });
+                Scheduler.get()
+                        .scheduleDeferred(() -> getElement().scrollIntoView());
             }
         }
     }

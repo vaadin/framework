@@ -16,12 +16,20 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
+
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasHierarchicalDataProvider;
@@ -30,6 +38,7 @@ import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalDataProvider;
+import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.CollapseEvent;
 import com.vaadin.event.CollapseEvent.CollapseListener;
@@ -46,11 +55,16 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModelImpl;
+import com.vaadin.ui.components.grid.NoSelectionModel;
+import com.vaadin.ui.components.grid.SingleSelectionModelImpl;
+import com.vaadin.ui.declarative.DesignAttributeHandler;
+import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import com.vaadin.util.ReflectTools;
 
@@ -221,7 +235,7 @@ public class Tree<T> extends Composite
      *
      * @since 8.1
      */
-    public final static class TreeMultiSelectionModel<T>
+    public static final class TreeMultiSelectionModel<T>
             extends MultiSelectionModelImpl<T> {
 
         @Override
@@ -599,8 +613,8 @@ public class Tree<T> extends Composite
     /**
      * Sets the description generator that is used for generating tooltip
      * descriptions for items.
-     * 
-     * @since
+     *
+     * @since 8.2
      * @param descriptionGenerator
      *            the item description generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -653,7 +667,7 @@ public class Tree<T> extends Composite
     /**
      * Gets the item description generator.
      *
-     * @since
+     * @since 8.2
      * @return the item description generator
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
@@ -700,6 +714,20 @@ public class Tree<T> extends Composite
         default:
             return treeGrid.setSelectionMode(selectionMode);
         }
+    }
+
+    private SelectionMode getSelectionMode() {
+        SelectionModel<T> selectionModel = getSelectionModel();
+        SelectionMode mode = null;
+        if (selectionModel.getClass().equals(SingleSelectionModelImpl.class)) {
+            mode = SelectionMode.SINGLE;
+        } else if (selectionModel.getClass()
+                .equals(TreeMultiSelectionModel.class)) {
+            mode = SelectionMode.MULTI;
+        } else if (selectionModel.getClass().equals(NoSelectionModel.class)) {
+            mode = SelectionMode.NONE;
+        }
+        return mode;
     }
 
     @Override
@@ -814,8 +842,20 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Gets the currently set content mode of the item captions of this Tree.
+     *
+     * @since 8.1.3
+     * @see ContentMode
+     * @return the content mode of the item captions of this Tree
+     */
+    public ContentMode getContentMode() {
+        return renderer.getState(false).mode;
+    }
+
+    /**
      * Sets the content mode of the item caption.
      *
+     * @see ContentMode
      * @param contentMode
      *            the content mode
      */
@@ -825,9 +865,9 @@ public class Tree<T> extends Composite
 
     /**
      * Returns the current state of automatic width recalculation.
-     * 
+     *
      * @return {@code true} if enabled; {@code false} if disabled
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isAutoRecalculateWidth() {
@@ -837,11 +877,11 @@ public class Tree<T> extends Composite
     /**
      * Sets the automatic width recalculation on or off. This feature is on by
      * default.
-     * 
+     *
      * @param autoRecalculateWidth
      *            {@code true} to enable recalculation; {@code false} to turn it
      *            off
-     * 
+     *
      * @since 8.1.1
      */
     public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
@@ -886,6 +926,153 @@ public class Tree<T> extends Composite
         setupContextClickListener();
     }
 
+    @Override
+    public void writeDesign(Element design, DesignContext designContext) {
+        super.writeDesign(design, designContext);
+        Attributes attrs = design.attributes();
+
+        SelectionMode mode = getSelectionMode();
+        if (mode != null) {
+            DesignAttributeHandler.writeAttribute("selection-mode", attrs, mode,
+                    SelectionMode.SINGLE, SelectionMode.class, designContext);
+        }
+        DesignAttributeHandler.writeAttribute("content-mode", attrs,
+                getContentMode(), ContentMode.TEXT, ContentMode.class,
+                designContext);
+
+        if (designContext.shouldWriteData(this)) {
+            writeItems(design, designContext);
+        }
+    }
+
+    private void writeItems(Element design, DesignContext designContext) {
+        getDataProvider().fetch(new HierarchicalQuery<>(null, null))
+                .forEach(item -> writeItem(design, designContext, item, null));
+    }
+
+    private void writeItem(Element design, DesignContext designContext, T item,
+            T parent) {
+
+        Element itemElement = design.appendElement("node");
+        itemElement.attr("item", serializeDeclarativeRepresentation(item));
+
+        if (parent != null) {
+            itemElement.attr("parent",
+                    serializeDeclarativeRepresentation(parent));
+        }
+
+        if (getSelectionModel().isSelected(item)) {
+            itemElement.attr("selected", "");
+        }
+
+        Resource icon = getItemIconGenerator().apply(item);
+        DesignAttributeHandler.writeAttribute("icon", itemElement.attributes(),
+                icon, null, Resource.class, designContext);
+
+        String text = getItemCaptionGenerator().apply(item);
+        itemElement.html(
+                Optional.ofNullable(text).map(Object::toString).orElse(""));
+
+        getDataProvider().fetch(new HierarchicalQuery<>(null, item)).forEach(
+                childItem -> writeItem(design, designContext, childItem, item));
+    }
+
+    @Override
+    public void readDesign(Element design, DesignContext designContext) {
+        super.readDesign(design, designContext);
+        Attributes attrs = design.attributes();
+        if (attrs.hasKey("selection-mode")) {
+            setSelectionMode(DesignAttributeHandler.readAttribute(
+                    "selection-mode", attrs, SelectionMode.class));
+        }
+        if (attrs.hasKey("content-mode")) {
+            setContentMode(DesignAttributeHandler.readAttribute("content-mode",
+                    attrs, ContentMode.class));
+        }
+        readItems(design.children());
+    }
+
+    private void readItems(Elements bodyItems) {
+        if (bodyItems.isEmpty()) {
+            return;
+        }
+
+        DeclarativeValueProvider<T> valueProvider = new DeclarativeValueProvider<>();
+        setItemCaptionGenerator(item -> valueProvider.apply(item));
+
+        DeclarativeIconGenerator<T> iconGenerator = new DeclarativeIconGenerator<>(
+                item -> null);
+        setItemIconGenerator(iconGenerator);
+
+        getSelectionModel().deselectAll();
+        List<T> selectedItems = new ArrayList<>();
+        TreeData<T> data = new TreeData<T>();
+
+        for (Element row : bodyItems) {
+            T item = deserializeDeclarativeRepresentation(row.attr("item"));
+            T parent = null;
+            if (row.hasAttr("parent")) {
+                parent = deserializeDeclarativeRepresentation(
+                        row.attr("parent"));
+            }
+            data.addItem(parent, item);
+            if (row.hasAttr("selected")) {
+                selectedItems.add(item);
+            }
+
+            valueProvider.addValue(item, row.html());
+            iconGenerator.setIcon(item, DesignAttributeHandler
+                    .readAttribute("icon", row.attributes(), Resource.class));
+        }
+
+        setDataProvider(new TreeDataProvider<>(data));
+        selectedItems.forEach(getSelectionModel()::select);
+    }
+
+    /**
+     * Deserializes a string to a data item. Used when reading from the
+     * declarative format of this Tree.
+     * <p>
+     * Default implementation is able to handle only {@link String} as an item
+     * type. There will be a {@link ClassCastException} if {@code T } is not a
+     * {@link String}.
+     *
+     * @since 8.1.3
+     *
+     * @see #serializeDeclarativeRepresentation(Object)
+     *
+     * @param item
+     *            string to deserialize
+     * @throws ClassCastException
+     *             if type {@code T} is not a {@link String}
+     * @return deserialized item
+     */
+    @SuppressWarnings("unchecked")
+    protected T deserializeDeclarativeRepresentation(String item) {
+        if (item == null) {
+            return (T) new String(UUID.randomUUID().toString());
+        }
+        return (T) new String(item);
+    }
+
+    /**
+     * Serializes an {@code item} to a string. Used when saving this Tree to its
+     * declarative format.
+     * <p>
+     * Default implementation delegates a call to {@code item.toString()}.
+     *
+     * @since 8.1.3
+     *
+     * @see #deserializeDeclarativeRepresentation(String)
+     *
+     * @param item
+     *            a data item
+     * @return string representation of the {@code item}.
+     */
+    protected String serializeDeclarativeRepresentation(T item) {
+        return item.toString();
+    }
+
     private void setupContextClickListener() {
         if (hasListeners(ContextClickEvent.class)) {
             if (contextClickRegistration == null) {
@@ -910,7 +1097,7 @@ public class Tree<T> extends Composite
      * ContextClickEvent for the Tree Component.
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * tree.addContextClickListener(event -&gt; Notification.show(
      *         ((TreeContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
@@ -956,4 +1143,58 @@ public class Tree<T> extends Composite
             return (Tree<T>) super.getComponent();
         }
     }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        treeGrid.scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        treeGrid.scrollTo(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     * 
+     * @since 8.2
+     */
+    public void scrollToStart() {
+        treeGrid.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     * 
+     * @since 8.2
+     */
+    public void scrollToEnd() {
+        treeGrid.scrollToEnd();
+    }
+
 }

@@ -15,7 +15,10 @@
  */
 package com.vaadin.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
@@ -27,7 +30,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,8 +54,7 @@ public class CurrentInstanceTest {
     @Test
     public void testClearedAfterRemove() throws Exception {
         CurrentInstance.set(CurrentInstanceTest.class, this);
-        Assert.assertEquals(this,
-                CurrentInstance.get(CurrentInstanceTest.class));
+        assertEquals(this, CurrentInstance.get(CurrentInstanceTest.class));
         CurrentInstance.set(CurrentInstanceTest.class, null);
 
         assertCleared();
@@ -62,8 +63,7 @@ public class CurrentInstanceTest {
     @Test
     public void testClearedWithClearAll() throws Exception {
         CurrentInstance.set(CurrentInstanceTest.class, this);
-        Assert.assertEquals(this,
-                CurrentInstance.get(CurrentInstanceTest.class));
+        assertEquals(this, CurrentInstance.get(CurrentInstanceTest.class));
         CurrentInstance.clearAll();
 
         assertCleared();
@@ -71,7 +71,7 @@ public class CurrentInstanceTest {
 
     private void assertCleared() throws SecurityException, NoSuchFieldException,
             IllegalAccessException {
-        Assert.assertNull(getInternalCurrentInstanceVariable().get());
+        assertNull(getInternalCurrentInstanceVariable().get());
     }
 
     private ThreadLocal<Map<Class<?>, CurrentInstance>> getInternalCurrentInstanceVariable()
@@ -156,7 +156,7 @@ public class CurrentInstanceTest {
 
         CurrentInstance.restoreInstances(previous);
 
-        Assert.assertNull(VaadinSession.getCurrent());
+        assertNull(VaadinSession.getCurrent());
     }
 
     public static void waitUntilGarbageCollected(WeakReference<?> ref)
@@ -168,7 +168,7 @@ public class CurrentInstanceTest {
             }
             Thread.sleep(100);
         }
-        Assert.fail("Value was not garbage collected.");
+        fail("Value was not garbage collected.");
     }
 
     @Test
@@ -177,10 +177,10 @@ public class CurrentInstanceTest {
         CurrentInstance.clearAll();
         CurrentInstance.set(CurrentInstanceTest.class, this);
 
-        Assert.assertNotNull(CurrentInstance.get(CurrentInstanceTest.class));
+        assertNotNull(CurrentInstance.get(CurrentInstanceTest.class));
 
         Callable<Void> runnable = () -> {
-            Assert.assertNull(CurrentInstance.get(CurrentInstanceTest.class));
+            assertNull(CurrentInstance.get(CurrentInstanceTest.class));
             return null;
         };
         ExecutorService service = Executors.newSingleThreadExecutor();

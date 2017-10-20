@@ -35,7 +35,7 @@ public class AriaHelper {
      *
      * @param widget
      *            Widget, that should be bound to the caption
-     * @param captionElements
+     * @param captionElement
      *            Element with of caption to bind
      */
     public static void bindCaption(Widget widget, Element captionElement) {
@@ -175,9 +175,9 @@ public class AriaHelper {
      *
      * @param element
      *            Element to move out of sight
-     * @param boolean
-     *            assistiveOnly true when element should only be visible for
-     *            assistive devices, false to make the element visible for all
+     * @param assistiveOnly
+     *            {@code true} when element should only be visible for
+     *            assistive devices, {@code false} to make the element visible for all
      */
     public static void setVisibleForAssistiveDevicesOnly(Element element,
             boolean assistiveOnly) {

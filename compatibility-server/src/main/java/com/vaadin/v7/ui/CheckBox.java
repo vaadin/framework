@@ -109,9 +109,10 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * Creates a new checkbox that is connected to a boolean property.
      *
-     * @param state
-     *            the Initial state of the switch-button.
+     * @param caption
+     *            the Initial caption of the checkbox.
      * @param dataSource
+     *            the data source
      */
     public CheckBox(String caption, Property<?> dataSource) {
         this(caption);
@@ -200,7 +201,7 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * Get the boolean value of the button state.
      *
-     * @return True iff the button is pressed down or checked.
+     * @return True if the button is pressed down or checked.
      *
      * @deprecated As of 7.0, use {@link #getValue()} instead and, if needed,
      *             handle null values.

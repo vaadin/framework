@@ -102,7 +102,7 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
             getWidget().preparePopup(getWidget().popup);
             getWidget().popup.setPopupConnector(getChildComponents().get(0));
 
-            final StringBuffer styleBuf = new StringBuffer();
+            final StringBuilder styleBuf = new StringBuilder();
             final String primaryName = getWidget().popup.getStylePrimaryName();
             styleBuf.append(primaryName);
 
@@ -111,17 +111,17 @@ public class PopupViewConnector extends AbstractHasComponentsConnector
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
 
             if (isAnimatingIn) {
-                styleBuf.append(" ");
+                styleBuf.append(' ');
                 styleBuf.append(primaryName);
-                styleBuf.append("-");
+                styleBuf.append('-');
                 styleBuf.append(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN);
             }
 
             if (ComponentStateUtil.hasStyles(getState())) {
                 for (String style : getState().styles) {
-                    styleBuf.append(" ");
+                    styleBuf.append(' ');
                     styleBuf.append(primaryName);
-                    styleBuf.append("-");
+                    styleBuf.append('-');
                     styleBuf.append(style);
                 }
             }

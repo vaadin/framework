@@ -29,7 +29,7 @@ public class TreeTableRowElement extends TableRowElement {
     public void toggleExpanded() {
         List<WebElement> expandButtons = getWrappedElement()
                 .findElements(By.className("v-treetable-treespacer"));
-        if (expandButtons.size() > 0) {
+        if (!expandButtons.isEmpty()) {
             expandButtons.get(0).click();
         }
     }

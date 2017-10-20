@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.server.ExternalResource;
@@ -71,8 +70,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication
             layout.addComponent(
                     new Link(u2.toString(), new ExternalResource(u2)));
         } catch (final Exception e) {
-            System.out.println(
-                    "Couldn't get hostname for this machine: " + e.toString());
+            System.out.println("Couldn't get hostname for this machine: " + e);
             e.printStackTrace();
         }
 
@@ -114,13 +112,12 @@ public class Parameters extends com.vaadin.server.LegacyApplication
 
         params.removeAllItems();
         Map<String, String[]> parameters = request.getParameterMap();
-        for (final Iterator<String> i = parameters.keySet().iterator(); i
-                .hasNext();) {
-            final String name = i.next();
-            final String[] values = parameters.get(name);
+        for (final Map.Entry<String, String[]> entry : parameters.entrySet()) {
+            final String name = entry.getKey();
+            final String[] values = entry.getValue();
             String v = "";
             for (int j = 0; j < values.length; j++) {
-                if (v.length() > 0) {
+                if (!v.isEmpty()) {
                     v += ", ";
                 }
                 v += "'" + values[j] + "'";

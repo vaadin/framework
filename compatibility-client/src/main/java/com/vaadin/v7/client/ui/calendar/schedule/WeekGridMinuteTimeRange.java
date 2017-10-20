@@ -18,7 +18,7 @@ package com.vaadin.v7.client.ui.calendar.schedule;
 import java.util.Date;
 
 /**
- * Internally used by the calendar
+ * Internally used by the calendar.
  *
  * @since 7.1
  */
@@ -34,9 +34,6 @@ public class WeekGridMinuteTimeRange {
      *            Start time of the range
      * @param end
      *            End time of the range
-     * @param clearSeconds
-     *            Boolean Indicates, if seconds should be dropped from the range
-     *            start and end
      */
     public WeekGridMinuteTimeRange(Date start, Date end) {
         this.start = new Date(start.getTime());

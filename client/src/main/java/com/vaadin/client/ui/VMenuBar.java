@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -94,9 +93,8 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public static final Command emptyCommand = null;
 
-    /** Widget fields **/
     protected boolean subMenu;
-    protected ArrayList<CustomMenuItem> items;
+    protected List<CustomMenuItem> items;
     protected Element containerElement;
     protected VOverlay popup;
     protected VMenuBar visibleChildMenu;
@@ -108,13 +106,7 @@ public class VMenuBar extends SimpleFocusablePanel
     public boolean enabled = true;
 
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    iLayout(true);
-                }
-            });
+            () -> iLayout(true));
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean openRootOnHover;
@@ -176,7 +168,8 @@ public class VMenuBar extends SimpleFocusablePanel
 
     protected void updateStyleNames() {
         String primaryStyleName = getParentMenu() != null
-                ? getParentMenu().getStylePrimaryName() : getStylePrimaryName();
+                ? getParentMenu().getStylePrimaryName()
+                : getStylePrimaryName();
 
         // Reset the style name for all the items
         for (CustomMenuItem item : items) {
@@ -220,7 +213,7 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public String buildItemHTML(UIDL item) {
         // Construct html from the text and the optional icon
-        StringBuffer itemHTML = new StringBuffer();
+        StringBuilder itemHTML = new StringBuilder();
         if (item.hasAttribute("separator")) {
             itemHTML.append("<span>---</span>");
         } else {
@@ -250,7 +243,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * This is called by the items in the menu and it communicates the
-     * information to the server
+     * information to the server.
      *
      * @param clickedItemId
      *            id of the item that was clicked
@@ -269,14 +262,14 @@ public class VMenuBar extends SimpleFocusablePanel
     /** Widget methods **/
 
     /**
-     * Returns a list of items in this menu
+     * Returns a list of items in this menu.
      */
     public List<CustomMenuItem> getItems() {
         return items;
     }
 
     /**
-     * Remove all the items in this menu
+     * Remove all the items in this menu.
      */
     public void clearItems() {
         Element e = getContainerElement();
@@ -287,7 +280,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Returns the containing element of the menu
+     * Returns the containing element of the menu.
      *
      * @return
      */
@@ -297,7 +290,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Add a new item to this menu
+     * Add a new item to this menu.
      *
      * @param html
      *            items text
@@ -314,7 +307,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Add a new item to this menu
+     * Add a new item to this menu.
      *
      * @param item
      */
@@ -339,7 +332,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Remove the given item from this menu
+     * Remove the given item from this menu.
      *
      * @param item
      */
@@ -436,7 +429,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When an item is clicked
+     * When an item is clicked.
      *
      * @param item
      */
@@ -467,7 +460,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When the user hovers the mouse over the item
+     * When the user hovers the mouse over the item.
      *
      * @param item
      */
@@ -494,7 +487,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * When the mouse is moved away from an item
+     * When the mouse is moved away from an item.
      *
      * @param item
      */
@@ -583,7 +576,8 @@ public class VMenuBar extends SimpleFocusablePanel
          * prefix if needed
          */
         String primaryStyleName = parentMenu != null
-                ? parentMenu.getStylePrimaryName() : getStylePrimaryName();
+                ? parentMenu.getStylePrimaryName()
+                : getStylePrimaryName();
         if (subMenu) {
             primaryStyleName = primaryStyleName
                     .replace(SUBMENU_CLASSNAME_PREFIX, "");
@@ -691,13 +685,12 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Hides the submenu of an item
+     * Hides the submenu of an item.
      *
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
-        if (visibleChildMenu != null
-                && !(visibleChildMenu == item.getSubMenu())) {
+        if (visibleChildMenu != null && visibleChildMenu != item.getSubMenu()) {
             popup.hide();
         }
     }
@@ -715,7 +708,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Listener method, fired when this menu is closed
+     * Listener method, fired when this menu is closed.
      */
     @Override
     public void onClose(CloseEvent<PopupPanel> event) {
@@ -729,7 +722,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Recursively hide all child menus
+     * Recursively hide all child menus.
      */
     public void hideChildren() {
         hideChildren(true, true);
@@ -737,7 +730,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      *
-     * Recursively hide all child menus
+     * Recursively hide all child menus.
      *
      * @param animateIn
      *            enable/disable animate-in animation when hide popup
@@ -753,7 +746,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Recursively hide all parent menus
+     * Recursively hide all parent menus.
      */
     public void hideParents(boolean autoClosed) {
         if (visibleChildMenu != null) {
@@ -769,7 +762,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Returns the parent menu of this menu, or null if this is the top-level
-     * menu
+     * menu.
      *
      * @return
      */
@@ -778,7 +771,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Set the parent menu of this menu
+     * Set the parent menu of this menu.
      *
      * @param parent
      */
@@ -788,7 +781,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      * Returns the currently selected item of this menu, or null if nothing is
-     * selected
+     * selected.
      *
      * @return
      */
@@ -797,7 +790,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Set the currently selected item of this menu
+     * Set the currently selected item of this menu.
      *
      * @param item
      */
@@ -816,7 +809,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     /**
      *
-     * A class to hold information on menu items
+     * A class to hold information on menu items.
      *
      */
     public static class CustomMenuItem extends Widget implements HasHTML {
@@ -1115,7 +1108,7 @@ public class VMenuBar extends SimpleFocusablePanel
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
         if ((getItems().size() > 1 || (collapsedRootItems != null
-                && collapsedRootItems.getItems().size() > 0))
+                && !collapsedRootItems.getItems().isEmpty()))
                 && getElement().getStyle().getProperty("width") != null
                 && moreItem != null) {
 
@@ -1143,7 +1136,7 @@ public class VMenuBar extends SimpleFocusablePanel
                 }
                 int widthReduced = 0;
 
-                while (widthReduced < widthNeeded && getItems().size() > 0) {
+                while (widthReduced < widthNeeded && !getItems().isEmpty()) {
                     // Move last root menu item to collapsed menu
                     CustomMenuItem collapse = getItems()
                             .get(getItems().size() - 1);
@@ -1151,21 +1144,21 @@ public class VMenuBar extends SimpleFocusablePanel
                     removeItem(collapse);
                     collapsedRootItems.addItem(collapse, 0);
                 }
-            } else if (collapsedRootItems.getItems().size() > 0) {
+            } else if (!collapsedRootItems.getItems().isEmpty()) {
                 // Space available for items: expand first items from collapsed
                 // menu
                 int widthAvailable = diff + moreItemWidth;
                 int widthGrowth = 0;
 
                 while (widthAvailable > widthGrowth
-                        && collapsedRootItems.getItems().size() > 0) {
+                        && !collapsedRootItems.getItems().isEmpty()) {
                     // Move first item from collapsed menu to the root menu
                     CustomMenuItem expand = collapsedRootItems.getItems()
                             .get(0);
                     collapsedRootItems.removeItem(expand);
                     addItem(expand);
                     widthGrowth += expand.getOffsetWidth();
-                    if (collapsedRootItems.getItems().size() > 0) {
+                    if (!collapsedRootItems.getItems().isEmpty()) {
                         widthAvailable -= moreItemWidth;
                     }
                     if (widthGrowth > widthAvailable) {
@@ -1176,7 +1169,7 @@ public class VMenuBar extends SimpleFocusablePanel
                     }
                 }
             }
-            if (collapsedRootItems.getItems().size() > 0) {
+            if (!collapsedRootItems.getItems().isEmpty()) {
                 addItem(moreItem);
             }
         }
@@ -1330,11 +1323,15 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Handles the keyboard events handled by the MenuBar
+     * Handles the keyboard events handled by the MenuBar.
      *
-     * @param event
-     *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
+     * @return true if the navigation event was handled
      */
     public boolean handleNavigation(int keycode, boolean ctrl, boolean shift) {
 
@@ -1645,12 +1642,10 @@ public class VMenuBar extends SimpleFocusablePanel
     private native String getText(Element element)
     /*-{
         var n = element.childNodes.length;
-        if(n > 0){
+        if (n > 0) {
             return element.childNodes[n - 1].nodeValue;
         }
-        else{
-            return "";
-        }
+        return "";
     }-*/;
 
     private Element getLastChildElement(CustomMenuItem item) {
@@ -1686,7 +1681,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Get menu item with given DOM element
+     * Get menu item with given DOM element.
      *
      * @param element
      *            Element used in search
@@ -1715,7 +1710,7 @@ public class VMenuBar extends SimpleFocusablePanel
     }
 
     /**
-     * Get menu item with given DOM element
+     * Get menu item with given DOM element.
      *
      * @param element
      *            Element used in search

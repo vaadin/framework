@@ -15,14 +15,15 @@
  */
 package com.vaadin.tests.components.combobox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.commands.TestBenchElementCommands;
-import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
+import com.vaadin.testbench.elements.ComboBoxElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ComboBoxNoTextInputTest extends MultiBrowserTest {
@@ -51,7 +52,7 @@ public class ComboBoxNoTextInputTest extends MultiBrowserTest {
         click(cb);
         // popup is opened lazily
         sleep(1000);
-        Assert.assertFalse(cb.isElementPresent(By.vaadin("#popup")));
+        assertFalse(cb.isElementPresent(By.vaadin("#popup")));
     }
 
     private void click(ComboBoxElement cb) throws Exception {

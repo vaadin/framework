@@ -14,7 +14,7 @@ endif::web[]
 
 [classname]#GridLayout# container lays components out on a grid consisting of rows and columns.
 The columns and rows of the grid serve as coordinates that are used for laying out components on the grid.
-Each component can use multiple cells from the grid, defined as an area (x1,y1,x2,y2), although they typically take up only a single grid cell.
+Typically a component only occupies a single cell of the grid. However, a component can also be configured to span a rectangular area consisting of multiple cells. Cell spanning is defined using the coordinates of the upper left cell and the lower right cell of the area to fill with the component.
 
 The grid layout maintains a cursor for adding components in left-to-right, top-to-bottom order.
 If the cursor goes past the bottom-right corner, it will automatically extend the grid downwards by adding a new row.

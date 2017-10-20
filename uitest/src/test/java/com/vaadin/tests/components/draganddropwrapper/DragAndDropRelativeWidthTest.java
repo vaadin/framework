@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.draganddropwrapper;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -48,9 +49,9 @@ public class DragAndDropRelativeWidthTest extends MultiBrowserTest {
         WebElement dragImage = getDriver()
                 .findElement(By.className("v-drag-element"));
 
-        Assert.assertEquals("Drag image element height is unexpected", height,
+        assertEquals("Drag image element height is unexpected", height,
                 dragImage.getSize().getHeight());
-        Assert.assertEquals("Drag image element width is unexpected", width,
+        assertEquals("Drag image element width is unexpected", width,
                 dragImage.getSize().getWidth());
     }
 

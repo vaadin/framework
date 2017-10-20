@@ -123,7 +123,7 @@ public class ItemClickEvents extends AbstractReindeerTestUI {
         if (event.isShiftKey()) {
             modifiers += "shift ";
         }
-        if (!"".equals(modifiers)) {
+        if (!modifiers.isEmpty()) {
             modifiers = " (" + modifiers.trim() + ")";
         }
 

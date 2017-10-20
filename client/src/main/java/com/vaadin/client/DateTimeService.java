@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.DateResolution;
 
@@ -34,7 +35,7 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 @SuppressWarnings("deprecation")
 public class DateTimeService {
 
-    private String currentLocale;
+    private String locale;
 
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
@@ -43,14 +44,14 @@ public class DateTimeService {
      * Creates a new date time service with the application default locale.
      */
     public DateTimeService() {
-        currentLocale = LocaleService.getDefaultLocale();
+        locale = LocaleService.getDefaultLocale();
     }
 
     /**
      * Creates a new date time service with a given locale.
      *
      * @param locale
-     *            e.g. fi, en etc.
+     *            e.g. {@code fi}, {@code en}, etc.
      * @throws LocaleNotLoadedException
      */
     public DateTimeService(String locale) throws LocaleNotLoadedException {
@@ -58,20 +59,19 @@ public class DateTimeService {
     }
 
     public void setLocale(String locale) throws LocaleNotLoadedException {
-        if (LocaleService.getAvailableLocales().contains(locale)) {
-            currentLocale = locale;
-        } else {
+        if (!LocaleService.getAvailableLocales().contains(locale)) {
             throw new LocaleNotLoadedException(locale);
         }
+        this.locale = locale;
     }
 
     public String getLocale() {
-        return currentLocale;
+        return locale;
     }
 
     public String getMonth(int month) {
         try {
-            return LocaleService.getMonthNames(currentLocale)[month];
+            return LocaleService.getMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getMonth", e);
             return null;
@@ -80,7 +80,7 @@ public class DateTimeService {
 
     public String getShortMonth(int month) {
         try {
-            return LocaleService.getShortMonthNames(currentLocale)[month];
+            return LocaleService.getShortMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortMonth", e);
             return null;
@@ -89,34 +89,52 @@ public class DateTimeService {
 
     public String getDay(int day) {
         try {
-            return LocaleService.getDayNames(currentLocale)[day];
+            return LocaleService.getDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getDay", e);
             return null;
         }
     }
 
+    /**
+     * Returns the localized short name of the specified day.
+     * 
+     * @param day
+     *            the day, {@code 0} is {@code SUNDAY}
+     * @return the localized short name
+     */
     public String getShortDay(int day) {
         try {
-            return LocaleService.getShortDayNames(currentLocale)[day];
+            return LocaleService.getShortDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortDay", e);
             return null;
         }
     }
 
+    /**
+     * Returns the first day of the week, according to the used Locale.
+     * 
+     * @return the localized first day of the week, {@code 0} is {@code SUNDAY}
+     */
     public int getFirstDayOfWeek() {
         try {
-            return LocaleService.getFirstDayOfWeek(currentLocale);
+            return LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getFirstDayOfWeek", e);
             return 0;
         }
     }
 
+    /**
+     * Returns whether the locale has twelve hour, or twenty four hour clock.
+     * 
+     * @return {@code true} if the locale has twelve hour clock, {@code false}
+     *         for twenty four clock
+     */
     public boolean isTwelveHourClock() {
         try {
-            return LocaleService.isTwelveHourClock(currentLocale);
+            return LocaleService.isTwelveHourClock(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in isTwelveHourClock", e);
             return false;
@@ -125,7 +143,7 @@ public class DateTimeService {
 
     public String getClockDelimeter() {
         try {
-            return LocaleService.getClockDelimiter(currentLocale);
+            return LocaleService.getClockDelimiter(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getClockDelimiter", e);
             return ":";
@@ -136,7 +154,7 @@ public class DateTimeService {
 
     public String[] getAmPmStrings() {
         try {
-            return LocaleService.getAmPmStrings(currentLocale);
+            return LocaleService.getAmPmStrings(locale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
             getLogger().log(Level.SEVERE,
@@ -145,12 +163,19 @@ public class DateTimeService {
         }
     }
 
-    public int getStartWeekDay(Date date) {
-        final Date dateForFirstOfThisMonth = new Date(date.getYear(),
-                date.getMonth(), 1);
+    /**
+     * Returns the first day of week of the specified {@code month}.
+     * 
+     * @param month
+     *            the month, not {@code null}
+     * @return the first day of week,
+     */
+    public int getStartWeekDay(Date month) {
+        final Date dateForFirstOfThisMonth = new Date(month.getYear(),
+                month.getMonth(), 1);
         int firstDay;
         try {
-            firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
+            firstDay = LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
                     e);
@@ -158,7 +183,7 @@ public class DateTimeService {
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
         if (start < 0) {
-            start = 6;
+            start += 7;
         }
         return start;
     }
@@ -177,7 +202,7 @@ public class DateTimeService {
 
     public static int getNumberOfDaysInMonth(Date date) {
         final int month = date.getMonth();
-        if (month == 1 && true == isLeapYear(date)) {
+        if (month == 1 && isLeapYear(date)) {
             return 29;
         }
         return maxDaysInMonth[month];
@@ -302,15 +327,43 @@ public class DateTimeService {
      *            The date to convert
      * @param formatStr
      *            The format string that might contain MMM or MMMM
-     * @param dateTimeService
-     *            Reference to the Vaadin DateTimeService
      * @return
      */
     public String formatDate(Date date, String formatStr) {
+        return formatDate(date, formatStr, null);
+    }
+
+    /**
+     * Check if format contains the month name. If it does we manually convert
+     * it to the month name since DateTimeFormat.format always uses the current
+     * locale and will replace the month name wrong if current locale is
+     * different from the locale set for the DateField.
+     *
+     * MMMM is converted into long month name, MMM is converted into short month
+     * name. '' are added around the name to avoid that DateTimeFormat parses
+     * the month name as a pattern.
+     *
+     * z is converted into the time zone name, using the specified
+     * {@code timeZoneJSON}
+     *
+     * @param date
+     *            The date to convert
+     * @param formatStr
+     *            The format string that might contain {@code MMM} or
+     *            {@code MMMM}
+     * @param timeZone
+     *            The {@link TimeZone} used to replace {@code z}, can be
+     *            {@code null}
+     *
+     * @return the formatted date string
+     * @since 8.2
+     */
+    public String formatDate(Date date, String formatStr, TimeZone timeZone) {
         /*
          * Format month and day names separately when locale for the
          * DateTimeService is not the same as the browser locale
          */
+        formatStr = formatTimeZone(date, formatStr, timeZone);
         formatStr = formatMonthNames(date, formatStr);
         formatStr = formatDayNames(date, formatStr);
 
@@ -406,6 +459,66 @@ public class DateTimeService {
         }
 
         return formatStr;
+    }
+
+    private String formatTimeZone(Date date, String formatStr,
+            TimeZone timeZone) {
+        // if 'z' is found outside quotes and timeZone is used
+        if (getIndexOf(formatStr, 'z') != -1 && timeZone != null) {
+            return replaceTimeZone(formatStr, timeZone.getShortName(date));
+        }
+        return formatStr;
+    }
+
+    /**
+     * Replaces the {@code z} characters of the specified {@code formatStr} with
+     * the given {@code timeZoneName}.
+     * 
+     * @param formatStr
+     *            The format string, which is the pattern describing the date
+     *            and time format
+     * @param timeZoneName
+     *            the time zone name
+     * @return the format string, with {@code z} replaced (if found)
+     */
+    private static String replaceTimeZone(String formatStr,
+            String timeZoneName) {
+
+        // search for 'z' outside the quotes (inside quotes is escaped)
+        int start = getIndexOf(formatStr, 'z');
+        if (start == -1) {
+            return formatStr;
+        }
+
+        // if there are multiple consecutive 'z', treat them as one
+        int end = start;
+        while (end + 1 < formatStr.length()
+                && formatStr.charAt(end + 1) == 'z') {
+            end++;
+        }
+        return formatStr.substring(0, start) + "'" + timeZoneName + "'"
+                + formatStr.substring(end + 1);
+    }
+
+    /**
+     * Returns the first index of the specified {@code ch}, which is outside the
+     * quotes.
+     */
+    private static int getIndexOf(String str, char ch) {
+        boolean inQuote = false;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '\'') {
+                if (i + 1 < str.length() && str.charAt(i + 1) == '\'') {
+                    i++;
+                } else {
+                    inQuote ^= true;
+                }
+            } else if (c == ch && !inQuote) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**

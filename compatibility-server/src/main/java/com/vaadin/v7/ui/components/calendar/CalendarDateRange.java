@@ -39,7 +39,7 @@ public class CalendarDateRange implements Serializable {
     private final transient TimeZone tz;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param start
      *            The start date and time of the date range
@@ -54,7 +54,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Get the start date of the date range
+     * Get the start date of the date range.
      *
      * @return the start Date of the range
      */
@@ -63,7 +63,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Get the end date of the date range
+     * Get the end date of the date range.
      *
      * @return the end Date of the range
      */
@@ -72,7 +72,7 @@ public class CalendarDateRange implements Serializable {
     }
 
     /**
-     * Is a date in the date range
+     * Is a date in the date range.
      *
      * @param date
      *            The date to check

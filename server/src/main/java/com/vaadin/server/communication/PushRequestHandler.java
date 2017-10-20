@@ -36,7 +36,6 @@ import org.atmosphere.interceptor.HeartbeatInterceptor;
 import org.atmosphere.util.VoidAnnotationProcessor;
 
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.ServiceDestroyEvent;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -66,9 +65,7 @@ public class PushRequestHandler
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        service.addServiceDestroyListener((ServiceDestroyEvent event) -> {
-            destroy();
-        });
+        service.addServiceDestroyListener(e -> destroy());
 
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();
@@ -141,7 +138,7 @@ public class PushRequestHandler
                 .getAttributeName(vaadinServletConfig.getServletName());
         Object framework = vaadinServletConfig.getServletContext()
                 .getAttribute(attributeName);
-        if (framework != null && framework instanceof AtmosphereFramework) {
+        if (framework instanceof AtmosphereFramework) {
             return (AtmosphereFramework) framework;
         }
 

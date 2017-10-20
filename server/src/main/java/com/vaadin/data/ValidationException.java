@@ -15,7 +15,6 @@
  */
 package com.vaadin.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,10 +59,10 @@ public class ValidationException extends Exception {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        ArrayList<ValidationResult> errors = new ArrayList<>(
+        List<ValidationResult> errors =
                 getFieldValidationErrors().stream()
                         .map(s -> s.getResult().get())
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }

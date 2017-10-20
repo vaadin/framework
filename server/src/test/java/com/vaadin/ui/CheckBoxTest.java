@@ -15,9 +15,11 @@
  */
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ServerRpcManager;
@@ -29,16 +31,16 @@ public class CheckBoxTest {
     @Test
     public void initiallyFalse() {
         CheckBox cb = new CheckBox();
-        Assert.assertFalse(cb.getValue());
+        assertFalse(cb.getValue());
     }
 
     @Test
     public void testSetValue() {
         CheckBox cb = new CheckBox();
         cb.setValue(true);
-        Assert.assertTrue(cb.getValue());
+        assertTrue(cb.getValue());
         cb.setValue(false);
-        Assert.assertFalse(cb.getValue());
+        assertFalse(cb.getValue());
     }
 
     @Test
@@ -47,18 +49,17 @@ public class CheckBoxTest {
         CheckBox cb = new CheckBox();
         ui.setContent(cb);
         AtomicBoolean userOriginated = new AtomicBoolean(false);
-        cb.addValueChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-        });
+        cb.addValueChangeListener(
+                e -> userOriginated.set(e.isUserOriginated()));
         ComponentTest.syncToClient(cb);
         ServerRpcManager.getRpcProxy(cb, CheckBoxServerRpc.class)
                 .setChecked(true, new MouseEventDetails());
-        Assert.assertTrue(userOriginated.get());
+        assertTrue(userOriginated.get());
         userOriginated.set(false);
         ComponentTest.syncToClient(cb);
         ServerRpcManager.getRpcProxy(cb, CheckBoxServerRpc.class)
                 .setChecked(false, new MouseEventDetails());
-        Assert.assertTrue(userOriginated.get());
+        assertTrue(userOriginated.get());
     }
 
     @Test
@@ -67,14 +68,13 @@ public class CheckBoxTest {
         CheckBox cb = new CheckBox();
         ui.setContent(cb);
         AtomicBoolean userOriginated = new AtomicBoolean(true);
-        cb.addValueChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-        });
+        cb.addValueChangeListener(
+                e -> userOriginated.set(e.isUserOriginated()));
         cb.setValue(true);
-        Assert.assertFalse(userOriginated.get());
+        assertFalse(userOriginated.get());
         userOriginated.set(true);
         cb.setValue(false);
-        Assert.assertFalse(userOriginated.get());
+        assertFalse(userOriginated.get());
     }
 
     @Test(expected = NullPointerException.class)

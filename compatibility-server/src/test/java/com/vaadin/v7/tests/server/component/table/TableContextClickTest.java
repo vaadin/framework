@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.event.ContextClickEvent;
@@ -49,9 +50,9 @@ public class TableContextClickTest extends Table {
                 Section.BODY));
 
         if (error != null) {
-            Assert.fail(error);
+            fail(error);
         } else if (!handled) {
-            Assert.fail("Event was not handled by the ContextClickListener");
+            fail("Event was not handled by the ContextClickListener");
         }
     }
 }

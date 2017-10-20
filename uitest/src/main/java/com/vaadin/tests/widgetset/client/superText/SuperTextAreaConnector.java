@@ -6,7 +6,6 @@ import com.vaadin.tests.widgetset.server.SuperTextArea;
 
 /**
  * @author artamonov
- * @version $Id$
  */
 @Connect(SuperTextArea.class)
 public class SuperTextAreaConnector extends TextAreaConnector {

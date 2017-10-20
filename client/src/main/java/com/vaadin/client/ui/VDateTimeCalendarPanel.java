@@ -46,7 +46,7 @@ public class VDateTimeCalendarPanel
     private VTime time;
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */
@@ -61,7 +61,7 @@ public class VDateTimeCalendarPanel
         private ListBox ampm;
 
         /**
-         * Constructor
+         * Constructor.
          */
         public VTime() {
             super();
@@ -91,11 +91,11 @@ public class VDateTimeCalendarPanel
             if (getDateTimeService().isTwelveHourClock()) {
                 hours.addItem("12");
                 for (int i = 1; i < 12; i++) {
-                    hours.addItem((i < 10) ? "0" + i : "" + i);
+                    hours.addItem(asTwoDigits(i));
                 }
             } else {
                 for (int i = 0; i < 24; i++) {
-                    hours.addItem((i < 10) ? "0" + i : "" + i);
+                    hours.addItem(asTwoDigits(i));
                 }
             }
 
@@ -111,14 +111,14 @@ public class VDateTimeCalendarPanel
             if (getResolution().compareTo(DateTimeResolution.MINUTE) <= 0) {
                 mins = createListBox();
                 for (int i = 0; i < 60; i++) {
-                    mins.addItem((i < 10) ? "0" + i : "" + i);
+                    mins.addItem(asTwoDigits(i));
                 }
                 mins.addChangeHandler(this);
             }
             if (getResolution().compareTo(DateTimeResolution.SECOND) <= 0) {
                 sec = createListBox();
                 for (int i = 0; i < 60; i++) {
-                    sec.addItem((i < 10) ? "0" + i : "" + i);
+                    sec.addItem(asTwoDigits(i));
                 }
                 sec.addChangeHandler(this);
             }
@@ -132,7 +132,7 @@ public class VDateTimeCalendarPanel
                 if (getDateTimeService().isTwelveHourClock()) {
                     h -= h < 12 ? 0 : 12;
                 }
-                add(new VLabel(h < 10 ? "0" + h : "" + h));
+                add(new VLabel(asTwoDigits(h)));
             } else {
                 add(hours);
             }
@@ -141,7 +141,7 @@ public class VDateTimeCalendarPanel
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int m = mins.getSelectedIndex();
-                    add(new VLabel(m < 10 ? "0" + m : "" + m));
+                    add(new VLabel(asTwoDigits(m)));
                 } else {
                     add(mins);
                 }
@@ -150,7 +150,7 @@ public class VDateTimeCalendarPanel
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int s = sec.getSelectedIndex();
-                    add(new VLabel(s < 10 ? "0" + s : "" + s));
+                    add(new VLabel(asTwoDigits(s)));
                 } else {
                     add(sec);
                 }
@@ -193,7 +193,6 @@ public class VDateTimeCalendarPanel
                     }
                 }
             });
-
         }
 
         private ListBox getLastDropDown() {
@@ -209,7 +208,7 @@ public class VDateTimeCalendarPanel
         }
 
         /**
-         * Updates the valus to correspond to the values in value
+         * Updates the value to correspond to the values in value.
          */
         public void updateTimes() {
             if (getDate() == null) {
@@ -243,14 +242,16 @@ public class VDateTimeCalendarPanel
             if (ampm != null) {
                 ampm.setEnabled(isEnabled());
             }
-
         }
 
         private DateTimeService getDateTimeService() {
-            if (VDateTimeCalendarPanel.this.getDateTimeService() == null) {
-                setDateTimeService(new DateTimeService());
+            DateTimeService dts = VDateTimeCalendarPanel.this
+                    .getDateTimeService();
+            if (dts == null) {
+                dts = new DateTimeService();
+                setDateTimeService(dts);
             }
-            return VDateTimeCalendarPanel.this.getDateTimeService();
+            return dts;
         }
 
         /*
@@ -312,11 +313,14 @@ public class VDateTimeCalendarPanel
                 event.stopPropagation();
             }
         }
+    }
 
+    private static String asTwoDigits(int i) {
+        return (i < 10 ? "0" : "") + i;
     }
 
     /**
-     * Dispatches an event when the panel when time is changed
+     * Dispatches an event when the panel when time is changed.
      */
     public interface TimeChangeListener {
 

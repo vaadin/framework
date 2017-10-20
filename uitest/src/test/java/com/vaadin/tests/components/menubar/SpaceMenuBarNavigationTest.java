@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.menubar;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -51,11 +52,11 @@ public class SpaceMenuBarNavigationTest extends MultiBrowserTest {
                 found = true;
             }
         }
-        Assert.assertTrue("Sub menu is not opened on ENTER key", found);
+        assertTrue("Sub menu is not opened on ENTER key", found);
 
         menu.sendKeys(Keys.SPACE);
 
-        Assert.assertTrue("No result of action triggered by SPACE key",
+        assertTrue("No result of action triggered by SPACE key",
                 isElementPresent(By.className("action-result")));
     }
 

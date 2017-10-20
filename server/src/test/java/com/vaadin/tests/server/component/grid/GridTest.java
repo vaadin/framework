@@ -1,8 +1,12 @@
 package com.vaadin.tests.server.component.grid;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,13 +28,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.easymock.Capture;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataCommunicator;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.data.provider.QuerySortOrder;
@@ -68,6 +72,16 @@ public class GridTest {
         objectColumn = grid.addColumn(string -> new Object());
         randomColumn = grid.addColumn(ValueProvider.identity())
                 .setId("randomColumnId");
+    }
+
+    @Test
+    public void testCreateGridWithDataCommunicator() {
+        DataCommunicator specificDataCommunicator = new DataCommunicator<>();
+
+        TestGrid<String> grid = new TestGrid(String.class,
+                specificDataCommunicator);
+
+        assertEquals(specificDataCommunicator, grid.getDataCommunicator());
     }
 
     @Test
@@ -174,7 +188,7 @@ public class GridTest {
         assertEquals("foo", event.getFirstSelectedItem().get());
         assertEquals("foo",
                 event.getAllSelectedItems().stream().findFirst().get());
-        Assert.assertArrayEquals(new String[] { "foo", "bar" },
+        assertArrayEquals(new String[] { "foo", "bar" },
                 event.getAllSelectedItems().toArray(new String[2]));
 
         grid.getSelectionModel().deselect("foo");
@@ -185,7 +199,7 @@ public class GridTest {
         assertEquals("bar", event.getFirstSelectedItem().get());
         assertEquals("bar",
                 event.getAllSelectedItems().stream().findFirst().get());
-        Assert.assertArrayEquals(new String[] { "bar" },
+        assertArrayEquals(new String[] { "bar" },
                 event.getAllSelectedItems().toArray(new String[1]));
 
         grid.getSelectionModel().deselectAll();
@@ -201,8 +215,7 @@ public class GridTest {
     public void testAddSelectionListener_noSelectionMode() {
         grid.setSelectionMode(SelectionMode.NONE);
 
-        grid.addSelectionListener(
-                event -> Assert.fail("never ever happens (tm)"));
+        grid.addSelectionListener(event -> fail("never ever happens (tm)"));
     }
 
     @Test
@@ -211,8 +224,8 @@ public class GridTest {
         grid.sort(column);
 
         GridSortOrder<String> sortOrder = grid.getSortOrder().get(0);
-        Assert.assertEquals(column, sortOrder.getSorted());
-        Assert.assertEquals(SortDirection.ASCENDING, sortOrder.getDirection());
+        assertEquals(column, sortOrder.getSorted());
+        assertEquals(SortDirection.ASCENDING, sortOrder.getDirection());
     }
 
     @Test
@@ -221,8 +234,8 @@ public class GridTest {
         grid.sort(column, SortDirection.DESCENDING);
 
         GridSortOrder<String> sortOrder = grid.getSortOrder().get(0);
-        Assert.assertEquals(column, sortOrder.getSorted());
-        Assert.assertEquals(SortDirection.DESCENDING, sortOrder.getDirection());
+        assertEquals(column, sortOrder.getSorted());
+        assertEquals(SortDirection.DESCENDING, sortOrder.getDirection());
     }
 
     @Test
@@ -235,13 +248,11 @@ public class GridTest {
         grid.setSortOrder(order);
 
         List<GridSortOrder<String>> sortOrder = grid.getSortOrder();
-        Assert.assertEquals(column2, sortOrder.get(0).getSorted());
-        Assert.assertEquals(SortDirection.DESCENDING,
-                sortOrder.get(0).getDirection());
+        assertEquals(column2, sortOrder.get(0).getSorted());
+        assertEquals(SortDirection.DESCENDING, sortOrder.get(0).getDirection());
 
-        Assert.assertEquals(column1, sortOrder.get(1).getSorted());
-        Assert.assertEquals(SortDirection.ASCENDING,
-                sortOrder.get(1).getDirection());
+        assertEquals(column1, sortOrder.get(1).getSorted());
+        assertEquals(SortDirection.ASCENDING, sortOrder.get(1).getDirection());
     }
 
     @Test
@@ -262,15 +273,14 @@ public class GridTest {
         List<GridSortOrder<String>> list = new ArrayList<>();
         AtomicReference<Boolean> fired = new AtomicReference<>();
         grid.addSortListener(event -> {
-            Assert.assertTrue(list.isEmpty());
+            assertTrue(list.isEmpty());
             fired.set(true);
             list.addAll(event.getSortOrder());
         });
         grid.sort(column1, SortDirection.DESCENDING);
 
-        Assert.assertEquals(column1, list.get(0).getSorted());
-        Assert.assertEquals(SortDirection.DESCENDING,
-                list.get(0).getDirection());
+        assertEquals(column1, list.get(0).getSorted());
+        assertEquals(SortDirection.DESCENDING, list.get(0).getDirection());
 
         List<GridSortOrder<String>> order = Arrays.asList(
                 new GridSortOrder<>(column2, SortDirection.DESCENDING),
@@ -279,19 +289,17 @@ public class GridTest {
 
         grid.setSortOrder(order);
 
-        Assert.assertEquals(column2, list.get(0).getSorted());
-        Assert.assertEquals(SortDirection.DESCENDING,
-                list.get(0).getDirection());
+        assertEquals(column2, list.get(0).getSorted());
+        assertEquals(SortDirection.DESCENDING, list.get(0).getDirection());
 
-        Assert.assertEquals(column1, list.get(1).getSorted());
-        Assert.assertEquals(SortDirection.ASCENDING,
-                list.get(1).getDirection());
+        assertEquals(column1, list.get(1).getSorted());
+        assertEquals(SortDirection.ASCENDING, list.get(1).getDirection());
 
         list.clear();
         fired.set(false);
         grid.clearSortOrder();
-        Assert.assertEquals(0, list.size());
-        Assert.assertTrue(fired.get());
+        assertEquals(0, list.size());
+        assertTrue(fired.get());
     }
 
     @Test
@@ -301,19 +309,18 @@ public class GridTest {
         Column<Person, ?> nameColumn = grid.getColumn("name");
         Column<Person, ?> bornColumn = grid.getColumn("born");
 
-        Assert.assertNotNull(nameColumn);
-        Assert.assertNotNull(bornColumn);
+        assertNotNull(nameColumn);
+        assertNotNull(bornColumn);
 
-        Assert.assertEquals("Name", nameColumn.getCaption());
-        Assert.assertEquals("Born", bornColumn.getCaption());
+        assertEquals("Name", nameColumn.getCaption());
+        assertEquals("Born", bornColumn.getCaption());
 
         JsonObject json = getRowData(grid, new Person("Lorem", 2000));
 
         Set<String> values = Stream.of(json.keys()).map(json::getString)
                 .collect(Collectors.toSet());
 
-        Assert.assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")),
-                values);
+        assertEquals(new HashSet<>(Arrays.asList("Lorem", "2000")), values);
 
         assertSingleSortProperty(nameColumn, "name");
         assertSingleSortProperty(bornColumn, "born");
@@ -330,18 +337,18 @@ public class GridTest {
 
         Optional<Binding<Person, ?>> maybeBinding = grid.getEditor().getBinder()
                 .getBinding("name");
-        Assert.assertTrue(maybeBinding.isPresent());
+        assertTrue(maybeBinding.isPresent());
 
         Binding<Person, ?> binding = maybeBinding.get();
-        Assert.assertSame(nameField, binding.getField());
+        assertSame(nameField, binding.getField());
 
         Person person = new Person("Lorem", 2000);
         grid.getEditor().getBinder().setBean(person);
 
-        Assert.assertEquals("Lorem", nameField.getValue());
+        assertEquals("Lorem", nameField.getValue());
 
         nameField.setValue("Ipsum");
-        Assert.assertEquals("Ipsum", person.getName());
+        assertEquals("Ipsum", person.getName());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -367,17 +374,16 @@ public class GridTest {
         grid.addColumn("name");
 
         List<Column<Person, ?>> columns = grid.getColumns();
-        Assert.assertEquals(2, columns.size());
-        Assert.assertEquals("born", columns.get(0).getId());
-        Assert.assertEquals("name", columns.get(1).getId());
+        assertEquals(2, columns.size());
+        assertEquals("born", columns.get(0).getId());
+        assertEquals("name", columns.get(1).getId());
     }
 
     @Test
     public void removeColumnByColumn() {
         grid.removeColumn(fooColumn);
 
-        Assert.assertEquals(
-                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+        assertEquals(Arrays.asList(lengthColumn, objectColumn, randomColumn),
                 grid.getColumns());
     }
 
@@ -387,8 +393,7 @@ public class GridTest {
         // Questionable that this doesn't throw, but that's a separate ticket...
         grid.removeColumn(fooColumn);
 
-        Assert.assertEquals(
-                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+        assertEquals(Arrays.asList(lengthColumn, objectColumn, randomColumn),
                 grid.getColumns());
     }
 
@@ -402,8 +407,7 @@ public class GridTest {
     public void removeColumnById() {
         grid.removeColumn("foo");
 
-        Assert.assertEquals(
-                Arrays.asList(lengthColumn, objectColumn, randomColumn),
+        assertEquals(Arrays.asList(lengthColumn, objectColumn, randomColumn),
                 grid.getColumns());
     }
 
@@ -411,14 +415,14 @@ public class GridTest {
     public void removeAllColumns() {
         grid.removeAllColumns();
 
-        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+        assertEquals(Collections.emptyList(), grid.getColumns());
     }
 
     @Test
     public void removeAllColumnsInGridWithoutColumns() {
         grid.removeAllColumns();
         grid.removeAllColumns();
-        Assert.assertEquals(Collections.emptyList(), grid.getColumns());
+        assertEquals(Collections.emptyList(), grid.getColumns());
     }
 
     @Test
@@ -464,9 +468,9 @@ public class GridTest {
 
         List<Column<String, ?>> columns = grid.getColumns();
 
-        Assert.assertEquals(2, columns.size());
-        Assert.assertEquals("length", columns.get(0).getId());
-        Assert.assertEquals("foo", columns.get(1).getId());
+        assertEquals(2, columns.size());
+        assertEquals("length", columns.get(0).getId());
+        assertEquals("foo", columns.get(1).getId());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -486,16 +490,16 @@ public class GridTest {
         grid.setColumns("born", "name");
 
         List<Column<Person, ?>> columns = grid.getColumns();
-        Assert.assertEquals(2, columns.size());
-        Assert.assertEquals("born", columns.get(0).getId());
-        Assert.assertEquals("name", columns.get(1).getId());
+        assertEquals(2, columns.size());
+        assertEquals("born", columns.get(0).getId());
+        assertEquals("name", columns.get(1).getId());
     }
 
     @Test
     public void setColumnOrder_byColumn() {
         grid.setColumnOrder(randomColumn, lengthColumn);
 
-        Assert.assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
+        assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
                 objectColumn), grid.getColumns());
     }
 
@@ -509,7 +513,7 @@ public class GridTest {
     public void setColumnOrder_byString() {
         grid.setColumnOrder("randomColumnId", "length");
 
-        Assert.assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
+        assertEquals(Arrays.asList(randomColumn, lengthColumn, fooColumn,
                 objectColumn), grid.getColumns());
     }
 
@@ -553,12 +557,12 @@ public class GridTest {
                 .addColumn(ValueProvider.identity())
                 .getComparator(SortDirection.ASCENDING);
 
-        Assert.assertNotNull(comparator);
+        assertNotNull(comparator);
 
         List<Object> values = new ArrayList<>(Arrays.asList(expectedOrder));
         Collections.shuffle(values, new Random(42));
 
-        Assert.assertArrayEquals(expectedOrder,
+        assertArrayEquals(expectedOrder,
                 values.stream().sorted(comparator).toArray());
     }
 
@@ -577,7 +581,7 @@ public class GridTest {
         String formattedValue = Stream.of(rowData.keys())
                 .map(rowData::getString).filter(value -> !value.equals("Name"))
                 .findFirst().orElse(null);
-        Assert.assertEquals(formattedValue, "2,017");
+        assertEquals(formattedValue, "2,017");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -595,7 +599,7 @@ public class GridTest {
 
     @Test
     public void columnId_sortProperty_noId() {
-        Assert.assertEquals(0,
+        assertEquals(0,
                 objectColumn.getSortOrder(SortDirection.ASCENDING).count());
     }
 
@@ -613,10 +617,9 @@ public class GridTest {
                 .getSortOrder(SortDirection.ASCENDING)
                 .toArray(QuerySortOrder[]::new);
 
-        Assert.assertEquals(1, sortOrders.length);
-        Assert.assertEquals(SortDirection.ASCENDING,
-                sortOrders[0].getDirection());
-        Assert.assertEquals(expectedProperty, sortOrders[0].getSorted());
+        assertEquals(1, sortOrders.length);
+        assertEquals(SortDirection.ASCENDING, sortOrders[0].getDirection());
+        assertEquals(expectedProperty, sortOrders[0].getSorted());
     }
 
     private static <T> JsonObject getRowData(Grid<T> grid, T row) {

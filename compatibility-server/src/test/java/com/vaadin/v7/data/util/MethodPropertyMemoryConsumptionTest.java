@@ -15,6 +15,9 @@
  */
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,7 +26,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -52,12 +54,12 @@ public class MethodPropertyMemoryConsumptionTest {
                 .getDeclaredField("setArgs");
         setArgsField.setAccessible(true);
 
-        Assert.assertSame(
+        assertSame(
                 "setArguments method sets non-default instance"
                         + " of empty Object array for getArgs",
                 getArgsField.get(property), getArgs);
 
-        Assert.assertSame(
+        assertSame(
                 "setArguments method sets non-default instance"
                         + " of empty Object array for setArgs",
                 setArgsField.get(property), setArgs);
@@ -75,11 +77,11 @@ public class MethodPropertyMemoryConsumptionTest {
         TestBean otherBean = new TestBean();
         TestMethodProperty<String> otherProperty = new TestMethodProperty<String>(
                 otherBean, "name");
-        Assert.assertSame(
+        assertSame(
                 "setArguments method uses different instance"
                         + " of empty Object array for getArgs",
                 getArgs, otherProperty.getGetArgs());
-        Assert.assertSame(
+        assertSame(
                 "setArguments method uses different instance"
                         + " of empty Object array for setArgs",
                 setArgs, otherProperty.getSetArgs());
@@ -101,9 +103,9 @@ public class MethodPropertyMemoryConsumptionTest {
         Object red = inputStream.readObject();
         TestMethodProperty<?> deserialized = (TestMethodProperty<?>) red;
 
-        Assert.assertNotNull("Deseriliation doesn't call setArguments method",
+        assertNotNull("Deseriliation doesn't call setArguments method",
                 deserialized.getGetArgs());
-        Assert.assertNotNull("Deseriliation doesn't call setArguments method",
+        assertNotNull("Deseriliation doesn't call setArguments method",
                 deserialized.getSetArgs());
 
     }
