@@ -385,7 +385,7 @@ public class LegacyCommunicationManager implements Serializable {
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
          *
-         * eg. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
+         * e.g. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
          *
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).

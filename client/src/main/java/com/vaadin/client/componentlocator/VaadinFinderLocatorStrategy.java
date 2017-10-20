@@ -185,7 +185,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         List<String> paths = new ArrayList<>();
         int compIdx = 0;
         String basePath = components.get(compIdx).replace("com.vaadin.ui.", "");
-        // Add a basic search for the first element (eg. //Button)
+        // Add a basic search for the first element (e.g. //Button)
         paths.add((components.size() == 1 ? "/" : "//") + basePath);
         while (++compIdx < components.size()) {
             // Loop through the remaining components

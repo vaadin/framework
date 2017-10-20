@@ -186,7 +186,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             @Override
             public void uiClosed(final boolean sessionExpired) {
                 Scheduler.get().scheduleDeferred(() -> {
-                    // Only notify user if we're still running and not eg.
+                    // Only notify user if we're still running and not e.g.
                     // navigating away (#12298)
                     if (getConnection().isApplicationRunning()) {
                         if (sessionExpired) {

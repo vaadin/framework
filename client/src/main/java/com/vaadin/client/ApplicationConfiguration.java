@@ -95,7 +95,7 @@ public class ApplicationConfiguration implements EntryPoint {
          *
          * @param name
          *            name of the configuration parameter
-         * @return boolean value of the configuration paramter, or
+         * @return boolean value of the configuration parameter, or
          *         <code>null</code> if no value is defined
          */
         private native Boolean getConfigBoolean(String name)
@@ -116,7 +116,7 @@ public class ApplicationConfiguration implements EntryPoint {
          *
          * @param name
          *            name of the configuration parameter
-         * @return integer value of the configuration paramter, or
+         * @return integer value of the configuration parameter, or
          *         <code>null</code> if no value is defined
          */
         private native Integer getConfigInteger(String name)

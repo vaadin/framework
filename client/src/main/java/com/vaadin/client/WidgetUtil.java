@@ -1428,7 +1428,7 @@ public class WidgetUtil {
     /**
      * Wrap a css size value and its unit and translate back and forth to the
      * string representation.<br/>
-     * Eg. 50%, 123px, ...
+     * E.g. 50%, 123px, ...
      *
      * @since 7.2.6
      * @author Vaadin Ltd
