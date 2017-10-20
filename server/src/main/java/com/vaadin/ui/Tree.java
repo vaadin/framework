@@ -1181,7 +1181,7 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the beginning of the first data row.
-     * 
+     *
      * @since 8.2
      */
     public void scrollToStart() {
@@ -1190,7 +1190,7 @@ public class Tree<T> extends Composite
 
     /**
      * Scrolls to the end of the last data row.
-     * 
+     *
      * @since 8.2
      */
     public void scrollToEnd() {

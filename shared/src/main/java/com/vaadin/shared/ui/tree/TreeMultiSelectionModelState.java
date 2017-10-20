@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.grid.MultiSelectionModelState;
 
 /**
  * State for TreeMultiSelectionModel.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
  */

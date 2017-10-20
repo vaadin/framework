@@ -27,7 +27,7 @@ import com.vaadin.ui.InlineDateTimeField;
 
 /**
  * The client-side connector for InlineDateTimeField.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */

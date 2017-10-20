@@ -72,7 +72,7 @@ public class NativeSelectElement extends AbstractSingleSelectElement {
      * Return value of the selected item in the native select element.
      *
      * @return value of the selected item
-     * 
+     *
      * @throws NoSuchElementException
      *             if no value is selected
      */
