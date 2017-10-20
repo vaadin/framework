@@ -3,7 +3,6 @@ package com.vaadin.tests.components.button;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
@@ -20,15 +19,12 @@ public class ButtonToggleIcons extends UI {
         final ThemeResource iconResource = new ThemeResource(
                 "../runo/icons/16/arrow-left.png");
 
-        final ClickListener iconToggleListener = new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                final Button btn = event.getButton();
-                if (btn.getIcon() == null) {
-                    btn.setIcon(iconResource);
-                } else {
-                    btn.setIcon(null);
-                }
+        final ClickListener iconToggleListener = e -> {
+            final Button btn = e.getButton();
+            if (btn.getIcon() == null) {
+                btn.setIcon(iconResource);
+            } else {
+                btn.setIcon(null);
             }
         };
 

@@ -1167,13 +1167,10 @@ public class NavigatorTest {
 
         AtomicReference<Map<String, String>> mapRef = new AtomicReference<>();
         AtomicReference<Map<String, String>> mapRefB = new AtomicReference<>();
-        navigator.addViewChangeListener(new ViewChangeListener() {
-            @Override
-            public boolean beforeViewChange(ViewChangeEvent event) {
-                mapRef.set(event.getParameterMap());
-                mapRefB.set(event.getParameterMap("b"));
-                return true;
-            }
+        navigator.addViewChangeListener(e -> {
+            mapRef.set(e.getParameterMap());
+            mapRefB.set(e.getParameterMap("b"));
+            return true;
         });
 
         navigator.navigateTo("view1");

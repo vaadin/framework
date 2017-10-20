@@ -2,11 +2,8 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.Table;
@@ -55,13 +52,9 @@ public class ComboBoxDataSourceChange extends TestBase {
         state.addComponent(t);
 
         Button b = new Button("Use ds1");
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                cb2.setContainerDataSource(ds1);
-                currentDS.setValue("ds1");
-            }
+        b.addClickListener(e -> {
+            cb2.setContainerDataSource(ds1);
+            currentDS.setValue("ds1");
         });
         state.addComponent(b);
 
@@ -71,25 +64,16 @@ public class ComboBoxDataSourceChange extends TestBase {
         state.addComponent(t);
 
         b = new Button("Use ds2");
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                cb2.setContainerDataSource(ds2);
-                currentDS.setValue("ds2");
-            }
+        b.addClickListener(e -> {
+            cb2.setContainerDataSource(ds2);
+            currentDS.setValue("ds2");
         });
         state.addComponent(b);
 
         addComponent(hl);
 
-        cb2.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                currentValue.setValue(
-                        String.valueOf(event.getProperty().getValue()));
-            }
-        });
+        cb2.addValueChangeListener(e -> currentValue
+                .setValue(String.valueOf(e.getProperty().getValue())));
     }
 
     @Override

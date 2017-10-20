@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import com.vaadin.event.ContextClickEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.CheckBox;
@@ -26,12 +25,7 @@ public class CheckboxContextClick extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         final CheckBox cb = new CheckBox("Right-click me", true);
         cb.addContextClickListener(
-                new ContextClickEvent.ContextClickListener() {
-                    @Override
-                    public void contextClick(ContextClickEvent event) {
-                        log("checkbox context clicked");
-                    }
-                });
+                e -> log("checkbox context clicked"));
 
         addComponent(cb);
     }

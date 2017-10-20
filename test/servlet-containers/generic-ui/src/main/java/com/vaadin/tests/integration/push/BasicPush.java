@@ -59,13 +59,9 @@ public class BasicPush extends AbstractTestUI {
         addComponent(lbl);
 
         Button incrementButton = new Button("Increment",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        clientCounter++;
-                        lbl.setValue(String.valueOf(clientCounter));
-                    }
+                e ->{
+                    clientCounter++;
+                    lbl.setValue(String.valueOf(clientCounter));
                 });
         incrementButton.setId(INCREMENT_BUTTON_ID);
         addComponent(incrementButton);
@@ -103,13 +99,10 @@ public class BasicPush extends AbstractTestUI {
         startTimer.setId(START_TIMER_ID);
         addComponent(startTimer);
 
-        Button stopTimer = new Button("Stop timer", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (task != null) {
-                    task.cancel();
-                    task = null;
-                }
+        Button stopTimer = new Button("Stop timer", e -> {
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         });
         stopTimer.setId(STOP_TIMER_ID);

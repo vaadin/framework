@@ -3,7 +3,6 @@ package com.vaadin.tests.components.accordion;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeButton;
 
 public class AccordionPrimaryStylenames extends TestBase {
@@ -17,12 +16,8 @@ public class AccordionPrimaryStylenames extends TestBase {
         addComponent(acc);
 
         addComponent(
-                new Button("Set primary stylename", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        acc.setPrimaryStyleName("my-second-accordion");
-                    }
-                }));
+                new Button("Set primary stylename",
+                        e -> acc.setPrimaryStyleName("my-second-accordion")));
     }
 
     @Override

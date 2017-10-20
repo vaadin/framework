@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
@@ -21,12 +19,8 @@ public class HugeRowCount extends TestBase {
 
         final TextField tf = new TextField("Rows");
         tf.setValue(String.valueOf(100000));
-        tf.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                container.setSize(Integer.parseInt(tf.getValue().toString()));
-            }
-        });
+        tf.addValueChangeListener(e -> container
+                .setSize(Integer.parseInt(tf.getValue().toString())));
         addComponent(tf);
         addComponent(new Button("Update rowcount"));
 

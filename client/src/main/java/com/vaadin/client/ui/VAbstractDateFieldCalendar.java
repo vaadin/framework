@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import com.google.gwt.event.dom.client.DomEvent;
-import com.vaadin.client.ui.VAbstractCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 
 /**
@@ -46,12 +44,9 @@ public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendar
 
             }
         });
-        calendarPanel.setFocusOutListener(new FocusOutListener() {
-            @Override
-            public boolean onFocusOut(DomEvent<?> event) {
-                updateValueFromPanel();
-                return false;
-            }
+        calendarPanel.setFocusOutListener(e -> {
+            updateValueFromPanel();
+            return false;
         });
     }
 

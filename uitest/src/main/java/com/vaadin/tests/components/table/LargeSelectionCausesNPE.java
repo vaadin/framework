@@ -117,18 +117,14 @@ public class LargeSelectionCausesNPE extends TestBase {
             }
         };
 
-        Button.ClickListener clickListener = new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Property nameProperty = table.getContainerProperty(0, NAME);
-                if (("0").equals(nameLabel.getValue())) {
-                    nameProperty.setValue(NAME + "0-version2");
-                    nameLabel.setValue("0-version2");
-                } else {
-                    nameProperty.setValue(NAME + 0);
-                    nameLabel.setValue("0");
-                }
+        Button.ClickListener clickListener = e-> {
+            Property nameProperty = table.getContainerProperty(0, NAME);
+            if (("0").equals(nameLabel.getValue())) {
+                nameProperty.setValue(NAME + "0-version2");
+                nameLabel.setValue("0-version2");
+            } else {
+                nameProperty.setValue(NAME + 0);
+                nameLabel.setValue("0");
             }
         };
 

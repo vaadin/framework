@@ -20,7 +20,6 @@ import java.util.Random;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -71,63 +70,49 @@ public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
 
         mainLayout
                 .addComponent(new Button("Hide/show both middle Column and row",
-                        new Button.ClickListener() {
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                for (int i = 0; i < ROWS; i++) {
-                                    for (int j = 0; j < COLS; j++) {
-                                        if (j == 2 || i == 2) {
-                                            if (labels[i][j].isVisible()) {
-                                                labels[i][j].setVisible(false);
-                                            } else {
-                                                labels[i][j].setVisible(true);
-                                            }
+                        e -> {
+                            for (int i = 0; i < ROWS; i++) {
+                                for (int j = 0; j < COLS; j++) {
+                                    if (j == 2 || i == 2) {
+                                        if (labels[i][j].isVisible()) {
+                                            labels[i][j].setVisible(false);
+                                        } else {
+                                            labels[i][j].setVisible(true);
                                         }
                                     }
                                 }
                             }
                         }));
         mainLayout.addComponent(new Button("Hide/show middle Column",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        for (int i = 0; i < ROWS; i++) {
-                            if (labels[i][2].isVisible()) {
-                                labels[i][2].setVisible(false);
-                            } else {
-                                labels[i][2].setVisible(true);
-                            }
-                        }
-                    }
-                }));
-        mainLayout.addComponent(
-                new Button("Hide/show middle Row", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        for (int j = 0; j < COLS; j++) {
-                            if (labels[2][j].isVisible()) {
-                                labels[2][j].setVisible(false);
-                            } else {
-                                labels[2][j].setVisible(true);
-                            }
-                        }
-                    }
-
-                }));
-        mainLayout.addComponent(
-                new Button("Hide Random button", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // TODO Auto-generated method stub
-                        Random rand = new Random();
-                        int i = rand.nextInt(ROWS);
-                        int j = rand.nextInt(COLS);
-                        if (labels[i][j].isVisible()) {
-                            labels[i][j].setVisible(false);
+                e -> {
+                    for (int i = 0; i < ROWS; i++) {
+                        if (labels[i][2].isVisible()) {
+                            labels[i][2].setVisible(false);
                         } else {
-                            labels[i][j].setVisible(true);
+                            labels[i][2].setVisible(true);
                         }
+                    }
+                }));
+        mainLayout.addComponent(
+                new Button("Hide/show middle Row", e -> {
+                    for (int j = 0; j < COLS; j++) {
+                        if (labels[2][j].isVisible()) {
+                            labels[2][j].setVisible(false);
+                        } else {
+                            labels[2][j].setVisible(true);
+                        }
+                    }
+                }));
+        mainLayout.addComponent(
+                new Button("Hide Random button", e -> {
+                    // TODO Auto-generated method stub
+                    Random rand = new Random();
+                    int i = rand.nextInt(ROWS);
+                    int j = rand.nextInt(COLS);
+                    if (labels[i][j].isVisible()) {
+                        labels[i][j].setVisible(false);
+                    } else {
+                        labels[i][j].setVisible(true);
                     }
                 }));
     }

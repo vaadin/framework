@@ -18,7 +18,6 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
@@ -51,19 +50,9 @@ public class MissingHierarchyDetection extends AbstractReindeerTestUIWithLog {
     protected void setup(VaadinRequest request) {
         addComponent(brokenLayout);
         addComponent(normalLayout);
-        addComponent(new Button("Toggle properly", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                toggle(true);
-            }
-        }));
+        addComponent(new Button("Toggle properly", e -> toggle(true)));
         addComponent(
-                new Button("Toggle improperly", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        toggle(false);
-                    }
-                }));
+                new Button("Toggle improperly", e -> toggle(false)));
     }
 
     private void toggle(boolean properly) {

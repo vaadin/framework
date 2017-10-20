@@ -19,7 +19,6 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ColorPicker;
 
 /**
@@ -37,29 +36,20 @@ public class DefaultCaptionWidth extends AbstractReindeerTestUI {
         colorPicker.setDefaultCaptionEnabled(true);
 
         Button setWidth = new Button("Set explicit width",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        colorPicker.setCaption(null);
-                        colorPicker.setWidth("150px");
-                    }
+                e -> {
+                    colorPicker.setCaption(null);
+                    colorPicker.setWidth("150px");
                 });
         setWidth.addStyleName("set-width");
         addComponent(setWidth);
 
         Button setCaption = new Button("Set explicit caption",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        colorPicker.setCaption("caption");
-                        colorPicker.setWidthUndefined();
-                    }
+                e -> {
+                    colorPicker.setCaption("caption");
+                    colorPicker.setWidthUndefined();
                 });
         setCaption.addStyleName("set-caption");
         addComponent(setCaption);
-
     }
 
     @Override

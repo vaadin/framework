@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 
 public class EmbeddedImageRefresh extends TestBase {
@@ -44,41 +43,24 @@ public class EmbeddedImageRefresh extends TestBase {
 
         // The button requests repainting the embedded.
         Button button = new Button("refr");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                embedded.markAsDirty();
-            }
-        });
+        button.addClickListener(e -> embedded.markAsDirty());
         addComponent(button);
         button = new Button("refr name");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ((StreamResource) embedded.getSource())
-                        .setFilename(new Date().getTime() + ".png");
-                embedded.markAsDirty();
-            }
+        button.addClickListener(e -> {
+            ((StreamResource) embedded.getSource())
+                    .setFilename(new Date().getTime() + ".png");
+            embedded.markAsDirty();
         });
         addComponent(button);
         button = new Button("200x200");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                embedded.setWidth("200px");
-                embedded.setHeight("200px");
-            }
+        button.addClickListener(e -> {
+            embedded.setWidth("200px");
+            embedded.setHeight("200px");
         });
         addComponent(button);
         button = new Button("undef");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                embedded.setSizeUndefined();
-            }
-        });
+        button.addClickListener(e -> embedded.setSizeUndefined());
         addComponent(button);
-
     }
 
     public class MyImageSource implements StreamResource.StreamSource {

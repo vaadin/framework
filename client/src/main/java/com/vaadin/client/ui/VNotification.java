@@ -23,7 +23,6 @@ import java.util.List;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.AnimationUtil;
-import com.vaadin.client.AnimationUtil.AnimationEndListener;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.WidgetUtil;
@@ -297,14 +295,10 @@ public class VNotification extends VOverlay {
             if (getStyleName()
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 AnimationUtil.addAnimationEndListener(getElement(),
-                        new AnimationEndListener() {
-                            @Override
-                            public void onAnimationEnd(NativeEvent event) {
-                                if (AnimationUtil.getAnimationName(event)
-                                        .contains(
-                                                VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
-                                    VNotification.this.hide();
-                                }
+                        e -> {
+                            if (AnimationUtil.getAnimationName(e).contains(
+                                    VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
+                                VNotification.this.hide();
                             }
                         });
             } else {

@@ -6,9 +6,6 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.v7.data.util.ObjectProperty;
@@ -39,23 +36,16 @@ public class ComboPushTiming extends TestBase {
 
         final ObjectProperty<String> log = new ObjectProperty<>("");
 
-        cb.addFocusListener(new FieldEvents.FocusListener() {
-            @Override
-            public void focus(FocusEvent event) {
-                log.setValue(
-                        log.getValue() + "<br>" + counter + ": Focus event!");
-                counter++;
-                changeValue(cb);
-            }
+        cb.addFocusListener(e -> {
+            log.setValue(
+                    log.getValue() + "<br>" + counter + ": Focus event!");
+            counter++;
+            changeValue(cb);
         });
 
-        cb.addBlurListener(new FieldEvents.BlurListener() {
-            @Override
-            public void blur(BlurEvent event) {
-                log.setValue(
-                        log.getValue() + "<br>" + counter + ": Blur event!");
-                counter++;
-            }
+        cb.addBlurListener(e -> {
+            log.setValue(log.getValue() + "<br>" + counter + ": Blur event!");
+            counter++;
         });
 
         TextField field = new TextField("Some textfield");

@@ -4,7 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -24,13 +23,9 @@ public class GridClientMemoryLeak extends AbstractTestUI {
                 ContentMode.PREFORMATTED);
         final VerticalLayout layout = new VerticalLayout();
         final Button btn = new Button("newGrid");
-        btn.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.removeComponent(layout.getComponent(1));
-                layout.addComponent(new Grid<String>());
-            }
+        btn.addClickListener(e -> {
+            layout.removeComponent(layout.getComponent(1));
+            layout.addComponent(new Grid<String>());
         });
         layout.addComponent(instructionLabel);
         layout.addComponent(btn);

@@ -11,8 +11,6 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.event.MouseEvents.ClickEvent;
-import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Image;
@@ -33,20 +31,13 @@ public class ImageClicks extends TestBase {
         final StreamResource imageResource = new StreamResource(imageSource,
                 "testimage.png");
         image.setSource(imageResource);
-        image.addClickListener(new ClickListener() {
-
-            @Override
-            public void click(ClickEvent event) {
-                ++clickCounter;
-                imageResource
-                        .setFilename("testimage.png?" + new Date().getTime());
-                image.markAsDirty();
-                label.setValue(labelText());
-            }
-
+        image.addClickListener(e -> {
+            ++clickCounter;
+            imageResource.setFilename("testimage.png?" + new Date().getTime());
+            image.markAsDirty();
+            label.setValue(labelText());
         });
         addComponent(image);
-
     }
 
     private String labelText() {

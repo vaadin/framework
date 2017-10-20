@@ -2,8 +2,6 @@ package com.vaadin.tests.components.combobox;
 
 import java.util.Arrays;
 
-import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.VerticalLayout;
@@ -22,12 +20,7 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
 
         ComboBox<String> comboBox = new ComboBox<>("Combo box",
                 Arrays.asList("Option 1", "Option 2", "Option 3"));
-        comboBox.addFocusListener(new FieldEvents.FocusListener() {
-            @Override
-            public void focus(FocusEvent event) {
-                popup.close();
-            }
-        });
+        comboBox.addFocusListener(e -> popup.close());
         layout.addComponent(comboBox);
 
         popup.setSizeUndefined();

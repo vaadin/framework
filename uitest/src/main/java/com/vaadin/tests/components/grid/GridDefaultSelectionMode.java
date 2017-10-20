@@ -21,8 +21,6 @@ import java.util.List;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 
@@ -50,21 +48,12 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
 
         VerticalLayout v = new VerticalLayout();
 
-        v.addComponent(new Button("Deselect on server", new ClickListener() {
+        v.addComponent(new Button("Deselect on server", e ->
+        grid.getSelectionModel().deselectAll()));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.getSelectionModel().deselectAll();
-            }
-        }));
-
-        v.addComponent(new Button("Select on server", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.getSelectionModel().select(person1);
-            }
-        }));
+        v.addComponent(new Button("Select on server",
+                e ->
+                grid.getSelectionModel().select(person1)));
         v.addComponent(grid);
 
         addComponent(v);

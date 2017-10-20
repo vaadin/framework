@@ -32,21 +32,16 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
 
         getLayout().addComponent(t);
         getLayout().addComponent(new Button("Change elements and selection",
-                new ClickListener() {
+                e-> {
+                    bic.removeAllItems();
+                    ValueHolder<String> v4 = null;
+                    for (int i = 4; i < 30; i++) {
+                        v4 = new ValueHolder<>("test" + i);
+                        bic.addBean(v4);
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-
-                        bic.removeAllItems();
-                        ValueHolder<String> v4 = null;
-                        for (int i = 4; i < 30; i++) {
-                            v4 = new ValueHolder<>("test" + i);
-                            bic.addBean(v4);
-
-                        }
-                        t.select(t.firstItemId());
-                        t.focus();
                     }
+                    t.select(t.firstItemId());
+                    t.focus();
                 }));
     }
 

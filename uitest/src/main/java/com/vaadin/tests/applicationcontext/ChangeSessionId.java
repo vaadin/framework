@@ -4,8 +4,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.LegacyWindow;
 
 public class ChangeSessionId extends AbstractTestCase {
@@ -20,30 +18,20 @@ public class ChangeSessionId extends AbstractTestCase {
         mainWindow.addComponent(log);
         mainWindow.addComponent(loginButton);
         mainWindow.addComponent(
-                new Button("Show session id", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        logSessionId();
-                    }
-                }));
+                new Button("Show session id", e -> logSessionId()));
         setMainWindow(mainWindow);
 
-        loginButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String oldSessionId = getSessionId();
-                VaadinService
-                        .reinitializeSession(VaadinService.getCurrentRequest());
-                String newSessionId = getSessionId();
-                if (oldSessionId.equals(newSessionId)) {
-                    log.log("FAILED! Both old and new session id is "
-                            + newSessionId);
-                } else {
-                    log.log("Session id changed successfully from "
-                            + oldSessionId + " to " + newSessionId);
-                }
-
+        loginButton.addClickListener(e -> {
+            String oldSessionId = getSessionId();
+            VaadinService
+                    .reinitializeSession(VaadinService.getCurrentRequest());
+            String newSessionId = getSessionId();
+            if (oldSessionId.equals(newSessionId)) {
+                log.log("FAILED! Both old and new session id is "
+                        + newSessionId);
+            } else {
+                log.log("Session id changed successfully from " + oldSessionId
+                        + " to " + newSessionId);
             }
         });
         logSessionId();

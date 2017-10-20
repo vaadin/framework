@@ -18,8 +18,6 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.JavaScriptFunction;
 
 import elemental.json.JsonArray;
@@ -58,14 +56,8 @@ public class TimingInfoReported extends AbstractTestUIWithLog {
                     }
                 });
         getPage().getJavaScript().execute(reportTimings);
-        Button b = new Button("test request", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().getJavaScript().execute(reportTimings);
-
-            }
-        });
+        Button b = new Button("test request",
+                e -> getPage().getJavaScript().execute(reportTimings));
         addComponent(b);
     }
 }

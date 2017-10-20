@@ -6,8 +6,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class ButtonEnterWithWindowShortcut extends TestBase {
     Log log = new Log(5);
@@ -34,12 +32,7 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
         });
 
         Button button = new Button("Focus me and press enter",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.log("button click listener fired");
-                    }
-                });
+                e -> log.log("button click listener fired"));
         button.focus();
 
         addComponent(log);

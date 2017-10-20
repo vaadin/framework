@@ -3,8 +3,6 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 
 public class ComboBoxSlow extends AbstractReindeerTestUI {
 
@@ -28,12 +26,8 @@ public class ComboBoxSlow extends AbstractReindeerTestUI {
         for (int i = 0; i <= 1000; i++) {
             cb.addItem("Item " + i);
         }
-        cb.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log.log("Value changed to " + cb.getValue());
-            }
-        });
+        cb.addValueChangeListener(
+                e -> log.log("Value changed to " + cb.getValue()));
         addComponent(cb);
     }
 }

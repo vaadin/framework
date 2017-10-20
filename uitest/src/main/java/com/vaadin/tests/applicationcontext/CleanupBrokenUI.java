@@ -18,7 +18,6 @@ package com.vaadin.tests.applicationcontext;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 /**
@@ -40,13 +39,7 @@ public class CleanupBrokenUI extends AbstractTestUIWithLog {
             }
         });
 
-        addComponent(new Button("Ping", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("pong");
-            }
-        }));
-
+        addComponent(new Button("Ping", e -> log("pong")));
     }
 
     private void logUIs() {

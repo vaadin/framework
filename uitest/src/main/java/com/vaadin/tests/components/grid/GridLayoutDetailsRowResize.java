@@ -19,7 +19,6 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -39,15 +38,11 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
         final Grid<Person> grid = createGrid();
         grid.setSizeFull();
 
-        addComponent(new Button("Toggle theme", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (ValoTheme.THEME_NAME.equals(getUI().getTheme())) {
-                    getUI().setTheme(Reindeer.THEME_NAME);
-                } else {
-                    getUI().setTheme(ValoTheme.THEME_NAME);
-                }
+        addComponent(new Button("Toggle theme", e -> {
+            if (ValoTheme.THEME_NAME.equals(getUI().getTheme())) {
+                getUI().setTheme(Reindeer.THEME_NAME);
+            } else {
+                getUI().setTheme(ValoTheme.THEME_NAME);
             }
         }));
 
@@ -77,13 +72,7 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
             detailsLayout.addComponent(lbl4);
 
             final Button button = new Button("Toggle visibility",
-                    new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            lbl4.setVisible(!lbl4.isVisible());
-                        }
-                    });
+                    e -> lbl4.setVisible(!lbl4.isVisible()));
             button.setId("btn");
             detailsLayout.addComponent(button);
 
@@ -95,15 +84,11 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
             grid.setDetailsVisible(person, !grid.isDetailsVisible(person));
         });
 
-        addComponent(new Button("Open details", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                for (Object itemId : ((ListDataProvider<?>) grid
-                        .getDataProvider()).getItems()) {
-                    if (itemId instanceof Person) {
-                        grid.setDetailsVisible((Person) itemId, true);
-                    }
+        addComponent(new Button("Open details", e -> {
+            for (Object itemId : ((ListDataProvider<?>) grid.getDataProvider())
+                    .getItems()) {
+                if (itemId instanceof Person) {
+                    grid.setDetailsVisible((Person) itemId, true);
                 }
             }
         }));
