@@ -48,9 +48,9 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
                 grid.getHeaderCell(0, 0).getAttribute("class")
                         .contains("sort-asc"));
         assertFalse("Second column should not be sorted", grid
-                .getHeaderCell(0, 1).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 1).getAttribute("class").contains("sort-"));
         assertFalse("Third column should not be sorted", grid
-                .getHeaderCell(0, 2).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 2).getAttribute("class").contains("sort-"));
 
         assertRow(grid, 0, "a", "4", true);
         assertRow(grid, 1, "a", "6", false);
@@ -63,12 +63,12 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
         grid.getHeaderCell(0, 1).click();
 
         assertFalse("First column should not be sorted", grid
-                .getHeaderCell(0, 0).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 0).getAttribute("class").contains("sort-"));
         assertTrue("Second column should be sorted ascending",
                 grid.getHeaderCell(0, 1).getAttribute("class")
                         .contains("sort-asc"));
         assertFalse("Third column should not be sorted", grid
-                .getHeaderCell(0, 2).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 2).getAttribute("class").contains("sort-"));
 
         assertRow(grid, 0, "b", "1", true);
         assertRow(grid, 1, "a", "2", true);
@@ -81,9 +81,9 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
         grid.getHeaderCell(0, 2).click();
 
         assertFalse("First column should not be sorted", grid
-                .getHeaderCell(0, 0).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 0).getAttribute("class").contains("sort-"));
         assertFalse("Second column should not be sorted", grid
-                .getHeaderCell(0, 1).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 1).getAttribute("class").contains("sort-"));
         assertTrue("Third column should be sorted ascending",
                 grid.getHeaderCell(0, 2).getAttribute("class")
                         .contains("sort-asc"));
@@ -117,9 +117,9 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
                 grid.getHeaderCell(0, 0).getAttribute("class")
                         .contains("sort-asc"));
         assertFalse("Second column should not be sorted", grid
-                .getHeaderCell(0, 1).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 1).getAttribute("class").contains("sort-"));
         assertFalse("Third column should not be sorted", grid
-                .getHeaderCell(0, 2).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 2).getAttribute("class").contains("sort-"));
 
         assertRow(grid, 0, "a", "4", true);
         assertRow(grid, 1, "a", "6", false);
@@ -132,12 +132,12 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
         grid.getHeaderCell(0, 1).click();
 
         assertFalse("First column should not be sorted", grid
-                .getHeaderCell(0, 0).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 0).getAttribute("class").contains("sort-"));
         assertTrue("Second column should be sorted ascending",
                 grid.getHeaderCell(0, 1).getAttribute("class")
                         .contains("sort-asc"));
         assertFalse("Third column should not be sorted", grid
-                .getHeaderCell(0, 2).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 2).getAttribute("class").contains("sort-"));
 
         assertRow(grid, 0, "b", "1", true);
         assertRow(grid, 1, "a", "2", true);
@@ -150,12 +150,12 @@ public class GridSortWhenPossibleTest extends MultiBrowserTest {
         grid.getHeaderCell(0, 2).click();
 
         assertFalse("First column should not be sorted", grid
-                .getHeaderCell(0, 0).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 0).getAttribute("class").contains("sort-"));
         assertTrue("Second column should be sorted ascending",
                 grid.getHeaderCell(0, 1).getAttribute("class")
                         .contains("sort-asc"));
         assertFalse("Third column should not be sorted", grid
-                .getHeaderCell(0, 2).getAttribute("class").contains("sort"));
+                .getHeaderCell(0, 2).getAttribute("class").contains("sort-"));
 
         assertRow(grid, 0, "b", "1", true);
         assertRow(grid, 1, "a", "2", true);
