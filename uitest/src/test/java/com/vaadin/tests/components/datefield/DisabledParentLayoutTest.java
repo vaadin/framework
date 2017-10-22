@@ -67,8 +67,9 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
                 textField.getAttribute("value"));
 
         dataFieldButton.click();
-        dataFieldButton.click();// Requires two clicks because of error message.
-                                // TODO fix
+        // Requires two clicks because of error message.
+        // TODO fix
+        dataFieldButton.click();
         assertFalse("Unexpected disabled element found",
                 isElementPresent(By.className("v-disabled")));
 

@@ -19,9 +19,8 @@ public class ComboBoxTextFieldEventOrder extends TestBase {
         textField.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                select.addItem(Long.valueOf(select.size() + 1).toString()); // or
-                                                                            // just
-                                                                            // select.requestRepaint();
+                // or just select.requestRepaint();
+                select.addItem(Long.valueOf(select.size() + 1).toString());
             }
         });
         addComponent(textField);

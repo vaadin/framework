@@ -210,12 +210,10 @@ public class VaadinSessionTest implements Serializable {
 
         session.valueUnbound(
                 EasyMock.createMock(HttpSessionBindingEvent.class));
-        mockService.runPendingAccessTasks(session); // as soon as we changed
-                                                    // session.accessSynchronously
-                                                    // to session.access in
-                                                    // VaadinService.fireSessionDestroy,
-                                                    // we need to run the
-                                                    // pending task ourselves
+        // as soon as we changed session.accessSynchronously
+        // to session.access in VaadinService.fireSessionDestroy,
+        // we need to run the pending task ourselves
+        mockService.runPendingAccessTasks(session);
         assertTrue(detachCalled.get());
     }
 
@@ -233,12 +231,10 @@ public class VaadinSessionTest implements Serializable {
         CurrentInstance.clearAll();
         session.close();
         mockService.cleanupSession(session);
-        mockService.runPendingAccessTasks(session); // as soon as we changed
-                                                    // session.accessSynchronously
-                                                    // to session.access in
-                                                    // VaadinService.fireSessionDestroy,
-                                                    // we need to run the
-                                                    // pending task ourselves
+        // as soon as we changed session.accessSynchronously
+        // to session.access in VaadinService.fireSessionDestroy,
+        // we need to run the pending task ourselves
+        mockService.runPendingAccessTasks(session);
         assertTrue(detachCalled.get());
     }
 

@@ -240,8 +240,8 @@ public class GridBasicClientFeaturesWidget
 
             d = datarow.get(col++);
             d.value = new Date(timestamp);
-            timestamp += 91250000; // a bit over a day, just to get
-                                   // variation
+            // a bit over a day, just to get variation
+            timestamp += 91250000;
 
             d = datarow.get(col++);
             d.value = "<b>" + row + "</b>";

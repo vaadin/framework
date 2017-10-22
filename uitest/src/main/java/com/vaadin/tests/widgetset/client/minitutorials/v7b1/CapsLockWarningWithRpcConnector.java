@@ -30,12 +30,12 @@ public class CapsLockWarningWithRpcConnector
             public void onKeyPress(KeyPressEvent event) {
                 if (isEnabled() && isCapsLockOn(event)) {
                     warning.showRelativeTo(passwordWidget);
-                    rpc.isCapsLockEnabled(true); // Added to send message to the
-                                                 // server
+                    // Added to send message to the server
+                    rpc.isCapsLockEnabled(true);
                 } else {
                     warning.hide();
-                    rpc.isCapsLockEnabled(false); // Added to send message to
-                                                  // the server
+                    // Added to send message to the server
+                    rpc.isCapsLockEnabled(false);
                 }
             }
         }, KeyPressEvent.getType());

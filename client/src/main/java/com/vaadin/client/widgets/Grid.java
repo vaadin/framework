@@ -4478,12 +4478,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     reordered.addAll(columns.subList(
                             draggedColumnIndex + colspan, columns.size()));
                 }
-                reordered.remove(selectionColumn); // since
-                                                   // setColumnOrder
-                                                   // will
-                                                   // add
-                                                   // it
-                                                   // anyway!
+                // since setColumnOrder will add it anyway!
+                reordered.remove(selectionColumn);
 
                 // capture focused cell column before reorder
                 Cell focusedCell = cellFocusHandler.getFocusedCell();
@@ -4497,9 +4493,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         .toArray(new Column[reordered.size()]);
                 setColumnOrder(true, array);
                 transferCellFocusOnDrop();
-            } // else
-              // no
-              // reordering
+            } // else no reordering
         }
 
         private void transferCellFocusOnDrop() {

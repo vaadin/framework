@@ -155,11 +155,9 @@ public class GridSingleSelectionModelTest {
         // since the selection model has been removed, it is no longer a data
         // generator for the data communicator, would need to verify somehow
         // that row is not marked as selected anymore ? (done in UI tests)
-        assertTrue(customModel.generatedData.isEmpty()); // at least
-                                                         // removed
-                                                         // selection
-                                                         // model is not
-                                                         // triggered
+
+        // at least removed selection model is not triggered
+        assertTrue(customModel.generatedData.isEmpty());
     }
 
     @Test
