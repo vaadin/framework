@@ -49,13 +49,24 @@ import elemental.json.JsonValue;
  * @since 8.1
  */
 @SuppressWarnings("serial")
-public class ComponentRenderer extends AbstractRenderer<Object, Component> {
+public class ComponentRenderer<T> extends ClickableRenderer<T, Component> {
 
     /**
      * Constructor for ComponentRenderer.
      */
     public ComponentRenderer() {
         super(Component.class);
+    }
+
+    /**
+     * Adds a click listener to the renderer that will select the clicked row item in the grid
+     *
+     * @param grid The grid to forward the selection to
+     *
+     * @see ClickableRenderer#addClickListener(RendererClickListener)
+     */
+    public void forwardSelection(Grid<T> grid) {
+        addClickListener(event -> grid.select(event.getItem()));
     }
 
     @Override
