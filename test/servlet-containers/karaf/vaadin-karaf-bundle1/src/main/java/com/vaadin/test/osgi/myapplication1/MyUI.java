@@ -2,6 +2,7 @@ package com.vaadin.test.osgi.myapplication1;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.Push;
 import org.osgi.service.component.annotations.Component;
 
 import com.vaadin.annotations.Theme;
@@ -17,6 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @Theme("karaftesttheme")
 @Widgetset("com.vaadin.test.osgi.widgetset.CustomWidgetSet")
+@Push
 public class MyUI extends UI {
 
     @Override
@@ -33,6 +35,18 @@ public class MyUI extends UI {
         layout.addComponents(name, button);
 
         setContent(layout);
+        Thread thread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+                }
+                button.setCaption(button.getCaption()+".");
+                push();
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @Component(service = VaadinServlet.class)

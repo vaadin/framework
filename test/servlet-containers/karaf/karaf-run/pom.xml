@@ -66,13 +66,8 @@
                                 <command>shutdown -f +10</command>
                                 <command>feature:install http</command>
                                 <command>feature:install http-whiteboard</command>
-                                <command>bundle:install -s mvn:org.jsoup/jsoup/1.8.3</command>
-                                <command>bundle:install -s mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-shared/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-server/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-osgi-integration/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-client-compiled/${vaadin.version}</command>
-                                <command>bundle:install -s mvn:com.vaadin/vaadin-themes/${vaadin.version}</command>
+                                <command>feature:repo-add file:C:/work/framework/vaadin-feature.xml</command>
+                                <command>feature:install vaadin-osgi-core</command>
                                 <command>
                                     <![CDATA[bundle:install -s file:./../vaadin-karaf-bundle1/target/vaadin-karaf-bundle1-${project.version}.jar]]></command>
                                 <command>
