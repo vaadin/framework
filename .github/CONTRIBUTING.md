@@ -14,7 +14,7 @@ Unless the issue is specific to a single version of the Framework, you should al
 
 In your repo, make a new branch from `master`. Make your code changes in that branch, and once you're done make a pull request to the `vaadin/framework` branch `master`.
 
-The contributor should make sure the "Allow edits from maintainers" checkbox on the pull request page is checked. This makes sure that minor fixes, like typos, can be done without bothering the contributor.
+We recommend making sure that the "Allow edits from maintainers" checkbox on the pull request page is checked. This allows us to commit minor fixes, like correcting typos, without bothering you.
 
 ### Getting feedback and responding to it
 
