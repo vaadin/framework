@@ -1157,8 +1157,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
             this.userId = id;
             getGrid().setColumnId(id, this);
+            updateSortable();
 
             return this;
+        }
+
+        private void updateSortable() {
+            setSortable(getGrid().getDataProvider().isInMemory()
+                    || getSortOrder(SortDirection.ASCENDING).count() != 0);
         }
 
         /**
@@ -2711,6 +2717,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (getDefaultHeaderRow() != null) {
             getDefaultHeaderRow().getCell(column).setText(column.getCaption());
         }
+
+        column.updateSortable();
     }
 
     /**
@@ -4587,4 +4595,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
     }
+
+    @Override
+    protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
+        super.internalSetDataProvider(dataProvider);
+        for (Column<T, ?> column : getColumns()) {
+            column.updateSortable();
+        }
+    }
+
 }

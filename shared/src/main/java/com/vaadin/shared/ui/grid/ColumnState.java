@@ -27,7 +27,7 @@ public class ColumnState extends AbstractGridExtensionState {
 
     public String caption;
     public String internalId;
-    public boolean sortable = true;
+    public boolean sortable = false;
     public boolean editable = false;
 
     /** The caption for the column hiding toggle. */
@@ -66,7 +66,7 @@ public class ColumnState extends AbstractGridExtensionState {
     public Connector renderer;
     /**
      * Whether the contents define the minimum width for this column.
-     * 
+     *
      * @since 8.1
      */
     public boolean minimumWidthFromContent = true;

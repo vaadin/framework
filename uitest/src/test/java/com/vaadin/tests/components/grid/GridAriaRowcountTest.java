@@ -15,10 +15,13 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -77,6 +80,7 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
     }
 
     private boolean containsRows(int rowcount) {
-        return grid.getHTML().contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
+        return grid.getHTML()
+                .contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
     }
 }
