@@ -194,22 +194,24 @@ public class VFlash extends HTML {
          * codebase
          */
         if (codebase != null) {
-            html.append("codebase=\"" + WidgetUtil.escapeAttribute(codebase)
-                    + "\" ");
+            html.append("codebase=\"")
+                    .append(WidgetUtil.escapeAttribute(codebase)).append("\" ");
         } else {
             html.append(
                     "codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
         }
 
         // Add width and height
-        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+        html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
+                .append("\" ");
+        html.append("height=\"").append(WidgetUtil.escapeAttribute(height))
+                .append("\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
         if (codetype != null) {
-            html.append("codetype=\"" + WidgetUtil.escapeAttribute(codetype)
-                    + "\" ");
+            html.append("codetype=\"")
+                    .append(WidgetUtil.escapeAttribute(codetype)).append("\" ");
         }
 
         // Standby
@@ -235,27 +237,33 @@ public class VFlash extends HTML {
         // Add parameters to OBJECT
         for (String name : embedParams.keySet()) {
             html.append("<param ");
-            html.append("name=\"" + WidgetUtil.escapeAttribute(name) + "\" ");
+            html.append("name=\"").append(WidgetUtil.escapeAttribute(name))
+                    .append("\" ");
             html.append("value=\""
-                    + WidgetUtil.escapeAttribute(embedParams.get(name))
-                    + "\" ");
+            ).append(WidgetUtil.escapeAttribute(embedParams.get(name)))
+                    .append("\" ");
             html.append("/>");
         }
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + WidgetUtil.escapeAttribute(source) + "\" ");
+        html.append("src=\"").append(WidgetUtil.escapeAttribute(source))
+                .append("\" ");
         if (hasPercentageWidth() && slotOffsetWidth >= 0) {
-            html.append("width=\"" + getRelativePixelWidth() + "\" ");
+            html.append("width=\"").append(getRelativePixelWidth())
+                    .append("\" ");
         } else {
-            html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
+            html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
+                    .append("\" ");
         }
 
         if (hasPercentageHeight() && slotOffsetHeight >= 0) {
-            html.append("height=\"" + getRelativePixelHeight() + "px\" ");
+            html.append("height=\"").append(getRelativePixelHeight())
+                    .append("px\" ");
         } else {
             html.append(
-                    "height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+                    "height=\"").append(WidgetUtil.escapeAttribute(height))
+                    .append("\" ");
         }
 
         html.append("type=\"application/x-shockwave-flash\" ");
@@ -264,8 +272,9 @@ public class VFlash extends HTML {
         for (String name : embedParams.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
             html.append('=');
-            html.append("\"" + WidgetUtil.escapeAttribute(embedParams.get(name))
-                    + "\"");
+            html.append("\"")
+                    .append(WidgetUtil.escapeAttribute(embedParams.get(name)))
+                    .append("\"");
         }
 
         // End embed tag

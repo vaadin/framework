@@ -107,12 +107,13 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
                 generateOrderBy(query, o, orderBys.indexOf(o) == 0);
             }
         }
-        query.append(") AS rownum, " + toSelect + " FROM ").append(tableName);
+        query.append(") AS rownum, ").append(toSelect).append(" FROM ")
+                .append(tableName);
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
         query.append(") AS a WHERE a.rownum BETWEEN ").append(offset)
-                .append(" AND ").append(offset + pagelength);
+                .append(" AND ").append(offset).append(pagelength);
         sh.setQueryString(query.toString());
         return sh;
     }

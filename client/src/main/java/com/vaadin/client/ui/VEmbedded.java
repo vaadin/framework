@@ -85,8 +85,9 @@ public class VEmbedded extends HTML {
          * this by setting his own classid.
          */
         if (state.classId != null) {
-            html.append("classid=\"" + WidgetUtil.escapeAttribute(state.classId)
-                    + "\" ");
+            html.append("classid=\"")
+                    .append(WidgetUtil.escapeAttribute(state.classId))
+                    .append("\" ");
         } else {
             html.append(
                     "classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
@@ -114,8 +115,10 @@ public class VEmbedded extends HTML {
         String width = paintable.getState().width;
 
         // Add width and height
-        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+        html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
+                .append("\" ");
+        html.append("height=\"").append(WidgetUtil.escapeAttribute(height))
+                .append("\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Codetype
@@ -126,14 +129,16 @@ public class VEmbedded extends HTML {
 
         // Standby
         if (state.standby != null) {
-            html.append("standby=\"" + WidgetUtil.escapeAttribute(state.standby)
-                    + "\" ");
+            html.append("standby=\"")
+                    .append(WidgetUtil.escapeAttribute(state.standby))
+                    .append("\" ");
         }
 
         // Archive
         if (state.archive != null) {
-            html.append("archive=\"" + WidgetUtil.escapeAttribute(state.archive)
-                    + "\" ");
+            html.append("archive=\"")
+                    .append(WidgetUtil.escapeAttribute(state.archive))
+                    .append("\" ");
         }
 
         // End object tag
@@ -148,26 +153,32 @@ public class VEmbedded extends HTML {
         // Add parameters to OBJECT
         for (String name : parameters.keySet()) {
             html.append("<param ");
-            html.append("name=\"" + WidgetUtil.escapeAttribute(name) + "\" ");
+            html.append("name=\"").append(WidgetUtil.escapeAttribute(name))
+                    .append("\" ");
             html.append("value=\""
-                    + WidgetUtil.escapeAttribute(parameters.get(name)) + "\" ");
+            ).append(WidgetUtil.escapeAttribute(parameters.get(name)))
+                    .append("\" ");
             html.append("/>");
         }
 
         // Build inner EMBED tag
         html.append("<embed ");
-        html.append("src=\"" + WidgetUtil.escapeAttribute(getSrc(src, client))
-                + "\" ");
-        html.append("width=\"" + WidgetUtil.escapeAttribute(width) + "\" ");
-        html.append("height=\"" + WidgetUtil.escapeAttribute(height) + "\" ");
+        html.append("src=\"")
+                .append(WidgetUtil.escapeAttribute(getSrc(src, client)))
+                .append("\" ");
+        html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
+                .append("\" ");
+        html.append("height=\"").append(WidgetUtil.escapeAttribute(height))
+                .append("\" ");
         html.append("type=\"application/x-shockwave-flash\" ");
 
         // Add the parameters to the Embed
         for (String name : parameters.keySet()) {
             html.append(WidgetUtil.escapeAttribute(name));
             html.append('=');
-            html.append("\"" + WidgetUtil.escapeAttribute(parameters.get(name))
-                    + "\"");
+            html.append("\"")
+                    .append(WidgetUtil.escapeAttribute(parameters.get(name)))
+                    .append("\"");
         }
 
         // End embed tag

@@ -151,7 +151,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else {
                 content = WidgetUtil.escapeHTML(caption);
             }
-            sb.append("<span>" + content + "</span>");
+            sb.append("<span>").append(content).append("</span>");
             return sb.toString();
         }
 

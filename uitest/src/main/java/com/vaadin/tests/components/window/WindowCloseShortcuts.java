@@ -174,10 +174,10 @@ public class WindowCloseShortcuts extends AbstractTestUI {
         }
         Collections.sort(names);
 
-        sb.append("<" + producedElem.tagName() + "");
+        sb.append('<').append(producedElem.tagName());
         for (String attrName : names) {
-            sb.append(' ').append(attrName).append('=').append("\'")
-                    .append(producedElem.attr(attrName)).append("\'");
+            sb.append(' ').append(attrName).append('=').append('\'')
+                    .append(producedElem.attr(attrName)).append('\'');
         }
         sb.append('>');
         for (Node child : producedElem.childNodes()) {

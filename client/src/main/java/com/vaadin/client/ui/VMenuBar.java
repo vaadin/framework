@@ -220,13 +220,13 @@ public class VMenuBar extends SimpleFocusablePanel
             // Add submenu indicator
             if (item.getChildCount() > 0) {
                 String bgStyle = "";
-                itemHTML.append("<span class=\"" + getStylePrimaryName()
-                        + "-submenu-indicator\"" + bgStyle
-                        + ">&#x25BA;</span>");
+                itemHTML.append("<span class=\"").append(getStylePrimaryName())
+                        .append("-submenu-indicator\"").append(bgStyle)
+                        .append(">&#x25BA;</span>");
             }
 
-            itemHTML.append("<span class=\"" + getStylePrimaryName()
-                    + "-menuitem-caption\">");
+            itemHTML.append("<span class=\"").append(getStylePrimaryName())
+                    .append("-menuitem-caption\">");
             Icon icon = client.getIcon(item.getStringAttribute("icon"));
             if (icon != null) {
                 itemHTML.append(icon.getElement().getString());

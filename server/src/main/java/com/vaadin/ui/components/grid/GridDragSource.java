@@ -61,7 +61,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Default drag data generator for Grid. It creates a list of row values
      * separated by a tabulator character ({@code \t}).
-     * 
+     *
      * <pre>
      * "column1_value\tcolumn2_value\t ... columnN_value"
      * </pre>
@@ -163,16 +163,16 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * type} data.
      * <p>
      * Example, building a JSON object that contains the item's values:
-     * 
+     *
      * <pre>
      *     dragSourceExtension.setDragDataGenerator("application/json", item ->
      * {
      *         StringBuilder builder = new StringBuilder();
      *         builder.append("{");
      *         getParent().getColumns().forEach(column -> {
-     *             builder.append("\"" + column.getCaption() + "\"");
+     *             builder.append("\"").append(column.getCaption()).append("\"");
      *             builder.append(":");
-     *             builder.append("\"" + column.getValueProvider().apply(item) + "\"");
+     *             builder.append("\"").append(column.getValueProvider().apply(item)).append("\"");
      *             builder.append(",");
      *         });
      *         builder.setLength(builder.length() - 1); // Remove last comma

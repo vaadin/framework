@@ -17,19 +17,19 @@ public class ButtonMouseDetails extends TestBase {
         @Override
         public void buttonClick(ClickEvent event) {
             StringBuilder str = new StringBuilder(out.getValue());
-            str.append(clickCounter + ":\t");
+            str.append(clickCounter).append(":\t");
 
             // Modifier keys
-            str.append("ctrl=" + event.isCtrlKey() + ",\t");
-            str.append("alt=" + event.isAltKey() + ",\t");
-            str.append("meta=" + event.isMetaKey() + ",\t");
-            str.append("shift=" + event.isShiftKey() + ",\t");
+            str.append("ctrl=").append(event.isCtrlKey()).append(",\t");
+            str.append("alt=").append(event.isAltKey()).append(",\t");
+            str.append("meta=").append(event.isMetaKey()).append(",\t");
+            str.append("shift=").append(event.isShiftKey()).append(",\t");
 
             // Coordinates
-            str.append("X=" + event.getRelativeX() + ",\t");
-            str.append("Y=" + event.getRelativeY() + ",\t");
-            str.append("clientX=" + event.getClientX() + ",\t");
-            str.append("clientY=" + event.getClientY());
+            str.append("X=").append(event.getRelativeX()).append(",\t");
+            str.append("Y=").append(event.getRelativeY()).append(",\t");
+            str.append("clientX=").append(event.getClientX()).append(",\t");
+            str.append("clientY=").append(event.getClientY());
 
             str.append("\n");
 

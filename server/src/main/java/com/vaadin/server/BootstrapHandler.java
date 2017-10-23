@@ -706,9 +706,9 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         StringBuilder builder = new StringBuilder();
         builder.append("//<![CDATA[\n");
-        builder.append("if (!window.vaadin) alert(" + JsonUtil.quote(
+        builder.append("if (!window.vaadin) alert(").append(JsonUtil.quote(
                 "Failed to load the bootstrap javascript: " + bootstrapLocation)
-                + ");\n");
+        ).append(");\n");
 
         appendMainScriptTagContents(context, builder);
 
