@@ -59,9 +59,10 @@ public class ComponentRenderer<T> extends ClickableRenderer<T, Component> {
     }
 
     /**
-     * Adds a click listener to the renderer that will select the clicked row item in the grid
+     * Adds a click listener to the renderer that will select the clicked row item in the grid.
      *
-     * @param grid The grid to forward the selection to
+     * @param grid
+     *             the grid to forward the selection to
      *
      * @see ClickableRenderer#addClickListener(RendererClickListener)
      */

@@ -20,25 +20,25 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.connectors.ClickableRendererConnector;
 import com.vaadin.client.renderers.ClickableRenderer;
+import com.vaadin.client.renderers.ComponentRenderer;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.grid.renderers.ComponentRendererState;
-import com.vaadin.ui.renderers.ComponentRenderer;
 import elemental.json.JsonObject;
 
 /**
- * Connector for {@link ComponentRenderer}. The renderer wraps the component
+ * Connector for {@link com.vaadin.ui.renderers.ComponentRenderer}. The renderer wraps the component
  * into a {@link SimplePanel} to allow handling events correctly.
  *
  * @author Vaadin Ltd
  * @since 8.1
  */
-@Connect(ComponentRenderer.class)
+@Connect(com.vaadin.ui.renderers.ComponentRenderer.class)
 public class ComponentRendererConnector
         extends ClickableRendererConnector<String> {
 
     @Override
-    public com.vaadin.client.connectors.grid.ComponentRenderer getRenderer() {
-        return (com.vaadin.client.connectors.grid.ComponentRenderer) super.getRenderer();
+    public ComponentRenderer getRenderer() {
+        return (ComponentRenderer) super.getRenderer();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ComponentRendererConnector
 
     @Override
     protected ClickableRenderer<String, SimplePanel> createRenderer() {
-        return new com.vaadin.client.connectors.grid.ComponentRenderer() {
+        return new ComponentRenderer() {
             @Override
             public ApplicationConnection getConnectorConnection() {
                 return getConnection();
