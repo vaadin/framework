@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -152,7 +153,7 @@ public class TableRepairsScrollPositionOnReAddingAllRowsTest
 
     private void assertCloseTo(String reason, int actual, int expected) {
         // ranged check because IE9 consistently misses the mark by 1 pixel
-        assertEquals(reason, expected, (double) actual, 1);
+        assertThat(reason, (double) actual, closeTo(expected, 1));
     }
 
 }

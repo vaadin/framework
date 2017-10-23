@@ -15,8 +15,9 @@
  */
 package com.vaadin.server;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -92,7 +93,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("foobar", "message",
                 "details", "url");
 
-        assertTrue(notification.contains("\"caption\":\"foobar\""));
+        assertThat(notification, containsString("\"caption\":\"foobar\""));
     }
 
     @Test
@@ -100,7 +101,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification(null, "message",
                 "details", "url");
 
-        assertTrue(notification.contains("\"caption\":null"));
+        assertThat(notification, containsString("\"caption\":null"));
     }
 
     @Test
@@ -108,7 +109,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", "foo",
                 "bar", "url");
 
-        assertTrue(notification.contains("\"details\":\"bar\""));
+        assertThat(notification, containsString("\"details\":\"bar\""));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", null,
                 "foobar", "url");
 
-        assertTrue(notification.contains("\"message\":null"));
+        assertThat(notification, containsString("\"message\":null"));
     }
 
     @Test
@@ -124,7 +125,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", null, null,
                 "url");
 
-        assertTrue(notification.contains("\"message\":null"));
+        assertThat(notification, containsString("\"message\":null"));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", "foobar",
                 null, "url");
 
-        assertTrue(notification.contains("\"message\":\"foobar\""));
+        assertThat(notification, containsString("\"message\":\"foobar\""));
     }
 
     @Test
@@ -140,7 +141,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", "message",
                 "details", "foobar");
 
-        assertTrue(notification.contains("\"url\":\"foobar\""));
+        assertThat(notification, containsString("\"url\":\"foobar\""));
     }
 
     @Test
@@ -148,7 +149,7 @@ public class VaadinServiceTest {
         String notification = createCriticalNotification("caption", "message",
                 "details", null);
 
-        assertTrue(notification.contains("\"url\":null"));
+        assertThat(notification, containsString("\"url\":null"));
     }
 
     @Test

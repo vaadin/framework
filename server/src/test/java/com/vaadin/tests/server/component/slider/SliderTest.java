@@ -1,7 +1,8 @@
 package com.vaadin.tests.server.component.slider;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -40,8 +41,8 @@ public class SliderTest {
 
             slider.setValue(-1.0);
         } catch (Slider.ValueOutOfBoundsException e) {
-            assertTrue(e.getMessage()
-                    .contains("Value -1.0 is out of bounds: [0.0, 100.0]"));
+            assertThat(e.getMessage(), containsString(
+                    "Value -1.0 is out of bounds: [0.0, 100.0]"));
         }
     }
 

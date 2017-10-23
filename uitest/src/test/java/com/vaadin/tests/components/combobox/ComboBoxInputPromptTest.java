@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.combobox;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -38,8 +37,8 @@ public class ComboBoxInputPromptTest extends MultiBrowserTest {
 
         assertEquals("Normal input prompt",
                 getInputPromptValue(normalComboBox));
-        assertTrue(getInputPromptValue(disabledComboBox).isEmpty());
-        assertTrue(getInputPromptValue(readOnlyComboBox).isEmpty());
+        assertEquals("", getInputPromptValue(disabledComboBox));
+        assertEquals("", getInputPromptValue(readOnlyComboBox));
 
         toggleDisabledAndReadonly();
         assertEquals("Disabled input prompt",
@@ -48,8 +47,8 @@ public class ComboBoxInputPromptTest extends MultiBrowserTest {
                 getInputPromptValue(readOnlyComboBox));
 
         toggleDisabledAndReadonly();
-        assertTrue(getInputPromptValue(disabledComboBox).isEmpty());
-        assertTrue(getInputPromptValue(readOnlyComboBox).isEmpty());
+        assertEquals("", getInputPromptValue(disabledComboBox));
+        assertEquals("", getInputPromptValue(readOnlyComboBox));
     }
 
     private void toggleDisabledAndReadonly() {

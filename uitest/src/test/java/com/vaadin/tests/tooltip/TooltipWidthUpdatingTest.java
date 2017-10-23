@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.tooltip;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -38,8 +39,9 @@ public class TooltipWidthUpdatingTest extends TooltipTest {
         moveMouseToTopLeft(btnShortTooltip);
         testBenchElement(btnShortTooltip).showTooltip();
 
-        assertTrue(getDriver().findElement(By.className("popupContent"))
-                .getSize().getWidth() < TooltipWidthUpdating.MAX_WIDTH);
+        assertThat(getDriver().findElement(By.className("popupContent"))
+                .getSize().getWidth(),
+                lessThan(TooltipWidthUpdating.MAX_WIDTH));
     }
 
 }

@@ -1,6 +1,10 @@
 package com.vaadin.tests.components.ui;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -15,11 +19,10 @@ public class UISerializationTest extends SingleBrowserTest {
 
         serialize();
 
-        assertTrue(getLogRow(0).startsWith("3. Diff states match, size: "));
-        assertTrue(getLogRow(1).startsWith("2. Deserialized UI in "));
-        assertTrue(getLogRow(2).startsWith("1. Serialized UI in"));
-        assertTrue(getLogRow(2).contains(" into "));
-        assertTrue(getLogRow(2).endsWith(" bytes"));
+        assertThat(getLogRow(0), startsWith("3. Diff states match, size: "));
+        assertThat(getLogRow(1), startsWith("2. Deserialized UI in "));
+        assertThat(getLogRow(2), allOf(startsWith("1. Serialized UI in"),
+                containsString(" into "), endsWith(" bytes")));
     }
 
     private void serialize() {

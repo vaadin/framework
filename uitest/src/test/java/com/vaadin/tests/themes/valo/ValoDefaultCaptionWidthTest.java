@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -36,8 +38,8 @@ public class ValoDefaultCaptionWidthTest extends DefaultCaptionWidthTest {
         int width = $(ColorPickerElement.class).first().getSize().getWidth();
         // Make sure that implicit width is less than one that will be
         // explicitly set by the test
-        assertTrue("Width of color picker is overridden by "
-                + "default caption feature", width < 148);
+        assertThat("Width of color picker is overridden by "
+                + "default caption feature", width, lessThan(148));
     }
 
     @Override
@@ -47,7 +49,9 @@ public class ValoDefaultCaptionWidthTest extends DefaultCaptionWidthTest {
         int width = $(ColorPickerElement.class).first().getSize().getWidth();
         // Width should be 150px but let's just check that it's not which is
         // used when default caption is used and at least >= 150-1
-        assertTrue("Width of color picker is overridden by "
-                + "default caption feature", width > 149);
+        assertThat(
+                "Width of color picker is overridden by "
+                        + "default caption feature",
+                width, greaterThan(149));
     }
 }

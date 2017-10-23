@@ -1,7 +1,8 @@
 package com.vaadin.tests.components.window;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -43,8 +44,8 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         WindowElement maximizedWindow = openMaximizedWindow();
         WindowElement anotherWindow = openAnotherWindow();
 
-        assertTrue(anotherWindow.getCssValue("z-index")
-                .compareTo(maximizedWindow.getCssValue("z-index")) > 0);
+        assertThat(anotherWindow.getCssValue("z-index"),
+                greaterThan(maximizedWindow.getCssValue("z-index")));
 
         assertEquals("10000", getMaximizedWindow().getCssValue("z-index"));
         assertEquals("10001", getAnotherWindow().getCssValue("z-index"));
@@ -63,7 +64,7 @@ public class MaximizedWindowOrderTest extends MultiBrowserTest {
         anotherWindow.move(10, 20);
         maximizedWindow.maximize();
 
-        assertTrue(maximizedWindow.getCssValue("z-index")
-                .compareTo(anotherWindow.getCssValue("z-index")) > 0);
+        assertThat(maximizedWindow.getCssValue("z-index"),
+                greaterThan(anotherWindow.getCssValue("z-index")));
     }
 }

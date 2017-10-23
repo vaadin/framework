@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.actions;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -61,8 +62,8 @@ public class ActionsOnDetachedComponentsTest extends MultiBrowserTest {
 
         assertElementNotPresent(By.id("layer-A"));
         assertElementPresent(By.id("layer-B"));
-        assertTrue(getLogRow(0).endsWith("btn-A"));
-        assertFalse(getLogRow(1).endsWith("btn-B"));
+        assertThat(getLogRow(0), endsWith("btn-A"));
+        assertThat(getLogRow(1), not(endsWith("btn-B")));
     }
 
     @Test
@@ -80,8 +81,9 @@ public class ActionsOnDetachedComponentsTest extends MultiBrowserTest {
 
         assertElementNotPresent(By.id("layer-A"));
         assertElementPresent(By.id("layer-B"));
-        assertTrue(getLogRow(0).endsWith("tableAction"));
-        assertFalse(getLogRow(1).endsWith("tableAction"));
+        assertThat(getLogRow(0), endsWith("tableAction"));
+        assertThat(getLogRow(1), not(endsWith("tableAction")));
+
     }
 
 }

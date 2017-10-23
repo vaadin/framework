@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -30,7 +31,8 @@ public class VerifyJreVersionTest extends SingleBrowserTest {
 
         WebElement jreVersionLabel = vaadinElementById("jreVersionLabel");
 
-        assertTrue(jreVersionLabel.getText().startsWith("Using Java 1.8.0_"));
+        assertThat(jreVersionLabel.getText(),
+                CoreMatchers.startsWith("Using Java 1.8.0_"));
     }
 
 }

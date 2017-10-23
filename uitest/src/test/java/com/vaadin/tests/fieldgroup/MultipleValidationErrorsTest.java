@@ -1,6 +1,7 @@
 package com.vaadin.tests.fieldgroup;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -33,9 +34,9 @@ public class MultipleValidationErrorsTest extends MultiBrowserTest {
         String validationErrors = $(LabelElement.class).id("validationErrors")
                 .getText();
 
-        assertTrue(validationErrors.contains(
+        assertThat(validationErrors, containsString(
                 MultipleValidationErrors.FIRST_NAME_NOT_EMPTY_VALIDATION_MESSAGE));
-        assertTrue(validationErrors.contains(
+        assertThat(validationErrors, containsString(
                 MultipleValidationErrors.LAST_NAME_NOT_EMPTY_VALIDATION_MESSAGE));
     }
 }

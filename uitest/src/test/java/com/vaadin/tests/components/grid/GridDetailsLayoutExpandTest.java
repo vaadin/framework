@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -66,7 +67,8 @@ public class GridDetailsLayoutExpandTest extends MultiBrowserTest {
 
     private void assertLabelWidth(String id, double expectedWidth) {
         // 1px leeway for calculations
-        assertEquals("Unexpected label width.", expectedWidth,
-                (double) $(LabelElement.class).id(id).getSize().width, 1);
+        assertThat("Unexpected label width.",
+                (double) $(LabelElement.class).id(id).getSize().width,
+                closeTo(expectedWidth, 1d));
     }
 }

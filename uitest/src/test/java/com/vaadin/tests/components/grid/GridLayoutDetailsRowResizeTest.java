@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
@@ -155,11 +157,11 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
         for (Entry<Integer, ButtonElement> entry : ordered.entrySet()) {
             ++i;
             ButtonElement button = entry.getValue();
-            assertEquals(
+            assertThat(
                     String.format("Unexpected button position: details row %s.",
                             i),
-                    positions.get(button) + (i * labelHeight),
-                    (double) button.getLocation().getY(), 1);
+                    (double) button.getLocation().getY(),
+                    closeTo(positions.get(button) + (i * labelHeight), 1d));
         }
 
         // toggle the contents
@@ -169,22 +171,23 @@ public class GridLayoutDetailsRowResizeTest extends MultiBrowserTest {
 
         // assert original positions back
         for (ButtonElement button : buttons) {
-            assertEquals(String.format("Unexpected button position."),
-                    positions.get(button), (double) button.getLocation().getY(),
-                    1);
+            assertThat(String.format("Unexpected button position."),
+                    (double) button.getLocation().getY(),
+                    closeTo(positions.get(button), 1d));
         }
     }
 
     private void assertLabelHeight(String id, double expectedHeight) {
         // 1px leeway for calculations
-        assertEquals("Unexpected label height.", expectedHeight,
-                (double) $(LabelElement.class).id(id).getSize().height, 1);
+        assertThat("Unexpected label height.",
+                (double) $(LabelElement.class).id(id).getSize().height,
+                closeTo(expectedHeight, 1d));
     }
 
     private void assertDetailsRowHeight(int layoutHeight) {
         // check that details row height matches layout height (3px leeway)
         WebElement detailsRow = findElement(By.className("v-grid-spacer"));
-        assertEquals("Unexpected details row height",
-                detailsRow.getSize().height, (double) layoutHeight, 3);
+        assertThat("Unexpected details row height", (double) layoutHeight,
+                closeTo(detailsRow.getSize().height, 3d));
     }
 }

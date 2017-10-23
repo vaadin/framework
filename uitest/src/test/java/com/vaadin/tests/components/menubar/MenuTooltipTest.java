@@ -15,8 +15,10 @@
  */
 package com.vaadin.tests.components.menubar;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -56,12 +58,12 @@ public class MenuTooltipTest extends MultiBrowserTest {
 
         sleep(1000);
 
-        assertTrue(getTooltipElement().getLocation().getX() < -1000);
+        assertThat(getTooltipElement().getLocation().getX(), lessThan(-1000));
 
         sleep(3000);
 
-        assertTrue(getTooltipElement().getLocation().getX() > elementCoordinates
-                .onPage().getX());
+        assertThat(getTooltipElement().getLocation().getX(),
+                greaterThan(elementCoordinates.onPage().getX()));
         assertEquals("TOOLTIP 1", getTooltipElement().getText());
     }
 }

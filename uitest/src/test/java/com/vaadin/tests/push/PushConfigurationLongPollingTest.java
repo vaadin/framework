@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -26,8 +27,9 @@ public class PushConfigurationLongPollingTest extends PushConfigurationTest {
         openDebugLogTab();
 
         getTransportSelect().selectByText("Long polling");
-        assertTrue(getStatusText().contains("fallbackTransport: long-polling"));
-        assertTrue(getStatusText().contains("transport: long-polling"));
+        assertThat(getStatusText(),
+                containsString("fallbackTransport: long-polling"));
+        assertThat(getStatusText(), containsString("transport: long-polling"));
 
         clearDebugMessages();
         getPushModeSelect().selectByText("Automatic");

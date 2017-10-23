@@ -1,6 +1,7 @@
 package com.vaadin.v7.tests.components.grid;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -43,8 +44,8 @@ public class GridDisabledSideBarTest extends GridBasicClientFeaturesTest {
     }
 
     private void assertSideBarContainsClass(String cssClass) {
-        assertTrue(findElement(By.cssSelector(".v-grid-sidebar"))
-                .getAttribute("class").contains(cssClass));
+        assertThat(findElement(By.cssSelector(".v-grid-sidebar"))
+                .getAttribute("class"), containsString(cssClass));
     }
 
     @Test

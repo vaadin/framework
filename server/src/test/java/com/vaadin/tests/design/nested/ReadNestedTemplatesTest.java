@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.design.nested;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,8 @@ public class ReadNestedTemplatesTest {
     @Test
     public void rootContainsOneChild() {
         assertEquals(1, root.getComponentCount());
-        assertTrue(root.iterator().next() instanceof MyExtendedChildDesign);
+        assertThat(root.iterator().next(),
+                instanceOf(MyExtendedChildDesign.class));
     }
 
     @Test

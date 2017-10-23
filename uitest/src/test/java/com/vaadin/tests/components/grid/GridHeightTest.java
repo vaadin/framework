@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -172,6 +174,7 @@ public class GridHeightTest extends MultiBrowserTest {
     }
 
     private void assertGridHeight(int expected, int actual) {
-        assertEquals("Unexpected Grid Height", expected, (double) actual, 1);
+        assertThat("Unexpected Grid Height", (double) actual,
+                closeTo(expected, 1));
     }
 }

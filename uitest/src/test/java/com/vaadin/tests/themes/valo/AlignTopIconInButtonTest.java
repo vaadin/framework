@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.themes.valo;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -42,6 +43,6 @@ public class AlignTopIconInButtonTest extends MultiBrowserTest {
                 + wrapper.getSize().getWidth() - icon.getLocation().getX()
                 - icon.getSize().getWidth();
 
-        assertTrue(Math.abs(rightSpace - leftSpace) <= 2);
+        assertThat(Math.abs(rightSpace - leftSpace), lessThanOrEqualTo(2));
     }
 }

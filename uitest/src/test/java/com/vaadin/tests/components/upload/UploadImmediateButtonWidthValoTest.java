@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.upload;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.closeTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -31,6 +32,6 @@ public class UploadImmediateButtonWidthValoTest
 
     @Test
     public void immediateButtonWithUndefinedWidth() {
-        assertEquals(89, getButtonWidth("upload3"), 2);
+        assertThat(getButtonWidth("upload3"), closeTo(89, 2));
     }
 }

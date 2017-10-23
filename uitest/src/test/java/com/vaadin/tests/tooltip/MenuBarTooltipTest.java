@@ -1,6 +1,7 @@
 package com.vaadin.tests.tooltip;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -29,8 +30,9 @@ public class MenuBarTooltipTest extends MultiBrowserTest {
 
         $(MenuBarElement.class).first().clickItem("Menu item");
 
-        assertTrue(String.format("Invalid z-index for theme %s.", theme),
-                getZIndex("v-tooltip") > getZIndex("v-menubar-popup"));
+        assertThat(String.format("Invalid z-index for theme %s.", theme),
+                getZIndex("v-tooltip"),
+                greaterThan(getZIndex("v-menubar-popup")));
     }
 
     private int getZIndex(String className) {

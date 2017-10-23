@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.push;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -26,8 +27,9 @@ public class PushConfigurationStreamingTest extends PushConfigurationTest {
         openDebugLogTab();
 
         getTransportSelect().selectByText("Streaming");
-        assertTrue(getStatusText().contains("fallbackTransport: long-polling"));
-        assertTrue(getStatusText().contains("transport: streaming"));
+        assertThat(getStatusText(),
+                containsString("fallbackTransport: long-polling"));
+        assertThat(getStatusText(), containsString("transport: streaming"));
 
         clearDebugMessages();
         getPushModeSelect().selectByText("Automatic");

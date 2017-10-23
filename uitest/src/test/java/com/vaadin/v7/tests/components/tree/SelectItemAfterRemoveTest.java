@@ -1,7 +1,8 @@
 package com.vaadin.v7.tests.components.tree;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class SelectItemAfterRemoveTest extends MultiBrowserTest {
         getSecondSpan().click();
 
         assertEquals(2, getNodes().size());
-        assertTrue(getFirstNode().getAttribute("class")
-                .contains("v-tree-node-selected"));
+        assertThat(getFirstNode().getAttribute("class"),
+                containsString("v-tree-node-selected"));
     }
 
     private WebElement getFirstNode() {

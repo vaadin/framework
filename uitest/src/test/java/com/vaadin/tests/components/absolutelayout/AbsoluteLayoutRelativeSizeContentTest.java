@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.absolutelayout;
 
+import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,12 +84,12 @@ public class AbsoluteLayoutRelativeSizeContentTest extends MultiBrowserTest {
         WebElement layout = findElement(By.id("halfinfull-layout"));
         WebElement half = findElement(By.id("halfinfull-table"));
 
-        assertEquals("Half-sized table should be half as wide as full layout",
-                ((double) layout.getSize().width) / 2,
-                (double) half.getSize().width, 0.5);
-        assertEquals("Half-sized table should be half as high as full layout",
-                ((double) layout.getSize().height) / 2,
-                (double) half.getSize().height, 0.5);
+        assertThat("Half-sized table should be half as wide as full layout",
+                (double) half.getSize().width,
+                closeTo(((double) layout.getSize().width) / 2, 0.5));
+        assertThat("Half-sized table should be half as high as full layout",
+                (double) half.getSize().height,
+                closeTo(((double) layout.getSize().height) / 2, 0.5));
     }
 
     @Test

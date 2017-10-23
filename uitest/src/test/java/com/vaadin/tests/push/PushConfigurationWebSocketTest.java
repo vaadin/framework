@@ -15,8 +15,9 @@
  */
 package com.vaadin.tests.push;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
@@ -35,15 +36,16 @@ public class PushConfigurationWebSocketTest extends PushConfigurationTest {
         getTransportSelect().selectByText("Websocket");
         getPushModeSelect().selectByText("Automatic");
 
-        assertTrue(getStatusText().contains("fallbackTransport: long-polling"));
-        assertTrue(getStatusText().contains("transport: websocket"));
+        assertThat(getStatusText(),
+                containsString("fallbackTransport: long-polling"));
+        assertThat(getStatusText(), containsString("transport: websocket"));
 
         waitForServerCounterToUpdate();
 
         // Use debug console to verify we used the correct transport type
-        assertTrue(driver.getPageSource()
-                .contains("Push connection established using websocket"));
-        assertFalse(driver.getPageSource()
-                .contains("Push connection established using streaming"));
+        assertThat(driver.getPageSource(),
+                containsString("Push connection established using websocket"));
+        assertThat(driver.getPageSource(), not(
+                containsString("Push connection established using streaming")));
     }
 }

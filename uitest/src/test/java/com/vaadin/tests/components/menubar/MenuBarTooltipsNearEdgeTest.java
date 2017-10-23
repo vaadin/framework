@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.menubar;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -43,7 +44,7 @@ public class MenuBarTooltipsNearEdgeTest extends MultiBrowserTest {
         mouse.click(menuLocation);
         mouse.mouseMove(menuLocation, 5, -40);
         WebElement tooltip = getTooltipElement();
-        assertTrue(tooltip.getLocation().x < menuLocation.onPage().x
-                - tooltip.getSize().getWidth());
+        assertThat(tooltip.getLocation().x, lessThan(
+                menuLocation.onPage().x - tooltip.getSize().getWidth()));
     }
 }

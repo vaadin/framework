@@ -25,7 +25,7 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertTrue(errors.isEmpty());
+        assertTrue("Should have no errors", errors.isEmpty());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertTrue(errors.isEmpty());
+        assertTrue("Should have no errors", errors.isEmpty());
 
         assertPopupClosed(combobox);
     }
@@ -55,7 +55,7 @@ public class ComboBoxEmptyItemsKeyboardNavigationTest
 
         List<WebElement> errors = findElements(By.className("SEVERE"));
 
-        assertTrue(errors.isEmpty());
+        assertTrue("Should have no errors", errors.isEmpty());
         assertPopupClosed(combobox);
     }
 

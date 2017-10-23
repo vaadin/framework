@@ -1,6 +1,7 @@
 package com.vaadin.tests.themes.chameleon;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 
@@ -11,7 +12,6 @@ import com.vaadin.testbench.elements.NotificationElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ChameleonNotificationTest extends MultiBrowserTest {
-
     @Test
     public void gradientPathIsCorrect() throws IOException {
         openTestURL();
@@ -20,7 +20,7 @@ public class ChameleonNotificationTest extends MultiBrowserTest {
         NotificationElement notificationElement = $(NotificationElement.class)
                 .first();
 
-        assertTrue(notificationElement.getCssValue("background-image")
-                .contains("chameleon/img/grad"));
+        assertThat(notificationElement.getCssValue("background-image"),
+                containsString("chameleon/img/grad"));
     }
 }

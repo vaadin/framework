@@ -35,7 +35,7 @@ public class PrimaryStyleTest extends MultiBrowserTest {
         // Verify the initial class names for all three components.
         List<WebElement> initialElements = driver
                 .findElements(By.className("initial-state"));
-        assertEquals(3, initialElements.size());
+        assertEquals("Size should be 3", 3, initialElements.size());
 
         // Click on a button that updates the styles.
         $(ButtonElement.class).id("update-button").click();
@@ -43,7 +43,8 @@ public class PrimaryStyleTest extends MultiBrowserTest {
         // Verify that the class names where updated as expected.
         List<WebElement> updatedElements = driver
                 .findElements(By.className("updated-correctly"));
-        assertEquals(initialElements.size(), updatedElements.size());
+        assertEquals("Size should be " + initialElements.size(),
+                initialElements.size(), updatedElements.size());
     }
 
 }

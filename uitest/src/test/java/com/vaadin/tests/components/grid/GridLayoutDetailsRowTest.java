@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.number.IsCloseTo.closeTo;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -57,7 +58,8 @@ public class GridLayoutDetailsRowTest extends MultiBrowserTest {
 
     private void assertLabelHeight(String id, double expectedHeight) {
         // 1px leeway for calculations
-        assertEquals("Unexpected label height.", expectedHeight,
-                (double) $(LabelElement.class).id(id).getSize().height, 1);
+        assertThat("Unexpected label height.",
+                (double) $(LabelElement.class).id(id).getSize().height,
+                closeTo(expectedHeight, 1d));
     }
 }

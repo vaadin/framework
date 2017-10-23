@@ -84,7 +84,8 @@ public class NestedCustomLayoutsTest {
 
     private void assertChildrenCount(Document doc) {
         Element rootNode = doc.body().child(0);
-        assertFalse(rootNode.children().isEmpty());
+        assertFalse("Children should not be empty",
+                rootNode.children().isEmpty());
 
         for (Element child : rootNode.children()) {
             // make sure that the nested custom layouts do not render children
