@@ -8,6 +8,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.util.FileTypeResolver;
 
 public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
 
@@ -33,7 +34,10 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                         + "/tests-tickets/icons/"
                         + item.substring(0, 2).toLowerCase() + ".gif");
                 InputStream is = new FileInputStream(file);
-                return new StreamResource(() -> is, file.getName());
+                StreamResource stream = new StreamResource(() -> is,
+                        file.getName());
+                stream.setMIMEType(FileTypeResolver.getMIMEType(file));
+                return stream;
             } catch (Exception e) {
                 return null;
             }

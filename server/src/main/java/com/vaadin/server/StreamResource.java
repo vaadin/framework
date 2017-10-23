@@ -220,16 +220,16 @@ public class StreamResource implements ConnectorResource {
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
-        } else if (obj instanceof StreamResource) {
+        }
+        if (obj instanceof StreamResource) {
             StreamResource that = (StreamResource) obj;
             return SharedUtil.equals(getStreamSource(), that.getStreamSource())
                     && SharedUtil.equals(MIMEType, that.MIMEType)
                     && SharedUtil.equals(getFilename(), that.getFilename())
                     && getBufferSize() == that.getBufferSize()
                     && getCacheTime() == that.getCacheTime();
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

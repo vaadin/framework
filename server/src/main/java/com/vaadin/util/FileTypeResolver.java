@@ -338,9 +338,8 @@ public class FileTypeResolver implements Serializable {
             // Drives
             if (file.getParentFile() == null) {
                 return "inode/drive";
-            } else {
-                return "inode/directory";
             }
+            return "inode/directory";
         }
 
         // Return type from extension
