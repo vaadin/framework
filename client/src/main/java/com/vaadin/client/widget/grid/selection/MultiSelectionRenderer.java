@@ -610,6 +610,9 @@ public class MultiSelectionRenderer<T>
 
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
+        // label of checkbox should only be visible for assistive devices
+        checkBox.addStyleName("v-assistive-device-only-label");
+
         // Sink events
         checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
         checkBox.sinkBitlessEvent(BrowserEvents.TOUCHSTART);
@@ -629,7 +632,16 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
+        // this should be a temp fix.
+        checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+    }
+
+    private int getDOMRowIndex(RendererCellReference cell){
+        // getRowIndex starts with zero, that's why we add an additional 1.
+        // getDOMRowIndex should include getHeaderRows as well, this number
+        // should be equals to aria-rowindex.
+        return cell.getGrid().getHeaderRowCount() + cell.getRowIndex() + 1;
     }
 
     @Override
