@@ -26,7 +26,6 @@ public class ComboBoxPasteWithDisabledTest extends MultiBrowserTest {
         js.executeScript("arguments[0].removeAttribute('disabled')", input);
 
         String os = System.getProperty("os.name").toLowerCase();
-        System.out.println("Operating System " + os);
         String paste;
         if (os.contains("windows")) {
             paste = Keys.chord(Keys.CONTROL, "v");
