@@ -25,7 +25,19 @@ public class ComboBoxPasteWithDisabledTest extends MultiBrowserTest {
         // .sendKeys() doesn't allow sending to a disabled element
         js.executeScript("arguments[0].removeAttribute('disabled')", input);
 
-        input.sendKeys(Keys.chord(Keys.CONTROL, "v"));
+        String os = System.getProperty("os.name").toLowerCase();
+        System.out.println("Operating System " + os);
+        String paste;
+        if (os.contains("windows")) {
+            paste = Keys.chord(Keys.CONTROL, "v");
+        } else if (os.contains("linux")) {
+            paste = Keys.chord(Keys.CONTROL, Keys.SHIFT, "v");
+        } else {
+            // mac
+            paste = Keys.chord(Keys.COMMAND, "v");
+        }
+
+        input.sendKeys(paste);
 
         assertFalse(cb.isPopupOpen());
     }
