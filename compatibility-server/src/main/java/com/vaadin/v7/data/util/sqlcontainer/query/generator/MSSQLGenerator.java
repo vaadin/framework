@@ -113,7 +113,7 @@ public class MSSQLGenerator extends DefaultSQLGenerator {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
         }
         query.append(") AS a WHERE a.rownum BETWEEN ").append(offset)
-                .append(" AND ").append(offset).append(pagelength);
+                .append(" AND ").append(offset + pagelength);
         sh.setQueryString(query.toString());
         return sh;
     }
