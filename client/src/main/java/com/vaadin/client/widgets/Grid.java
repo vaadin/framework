@@ -2916,11 +2916,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 selectAllCheckBox = GWT.create(CheckBox.class);
                 selectAllCheckBox.setStylePrimaryName(
                         getStylePrimaryName() + SELECT_ALL_CHECKBOX_CLASSNAME);
+                // label of checkbox should only be visible for assistive devices
+                selectAllCheckBox.addStyleName("v-assistive-device-only-label");
                 selectAllCheckBox.addValueChangeHandler(event -> {
                     selected = event.getValue();
                     fireEvent(new SelectAllEvent<>(getSelectionModel(),
                             selected));
                 });
+                selectAllCheckBox.setText("Selects all rows of the table.");
                 selectAllCheckBox.setValue(selected);
 
                 addHeaderClickHandler(this::onHeaderClickEvent);
