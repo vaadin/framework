@@ -1679,8 +1679,8 @@ public class VMenuBar extends FocusableFlowPanel
     }
 
     private void selectLastItem() {
-        for (int i = 1; i <= items.size(); i++) {
-            CustomMenuItem item = items.get(items.size() - i);
+        for (int i = items.size() - 1; i >= 0; i--) {
+            CustomMenuItem item = items.get(i);
             if (item.isSelectable()) {
                 setSelected(item);
                 break;

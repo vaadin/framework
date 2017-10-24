@@ -228,4 +228,10 @@ public class MenuBarConnector extends AbstractComponentConnector
             getWidget().getElement().setAttribute("aria-disabled", "true");
         }
     }
+
+    @OnStateChange("tabIndex")
+    void updateTabIndex() {
+        getWidget().getElement().setAttribute("tabindex",
+                String.valueOf(getState().tabIndex));
+    }
 }
