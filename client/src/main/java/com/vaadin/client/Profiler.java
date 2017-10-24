@@ -290,7 +290,7 @@ public class Profiler {
 
         private native String getEvtGroup()
         /*-{
-            return this.evtGroup;
+            return this.EVT_GROUP;
         }-*/;
 
         private native double getMillis()
@@ -387,7 +387,7 @@ public class Profiler {
     private static final native void logGwtEvent(String name, String type)
     /*-{
         $wnd.__gwtStatsEvent({
-            evtGroup: @com.vaadin.client.Profiler::evtGroup,
+            evtGroup: @com.vaadin.client.Profiler::EVT_GROUP,
             moduleName: @com.google.gwt.core.client.GWT::getModuleName()(),
             millis: (new Date).getTime(),
             sessionId: undefined,
