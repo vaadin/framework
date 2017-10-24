@@ -542,7 +542,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
                 ((Orphanable) widget).afterAdoption();
                 return false;
-            }, 100);
+            }, 1000);
 
         } else {
             doSetCaption(captionText, icon, styles, error, errorLevel,
