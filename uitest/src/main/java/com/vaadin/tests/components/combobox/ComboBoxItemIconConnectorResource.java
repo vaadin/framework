@@ -1,11 +1,15 @@
 package com.vaadin.tests.components.combobox;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
-import com.vaadin.server.FileResource;
+import com.vaadin.server.ConnectorResource;
+import com.vaadin.server.DownloadStream;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.util.FileTypeResolver;
 
 public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
 
@@ -30,7 +34,30 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 File file = new File("src/main/webapp/VAADIN/themes"
                         + "/tests-tickets/icons/"
                         + item.substring(0, 2).toLowerCase() + ".gif");
-                return new FileResource(file);
+                return new ConnectorResource() {
+
+                    @Override
+                    public String getMIMEType() {
+                        return FileTypeResolver.getMIMEType(file);
+                    }
+
+                    @Override
+                    public DownloadStream getStream() {
+                        try {
+                            return new DownloadStream(new FileInputStream(file),
+                                    getMIMEType(), getFilename());
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public String getFilename() {
+                        return file.getName();
+                    }
+                };
+                // return new FileResource(file);
                 // InputStream is = new FileInputStream(file);
                 // StreamResource stream = new StreamResource(() -> is,
                 // file.getName());
