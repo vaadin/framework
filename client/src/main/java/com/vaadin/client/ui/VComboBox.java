@@ -104,7 +104,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
         private final String key;
         private final String caption;
-        private String resourceUrl;
+        private String iconUrl;
         private String style;
 
         /**
@@ -117,15 +117,15 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          *            item caption
          * @param style
          *            item style name, can be empty string
-         * @param resourceUrl
+         * @param iconUrl
          *            icon URL or {@code null}
          */
         public ComboBoxSuggestion(String key, String caption, String style,
-                String resourceUrl) {
+                String iconUrl) {
             this.key = key;
             this.caption = caption;
             this.style = style;
-            this.resourceUrl = resourceUrl;
+            this.iconUrl = iconUrl;
         }
 
         /**
@@ -133,12 +133,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
          * contains an image tag with the rows icon (if an icon has been
          * specified) and the caption of the item
          */
-
         @Override
         public String getDisplayString() {
             final StringBuilder sb = new StringBuilder();
             ApplicationConnection client = connector.getConnection();
-            final Icon icon = client.getIcon(resourceUrl);
+            final Icon icon = client.getIcon(iconUrl);
             if (icon != null) {
                 sb.append(icon.getElement().getString());
             }
@@ -175,10 +174,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Get the URI of the icon. Used when constructing the displayed option.
          *
-         * @return real (translated) icon URI or null if none
+         * @return real (translated) icon URI or {@code null} if none
          */
         public String getIconUri() {
-            return resourceUrl;
+            return iconUrl;
         }
 
         /**
@@ -217,7 +216,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     || caption != null && !caption.equals(other.caption)) {
                 return false;
             }
-            if (!SharedUtil.equals(resourceUrl, other.resourceUrl)) {
+            if (!SharedUtil.equals(iconUrl, other.iconUrl)) {
                 return false;
             }
             if (!SharedUtil.equals(style, other.style)) {
@@ -235,7 +234,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             result = prime * result
                     + ((caption == null) ? 0 : caption.hashCode());
             result = prime * result
-                    + ((resourceUrl == null) ? 0 : resourceUrl.hashCode());
+                    + ((iconUrl == null) ? 0 : iconUrl.hashCode());
             result = prime * result + ((style == null) ? 0 : style.hashCode());
             return result;
         }
@@ -255,12 +254,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;

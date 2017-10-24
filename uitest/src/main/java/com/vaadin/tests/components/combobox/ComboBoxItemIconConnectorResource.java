@@ -2,9 +2,10 @@ package com.vaadin.tests.components.combobox;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.FileNotFoundException;
 
 import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
@@ -22,7 +23,6 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
     }
 
     @Override
-    @SuppressWarnings("resource")
     protected void setup(VaadinRequest request) {
         ComboBox<String> cb = new ComboBox<>();
         cb.setItems("Finland", "Australia", "Hungary");
@@ -32,8 +32,17 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 File file = new File("src/main/webapp/VAADIN/themes"
                         + "/tests-tickets/icons/"
                         + item.substring(0, 2).toLowerCase() + ".gif");
-                InputStream is = new FileInputStream(file);
-                return new StreamResource(() -> is, file.getName());
+
+                StreamSource streamSource = () -> {
+                    try {
+                        return new FileInputStream(file);
+                    } catch (final FileNotFoundException e) {
+                        throw new RuntimeException(
+                                "File not found: " + file.getName(), e);
+                    }
+                };
+
+                return new StreamResource(streamSource, file.getName());
             } catch (Exception e) {
                 return null;
             }
