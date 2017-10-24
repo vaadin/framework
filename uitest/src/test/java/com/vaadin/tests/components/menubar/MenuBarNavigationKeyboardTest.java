@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -90,6 +91,9 @@ public class MenuBarNavigationKeyboardTest extends MultiBrowserTest {
     }
 
     public void openMenu(String name) {
+        // move hover focus outside the MenuBar to keep the behaviour stable
+        new Actions(driver).moveToElement($(LabelElement.class).first(), 10, 10)
+                .perform();
         getMenuBar().clickItem(name);
     }
 }
