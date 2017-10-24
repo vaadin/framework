@@ -3,8 +3,8 @@ package com.vaadin.tests.components.combobox;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
+import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
@@ -58,9 +58,7 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 // return file.getName();
                 // }
                 // };
-                InputStream is = new FileInputStream(file);
-                StreamResource stream = new StreamResource(() -> is,
-                        file.getName()) {
+                ConnectorResource stream = new StreamResource(null, null) {
                     @Override
                     public DownloadStream getStream() {
                         try {
@@ -83,9 +81,6 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                     }
                 };
                 // stream.setMIMEType(FileTypeResolver.getMIMEType(file));
-                System.out
-                        .println("ComboBoxItemIconConnectorResource: mime type "
-                                + FileTypeResolver.getMIMEType(file));
                 return stream;
             } catch (Exception e) {
                 return null;
