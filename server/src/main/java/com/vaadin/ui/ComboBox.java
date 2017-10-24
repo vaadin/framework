@@ -268,28 +268,28 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 }
             }
 
-            @Override
-            public void destroyData(T item) {
-                String key = itemToKey(item);
-                if (resourcesSet.contains(key)) {
-                    setResource(key, null);
-                    resourcesSet.remove(key);
-                }
-            }
-
-            @Override
-            public void destroyAllData() {
-                for (String key : resourcesSet) {
-                    setResource(key, null);
-                }
-                resourcesSet.clear();
-            }
-
-            @Override
-            public void refreshData(T item) {
-                destroyData(item);
-                addItemIcon(item);
-            }
+            // @Override
+            // public void destroyData(T item) {
+            // String key = itemToKey(item);
+            // if (resourcesSet.contains(key)) {
+            // setResource(key, null);
+            // resourcesSet.remove(key);
+            // }
+            // }
+            //
+            // @Override
+            // public void destroyAllData() {
+            // for (String key : resourcesSet) {
+            // setResource(key, null);
+            // }
+            // resourcesSet.clear();
+            // }
+            //
+            // @Override
+            // public void refreshData(T item) {
+            // destroyData(item);
+            // addItemIcon(item);
+            // }
         });
     }
 

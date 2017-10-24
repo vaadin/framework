@@ -37,6 +37,9 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 StreamResource stream = new StreamResource(() -> is,
                         file.getName());
                 stream.setMIMEType(FileTypeResolver.getMIMEType(file));
+                System.out
+                        .println("ComboBoxItemIconConnectorResource: mime type "
+                                + FileTypeResolver.getMIMEType(file));
                 return stream;
             } catch (Exception e) {
                 return null;
