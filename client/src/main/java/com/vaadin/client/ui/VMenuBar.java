@@ -56,7 +56,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
-public class VMenuBar extends SimpleFocusablePanel
+public class VMenuBar extends FocusableFlowPanel
         implements CloseHandler<PopupPanel>, KeyPressHandler, KeyDownHandler,
         FocusHandler, SubPartAware, MouseOutHandler, MouseOverHandler {
 
@@ -105,6 +105,9 @@ public class VMenuBar extends SimpleFocusablePanel
     /** For internal use only. May be removed or replaced in the future. */
     public boolean enabled = true;
 
+    /** For internal use only. May be removed or replaced in the future. */
+    private boolean ignoreFocus = false;
+
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
             () -> iLayout(true));
 
@@ -131,6 +134,7 @@ public class VMenuBar extends SimpleFocusablePanel
         } else {
             addKeyDownHandler(this);
         }
+        getElement().setAttribute("tabindex", "0");
     }
 
     public VMenuBar(boolean subMenu, VMenuBar parentMenu) {
@@ -148,10 +152,13 @@ public class VMenuBar extends SimpleFocusablePanel
         if (parentMenu == null) {
             // Root menu
             setStyleName(CLASSNAME);
+            containerElement.setAttribute("role", "menubar");
         } else {
             // Child menus inherits style name
             setStyleName(parentMenu.getStyleName());
+            containerElement.setAttribute("role", "menu");
         }
+        getElement().setAttribute("tabindex", "-1");
     }
 
     @Override
@@ -173,7 +180,24 @@ public class VMenuBar extends SimpleFocusablePanel
 
         // Reset the style name for all the items
         for (CustomMenuItem item : items) {
-            item.setStyleName(primaryStyleName + "-menuitem");
+            if (item.isSeparator) {
+                item.setStyleName(primaryStyleName + "-separator");
+                item.getElement().setAttribute("role", "separator");
+            } else {
+                item.setStyleName(primaryStyleName + "-menuitem");
+                if (item.isCheckable()) {
+                    item.getElement().setAttribute("role", "menuitemcheckbox");
+                    item.getElement().setAttribute("aria-checked",
+                            String.valueOf(item.isChecked()));
+                } else {
+                    item.getElement().setAttribute("role", "menuitem");
+                }
+                if (item.isEnabled()) {
+                    item.getElement().removeAttribute("aria-disabled");
+                } else {
+                    item.getElement().setAttribute("aria-disabled", "true");
+                }
+            }
         }
 
         if (subMenu
@@ -222,7 +246,7 @@ public class VMenuBar extends SimpleFocusablePanel
                 String bgStyle = "";
                 itemHTML.append("<span class=\"" + getStylePrimaryName()
                         + "-submenu-indicator\"" + bgStyle
-                        + ">&#x25BA;</span>");
+                        + " aria-hidden=\"true\">&#x25BA;</span>");
             }
 
             itemHTML.append("<span class=\"" + getStylePrimaryName()
@@ -272,21 +296,10 @@ public class VMenuBar extends SimpleFocusablePanel
      * Remove all the items in this menu.
      */
     public void clearItems() {
-        Element e = getContainerElement();
-        while (DOM.getChildCount(e) > 0) {
-            DOM.removeChild(e, DOM.getChild(e, 0));
+        for (CustomMenuItem child : items) {
+            remove(child);
         }
         items.clear();
-    }
-
-    /**
-     * Returns the containing element of the menu.
-     *
-     * @return
-     */
-    @Override
-    public com.google.gwt.user.client.Element getContainerElement() {
-        return DOM.asOld(containerElement);
     }
 
     /**
@@ -315,7 +328,7 @@ public class VMenuBar extends SimpleFocusablePanel
         if (items.contains(item)) {
             return;
         }
-        DOM.appendChild(getContainerElement(), item.getElement());
+        add(item);
         item.setParentMenu(this);
         item.setSelected(false);
         items.add(item);
@@ -325,7 +338,7 @@ public class VMenuBar extends SimpleFocusablePanel
         if (items.contains(item)) {
             return;
         }
-        DOM.insertChild(getContainerElement(), item.getElement(), index);
+        insert(item, index);
         item.setParentMenu(this);
         item.setSelected(false);
         items.add(index, item);
@@ -340,8 +353,7 @@ public class VMenuBar extends SimpleFocusablePanel
         if (items.contains(item)) {
             int index = items.indexOf(item);
 
-            DOM.removeChild(getContainerElement(),
-                    DOM.getChild(getContainerElement(), index));
+            remove(item);
             items.remove(index);
         }
     }
@@ -386,14 +398,6 @@ public class VMenuBar extends SimpleFocusablePanel
                 if (isEnabled() && targetItem.isEnabled()) {
                     itemClick(targetItem);
                 }
-                if (subMenu) {
-                    // Prevent moving keyboard focus to child menus
-                    VMenuBar parent = parentMenu;
-                    while (parent.getParentMenu() != null) {
-                        parent = parent.getParentMenu();
-                    }
-                    parent.setFocus(true);
-                }
 
                 break;
 
@@ -410,13 +414,6 @@ public class VMenuBar extends SimpleFocusablePanel
                 LazyCloser.schedule();
                 break;
             }
-        } else if (subMenu && DOM.eventGetType(e) == Event.ONCLICK && subMenu) {
-            // Prevent moving keyboard focus to child menus
-            VMenuBar parent = parentMenu;
-            while (parent.getParentMenu() != null) {
-                parent = parent.getParentMenu();
-            }
-            parent.setFocus(true);
         }
     }
 
@@ -812,7 +809,8 @@ public class VMenuBar extends SimpleFocusablePanel
      * A class to hold information on menu items.
      *
      */
-    public static class CustomMenuItem extends Widget implements HasHTML {
+    public static class CustomMenuItem extends Widget
+            implements HasHTML, SubPartAware {
 
         protected String html = null;
         protected Command command = null;
@@ -856,6 +854,40 @@ public class VMenuBar extends SimpleFocusablePanel
         }
 
         @Override
+        public void onBrowserEvent(Event event) {
+            VMenuBar p = getParentMenu();
+            if (event.getTypeInt() == Event.ONKEYDOWN
+                    || event.getTypeInt() == Event.ONKEYPRESS) {
+                if (p.getParentMenu() != null
+                        && p.getParentMenu().visibleChildMenu != null) {
+                    int keyCode = event.getKeyCode();
+                    if (keyCode == 0) {
+                        keyCode = event.getCharCode();
+                    }
+                    if (getParentMenu().handleNavigation(keyCode,
+                            event.getCtrlKey() || event.getMetaKey(),
+                            event.getShiftKey())) {
+                        event.preventDefault();
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onLoad() {
+            super.onLoad();
+            if (getParentMenu() != null
+                    && getParentMenu().getParentMenu() == null
+                    && getParentMenu().getItems().get(0).equals(this)) {
+                getElement().setAttribute("tabindex", "0");
+            } else {
+                getElement().setAttribute("tabindex", "-1");
+            }
+
+            sinkEvents(Event.KEYEVENTS);
+        }
+
+        @Override
         public void setStyleName(String style) {
             super.setStyleName(style);
             updateStyleNames();
@@ -869,6 +901,9 @@ public class VMenuBar extends SimpleFocusablePanel
         public void setSelected(boolean selected) {
             this.selected = selected;
             updateStyleNames();
+            if (selected) {
+                getElement().focus();
+            }
         }
 
         public void setChecked(boolean checked) {
@@ -903,6 +938,11 @@ public class VMenuBar extends SimpleFocusablePanel
 
         public void setSubMenu(VMenuBar subMenu) {
             this.subMenu = subMenu;
+            if (subMenu != null) {
+                getElement().setAttribute("aria-haspopup", "true");
+            } else {
+                getElement().setAttribute("aria-haspopup", "false");
+            }
         }
 
         public VMenuBar getSubMenu() {
@@ -937,8 +977,21 @@ public class VMenuBar extends SimpleFocusablePanel
 
             if (isSeparator) {
                 super.setStyleName(primaryStyleName + "-separator");
+                getElement().setAttribute("role", "separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
+                if (isCheckable()) {
+                    getElement().setAttribute("role", "menuitemcheckbox");
+                    getElement().setAttribute("aria-checked",
+                            String.valueOf(isChecked()));
+                } else {
+                    getElement().setAttribute("role", "menuitem");
+                }
+                if (isEnabled()) {
+                    getElement().removeAttribute("aria-disabled");
+                } else {
+                    getElement().setAttribute("aria-disabled", "true");
+                }
             }
 
             for (String customStyle : customStyles) {
@@ -1092,6 +1145,26 @@ public class VMenuBar extends SimpleFocusablePanel
          */
         public boolean isSelectable() {
             return !isSeparator() && isEnabled();
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public com.google.gwt.user.client.Element getSubPartElement(
+                String subPart) {
+            if (getSubMenu() != null && getSubMenu().menuVisible) {
+                return getSubMenu().getSubPartElement(subPart);
+            }
+            return null;
+        }
+
+        @SuppressWarnings("deprecation")
+        @Override
+        public String getSubPartName(
+                com.google.gwt.user.client.Element subElement) {
+            if (getSubMenu() != null && getSubMenu().menuVisible) {
+                return getSubMenu().getSubPartName(subElement);
+            }
+            return null;
         }
 
     }
@@ -1338,8 +1411,26 @@ public class VMenuBar extends SimpleFocusablePanel
         // If tab or shift+tab close menus
         if (keycode == KeyCodes.KEY_TAB) {
             setSelected(null);
-            hideChildren();
+            hideParents(false);
             menuVisible = false;
+            VMenuBar root = getParentMenu();
+            while (root != null && root.getParentMenu() != null) {
+                root = root.getParentMenu();
+            }
+            if (root != null) {
+                if (shift) {
+                    root.ignoreFocus = true;
+                    root.getElement().focus();
+                    root.ignoreFocus = false;
+                } else {
+                    root.getElement().focus();
+                    root.setSelected(null);
+                }
+            } else if (shift) {
+                ignoreFocus = true;
+                getElement().focus();
+                ignoreFocus = false;
+            }
             return false;
         }
 
@@ -1394,6 +1485,8 @@ public class VMenuBar extends SimpleFocusablePanel
             } else {
                 getParentMenu().getSelected().getSubMenu().setSelected(null);
                 getParentMenu().hideChildren();
+                getParentMenu().getSelected().getElement().focus();
+                getParentMenu().menuVisible = false;
             }
 
             return true;
@@ -1469,10 +1562,22 @@ public class VMenuBar extends SimpleFocusablePanel
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
             } else {
-                // Select the previous item if possible or loop to the last item
+                // Select the previous item if possible or loop to the last
+                // item. If menu is in the first popup (opens down), closes the
+                // popup. If menu is the root menu, opens the popup.
                 int idx = items.indexOf(getSelected());
-                if (idx > 0) {
+                if (getParentMenu() == null && visibleChildMenu == null) {
+                    openMenuAndFocusLastIfPossible(selected);
+                } else if (idx > 0) {
                     setSelected(items.get(idx - 1));
+                } else if (getParentMenu() != null
+                        && getParentMenu().getParentMenu() == null) {
+                    getParentMenu().getSelected().getSubMenu()
+                            .setSelected(null);
+                    getParentMenu().hideChildren();
+                    getParentMenu().getSelected().getElement().focus();
+                    getParentMenu().menuVisible = false;
+                    return true;
                 } else {
                     setSelected(items.get(items.size() - 1));
                 }
@@ -1514,7 +1619,12 @@ public class VMenuBar extends SimpleFocusablePanel
         } else if (keycode == getCloseMenuKey()) {
             setSelected(null);
             hideChildren();
+            if (getParentMenu() != null) {
+                getParentMenu().hideChildren();
+                getParentMenu().getSelected().getElement().focus();
+            }
             menuVisible = false;
+            return true;
 
         } else if (isNavigationSelectKey(keycode)) {
             if (getSelected() == null) {
@@ -1542,8 +1652,17 @@ public class VMenuBar extends SimpleFocusablePanel
                     // #17076 keyboard selected menuitem without children: do
                     // not leave menu to visible ("hover open") mode
                     menuVisible = false;
+
+                    VMenuBar root = this;
+                    while (root.getParentMenu() != null) {
+                        root = root.getParentMenu();
+                    }
+                    root.ignoreFocus = true;
+                    root.getElement().focus();
+                    root.ignoreFocus = false;
                 }
             }
+            return true;
         }
 
         return false;
@@ -1552,6 +1671,16 @@ public class VMenuBar extends SimpleFocusablePanel
     private void selectFirstItem() {
         for (int i = 0; i < items.size(); i++) {
             CustomMenuItem item = items.get(i);
+            if (item.isSelectable()) {
+                setSelected(item);
+                break;
+            }
+        }
+    }
+
+    private void selectLastItem() {
+        for (int i = 1; i <= items.size(); i++) {
+            CustomMenuItem item = items.get(items.size() - i);
             if (item.isSelectable()) {
                 setSelected(item);
                 break;
@@ -1572,7 +1701,21 @@ public class VMenuBar extends SimpleFocusablePanel
         menuVisible = true;
         // Select the first item in the newly open submenu
         subMenu.selectFirstItem();
+    }
 
+    private void openMenuAndFocusLastIfPossible(CustomMenuItem menuItem) {
+        VMenuBar subMenu = menuItem.getSubMenu();
+        if (subMenu == null) {
+            // No child menu? Nothing to do
+            return;
+        }
+
+        VMenuBar parentMenu = menuItem.getParentMenu();
+        parentMenu.showChildMenu(menuItem);
+
+        menuVisible = true;
+        // Select the last item in the newly open submenu
+        subMenu.selectLastItem();
     }
 
     /*
@@ -1584,7 +1727,9 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     @Override
     public void onFocus(FocusEvent event) {
-
+        if (!ignoreFocus && getSelected() == null) {
+            selectFirstItem();
+        }
     }
 
     private static final String SUBPART_PREFIX = "item";
