@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import com.vaadin.server.ConnectorResource;
-import com.vaadin.server.DownloadStream;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -58,29 +56,18 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 // return file.getName();
                 // }
                 // };
-                ConnectorResource stream = new StreamResource(null, null) {
-                    @Override
-                    public DownloadStream getStream() {
-                        try {
-                            return new DownloadStream(new FileInputStream(file),
-                                    getMIMEType(), getFilename());
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                            return null;
+                StreamResource stream = new StreamResource(
+                        () -> {
+                            try {
+                            return new FileInputStream(file);
+
+                        } catch (final FileNotFoundException e) {
+                            throw new RuntimeException(
+                                        "File not found: " + file.getName(), e);
                         }
-                    }
-
-                    @Override
-                    public String getMIMEType() {
-                        return FileTypeResolver.getMIMEType(file);
-                    }
-
-                    @Override
-                    public String getFilename() {
-                        return file.getName();
-                    }
-                };
-                // stream.setMIMEType(FileTypeResolver.getMIMEType(file));
+                        }
+                        , file.getName());
+                stream.setMIMEType(FileTypeResolver.getMIMEType(file));
                 return stream;
             } catch (Exception e) {
                 return null;
