@@ -2,7 +2,6 @@ package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TwinColSelect;
 
 public class TwinColSelectCaptionStyles extends TestBase {
@@ -19,14 +18,9 @@ public class TwinColSelectCaptionStyles extends TestBase {
         addComponent(sel);
 
         Button b = new Button("Set height and width to 500px",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        sel.setHeight("500px");
-                        sel.setWidth("500px");
-
-                    }
+                event -> {
+                    sel.setHeight("500px");
+                    sel.setWidth("500px");
                 });
         addComponent(b);
     }

@@ -28,7 +28,8 @@ public class ComboBoxInputNotAllowed extends AbstractTestUI {
         ComboBox<String> comboBox = new ComboBox<>("", ITEMS);
         comboBox.setTextInputAllowed(false);
         comboBox.addValueChangeListener(
-                e -> addComponent(new Label("Value is now: " + e.getValue())));
+                event -> addComponent(
+                        new Label("Value is now: " + event.getValue())));
 
         addComponent(comboBox);
     }

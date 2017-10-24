@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -151,8 +150,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private abstract static class BaseItemAddOrRemoveEvent extends EventObject
-            implements Serializable {
+    private abstract static class BaseItemAddOrRemoveEvent extends EventObject {
         protected Object itemId;
         protected int index;
         protected int count;
@@ -450,7 +448,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -472,7 +470,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.ItemSetChangeListener listener) {

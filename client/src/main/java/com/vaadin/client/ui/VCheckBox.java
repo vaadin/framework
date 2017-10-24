@@ -17,8 +17,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
@@ -60,12 +58,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
         if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isFirefox()) {
             // Webkit and Firefox do not focus non-text input elements on click
             // (#3944)
-            addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    setFocus(true);
-                }
-            });
+            addClickHandler(event -> setFocus(true));
         }
     }
 

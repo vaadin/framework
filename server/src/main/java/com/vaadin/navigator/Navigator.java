@@ -121,7 +121,7 @@ public class Navigator implements Serializable {
             }
             if (navigator != null) {
                 popStateListenerRegistration = ui.getPage().addPopStateListener(
-                        e -> navigator.navigateTo(getState()));
+                        event -> navigator.navigateTo(getState()));
             }
         }
 
@@ -601,11 +601,11 @@ public class Navigator implements Serializable {
     /**
      * Creates a navigation state manager for given UI. This method should take
      * into account any navigation related annotations.
-     * 
+     *
      * @param ui
      *            the ui
      * @return the navigation state manager
-     * 
+     *
      * @since 8.2
      */
     protected NavigationStateManager createNavigationStateManager(UI ui) {

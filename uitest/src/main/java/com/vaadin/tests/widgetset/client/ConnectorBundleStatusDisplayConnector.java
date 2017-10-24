@@ -34,12 +34,8 @@ public class ConnectorBundleStatusDisplayConnector extends AbstractComponentConn
     protected void init() {
         super.init();
         registerRpc(ConnectorBundleStatusRpc.class,
-                new ConnectorBundleStatusRpc() {
-                    @Override
-                    public void updateStatus() {
-                        ConnectorBundleStatusDisplayConnector.this.updateStatus();
-                    }
-                });
+                () -> ConnectorBundleStatusDisplayConnector.this
+                        .updateStatus());
 
         updateStatus();
     }

@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 @SuppressWarnings("serial")
@@ -20,18 +18,15 @@ public class MultiClickingItemThatDetachesTable extends TestBase {
             item.getItemProperty("p2").setValue(i + "");
             item.getItemProperty("p1").setValue(i + "");
         }
-        table.addListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    try {
-                        // Wait a bit so there's time to click multiple times
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    replaceComponent(table, new Label("Completed!"));
+        table.addItemClickListener(event -> {
+            if (event.isDoubleClick()) {
+                try {
+                    // Wait a bit so there's time to click multiple times
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                replaceComponent(table, new Label("Completed!"));
             }
         });
         addComponent(table);

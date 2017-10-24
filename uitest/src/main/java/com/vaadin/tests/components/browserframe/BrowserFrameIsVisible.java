@@ -9,7 +9,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 
 public class BrowserFrameIsVisible extends TestBase {
@@ -42,37 +41,23 @@ public class BrowserFrameIsVisible extends TestBase {
         browser.setSource(textResource);
         addComponent(browser);
 
-        page1.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                TextSource helloSource = new TextSource("Hello World");
-                StreamResource helloResource = new StreamResource(helloSource,
-                        "helloworld.txt");
-                helloResource.setMIMEType("text/plain");
-                browser.setSource(helloResource);
-            }
+        page1.addClickListener(event -> {
+            TextSource helloSource = new TextSource("Hello World");
+            StreamResource helloResource = new StreamResource(helloSource,
+                    "helloworld.txt");
+            helloResource.setMIMEType("text/plain");
+            browser.setSource(helloResource);
         });
 
-        page2.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                TextSource helloSource = new TextSource("Lorem Ipsum");
-                StreamResource helloResource = new StreamResource(helloSource,
-                        "loremipsum.txt");
-                helloResource.setMIMEType("text/plain");
-                browser.setSource(helloResource);
-            }
+        page2.addClickListener(event -> {
+            TextSource helloSource = new TextSource("Lorem Ipsum");
+            StreamResource helloResource = new StreamResource(helloSource,
+                    "loremipsum.txt");
+            helloResource.setMIMEType("text/plain");
+            browser.setSource(helloResource);
         });
 
-        page3.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                browser.setSource(null);
-            }
-        });
+        page3.addClickListener(event -> browser.setSource(null));
     }
 
     @Override

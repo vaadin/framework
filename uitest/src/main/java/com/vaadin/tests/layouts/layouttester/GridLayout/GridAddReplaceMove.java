@@ -19,8 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
@@ -70,34 +68,12 @@ public class GridAddReplaceMove extends GridBaseLayoutTestUI {
         layout.addComponent(btnMove);
         layout.addComponent(btnRemove);
 
-        btnAdd.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.addComponent(new TextField());
-            }
-        });
-        btnReplace.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.replaceComponent(c1, c3);
-            }
-        });
-        btnMove.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.moveComponentsFrom(source);
-            }
-        });
-        btnRemove.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.removeComponent(c1);
-                layout.removeComponent(c2);
-            }
+        btnAdd.addClickListener(event -> layout.addComponent(new TextField()));
+        btnReplace.addClickListener(event -> layout.replaceComponent(c1, c3));
+        btnMove.addClickListener(event -> layout.moveComponentsFrom(source));
+        btnRemove.addClickListener(event -> {
+            layout.removeComponent(c1);
+            layout.removeComponent(c2);
         });
 
         layout.addComponent(c1);

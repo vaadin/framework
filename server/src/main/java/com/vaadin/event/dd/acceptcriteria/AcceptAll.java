@@ -29,13 +29,13 @@ import com.vaadin.event.dd.DragAndDropEvent;
 public final class AcceptAll extends ClientSideCriterion {
 
     private static final long serialVersionUID = 7406683402153141461L;
-    private static final AcceptCriterion singleton = new AcceptAll();
+    private static final AcceptCriterion SINGLETON = new AcceptAll();
 
     private AcceptAll() {
     }
 
     public static AcceptCriterion get() {
-        return singleton;
+        return SINGLETON;
     }
 
     @Override

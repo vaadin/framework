@@ -52,30 +52,30 @@ public class AbstractDateFieldState extends AbstractFieldState {
     /**
      * The JSON used to construct a TimeZone on the client side, can be
      * {@code null}.
-     * 
+     *
      * @since 8.2
      */
     public String timeZoneJSON;
 
     /**
      * The used Locale, can be {@code null}.
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public String locale;
 
     /**
      * Overridden date format string, can be {@code null} if default formatting
      * of the components locale is used.
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public String format;
 
     /**
      * Whether the date/time interpretation is lenient.
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public boolean lenient;
 
@@ -84,25 +84,25 @@ public class AbstractDateFieldState extends AbstractFieldState {
      *
      * The key is the resolution name e.g. "HOUR", "MINUTE", with possibly
      * prefixed by "default-".
-     * 
+     *
      * The value can be {@code null}
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public Map<String, Integer> resolutions = new HashMap<>();
 
     /**
      * Determines if week numbers are shown in the date selector.
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public boolean showISOWeekNumbers;
 
     /**
      * Was the last entered string parsable? If this flag is false, datefields
      * internal validator does not pass.
-     * 
-     * @since
+     *
+     * @since 8.2
      */
     public boolean parsable = true;
 

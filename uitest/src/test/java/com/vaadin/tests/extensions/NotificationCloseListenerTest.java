@@ -17,8 +17,6 @@
 package com.vaadin.tests.extensions;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.NotificationElement;
@@ -32,17 +30,12 @@ public class NotificationCloseListenerTest extends MultiBrowserTest {
 
         $(NotificationElement.class).first().close();
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                try {
-                    return $(CheckBoxElement.class).first().isChecked();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return $(CheckBoxElement.class).first().isChecked();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
         });
     }

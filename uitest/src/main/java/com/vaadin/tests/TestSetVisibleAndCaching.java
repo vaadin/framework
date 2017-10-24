@@ -17,8 +17,6 @@
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
@@ -62,17 +60,13 @@ public class TestSetVisibleAndCaching
 
         selectPanel(selectedPanel);
 
-        buttonNextPanel.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                selectedPanel++;
-                if (selectedPanel > 2) {
-                    selectedPanel = 0;
-                }
-                selectPanel(selectedPanel);
+        buttonNextPanel.addClickListener(event -> {
+            selectedPanel++;
+            if (selectedPanel > 2) {
+                selectedPanel = 0;
             }
+            selectPanel(selectedPanel);
         });
-
     }
 
     private VerticalLayout wrapInPanelLayout(Component component) {

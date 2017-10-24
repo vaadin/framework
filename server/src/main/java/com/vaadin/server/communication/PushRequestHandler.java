@@ -35,7 +35,6 @@ import org.atmosphere.cpr.AtmosphereResponseImpl;
 import org.atmosphere.interceptor.HeartbeatInterceptor;
 import org.atmosphere.util.VoidAnnotationProcessor;
 
-import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -57,7 +56,7 @@ import com.vaadin.shared.communication.PushConstants;
  * @since 7.1
  */
 public class PushRequestHandler
-        implements RequestHandler, SessionExpiredHandler {
+        implements SessionExpiredHandler {
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
@@ -65,7 +64,7 @@ public class PushRequestHandler
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        service.addServiceDestroyListener(e -> destroy());
+        service.addServiceDestroyListener(event -> destroy());
 
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();

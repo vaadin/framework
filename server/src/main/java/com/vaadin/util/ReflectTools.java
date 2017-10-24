@@ -323,17 +323,17 @@ public class ReflectTools implements Serializable {
     /**
      * Returns the first non-synthetic method of the specified
      * {@code listenerClass}, which must have single method in the source-code.
-     * 
+     *
      * This is needed, to remove the synthetic methods added if the class is
      * instrumented.
-     * 
+     *
      * @param listenerClass
      *            The {@link Class} of the listener, which has a single method
      *            in the source code
      * @return the first non-synthetic method
      * @throws IllegalStateException
      *             if the specified class does not have found method
-     * @since
+     * @since 8.2
      */
     public static Method getMethod(Class<?> listenerClass) {
         for (Method m : listenerClass.getDeclaredMethods()) {

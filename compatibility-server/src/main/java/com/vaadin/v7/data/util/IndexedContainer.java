@@ -435,7 +435,7 @@ public class IndexedContainer
      * @since 3.0
      */
     private static class PropertyValueChangeEvent extends EventObject
-            implements Property.ValueChangeEvent, Serializable {
+            implements Property.ValueChangeEvent {
 
         private PropertyValueChangeEvent(Property source) {
             super(source);
@@ -457,7 +457,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -473,7 +473,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.PropertySetChangeListener listener) {
@@ -491,7 +491,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
@@ -509,7 +509,7 @@ public class IndexedContainer
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
@@ -915,7 +915,7 @@ public class IndexedContainer
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-         **/
+         */
         @Override
         @Deprecated
         public void addListener(Property.ValueChangeListener listener) {
@@ -931,7 +931,7 @@ public class IndexedContainer
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-         **/
+         */
         @Override
         @Deprecated
         public void removeListener(Property.ValueChangeListener listener) {

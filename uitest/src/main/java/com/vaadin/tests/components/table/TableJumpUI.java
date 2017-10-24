@@ -15,14 +15,8 @@
  */
 package com.vaadin.tests.components.table;
 
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
@@ -68,28 +62,12 @@ public class TableJumpUI extends AbstractTestUIWithLog {
             TextField tf = new TextField();
             tf.setValue(String.valueOf(i));
             final int j = i;
-            tf.addFocusListener(new FocusListener() {
-                @Override
-                public void focus(FocusEvent event) {
-                    log("Tf " + j + " focus");
-                }
-            });
-            tf.addBlurListener(new BlurListener() {
-                @Override
-                public void blur(BlurEvent event) {
-                    log("Tf " + j + " Blur");
-                }
-            });
+            tf.addFocusListener(event -> log("Tf " + j + " focus"));
+            tf.addBlurListener(event -> log("Tf " + j + " Blur"));
             addComponent(tf);
         }
 
-        addButton("refresh row cache", new ClickListener() {
-
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                table.refreshRowCache();
-            }
-        });
+        addButton("refresh row cache", event -> table.refreshRowCache());
     }
 
     @Override

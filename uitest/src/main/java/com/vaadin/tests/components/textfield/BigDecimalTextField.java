@@ -22,8 +22,6 @@ import java.util.Locale;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
@@ -54,25 +52,19 @@ public class BigDecimalTextField extends AbstractTestUIWithLog {
         final FieldGroup fieldGroup = new FieldGroup(beanItem);
         fieldGroup.bind(textField, "decimal");
 
-        Button setValue = new Button("Set value to 15,2", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ((TextField) fieldGroup.getField("decimal")).setValue("15,2");
-            }
-        });
+        Button setValue = new Button("Set value to 15,2",
+                event -> ((TextField) fieldGroup.getField("decimal"))
+                        .setValue("15,2"));
 
         Button button = new Button("Commit");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    fieldGroup.commit();
-                    log("Commit ok. Property value: "
-                            + fieldGroup.getItemDataSource()
-                                    .getItemProperty("decimal").getValue());
-                } catch (FieldGroup.CommitException e) {
-                    log("Commit failed: " + e.getMessage());
-                }
+        button.addClickListener(event -> {
+            try {
+                fieldGroup.commit();
+                log("Commit ok. Property value: "
+                        + fieldGroup.getItemDataSource()
+                                .getItemProperty("decimal").getValue());
+            } catch (FieldGroup.CommitException e) {
+                log("Commit failed: " + e.getMessage());
             }
         });
 

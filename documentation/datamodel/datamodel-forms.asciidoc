@@ -95,7 +95,7 @@ binder.bind(nameField,
 == Validating and Converting User Input
 
 `Binder` supports checking the validity of the user's input and converting the values between the type used in business objects and the bound UI components.
-These to concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
+These two concepts go hand in hand since validation can be based on a converted value, and being able to convert a value is a kind of validation.
 
 [[datamodel.forms.validation]]
 === Validation

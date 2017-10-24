@@ -16,8 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
-
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 import com.vaadin.util.FileTypeResolver;
@@ -34,7 +32,7 @@ import com.vaadin.util.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ClassResource implements ConnectorResource, Serializable {
+public class ClassResource implements ConnectorResource {
 
     /**
      * Default buffer size for this stream resource.

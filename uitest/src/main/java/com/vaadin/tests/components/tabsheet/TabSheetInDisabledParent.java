@@ -18,8 +18,6 @@ package com.vaadin.tests.components.tabsheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -34,13 +32,8 @@ public class TabSheetInDisabledParent extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final HorizontalLayout layout = new HorizontalLayout();
-        addComponent(new Button("toggle", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.setEnabled(!layout.isEnabled());
-            }
-        }));
+        addComponent(new Button("toggle",
+                event -> layout.setEnabled(!layout.isEnabled())));
         addComponent(layout);
 
         TabSheet sheet = new TabSheet();

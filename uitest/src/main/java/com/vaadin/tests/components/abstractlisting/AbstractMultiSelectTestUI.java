@@ -74,6 +74,6 @@ public abstract class AbstractMultiSelectTestUI<MULTISELECT extends AbstractMult
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getNewSelection())));
+                        event -> log("Selected: " + event.getNewSelection())));
     }
 }

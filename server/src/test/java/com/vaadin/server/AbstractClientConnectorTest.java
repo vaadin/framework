@@ -88,7 +88,7 @@ public class AbstractClientConnectorTest {
             NoSuchFieldException, SecurityException, InterruptedException,
             ClassNotFoundException {
         Field stateTypeCacheField = AbstractClientConnector.class
-                .getDeclaredField("stateTypeCache");
+                .getDeclaredField("STATE_TYPE_CACHE");
         stateTypeCacheField.setAccessible(true);
         Map<Class<?>, ?> stateTypeCache = (Map<Class<?>, ?>) stateTypeCacheField
                 .get(null);

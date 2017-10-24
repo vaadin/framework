@@ -58,10 +58,7 @@ public class ListenerOrder extends com.vaadin.server.LegacyApplication
         b1.addClickListener(mutualListener);
         b1.removeClickListener(b1Listener);
         // remove non-existing listener
-        b1.removeClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-            }
+        b1.removeClickListener(event -> {
         });
 
         //

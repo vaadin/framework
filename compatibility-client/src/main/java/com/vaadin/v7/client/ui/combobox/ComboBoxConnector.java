@@ -50,12 +50,13 @@ public class ComboBoxConnector extends AbstractFieldConnector
      */
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        VFilterSelect widget = getWidget();
         // Save details
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
+        widget.client = client;
+        widget.paintableId = uidl.getId();
 
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
+        widget.readonly = isReadOnly();
+        widget.updateReadOnly();
 
         if (!isRealUpdate(uidl)) {
             return;
@@ -67,75 +68,75 @@ public class ComboBoxConnector extends AbstractFieldConnector
                 .hasAttribute(ComboBoxConstants.ATTR_NO_TEXT_INPUT)
                 && uidl.getBooleanAttribute(
                         ComboBoxConstants.ATTR_NO_TEXT_INPUT);
-        getWidget().setTextInputEnabled(!noTextInput);
+        widget.setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
-        getWidget().tb.setTabIndex(getState().tabIndex);
+        widget.tb.setTabIndex(getState().tabIndex);
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = FilteringMode
+            widget.filteringmode = FilteringMode
                     .valueOf(uidl.getStringAttribute("filteringmode"));
         }
 
-        getWidget().immediate = getState().immediate;
+        widget.immediate = getState().immediate;
 
-        getWidget().nullSelectionAllowed = uidl.hasAttribute("nullselect");
+        widget.nullSelectionAllowed = uidl.hasAttribute("nullselect");
 
-        getWidget().nullSelectItem = uidl.hasAttribute("nullselectitem")
+        widget.nullSelectItem = uidl.hasAttribute("nullselectitem")
                 && uidl.getBooleanAttribute("nullselectitem");
 
-        getWidget().currentPage = uidl.getIntVariable("page");
+        widget.currentPage = uidl.getIntVariable("page");
 
         if (uidl.hasAttribute("pagelength")) {
-            getWidget().pageLength = uidl.getIntAttribute("pagelength");
+            widget.pageLength = uidl.getIntAttribute("pagelength");
         }
 
         if (uidl.hasAttribute(ComboBoxConstants.ATTR_INPUTPROMPT)) {
             // input prompt changed from server
-            getWidget().inputPrompt = uidl
+            widget.inputPrompt = uidl
                     .getStringAttribute(ComboBoxConstants.ATTR_INPUTPROMPT);
         } else {
-            getWidget().inputPrompt = "";
+            widget.inputPrompt = "";
         }
 
         if (uidl.hasAttribute("suggestionPopupWidth")) {
-            getWidget().suggestionPopupWidth = uidl
+            widget.suggestionPopupWidth = uidl
                     .getStringAttribute("suggestionPopupWidth");
         } else {
-            getWidget().suggestionPopupWidth = null;
+            widget.suggestionPopupWidth = null;
         }
 
         if (uidl.hasAttribute("suggestionPopupWidth")) {
-            getWidget().suggestionPopupWidth = uidl
+            widget.suggestionPopupWidth = uidl
                     .getStringAttribute("suggestionPopupWidth");
         } else {
-            getWidget().suggestionPopupWidth = null;
+            widget.suggestionPopupWidth = null;
         }
 
-        getWidget().suggestionPopup.updateStyleNames(uidl, getState());
+        widget.suggestionPopup.updateStyleNames(uidl, getState());
 
-        getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
-        getWidget().lastNewItemString = null;
+        widget.allowNewItem = uidl.hasAttribute("allownewitem");
+        widget.lastNewItemString = null;
 
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
-            getWidget().totalMatches = uidl.getIntAttribute("totalMatches");
+            widget.totalMatches = uidl.getIntAttribute("totalMatches");
         } else {
-            getWidget().totalMatches = 0;
+            widget.totalMatches = 0;
         }
 
         List<FilterSelectSuggestion> newSuggestions = new ArrayList<FilterSelectSuggestion>();
 
         for (final Object child : options) {
             final UIDL optionUidl = (UIDL) child;
-            final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
+            final FilterSelectSuggestion suggestion = widget.new FilterSelectSuggestion(
                     optionUidl);
             newSuggestions.add(suggestion);
         }
 
         // only close the popup if the suggestions list has actually changed
-        boolean suggestionsChanged = !getWidget().initDone
-                || !newSuggestions.equals(getWidget().currentSuggestions);
+        boolean suggestionsChanged = !widget.initDone
+                || !newSuggestions.equals(widget.currentSuggestions);
 
         // An ItemSetChangeEvent on server side clears the current suggestion
         // popup. Popup needs to be repopulated with suggestions from UIDL.
@@ -145,28 +146,28 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
         if (suggestionsChanged) {
             oldSuggestionTextMatchTheOldSelection = isWidgetsCurrentSelectionTextInTextBox();
-            getWidget().currentSuggestions.clear();
+            widget.currentSuggestions.clear();
 
-            if (!getWidget().waitingForFilteringResponse) {
+            if (!widget.waitingForFilteringResponse) {
                 /*
                  * Clear the current suggestions as the server response always
                  * includes the new ones. Exception is when filtering, then we
                  * need to retain the value if the user does not select any of
                  * the options matching the filter.
                  */
-                getWidget().currentSuggestion = null;
+                widget.currentSuggestion = null;
                 /*
                  * Also ensure no old items in menu. Unless cleared the old
                  * values may cause odd effects on blur events. Suggestions in
                  * menu might not necessary exist in select at all anymore.
                  */
-                getWidget().suggestionPopup.menu.clearItems();
-                popupOpenAndCleared = getWidget().suggestionPopup.isAttached();
+                widget.suggestionPopup.menu.clearItems();
+                popupOpenAndCleared = widget.suggestionPopup.isAttached();
 
             }
 
             for (FilterSelectSuggestion suggestion : newSuggestions) {
-                getWidget().currentSuggestions.add(suggestion);
+                widget.currentSuggestions.add(suggestion);
             }
         }
 
@@ -175,7 +176,7 @@ public class ComboBoxConnector extends AbstractFieldConnector
 
         // In case we're switching page no need to update the selection as the
         // selection process didn't finish.
-        // && getWidget().selectPopupItemWhenResponseIsReceived ==
+        // && widget.selectPopupItemWhenResponseIsReceived ==
         // VFilterSelect.Select.NONE
         //
         ) {
@@ -190,32 +191,31 @@ public class ComboBoxConnector extends AbstractFieldConnector
                 performSelection(selectedKeys[0]);
                 // if selected key is available, assume caption is know based on
                 // it as well and clear selected caption
-                getWidget().setSelectedCaption(null);
+                widget.setSelectedCaption(null);
 
-            } else if (!getWidget().waitingForFilteringResponse
+            } else if (!widget.waitingForFilteringResponse
                     && uidl.hasAttribute("selectedCaption")) {
                 // scrolling to correct page is disabled, caption is passed as a
                 // special parameter
-                getWidget().setSelectedCaption(
+                widget.setSelectedCaption(
                         uidl.getStringAttribute("selectedCaption"));
             } else {
                 resetSelection();
             }
         }
 
-        if ((getWidget().waitingForFilteringResponse
-                && getWidget().lastFilter.toLowerCase(Locale.ROOT)
+        if ((widget.waitingForFilteringResponse
+                && widget.lastFilter.toLowerCase(Locale.ROOT)
                         .equals(uidl.getStringVariable("filter")))
                 || popupOpenAndCleared) {
 
-            getWidget().suggestionPopup.showSuggestions(
-                    getWidget().currentSuggestions, getWidget().currentPage,
-                    getWidget().totalMatches);
+            widget.suggestionPopup.showSuggestions(widget.currentSuggestions,
+                    widget.currentPage, widget.totalMatches);
 
-            getWidget().waitingForFilteringResponse = false;
+            widget.waitingForFilteringResponse = false;
 
-            if (!getWidget().popupOpenerClicked
-                    && getWidget().selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
+            if (!widget.popupOpenerClicked
+                    && widget.selectPopupItemWhenResponseIsReceived != VFilterSelect.Select.NONE) {
 
                 // we're paging w/ arrows
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -226,32 +226,32 @@ public class ComboBoxConnector extends AbstractFieldConnector
                 });
             }
 
-            if (getWidget().updateSelectionWhenReponseIsReceived) {
-                getWidget().suggestionPopup.menu
+            if (widget.updateSelectionWhenReponseIsReceived) {
+                widget.suggestionPopup.menu
                         .doPostFilterSelectedItemAction();
             }
         }
 
         // Calculate minimum textarea width
-        getWidget().updateSuggestionPopupMinWidth();
+        widget.updateSuggestionPopupMinWidth();
 
-        getWidget().popupOpenerClicked = false;
+        widget.popupOpenerClicked = false;
 
         /*
          * if this is our first time we need to recalculate the root width.
          */
-        if (!getWidget().initDone) {
+        if (!widget.initDone) {
 
-            getWidget().updateRootWidth();
+            widget.updateRootWidth();
         }
 
         // Focus dependent style names are lost during the update, so we add
         // them here back again
-        if (getWidget().focused) {
-            getWidget().addStyleDependentName("focus");
+        if (widget.focused) {
+            widget.addStyleDependentName("focus");
         }
 
-        getWidget().initDone = true;
+        widget.initDone = true;
     }
 
     /*
@@ -277,30 +277,31 @@ public class ComboBoxConnector extends AbstractFieldConnector
     }
 
     private void performSelection(String selectedKey) {
+        VFilterSelect widget = getWidget();
         // some item selected
-        for (FilterSelectSuggestion suggestion : getWidget().currentSuggestions) {
+        for (FilterSelectSuggestion suggestion : widget.currentSuggestions) {
             String suggestionKey = suggestion.getOptionKey();
             if (!suggestionKey.equals(selectedKey)) {
                 continue;
             }
-            if (!getWidget().waitingForFilteringResponse
-                    || getWidget().popupOpenerClicked) {
-                if (!suggestionKey.equals(getWidget().selectedOptionKey)
+            if (!widget.waitingForFilteringResponse
+                    || widget.popupOpenerClicked) {
+                if (!suggestionKey.equals(widget.selectedOptionKey)
                         || suggestion.getReplacementString()
-                                .equals(getWidget().tb.getText())
+                                .equals(widget.tb.getText())
                         || oldSuggestionTextMatchTheOldSelection) {
                     // Update text field if we've got a new
                     // selection
                     // Also update if we've got the same text to
                     // retain old text selection behavior
                     // OR if selected item caption is changed.
-                    getWidget()
+                    widget
                             .setPromptingOff(suggestion.getReplacementString());
-                    getWidget().selectedOptionKey = suggestionKey;
+                    widget.selectedOptionKey = suggestionKey;
                 }
             }
-            getWidget().currentSuggestion = suggestion;
-            getWidget().setSelectedItemIcon(suggestion.getIconUri());
+            widget.currentSuggestion = suggestion;
+            widget.setSelectedItemIcon(suggestion.getIconUri());
             // only a single item can be selected
             break;
         }
@@ -313,41 +314,39 @@ public class ComboBoxConnector extends AbstractFieldConnector
     }
 
     private void resetSelection() {
-        if (!getWidget().waitingForFilteringResponse
-                || getWidget().popupOpenerClicked) {
+        VFilterSelect widget = getWidget();
+        if (!widget.waitingForFilteringResponse || widget.popupOpenerClicked) {
             // select nulled
-            if (!getWidget().focused) {
+            if (!widget.focused) {
                 /*
                  * client.updateComponent overwrites all styles so we must
                  * ALWAYS set the prompting style at this point, even though we
                  * think it has been set already...
                  */
-                getWidget().setPromptingOff("");
-                if (getWidget().enabled && !getWidget().readonly) {
-                    getWidget().setPromptingOn();
+                widget.setPromptingOff("");
+                if (widget.enabled && !widget.readonly) {
+                    widget.setPromptingOn();
                 }
             } else {
                 // we have focus in field, prompting can't be set on, instead
                 // just clear the input if the value has changed from something
                 // else to null
-                if (getWidget().selectedOptionKey != null
-                        || (getWidget().allowNewItem
-                                && !getWidget().tb.getValue().isEmpty())) {
+                if (widget.selectedOptionKey != null || (widget.allowNewItem
+                        && !widget.tb.getValue().isEmpty())) {
 
-                    boolean openedPopupWithNonScrollingMode = (getWidget().popupOpenerClicked
-                            && getWidget().getSelectedCaption() != null);
+                    boolean openedPopupWithNonScrollingMode = (widget.popupOpenerClicked
+                            && widget.getSelectedCaption() != null);
                     if (!openedPopupWithNonScrollingMode) {
-                        getWidget().tb.setValue("");
+                        widget.tb.setValue("");
                     } else {
-                        getWidget().tb
-                                .setValue(getWidget().getSelectedCaption());
-                        getWidget().tb.selectAll();
+                        widget.tb.setValue(widget.getSelectedCaption());
+                        widget.tb.selectAll();
                     }
                 }
             }
-            getWidget().currentSuggestion = null; // #13217
-            getWidget().setSelectedItemIcon(null);
-            getWidget().selectedOptionKey = null;
+            widget.currentSuggestion = null; // #13217
+            widget.setSelectedItemIcon(null);
+            widget.selectedOptionKey = null;
         }
     }
 

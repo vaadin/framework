@@ -15,8 +15,6 @@
  */
 package com.vaadin.event.dd.acceptcriteria;
 
-import java.io.Serializable;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -39,7 +37,7 @@ import com.vaadin.server.PaintTarget;
  * @since 6.3
  */
 public abstract class ServerSideCriterion
-        implements Serializable, AcceptCriterion {
+        implements AcceptCriterion {
 
     private static final long serialVersionUID = 2128510128911628902L;
 

@@ -189,9 +189,9 @@ public class BinderValidationStatus<BEAN> implements Serializable {
 
     /**
      * Notifies all validation status handlers in bindings.
-     * 
+     *
      * @see #notifyBindingValidationStatusHandlers(SerializablePredicate)
-     * 
+     *
      * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers() {
@@ -203,12 +203,12 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * The filter should return {@code true} for each
      * {@link BindingValidationStatus} that should be delegated to the status
      * handler in the binding.
-     * 
+     *
      * @see #notifyBindingValidationStatusHandlers()
-     * 
+     *
      * @param filter
      *            the filter to select bindings to run status handling for
-     * 
+     *
      * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers(

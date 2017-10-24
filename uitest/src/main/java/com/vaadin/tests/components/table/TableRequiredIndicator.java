@@ -18,8 +18,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableRequiredIndicator extends AbstractReindeerTestUI {
@@ -45,17 +43,12 @@ public class TableRequiredIndicator extends AbstractReindeerTestUI {
         // This should cause red asterisk to the vertical layout
         table.setRequired(true);
 
-        table.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = table.getValue();
-                if (value != null) {
-                    Notification.show("Value is set.");
-                } else {
-                    Notification.show("Value is NOT set.");
-                }
-
+        table.addValueChangeListener(event -> {
+            Object value = table.getValue();
+            if (value != null) {
+                Notification.show("Value is set.");
+            } else {
+                Notification.show("Value is NOT set.");
             }
         });
     }

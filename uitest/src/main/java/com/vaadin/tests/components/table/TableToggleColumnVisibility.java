@@ -19,8 +19,6 @@ import com.vaadin.server.ClassResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -55,24 +53,16 @@ public class TableToggleColumnVisibility extends AbstractReindeerTestUI {
 
         final Button visibToggler = new Button("visibility");
         visibToggler.setId("visib-toggler");
-        visibToggler.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                currentSetNumber = (currentSetNumber == 0) ? 1 : 0;
-                table.setVisibleColumns(columnSets[currentSetNumber]);
-            }
+        visibToggler.addClickListener(event -> {
+            currentSetNumber = (currentSetNumber == 0) ? 1 : 0;
+            table.setVisibleColumns(columnSets[currentSetNumber]);
         });
 
         final Button orderToggler = new Button("change order");
         orderToggler.setId("order-toggler");
-        orderToggler.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                currentSetNumber = (currentSetNumber == 1) ? 2 : 1;
-                table.setVisibleColumns(columnSets[currentSetNumber]);
-            }
+        orderToggler.addClickListener(event -> {
+            currentSetNumber = (currentSetNumber == 1) ? 2 : 1;
+            table.setVisibleColumns(columnSets[currentSetNumber]);
         });
 
         layout.addComponent(table);

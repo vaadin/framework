@@ -729,13 +729,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             return $entry(function(e) {
                 var target = e.target;
-        
+
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -756,29 +756,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // Delta mode 0 is in pixels; we don't need to do anything...
-        
+
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
                 if (e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-        
+
                 // Other delta modes aren't supported
                 if ((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-        
+
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1197,7 +1197,7 @@ public class Escalator extends Widget
          * @param element     element that should get the role attribute
          * @param role        role to be added
          *
-         * @since
+         * @since 8.2
          */
         public void updateRole(final Element element, AriaGridRole role) {
             element.setAttribute("role", role.getName());
@@ -1207,7 +1207,7 @@ public class Escalator extends Widget
     /**
      * Holds the currently used aria roles within the grid for rows and cells.
      *
-     * @since
+     * @since 8.2
      */
     public enum AriaGridRole {
 
@@ -1290,7 +1290,7 @@ public class Escalator extends Widget
          *
          * @return the role attribute for the element to represent cells
          *
-         * @since
+         * @since 8.2
          */
         protected AriaGridRole getCellElementRole() {
             return AriaGridRole.GRIDCELL;
@@ -1304,7 +1304,7 @@ public class Escalator extends Widget
          *
          * @return the role attribute for the element to represent rows
          *
-         * @since
+         * @since 8.2
          */
         protected AriaGridRole getRowElementRole() {
             return AriaGridRole.ROW;
@@ -5868,12 +5868,9 @@ public class Escalator extends Widget
 
     private void setupScrollbars(final Element root) {
 
-        ScrollHandler scrollHandler = new ScrollHandler() {
-            @Override
-            public void onScroll(ScrollEvent event) {
-                scroller.onScroll();
-                fireEvent(new ScrollEvent());
-            }
+        ScrollHandler scrollHandler = event -> {
+            scroller.onScroll();
+            fireEvent(new ScrollEvent());
         };
 
         int scrollbarThickness = WidgetUtil.getNativeScrollbarSize();

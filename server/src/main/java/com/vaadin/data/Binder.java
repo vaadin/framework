@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
@@ -165,6 +166,16 @@ public class Binder<BEAN> implements Serializable {
          * @since 8.2
          */
         public void unbind();
+
+        /**
+         * Reads the value from given item and stores it to the bound field.
+         *
+         * @param bean
+         *            the bean to read from
+         *
+         * @since 8.2
+         */
+        public void read(BEAN bean);
     }
 
     /**
@@ -330,7 +341,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         * 
+         *
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
@@ -394,7 +405,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         * 
+         *
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
@@ -516,9 +527,11 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null : fieldValue,
+                            ? null
+                            : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation : modelValue);
+                            ? nullRepresentation
+                            : modelValue);
         }
 
         /**
@@ -1052,8 +1065,10 @@ public class Binder<BEAN> implements Serializable {
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            return converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext());
+            TARGET target = getter.apply(bean);
+            ValueContext valueContext = createValueContext();
+            return converterValidatorChain.convertToPresentation(target,
+                    valueContext);
         }
 
         /**
@@ -1098,6 +1113,12 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingValidationStatusHandler getValidationStatusHandler() {
             return statusHandler;
+        }
+
+        @Override
+        public void read(BEAN bean) {
+            field.setValue(converterValidatorChain.convertToPresentation(
+                    getter.apply(bean), createValueContext()));
         }
     }
 
@@ -1246,6 +1267,21 @@ public class Binder<BEAN> implements Serializable {
      */
     public Binder(Class<BEAN> beanType) {
         this(BeanPropertySet.get(beanType));
+    }
+
+    /**
+     * Creates a new binder that uses reflection based on the provided bean type
+     * to resolve bean properties.
+     *
+     * @param beanType
+     *            the bean type to use, not {@code null}
+     * @param scanNestedDefinitions
+     *            if {@code true}, scan for nested property definitions as well
+     * @since 8.2
+     */
+    public Binder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
+        this(BeanPropertySet.get(beanType, scanNestedDefinitions,
+                PropertyFilterDefinition.getDefaultFilter()));
     }
 
     /**
@@ -2299,7 +2335,8 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue() : modelValue,
+                                ? field.getEmptyValue()
+                                : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);
@@ -2593,7 +2630,6 @@ public class Binder<BEAN> implements Serializable {
     private Optional<PropertyDefinition<BEAN, ?>> getPropertyDescriptor(
             Field field) {
         PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
-
         String propertyId;
         if (propertyIdAnnotation != null) {
             // @PropertyId(propertyId) always overrides property id
@@ -2601,9 +2637,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             propertyId = field.getName();
         }
-
         String minifiedFieldName = minifyFieldName(propertyId);
-
         return propertySet.getProperties().map(PropertyDefinition::getName)
                 .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
                 .findFirst().flatMap(propertySet::getProperty);

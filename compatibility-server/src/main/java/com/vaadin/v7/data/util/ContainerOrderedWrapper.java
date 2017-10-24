@@ -550,7 +550,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -575,7 +575,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -600,7 +600,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -625,7 +625,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {

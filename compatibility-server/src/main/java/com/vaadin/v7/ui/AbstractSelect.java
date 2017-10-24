@@ -1592,7 +1592,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -1618,7 +1618,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {
@@ -1642,7 +1642,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -1668,7 +1668,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -1746,7 +1746,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of item set change event.
      */
     private static class ItemSetChangeEvent extends EventObject
-            implements Serializable, Container.ItemSetChangeEvent {
+            implements Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(Container source) {
             super(source);
@@ -1768,7 +1768,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of property set change event.
      */
     private static class PropertySetChangeEvent extends EventObject
-            implements Container.PropertySetChangeEvent, Serializable {
+            implements Container.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Container source) {
             super(source);

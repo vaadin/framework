@@ -2,7 +2,6 @@ package com.vaadin.tests.components.slider;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Slider;
 
 public class SliderPrimaryStyleName extends TestBase {
@@ -15,12 +14,8 @@ public class SliderPrimaryStyleName extends TestBase {
         addComponent(slider);
 
         addComponent(
-                new Button("Change primary style", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        slider.setPrimaryStyleName("my-second-slider");
-                    }
-                }));
+                new Button("Change primary style", event -> slider
+                        .setPrimaryStyleName("my-second-slider")));
     }
 
     @Override

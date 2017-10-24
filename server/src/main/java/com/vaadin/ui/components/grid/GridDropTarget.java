@@ -35,8 +35,13 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  *            Type of the Grid bean.
  * @author Vaadin Ltd
  * @since 8.1
+ * @see GridRowDragger
  */
 public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
+
+    private Registration sortListenerRegistration;
+    private DropMode cachedDropMode;
+    private boolean dropAllowedOnSortedGridRows = true;
 
     /**
      * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
@@ -55,29 +60,61 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     }
 
     /**
+     * Gets the grid this extension has been attached to.
+     *
+     * @return the grid for this extension
+     * @since 8.2
+     */
+    public Grid<T> getGrid() {
+        return getParent();
+    }
+
+    /**
      * Sets the drop mode of this drop target.
      * <p>
-     * Note that when using {@link DropMode#ON_TOP}, and the grid is either
-     * empty or has empty space after the last row, the drop can still happen on
-     * the empty space, and the {@link GridDropEvent#getDropTargetRow()} will
-     * return an empty optional.
+     * When using {@link DropMode#ON_TOP}, and the grid is either empty or has
+     * empty space after the last row, the drop can still happen on the empty
+     * space, and the {@link GridDropEvent#getDropTargetRow()} will return an
+     * empty optional.
      * <p>
      * When using {@link DropMode#BETWEEN} or
      * {@link DropMode#ON_TOP_OR_BETWEEN}, and there is at least one row in the
      * grid, any drop after the last row in the grid will get the last row as
      * the {@link GridDropEvent#getDropTargetRow()}. If there are no rows in the
      * grid, then it will return an empty optional.
+     * <p>
+     * If using {@link DropMode#ON_GRID}, then the drop will not happen on any
+     * row, but instead just "on the grid". The target row will not be present
+     * in this case.
+     * <p>
+     * <em>NOTE: {@link DropMode#ON_GRID} is used automatically when the grid
+     * has been sorted and {@link #setDropAllowedOnSortedGridRows(boolean)} is
+     * {@code false} - since the drop location would not necessarily match the
+     * correct row because of the sorting. During the sorting, any calls to this
+     * method don't have any effect until the sorting has been removed, or
+     * {@link #setDropAllowedOnSortedGridRows(boolean)} is set back to
+     * {@code true}.</em>
      *
      * @param dropMode
      *            Drop mode that describes the allowed drop locations within the
      *            Grid's row.
      * @see GridDropEvent#getDropLocation()
+     * @see #setDropAllowedOnSortedGridRows(boolean)
      */
     public void setDropMode(DropMode dropMode) {
         if (dropMode == null) {
             throw new IllegalArgumentException("Drop mode cannot be null");
         }
 
+        if (cachedDropMode != null) {
+            cachedDropMode = dropMode;
+        } else {
+            internalSetDropMode(dropMode);
+        }
+
+    }
+
+    private void internalSetDropMode(DropMode dropMode) {
         getState().dropMode = dropMode;
     }
 
@@ -89,6 +126,76 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      */
     public DropMode getDropMode() {
         return getState(false).dropMode;
+    }
+
+    /**
+     * Sets whether the grid accepts drop on rows as target when the grid has
+     * been sorted by the user.
+     * <p>
+     * Default value is {@code true} for backwards compatibility with 8.1. When
+     * {@code true} is used or the grid is not sorted, the mode used in
+     * {@link #setDropMode(DropMode)} is always used.
+     * <p>
+     * {@code false} value means that when the grid has been sorted, the drop
+     * mode is always {@link DropMode#ON_GRID}, regardless of what was set with
+     * {@link #setDropMode(DropMode)}. Once the grid is not sorted anymore, the
+     * sort mode is reverted back to what was set with
+     * {@link #setDropMode(DropMode)}.
+     *
+     * @param dropAllowedOnSortedGridRows
+     *            {@code true} for allowing, {@code false} for not allowing
+     *            drops on sorted grid rows
+     * @since 8.2
+     */
+    public void setDropAllowedOnSortedGridRows(
+            boolean dropAllowedOnSortedGridRows) {
+        if (this.dropAllowedOnSortedGridRows != dropAllowedOnSortedGridRows) {
+            this.dropAllowedOnSortedGridRows = dropAllowedOnSortedGridRows;
+
+            if (!dropAllowedOnSortedGridRows) {
+
+                sortListenerRegistration = getParent()
+                        .addSortListener(event -> {
+                            updateDropModeForSortedGrid(
+                                    !event.getSortOrder().isEmpty());
+                        });
+
+                updateDropModeForSortedGrid(
+                        !getParent().getSortOrder().isEmpty());
+
+            } else {
+                // if the grid has been sorted, but now dropping on sorted grid
+                // is allowed, switch back to the previously allowed drop mode
+                if (cachedDropMode != null) {
+                    internalSetDropMode(cachedDropMode);
+                }
+                sortListenerRegistration.remove();
+                sortListenerRegistration = null;
+                cachedDropMode = null;
+            }
+        }
+    }
+
+    private void updateDropModeForSortedGrid(boolean sorted) {
+        if (sorted && cachedDropMode == null) {
+            cachedDropMode = getDropMode();
+            internalSetDropMode(DropMode.ON_GRID);
+        } else if (!sorted && cachedDropMode != null) {
+            internalSetDropMode(cachedDropMode);
+            cachedDropMode = null;
+        }
+    }
+
+    /**
+     * Gets whether drops are allowed on rows as target, when the user has
+     * sorted the grid.
+     *
+     * @return whether drop are allowed for the grid's rows when user has sorted
+     *         the grid
+     * @since 8.2
+     */
+    public boolean isDropAllowedOnSortedGridRows() {
+        return dropAllowedOnSortedGridRows;
     }
 
     /**
@@ -173,5 +280,17 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     @Override
     protected GridDropTargetState getState(boolean markAsDirty) {
         return (GridDropTargetState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+
+        // this handler can be removed from the grid and cannot be added to
+        // another grid, thus enough to just remove the listener
+        if (sortListenerRegistration != null) {
+            sortListenerRegistration.remove();
+            sortListenerRegistration = null;
+        }
     }
 }

@@ -23,11 +23,8 @@ import java.util.Set;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.TextDecoration;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -124,31 +121,20 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
                     Highlight.show(parentConnector, "yellow");
                 }
 
-                errorDetails.addMouseOverHandler(new MouseOverHandler() {
-                    @Override
-                    public void onMouseOver(MouseOverEvent event) {
-                        Highlight.hideAll();
-                        Highlight.show(parentConnector, "yellow");
-                        Highlight.show(connector);
-                        errorDetails.getElement().getStyle()
-                                .setTextDecoration(TextDecoration.UNDERLINE);
-                    }
+                errorDetails.addMouseOverHandler(event -> {
+                    Highlight.hideAll();
+                    Highlight.show(parentConnector, "yellow");
+                    Highlight.show(connector);
+                    errorDetails.getElement().getStyle()
+                            .setTextDecoration(TextDecoration.UNDERLINE);
                 });
-                errorDetails.addMouseOutHandler(new MouseOutHandler() {
-                    @Override
-                    public void onMouseOut(MouseOutEvent event) {
-                        Highlight.hideAll();
-                        errorDetails.getElement().getStyle()
-                                .setTextDecoration(TextDecoration.NONE);
-                    }
+                errorDetails.addMouseOutHandler(event -> {
+                    Highlight.hideAll();
+                    errorDetails.getElement().getStyle()
+                            .setTextDecoration(TextDecoration.NONE);
                 });
-                errorDetails.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        fireSelectEvent(connector);
-                    }
-                });
-
+                errorDetails
+                        .addClickHandler(event -> fireSelectEvent(connector));
             }
 
             Highlight.show(connector);
@@ -174,30 +160,21 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
 
         final SimpleTree errorNode = new SimpleTree(
                 connector.getClass().getSimpleName() + " id: " + pid);
-        errorNode.addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                Highlight.showOnly(connector);
-                ((Widget) event.getSource()).getElement().getStyle()
-                        .setTextDecoration(TextDecoration.UNDERLINE);
-            }
+        errorNode.addDomHandler(event -> {
+            Highlight.showOnly(connector);
+            ((Widget) event.getSource()).getElement().getStyle()
+                    .setTextDecoration(TextDecoration.UNDERLINE);
         }, MouseOverEvent.getType());
-        errorNode.addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                Highlight.hideAll();
-                ((Widget) event.getSource()).getElement().getStyle()
-                        .setTextDecoration(TextDecoration.NONE);
-            }
+        errorNode.addDomHandler(event -> {
+            Highlight.hideAll();
+            ((Widget) event.getSource()).getElement().getStyle()
+                    .setTextDecoration(TextDecoration.NONE);
         }, MouseOutEvent.getType());
 
-        errorNode.addDomHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (event.getNativeEvent().getEventTarget().cast() == errorNode
-                        .getElement().getChild(1).cast()) {
-                    fireSelectEvent(connector);
-                }
+        errorNode.addDomHandler(event -> {
+            if (event.getNativeEvent().getEventTarget().cast() == errorNode
+                    .getElement().getChild(1).cast()) {
+                fireSelectEvent(connector);
             }
         }, ClickEvent.getType());
 

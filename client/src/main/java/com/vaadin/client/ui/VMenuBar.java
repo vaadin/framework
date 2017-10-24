@@ -283,7 +283,7 @@ public class VMenuBar extends FocusableFlowPanel
         }
     }
 
-    /** Widget methods **/
+    /* Widget methods */
 
     /**
      * Returns a list of items in this menu.
@@ -502,7 +502,7 @@ public class VMenuBar extends FocusableFlowPanel
      * root menus on mouse hover.
      */
     private static class LazyCloser extends Timer {
-        static LazyCloser INSTANCE;
+        static LazyCloser instance;
         private VMenuBar activeRoot;
 
         @Override
@@ -514,27 +514,27 @@ public class VMenuBar extends FocusableFlowPanel
         }
 
         public static void cancelClosing() {
-            if (INSTANCE != null) {
-                INSTANCE.cancel();
+            if (instance != null) {
+                instance.cancel();
             }
         }
 
         public static void prepare(VMenuBar vMenuBar) {
-            if (INSTANCE == null) {
-                INSTANCE = new LazyCloser();
+            if (instance == null) {
+                instance = new LazyCloser();
             }
-            if (INSTANCE.activeRoot == vMenuBar) {
-                INSTANCE.cancel();
-            } else if (INSTANCE.activeRoot != null) {
-                INSTANCE.cancel();
-                INSTANCE.run();
+            if (instance.activeRoot == vMenuBar) {
+                instance.cancel();
+            } else if (instance.activeRoot != null) {
+                instance.cancel();
+                instance.run();
             }
-            INSTANCE.activeRoot = vMenuBar;
+            instance.activeRoot = vMenuBar;
         }
 
         public static void schedule() {
-            if (INSTANCE != null && INSTANCE.activeRoot != null) {
-                INSTANCE.schedule(750);
+            if (instance != null && instance.activeRoot != null) {
+                instance.schedule(750);
             }
         }
 
@@ -1732,7 +1732,11 @@ public class VMenuBar extends FocusableFlowPanel
         }
     }
 
+<<<<<<< HEAD
+    private static final String SUBPART_PREFIX = "item";
+=======
     private final static String SUBPART_PREFIX = "item";
+>>>>>>> branch 'issue3922' of https://github.com/Ansku/framework.git
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(

@@ -25,38 +25,19 @@ public class TableSetUndefinedSize extends AbstractReindeerTestUI {
     }
 
     private Button createSizeUndefinedButton(final Table table) {
-        return new Button("size undefined", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                table.setSizeUndefined();
-            }
-        });
+        return new Button("size undefined", event -> table.setSizeUndefined());
     }
 
     private HorizontalLayout createWidthButtons(final Table table) {
         HorizontalLayout layout = new HorizontalLayout();
 
         layout.addComponent(
-                new Button("width 500px", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setWidth("500px");
-                    }
-                }));
+                new Button("width 500px", event -> table.setWidth("500px")));
         layout.addComponent(
-                new Button("width 100%", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setWidth("100%");
-                    }
-                }));
+                new Button("width 100%", event -> table.setWidth("100%")));
         layout.addComponent(
-                new Button("undefined width", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setWidthUndefined();
-                    }
-                }));
+                new Button("undefined width",
+                        event -> table.setWidthUndefined()));
 
         return layout;
     }
@@ -65,33 +46,14 @@ public class TableSetUndefinedSize extends AbstractReindeerTestUI {
         HorizontalLayout layout = new HorizontalLayout();
 
         layout.addComponent(
-                new Button("height 200px", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setHeight("200px");
-                    }
-                }));
+                new Button("height 200px", event -> table.setHeight("200px")));
         layout.addComponent(
-                new Button("height 300px", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setHeight("300px");
-                    }
-                }));
+                new Button("height 300px", event -> table.setHeight("300px")));
         layout.addComponent(
-                new Button("height 100%", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setHeight("100%");
-                    }
-                }));
+                new Button("height 100%", event -> table.setHeight("100%")));
         layout.addComponent(
-                new Button("undefined height", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        table.setHeightUndefined();
-                    }
-                }));
+                new Button("undefined height",
+                        event -> table.setHeightUndefined()));
 
         return layout;
     }

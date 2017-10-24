@@ -66,7 +66,7 @@ public class BeanPropertySetTest {
         // Simulate deserializing into a different JVM by clearing the instance
         // map
         Field instancesField = BeanPropertySet.class
-                .getDeclaredField("instances");
+                .getDeclaredField("INSTANCES");
         instancesField.setAccessible(true);
         Map<?, ?> instances = (Map<?, ?>) instancesField.get(null);
         instances.clear();
@@ -161,9 +161,7 @@ public class BeanPropertySetTest {
         PropertyDefinition<FatherAndSon, ?> definition = BeanPropertySet
                 .get(FatherAndSon.class).getProperty("father.firstName")
                 .orElseThrow(RuntimeException::new);
-
         ValueProvider<FatherAndSon, ?> getter = definition.getGetter();
-
         getter.apply(new FatherAndSon("Jon", "Doe", null, null));
     }
 

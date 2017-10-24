@@ -2,7 +2,6 @@ package com.vaadin.tests.components.textfield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.TextField;
 
 public class TextFieldPrimaryStyleName extends TestBase {
@@ -14,13 +13,7 @@ public class TextFieldPrimaryStyleName extends TestBase {
         addComponent(field);
 
         addComponent(new Button("Change primary style name",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        field.setPrimaryStyleName("my-dynamic-textfield");
-                    }
-                }));
-
+                event -> field.setPrimaryStyleName("my-dynamic-textfield")));
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 
 public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
@@ -32,17 +31,11 @@ public class TestUpload extends ComponentTestCase<Upload> implements Receiver {
         u.setSizeUndefined();
         addTestComponent(u);
 
-        u.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                Notification.show("Done");
-            }
-        });
+        u.addFinishedListener(event -> Notification.show("Done"));
 
         u = new Upload("300px wide upload", this);
         u.setWidth("300px");
         addTestComponent(u);
-
     }
 
     @Override

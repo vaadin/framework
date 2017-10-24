@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -52,30 +50,14 @@ public class HeaderSyncOnScroll extends AbstractReindeerTestUI {
         addComponent(buttonsLo);
 
         Button setTableWidth100 = new Button("table.setWidth(100%)",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.setWidth("100%");
-                    }
-                });
+                event -> table.setWidth("100%"));
 
         Button setParent500px = new Button("layout.setWidth(500px)",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.getParent().setWidth("500px");
-                    }
-                });
+                event -> table.getParent().setWidth("500px"));
 
         Button setParent100 = new Button("layout.setWidth(100%)",
-                new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.getParent().setWidth("100%");
-                    }
-                });
+                event -> table.getParent().setWidth("100%"));
 
         buttonsLo.addComponents(setTableWidth100, setParent500px, setParent100);
-
     }
 }

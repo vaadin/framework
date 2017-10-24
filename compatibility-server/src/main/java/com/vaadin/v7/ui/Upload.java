@@ -282,15 +282,15 @@ public class Upload extends AbstractLegacyComponent
          *            the source of the file.
          * @param filename
          *            the received file name.
-         * @param MIMEType
+         * @param mimeType
          *            the MIME type of the received file.
          * @param length
          *            the length of the received file.
          */
-        public FinishedEvent(Upload source, String filename, String MIMEType,
+        public FinishedEvent(Upload source, String filename, String mimeType,
                 long length) {
             super(source);
-            type = MIMEType;
+            type = mimeType;
             this.filename = filename;
             this.length = length;
         }
@@ -349,13 +349,13 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          * @param exception
          */
-        public FailedEvent(Upload source, String filename, String MIMEType,
+        public FailedEvent(Upload source, String filename, String mimeType,
                 long length, Exception reason) {
-            this(source, filename, MIMEType, length);
+            this(source, filename, mimeType, length);
             this.reason = reason;
         }
 
@@ -363,13 +363,13 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          * @param exception
          */
-        public FailedEvent(Upload source, String filename, String MIMEType,
+        public FailedEvent(Upload source, String filename, String mimeType,
                 long length) {
-            super(source, filename, MIMEType, length);
+            super(source, filename, mimeType, length);
         }
 
         /**
@@ -393,12 +393,12 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
         public NoOutputStreamEvent(Upload source, String filename,
-                String MIMEType, long length) {
-            super(source, filename, MIMEType, length);
+                String mimeType, long length) {
+            super(source, filename, mimeType, length);
         }
     }
 
@@ -412,14 +412,13 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
         public NoInputStreamEvent(Upload source, String filename,
-                String MIMEType, long length) {
-            super(source, filename, MIMEType, length);
+                String mimeType, long length) {
+            super(source, filename, mimeType, length);
         }
-
     }
 
     /**
@@ -436,14 +435,13 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
-        public SucceededEvent(Upload source, String filename, String MIMEType,
+        public SucceededEvent(Upload source, String filename, String mimeType,
                 long length) {
-            super(source, filename, MIMEType, length);
+            super(source, filename, mimeType, length);
         }
-
     }
 
     /**
@@ -466,14 +464,14 @@ public class Upload extends AbstractLegacyComponent
          *
          * @param source
          * @param filename
-         * @param MIMEType
+         * @param mimeType
          * @param length
          */
-        public StartedEvent(Upload source, String filename, String MIMEType,
+        public StartedEvent(Upload source, String filename, String mimeType,
                 long contentLength) {
             super(source);
             this.filename = filename;
-            type = MIMEType;
+            type = mimeType;
             length = contentLength;
         }
 
@@ -655,7 +653,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addStartedListener(StartedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(StartedListener listener) {
         addStartedListener(listener);
@@ -674,7 +672,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeStartedListener(StartedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(StartedListener listener) {
         removeStartedListener(listener);
@@ -693,7 +691,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFinishedListener(FinishedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FinishedListener listener) {
         addFinishedListener(listener);
@@ -712,7 +710,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFinishedListener(FinishedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FinishedListener listener) {
         removeFinishedListener(listener);
@@ -731,7 +729,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFailedListener(FailedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FailedListener listener) {
         addFailedListener(listener);
@@ -750,7 +748,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFailedListener(FailedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FailedListener listener) {
         removeFailedListener(listener);
@@ -769,7 +767,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addSucceededListener(SucceededListener)}
-     **/
+     */
     @Deprecated
     public void addListener(SucceededListener listener) {
         addSucceededListener(listener);
@@ -788,7 +786,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeSucceededListener(SucceededListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(SucceededListener listener) {
         removeSucceededListener(listener);
@@ -810,7 +808,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addProgressListener(ProgressListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ProgressListener listener) {
         addProgressListener(listener);
@@ -852,7 +850,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeProgressListener(ProgressListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ProgressListener listener) {
         removeProgressListener(listener);
@@ -862,11 +860,11 @@ public class Upload extends AbstractLegacyComponent
      * Emit upload received event.
      *
      * @param filename
-     * @param MIMEType
+     * @param mimeType
      * @param length
      */
-    protected void fireStarted(String filename, String MIMEType) {
-        fireEvent(new Upload.StartedEvent(this, filename, MIMEType,
+    protected void fireStarted(String filename, String mimeType) {
+        fireEvent(new Upload.StartedEvent(this, filename, mimeType,
                 contentLength));
     }
 
@@ -874,42 +872,42 @@ public class Upload extends AbstractLegacyComponent
      * Emits the upload failed event.
      *
      * @param filename
-     * @param MIMEType
+     * @param mimeType
      * @param length
      */
-    protected void fireUploadInterrupted(String filename, String MIMEType,
+    protected void fireUploadInterrupted(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.FailedEvent(this, filename, MIMEType, length));
+        fireEvent(new Upload.FailedEvent(this, filename, mimeType, length));
     }
 
-    protected void fireNoInputStream(String filename, String MIMEType,
+    protected void fireNoInputStream(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.NoInputStreamEvent(this, filename, MIMEType,
+        fireEvent(new Upload.NoInputStreamEvent(this, filename, mimeType,
                 length));
     }
 
-    protected void fireNoOutputStream(String filename, String MIMEType,
+    protected void fireNoOutputStream(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.NoOutputStreamEvent(this, filename, MIMEType,
+        fireEvent(new Upload.NoOutputStreamEvent(this, filename, mimeType,
                 length));
     }
 
-    protected void fireUploadInterrupted(String filename, String MIMEType,
+    protected void fireUploadInterrupted(String filename, String mimeType,
             long length, Exception e) {
-        fireEvent(new Upload.FailedEvent(this, filename, MIMEType, length, e));
+        fireEvent(new Upload.FailedEvent(this, filename, mimeType, length, e));
     }
 
     /**
      * Emits the upload success event.
      *
      * @param filename
-     * @param MIMEType
+     * @param mimeType
      * @param length
      *
      */
-    protected void fireUploadSuccess(String filename, String MIMEType,
+    protected void fireUploadSuccess(String filename, String mimeType,
             long length) {
-        fireEvent(new Upload.SucceededEvent(this, filename, MIMEType, length));
+        fireEvent(new Upload.SucceededEvent(this, filename, mimeType, length));
     }
 
     /**

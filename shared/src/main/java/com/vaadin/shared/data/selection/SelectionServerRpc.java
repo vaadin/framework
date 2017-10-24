@@ -19,7 +19,7 @@ import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * Transmits SelectionModel selection events from the client to the server.
- * 
+ *
  * @since 8.0
  */
 public interface SelectionServerRpc extends ServerRpc {

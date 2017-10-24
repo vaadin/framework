@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TreeGrid;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -34,8 +35,8 @@ public class TreeGridTest {
         treeData.addItem("Foo", "Baz");
         treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
 
-        treeGrid.addExpandListener(e -> expandEventFired = true);
-        treeGrid.addCollapseListener(e -> collapseEventFired = true);
+        treeGrid.addExpandListener(event -> expandEventFired = true);
+        treeGrid.addCollapseListener(event -> collapseEventFired = true);
 
         // Test expand event
         assertFalse(expandEventFired);
@@ -59,4 +60,9 @@ public class TreeGridTest {
                 treeGrid.getHierarchyColumn());
     }
 
+    @Test
+    public void testBeanTypeConstructor() {
+        TreeGrid<Person> treeGrid = new TreeGrid<>(Person.class);
+        assertEquals(Person.class, treeGrid.getBeanType());
+    }
 }

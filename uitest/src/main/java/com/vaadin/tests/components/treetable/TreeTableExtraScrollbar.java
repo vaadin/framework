@@ -2,8 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
@@ -47,21 +45,17 @@ public class TreeTableExtraScrollbar extends TestBase {
 
         Button button = new Button("Add");
         button.setId("button");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.addItem(new TestObject("name 6-1", "value 6-1"));
-                table.addItem(new TestObject("name 6-2", "value 6-2"));
-                table.addItem(new TestObject("name 6-3", "value 6-3"));
-                table.addItem(new TestObject("name 6-4", "value 6-4"));
-                table.addItem(new TestObject("name 6-5", "value 6-5"));
-                table.addItem(new TestObject("name 6-6", "value 6-6"));
-                table.addItem(new TestObject("name 6-7", "value 6-7"));
-                table.addItem(new TestObject("name 6-8", "value 6-8"));
-                table.addItem(new TestObject("name 6-9", "value 6-9"));
-                table.addItem(new TestObject("name 6-9", "value 6-10"));
-            }
+        button.addClickListener(event -> {
+            table.addItem(new TestObject("name 6-1", "value 6-1"));
+            table.addItem(new TestObject("name 6-2", "value 6-2"));
+            table.addItem(new TestObject("name 6-3", "value 6-3"));
+            table.addItem(new TestObject("name 6-4", "value 6-4"));
+            table.addItem(new TestObject("name 6-5", "value 6-5"));
+            table.addItem(new TestObject("name 6-6", "value 6-6"));
+            table.addItem(new TestObject("name 6-7", "value 6-7"));
+            table.addItem(new TestObject("name 6-8", "value 6-8"));
+            table.addItem(new TestObject("name 6-9", "value 6-9"));
+            table.addItem(new TestObject("name 6-9", "value 6-10"));
         });
 
         addComponent(layout);

@@ -11,13 +11,7 @@ public abstract class UIRunSafelyThread extends Thread {
 
     @Override
     public void run() {
-        ui.accessSynchronously(new Runnable() {
-
-            @Override
-            public void run() {
-                runSafely();
-            }
-        });
+        ui.accessSynchronously(() -> runSafely());
     }
 
     protected abstract void runSafely();

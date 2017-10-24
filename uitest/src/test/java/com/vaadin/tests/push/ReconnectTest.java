@@ -16,9 +16,7 @@
 package com.vaadin.tests.push;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.jcraft.jsch.JSchException;
 import com.vaadin.tests.tb3.MultiBrowserTestWithProxy;
@@ -93,25 +91,15 @@ public abstract class ReconnectTest extends MultiBrowserTestWithProxy {
 
     private void waitUntilServerCounterChanges() {
         final int counter = BasicPushTest.getServerCounter(this);
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getServerCounter(ReconnectTest.this) > counter;
-            }
-        }, 30);
+        waitUntil(input -> BasicPushTest
+                .getServerCounter(ReconnectTest.this) > counter, 30);
     }
 
     private void waitUntilClientCounterChanges(final int expectedValue) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return BasicPushTest
-                        .getClientCounter(ReconnectTest.this) == expectedValue;
-            }
-        }, 5);
+        waitUntil(
+                input -> BasicPushTest
+                        .getClientCounter(ReconnectTest.this) == expectedValue,
+                5);
     }
 
     private void startTimer() {

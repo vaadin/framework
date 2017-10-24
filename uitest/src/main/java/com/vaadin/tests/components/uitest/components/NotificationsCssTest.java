@@ -2,7 +2,6 @@ package com.vaadin.tests.components.uitest.components;
 
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
@@ -19,42 +18,20 @@ public class NotificationsCssTest extends VerticalLayout {
         parent.registerComponent(this);
 
         Button humanized = new Button("Humanized message",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        createNotification("A message", "A description",
-                                Notification.Type.HUMANIZED_MESSAGE);
-                    }
-                });
+                event -> createNotification("A message", "A description",
+                        Notification.Type.HUMANIZED_MESSAGE));
         humanized.setId("notifButt" + debugIdCounter++);
         Button warning = new Button("Warning message",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        createNotification("A message", "A description",
-                                Notification.Type.WARNING_MESSAGE);
-                    }
-                });
+                event -> createNotification("A message", "A description",
+                        Notification.Type.WARNING_MESSAGE));
         warning.setId("notifButt" + debugIdCounter++);
-        Button error = new Button("Error message", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNotification("A message", "A description",
-                        Notification.Type.ERROR_MESSAGE);
-            }
-        });
+        Button error = new Button("Error message",
+                event -> createNotification("A message", "A description",
+                        Notification.Type.ERROR_MESSAGE));
         error.setId("notifButt" + debugIdCounter++);
-        Button tray = new Button("Tray message", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNotification("A message", "A description",
-                        Notification.Type.TRAY_NOTIFICATION);
-            }
-        });
+        Button tray = new Button("Tray message",
+                event -> createNotification("A message", "A description",
+                        Notification.Type.TRAY_NOTIFICATION));
         tray.setId("notifButt" + debugIdCounter++);
 
         addComponent(humanized);

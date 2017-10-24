@@ -1,7 +1,6 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -9,36 +8,30 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Image;
 
 public class DynamicImageUI extends AbstractReindeerTestUI {
     public static final String IMAGE_URL = "myimage.png";
 
-    private final RequestHandler requestHandler = new RequestHandler() {
-        @Override
-        public boolean handleRequest(VaadinSession session,
-                VaadinRequest request, VaadinResponse response)
-                throws IOException {
-            if (("/" + IMAGE_URL).equals(request.getPathInfo())) {
-                // Create an image, draw the "text" parameter to it and output
-                // it to the browser.
-                String text = request.getParameter("text");
-                BufferedImage bi = new BufferedImage(100, 30,
-                        BufferedImage.TYPE_3BYTE_BGR);
-                bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(),
-                        10, 20);
-                response.setContentType("image/png");
-                ImageIO.write(bi, "png", response.getOutputStream());
+    private final RequestHandler requestHandler = (session, request,
+            response) -> {
+        if (("/" + IMAGE_URL).equals(request.getPathInfo())) {
+            // Create an image, draw the "text" parameter to it and output
+            // it to the browser.
+            String text = request.getParameter("text");
+            BufferedImage bi = new BufferedImage(100, 30,
+                    BufferedImage.TYPE_3BYTE_BGR);
+            bi.getGraphics().drawChars(text.toCharArray(), 0, text.length(), 10,
+                    20);
+            response.setContentType("image/png");
+            ImageIO.write(bi, "png", response.getOutputStream());
 
-                return true;
-            }
-            // If the URL did not match our image URL, let the other request
-            // handlers handle it
-            return false;
+            return true;
         }
+        // If the URL did not match our image URL, let the other request
+        // handlers handle it
+        return false;
     };
 
     @Override

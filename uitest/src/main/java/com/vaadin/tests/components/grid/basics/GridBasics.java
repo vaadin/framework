@@ -23,6 +23,7 @@ import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -42,6 +43,7 @@ import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
@@ -125,7 +127,7 @@ public class GridBasics extends AbstractTestUIWithLog {
 
             cssLayout
                     .addComponent(new Button("Press me",
-                            e -> Notification.show("You clicked on the "
+                            event -> Notification.show("You clicked on the "
                                     + "button in the details for " + "row "
                                     + dataObj.getRowNumber())));
             return cssLayout;
@@ -256,8 +258,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
         log("SingleSelectionEvent: Selected: "
                 + (event.getSelectedItem().isPresent()
-                        ? event.getSelectedItem().get().toString()
-                        : "none"));
+                        ? event.getSelectedItem().get().toString() : "none"));
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
@@ -268,8 +269,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
         String removedRow = firstRemoved.isPresent()
-                ? firstRemoved.get().toString()
-                : "none";
+                ? firstRemoved.get().toString() : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
@@ -363,11 +363,9 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
 
-        columnsMenu
-                .addItem("Simple resize mode",
-                        item -> grid.setColumnResizeMode(
-                                item.isChecked() ? ColumnResizeMode.SIMPLE
-                                        : ColumnResizeMode.ANIMATED))
+        columnsMenu.addItem("Simple resize mode",
+                item -> grid.setColumnResizeMode(item.isChecked()
+                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
     }
 
@@ -405,18 +403,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         createRowStyleMenu(stateMenu.addItem("Row style generator", null));
         createCellStyleMenu(stateMenu.addItem("Cell style generator", null));
-        stateMenu.addItem("Row description generator",
-                item -> grid.setDescriptionGenerator(item.isChecked()
-                        ? t -> "Row tooltip for row " + t.getRowNumber()
-                        : null))
-                .setCheckable(true);
-        stateMenu.addItem("Cell description generator",
-                item -> grid.getColumns().stream().findFirst().ifPresent(
-                        c -> c.setDescriptionGenerator(item.isChecked()
-                                ? t -> "Cell tooltip for row "
-                                        + t.getRowNumber() + ", Column 0"
-                                : null)))
-                .setCheckable(true);
+        createRowDescriptionMenu(
+                stateMenu.addItem("Row description generator", null));
+        createCellDescriptionMenu(
+                stateMenu.addItem("Cell description generator", null));
         stateMenu.addItem("Item click listener", new Command() {
 
             private Registration registration = null;
@@ -425,12 +415,12 @@ public class GridBasics extends AbstractTestUIWithLog {
             public void menuSelected(MenuItem selectedItem) {
                 removeRegistration();
                 if (selectedItem.isChecked()) {
-                    registration = grid.addItemClickListener(e -> {
-                        grid.setDetailsVisible(e.getItem(),
-                                !grid.isDetailsVisible(e.getItem()));
-                        log("Item click on row " + e.getItem().getRowNumber()
-                                + ", Column '" + e.getColumn().getCaption()
-                                + "'");
+                    registration = grid.addItemClickListener(event -> {
+                        grid.setDetailsVisible(event.getItem(),
+                                !grid.isDetailsVisible(event.getItem()));
+                        log("Item click on row "
+                                + event.getItem().getRowNumber() + ", Column '"
+                                + event.getColumn().getCaption() + "'");
                     });
                     log("Registered an item click listener.");
                 }
@@ -471,13 +461,50 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .setCheckable(true);
 
         MenuItem enableItem = stateMenu.addItem("Enabled",
-                e -> grid.setEnabled(e.isChecked()));
+                event -> grid.setEnabled(event.isChecked()));
         enableItem.setCheckable(true);
         enableItem.setChecked(true);
 
         createSelectionMenu(stateMenu);
 
         stateMenu.addItem("Set focus", item -> grid.focus());
+    }
+
+    private void createRowDescriptionMenu(MenuItem rowDescriptionMenu) {
+        DescriptionGenerator<DataObject> description = t -> "Row tooltip for row <b>"
+                + t.getRowNumber() + "</b>";
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(rowDescriptionMenu, "Remove descriptions", null,
+                g -> grid.setDescriptionGenerator(null));
+        addGridMethodMenu(rowDescriptionMenu, "Preformatted", description,
+                generator -> grid.setDescriptionGenerator(generator));
+        addGridMethodMenu(rowDescriptionMenu, "HTML", description,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(rowDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+    }
+
+    private void createCellDescriptionMenu(MenuItem cellDescriptionMenu) {
+        Column<DataObject, ?> column = grid.getColumns().get(0);
+        DescriptionGenerator<DataObject> description = t -> "Cell tooltip for row <b>"
+                + t.getRowNumber() + "</b>, " + column.getCaption();
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(cellDescriptionMenu, "Remove descriptions", null,
+                g -> column.setDescriptionGenerator(null));
+        addGridMethodMenu(cellDescriptionMenu, "Preformatted", description,
+                generator -> column.setDescriptionGenerator(generator));
+        addGridMethodMenu(cellDescriptionMenu, "HTML", description,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(cellDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {
@@ -757,9 +784,9 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
 
         editorMenu.addItem("Change save caption",
-                e -> grid.getEditor().setSaveCaption("ǝʌɐS"));
+                event -> grid.getEditor().setSaveCaption("ǝʌɐS"));
         editorMenu.addItem("Change cancel caption",
-                e -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
+                event -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
 
     }
 

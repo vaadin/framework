@@ -19,7 +19,7 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.shared.AbstractFieldState;
 
 public abstract class AbstractFieldConnector extends AbstractComponentConnector
-        implements HasRequiredIndicator, HasErrorIndicator {
+        implements HasRequiredIndicator {
 
     @Override
     public AbstractFieldState getState() {

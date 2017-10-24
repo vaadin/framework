@@ -79,8 +79,10 @@ public class GridEditorMissingPropertyTest {
         // Item with incomplete property set
         fieldGroup.setItemDataSource(
                 grid.getContainerDataSource().getItem(folder));
-        grid.getColumn(PROPERTY_NAME).getEditorField(); // called in
-                                                        // grid.doEditItem
+
+        // called in grid.doEditItem
+        grid.getColumn(PROPERTY_NAME).getEditorField();
+
         assertTrue("Properties in item should be bound",
                 fieldGroup.getBoundPropertyIds().contains(PROPERTY_NAME));
         assertFalse("Properties not present in item should not be bound",
