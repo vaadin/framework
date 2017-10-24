@@ -70,7 +70,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
 
     private Map<ComponentConnector, String> oldMaxWidths = null;
 
-    private static final ElementResizeListener dummyFirstCellResizeListener = new ElementResizeListener() {
+    private static final ElementResizeListener DUMMY_FIRST_CELL_RESIZE_LISTENER = new ElementResizeListener() {
         @Override
         public void onElementResize(ElementResizeEvent e) {
             // Ignore event, listener added just to make measurements available
@@ -220,7 +220,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
         Element td = findFirstComponentTd();
         if (td != null) {
             getLayoutManager().addElementResizeListener(td,
-                    dummyFirstCellResizeListener);
+                    DUMMY_FIRST_CELL_RESIZE_LISTENER);
         }
     }
 
@@ -228,7 +228,7 @@ public class FormLayoutConnector extends AbstractLayoutConnector
         Element td = findFirstComponentTd();
         if (td != null) {
             getLayoutManager().removeElementResizeListener(td,
-                    dummyFirstCellResizeListener);
+                    DUMMY_FIRST_CELL_RESIZE_LISTENER);
         }
     }
 

@@ -185,7 +185,7 @@ public class VTabsheet extends VTabsheetBase
 
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
             if (!enabled) {
-                focusImpl.setTabIndex(td, -1);
+                FOCUS_IMPL.setTabIndex(td, -1);
             }
         }
 
@@ -297,11 +297,11 @@ public class VTabsheet extends VTabsheetBase
 
         public void focus() {
             getTabsheet().scrollIntoView(this);
-            focusImpl.focus(td);
+            FOCUS_IMPL.focus(td);
         }
 
         public void blur() {
-            focusImpl.blur(td);
+            FOCUS_IMPL.blur(td);
         }
 
         public boolean hasTooltip() {
@@ -749,7 +749,7 @@ public class VTabsheet extends VTabsheetBase
      */
     int tabulatorIndex = 0;
 
-    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
+    private static final FocusImpl FOCUS_IMPL = FocusImpl.getFocusImplForPanel();
 
     // tab-scroller element
     private final Element scroller;

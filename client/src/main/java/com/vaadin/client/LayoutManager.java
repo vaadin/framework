@@ -43,7 +43,7 @@ public class LayoutManager {
 
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";
 
-    private static final boolean debugLogging = false;
+    private static final boolean DEBUG_LOGGING = false;
 
     private ApplicationConnection connection;
     private final Set<Element> measuredNonConnectorElements = new HashSet<>();
@@ -457,7 +457,7 @@ public class LayoutManager {
                         }
                         countLayout(layoutCounts, rr);
                     }
-                    if (debugLogging) {
+                    if (DEBUG_LOGGING) {
                         updatedSet.add(layout.getConnectorId());
                     }
                 }
@@ -517,7 +517,7 @@ public class LayoutManager {
                         }
                         countLayout(layoutCounts, rr);
                     }
-                    if (debugLogging) {
+                    if (DEBUG_LOGGING) {
                         updatedSet.add(layout.getConnectorId());
                     }
                 }
@@ -525,7 +525,7 @@ public class LayoutManager {
 
             Profiler.leave("LayoutManager handle ManagedLayout");
 
-            if (debugLogging) {
+            if (DEBUG_LOGGING) {
                 JsArrayString changedCids = updatedSet.dump();
 
                 StringBuilder b = new StringBuilder("  ");
@@ -637,7 +637,7 @@ public class LayoutManager {
                     continue;
                 }
 
-                if (debugLogging) {
+                if (DEBUG_LOGGING) {
                     getLogger().info("Doing overflow fix for "
                             + Util.getConnectorString(componentConnector)
                             + " in " + Util.getConnectorString(

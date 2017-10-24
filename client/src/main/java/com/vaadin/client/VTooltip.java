@@ -471,7 +471,7 @@ public class VTooltip extends VOverlay {
         setPopupPosition(tooltipEventMouseX, tooltipEventMouseY);
     }
 
-    private int EVENT_XY_POSITION_OUTSIDE = -5000;
+    private static final int EVENT_XY_POSITION_OUTSIDE = -5000;
     private int tooltipEventMouseX;
     private int tooltipEventMouseY;
 

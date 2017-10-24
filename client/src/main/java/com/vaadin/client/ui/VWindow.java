@@ -81,7 +81,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static List<VWindow> windowOrder = new ArrayList<>();
 
-    private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
+    private static final HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
 
     private static boolean orderingDefered;

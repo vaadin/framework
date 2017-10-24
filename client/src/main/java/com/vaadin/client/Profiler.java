@@ -47,7 +47,7 @@ public class Profiler {
 
     private static RelativeTimeSupplier RELATIVE_TIME_SUPPLIER;
 
-    private static final String evtGroup = "VaadinProfiler";
+    private static final String EVT_GROUP = "VaadinProfiler";
 
     private static ProfilerResultConsumer consumer;
 
@@ -325,7 +325,7 @@ public class Profiler {
 
         public final String getEventName() {
             String group = getEvtGroup();
-            if (evtGroup.equals(group)) {
+            if (EVT_GROUP.equals(group)) {
                 return getSubSystem();
             } else {
                 return group + "." + getSubSystem();
@@ -463,7 +463,7 @@ public class Profiler {
         Set<Node> extendedTimeNodes = new HashSet<>();
         for (int i = 0; i < gwtStatsEvents.length(); i++) {
             GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
-            if (!evtGroup.equals(gwtStatsEvent.getEvtGroup())) {
+            if (!EVT_GROUP.equals(gwtStatsEvent.getEvtGroup())) {
                 // Only log our own events to avoid problems with events which
                 // are not of type start+end
                 continue;

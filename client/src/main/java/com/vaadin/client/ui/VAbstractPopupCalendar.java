@@ -98,7 +98,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     private Element descriptionForAssistiveDevicesElement;
 
-    private final String CALENDAR_TOGGLE_ID = "popupButton";
+    private static final String CALENDAR_TOGGLE_ID = "popupButton";
 
     public VAbstractPopupCalendar(PANEL calendarPanel, R resolution) {
         super(resolution);
@@ -221,7 +221,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Changes the current date, and updates the
      * {@link VDateField#bufferedResolutions}, possibly
      * {@link VDateField#sendBufferedValues()} to the server if needed
-     * 
+     *
      * @param newDate
      *            the new {@code Date} to update
      */

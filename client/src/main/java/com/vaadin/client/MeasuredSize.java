@@ -21,7 +21,7 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 
 public class MeasuredSize {
-    private static final boolean debugSizeChanges = false;
+    private static final boolean DEBGU_SIZE_CHANGES = false;
 
     public static class MeasureResult {
         private final boolean widthChanged;
@@ -278,7 +278,7 @@ public class MeasuredSize {
 
     private void debugSizeChange(Element element, String sizeChangeType,
             String changedFrom, String changedTo) {
-        if (debugSizeChanges) {
+        if (DEBGU_SIZE_CHANGES) {
             getLogger().info(sizeChangeType + " has changed from " + changedFrom
                     + " to " + changedTo + " for " + element);
         }
