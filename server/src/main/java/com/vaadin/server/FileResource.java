@@ -69,10 +69,10 @@ public class FileResource implements ConnectorResource {
             final DownloadStream ds = new DownloadStream(
                     new FileInputStream(sourceFile), getMIMEType(),
                     getFilename());
-            ds.setParameter("Content-Length",
-                    String.valueOf(sourceFile.length()));
+            // ds.setParameter("Content-Length",
+            // String.valueOf(sourceFile.length()));
 
-            ds.setCacheTime(cacheTime);
+            // ds.setCacheTime(cacheTime);
             return ds;
         } catch (final FileNotFoundException e) {
             throw new RuntimeException(

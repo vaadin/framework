@@ -1,14 +1,11 @@
 package com.vaadin.tests.components.combobox;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
-import com.vaadin.server.StreamResource;
+import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.util.FileTypeResolver;
 
 public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
 
@@ -33,14 +30,15 @@ public class ComboBoxItemIconConnectorResource extends AbstractTestUI {
                 File file = new File("src/main/webapp/VAADIN/themes"
                         + "/tests-tickets/icons/"
                         + item.substring(0, 2).toLowerCase() + ".gif");
-                InputStream is = new FileInputStream(file);
-                StreamResource stream = new StreamResource(() -> is,
-                        file.getName());
-                stream.setMIMEType(FileTypeResolver.getMIMEType(file));
-                System.out
-                        .println("ComboBoxItemIconConnectorResource: mime type "
-                                + FileTypeResolver.getMIMEType(file));
-                return stream;
+                return new FileResource(file);
+                // InputStream is = new FileInputStream(file);
+                // StreamResource stream = new StreamResource(() -> is,
+                // file.getName());
+                // stream.setMIMEType(FileTypeResolver.getMIMEType(file));
+                // System.out
+                // .println("ComboBoxItemIconConnectorResource: mime type "
+                // + FileTypeResolver.getMIMEType(file));
+                // return stream;
             } catch (Exception e) {
                 return null;
             }
