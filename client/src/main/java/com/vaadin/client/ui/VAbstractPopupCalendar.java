@@ -221,7 +221,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Changes the current date, and updates the
      * {@link VDateField#bufferedResolutions}, possibly
      * {@link VDateField#sendBufferedValues()} to the server if needed
-     * 
+     *
      * @param newDate
      *            the new {@code Date} to update
      */
@@ -390,7 +390,6 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Opens the calendar panel popup.
      */
     public void openCalendarPanel() {
-
         if (!open && !readonly && isEnabled()) {
             open = true;
 
@@ -406,6 +405,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
             popup.setWidth("");
             popup.setHeight("");
             popup.setPopupPositionAndShow(new PopupPositionCallback());
+
+            checkGroupFocus(true);
         } else {
             VConsole.error("Cannot reopen popup, it is already open!");
         }
@@ -464,6 +465,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
      * Sets focus to Calendar panel.
      *
      * @param focus
+     *            {@code true} for {@code focus}, {@code false} for {@code blur}
      */
     public void setFocus(boolean focus) {
         calendar.setFocus(focus);
@@ -696,19 +698,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
                 // are in the lower right corner of the screen
                 if (overflow) {
                     return left;
-                } else {
-                    return left + calendarToggle.getOffsetWidth();
                 }
-            } else {
-                int[] margins = style.getMargin();
-                int desiredLeftPosition = calendarToggle.getAbsoluteLeft()
-                        - width - margins[1] - margins[3];
-                if (desiredLeftPosition >= 0) {
-                    return desiredLeftPosition;
-                } else {
-                    return left;
-                }
+                return left + calendarToggle.getOffsetWidth();
             }
+            int[] margins = style.getMargin();
+            int desiredLeftPosition = calendarToggle.getAbsoluteLeft() - width
+                    - margins[1] - margins[3];
+            if (desiredLeftPosition >= 0) {
+                return desiredLeftPosition;
+            }
+            return left;
         }
 
         private boolean positionRightSide() {
@@ -734,4 +733,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         }
     }
 
+    @Override
+    protected boolean hasChildFocus() {
+        return open;
+    }
 }
