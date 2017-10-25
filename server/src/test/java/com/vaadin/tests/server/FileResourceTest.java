@@ -15,10 +15,14 @@
  */
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
+import java.net.URISyntaxException;
 
 import org.junit.Test;
 
+import com.vaadin.server.DownloadStream;
 import com.vaadin.server.FileResource;
 
 public class FileResourceTest {
@@ -33,4 +37,22 @@ public class FileResourceTest {
         new FileResource(new File("nonexisting")).getStream();
     }
 
+    @Test
+    public void bufferSize() throws URISyntaxException {
+        File file = new File(getClass().getResource("../styles.scss").toURI());
+        FileResource resource = new FileResource(file) {
+            @Override
+            public long getCacheTime() {
+                return 5;
+            }
+        };
+        resource.setBufferSize(100);
+        resource.setCacheTime(200);
+
+        DownloadStream downloadStream = resource.getStream();
+        assertEquals(resource.getBufferSize(),
+                downloadStream.getBufferSize());
+        assertEquals(resource.getCacheTime(),
+                downloadStream.getCacheTime());
+    }
 }
