@@ -97,6 +97,16 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
                 defaultGridGenerator);
     }
 
+    /**
+     * Gets the grid this extension has been attached to.
+     *
+     * @return the grid for this extension
+     * @since
+     */
+    public Grid<T> getGrid() {
+        return getParent();
+    }
+
     @Override
     protected void registerDragSourceRpc() {
         registerRpc(new GridDragSourceRpc() {
