@@ -18,23 +18,31 @@ package com.vaadin.ui.components.grid;
 import java.io.Serializable;
 import java.util.Collection;
 
+import com.vaadin.data.provider.DataProvider;
+
 /**
- * An event listener for a GridDragger Drop.
- * 
- * Used to write the updates to the target Grid DataProvider.
- * 
+ * A handler for source grid data provider updater for {@link GridDragger}.
+ *
+ * Used to handle updates to the source grid's {@link DataProvider} after a
+ * drop.
+ *
  * @author Stephan Knitelius
- * @since 8.1
- * 
+ * @author Vaadin Ltd
+ * @since
+ *
  * @param <T>
  *            the bean type
  */
-public interface GridTargetWriter<T> extends Serializable {
+@FunctionalInterface
+public interface SourceDataProviderUpdater<T> extends Serializable {
     /**
-     * Called when items have been dropped on the target Grid.
-     * 
-     * @param index the Target index Integer.MAX when items should be added to end.
-     * @param items items to be added.
+     * Called when Items have been dragged.
+     *
+     * @param dataProvider
+     *            the data provider for the source grid
+     * @param items
+     *            dragged items.
      */
-    public void addItems(int index, Collection<T>  items);
+    public void removeItems(DataProvider<T, ?> dataProvider,
+            Collection<T> items);
 }

@@ -55,6 +55,16 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     }
 
     /**
+     * Gets the grid this extension has been attached to.
+     *
+     * @return the grid for this extension
+     * @since
+     */
+    public Grid<T> getGrid() {
+        return getParent();
+    }
+
+    /**
      * Sets the drop mode of this drop target.
      * <p>
      * Note that when using {@link DropMode#ON_TOP}, and the grid is either
