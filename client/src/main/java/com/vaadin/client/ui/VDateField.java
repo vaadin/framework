@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
+import com.vaadin.client.ui.datefield.AbstractDateFieldConnector;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
@@ -43,10 +44,10 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     public static final String CLASSNAME = "v-datefield";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String paintableId;
+    public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public ApplicationConnection client;
+    public AbstractDateFieldConnector<R> connector;
 
     private R currentResolution;
 
@@ -58,7 +59,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
 
     /**
      * The RPC send calls to the server.
-     * 
+     *
      * @since
      */
     public AbstractDateFieldServerRpc rpc;
@@ -66,11 +67,11 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /**
      * A temporary holder of the time units (resolutions), which would be sent
      * to the server through {@link #sendBufferedValues()}.
-     * 
+     *
      * The key is the resolution.
-     * 
+     *
      * The value can be {@code null}.
-     * 
+     *
      * @since
      */
     protected Map<R, Integer> bufferedResolutions = new HashMap<>();
@@ -78,7 +79,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /**
      * A temporary holder of the date string, which would be sent to the server
      * through {@link #sendBufferedValues()}.
-     * 
+     *
      * @since
      */
     protected String bufferedDateString;
@@ -200,7 +201,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     public String getId() {
-        return paintableId;
+        return connector.getConnectorId();
     }
 
     public ApplicationConnection getClient() {
@@ -264,7 +265,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /**
      * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
      * the server, and clears their values.
-     * 
+     *
      * @since
      */
     public void sendBufferedValues() {

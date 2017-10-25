@@ -62,7 +62,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
     /**
      * Returns the default date (when no date is selected) components as a map
      * from Resolution to the corresponding value.
-     * 
+     *
      * @return default date component map
      * @since
      */
@@ -95,7 +95,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         // Save details
         widget.client = getConnection();
-        widget.paintableId = getConnectorId();
+        widget.connector = this;
 
         widget.setReadonly(isReadOnly());
         widget.setEnabled(isEnabled());

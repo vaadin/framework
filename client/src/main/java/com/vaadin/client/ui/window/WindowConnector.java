@@ -105,6 +105,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         VWindow window = getWidget();
         window.id = getConnectorId();
         window.client = getConnection();
+        window.connector = this;
 
         getLayoutManager().registerDependency(this,
                 window.contentPanel.getElement());

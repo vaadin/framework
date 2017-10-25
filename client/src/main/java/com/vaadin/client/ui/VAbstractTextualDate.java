@@ -398,8 +398,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         } else {
             text.removeStyleName(styleName);
         }
-        if (getClient() != null && getClient()
-                .hasEventListeners(VAbstractTextualDate.this, eventId)) {
+        if (getClient() != null && connector.hasEventListener(eventId)) {
             // may excessively send events if if focus went to another
             // sub-component
             if (EventId.FOCUS.equals(eventId)) {
