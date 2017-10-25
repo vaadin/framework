@@ -62,18 +62,20 @@ public class GridDragger<T> implements Serializable {
     private boolean removeFromSource = true;
 
     /**
-     * Extends a Grid and makes it's row orderable by dragging entries up or
-     * down.
+     * Enables DnD reordering for the rows in the given grid.
+     * <p>
+     * {@link DropMode#BETWEEN} is used.
      *
      * @param grid
      *            Grid to be extended.
      */
     public GridDragger(Grid<T> grid) {
-        this(grid, grid, DropMode.ON_TOP_OR_BETWEEN);
+        this(grid, grid, DropMode.BETWEEN);
     }
 
     /**
-     * Enables DnD reordering the rows in the given grid.
+     * Enables DnD reordering the rows in the given grid with the given drop
+     * mode.
      * <p>
      * <em>NOTE: this only works when the grid has a
      * {@link ListDataProvider}.</em> Use the custom handlers
@@ -93,7 +95,7 @@ public class GridDragger<T> implements Serializable {
     /**
      * Enables DnD moving of rows from the source grid to the target grid.
      * <p>
-     * {@link DropMode#ON_TOP_OR_BETWEEN} is used.
+     * {@link DropMode#BETWEEN} is used.
      * <p>
      * <em>NOTE: this only works when the grids have a
      * {@link ListDataProvider}.</em> Use the custom handlers
@@ -107,14 +109,14 @@ public class GridDragger<T> implements Serializable {
      *            the target grid dropped to.
      */
     public GridDragger(Grid<T> source, Grid<T> target) {
-        this(source, target, DropMode.ON_TOP_OR_BETWEEN);
+        this(source, target, DropMode.BETWEEN);
     }
 
     /**
      * Enables DnD moving of rows from the source grid to the target grid with
      * the custom data provider updaters.
      * <p>
-     * {@link DropMode#ON_TOP_OR_BETWEEN} is used.
+     * {@link DropMode#BETWEEN} is used.
      *
      * @param source
      *            grid dragged from
@@ -128,7 +130,7 @@ public class GridDragger<T> implements Serializable {
     public GridDragger(Grid<T> source, Grid<T> target,
             TargetDataProviderUpdater<T> targetDataProviderUpdater,
             SourceDataProviderUpdater<T> sourceDataProviderUpdater) {
-        this(source, target, DropMode.ON_TOP_OR_BETWEEN);
+        this(source, target, DropMode.BETWEEN);
         this.targetDataProviderUpdater = targetDataProviderUpdater;
         this.sourceDataProviderUpdater = sourceDataProviderUpdater;
     }
@@ -203,7 +205,7 @@ public class GridDragger<T> implements Serializable {
      * handle updating instead.
      * <p>
      * <em>NOTE: this is not triggered when
-     * {@link #setRemoveItemsFromSourceGrid(boolean)} has been set to
+     * {@link #setRemoveItemsFromSource(boolean)} has been set to
      * {@code false}</em>
      *
      * @param sourceDataProviderUpdater
@@ -318,7 +320,7 @@ public class GridDragger<T> implements Serializable {
      *            {@code true} to remove dropped items, {@code false} to not
      *            remove.
      */
-    public void setRemoveItemsFromSourceGrid(boolean removeFromSource) {
+    public void setRemoveItemsFromSource(boolean removeFromSource) {
         this.removeFromSource = removeFromSource;
     }
 
@@ -335,7 +337,7 @@ public class GridDragger<T> implements Serializable {
      * @return {@code true} to remove dropped items, {@code false} to not
      *         remove.
      */
-    public boolean isRemoveItemsFromSourceGrid() {
+    public boolean isRemoveItemsFromSource() {
         return removeFromSource;
     }
 
@@ -343,7 +345,7 @@ public class GridDragger<T> implements Serializable {
         Grid<T> source = getGridDragSource().getGrid();
         if (getSourceGridDropHandler() == null) {
             if (!(source.getDataProvider() instanceof ListDataProvider)) {
-                throwIllegalStateException(true);
+                throwIllegalStateExceptionForUnsupportedDataProvider(true);
             }
             ListDataProvider<T> listDataProvider = (ListDataProvider<T>) source
                     .getDataProvider();
@@ -361,7 +363,7 @@ public class GridDragger<T> implements Serializable {
         Grid<T> target = getGridDropTarget().getGrid();
         if (targetDataProviderUpdater == null) {
             if (!(target.getDataProvider() instanceof ListDataProvider)) {
-                throwIllegalStateException(false);
+                throwIllegalStateExceptionForUnsupportedDataProvider(false);
             }
             ListDataProvider<T> listDataProvider = (ListDataProvider<T>) target
                     .getDataProvider();
@@ -394,7 +396,7 @@ public class GridDragger<T> implements Serializable {
         }
     }
 
-    private static void throwIllegalStateException(boolean sourceGrid) {
+    private static void throwIllegalStateExceptionForUnsupportedDataProvider(boolean sourceGrid) {
         throw new IllegalStateException(
                 new StringBuilder().append(sourceGrid ? "Source " : "Target ")
                         .append("grid does not have a ListDataProvider, cannot automatically ")
