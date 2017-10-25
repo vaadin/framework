@@ -267,7 +267,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
-
     }
 
     /**
@@ -424,7 +423,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("VComboBox.SP: showSuggestions(" + currentPage + ", "
                     + getTotalSuggestions() + ")");
 
-            final SuggestionPopup popup = this;
             // Add TT anchor point
             getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
@@ -462,7 +460,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             menu.setWidth("");
             menu.getElement().getFirstChildElement().getStyle().clearWidth();
 
-            setPopupPositionAndShow(popup);
+            setPopupPositionAndShow(this);
         }
 
         private int getDesiredTopPosition() {
@@ -520,7 +518,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 up.setClassName(
                         VComboBox.this.getStylePrimaryName() + "-prevpage-off");
             }
-
         }
 
         /**
@@ -551,10 +548,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else if (index == -1) {
                 selectPrevPage();
 
-            } else {
-                if (!menu.getItems().isEmpty()) {
+            } else if (!menu.getItems().isEmpty()) {
                     selectLastItem();
-                }
             }
         }
 
@@ -1066,9 +1061,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 final int pixels = getPreferredHeight()
                         / currentSuggestions.size() * pageItemsCount;
                 return pixels + "px";
-            } else {
-                return "";
             }
+            return "";
         }
 
         /**
@@ -1389,7 +1383,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 super.setSelectionRange(0, 0);
             }
         }
-
     }
 
     /**
@@ -1435,6 +1428,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             suggestionPopup.menu.setSuggestions(currentSuggestions);
             if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
                 showPopup = true;
+            }
+            if (getTotalSuggestions() == 0) {
+                showPopup = false;
             }
             if (showPopup) {
                 suggestionPopup.showSuggestions(currentPage);
@@ -2625,7 +2621,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                  * the combobox. Subtract the width of the icon and the
                  * popupopener
                  */
-
                 tb.setWidth(suggestionPopupMinWidth - iconWidth - buttonWidth
                         + "px");
             }
@@ -2720,15 +2715,19 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
         String[] parts = subPart.split("/");
-        if ("textbox".equals(parts[0])) {
+        switch (parts[0]) {
+        case "textbox":
             return tb.getElement();
-        } else if ("button".equals(parts[0])) {
+        case "button":
             return popupOpener.getElement();
-        } else if ("popup".equals(parts[0]) && suggestionPopup.isAttached()) {
-            if (parts.length == 2) {
-                return suggestionPopup.menu.getSubPartElement(parts[1]);
+        case "popup":
+            if (suggestionPopup.isAttached()) {
+                if (parts.length == 2) {
+                    return suggestionPopup.menu.getSubPartElement(parts[1]);
+                }
+                return suggestionPopup.getElement();
             }
-            return suggestionPopup.getElement();
+        default:
         }
         return null;
     }
@@ -2738,9 +2737,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             com.google.gwt.user.client.Element subElement) {
         if (tb.getElement().isOrHasChild(subElement)) {
             return "textbox";
-        } else if (popupOpener.getElement().isOrHasChild(subElement)) {
+        }
+        if (popupOpener.getElement().isOrHasChild(subElement)) {
             return "button";
-        } else if (suggestionPopup.getElement().isOrHasChild(subElement)) {
+        }
+        if (suggestionPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }
         return null;
