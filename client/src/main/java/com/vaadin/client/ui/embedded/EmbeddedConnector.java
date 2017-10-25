@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.embedded;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -27,7 +28,6 @@ import com.google.gwt.dom.client.ObjectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -134,7 +134,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                 setResourceUrl(getResourceUrl("src"));
                 clearBrowserElement = false;
             } else {
-                VConsole.error(
+                getLogger().severe(
                         "Unknown Embedded type '" + getWidget().type + "'");
             }
         } else if (state.mimeType != null) {
@@ -200,10 +200,10 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                     obj.setInnerText(state.altText);
                 }
             } else {
-                VConsole.error("Unknown Embedded mimetype '" + mime + "'");
+                getLogger().severe("Unknown Embedded mimetype '" + mime + "'");
             }
         } else {
-            VConsole.error("Unknown Embedded; no type or mimetype attribute");
+            getLogger().severe("Unknown Embedded; no type or mimetype attribute");
         }
 
         if (clearBrowserElement) {
@@ -254,4 +254,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
 
     };
 
+    private static Logger getLogger() {
+        return Logger.getLogger(EmbeddedConnector.class.getName());
+    }
 }

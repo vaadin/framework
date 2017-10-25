@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,7 +53,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -403,7 +403,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
             selectDate(focusedDate);
         } else {
-            VConsole.log("Trying to select a the focused date which is NULL!");
+            getLogger().info("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -2027,5 +2027,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 renderCalendar();
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractCalendarPanel.class.getName());
     }
 }

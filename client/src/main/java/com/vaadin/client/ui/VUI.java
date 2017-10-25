@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
@@ -35,7 +36,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -184,14 +184,14 @@ public class VUI extends SimplePanel implements ResizeHandler,
             changed = true;
             connector.getLayoutManager().reportOuterWidth(connector,
                     newWindowWidth);
-            VConsole.log("New window width: " + windowWidth);
+            getLogger().info("New window width: " + windowWidth);
         }
         if (windowHeight != newWindowHeight) {
             windowHeight = newWindowHeight;
             changed = true;
             connector.getLayoutManager().reportOuterHeight(connector,
                     newWindowHeight);
-            VConsole.log("New window height: " + windowHeight);
+            getLogger().info("New window height: " + windowHeight);
         }
         Element parentElement = getElement().getParentElement();
         if (isMonitoringParentSize() && parentElement != null) {
@@ -201,12 +201,12 @@ public class VUI extends SimplePanel implements ResizeHandler,
             if (parentWidth != newParentWidth) {
                 parentWidth = newParentWidth;
                 changed = true;
-                VConsole.log("New parent width: " + parentWidth);
+                getLogger().info("New parent width: " + parentWidth);
             }
             if (parentHeight != newParentHeight) {
                 parentHeight = newParentHeight;
                 changed = true;
-                VConsole.log("New parent height: " + parentHeight);
+                getLogger().info("New parent height: " + parentHeight);
             }
         }
         if (changed) {
@@ -217,7 +217,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
              * should shrink as the content's size is fixed and would thus not
              * automatically shrink.)
              */
-            VConsole.log(
+            getLogger().info(
                     "Running layout functions due to window or parent resize");
 
             // update size to avoid (most) redundant re-layout passes
@@ -419,4 +419,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VUI.class.getName());
+    }
 }

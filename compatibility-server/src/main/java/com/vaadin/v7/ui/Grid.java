@@ -4453,7 +4453,6 @@ public class Grid extends AbstractComponent
         private static Logger getLogger() {
             return Logger.getLogger(AbstractRenderer.class.getName());
         }
-
     }
 
     /**

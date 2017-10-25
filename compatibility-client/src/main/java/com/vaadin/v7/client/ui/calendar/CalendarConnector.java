@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
@@ -35,7 +37,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -511,7 +512,7 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                     actionStartDate = getActionStartDate(actionKey);
                     actionEndDate = getActionEndDate(actionKey);
                 } catch (ParseException pe) {
-                    VConsole.error("Failed to parse action date");
+                    getLogger().severe("Failed to parse action date");
                     continue;
                 }
 
@@ -663,7 +664,8 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
                 a.setActionStartDate(getActionStartDate(actionKey));
                 a.setActionEndDate(getActionEndDate(actionKey));
             } catch (ParseException pe) {
-                VConsole.error(pe);
+                getLogger().log(Level.SEVERE,
+                        pe.getMessage() == null ? "" : pe.getMessage(), pe);
             }
 
             actions.add(a);
@@ -737,5 +739,9 @@ public class CalendarConnector extends AbstractLegacyComponentConnector
 
         getWidget().setSizeForChildren(width, height);
 
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CalendarConnector.class.getName());
     }
 }

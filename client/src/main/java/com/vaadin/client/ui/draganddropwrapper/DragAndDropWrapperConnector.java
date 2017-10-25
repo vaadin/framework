@@ -25,7 +25,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VDragAndDropWrapper;
@@ -87,7 +86,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                                 && !receiverUrl
                                         .equals(getWidget().fileIdToReceiver
                                                 .get(fileId))) {
-                            VConsole.error(
+                            getLogger().severe(
                                     "Overwriting file receiver mapping for fileId "
                                             + fileId + " . Old receiver URL: "
                                             + getWidget().fileIdToReceiver

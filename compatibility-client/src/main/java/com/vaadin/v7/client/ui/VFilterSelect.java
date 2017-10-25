@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -73,7 +74,6 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.Icon;
@@ -257,12 +257,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -2048,7 +2048,7 @@ public class VFilterSelect extends Composite
 
     private void debug(String string) {
         if (enableDebug) {
-            VConsole.error(string);
+            getLogger().severe(string);
         }
     }
 
@@ -2660,4 +2660,7 @@ public class VFilterSelect extends Composite
         return explicitSelectedCaption;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VFilterSelect.class.getName());
+    }
 }
