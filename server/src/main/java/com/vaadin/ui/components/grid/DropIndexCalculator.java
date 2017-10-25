@@ -18,21 +18,23 @@ package com.vaadin.ui.components.grid;
 import java.io.Serializable;
 
 /**
- * An event listener for a GridDragger Drop.
- * 
- * Used to calculate the target index of the dropped items.
- * 
+ * A handler for calculating the index of the dropped items on the drop target
+ * grid.
+ *
  * @author Stephan Knitelius
- * @since 8.1
- * 
+ * @author Vaadin Ltd
+ * @since
+ * @see GridDragger
  * @param <T>
  *            the bean type
  */
-public interface GridDropTargetIndex<T> extends Serializable {
+@FunctionalInterface
+public interface DropIndexCalculator<T> extends Serializable {
     /**
      * Called when Items are dropped onto a target grid.
-     * 
-     * @param event the GridDropEvent.
+     *
+     * @param event
+     *            the GridDropEvent.
      * @return index the target index.
      */
     public int calculateDropIndex(GridDropEvent<T> event);
