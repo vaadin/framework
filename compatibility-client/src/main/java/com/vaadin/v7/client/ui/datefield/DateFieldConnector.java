@@ -70,67 +70,66 @@ public class DateFieldConnector extends TextualDateConnector {
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
 
-        String oldLocale = getWidget().getCurrentLocale();
+        VPopupCalendar calendar = getWidget();
+        String oldLocale = calendar.getCurrentLocale();
 
-        getWidget().parsable = uidl.getBooleanAttribute("parsable");
+        calendar.parsable = uidl.getBooleanAttribute("parsable");
 
         super.updateFromUIDL(uidl, client);
 
-        getWidget().calendar
-                .setDateTimeService(getWidget().getDateTimeService());
-        getWidget().calendar
-                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
-        if (getWidget().calendar.getResolution() != getWidget()
+        calendar.calendar.setDateTimeService(calendar.getDateTimeService());
+        calendar.calendar
+                .setShowISOWeekNumbers(calendar.isShowISOWeekNumbers());
+        if (calendar.calendar.getResolution() != calendar
                 .getCurrentResolution()) {
             boolean hasSelectedDate = false;
-            getWidget().calendar
-                    .setResolution(getWidget().getCurrentResolution());
-            if (getWidget().calendar.getDate() != null
-                    && getWidget().getCurrentDate() != null) {
+            calendar.calendar.setResolution(calendar.getCurrentResolution());
+            if (calendar.calendar.getDate() != null
+                    && calendar.getCurrentDate() != null) {
                 hasSelectedDate = true;
-                getWidget().calendar
-                        .setDate((Date) getWidget().getCurrentDate().clone());
+                calendar.calendar
+                        .setDate((Date) calendar.getCurrentDate().clone());
             }
             // force re-render when changing resolution only
-            getWidget().calendar.renderCalendar(hasSelectedDate);
+            calendar.calendar.renderCalendar(hasSelectedDate);
         }
 
         // Force re-render of calendar if locale has changed (#12153)
-        if (!getWidget().getCurrentLocale().equals(oldLocale)) {
-            getWidget().calendar.renderCalendar();
+        if (!calendar.getCurrentLocale().equals(oldLocale)) {
+            calendar.calendar.renderCalendar();
         }
 
-        if (getWidget().getCurrentResolution()
+        if (calendar.getCurrentResolution()
                 .getCalendarField() <= Resolution.MONTH.getCalendarField()) {
-            getWidget().calendar
+            calendar.calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
                         public void focusChanged(Date date) {
 
-                            getWidget().updateValue(date);
-                            getWidget().buildDate();
-                            Date date2 = getWidget().calendar.getDate();
+                            calendar.updateValue(date);
+                            calendar.buildDate();
+                            Date date2 = calendar.calendar.getDate();
                             date2.setYear(date.getYear());
                             date2.setMonth(date.getMonth());
                         }
                     });
         } else {
-            getWidget().calendar.setFocusChangeListener(null);
+            calendar.calendar.setFocusChangeListener(null);
         }
 
-        if (getWidget().getCurrentResolution()
+        if (calendar.getCurrentResolution()
                 .getCalendarField() > Resolution.DAY.getCalendarField()) {
-            getWidget().calendar
+            calendar.calendar
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
                         public void changed(int hour, int min, int sec,
                                 int msec) {
-                            Date d = getWidget().getDate();
+                            Date d = calendar.getDate();
                             if (d == null) {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendar.getDate()
+                                d = (Date) calendar.calendar.getDate()
                                         .clone();
                             }
                             d.setHours(hour);
@@ -139,26 +138,26 @@ public class DateFieldConnector extends TextualDateConnector {
                             DateTimeService.setMilliseconds(d, msec);
 
                             // Always update time changes to the server
-                            getWidget().updateValue(d);
+                            calendar.updateValue(d);
 
                             // Update text field
-                            getWidget().buildDate();
+                            calendar.buildDate();
                         }
                     });
         }
 
-        if (getWidget().isReadonly()) {
-            getWidget().calendarToggle.addStyleName(
+        if (calendar.isReadonly()) {
+            calendar.calendarToggle.addStyleName(
                     VPopupCalendar.CLASSNAME + "-button-readonly");
         } else {
-            getWidget().calendarToggle.removeStyleName(
+            calendar.calendarToggle.removeStyleName(
                     VPopupCalendar.CLASSNAME + "-button-readonly");
         }
 
-        getWidget().setDescriptionForAssistiveDevices(
+        calendar.setDescriptionForAssistiveDevices(
                 getState().descriptionForAssistiveDevices);
 
-        getWidget().setTextFieldTabIndex();
+        calendar.setTextFieldTabIndex();
     }
 
     @Override

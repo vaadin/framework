@@ -178,7 +178,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     protected void registerTouchHandlers() {
-        touchStartHandler = getWidget().addDomHandler(new TouchStartHandler() {
+        Widget widget = getWidget();
+        touchStartHandler = widget.addDomHandler(new TouchStartHandler() {
 
             @Override
             public void onTouchStart(final TouchStartEvent event) {
@@ -187,7 +188,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 }
 
                 // Prevent selection for the element while pending long tap.
-                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
+                WidgetUtil.setTextSelectionEnabled(widget.getElement(),
                         false);
 
                 if (BrowserInfo.get().isAndroid()) {
@@ -203,7 +204,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
                 final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
                         .buildMouseEventDetails(event.getNativeEvent(),
-                                getWidget().getElement());
+                                widget.getElement());
 
                 final EventTarget eventTarget = event.getNativeEvent()
                         .getEventTarget();
@@ -234,7 +235,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchStartEvent.getType());
 
-        touchMoveHandler = getWidget().addDomHandler(new TouchMoveHandler() {
+        touchMoveHandler = widget.addDomHandler(new TouchMoveHandler() {
 
             @Override
             public void onTouchMove(TouchMoveEvent event) {
@@ -243,7 +244,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     // expired, so let the browser handle the event.
                     cancelTouchTimer();
                 }
-
             }
 
             // mostly copy-pasted code from VScrollTable
@@ -272,7 +272,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchMoveEvent.getType());
 
-        touchEndHandler = getWidget().addDomHandler(new TouchEndHandler() {
+        touchEndHandler = widget.addDomHandler(new TouchEndHandler() {
 
             @Override
             public void onTouchEnd(TouchEndEvent event) {
@@ -492,21 +492,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @OnStateChange({ "errorMessage", "errorLevel" })
     private void setErrorLevel() {
+        Widget widget = getWidget();
         // Add or remove the widget's error level style name
-        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
-                getWidget().getStylePrimaryName() + StyleConstants.ERROR_EXT,
+        ErrorUtil.setErrorLevelStyle(widget.getElement(),
+                widget.getStylePrimaryName() + StyleConstants.ERROR_EXT,
                 getState().errorLevel);
 
         // Add or remove error indicator element
-        if (getWidget() instanceof HasErrorIndicatorElement) {
-            HasErrorIndicatorElement widget = (HasErrorIndicatorElement) getWidget();
+        if (widget instanceof HasErrorIndicatorElement) {
+            HasErrorIndicatorElement e = (HasErrorIndicatorElement) widget;
             if (getState().errorMessage != null) {
-                widget.setErrorIndicatorElementVisible(true);
-                ErrorUtil.setErrorLevelStyle(widget.getErrorIndicatorElement(),
+                e.setErrorIndicatorElementVisible(true);
+                ErrorUtil.setErrorLevelStyle(e.getErrorIndicatorElement(),
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                         getState().errorLevel);
             } else {
-                widget.setErrorIndicatorElementVisible(false);
+                e.setErrorIndicatorElementVisible(false);
             }
         }
     }

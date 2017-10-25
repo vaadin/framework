@@ -64,36 +64,37 @@ public class UploadConnector extends AbstractComponentConnector
         if (!isRealUpdate(uidl)) {
             return;
         }
+        VUpload upload = getWidget();
         if (uidl.hasAttribute("notStarted")) {
-            getWidget().t.schedule(400);
+            upload.t.schedule(400);
             return;
         }
-        getWidget().setImmediateMode(getState().immediateMode);
-        getWidget().client = client;
-        getWidget().paintableId = uidl.getId();
-        getWidget().nextUploadId = uidl.getIntAttribute("nextid");
+        upload.setImmediateMode(getState().immediateMode);
+        upload.client = client;
+        upload.paintableId = uidl.getId();
+        upload.nextUploadId = uidl.getIntAttribute("nextid");
         final String action = client
                 .translateVaadinUri(uidl.getStringVariable("action"));
-        getWidget().element.setAction(action);
+        upload.element.setAction(action);
         if (uidl.hasAttribute("buttoncaption")) {
-            getWidget().submitButton
+            upload.submitButton
                     .setText(uidl.getStringAttribute("buttoncaption"));
             if (uidl.hasAttribute("buttonstylename")) {
-                getWidget().submitButton
+                upload.submitButton
                         .setStyleName(uidl.getStringAttribute("buttonstylename"));
             }
-            getWidget().submitButton.setVisible(true);
+            upload.submitButton.setVisible(true);
         } else {
-            getWidget().submitButton.setVisible(false);
+            upload.submitButton.setVisible(false);
         }
-        getWidget().fu.setName(getWidget().paintableId + "_file");
+        upload.fu.setName(upload.paintableId + "_file");
 
         if (!isEnabled()) {
-            getWidget().disableUpload();
+            upload.disableUpload();
         } else if (!uidl.getBooleanAttribute("state")) {
             // Enable the button only if an upload is not in progress
-            getWidget().enableUpload();
-            getWidget().ensureTargetFrame();
+            upload.enableUpload();
+            upload.ensureTargetFrame();
         }
     }
 

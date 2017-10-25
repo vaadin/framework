@@ -254,17 +254,18 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
     @Override
     public void postLayout() {
-        if (getWidget().startWidth.getValue() == null) {
+        ResizeTerrorizerControlPanel panel = getWidget();
+        if (panel.startWidth.getValue() == null) {
             int width = getTarget().getWidget().getElement().getOffsetWidth();
-            getWidget().startWidth.setValue(width);
-            getWidget().endWidth
+            panel.startWidth.setValue(width);
+            panel.endWidth
                     .setValue(width + getState().defaultWidthOffset);
         }
 
-        if (getWidget().startHeight.getValue() == null) {
+        if (panel.startHeight.getValue() == null) {
             int height = getTarget().getWidget().getElement().getOffsetHeight();
-            getWidget().startHeight.setValue(height);
-            getWidget().endHeight
+            panel.startHeight.setValue(height);
+            panel.endHeight
                     .setValue(height + getState().defaultHeightOffset);
         }
     }

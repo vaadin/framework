@@ -28,7 +28,7 @@ import com.vaadin.ui.AbstractLocalDateTimeField;
 
 /**
  * The client-side connector for AbstractLocalDateTimeField.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */
@@ -55,19 +55,20 @@ public class DateTimeFieldConnector extends
     @Override
     protected void updateListeners() {
         super.updateListeners();
-        if (getWidget().getCurrentResolution()
+        VPopupTimeCalendar widget = getWidget();
+        if (widget.getCurrentResolution()
                 .compareTo(DateTimeResolution.DAY) < 0) {
-            getWidget().calendar
+            widget.calendar
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
                         public void changed(int hour, int min, int sec,
                                 int msec) {
-                            Date d = getWidget().getDate();
+                            Date d = widget.getDate();
                             if (d == null) {
                                 // date currently null, use the value from
                                 // calendarPanel
                                 // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendar.getDate()
+                                d = (Date) widget.calendar.getDate()
                                         .clone();
                             }
                             d.setHours(hour);
@@ -76,10 +77,10 @@ public class DateTimeFieldConnector extends
                             DateTimeService.setMilliseconds(d, msec);
 
                             // Always update time changes to the server
-                            getWidget().updateValue(d);
+                            widget.updateValue(d);
 
                             // Update text field
-                            getWidget().buildDate();
+                            widget.buildDate();
                         }
                     });
         }

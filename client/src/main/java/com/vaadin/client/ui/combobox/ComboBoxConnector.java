@@ -71,29 +71,30 @@ public class ComboBoxConnector extends AbstractListingConnector
 
         Profiler.enter("ComboBoxConnector.onStateChanged update content");
 
-        getWidget().readonly = isReadOnly();
-        getWidget().updateReadOnly();
+        VComboBox widget = getWidget();
+        widget.readonly = isReadOnly();
+        widget.updateReadOnly();
 
         // not a FocusWidget -> needs own tabindex handling
-        getWidget().tb.setTabIndex(getState().tabIndex);
+        widget.tb.setTabIndex(getState().tabIndex);
 
-        getWidget().suggestionPopup.updateStyleNames(getState());
+        widget.suggestionPopup.updateStyleNames(getState());
 
         // TODO if the pop up is opened, the actual item should be removed from
         // the popup (?)
-        getWidget().nullSelectionAllowed = getState().emptySelectionAllowed;
+        widget.nullSelectionAllowed = getState().emptySelectionAllowed;
         // TODO having this true would mean that the empty selection item comes
         // from the data source so none needs to be added - currently
         // unsupported
-        getWidget().nullSelectItem = false;
+        widget.nullSelectItem = false;
 
         // make sure the input prompt is updated
-        getWidget().updatePlaceholder();
+        widget.updatePlaceholder();
 
         getDataReceivedHandler().serverReplyHandled();
 
         // all updates except options have been done
-        getWidget().initDone = true;
+        widget.initDone = true;
 
         Profiler.leave("ComboBoxConnector.onStateChanged update content");
     }
@@ -206,15 +207,15 @@ public class ComboBoxConnector extends AbstractListingConnector
                 // TODO this should be optimized not to try to fetch everything
                 getDataSource().ensureAvailability(0, getDataSource().size());
                 return;
-            } else {
-                page = 0;
             }
+            page = 0;
         }
-        int adjustment = getWidget().nullSelectionAllowed && filter.isEmpty()
+        VComboBox widget = getWidget();
+        int adjustment = widget.nullSelectionAllowed && filter.isEmpty()
                 ? 1 : 0;
         int startIndex = Math.max(0,
-                page * getWidget().pageLength - adjustment);
-        int pageLength = getWidget().pageLength > 0 ? getWidget().pageLength
+                page * widget.pageLength - adjustment);
+        int pageLength = widget.pageLength > 0 ? widget.pageLength
                 : getDataSource().size();
         getDataSource().ensureAvailability(startIndex, pageLength);
     }
