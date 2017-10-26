@@ -150,7 +150,7 @@ public class AtmospherePushConnection implements PushConnection {
         this.connection = connection;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
-                e -> {
+                event -> {
                     if (state == State.DISCONNECT_PENDING
                             || state == State.DISCONNECTED) {
                         return;

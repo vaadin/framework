@@ -116,8 +116,8 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
 
     protected void setErrorHandler(boolean enabled) {
         if (enabled) {
-            VaadinSession.getCurrent().setErrorHandler(e -> {
-                Throwable t = e.getThrowable();
+            VaadinSession.getCurrent().setErrorHandler(event -> {
+                Throwable t = event.getThrowable();
                 if (t instanceof RpcInvocationException) {
                     t = t.getCause();
                     if (t instanceof InvocationTargetException) {

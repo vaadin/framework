@@ -163,8 +163,8 @@ public abstract class ConnectorBundleLoader {
     private void notice(String productName) {
         if (notice == null) {
             notice = new HTML();
-            notice.addClickHandler(e -> notice.removeFromParent());
-            notice.addTouchStartHandler(e -> notice.removeFromParent());
+            notice.addClickHandler(event -> notice.removeFromParent());
+            notice.addTouchStartHandler(event -> notice.removeFromParent());
         }
         String msg = notice.getText().trim();
         msg += msg.isEmpty() ? "Using Evaluation License of: " : ", ";

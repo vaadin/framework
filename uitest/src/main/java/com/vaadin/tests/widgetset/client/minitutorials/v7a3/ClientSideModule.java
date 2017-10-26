@@ -36,7 +36,7 @@ public class ClientSideModule implements EntryPoint {
         vp.add(button);
         RootPanel.get().add(vp);
 
-        button.addClickHandler(e -> {
+        button.addClickHandler(event -> {
             if ("GWT User".equals(nameField.getText())) {
                 Window.alert("User OK");
             } else {

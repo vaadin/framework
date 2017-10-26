@@ -108,11 +108,11 @@ public class TestBenchSection implements Section {
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        find.addClickHandler(e -> toggleFind());
+        find.addClickHandler(event -> toggleFind());
 
         controls.add(clear);
         clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        clear.addClickHandler(e -> clearResults());
+        clear.addClickHandler(event -> clearResults());
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-testbench");
         content.add(selectorPanel);

@@ -64,7 +64,7 @@ public class GwtRpcButtonConnector extends AbstractComponentConnector {
         log("GwtRpcButtonTestConnector init");
 
         getWidget().setText("Click me");
-        getWidget().addClickHandler(e -> doRPC());
+        getWidget().addClickHandler(event -> doRPC());
     }
 
     /**

@@ -90,7 +90,7 @@ public class VPopupView extends HTML
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        addClickHandler(e -> {
+        addClickHandler(event -> {
             if (isEnabled()) {
                 preparePopup(popup);
                 showPopup(popup);
@@ -243,10 +243,11 @@ public class VPopupView extends HTML
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is
             // directly attached to the RootPanel.
-            addDomHandler(e -> {
+            addDomHandler(event -> {
                 if (shortcutActionHandler != null) {
                     shortcutActionHandler
-                            .handleKeyboardEvent(Event.as(e.getNativeEvent()));
+                            .handleKeyboardEvent(
+                                    Event.as(event.getNativeEvent()));
                 }
             }, KeyDownEvent.getType());
         }

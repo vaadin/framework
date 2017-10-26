@@ -62,14 +62,14 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * Previews events after a mousedown to detect where the following mouseup
      * hits.
      */
-    private final NativePreviewHandler mouseUpPreviewHandler = e -> {
-        if (e.getTypeInt() == Event.ONMOUSEUP) {
+    private final NativePreviewHandler mouseUpPreviewHandler = event -> {
+        if (event.getTypeInt() == Event.ONMOUSEUP) {
             mouseUpEventPreviewRegistration.removeHandler();
 
             // Event's reported target not always correct if event
             // capture is in use
             Element elementUnderMouse = WidgetUtil
-                    .getElementUnderMouse(e.getNativeEvent());
+                    .getElementUnderMouse(event.getNativeEvent());
             if (lastMouseDownTarget != null
                     && elementUnderMouse == lastMouseDownTarget) {
                 mouseUpPreviewMatched = true;

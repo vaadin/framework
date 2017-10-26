@@ -69,7 +69,7 @@ public class JavaScriptConnectorHelper {
     private int processedResponseId = -1;
 
     public void init() {
-        connector.addStateChangeHandler(e -> processStateChanges());
+        connector.addStateChangeHandler(event -> processStateChanges());
     }
 
     /**

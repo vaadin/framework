@@ -71,7 +71,7 @@ public class Heartbeat {
 
         connection.addHandler(
                 ApplicationConnection.ApplicationStoppedEvent.TYPE,
-                e -> setInterval(-1));
+                event -> setInterval(-1));
     }
 
     /**

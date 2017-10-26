@@ -24,8 +24,8 @@ public class CapsLockWarningWithRpcConnector
         warning.setOwner(passwordWidget);
         warning.add(new HTML("Caps Lock is enabled!"));
 
-        passwordWidget.addDomHandler(e -> {
-            if (isEnabled() && isCapsLockOn(e)) {
+        passwordWidget.addDomHandler(event -> {
+            if (isEnabled() && isCapsLockOn(event)) {
                 warning.showRelativeTo(passwordWidget);
                 // Added to send message to the server
                 rpc.isCapsLockEnabled(true);

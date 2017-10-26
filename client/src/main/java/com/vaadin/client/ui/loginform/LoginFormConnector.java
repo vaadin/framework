@@ -58,7 +58,7 @@ public class LoginFormConnector
         super.init();
 
         loginFormRpc = getRpcProxy(LoginFormRpc.class);
-        getWidget().addSubmitCompleteHandler(e -> {
+        getWidget().addSubmitCompleteHandler(event -> {
             valuesChanged();
             loginFormRpc.submitCompleted();
         });
@@ -145,7 +145,7 @@ public class LoginFormConnector
     }
 
     private void addSubmitButtonClickHandler(FocusWidget button) {
-        button.addClickHandler(e -> login());
+        button.addClickHandler(event -> login());
     }
 
     private void valuesChanged() {

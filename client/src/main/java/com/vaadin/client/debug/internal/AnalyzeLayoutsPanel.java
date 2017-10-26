@@ -121,19 +121,20 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
                     Highlight.show(parentConnector, "yellow");
                 }
 
-                errorDetails.addMouseOverHandler(e -> {
+                errorDetails.addMouseOverHandler(event -> {
                     Highlight.hideAll();
                     Highlight.show(parentConnector, "yellow");
                     Highlight.show(connector);
                     errorDetails.getElement().getStyle()
                             .setTextDecoration(TextDecoration.UNDERLINE);
                 });
-                errorDetails.addMouseOutHandler(e -> {
+                errorDetails.addMouseOutHandler(event -> {
                     Highlight.hideAll();
                     errorDetails.getElement().getStyle()
                             .setTextDecoration(TextDecoration.NONE);
                 });
-                errorDetails.addClickHandler(e -> fireSelectEvent(connector));
+                errorDetails
+                        .addClickHandler(event -> fireSelectEvent(connector));
             }
 
             Highlight.show(connector);
@@ -159,19 +160,19 @@ public class AnalyzeLayoutsPanel extends FlowPanel {
 
         final SimpleTree errorNode = new SimpleTree(
                 connector.getClass().getSimpleName() + " id: " + pid);
-        errorNode.addDomHandler(e -> {
+        errorNode.addDomHandler(event -> {
             Highlight.showOnly(connector);
-            ((Widget) e.getSource()).getElement().getStyle()
+            ((Widget) event.getSource()).getElement().getStyle()
                     .setTextDecoration(TextDecoration.UNDERLINE);
         }, MouseOverEvent.getType());
-        errorNode.addDomHandler(e -> {
+        errorNode.addDomHandler(event -> {
             Highlight.hideAll();
-            ((Widget) e.getSource()).getElement().getStyle()
+            ((Widget) event.getSource()).getElement().getStyle()
                     .setTextDecoration(TextDecoration.NONE);
         }, MouseOutEvent.getType());
 
-        errorNode.addDomHandler(e -> {
-            if (e.getNativeEvent().getEventTarget().cast() == errorNode
+        errorNode.addDomHandler(event -> {
+            if (event.getNativeEvent().getEventTarget().cast() == errorNode
                     .getElement().getChild(1).cast()) {
                 fireSelectEvent(connector);
             }

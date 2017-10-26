@@ -104,11 +104,12 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
 
-        calendarToggle.addDomHandler(e -> cursorOverCalendarToggleButton = true,
+        calendarToggle.addDomHandler(
+                event -> cursorOverCalendarToggleButton = true,
                 MouseOverEvent.getType());
 
         calendarToggle.addDomHandler(
-                e -> cursorOverCalendarToggleButton = false,
+                event -> cursorOverCalendarToggleButton = false,
                 MouseOutEvent.getType());
 
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it

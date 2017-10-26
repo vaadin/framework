@@ -487,16 +487,16 @@ public class MultiSelectionRenderer<T>
         /** The registration info for {@link #scrollPreviewHandler} */
         private HandlerRegistration handlerRegistration;
 
-        private final NativePreviewHandler scrollPreviewHandler = e -> {
+        private final NativePreviewHandler scrollPreviewHandler = event -> {
             if (autoScroller == null) {
                 stop();
                 return;
             }
 
-            final NativeEvent nativeEvent = e.getNativeEvent();
+            final NativeEvent nativeEvent = event.getNativeEvent();
             int pageY = 0;
             int pageX = 0;
-            switch (e.getTypeInt()) {
+            switch (event.getTypeInt()) {
             case Event.ONMOUSEMOVE:
             case Event.ONTOUCHMOVE:
                 pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);

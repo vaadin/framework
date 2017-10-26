@@ -433,8 +433,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         // Handlers to Prevent tab to leave the window
         // and backspace to cause browser navigation
-        topEventBlocker = e -> {
-            NativeEvent nativeEvent = e.getNativeEvent();
+        topEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && nativeEvent.getShiftKey()) {
@@ -446,8 +446,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             }
         };
 
-        bottomEventBlocker = e -> {
-            NativeEvent nativeEvent = e.getNativeEvent();
+        bottomEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && !nativeEvent.getShiftKey()) {

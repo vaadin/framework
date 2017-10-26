@@ -74,7 +74,7 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = e -> {
+    private StateChangeHandler childStateChangeHandler = event -> {
         // Child state has changed, update stuff it hasn't already been done
         updateInternalState();
 
@@ -83,7 +83,7 @@ public abstract class AbstractOrderedLayoutConnector
          * handler has been run because it might have changed some styles that
          * are overridden here.
          */
-        ServerConnector child = e.getConnector();
+        ServerConnector child = event.getConnector();
         if (child instanceof ComponentConnector) {
             ComponentConnector component = (ComponentConnector) child;
             Slot slot = getWidget().getSlot(component.getWidget());

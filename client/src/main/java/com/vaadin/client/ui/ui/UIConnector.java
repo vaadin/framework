@@ -119,14 +119,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      */
     private String currentLocation;
 
-    private final StateChangeHandler childStateChangeHandler = e -> {
+    private final StateChangeHandler childStateChangeHandler = event -> {
         // TODO Should use a more specific handler that only reacts to
         // size changes
         onChildSizeChange();
     };
 
-    private WindowOrderHandler windowOrderHandler = e -> {
-        VWindow[] windows = e.getWindows();
+    private WindowOrderHandler windowOrderHandler = event -> {
+        VWindow[] windows = event.getWindows();
         Map<Integer, Connector> orders = new HashMap<>();
         boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
         for (VWindow window : windows) {
@@ -204,9 +204,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }-*/;
         });
 
-        getWidget().addResizeHandler(e -> {
-            getRpcProxy(UIServerRpc.class).resize(e.getWidth(),
-                    e.getHeight(), Window.getClientWidth(),
+        getWidget().addResizeHandler(event -> {
+            getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
+                    event.getHeight(), Window.getClientWidth(),
                     Window.getClientHeight());
             getConnection().getServerRpcQueue().flush();
         });
@@ -511,18 +511,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             shortcutContextWidget = RootPanel.get(); // document body
         }
 
-        shortcutContextWidget.addDomHandler(e -> {
+        shortcutContextWidget.addDomHandler(event -> {
             if (VWindow.isModalWindowOpen()) {
                 return;
             }
             if (getWidget().actionHandler != null) {
                 Element target = Element
-                        .as(e.getNativeEvent().getEventTarget());
+                        .as(event.getNativeEvent().getEventTarget());
                 if (target == Document.get().getBody()
                         || getWidget().getElement().isOrHasChild(target)) {
                     // Only react to body and elements inside the UI
                     getWidget().actionHandler.handleKeyboardEvent(
-                            (Event) e.getNativeEvent().cast());
+                            (Event) event.getNativeEvent().cast());
                 }
             }
         }, KeyDownEvent.getType());

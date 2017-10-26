@@ -46,7 +46,7 @@ public class UploadConnector extends AbstractComponentConnector
     protected void init() {
         super.init();
 
-        getWidget().fu.addChangeHandler(e -> {
+        getWidget().fu.addChangeHandler(event -> {
             if (hasEventListener(EventId.CHANGE)) {
                 getRpcProxy(UploadServerRpc.class)
                         .change(getWidget().fu.getFilename());

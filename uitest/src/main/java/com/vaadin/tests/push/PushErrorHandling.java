@@ -22,13 +22,15 @@ public class PushErrorHandling extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
 
-        VaadinSession.getCurrent().setErrorHandler(e -> {
+        VaadinSession.getCurrent().setErrorHandler(event -> {
             addComponent(
-                    new Label("An error! " + e.getThrowable().getMessage()));
-            System.err.println("An error! " + e.getThrowable().getMessage());
+                    new Label(
+                            "An error! " + event.getThrowable().getMessage()));
+            System.err
+                    .println("An error! " + event.getThrowable().getMessage());
         });
 
-        final Button button = new Button("Click for NPE!", e -> {
+        final Button button = new Button("Click for NPE!", event -> {
                     ((String) null).length(); // Null-pointer exception
                 });
         button.setId("npeButton");

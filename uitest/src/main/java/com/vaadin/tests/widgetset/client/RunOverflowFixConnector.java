@@ -40,7 +40,7 @@ public class RunOverflowFixConnector
         overflowY.addStyleName("third-scrollbar");
 
         Button runFix = new Button("Click to runWebkitOverflowAutoFix",
-                (ClickHandler) e -> {
+                (ClickHandler) event -> {
                     overflow.getElement().getStyle()
                             .setOverflow(Style.Overflow.SCROLL);
                     WidgetUtil.runWebkitOverflowAutoFix(overflow.getElement());
@@ -57,7 +57,7 @@ public class RunOverflowFixConnector
         getWidget().add(runFix);
 
         Button runFix2 = new Button("Click to runWebkitOverflowAutoFix 2",
-                (ClickHandler) e -> {
+                (ClickHandler) event -> {
                     overflow.getElement().getStyle()
                             .setOverflow(Style.Overflow.VISIBLE);
                     WidgetUtil.runWebkitOverflowAutoFix(overflow.getElement());

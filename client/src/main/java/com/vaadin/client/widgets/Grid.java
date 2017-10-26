@@ -1454,14 +1454,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         public Editor() {
             saveButton = new Button();
             saveButton.setText(GridConstants.DEFAULT_SAVE_CAPTION);
-            saveButton.addClickHandler(e -> {
+            saveButton.addClickHandler(event -> {
                 save();
                 FocusUtil.setFocus(grid, true);
             });
 
             cancelButton = new Button();
             cancelButton.setText(GridConstants.DEFAULT_CANCEL_CAPTION);
-            cancelButton.addClickHandler(e -> {
+            cancelButton.addClickHandler(event -> {
                 cancel();
                 FocusUtil.setFocus(grid, true);
             });
@@ -1603,7 +1603,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             if (escalator.getVisibleRowRange().contains(rowIndex)) {
                 show(rowIndex, columnIndexDOM);
             } else {
-                vScrollHandler = grid.addScrollHandler(e -> {
+                vScrollHandler = grid.addScrollHandler(event -> {
                     if (escalator.getVisibleRowRange().contains(rowIndex)) {
                         show(rowIndex, columnIndexDOM);
                         vScrollHandler.removeHandler();
@@ -1816,7 +1816,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             TableRowElement tr = grid.getEscalator().getBody()
                     .getRowElement(rowIndex);
 
-            hScrollHandler = grid.addScrollHandler(e -> {
+            hScrollHandler = grid.addScrollHandler(event -> {
                 updateHorizontalScrollPosition();
                 updateVerticalScrollPosition();
             });
@@ -3762,7 +3762,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      */
     private static class Sidebar extends Composite implements HasEnabled {
 
-        private final ClickHandler openCloseButtonHandler = e -> {
+        private final ClickHandler openCloseButtonHandler = event -> {
             if (!isOpen()) {
                 open();
             } else {
@@ -3849,8 +3849,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                     }
                 }
             };
-            KeyDownHandler keyDownHandler = e -> {
-                if (e.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+            KeyDownHandler keyDownHandler = event -> {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
                     close();
                 }
             };
@@ -4515,10 +4515,10 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             // mouse was released on top of the dragged cell
             if (columnSortPreventRegistration == null) {
                 columnSortPreventRegistration = Event
-                        .addNativePreviewHandler(e -> {
-                            if (e.getTypeInt() == Event.ONCLICK) {
-                                e.cancel();
-                                e.getNativeEvent().preventDefault();
+                        .addNativePreviewHandler(event -> {
+                            if (event.getTypeInt() == Event.ONCLICK) {
+                                event.cancel();
+                                event.getNativeEvent().preventDefault();
                                 columnSortPreventRegistration.removeHandler();
                                 columnSortPreventRegistration = null;
                             }
@@ -6123,13 +6123,14 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         escalator.getBody().setSpacerUpdater(gridSpacerUpdater);
 
-        escalator.addScrollHandler(e -> fireEvent(new ScrollEvent()));
+        escalator.addScrollHandler(event -> fireEvent(new ScrollEvent()));
 
         escalator.addRowVisibilityChangeHandler(
-                e -> {
+                event -> {
                     if (dataSource != null && dataSource.size() != 0) {
-                        dataSource.ensureAvailability(e.getFirstVisibleRow(),
-                                e.getVisibleRowCount());
+                        dataSource.ensureAvailability(
+                                event.getFirstVisibleRow(),
+                                event.getVisibleRowCount());
                     }
                 });
 
@@ -6150,14 +6151,15 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 BrowserEvents.MOUSEDOWN, BrowserEvents.CLICK));
 
         // Make ENTER and SHIFT+ENTER in the header perform sorting
-        addHeaderKeyUpHandler(e -> {
-            if (e.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
+        addHeaderKeyUpHandler(event -> {
+            if (event.getNativeKeyCode() != KeyCodes.KEY_ENTER) {
                 return;
             }
-            if (getHeader().getRow(e.getFocusedCell().getRowIndex())
+            if (getHeader().getRow(event.getFocusedCell().getRowIndex())
                     .isDefault()) {
                 // Only sort for enter on the default header
-                sorter.sort(e.getFocusedCell().getColumn(), e.isShiftKeyDown());
+                sorter.sort(event.getFocusedCell().getColumn(),
+                        event.isShiftKeyDown());
             }
         });
 

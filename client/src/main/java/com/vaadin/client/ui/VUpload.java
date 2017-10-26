@@ -141,7 +141,7 @@ public class VUpload extends SimplePanel {
         panel.add(maxfilesize);
         panel.add(fu);
         submitButton = new VButton();
-        submitButton.addClickHandler(e -> {
+        submitButton.addClickHandler(event -> {
             if (isImmediateMode()) {
                 // fire click on upload (e.g. focused button and hit space)
                 fireNativeClick(fu.getElement());

@@ -79,7 +79,7 @@ public class DefaultReconnectDialog extends VOverlay
 
         // Click to refresh after giving up
         if (!reconnecting) {
-            clickHandler = addDomHandler(e -> {
+            clickHandler = addDomHandler(event -> {
                 // refresh
                 WidgetUtil.redirect(null);
             }, ClickEvent.getType());

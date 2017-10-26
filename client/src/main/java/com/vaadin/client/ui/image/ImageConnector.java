@@ -34,7 +34,8 @@ public class ImageConnector extends AbstractComponentConnector {
     protected void init() {
         super.init();
         getWidget().addHandler(
-                e -> getLayoutManager().setNeedsMeasure(ImageConnector.this),
+                event -> getLayoutManager()
+                        .setNeedsMeasure(ImageConnector.this),
                 LoadEvent.getType());
     }
 

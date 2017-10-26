@@ -58,8 +58,8 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = e -> {
-        ComponentConnector child = (ComponentConnector) e.getConnector();
+    private StateChangeHandler childStateChangeHandler = event -> {
+        ComponentConnector child = (ComponentConnector) event.getConnector();
         List<String> childStyles = child.getState().styles;
         if (childStyles == null) {
             getWidget().setWidgetWrapperStyleNames(child.getWidget(),
@@ -69,7 +69,8 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
                     childStyles.toArray(new String[childStyles.size()]));
         }
 
-        if (e.hasPropertyChanged("height") || e.hasPropertyChanged("width")) {
+        if (event.hasPropertyChanged("height")
+                || event.hasPropertyChanged("width")) {
             setChildWidgetPosition(child);
         }
     };

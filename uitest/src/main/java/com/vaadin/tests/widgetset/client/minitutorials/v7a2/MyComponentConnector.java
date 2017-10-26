@@ -16,9 +16,9 @@ public class MyComponentConnector extends AbstractComponentConnector {
             this);
 
     public MyComponentConnector() {
-        getWidget().addClickHandler(e -> {
+        getWidget().addClickHandler(event -> {
             final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(e.getNativeEvent(),
+                    .buildMouseEventDetails(event.getNativeEvent(),
                             getWidget().getElement());
 
             rpc.clicked(mouseDetails);

@@ -8,8 +8,9 @@ public class UIInitException extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        setErrorHandler(e -> addComponent(new Label(
-                "An exception occurred: " + e.getThrowable().getMessage())));
+        setErrorHandler(
+                event -> addComponent(new Label("An exception occurred: "
+                        + event.getThrowable().getMessage())));
         throw new RuntimeException("Catch me if you can");
     }
 

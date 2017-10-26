@@ -93,7 +93,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         this.connection = connection;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
-                e -> {
+                event -> {
                     if (isReconnecting()) {
                         giveUp();
                     }

@@ -104,27 +104,27 @@ public class DragAndDropHandler {
         }
     };
 
-    private final NativePreviewHandler dragPreviewHandler = e -> {
+    private final NativePreviewHandler dragPreviewHandler = event -> {
         if (dragging) {
-            final int typeInt = e.getTypeInt();
+            final int typeInt = event.getTypeInt();
             switch (typeInt) {
             case Event.ONMOUSEMOVE:
             case Event.ONTOUCHMOVE:
-                callback.onDragUpdate(Event.as(e.getNativeEvent()));
+                callback.onDragUpdate(Event.as(event.getNativeEvent()));
                 break;
             case Event.ONKEYDOWN:
                 // End drag if ESC is pressed
-                int keyCode = e.getNativeEvent().getKeyCode();
+                int keyCode = event.getNativeEvent().getKeyCode();
                 if (keyCode == KeyCodes.KEY_ESCAPE) {
-                    cancelDrag(e);
+                    cancelDrag(event);
                 }
                 break;
             case Event.ONTOUCHCANCEL:
-                cancelDrag(e);
+                cancelDrag(event);
                 break;
             case Event.ONTOUCHEND:
             case Event.ONMOUSEUP:
-                callback.onDragUpdate(Event.as(e.getNativeEvent()));
+                callback.onDragUpdate(Event.as(event.getNativeEvent()));
                 callback.onDrop();
                 stopDrag();
                 break;
@@ -139,9 +139,9 @@ public class DragAndDropHandler {
 
         // Kill events - as long as this thing is active, we don't want to
         // let any event through.
-        e.getNativeEvent().stopPropagation();
-        e.getNativeEvent().preventDefault();
-        e.cancel();
+        event.getNativeEvent().stopPropagation();
+        event.getNativeEvent().preventDefault();
+        event.cancel();
     };
 
     /**

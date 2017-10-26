@@ -83,32 +83,33 @@ public class VDragAndDropWrapper extends VCustomComponent
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
 
-        addDomHandler(e -> {
+        addDomHandler(event -> {
             if (getConnector().isEnabled()
-                    && e.getNativeEvent().getButton() == Event.BUTTON_LEFT
-                    && startDrag(e.getNativeEvent())) {
-                e.preventDefault(); // prevent text selection
-                startX = e.getClientX();
-                startY = e.getClientY();
+                    && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
+                    && startDrag(event.getNativeEvent())) {
+                event.preventDefault(); // prevent text selection
+                startX = event.getClientX();
+                startY = event.getClientY();
             }
         }, MouseDownEvent.getType());
 
-        addDomHandler(e -> {
-            final int deltaX = Math.abs(e.getClientX() - startX);
-            final int deltaY = Math.abs(e.getClientY() - startY);
+        addDomHandler(event -> {
+            final int deltaX = Math.abs(event.getClientX() - startX);
+            final int deltaY = Math.abs(event.getClientY() - startY);
             if ((deltaX + deltaY) < MIN_PX_DELTA) {
                 Element clickedElement = WidgetUtil.getElementFromPoint(
-                        e.getClientX(), e.getClientY());
+                        event.getClientX(), event.getClientY());
                 clickedElement.focus();
             }
         }, MouseUpEvent.getType());
 
-        addDomHandler(e -> {
-            if (getConnector().isEnabled() && startDrag(e.getNativeEvent())) {
+        addDomHandler(event -> {
+            if (getConnector().isEnabled()
+                    && startDrag(event.getNativeEvent())) {
                 /*
                  * Don't let e.g. panel start scrolling.
                  */
-                e.stopPropagation();
+                event.stopPropagation();
             }
         }, TouchStartEvent.getType());
 

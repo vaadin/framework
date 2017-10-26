@@ -76,17 +76,17 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
         style.setDisplay(Display.NONE);
 
         getElement().appendChild(children);
-        addDomHandler(e -> {
-            if (e.getNativeEvent().getEventTarget().cast() == handle) {
+        addDomHandler(event -> {
+            if (event.getNativeEvent().getEventTarget().cast() == handle) {
                 if (children.getStyle().getDisplay().intern() == Display.NONE
                         .getCssName()) {
-                    open(e.getNativeEvent().getAltKey());
+                    open(event.getNativeEvent().getAltKey());
                 } else {
                     close();
                 }
 
-            } else if (e.getNativeEvent().getEventTarget().cast() == text) {
-                select(e);
+            } else if (event.getNativeEvent().getEventTarget().cast() == text) {
+                select(event);
             }
         }, ClickEvent.getType());
     }
@@ -172,9 +172,9 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
             DoubleClickHandler handler) {
         if (textDoubleClickHandlerManager == null) {
             textDoubleClickHandlerManager = new HandlerManager(this);
-            addDomHandler(e -> {
-                if (e.getNativeEvent().getEventTarget().cast() == text) {
-                    textDoubleClickHandlerManager.fireEvent(e);
+            addDomHandler(event -> {
+                if (event.getNativeEvent().getEventTarget().cast() == text) {
+                    textDoubleClickHandlerManager.fireEvent(event);
                 }
             }, DoubleClickEvent.getType());
         }

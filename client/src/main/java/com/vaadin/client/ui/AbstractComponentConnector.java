@@ -106,15 +106,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
             contextHandler = getWidget()
-                    .addDomHandler(e -> {
+                    .addDomHandler(event -> {
                         final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                                .buildMouseEventDetails(e.getNativeEvent(),
+                                .buildMouseEventDetails(event.getNativeEvent(),
                                         getWidget().getElement());
 
-                        e.preventDefault();
-                        e.stopPropagation();
+                        event.preventDefault();
+                        event.stopPropagation();
                         sendContextClickEvent(mouseEventDetails,
-                                e.getNativeEvent().getEventTarget());
+                                event.getNativeEvent().getEventTarget());
                     }, ContextMenuEvent.getType());
 
             // if the widget has a contextclick listener, add touch support as
@@ -260,12 +260,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchMoveEvent.getType());
 
-        touchEndHandler = getWidget().addDomHandler(e -> {
+        touchEndHandler = getWidget().addDomHandler(event -> {
             // cancel the timer so the event doesn't fire
             cancelTouchTimer();
 
             if (preventNextTouchEnd) {
-                e.preventDefault();
+                event.preventDefault();
                 preventNextTouchEnd = false;
             }
         }, TouchEndEvent.getType());

@@ -101,7 +101,7 @@ public class HierarchyPanel extends FlowPanel {
         if (children == null || children.isEmpty()) {
             // Leaf node, just add a label
             Label label = new Label(connectorString);
-            label.addClickHandler(e -> {
+            label.addClickHandler(event -> {
                 Highlight.showOnly(connector);
                 showServerDebugInfo(connector);
             });
@@ -126,7 +126,7 @@ public class HierarchyPanel extends FlowPanel {
 
         if (widget instanceof HasDoubleClickHandlers) {
             HasDoubleClickHandlers has = (HasDoubleClickHandlers) widget;
-            has.addDoubleClickHandler(e -> fireSelectEvent(connector));
+            has.addDoubleClickHandler(event -> fireSelectEvent(connector));
         }
 
         return widget;

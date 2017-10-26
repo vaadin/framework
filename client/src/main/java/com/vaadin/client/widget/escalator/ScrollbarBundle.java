@@ -436,7 +436,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
             }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
-                    e -> setOffsetSizeNow(px));
+                    event -> setOffsetSizeNow(px));
             setScrollPos(0);
         } else {
             setOffsetSizeNow(px);
@@ -519,7 +519,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
             if (scrollInProgress == null) {
                 // Only used for tracking that there is "workPending"
-                scrollInProgress = addScrollHandler(e -> {
+                scrollInProgress = addScrollHandler(event -> {
                     scrollInProgress.removeHandler();
                     scrollInProgress = null;
                 });
@@ -655,7 +655,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                     scrollSizeTemporaryScrollHandler.removeHandler();
                 }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
-                        e -> setScrollSizeNow(px));
+                        event -> setScrollSizeNow(px));
             }
             setScrollPos(0);
             if (!delayedSizeSet) {

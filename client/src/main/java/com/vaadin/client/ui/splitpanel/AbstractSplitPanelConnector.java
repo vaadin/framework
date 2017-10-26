@@ -51,7 +51,7 @@ public abstract class AbstractSplitPanelConnector extends
         // TODO Remove
         getWidget().client = getConnection();
 
-        getWidget().addHandler(e -> {
+        getWidget().addHandler(event -> {
             String position = getWidget().getSplitterPosition();
             float pos = 0;
             if (position.indexOf("%") > 0) {

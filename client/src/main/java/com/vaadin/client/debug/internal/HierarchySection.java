@@ -129,26 +129,26 @@ public class HierarchySection implements Section {
     public HierarchySection() {
         controls.add(showHierarchy);
         showHierarchy.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        showHierarchy.addClickHandler(e -> showHierarchy());
+        showHierarchy.addClickHandler(event -> showHierarchy());
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        find.addClickHandler(e -> toggleFind(inspectComponent));
+        find.addClickHandler(event -> toggleFind(inspectComponent));
 
         controls.add(analyze);
         analyze.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        analyze.addClickHandler(e -> {
+        analyze.addClickHandler(event -> {
             stopFind();
             analyzeLayouts();
         });
 
         controls.add(generateWS);
         generateWS.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        generateWS.addClickHandler(e -> generateWidgetset());
+        generateWS.addClickHandler(event -> generateWidgetset());
 
         controls.add(generateDesign);
         generateDesign.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        generateDesign.addClickHandler(e -> {
+        generateDesign.addClickHandler(event -> {
             content.setWidget(new HTML(
                     "Select a layout or component to generate the declarative design"));
             toggleFind(showComponentDesign);

@@ -278,7 +278,7 @@ public class GridClientColumnRendererConnector
                 @Override
                 public Button createWidget() {
                     final Button button = new Button("");
-                    button.addClickHandler(e -> button.setText("Clicked"));
+                    button.addClickHandler(event -> button.setText("Clicked"));
                     return button;
                 }
 

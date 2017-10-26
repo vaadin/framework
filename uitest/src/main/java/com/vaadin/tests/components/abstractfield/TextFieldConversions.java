@@ -40,6 +40,6 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
         tf = new TextField("TextField");
         addComponent(tf);
         tf.setErrorHandler(
-                e -> tf.setComponentError(new UserError("Invalid value")));
+                event -> tf.setComponentError(new UserError("Invalid value")));
     }
 }

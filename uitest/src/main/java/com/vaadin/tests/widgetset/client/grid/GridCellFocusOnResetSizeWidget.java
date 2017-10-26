@@ -108,7 +108,7 @@ public class GridCellFocusOnResetSizeWidget
         final MyDataSource dataSource = new MyDataSource();
         grid.setDataSource(dataSource);
         Button widget = new Button("Change Container Size");
-        widget.addClickHandler(e -> dataSource.changeSize());
+        widget.addClickHandler(event -> dataSource.changeSize());
         addNorth(grid, 400);
         addNorth(widget, 50);
     }

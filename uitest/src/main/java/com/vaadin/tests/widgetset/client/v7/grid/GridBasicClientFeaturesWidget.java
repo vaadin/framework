@@ -447,8 +447,8 @@ public class GridBasicClientFeaturesWidget
                 if (scrollHandler != null) {
                     return;
                 }
-                scrollHandler = grid.addScrollHandler(e -> {
-                    final Grid<?> grid = (Grid<?>) e.getSource();
+                scrollHandler = grid.addScrollHandler(event -> {
+                    final Grid<?> grid = (Grid<?>) event.getSource();
                     label.setText("scrollTop: " + grid.getScrollTop()
                             + ", scrollLeft: " + grid.getScrollLeft());
                 });
@@ -519,8 +519,8 @@ public class GridBasicClientFeaturesWidget
         addMenuCommand("Add context menu listener", new ScheduledCommand() {
 
             HandlerRegistration handler = null;
-            ContextMenuHandler contextMenuHandler = e -> {
-                e.preventDefault();
+            ContextMenuHandler contextMenuHandler = event -> {
+                event.preventDefault();
                 final String location;
                 EventCellReference<?> cellRef = grid.getEventCell();
                 if (cellRef.isHeader()) {
@@ -902,7 +902,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Header");
-                    button.addClickHandler(e -> button.setText("Clicked"));
+                    button.addClickHandler(event -> button.setText("Clicked"));
                     grid.getHeaderRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
@@ -925,7 +925,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Footer");
-                    button.addClickHandler(e -> button.setText("Clicked"));
+                    button.addClickHandler(event -> button.setText("Clicked"));
                     grid.getFooterRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
@@ -1436,7 +1436,8 @@ public class GridBasicClientFeaturesWidget
 
                         final Label label = new Label("Row: " + rowIndex + ".");
                         Button button = new Button("Button",
-                                (ClickHandler) e -> label.setText("clicked"));
+                                (ClickHandler) event -> label
+                                        .setText("clicked"));
 
                         panel.add(label);
                         panel.add(button);

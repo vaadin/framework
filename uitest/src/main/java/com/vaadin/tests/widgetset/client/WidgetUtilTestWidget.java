@@ -42,7 +42,7 @@ public class WidgetUtilTestWidget extends Widget {
         root.addClassName("v-widget-util-test");
         setElement(root);
 
-        addDomHandler(e -> showSizes(), ClickEvent.getType());
+        addDomHandler(event -> showSizes(), ClickEvent.getType());
     }
 
     public void construct(boolean inline) {

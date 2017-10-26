@@ -197,15 +197,15 @@ public final class VDebugWindow extends VOverlay {
 
         // add controls TODO move these
         controls.add(menu);
-        menu.addClickHandler(e -> menuPopup.showRelativeTo(menu));
+        menu.addClickHandler(event -> menuPopup.showRelativeTo(menu));
 
         controls.add(minimize);
-        minimize.addClickHandler(e -> {
+        minimize.addClickHandler(event -> {
             toggleMinimized();
             writeStoredState();
         });
         controls.add(close);
-        close.addClickHandler(e -> close());
+        close.addClickHandler(event -> close());
 
         Style s = content.getElement().getStyle();
         s.setOverflow(Overflow.AUTO);

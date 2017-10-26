@@ -123,17 +123,17 @@ public class LogSection implements Section {
         // clear log button
         controls.add(clear);
         clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        clear.addClickHandler(e -> clear());
+        clear.addClickHandler(event -> clear());
 
         // reset timer button
         controls.add(reset);
         reset.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        reset.addClickHandler(e -> resetTimer());
+        reset.addClickHandler(event -> resetTimer());
 
         // scroll lock toggle
         controls.add(scroll);
         scroll.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        scroll.addClickHandler(e -> toggleScrollLock());
+        scroll.addClickHandler(event -> toggleScrollLock());
 
         // select message if row is clicked
         content.addClickHandler(event -> {

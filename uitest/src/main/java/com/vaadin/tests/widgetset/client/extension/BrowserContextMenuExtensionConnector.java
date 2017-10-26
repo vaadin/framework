@@ -31,9 +31,9 @@ public class BrowserContextMenuExtensionConnector
 
     @Override
     protected void extend(ServerConnector target) {
-        getParent().getWidget().addDomHandler(e -> {
+        getParent().getWidget().addDomHandler(event -> {
             // Stop context click events from propagating.
-            e.stopPropagation();
+            event.stopPropagation();
         }, ContextMenuEvent.getType());
     }
 

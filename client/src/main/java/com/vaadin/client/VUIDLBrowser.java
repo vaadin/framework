@@ -102,7 +102,7 @@ public class VUIDLBrowser extends SimpleTree {
 
         protected StateChangeItem() {
             setTitle(HELP);
-            addDomHandler(e -> deHiglight(), MouseOutEvent.getType());
+            addDomHandler(event -> deHiglight(), MouseOutEvent.getType());
         }
 
         @Override

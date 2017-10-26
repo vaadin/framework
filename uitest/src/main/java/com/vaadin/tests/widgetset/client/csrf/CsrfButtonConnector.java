@@ -58,7 +58,8 @@ public class CsrfButtonConnector extends AbstractComponentConnector {
 
         getWidget().getElement().setId(ID);
         getWidget().setText(csrfTokenInfo());
-        getWidget().addClickHandler(e -> getWidget().setText(csrfTokenInfo()));
+        getWidget()
+                .addClickHandler(event -> getWidget().setText(csrfTokenInfo()));
     }
 
     private String csrfTokenInfo() {

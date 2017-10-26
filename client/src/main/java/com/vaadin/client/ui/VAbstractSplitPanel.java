@@ -136,24 +136,24 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
         makeScrollable();
 
-        addDomHandler(e -> {
+        addDomHandler(event -> {
             // TODO When does this actually happen??
             VConsole.log("TOUCH CANCEL");
         }, TouchCancelEvent.getType());
-        addDomHandler(e -> {
-            Node target = e.getTouches().get(0).getTarget().cast();
+        addDomHandler(event -> {
+            Node target = event.getTouches().get(0).getTarget().cast();
             if (splitter.isOrHasChild(target)) {
-                onMouseDown(Event.as(e.getNativeEvent()));
+                onMouseDown(Event.as(event.getNativeEvent()));
             }
         }, TouchStartEvent.getType());
-        addDomHandler(e -> {
+        addDomHandler(event -> {
             if (resizing) {
-                onMouseMove(Event.as(e.getNativeEvent()));
+                onMouseMove(Event.as(event.getNativeEvent()));
             }
         }, TouchMoveEvent.getType());
-        addDomHandler(e -> {
+        addDomHandler(event -> {
             if (resizing) {
-                onMouseUp(Event.as(e.getNativeEvent()));
+                onMouseUp(Event.as(event.getNativeEvent()));
             }
         }, TouchEndEvent.getType());
 

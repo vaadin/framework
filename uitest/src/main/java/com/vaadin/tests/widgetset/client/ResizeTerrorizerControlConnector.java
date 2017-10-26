@@ -60,7 +60,7 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
         private IntegerBox endHeight = new IntegerBox();
 
         private final Button terrorizeButton = new Button("Terrorize",
-                (ClickHandler) e -> terrorize(startWidth.getValue(),
+                (ClickHandler) event -> terrorize(startWidth.getValue(),
                         endWidth.getValue(), startHeight.getValue(),
                         endHeight.getValue(),
                         1000));
@@ -91,8 +91,8 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
             // Emulate button click from enter on any of the text boxes
             for (IntegerBox box : Arrays.asList(startWidth, endWidth,
                     startHeight, endHeight)) {
-                box.addKeyUpHandler(e -> {
-                    if (e.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                box.addKeyUpHandler(event -> {
+                    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                         terrorizeButton.click();
                     }
                 });

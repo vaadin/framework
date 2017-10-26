@@ -41,7 +41,7 @@ public class GridComponents extends AbstractTestUIWithLog {
             textField.setWidth("100%");
             // Make sure all changes are sent immediately
             textField.setValueChangeMode(ValueChangeMode.EAGER);
-            textField.addValueChangeListener(e -> {
+            textField.addValueChangeListener(event -> {
                 // Value of text field edited by user, store
                 textFields.put(string, textField);
             });
@@ -52,7 +52,7 @@ public class GridComponents extends AbstractTestUIWithLog {
                 return null;
             }
             Button button = new Button("Click Me!",
-                    e -> Notification.show(
+                    event -> Notification.show(
                             "Clicked button on row for: " + string,
                             Type.WARNING_MESSAGE));
             button.setId(string.replace(' ', '_').toLowerCase(Locale.ROOT));
@@ -67,7 +67,7 @@ public class GridComponents extends AbstractTestUIWithLog {
         addComponent(grid);
         grid.setSizeFull();
 
-        Button resetData = new Button("Reset data", e -> {
+        Button resetData = new Button("Reset data", event -> {
             grid.setItems(IntStream.range(0, 1000).boxed()
                     .map(i -> "Row " + (i + (counter * 1000))));
             textFields.clear();

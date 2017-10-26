@@ -177,12 +177,12 @@ public class VDateTimeCalendarPanel
             updateTimes();
 
             ListBox lastDropDown = getLastDropDown();
-            lastDropDown.addKeyDownHandler(e -> {
-                boolean shiftKey = e.getNativeEvent().getShiftKey();
+            lastDropDown.addKeyDownHandler(event -> {
+                boolean shiftKey = event.getNativeEvent().getShiftKey();
                 if (!shiftKey) {
-                    int nativeKeyCode = e.getNativeKeyCode();
+                    int nativeKeyCode = event.getNativeKeyCode();
                     if (nativeKeyCode == KeyCodes.KEY_TAB) {
-                        onTabOut(e);
+                        onTabOut(event);
                     }
                 }
             });
