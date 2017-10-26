@@ -368,7 +368,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
         e.onselectstart = function() {
             return false;
         }
-    
+
         e.ondragstart = function() {
             return false;
         }
@@ -1127,7 +1127,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     /**
      * Get the first hour of the day.
-     * 
+     *
      * @return The first hour of the day
      */
     public int getFirstHourOfTheDay() {

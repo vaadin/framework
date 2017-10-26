@@ -33,9 +33,9 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  * Abstract date/time field connector which extend
  * {@link AbstractTextualDateConnector} functionality with widget that shows
  * date/time chooser as a popup panel.
- * 
+ *
  * @author Vaadin Ltd
- * 
+ *
  * @since 8.0
  *
  * @param <PANEL>
@@ -101,7 +101,7 @@ public abstract class TextualDateConnector<PANEL extends VAbstractCalendarPanel<
     /**
      * Returns {@code true} is the current resolution of the widget is month or
      * less specific (e.g. month, year, quarter, etc).
-     * 
+     *
      * @return {@code true} if the current resolution is above month
      */
     protected abstract boolean isResolutionMonthOrHigher();
