@@ -1144,7 +1144,7 @@ public class VMenuBar extends FocusableFlowPanel
          * @return true if it is possible to select this item, false otherwise
          */
         public boolean isSelectable() {
-            return !isSeparator() && isEnabled();
+            return !isSeparator();
         }
 
         @SuppressWarnings("deprecation")
@@ -1630,6 +1630,8 @@ public class VMenuBar extends FocusableFlowPanel
             if (getSelected() == null) {
                 // If nothing is selected then select the first item
                 selectFirstItem();
+            } else if (!getSelected().isEnabled()) {
+                // NOP
             } else if (visibleChildMenu != null) {
                 // Redirect all navigation to the submenu
                 visibleChildMenu.handleNavigation(keycode, ctrl, shift);
@@ -1690,8 +1692,8 @@ public class VMenuBar extends FocusableFlowPanel
 
     private void openMenuAndFocusFirstIfPossible(CustomMenuItem menuItem) {
         VMenuBar subMenu = menuItem.getSubMenu();
-        if (subMenu == null) {
-            // No child menu? Nothing to do
+        if (!menuItem.isEnabled() || subMenu == null) {
+            // No child menu or disabled? Nothing to do
             return;
         }
 
@@ -1705,8 +1707,8 @@ public class VMenuBar extends FocusableFlowPanel
 
     private void openMenuAndFocusLastIfPossible(CustomMenuItem menuItem) {
         VMenuBar subMenu = menuItem.getSubMenu();
-        if (subMenu == null) {
-            // No child menu? Nothing to do
+        if (!menuItem.isEnabled() || subMenu == null) {
+            // No child menu or disabled? Nothing to do
             return;
         }
 

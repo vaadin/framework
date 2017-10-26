@@ -86,6 +86,30 @@ public class MenuBarNavigationKeyboardTest extends MultiBrowserTest {
                 isElementPresent(By.className("v-menubar-popup")));
     }
 
+    @Test
+    public void testNavigatingToDisabled() throws InterruptedException {
+        openTestURL();
+
+        openMenu("File");
+
+        getMenuBar().sendKeys(Keys.ARROW_RIGHT, Keys.ARROW_RIGHT,
+                Keys.ARROW_RIGHT, Keys.ARROW_RIGHT, Keys.ENTER);
+
+        assertTrue("Disabled menu not selected",
+                getFocusedElement().getText().contains("Disabled"));
+
+        assertFalse("Disabled menu was triggered",
+                logContainsText("MenuItem Disabled selected"));
+
+        getMenuBar().sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
+
+        assertFalse("Disabled submenu was opened",
+                logContainsText("MenuItem Disabled/Can't reach selected"));
+
+        assertTrue("Disabled menu not selected",
+                getFocusedElement().getText().contains("Disabled"));
+    }
+
     public MenuBarElement getMenuBar() {
         return $(MenuBarElement.class).first();
     }
