@@ -73,11 +73,11 @@ public class VNotification extends VOverlay {
     public static final int DELAY_NONE = 0;
 
     private static final String STYLENAME = "v-Notification";
-    private static final int mouseMoveThreshold = 7;
+    private static final int MOUSE_MOVE_THRESHOLD = 7;
     private static final int Z_INDEX_BASE = 20000;
     public static final String STYLE_SYSTEM = "system";
 
-    private static final List<VNotification> notifications = new ArrayList<>();
+    private static final List<VNotification> NOTIFICATIONS = new ArrayList<>();
 
     private boolean infiniteDelay = false;
     private int hideDelay = 0;
@@ -252,7 +252,7 @@ public class VNotification extends VOverlay {
         setPosition(position);
         super.show();
         updatePositionOffsets(position);
-        notifications.add(this);
+        NOTIFICATIONS.add(this);
         positionOrSizeUpdated();
         /**
          * Android 4 fails to render notifications correctly without a little
@@ -286,7 +286,7 @@ public class VNotification extends VOverlay {
             delay.cancel();
         }
         // Run only once
-        if (notifications.contains(this)) {
+        if (NOTIFICATIONS.contains(this)) {
             DOM.removeEventPreview(this);
 
             // Still animating in, wait for it to finish before touching
@@ -304,7 +304,7 @@ public class VNotification extends VOverlay {
             } else {
                 VNotification.super.hide();
                 fireEvent(new HideEvent(this));
-                notifications.remove(this);
+                NOTIFICATIONS.remove(this);
             }
         }
     }
@@ -427,9 +427,9 @@ public class VNotification extends VOverlay {
                 x = DOM.eventGetClientX(event);
                 y = DOM.eventGetClientY(event);
             } else if (Math
-                    .abs(DOM.eventGetClientX(event) - x) > mouseMoveThreshold
+                    .abs(DOM.eventGetClientX(event) - x) > MOUSE_MOVE_THRESHOLD
                     || Math.abs(DOM.eventGetClientY(event)
-                            - y) > mouseMoveThreshold) {
+                            - y) > MOUSE_MOVE_THRESHOLD) {
                 hideAfterDelay();
             }
             break;
@@ -586,7 +586,7 @@ public class VNotification extends VOverlay {
      * TODO Should this be a generic Overlay feature instead?
      */
     public static void bringNotificationsToFront() {
-        for (VNotification notification : notifications) {
+        for (VNotification notification : NOTIFICATIONS) {
             DOM.removeEventPreview(notification);
             DOM.addEventPreview(notification);
         }

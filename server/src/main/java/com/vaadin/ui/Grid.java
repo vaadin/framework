@@ -976,10 +976,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         private static int compareMaybeComparables(Object a, Object b) {
             if (hasCommonComparableBaseType(a, b)) {
                 return compareComparables(a, b);
-            } else {
-                return compareComparables(Objects.toString(a, ""),
-                        Objects.toString(b, ""));
             }
+            return compareComparables(Objects.toString(a, ""),
+                    Objects.toString(b, ""));
         }
 
         private static boolean hasCommonComparableBaseType(Object a, Object b) {
@@ -1005,7 +1004,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             return false;
         }
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         private static int compareComparables(Object a, Object b) {
             return ((Comparator) Comparator
                     .nullsLast(Comparator.naturalOrder())).compare(a, b);
@@ -1019,20 +1018,19 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (valueA instanceof Comparable
                     && valueA.getClass().isInstance(valueB)) {
                 return ((Comparable<Number>) valueA).compareTo(valueB);
-            } else if (valueA.equals(valueB)) {
-                return 0;
-            } else {
-                // Fall back to comparing based on potentially truncated values
-                int compare = Long.compare(valueA.longValue(),
-                        valueB.longValue());
-                if (compare == 0) {
-                    // This might still produce 0 even though the values are not
-                    // equals, but there's nothing more we can do about that
-                    compare = Double.compare(valueA.doubleValue(),
-                            valueB.doubleValue());
-                }
-                return compare;
             }
+            if (valueA.equals(valueB)) {
+                return 0;
+            }
+            // Fall back to comparing based on potentially truncated values
+            int compare = Long.compare(valueA.longValue(), valueB.longValue());
+            if (compare == 0) {
+                // This might still produce 0 even though the values are not
+                // equals, but there's nothing more we can do about that
+                compare = Double.compare(valueA.doubleValue(),
+                        valueB.doubleValue());
+            }
+            return compare;
         }
 
         @SuppressWarnings("unchecked")
@@ -1159,8 +1157,14 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             }
             this.userId = id;
             getGrid().setColumnId(id, this);
+            updateSortable();
 
             return this;
+        }
+
+        private void updateSortable() {
+            setSortable(getGrid().getDataProvider().isInMemory()
+                    || getSortOrder(SortDirection.ASCENDING).count() != 0);
         }
 
         /**
@@ -2713,6 +2717,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (getDefaultHeaderRow() != null) {
             getDefaultHeaderRow().getCell(column).setText(column.getCaption());
         }
+
+        column.updateSortable();
     }
 
     /**
@@ -2720,6 +2726,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      *
      * @param column
      *            the column to remove
+     *
+     * @throws IllegalArgumentException
+     *             if the column is not a valid one
      */
     public void removeColumn(Column<T, ?> column) {
         if (columnSet.remove(column)) {
@@ -2737,6 +2746,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (displayIndex < getFrozenColumnCount()) {
                 setFrozenColumnCount(getFrozenColumnCount() - 1);
             }
+        } else {
+            throw new IllegalArgumentException("Column with id "
+                    + column.getId() + " cannot be removed from the grid");
         }
     }
 
@@ -2934,10 +2946,12 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         if (rows <= 0.0d) {
             throw new IllegalArgumentException(
                     "More than zero rows must be shown.");
-        } else if (Double.isInfinite(rows)) {
+        }
+        if (Double.isInfinite(rows)) {
             throw new IllegalArgumentException(
                     "Grid doesn't support infinite heights");
-        } else if (Double.isNaN(rows)) {
+        }
+        if (Double.isNaN(rows)) {
             throw new IllegalArgumentException("NaN is not a valid row count");
         }
         getState().heightMode = HeightMode.ROW;
@@ -3761,7 +3775,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         } else {
             addExtension(selectionModel);
         }
-
     }
 
     /**
@@ -4267,7 +4280,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         SelectionMode selectionMode = getSelectionMode();
         if (SelectionMode.SINGLE.equals(selectionMode)) {
             return asSingleSelect().isReadOnly();
-        } else if (SelectionMode.MULTI.equals(selectionMode)) {
+        }
+        if (SelectionMode.MULTI.equals(selectionMode)) {
             return asMultiSelect().isReadOnly();
         }
         return false;
@@ -4581,4 +4595,13 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);
     }
+
+    @Override
+    protected void internalSetDataProvider(DataProvider<T, ?> dataProvider) {
+        super.internalSetDataProvider(dataProvider);
+        for (Column<T, ?> column : getColumns()) {
+            column.updateSortable();
+        }
+    }
+
 }

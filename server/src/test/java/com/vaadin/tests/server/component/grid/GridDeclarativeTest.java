@@ -200,13 +200,18 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
         int expandRatio = 83;
         column2.setExpandRatio(expandRatio);
 
+
+        String sortableSuffix = "";
+        if (sortable) {
+            sortableSuffix = "='true'";
+        }
         String design = String.format("<%s><table><colgroup>"
-                + "<col column-id='column0' sortable='%s' editable resizable='%s' hidable hidden>"
+                + "<col column-id='column0' sortable%s editable resizable='%s' hidable hidden>"
                 + "<col column-id='id' sortable hiding-toggle-caption='%s' width='%s' min-width='%s' max-width='%s' expand='%s'>"
                 + "</colgroup><thead>"
                 + "<tr default><th plain-text column-ids='column0'>%s</th>"
                 + "<th plain-text column-ids='id'>%s</th>" + "</tr></thead>"
-                + "</table></%s>", getComponentTag(), sortable, resizable,
+                + "</table></%s>", getComponentTag(), sortableSuffix, resizable,
                 hidingToggleCaption, width, minWidth, maxWidth, expandRatio,
                 caption, "Id", getComponentTag());
 
@@ -694,8 +699,14 @@ public class GridDeclarativeTest extends AbstractListingDeclarativeTest<Grid> {
                     col2.getMinimumWidth());
             assertEquals(baseError + "Expand ratio", col1.getExpandRatio(),
                     col2.getExpandRatio());
-            assertEquals(baseError + "Sortable", col1.isSortable(),
+
+            String id1 = col1.getId();
+            String id2 = col2.getId();
+            // column.getId() affects .isSortable()
+            if ((id1 != null && id2 != null) || (id1 == null && id2 == null)) {
+                assertEquals(baseError + "Sortable", col1.isSortable(),
                     col2.isSortable());
+            }
             assertEquals(baseError + "Editable", col1.isEditable(),
                     col2.isEditable());
             assertEquals(baseError + "Hidable", col1.isHidable(),

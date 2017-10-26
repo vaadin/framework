@@ -104,7 +104,7 @@ public final class TimeZoneUtil implements Serializable {
         }
         info.id = zoneId.getId();
         info.transitions = transitionsList.stream().mapToLong(l -> l).toArray();
-        info.std_offset = (int) Duration.ofMillis(timeZone.getRawOffset())
+        info.stdOffset = (int) Duration.ofMillis(timeZone.getRawOffset())
                 .toMinutes();
         info.names = new String[] {
                 timeZone.getDisplayName(false, TimeZone.SHORT, locale),
@@ -119,7 +119,7 @@ public final class TimeZoneUtil implements Serializable {
         JreJsonFactory factory = new JreJsonFactory();
         JsonObject object = factory.createObject();
         object.put("id", info.id);
-        object.put("std_offset", info.std_offset);
+        object.put("std_offset", info.stdOffset);
         object.put("names", getArray(factory, info.names));
         object.put("transitions", getArray(factory, info.transitions));
         return JsonUtil.stringify(object);
@@ -143,7 +143,7 @@ public final class TimeZoneUtil implements Serializable {
 
     private static class TimeZoneInfo implements Serializable {
         String id;
-        int std_offset;
+        int stdOffset;
         String[] names;
         long[] transitions;
     }

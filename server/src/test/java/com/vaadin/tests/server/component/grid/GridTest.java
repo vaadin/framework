@@ -29,7 +29,9 @@ import java.util.stream.Stream;
 
 import org.easymock.Capture;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.ValidationException;
@@ -62,6 +64,9 @@ public class GridTest {
     private Column<String, Object> objectColumn;
     private Column<String, String> randomColumn;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() {
         grid = new Grid<>();
@@ -76,9 +81,9 @@ public class GridTest {
 
     @Test
     public void testCreateGridWithDataCommunicator() {
-        DataCommunicator specificDataCommunicator = new DataCommunicator<>();
+        DataCommunicator<String> specificDataCommunicator = new DataCommunicator<>();
 
-        TestGrid<String> grid = new TestGrid(String.class,
+        TestGrid<String> grid = new TestGrid<>(String.class,
                 specificDataCommunicator);
 
         assertEquals(specificDataCommunicator, grid.getDataCommunicator());
@@ -96,17 +101,25 @@ public class GridTest {
                 HeightMode.CSS, grid.getHeightMode());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFrozenColumnCountTooBig() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(
+                "count must be between -1 and the current number of columns (4): 5");
+
         grid.setFrozenColumnCount(5);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFrozenColumnCountTooSmall() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(
+                "count must be between -1 and the current number of columns (4): -2");
+
         grid.setFrozenColumnCount(-2);
     }
 
-    @Test()
+    @Test
     public void testSetFrozenColumnCount() {
         for (int i = -1; i < 2; ++i) {
             grid.setFrozenColumnCount(i);
@@ -122,8 +135,11 @@ public class GridTest {
                 grid.getHeaderRow(0).getCell("foo").getText());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGridMultipleColumnsWithSameIdentifier() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Duplicate ID for columns");
+
         grid.addColumn(t -> t).setId("foo");
     }
 
@@ -211,8 +227,12 @@ public class GridTest {
         assertEquals(0, event.getAllSelectedItems().size());
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testAddSelectionListener_noSelectionMode() {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage(
+                "This selection model doesn't allow selection, cannot add selection listeners to it");
+
         grid.setSelectionMode(SelectionMode.NONE);
 
         grid.addSelectionListener(event -> fail("never ever happens (tm)"));
@@ -351,8 +371,13 @@ public class GridTest {
         assertEquals("Ipsum", person.getName());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void oneArgSetEditor_nonBeanGrid() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(
+                "A Grid created without a bean type class literal or a custom property set"
+                        + " doesn't support finding properties by name.");
+
         Grid<Person> grid = new Grid<>();
         Column<Person, String> nameCol = grid.addColumn(Person::getName)
                 .setId("name");
@@ -360,8 +385,11 @@ public class GridTest {
         nameCol.setEditorComponent(new TextField());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void addExistingColumnById_throws() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("There is already a column for name");
+
         Grid<Person> grid = new Grid<>(Person.class);
         grid.addColumn("name");
     }
@@ -389,16 +417,22 @@ public class GridTest {
 
     @Test
     public void removeColumnByColumn_alreadyRemoved() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(
+                "Column with id foo cannot be removed from the grid");
+
         grid.removeColumn(fooColumn);
-        // Questionable that this doesn't throw, but that's a separate ticket...
         grid.removeColumn(fooColumn);
 
         assertEquals(Arrays.asList(lengthColumn, objectColumn, randomColumn),
                 grid.getColumns());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void removeColumnById_alreadyRemoved() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("There is no column with the id foo");
+
         grid.removeColumn("foo");
         grid.removeColumn("foo");
     }
@@ -473,8 +507,13 @@ public class GridTest {
         assertEquals("foo", columns.get(1).getId());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setColumns_addColumn_notBeangrid() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage(
+                "A Grid created without a bean type class literal or a custom property set"
+                        + " doesn't support finding properties by name.");
+
         // Not possible to add a column in a grid that cannot add columns based
         // on a string
         grid.setColumns("notHere");
@@ -503,8 +542,12 @@ public class GridTest {
                 objectColumn), grid.getColumns());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setColumnOrder_byColumn_removedColumn() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("setColumnOrder should not be called "
+                        + "with columns that are not in the grid.");
+
         grid.removeColumn(randomColumn);
         grid.setColumnOrder(randomColumn, lengthColumn);
     }
@@ -517,8 +560,11 @@ public class GridTest {
                 objectColumn), grid.getColumns());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void setColumnOrder_byString_removedColumn() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("There is no column with the id randomColumnId");
+
         grid.removeColumn("randomColumnId");
         grid.setColumnOrder("randomColumnId", "length");
     }
@@ -584,8 +630,13 @@ public class GridTest {
         assertEquals(formattedValue, "2,017");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void addBeanColumn_invalidRenderer() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("NumberRenderer");
+        thrown.expectMessage(
+                " cannot be used with a property of type java.lang.String");
+
         Grid<Person> grid = new Grid<>(Person.class);
 
         grid.removeColumn("name");
@@ -652,9 +703,8 @@ public class GridTest {
     }
 
     private static Method findDataGeneratorGetterMethod() {
-        Method getter;
         try {
-            getter = Column.class.getDeclaredMethod("getDataGenerator",
+            Method getter = Column.class.getDeclaredMethod("getDataGenerator",
                     new Class<?>[] {});
             getter.setAccessible(true);
             return getter;
@@ -662,5 +712,17 @@ public class GridTest {
             throw new AssertionFailedError(
                     "Cannot get DataGenerator from Column");
         }
+    }
+
+    @Test
+    public void removeColumnToThrowForInvalidColumn() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage(
+                "Column with id null cannot be removed from the grid");
+
+        Grid<Person> grid1 = new Grid<>();
+        Grid<Person> grid2 = new Grid<>();
+        Column<Person, ?> column1 = grid1.addColumn(ValueProvider.identity());
+        grid2.removeColumn(column1);
     }
 }
