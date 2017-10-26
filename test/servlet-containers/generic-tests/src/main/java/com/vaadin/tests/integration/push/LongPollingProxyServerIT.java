@@ -80,7 +80,7 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     public void basicPush() {
         assertEquals(0, getServerCounter());
         getServerCounterStartButton().click();
-        waitUntil(event -> getServerCounter() > 1, 10);
+        waitUntil(e -> getServerCounter() > 1, 10);
     }
 
     @Override
