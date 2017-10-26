@@ -11,7 +11,16 @@ public class ComboBoxHeightTest extends SingleBrowserTest {
     @Test
     public void testPopupHeight() {
         openTestURL();
+        assertPopupHeight();
+    }
 
+    @Test
+    public void testPopupHeightCustomTheme() {
+        openTestURL("theme=tests-valo-combobox-height");
+        assertPopupHeight();
+    }
+
+    private void assertPopupHeight() {
         ComboBoxElement comboBox = $(ComboBoxElement.class).first();
 
         comboBox.openPopup();
