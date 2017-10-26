@@ -15,13 +15,14 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class GridAssistiveCaptionTest extends SingleBrowserTest {
 
@@ -37,10 +38,11 @@ public class GridAssistiveCaptionTest extends SingleBrowserTest {
                 headerCell.getAttribute("aria-label"));
 
         $(ButtonElement.class).caption("addAssistiveCaption").first().click();
-        assertTrue("Column should contain aria-label",
-                headerCell.getAttribute("aria-label").equals("Press Enter to sort."));
+        assertTrue("Column should contain aria-label", headerCell
+                .getAttribute("aria-label").equals("Press Enter to sort."));
 
-        $(ButtonElement.class).caption("removeAssistiveCaption").first().click();
+        $(ButtonElement.class).caption("removeAssistiveCaption").first()
+                .click();
         assertNull("Column should not contain aria-label",
                 headerCell.getAttribute("aria-label"));
     }
