@@ -481,7 +481,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private native void initializeTestbenchHooks(
-            ComponentLocator componentLocator, String TTAppId)
+            ComponentLocator componentLocator, String ttAppId)
     /*-{
         var ap = this;
         var client = {};
@@ -527,7 +527,7 @@ public class ApplicationConnection implements HasHandlers {
         });
         client.initializing = false;
 
-        $wnd.vaadin.clients[TTAppId] = client;
+        $wnd.vaadin.clients[ttAppId] = client;
     }-*/;
 
     /**

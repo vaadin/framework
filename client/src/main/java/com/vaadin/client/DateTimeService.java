@@ -40,6 +40,8 @@ public class DateTimeService {
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
 
+    private static final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
+
     /**
      * Creates a new date time service with the application default locale.
      */
@@ -286,7 +288,6 @@ public class DateTimeService {
      * @return The ISO-8601 week number for {@literal date}
      */
     public static int getISOWeekNumber(Date date) {
-        final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
         int dayOfWeek = date.getDay(); // 0 == sunday
 
         // ISO 8601 use weeks that start on monday so we use

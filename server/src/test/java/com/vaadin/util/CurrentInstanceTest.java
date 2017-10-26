@@ -77,7 +77,7 @@ public class CurrentInstanceTest {
     private ThreadLocal<Map<Class<?>, CurrentInstance>> getInternalCurrentInstanceVariable()
             throws SecurityException, NoSuchFieldException,
             IllegalAccessException {
-        Field f = CurrentInstance.class.getDeclaredField("instances");
+        Field f = CurrentInstance.class.getDeclaredField("INSTANCES");
         f.setAccessible(true);
         return (ThreadLocal<Map<Class<?>, CurrentInstance>>) f.get(null);
     }

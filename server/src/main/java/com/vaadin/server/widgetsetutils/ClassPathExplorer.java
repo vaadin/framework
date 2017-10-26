@@ -92,15 +92,15 @@ public class ClassPathExplorer {
      * entries that could include widgets/widgetsets are listed (primarily
      * directories, Vaadin JARs and add-on JARs).
      */
-    private static final List<String> rawClasspathEntries = getRawClasspathEntries();
+    private static final List<String> RAW_CLASSPATH_ENTRIES = getRawClasspathEntries();
 
     /**
      * Map from identifiers (either a package name preceded by the path and a
      * slash, or a URL for a JAR file) to the corresponding URLs. This is
      * constructed from the class path.
      */
-    private static final Map<String, URL> classpathLocations = getClasspathLocations(
-            rawClasspathEntries);
+    private static final Map<String, URL> CLASSPATH_LOCATIONS = getClasspathLocations(
+            RAW_CLASSPATH_ENTRIES);
 
     private static boolean debug = false;
 
@@ -138,7 +138,7 @@ public class ClassPathExplorer {
         long start = System.currentTimeMillis();
         Map<String, URL> widgetsets = new HashMap<>();
         Map<String, URL> themes = new HashMap<>();
-        Set<String> keySet = classpathLocations.keySet();
+        Set<String> keySet = CLASSPATH_LOCATIONS.keySet();
         for (String location : keySet) {
             searchForWidgetSetsAndAddonStyles(location, widgetsets, themes);
         }
@@ -179,16 +179,16 @@ public class ClassPathExplorer {
      * "Vaadin-Widgetsets" attribute in its manifest are added to widgetsets.
      *
      * @param locationString
-     *            an entry in {@link #classpathLocations}
+     *            an entry in {@link #CLASSPATH_LOCATIONS}
      * @param widgetsets
      *            a map from widgetset name (including package, with dots as
-     *            separators) to a URL (see {@link #classpathLocations}) - new
+     *            separators) to a URL (see {@link #CLASSPATH_LOCATIONS}) - new
      *            entries are added to this map
      */
     private static void searchForWidgetSetsAndAddonStyles(String locationString,
             Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
 
-        URL location = classpathLocations.get(locationString);
+        URL location = CLASSPATH_LOCATIONS.get(locationString);
         File directory = new File(location.getFile());
 
         if (directory.exists() && !directory.isHidden()) {
@@ -329,12 +329,12 @@ public class ClassPathExplorer {
      * Determine every URL location defined by the current classpath, and it's
      * associated package name.
      *
-     * See {@link #classpathLocations} for information on output format.
+     * See {@link #CLASSPATH_LOCATIONS} for information on output format.
      *
      * @param rawClasspathEntries
      *            raw class path entries as split from the Java class path
      *            string
-     * @return map of classpath locations, see {@link #classpathLocations}
+     * @return map of classpath locations, see {@link #CLASSPATH_LOCATIONS}
      */
     private static final Map<String, URL> getClasspathLocations(
             List<String> rawClasspathEntries) {
@@ -419,7 +419,7 @@ public class ClassPathExplorer {
 
     /**
      * Recursively add subdirectories and jar files to locations - see
-     * {@link #classpathLocations}.
+     * {@link #CLASSPATH_LOCATIONS}.
      *
      * @param name
      * @param file
@@ -465,7 +465,7 @@ public class ClassPathExplorer {
     }
 
     /**
-     * Add a jar file to locations - see {@link #classpathLocations}.
+     * Add a jar file to locations - see {@link #CLASSPATH_LOCATIONS}.
      *
      * @param file
      * @param locations
@@ -522,14 +522,14 @@ public class ClassPathExplorer {
         if (debug) {
             debug("classpathLocations values:");
             List<String> locations = new ArrayList<>(
-                    classpathLocations.keySet());
+                    CLASSPATH_LOCATIONS.keySet());
             for (String location : locations) {
-                debug(String.valueOf(classpathLocations.get(location)));
+                debug(String.valueOf(CLASSPATH_LOCATIONS.get(location)));
             }
         }
 
         URL firstDirectory = null;
-        for (String entry : rawClasspathEntries) {
+        for (String entry : RAW_CLASSPATH_ENTRIES) {
 
             File directory = new File(entry);
             if (directory.exists() && !directory.isHidden()
