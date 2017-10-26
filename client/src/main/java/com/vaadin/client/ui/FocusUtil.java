@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -94,4 +95,28 @@ public class FocusUtil {
 
         return focusable.getElement().getTabIndex();
     }
+
+    public static native Element getFirstFocusableElement(VWindow window)
+    /*-{
+        var focusable = $wnd.document.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [class=v-window-maximizebox], [class=v-window-closebox]');
+        console.log('Found ' + focusable.length + ' focusable elements');
+        if (focusable.length > 0) {
+            var firstFocusable = focusable[0];
+            console.log('First is ' + firstFocusable.id);
+            return firstFocusable;
+        }
+        return null;
+    }-*/;
+
+    public static native Element getLastFocusableElement(VWindow window)
+    /*-{
+        var focusable = $wnd.document.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [class=v-window-maximizebox], [class=v-window-closebox]');
+        console.log('Found ' + focusable.length + ' focusable elements');
+        if (focusable.length > 0) {
+            var lastFocusable = focusable[focusable.length - 1];
+            console.log('Last is ' + lastFocusable.id);
+            return lastFocusable;
+        }
+        return null;
+    }-*/;
 }

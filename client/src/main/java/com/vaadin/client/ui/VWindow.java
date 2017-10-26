@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
@@ -432,37 +433,49 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
                 Id.of(headerText));
 
-        // Handlers to Prevent tab to leave the window
+        Logger logger = Logger.getLogger("");
+
+        // Handlers to Prevent tab to leave the window (by circulating focus)
         // and backspace to cause browser navigation
-        topEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        topEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && nativeEvent.getShiftKey()) {
+                logger.warning("Top event blocker caught Shift+Tab event "
+                        + nativeEvent.getType() + " with target "
+                        + nativeEvent.getEventTarget().cast());
+            }
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+                logger.warning("Turning focus around to the bottom");
+                FocusUtil.getLastFocusableElement(this).focus();
+            }
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
 
-        bottomEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && !nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        bottomEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && !nativeEvent.getShiftKey()) {
+                logger.warning("Bottom event blocker caught Tab event "
+                        + nativeEvent.getType() + " with target "
+                        + nativeEvent.getEventTarget().cast());
+            }
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && !nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+                logger.warning("Turning focus around to the top");
+                FocusUtil.getFirstFocusableElement(this).focus();
+            }
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
     }

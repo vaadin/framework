@@ -27,6 +27,7 @@ import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
@@ -42,6 +43,7 @@ import com.vaadin.ui.SingleSelect;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.FooterCell;
 import com.vaadin.ui.components.grid.FooterRow;
@@ -178,6 +180,13 @@ public class GridBasics extends AbstractTestUIWithLog {
                                 + watchingCount++ + ")"));
         persistingDetails = new PersistingDetailsGenerator();
         generators.put("Persisting", persistingDetails);
+        Window window = new Window();
+        window.setModal(true);
+        TextField textField = new TextField("A text field");
+        CheckBox checkBox = new CheckBox("Check?");
+        VerticalLayout layout = new VerticalLayout(textField, checkBox);
+        window.setContent(layout);
+        addWindow(window);
     }
 
     @Override
