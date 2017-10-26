@@ -739,6 +739,9 @@ public class VTabsheet extends VTabsheetBase
     public static final String TABS_CLASSNAME = CLASSNAME + "-tabcontainer";
     public static final String SCROLLER_CLASSNAME = CLASSNAME + "-scroller";
 
+    private static final FocusImpl FOCUS_IMPL = FocusImpl
+            .getFocusImplForPanel();
+
     /** For internal use only. May be removed or replaced in the future. */
     // tabbar and 'scroller' container
     public final Element tabs;
@@ -748,8 +751,6 @@ public class VTabsheet extends VTabsheetBase
      * this to avoid confusion with activeTabIndex.
      */
     int tabulatorIndex = 0;
-
-    private static final FocusImpl FOCUS_IMPL = FocusImpl.getFocusImplForPanel();
 
     // tab-scroller element
     private final Element scroller;

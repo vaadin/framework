@@ -56,6 +56,8 @@ public class VTooltip extends VOverlay {
     private static final int MARGIN = 4;
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN | Event.ONMOUSEOVER
             | Event.ONMOUSEOUT | Event.ONMOUSEMOVE | Event.ONCLICK;
+    private static final int EVENT_XY_POSITION_OUTSIDE = -5000;
+
     VErrorMessage em = new VErrorMessage();
     HTML description = GWT.create(HTML.class);
 
@@ -80,6 +82,9 @@ public class VTooltip extends VOverlay {
      * Current element hovered
      */
     private com.google.gwt.dom.client.Element currentElement = null;
+
+    private int tooltipEventMouseX;
+    private int tooltipEventMouseY;
 
     /**
      * Used to show tooltips; usually used via the singleton in
@@ -470,10 +475,6 @@ public class VTooltip extends VOverlay {
         updatePosition(null, true);
         setPopupPosition(tooltipEventMouseX, tooltipEventMouseY);
     }
-
-    private static final int EVENT_XY_POSITION_OUTSIDE = -5000;
-    private int tooltipEventMouseX;
-    private int tooltipEventMouseY;
 
     public void updatePosition(Event event, boolean isFocused) {
         tooltipEventMouseX = getEventX(event, isFocused);
