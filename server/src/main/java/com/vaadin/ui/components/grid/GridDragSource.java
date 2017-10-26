@@ -61,7 +61,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Default drag data generator for Grid. It creates a list of row values
      * separated by a tabulator character ({@code \t}).
-     * 
+     *
      * <pre>
      * "column1_value\tcolumn2_value\t ... columnN_value"
      * </pre>
@@ -163,7 +163,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * type} data.
      * <p>
      * Example, building a JSON object that contains the item's values:
-     * 
+     *
      * <pre>
      *     dragSourceExtension.setDragDataGenerator("application/json", item ->
      * {
