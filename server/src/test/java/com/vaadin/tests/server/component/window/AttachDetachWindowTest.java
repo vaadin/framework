@@ -220,7 +220,8 @@ public class AttachDetachWindowTest {
 
         final boolean[] eventFired = new boolean[1];
         ui.addComponentAttachListener(
-                e -> eventFired[0] = e.getAttachedComponent().equals(window));
+                event -> eventFired[0] = event.getAttachedComponent()
+                        .equals(window));
         ui.addWindow(window);
         assertTrue("Attach event is not fired for added window", eventFired[0]);
     }
@@ -232,7 +233,8 @@ public class AttachDetachWindowTest {
 
         final boolean[] eventFired = new boolean[1];
         ui.addComponentDetachListener(
-                e -> eventFired[0] = e.getDetachedComponent().equals(window));
+                event -> eventFired[0] = event.getDetachedComponent()
+                        .equals(window));
         ui.addWindow(window);
         ui.removeWindow(window);
 

@@ -23,7 +23,7 @@ public class DefaultView extends VerticalLayout implements View {
     void init() {
         setId("default-view");
         Button button = new Button("Click Me!",
-                e -> Notification.show(service.getText()));
+                event -> Notification.show(service.getText()));
         addComponent(button);
     }
 

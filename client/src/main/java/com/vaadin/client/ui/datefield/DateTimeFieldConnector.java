@@ -19,7 +19,6 @@ import java.util.Date;
 
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.VDateTimeCalendarPanel;
-import com.vaadin.client.ui.VDateTimeCalendarPanel.TimeChangeListener;
 import com.vaadin.client.ui.VPopupTimeCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
@@ -58,29 +57,24 @@ public class DateTimeFieldConnector extends
         if (getWidget().getCurrentResolution()
                 .compareTo(DateTimeResolution.DAY) < 0) {
             getWidget().calendar
-                    .setTimeChangeListener(new TimeChangeListener() {
-                        @Override
-                        public void changed(int hour, int min, int sec,
-                                int msec) {
-                            Date d = getWidget().getDate();
-                            if (d == null) {
-                                // date currently null, use the value from
-                                // calendarPanel
-                                // (~ client time at the init of the widget)
-                                d = (Date) getWidget().calendar.getDate()
-                                        .clone();
-                            }
-                            d.setHours(hour);
-                            d.setMinutes(min);
-                            d.setSeconds(sec);
-                            DateTimeService.setMilliseconds(d, msec);
-
-                            // Always update time changes to the server
-                            getWidget().updateValue(d);
-
-                            // Update text field
-                            getWidget().buildDate();
+                    .setTimeChangeListener((hour, min, sec, msec) -> {
+                        Date d = getWidget().getDate();
+                        if (d == null) {
+                            // date currently null, use the value from
+                            // calendarPanel
+                            // (~ client time at the init of the widget)
+                            d = (Date) getWidget().calendar.getDate().clone();
                         }
+                        d.setHours(hour);
+                        d.setMinutes(min);
+                        d.setSeconds(sec);
+                        DateTimeService.setMilliseconds(d, msec);
+
+                        // Always update time changes to the server
+                        getWidget().updateValue(d);
+
+                        // Update text field
+                        getWidget().buildDate();
                     });
         }
     }

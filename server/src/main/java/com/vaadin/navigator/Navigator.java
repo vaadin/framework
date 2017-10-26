@@ -121,7 +121,7 @@ public class Navigator implements Serializable {
             }
             if (navigator != null) {
                 popStateListenerRegistration = ui.getPage().addPopStateListener(
-                        e -> navigator.navigateTo(getState()));
+                        event -> navigator.navigateTo(getState()));
             }
         }
 

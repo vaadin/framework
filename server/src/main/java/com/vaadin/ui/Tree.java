@@ -275,20 +275,21 @@ public class Tree<T> extends Composite
         treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
-        treeGrid.addExpandListener(e -> {
-            fireExpandEvent(e.getExpandedItem(), e.isUserOriginated());
+        treeGrid.addExpandListener(event -> {
+            fireExpandEvent(event.getExpandedItem(), event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addCollapseListener(e -> {
-            fireCollapseEvent(e.getCollapsedItem(), e.isUserOriginated());
+        treeGrid.addCollapseListener(event -> {
+            fireCollapseEvent(event.getCollapsedItem(),
+                    event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addItemClickListener(e -> fireEvent(
-                new ItemClick<>(this, e.getItem(), e.getMouseEventDetails())));
+        treeGrid.addItemClickListener(event -> fireEvent(new ItemClick<>(this,
+                event.getItem(), event.getMouseEventDetails())));
     }
 
     /**

@@ -32,11 +32,12 @@ public class AbstractSingleSelection extends AbstractTestUI {
         addComponent(componentSelect);
         addComponent(component); // This will be replaced in createComponent
         addComponent(
-                new Button("Deselect", e -> component.setSelectedItem(null)));
+                new Button("Deselect",
+                        event -> component.setSelectedItem(null)));
         addComponent(new Button("Select Bar",
-                e -> component.setSelectedItem("Bar")));
+                event -> component.setSelectedItem("Bar")));
         addComponent(new Button("Refresh",
-                e -> component.getDataProvider().refreshAll()));
+                event -> component.getDataProvider().refreshAll()));
 
         // Select a value from native select to create the initial component
         componentSelect.getDataProvider().fetch(new Query<>()).findFirst()
@@ -51,8 +52,8 @@ public class AbstractSingleSelection extends AbstractTestUI {
             select.setItems("Foo", "Bar", "Baz", "Reset");
             select.setSelectedItem("Bar");
 
-            select.addValueChangeListener(e -> {
-                if ("Reset".equals(e.getValue())) {
+            select.addValueChangeListener(event -> {
+                if ("Reset".equals(event.getValue())) {
                     select.setSelectedItem("Bar");
                 }
             });
