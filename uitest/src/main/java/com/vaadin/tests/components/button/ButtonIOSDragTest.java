@@ -31,7 +31,7 @@ public class ButtonIOSDragTest extends AbstractReindeerTestUI {
         final VerticalLayout layout = new VerticalLayout();
 
         Button offset = new Button("Drag me");
-        offset.addClickListener(e -> Notification.show("Button clicked!"));
+        offset.addClickListener(event -> Notification.show("Button clicked!"));
         DragAndDropWrapper dragMe = new DragAndDropWrapper(offset);
         dragMe.setDragStartMode(DragStartMode.WRAPPER);
         layout.addComponent(dragMe);

@@ -34,7 +34,7 @@ public class ComboBoxSetNullWhenNewItemsAllowed extends AbstractReindeerTestUI {
 
         final Label value = new Label("Selected: ");
 
-        comboBox.addValueChangeListener(e -> {
+        comboBox.addValueChangeListener(event -> {
             if (comboBox.getValue() != null) {
                 comboBox.setValue(null);
                 value.setValue("Selected: " + (String) comboBox.getValue());

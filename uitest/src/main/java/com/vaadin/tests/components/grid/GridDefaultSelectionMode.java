@@ -49,10 +49,10 @@ public class GridDefaultSelectionMode extends AbstractTestUI {
         VerticalLayout v = new VerticalLayout();
 
         v.addComponent(new Button("Deselect on server",
-                e -> grid.getSelectionModel().deselectAll()));
+                event -> grid.getSelectionModel().deselectAll()));
 
         v.addComponent(new Button("Select on server",
-                e -> grid.getSelectionModel().select(person1)));
+                event -> grid.getSelectionModel().select(person1)));
         v.addComponent(grid);
 
         addComponent(v);

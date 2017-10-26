@@ -23,7 +23,7 @@ public class GridClientMemoryLeak extends AbstractTestUI {
                 ContentMode.PREFORMATTED);
         final VerticalLayout layout = new VerticalLayout();
         final Button btn = new Button("newGrid");
-        btn.addClickListener(e -> {
+        btn.addClickListener(event -> {
             layout.removeComponent(layout.getComponent(1));
             layout.addComponent(new Grid<String>());
         });

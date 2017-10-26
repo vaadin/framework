@@ -25,9 +25,9 @@ public class AccordionTabIds extends AbstractReindeerTestUI {
         final Tab firstTab = accordion.addTab(new Label(FIRST_TAB_MESSAGE));
         firstTab.setId(FIRST_TAB_ID);
         Button setIdButton = new Button("Set id");
-        setIdButton.addClickListener(e -> firstTab.setId(FIRST_TAB_ID));
+        setIdButton.addClickListener(event -> firstTab.setId(FIRST_TAB_ID));
         Button clearIdButton = new Button("Clear id");
-        clearIdButton.addClickListener(e -> firstTab.setId(null));
+        clearIdButton.addClickListener(event -> firstTab.setId(null));
         addComponents(setIdButton, clearIdButton, accordion);
     }
 

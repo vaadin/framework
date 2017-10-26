@@ -21,7 +21,7 @@ public class DateFieldBasedOnLong extends AbstractComponentDataBindingTest {
         property.setValue(new Date(2011 - 1900, 4, 6).getTime());
 
         addComponent(new Button("Set property value to 10000L",
-                e -> property.setValue(10000L)));
+                event -> property.setValue(10000L)));
     }
 
 }

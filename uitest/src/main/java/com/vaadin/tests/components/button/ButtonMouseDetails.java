@@ -11,21 +11,21 @@ public class ButtonMouseDetails extends TestBase {
 
     private int clickCounter = 1;
 
-    private Button.ClickListener clickListener = e -> {
+    private Button.ClickListener clickListener = event -> {
         StringBuilder str = new StringBuilder(out.getValue());
         str.append(clickCounter + ":\t");
 
         // Modifier keys
-        str.append("ctrl=" + e.isCtrlKey() + ",\t");
-        str.append("alt=" + e.isAltKey() + ",\t");
-        str.append("meta=" + e.isMetaKey() + ",\t");
-        str.append("shift=" + e.isShiftKey() + ",\t");
+        str.append("ctrl=" + event.isCtrlKey() + ",\t");
+        str.append("alt=" + event.isAltKey() + ",\t");
+        str.append("meta=" + event.isMetaKey() + ",\t");
+        str.append("shift=" + event.isShiftKey() + ",\t");
 
         // Coordinates
-        str.append("X=" + e.getRelativeX() + ",\t");
-        str.append("Y=" + e.getRelativeY() + ",\t");
-        str.append("clientX=" + e.getClientX() + ",\t");
-        str.append("clientY=" + e.getClientY());
+        str.append("X=" + event.getRelativeX() + ",\t");
+        str.append("Y=" + event.getRelativeY() + ",\t");
+        str.append("clientX=" + event.getClientX() + ",\t");
+        str.append("clientY=" + event.getClientY());
 
         str.append("\n");
 

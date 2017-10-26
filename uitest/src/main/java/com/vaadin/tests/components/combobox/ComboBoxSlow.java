@@ -27,7 +27,7 @@ public class ComboBoxSlow extends AbstractReindeerTestUI {
             cb.addItem("Item " + i);
         }
         cb.addValueChangeListener(
-                e -> log.log("Value changed to " + cb.getValue()));
+                event -> log.log("Value changed to " + cb.getValue()));
         addComponent(cb);
     }
 }

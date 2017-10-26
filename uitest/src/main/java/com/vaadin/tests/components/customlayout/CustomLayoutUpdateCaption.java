@@ -29,7 +29,7 @@ public class CustomLayoutUpdateCaption extends UI {
         content.addComponent(new VerticalLayout(username2), "test2");
         content.addComponent(loginButton, "okbutton");
 
-        loginButton.addClickListener(e -> {
+        loginButton.addClickListener(event -> {
             username1.setCaption("updated");
             username2.setCaption("updated");
         });

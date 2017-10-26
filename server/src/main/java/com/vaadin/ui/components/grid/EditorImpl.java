@@ -102,14 +102,14 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     private EditorErrorGenerator<T> errorGenerator = (fieldToColumn,
             status) -> {
         String message = status.getFieldValidationErrors().stream()
-                .filter(e -> e.getMessage().isPresent()
-                        && fieldToColumn.containsKey(e.getField()))
-                .map(e -> fieldToColumn.get(e.getField()).getCaption() + ": "
-                        + e.getMessage().get())
+                .filter(event -> event.getMessage().isPresent()
+                        && fieldToColumn.containsKey(event.getField()))
+                .map(event -> fieldToColumn.get(event.getField()).getCaption() + ": "
+                        + event.getMessage().get())
                 .collect(Collectors.joining("; "));
 
         String beanMessage = status.getBeanValidationErrors().stream()
-                .map(e -> e.getErrorMessage())
+                .map(event -> event.getErrorMessage())
                 .collect(Collectors.joining("; "));
 
         message = Stream.of(message, beanMessage).filter(s -> !s.isEmpty())
@@ -283,6 +283,7 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
      *             if the {@code rowNumber} is not in the backing data provider
      * @see #setEnabled(boolean)
      */
+    @Override
     public void editRow(int rowNumber)
             throws IllegalStateException, IllegalArgumentException {
         if (!isEnabled()) {

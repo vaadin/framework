@@ -39,7 +39,7 @@ public class CleanupBrokenUI extends AbstractTestUIWithLog {
             }
         });
 
-        addComponent(new Button("Ping", e -> log("pong")));
+        addComponent(new Button("Ping", event -> log("pong")));
     }
 
     private void logUIs() {

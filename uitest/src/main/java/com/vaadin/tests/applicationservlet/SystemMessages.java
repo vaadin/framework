@@ -43,7 +43,7 @@ public class SystemMessages extends AbstractReindeerTestUI {
         localeSelect.addItem(new Locale("en", "US"));
         localeSelect.addItem(new Locale("fi", "FI"));
         localeSelect.addItem(Locale.GERMANY);
-        localeSelect.addValueChangeListener(e -> {
+        localeSelect.addValueChangeListener(event -> {
             Locale locale = (Locale) localeSelect.getValue();
             setLocale(locale);
         });
@@ -51,7 +51,7 @@ public class SystemMessages extends AbstractReindeerTestUI {
         addComponent(localeSelect);
         final MyButton failButton = new MyButton();
         failButton.setCaption("Generate server side error");
-        failButton.addClickListener(e -> {
+        failButton.addClickListener(event -> {
             failButton.fail = true;
             failButton.markAsDirty();
         });

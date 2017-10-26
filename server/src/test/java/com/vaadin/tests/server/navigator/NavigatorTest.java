@@ -1167,9 +1167,9 @@ public class NavigatorTest {
 
         AtomicReference<Map<String, String>> mapRef = new AtomicReference<>();
         AtomicReference<Map<String, String>> mapRefB = new AtomicReference<>();
-        navigator.addViewChangeListener(e -> {
-            mapRef.set(e.getParameterMap());
-            mapRefB.set(e.getParameterMap("b"));
+        navigator.addViewChangeListener(event -> {
+            mapRef.set(event.getParameterMap());
+            mapRefB.set(event.getParameterMap("b"));
             return true;
         });
 

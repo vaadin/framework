@@ -23,7 +23,7 @@ public class MoveComponentsFromGridLayoutToInnerLayout
         gl.setHeight("200px");
 
         testButton = new Button("Click to move to inner layout",
-                e -> vl.addComponent(testButton));
+                event -> vl.addComponent(testButton));
 
         gl.addComponent(testButton);
 
@@ -35,7 +35,8 @@ public class MoveComponentsFromGridLayoutToInnerLayout
 
         addComponent(gl);
 
-        Button b = new Button("Repaint inner layout", e -> vl.markAsDirty());
+        Button b = new Button("Repaint inner layout",
+                event -> vl.markAsDirty());
 
         addComponent(b);
     }

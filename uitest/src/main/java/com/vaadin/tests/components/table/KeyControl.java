@@ -39,7 +39,7 @@ public class KeyControl extends TestBase {
         table1.setImmediate(true);
         layout1.addComponent(table1);
 
-        table1.addValueChangeListener(e -> {
+        table1.addValueChangeListener(event -> {
             @SuppressWarnings("unchecked")
             Set<String> value = (Set<String>) table1.getValue();
             selected1.setValue(value + " TOTAL: " + value.size());
@@ -59,7 +59,7 @@ public class KeyControl extends TestBase {
         table2.setImmediate(true);
         layout2.addComponent(table2);
 
-        table2.addValueChangeListener(e -> {
+        table2.addValueChangeListener(event -> {
             String value = table2.getValue() == null ? "No selected items"
                     : table2.getValue().toString();
             selected2.setValue(value);
@@ -80,7 +80,7 @@ public class KeyControl extends TestBase {
         table3.setImmediate(true);
         layout3.addComponent(table3);
 
-        table3.addValueChangeListener(e -> {
+        table3.addValueChangeListener(event -> {
             @SuppressWarnings("unchecked")
             Set<String> value = (Set<String>) table3.getValue();
             selected3.setValue(value.isEmpty() ? "No selected items"

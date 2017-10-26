@@ -57,7 +57,7 @@ public class TimingInfoReported extends AbstractTestUIWithLog {
                 });
         getPage().getJavaScript().execute(reportTimings);
         Button b = new Button("test request",
-                e -> getPage().getJavaScript().execute(reportTimings));
+                event -> getPage().getJavaScript().execute(reportTimings));
         addComponent(b);
     }
 }

@@ -22,7 +22,7 @@ public class ButtonHtml extends TestBase {
         addComponent(b);
 
         final Button swapButton = new Button("<i>Swap button<i>");
-        swapButton.addClickListener(e -> swapButton
+        swapButton.addClickListener(event -> swapButton
                 .setCaptionAsHtml(!swapButton.isCaptionAsHtml()));
         addComponent(swapButton);
     }

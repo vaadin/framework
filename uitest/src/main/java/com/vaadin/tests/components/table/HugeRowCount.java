@@ -19,7 +19,7 @@ public class HugeRowCount extends TestBase {
 
         final TextField tf = new TextField("Rows");
         tf.setValue(String.valueOf(100000));
-        tf.addValueChangeListener(e -> container
+        tf.addValueChangeListener(event -> container
                 .setSize(Integer.parseInt(tf.getValue().toString())));
         addComponent(tf);
         addComponent(new Button("Update rowcount"));

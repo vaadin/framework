@@ -8,7 +8,7 @@ public class ButtonErrorMessage extends TestBase {
     @Override
     protected void setup() {
         Button b = new Button("Click for error");
-        b.addClickListener(e -> {
+        b.addClickListener(event -> {
             throw new NullPointerException();
         });
         addComponent(b);

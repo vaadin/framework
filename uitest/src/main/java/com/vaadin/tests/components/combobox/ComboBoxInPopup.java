@@ -18,7 +18,7 @@ public class ComboBoxInPopup extends TestBase {
         final Window w = new Window();
         w.setContent(layout);
         layout.addComponent(createComboBox());
-        Button close = new Button("Close window", e -> w.close());
+        Button close = new Button("Close window", event -> w.close());
         close.setClickShortcut(KeyCode.ESCAPE, null);
         layout.addComponent(close);
 

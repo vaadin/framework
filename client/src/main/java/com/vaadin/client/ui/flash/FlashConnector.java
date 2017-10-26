@@ -54,8 +54,8 @@ public class FlashConnector extends AbstractComponentConnector {
         getWidget().rebuildIfNeeded();
     }
 
-    private final ElementResizeListener listener = e -> {
-        Element slot = e.getElement().getParentElement();
+    private final ElementResizeListener listener = event -> {
+        Element slot = event.getElement().getParentElement();
         getWidget().setSlotHeightAndWidth(slot.getOffsetHeight(),
                 slot.getOffsetWidth());
     };

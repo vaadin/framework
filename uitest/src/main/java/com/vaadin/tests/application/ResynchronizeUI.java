@@ -23,7 +23,7 @@ public class ResynchronizeUI extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Button b = new Button("Resynchronize", e -> {
+        Button b = new Button("Resynchronize", event -> {
             // Theme change is currently the only operation which always
             // does resynchronize
             setTheme("runo");

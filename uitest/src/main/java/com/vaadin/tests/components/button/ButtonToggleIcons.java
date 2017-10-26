@@ -19,8 +19,8 @@ public class ButtonToggleIcons extends UI {
         final ThemeResource iconResource = new ThemeResource(
                 "../runo/icons/16/arrow-left.png");
 
-        final ClickListener iconToggleListener = e -> {
-            final Button btn = e.getButton();
+        final ClickListener iconToggleListener = event -> {
+            final Button btn = event.getButton();
             if (btn.getIcon() == null) {
                 btn.setIcon(iconResource);
             } else {

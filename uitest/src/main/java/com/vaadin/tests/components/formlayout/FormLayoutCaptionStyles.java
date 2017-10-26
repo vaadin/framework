@@ -17,7 +17,7 @@ public class FormLayoutCaptionStyles extends TestBase {
 
         fl.addComponent(f1);
         fl.addComponent(new Button("Toggle Text field 2 bold style",
-                e -> {
+                event -> {
                     if ("bold".equals(f2.getStyleName())) {
                         f2.setStyleName("");
                     } else {

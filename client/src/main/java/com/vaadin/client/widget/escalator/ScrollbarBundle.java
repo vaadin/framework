@@ -727,7 +727,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (isInvisibleScrollbar) {
             Event.sinkEvents(root, Event.ONSCROLL);
             Event.setEventListener(root,
-                    e -> invisibleScrollbarTemporaryResizer.show());
+                    event -> invisibleScrollbarTemporaryResizer.show());
 
             root.getStyle().setVisibility(Visibility.HIDDEN);
         } else {

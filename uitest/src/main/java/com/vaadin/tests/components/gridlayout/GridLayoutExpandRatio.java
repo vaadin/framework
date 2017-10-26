@@ -67,7 +67,7 @@ public class GridLayoutExpandRatio extends AbstractReindeerTestUI {
 
         setExpandRatio();
         addComponent(new Button("Hide/show both middle Column and row",
-                e -> hideComponetns()));
+                event -> hideComponetns()));
     }
 
     private void hideComponetns() {

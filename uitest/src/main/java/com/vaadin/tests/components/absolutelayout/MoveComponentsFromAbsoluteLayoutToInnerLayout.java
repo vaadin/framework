@@ -19,7 +19,7 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         al.setHeight("200px");
 
         testButton = new Button("Click to move to inner layout",
-                e -> vl.addComponent(testButton));
+                event -> vl.addComponent(testButton));
 
         al.addComponent(testButton);
 
@@ -29,7 +29,7 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         addComponent(al);
 
         Button b = new Button("Repaint inner layout",
-                e -> vl.markAsDirty());
+                event -> vl.markAsDirty());
 
         addComponent(b);
     }

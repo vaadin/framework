@@ -40,7 +40,7 @@ public class FormLayoutResizing extends AbstractReindeerTestUI {
 
         addComponent(view);
 
-        addComponent(new Button("Toggle width", e -> {
+        addComponent(new Button("Toggle width", event -> {
             if ((int) view.getWidth() == 400) {
                 view.setWidth("600px");
             } else {

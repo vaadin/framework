@@ -31,7 +31,7 @@ public class HtmlCaptionInFormLayout extends AbstractReindeerTestUI {
 
         addComponent(new FormLayout(asHtml, asText));
 
-        addComponent(new Button("Toggle", e -> {
+        addComponent(new Button("Toggle", event -> {
             asHtml.setCaptionAsHtml(!asHtml.isCaptionAsHtml());
             asText.setCaptionAsHtml(!asText.isCaptionAsHtml());
         }));

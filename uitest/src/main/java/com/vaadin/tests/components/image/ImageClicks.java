@@ -31,7 +31,7 @@ public class ImageClicks extends TestBase {
         final StreamResource imageResource = new StreamResource(imageSource,
                 "testimage.png");
         image.setSource(imageResource);
-        image.addClickListener(e -> {
+        image.addClickListener(event -> {
             ++clickCounter;
             imageResource.setFilename("testimage.png?" + new Date().getTime());
             image.markAsDirty();

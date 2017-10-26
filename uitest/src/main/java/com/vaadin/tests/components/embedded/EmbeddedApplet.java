@@ -29,7 +29,8 @@ public class EmbeddedApplet extends TestBase {
         applet.setSource(new ExternalResource("/statictestfiles/applet.html"));
         addComponent(applet);
 
-        addComponent(new Button("Remove applet", e -> removeComponent(applet)));
+        addComponent(
+                new Button("Remove applet", event -> removeComponent(applet)));
 
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);

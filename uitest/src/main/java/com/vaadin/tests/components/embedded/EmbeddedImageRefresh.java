@@ -43,23 +43,23 @@ public class EmbeddedImageRefresh extends TestBase {
 
         // The button requests repainting the embedded.
         Button button = new Button("refr");
-        button.addClickListener(e -> embedded.markAsDirty());
+        button.addClickListener(event -> embedded.markAsDirty());
         addComponent(button);
         button = new Button("refr name");
-        button.addClickListener(e -> {
+        button.addClickListener(event -> {
             ((StreamResource) embedded.getSource())
                     .setFilename(new Date().getTime() + ".png");
             embedded.markAsDirty();
         });
         addComponent(button);
         button = new Button("200x200");
-        button.addClickListener(e -> {
+        button.addClickListener(event -> {
             embedded.setWidth("200px");
             embedded.setHeight("200px");
         });
         addComponent(button);
         button = new Button("undef");
-        button.addClickListener(e -> embedded.setSizeUndefined());
+        button.addClickListener(event -> embedded.setSizeUndefined());
         addComponent(button);
     }
 

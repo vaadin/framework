@@ -205,11 +205,11 @@ public class ScreenshotBrowser extends UI {
 
             left.addComponent(createSpacer());
             left.addComponent(
-                    new Button("Commit actions", e -> commitActions()));
+                    new Button("Commit actions", event -> commitActions()));
 
             left.addComponent(createSpacer());
             left.addComponent(
-                    new Button("Refresh", e -> refreshTableContainer()));
+                    new Button("Refresh", event -> refreshTableContainer()));
 
             Label expandSpacer = createSpacer();
             left.addComponent(expandSpacer);
@@ -241,7 +241,7 @@ public class ScreenshotBrowser extends UI {
         }
 
         private ClickListener createSetActionListener(final Action action) {
-            return e -> setActions(action);
+            return event -> setActions(action);
         }
 
         public void setActions(final Action action) {
@@ -272,7 +272,7 @@ public class ScreenshotBrowser extends UI {
         table.setHeight("100%");
 
         table.setMultiSelect(true);
-        table.addValueChangeListener(e -> {
+        table.addValueChangeListener(event -> {
 
             @SuppressWarnings("unchecked")
             Collection<ComparisonFailure> selectedRows = (Collection<ComparisonFailure>) table

@@ -22,7 +22,7 @@ public class CustomComponentGrowingContent extends TestBase {
             }
         });
 
-        addComponent(new Button("Set long content", e -> label
+        addComponent(new Button("Set long content", event -> label
                 .setValue("Longer content that should be fully visible")));
     }
 

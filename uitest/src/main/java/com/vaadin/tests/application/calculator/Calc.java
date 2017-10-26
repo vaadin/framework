@@ -55,7 +55,7 @@ public class Calc extends AbstractReindeerTestUI {
             addCommentButton = new Button("Add Comment");
             addCommentButton.setWidth("100%");
 
-            addCommentButton.addClickListener(e -> {
+            addCommentButton.addClickListener(event -> {
                 final Window w = new Window("Add comment");
                 VerticalLayout vl = new VerticalLayout();
                 vl.setMargin(true);
@@ -68,7 +68,7 @@ public class Calc extends AbstractReindeerTestUI {
 
                 Button okButton = new Button("OK");
                 okButton.setWidth("100%");
-                okButton.addClickListener(event -> {
+                okButton.addClickListener(event2 -> {
                     addRow("[ " + tf.getValue() + " ]");
                     tf.setValue("");
                     w.close();
@@ -77,7 +77,7 @@ public class Calc extends AbstractReindeerTestUI {
 
                 Button cancelButton = new Button("Cancel");
                 cancelButton.setWidth("100%");
-                cancelButton.addClickListener(event -> {
+                cancelButton.addClickListener(event2 -> {
                     tf.setValue("");
                     w.close();
                     removeWindow(w);
@@ -219,9 +219,9 @@ public class Calc extends AbstractReindeerTestUI {
             // Create a button and use this application for event handling
             Button button = new Button(caption);
             button.setWidth("40px");
-            button.addClickListener(e -> {
+            button.addClickListener(event -> {
                 // Get the button that was clicked
-                Button b = e.getButton();
+                Button b = event.getButton();
 
                 // Get the requested operation from the button caption
                 char requestedOperation = b.getCaption().charAt(0);

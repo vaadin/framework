@@ -16,7 +16,7 @@ public class WebBrowserSize extends AbstractReindeerTestUI {
         final Label browserSizeLabel = new Label("n/a");
         browserSizeLabel.setCaption("Client (browser window) size");
 
-        final Button update = new Button("Refresh", e -> {
+        final Button update = new Button("Refresh", event -> {
             screenSizeLabel.setValue(getBrowser().getScreenWidth() + " x "
                     + getBrowser().getScreenHeight());
             browserSizeLabel.setValue(getPage().getBrowserWindowWidth() + " x "

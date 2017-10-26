@@ -98,7 +98,7 @@ public class SuperDevMode {
                     private void failed() {
                         VNotification n = new VNotification();
                         n.addEventListener(
-                                e -> recompileWidgetsetAndStartInDevMode(
+                                event -> recompileWidgetsetAndStartInDevMode(
                                         serverUrl));
                         n.show("Recompilation failed.<br/>"
                                 + "Make sure CodeServer is running, "

@@ -35,7 +35,7 @@ public class EmbeddedThemeResource extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         setTheme("tests-components");
 
-        addButton("Toggle theme", e -> {
+        addButton("Toggle theme", event -> {
             if (Reindeer.THEME_NAME.equals(getTheme())) {
                 setTheme("tests-components");
             } else {

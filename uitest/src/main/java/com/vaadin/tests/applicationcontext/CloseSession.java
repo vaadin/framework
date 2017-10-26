@@ -67,7 +67,7 @@ public class CloseSession extends AbstractReindeerTestUI {
         addComponent(log);
         addComponent(
                 new Button("Close VaadinServiceSession and redirect elsewhere",
-                        e -> {
+                        event -> {
                             // Assuming Vaadin is deployed to the root
                             // context
                             getPage().setLocation(
@@ -75,28 +75,28 @@ public class CloseSession extends AbstractReindeerTestUI {
                             getSession().close();
                         }));
         addComponent(new Button("Close VaadinServiceSession and reopen page",
-                e -> {
+                event -> {
                     getPage().setLocation(reopenUrl);
                     getSession().close();
                 }));
         addComponent(new Button("Just close VaadinSession",
-                e -> getSession().close()));
+                event -> getSession().close()));
         addComponent(new Button("Just close HttpSession",
-                e -> getSession().getSession().invalidate()));
+                event -> getSession().getSession().invalidate()));
         addComponent(new Button("Invalidate HttpSession and reopen page",
-                e -> {
+                event -> {
                     VaadinService.getCurrentRequest().getWrappedSession()
                             .invalidate();
                     getPage().setLocation(reopenUrl);
                 }));
         addComponent(new Button("Invalidate HttpSession and redirect elsewhere",
-                e -> {
+                event -> {
                     VaadinService.getCurrentRequest().getWrappedSession()
                             .invalidate();
                     getPage().setLocation("/statictestfiles/static.html");
                 }));
         addComponent(new Button("Invalidate HttpSession in a background thread",
-                e -> {
+                event -> {
                     final HttpSession session = ((WrappedHttpSession) VaadinService
                             .getCurrentRequest().getWrappedSession())
                                     .getHttpSession();

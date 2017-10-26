@@ -95,10 +95,10 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private ElementResizeListener slotCaptionResizeListener = e -> {
+    private ElementResizeListener slotCaptionResizeListener = event -> {
 
         // Get all needed element references
-        Element captionElement = e.getElement();
+        Element captionElement = event.getElement();
 
         // Caption position determines if the widget element is the first or
         // last child inside the caption wrap
@@ -143,14 +143,14 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private ElementResizeListener childComponentResizeListener = e -> {
+    private ElementResizeListener childComponentResizeListener = event -> {
         updateLayoutHeight();
         if (needsExpand()) {
             getWidget().updateExpandCompensation();
         }
     };
 
-    private ElementResizeListener spacingResizeListener = e -> {
+    private ElementResizeListener spacingResizeListener = event -> {
         if (needsExpand()) {
             getWidget().updateExpandCompensation();
         }

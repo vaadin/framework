@@ -16,7 +16,7 @@ public class ImageAltText extends TestBase {
         addComponent(image);
 
         Button changeAltTexts = new Button("Change alt text",
-                e -> image.setAlternateText("New alt text!"));
+                event -> image.setAlternateText("New alt text!"));
         addComponent(changeAltTexts);
     }
 

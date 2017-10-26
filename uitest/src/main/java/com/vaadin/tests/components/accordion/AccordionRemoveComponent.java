@@ -32,7 +32,7 @@ public class AccordionRemoveComponent extends AbstractReindeerTestUI {
         final Accordion accordion = new Accordion();
         Button button = new Button("remove");
         button.addClickListener(
-                e -> accordion.removeComponent(e.getButton()));
+                event -> accordion.removeComponent(event.getButton()));
         accordion.addComponent(button);
         addComponent(accordion);
     }

@@ -31,7 +31,7 @@ public class CustomComponentHideContent extends AbstractReindeerTestUI {
         addComponent(customComponent);
 
         addComponent(new Button("Toggle content visibility",
-                e -> content.setVisible(!content.isVisible())));
+                event -> content.setVisible(!content.isVisible())));
     }
 
     @Override

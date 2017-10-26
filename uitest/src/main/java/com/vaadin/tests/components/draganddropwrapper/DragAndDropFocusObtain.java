@@ -40,12 +40,12 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
 
-    private FocusListener focusListener = e -> log(
-            "Field '" + e.getComponent().getCaption() + "' focused");
+    private FocusListener focusListener = event -> log(
+            "Field '" + event.getComponent().getCaption() + "' focused");
 
-    private ValueChangeListener<String> listener = e ->
-        log("Value of " + ((AbstractTextField) e.getSource()).getCaption()
-            + " changed to " + e.getValue());
+    private ValueChangeListener<String> listener = event ->
+    log("Value of " + ((AbstractTextField) event.getSource()).getCaption()
+            + " changed to " + event.getValue());
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -22,11 +22,11 @@ public class ClipContent extends TestBase {
 
         final TextField w = new TextField("Width");
         w.setValue("20px");
-        w.addValueChangeListener(e -> cc.setWidth(w.getValue()));
+        w.addValueChangeListener(event -> cc.setWidth(w.getValue()));
         addComponent(w);
         final TextField h = new TextField("Height");
         h.setValue("20px");
-        h.addValueChangeListener(e -> cc.setHeight(h.getValue()));
+        h.addValueChangeListener(event -> cc.setHeight(h.getValue()));
         addComponent(h);
         Button b = new Button("apply");
         addComponent(b);

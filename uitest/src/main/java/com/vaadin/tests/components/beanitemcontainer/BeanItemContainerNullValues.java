@@ -26,12 +26,12 @@ public class BeanItemContainerNullValues extends TestBase {
                 BeanItemContainerGenerator.createContainer(100, 1));
         table.setColumnCollapsingAllowed(true);
 
-        Button b = new Button("Disable sorting", e -> {
+        Button b = new Button("Disable sorting", event -> {
             table.setSortEnabled(!table.isSortEnabled());
             if (table.isSortEnabled()) {
-                e.getButton().setCaption("Disable sorting");
+                event.getButton().setCaption("Disable sorting");
             } else {
-                e.getButton().setCaption("Enable sorting");
+                event.getButton().setCaption("Enable sorting");
             }
         });
 

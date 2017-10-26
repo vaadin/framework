@@ -41,7 +41,7 @@ public class BrowserFrameIsVisible extends TestBase {
         browser.setSource(textResource);
         addComponent(browser);
 
-        page1.addClickListener(e -> {
+        page1.addClickListener(event -> {
             TextSource helloSource = new TextSource("Hello World");
             StreamResource helloResource = new StreamResource(helloSource,
                     "helloworld.txt");
@@ -49,7 +49,7 @@ public class BrowserFrameIsVisible extends TestBase {
             browser.setSource(helloResource);
         });
 
-        page2.addClickListener(e -> {
+        page2.addClickListener(event -> {
             TextSource helloSource = new TextSource("Lorem Ipsum");
             StreamResource helloResource = new StreamResource(helloSource,
                     "loremipsum.txt");
@@ -57,7 +57,7 @@ public class BrowserFrameIsVisible extends TestBase {
             browser.setSource(helloResource);
         });
 
-        page3.addClickListener(e -> browser.setSource(null));
+        page3.addClickListener(event -> browser.setSource(null));
     }
 
     @Override

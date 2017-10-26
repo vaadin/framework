@@ -119,7 +119,7 @@ public class RadioButtonGroupTestUI
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getSelectedItem())));
+                        event -> log("Selected: " + event.getSelectedItem())));
     }
 
     private int getIndex(Object item) {

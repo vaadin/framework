@@ -30,7 +30,7 @@ public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
         // 3. Choose to stay on the page after all
         // 4. Click the button
         // There should be no error
-        Button b = new Button("Say hello", e -> log("Hello"));
+        Button b = new Button("Say hello", event -> log("Hello"));
         addComponent(b);
         JavaScript
                 .eval("window.addEventListener('beforeunload', function (e) {"

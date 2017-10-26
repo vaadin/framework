@@ -26,7 +26,7 @@ public class ComboBoxCombinedWithEnterShortcut extends TestBase {
 
         Button aButton = new Button("Show Value");
         aButton.setClickShortcut(KeyCode.ENTER);
-        aButton.addClickListener(e -> log
+        aButton.addClickListener(event -> log
                 .log("Button clicked. ComboBox value: " + l.getValue()));
 
         addComponent(log);

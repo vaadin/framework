@@ -80,17 +80,17 @@ public class GridLayoutFocusOrderAfterShowChild extends AbstractTestUIWithLog {
 
         addComponent(gl);
 
-        addComponent(new Button("Show first", e -> {
+        addComponent(new Button("Show first", event -> {
             t1.setVisible(true);
             l1.setVisible(true);
         }));
 
-        addComponent(new Button("Show third", e -> {
+        addComponent(new Button("Show third", event -> {
             t3.setVisible(true);
             l3.setVisible(true);
         }));
 
-        addComponent(new Button("Show fifth", e -> {
+        addComponent(new Button("Show fifth", event -> {
             t5.setVisible(true);
             l5.setVisible(true);
         }));

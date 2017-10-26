@@ -18,10 +18,10 @@ public class ChangeSessionId extends AbstractTestCase {
         mainWindow.addComponent(log);
         mainWindow.addComponent(loginButton);
         mainWindow.addComponent(
-                new Button("Show session id", e -> logSessionId()));
+                new Button("Show session id", event -> logSessionId()));
         setMainWindow(mainWindow);
 
-        loginButton.addClickListener(e -> {
+        loginButton.addClickListener(event -> {
             String oldSessionId = getSessionId();
             VaadinService
                     .reinitializeSession(VaadinService.getCurrentRequest());

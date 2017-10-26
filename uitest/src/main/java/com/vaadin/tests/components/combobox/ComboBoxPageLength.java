@@ -7,11 +7,11 @@ public class ComboBoxPageLength extends ComboBoxes2<ComboBox> {
     @Override
     public void initializeComponents() {
         super.initializeComponents();
-        getComponent().addValueChangeListener(e -> {
-            if (e.getProperty() != null) {
-                if (e.getProperty().getValue() != null) {
+        getComponent().addValueChangeListener(event -> {
+            if (event.getProperty() != null) {
+                if (event.getProperty().getValue() != null) {
                     Integer value = Integer
-                            .parseInt(((String) e.getProperty().getValue())
+                            .parseInt(((String) event.getProperty().getValue())
                                     .split(" ")[1]);
                     getComponent().setPageLength(value);
                 } else {

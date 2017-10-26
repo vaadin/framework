@@ -38,7 +38,7 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
             cl.addComponent(new TextField("This should be visible"), "first");
             Button button = new Button(
                     "This button is visible, together with one label");
-            button.addClickListener(e -> log("Button clicked"));
+            button.addClickListener(event -> log("Button clicked"));
             cl.addComponent(button, "second");
             cl.addComponent(
                     new TextField("This won't be as the slot is missing"),

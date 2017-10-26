@@ -20,7 +20,7 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
 
         ComboBox<String> comboBox = new ComboBox<>("Combo box",
                 Arrays.asList("Option 1", "Option 2", "Option 3"));
-        comboBox.addFocusListener(e -> popup.close());
+        comboBox.addFocusListener(event -> popup.close());
         layout.addComponent(comboBox);
 
         popup.setSizeUndefined();

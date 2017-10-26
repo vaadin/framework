@@ -34,7 +34,7 @@ public class UseStateFromHierachy extends AbstractReindeerTestUI {
 
         addComponent(component);
         addComponent(new Button("Remove component",
-                e -> removeComponent(component)));
+                event -> removeComponent(component)));
     }
 
     @Override

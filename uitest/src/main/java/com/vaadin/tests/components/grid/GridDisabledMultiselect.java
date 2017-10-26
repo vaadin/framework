@@ -14,8 +14,8 @@ public class GridDisabledMultiselect extends AbstractReindeerTestUI {
         grid.setItems("bar");
         addComponent(grid);
 
-        addButton("Multi", e -> grid.setSelectionMode(SelectionMode.MULTI));
+        addButton("Multi", event -> grid.setSelectionMode(SelectionMode.MULTI));
 
-        addButton("Disable", e -> grid.setEnabled(!grid.isEnabled()));
+        addButton("Disable", event -> grid.setEnabled(!grid.isEnabled()));
     }
 }

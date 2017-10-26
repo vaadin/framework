@@ -67,7 +67,7 @@ public class ThreadLocalInstances extends AbstractTestCase {
         mainWindow.addComponent(log);
         mainWindow.addComponent(new Embedded("Icon", resource));
         mainWindow.addComponent(new Button("Sync",
-                e -> reportCurrentStatus("button listener")));
+                event -> reportCurrentStatus("button listener")));
 
         reportStatus("class init", staticInitApplication, staticInitRoot);
         reportCurrentStatus("app constructor");

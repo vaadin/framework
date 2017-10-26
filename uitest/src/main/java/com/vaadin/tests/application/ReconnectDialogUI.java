@@ -28,7 +28,7 @@ public class ReconnectDialogUI extends AbstractReindeerTestUIWithLog {
                     .parseInt(request.getParameter("reconnectAttempts")));
         }
         Button b = new Button("Say hello");
-        b.addClickListener(e -> log("Hello from the server"));
+        b.addClickListener(event -> log("Hello from the server"));
 
         addComponent(b);
     }

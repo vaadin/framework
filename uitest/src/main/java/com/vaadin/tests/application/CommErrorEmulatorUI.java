@@ -73,7 +73,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         addComponent(createConfigPanel());
         addComponent(createServerConfigPanel());
 
-        addComponent(new Button("Say hello", e -> log("Hello")));
+        addComponent(new Button("Say hello", event -> log("Hello")));
     }
 
     /**
@@ -90,7 +90,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
                 createTemporaryResponseCodeSetters("UIDL", uidlResponse));
         vl.addComponent(createTemporaryResponseCodeSetters("Heartbeat",
                 heartbeatResponse));
-        vl.addComponent(new Button("Activate", e -> {
+        vl.addComponent(new Button("Activate", event -> {
             if (uidlResponse.code != null && uidlResponse.code != 200) {
                 getServlet().setUIDLResponseCode(CommErrorEmulatorUI.this,
                         uidlResponse.code, uidlResponse.time);
@@ -119,7 +119,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogMessage
                 .setValue(getReconnectDialogConfiguration().getDialogText());
         reconnectDialogMessage
-                .addValueChangeListener(e ->
+                .addValueChangeListener(event ->
                         getReconnectDialogConfiguration().setDialogText(
                 reconnectDialogMessage.getValue()));
 
@@ -130,7 +130,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogGaveUpMessage.setValue(
                 getReconnectDialogConfiguration().getDialogTextGaveUp());
         reconnectDialogGaveUpMessage
-                .addValueChangeListener(e ->
+                .addValueChangeListener(event ->
                         getReconnectDialogConfiguration().setDialogTextGaveUp(
                 reconnectDialogGaveUpMessage.getValue()));
         final TextField reconnectDialogReconnectAttempts = new TextField(
@@ -149,7 +149,7 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogReconnectInterval.setConvertedValue(
                 getReconnectDialogConfiguration().getReconnectInterval());
         reconnectDialogReconnectInterval
-                .addValueChangeListener(e ->
+                .addValueChangeListener(event ->
                         getReconnectDialogConfiguration().setReconnectInterval(
                                 (Integer) reconnectDialogReconnectInterval
                         .getConvertedValue()));
@@ -160,7 +160,8 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         reconnectDialogGracePeriod.setConvertedValue(
                 getReconnectDialogConfiguration().getDialogGracePeriod());
         reconnectDialogGracePeriod
-                .addValueChangeListener(e -> getReconnectDialogConfiguration()
+                .addValueChangeListener(
+                        event -> getReconnectDialogConfiguration()
                         .setDialogGracePeriod(
                                 (Integer) reconnectDialogGracePeriod
                                         .getConvertedValue()));
@@ -200,12 +201,12 @@ public class CommErrorEmulatorUI extends AbstractTestUIWithLog {
         timeField.setWidth("5em");
         Label l3 = new Label("seconds");
 
-        responseCode.addValueChangeListener(e -> {
+        responseCode.addValueChangeListener(event -> {
             Integer code = (Integer) responseCode.getConvertedValue();
             response.code = code;
         });
 
-        timeField.addValueChangeListener(e -> {
+        timeField.addValueChangeListener(event -> {
             Integer time = (Integer) timeField.getConvertedValue();
             response.time = time;
         });

@@ -295,8 +295,8 @@ public class VNotification extends VOverlay {
             if (getStyleName()
                     .contains(VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                 AnimationUtil.addAnimationEndListener(getElement(),
-                        e -> {
-                            if (AnimationUtil.getAnimationName(e).contains(
+                        event -> {
+                            if (AnimationUtil.getAnimationName(event).contains(
                                     VOverlay.ADDITIONAL_CLASSNAME_ANIMATE_IN)) {
                                 VNotification.this.hide();
                             }

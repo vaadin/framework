@@ -25,10 +25,10 @@ public class TooltipForDisabledButton extends TestBase {
         buttonDisabled.setDescription("Tooltip for disabled");
 
         buttonDisabled.addClickListener(
-                e -> getMainWindow().showNotification("Clicked Disabled"));
+                event -> getMainWindow().showNotification("Clicked Disabled"));
 
         buttonEnabled.addClickListener(
-                e -> getMainWindow().showNotification("Clicked Enabled"));
+                event -> getMainWindow().showNotification("Clicked Enabled"));
 
         addComponent(buttonEnabled);
         addComponent(buttonDisabled);

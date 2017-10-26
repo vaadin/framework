@@ -40,7 +40,7 @@ public class WindowWaiAriaRoles extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Button closeButton = new Button("Close windows");
-        closeButton.addClickListener(e -> {
+        closeButton.addClickListener(event -> {
             while (!windows.isEmpty()) {
                 Window window = windows.pop();
                 removeWindow(window);
@@ -48,13 +48,13 @@ public class WindowWaiAriaRoles extends AbstractReindeerTestUI {
         });
 
         Button regularButton = new Button("Regular");
-        regularButton.addClickListener(e -> {
+        regularButton.addClickListener(event -> {
             Window regularWindow = new Window("Regular window");
             openWindow(regularWindow);
         });
 
         Button alertButton = new Button("Alert");
-        alertButton.addClickListener(e -> {
+        alertButton.addClickListener(event -> {
             Window alertWindow = new Window("Alert window");
             alertWindow.setAssistiveRole(WindowRole.ALERTDIALOG);
             openWindow(alertWindow);

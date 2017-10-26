@@ -44,7 +44,7 @@ public abstract class VAbstractDateFieldCalendar<PANEL extends VAbstractCalendar
 
             }
         });
-        calendarPanel.setFocusOutListener(e -> {
+        calendarPanel.setFocusOutListener(event -> {
             updateValueFromPanel();
             return false;
         });

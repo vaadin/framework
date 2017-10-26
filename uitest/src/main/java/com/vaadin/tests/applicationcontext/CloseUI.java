@@ -51,10 +51,10 @@ public class CloseUI extends AbstractTestUIWithLog {
             log("Same WrappedSession id? " + oldSessionId.equals(sessionId));
         }
 
-        addButton("Log 'hello'", e -> log("Hello"));
-        addButton("Close UI", e -> close());
+        addButton("Log 'hello'", event -> log("Hello"));
+        addButton("Close UI", event -> close());
 
-        addButton("Close UI (background)", e -> {
+        addButton("Close UI (background)", event -> {
             new UIRunSafelyThread(CloseUI.this) {
                 @Override
                 protected void runSafely() {
@@ -63,13 +63,13 @@ public class CloseUI extends AbstractTestUIWithLog {
             }.start();
         });
         addButton("Close UI and redirect to /statictestfiles/static.html",
-                e -> {
+                event -> {
                     getPage().setLocation("/statictestfiles/static.html");
                     close();
                 });
         addButton(
                 "Close UI and redirect to /statictestfiles/static.html (background)",
-                e -> {
+                event -> {
                     new UIRunSafelyThread(CloseUI.this) {
                         @Override
                         protected void runSafely() {

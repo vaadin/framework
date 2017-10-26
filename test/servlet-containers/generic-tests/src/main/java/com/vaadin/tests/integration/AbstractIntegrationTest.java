@@ -56,7 +56,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
         driver.get(url);
 
         if (!isElementPresent(UIElement.class)) {
-            waitUntil(e -> isElementPresent(UIElement.class), 10);
+            waitUntil(event -> isElementPresent(UIElement.class), 10);
         }
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
      * Returns the deployment context path with a leading slash. If not provided
      * through {@code deployment.context.path} system property, will default to
      * {@code /demo}.
-     * 
+     *
      * @return deployment context path
      */
     protected String getContextPath() {

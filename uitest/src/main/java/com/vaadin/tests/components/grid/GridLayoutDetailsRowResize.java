@@ -38,7 +38,7 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
         final Grid<Person> grid = createGrid();
         grid.setSizeFull();
 
-        addComponent(new Button("Toggle theme", e -> {
+        addComponent(new Button("Toggle theme", event -> {
             if (ValoTheme.THEME_NAME.equals(getUI().getTheme())) {
                 getUI().setTheme(Reindeer.THEME_NAME);
             } else {
@@ -72,7 +72,7 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
             detailsLayout.addComponent(lbl4);
 
             final Button button = new Button("Toggle visibility",
-                    e -> lbl4.setVisible(!lbl4.isVisible()));
+                    event -> lbl4.setVisible(!lbl4.isVisible()));
             button.setId("btn");
             detailsLayout.addComponent(button);
 
@@ -84,7 +84,7 @@ public class GridLayoutDetailsRowResize extends SimpleGridUI {
             grid.setDetailsVisible(person, !grid.isDetailsVisible(person));
         });
 
-        addComponent(new Button("Open details", e -> {
+        addComponent(new Button("Open details", event -> {
             for (Object itemId : ((ListDataProvider<?>) grid.getDataProvider())
                     .getItems()) {
                 if (itemId instanceof Person) {

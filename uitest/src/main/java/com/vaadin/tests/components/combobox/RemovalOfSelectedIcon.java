@@ -18,7 +18,7 @@ public class RemovalOfSelectedIcon extends TestBase {
         addComponent(cb2);
 
         Button btClear = new Button("Clear button");
-        btClear.addClickListener(e -> {
+        btClear.addClickListener(event -> {
             cb2.removeAllItems();
             cb2.setContainerDataSource(null);
         });

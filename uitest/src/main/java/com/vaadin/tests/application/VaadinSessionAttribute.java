@@ -31,7 +31,7 @@ public class VaadinSessionAttribute extends AbstractReindeerTestUI {
         getSession().setAttribute(Integer.class, Integer.valueOf(42 * 2));
 
         addComponent(
-                new Button("Show attribute values", e -> {
+                new Button("Show attribute values", event -> {
                     Notification notification = new Notification(
                             getSession().getAttribute(ATTR_NAME) + " & "
                                     + getSession().getAttribute(Integer.class));

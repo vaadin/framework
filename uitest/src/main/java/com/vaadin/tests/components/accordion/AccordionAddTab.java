@@ -40,7 +40,7 @@ public class AccordionAddTab extends AbstractReindeerTestUI {
         tabs.setHeight(500, Unit.PIXELS);
         Button remove = new Button("Remove 'First'");
         final Tab me = tabs.addTab(addTab("First"));
-        remove.addClickListener(e -> {
+        remove.addClickListener(event -> {
             tabs.removeTab(me);
             Tab tab = tabs.addTab(addTab("Next"));
             tabs.setSelectedTab(tab);

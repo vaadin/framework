@@ -57,10 +57,10 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private Registration dataChangeRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
-    private final ElementResizeListener detailsRowResizeListener = e -> {
-        if (elementToResizeCommand.containsKey(e.getElement())) {
+    private final ElementResizeListener detailsRowResizeListener = event -> {
+        if (elementToResizeCommand.containsKey(event.getElement())) {
             Scheduler.get().scheduleFinally(
-                    elementToResizeCommand.get(e.getElement()));
+                    elementToResizeCommand.get(event.getElement()));
         }
     };
 

@@ -36,14 +36,14 @@ public class ComboPushTiming extends TestBase {
 
         final ObjectProperty<String> log = new ObjectProperty<>("");
 
-        cb.addFocusListener(e -> {
+        cb.addFocusListener(event -> {
             log.setValue(
                     log.getValue() + "<br>" + counter + ": Focus event!");
             counter++;
             changeValue(cb);
         });
 
-        cb.addBlurListener(e -> {
+        cb.addBlurListener(event -> {
             log.setValue(log.getValue() + "<br>" + counter + ": Blur event!");
             counter++;
         });

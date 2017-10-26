@@ -29,7 +29,7 @@ public class InsertRowInMiddle extends AbstractReindeerTestUI {
         final GridLayout layout = new GridLayout(1, 2);
         layout.addComponent(new Label("some row"), 0, 0);
         Button newRowButton = new Button("Insert Row");
-        newRowButton.addClickListener(e -> {
+        newRowButton.addClickListener(event -> {
             layout.insertRow(1);
             layout.addComponent(new Label("some new row"), 0, 1);
         });

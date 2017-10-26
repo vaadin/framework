@@ -23,7 +23,7 @@ public class WebBrowserTimeZone extends AbstractReindeerTestUI {
                 "Browser to Europe/Helsinki offset difference");
         final Label containsLabel = addLabel("Browser could be in Helsinki");
 
-        addButton("Get TimeZone from browser", e -> {
+        addButton("Get TimeZone from browser", event -> {
             TimeZone hkiTZ = TimeZone.getTimeZone("Europe/Helsinki");
             int hkiOffset = hkiTZ.getOffset(new Date().getTime());
 

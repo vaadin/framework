@@ -23,7 +23,7 @@ public class AbsoluteLayoutCorrectPositioningOfHiddenField extends TestBase {
         abs.addComponent(l, "top:20px;left:20px");
 
         final Button action = new Button("Set visible");
-        action.addClickListener(e -> {
+        action.addClickListener(event -> {
             if (l.isVisible()) {
                 l.setValue("Top 70, Left 20");
                 ComponentPosition position = abs.getPosition(l);

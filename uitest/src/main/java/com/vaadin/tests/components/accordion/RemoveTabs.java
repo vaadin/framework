@@ -44,16 +44,16 @@ public class RemoveTabs extends TestBase {
         getLayout().addComponent(accordion);
 
         closeCurrent = new Button("Close current tab");
-        closeCurrent.addClickListener(e -> closeCurrentTab());
+        closeCurrent.addClickListener(event -> closeCurrentTab());
 
         closeFirst = new Button("close first tab");
-        closeFirst.addClickListener(e -> closeFirstTab());
+        closeFirst.addClickListener(event -> closeFirstTab());
 
         closeLast = new Button("close last tab");
-        closeLast.addClickListener(e -> closeLastTab());
+        closeLast.addClickListener(event -> closeLastTab());
 
         reorderTabs = new Button("reorder");
-        reorderTabs.addClickListener(e -> reorder());
+        reorderTabs.addClickListener(event -> reorder());
 
         getLayout().addComponent(closeFirst);
         getLayout().addComponent(closeLast);

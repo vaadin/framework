@@ -60,11 +60,12 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
 
         addComponents(new HorizontalLayout(update(0), update(1), update(2)));
         Button refresh10 = new Button("Refresh 0-9",
-                e -> grid.refreshRows(container.getItemIds(0, 9).toArray()));
+                event -> grid
+                        .refreshRows(container.getItemIds(0, 9).toArray()));
         refresh10.setId("refresh10");
         addComponents(new HorizontalLayout(refresh(0), refresh(1), refresh(2),
                 new Button("Refresh non-existant",
-                        e -> grid.refreshRows("foobar"))),
+                        event -> grid.refreshRows("foobar"))),
                 refresh10);
         addComponents(new HorizontalLayout(style(0), style(1), style(2)));
     }
@@ -78,7 +79,7 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
     }
 
     private Component update(final int i) {
-        Button button = new Button("Update " + i, e -> {
+        Button button = new Button("Update " + i, event -> {
             Person p = container.getIdByIndex(i);
             p.setFirstName("!" + p.getFirstName());
         });
@@ -88,7 +89,7 @@ public class GridRefreshRow extends AbstractTestUIWithLog {
 
     protected Component refresh(final int i) {
         Button button = new Button("Refresh row " + i,
-                e -> grid.refreshRows(container.getIdByIndex(i)));
+                event -> grid.refreshRows(container.getIdByIndex(i)));
         button.setId("refresh" + i);
         return button;
     }

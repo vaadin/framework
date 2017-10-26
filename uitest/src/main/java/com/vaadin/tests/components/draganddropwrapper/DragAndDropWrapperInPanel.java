@@ -29,7 +29,7 @@ public class DragAndDropWrapperInPanel extends TestBase {
     @Override
     protected void setup() {
 
-        addComponent(new Button("Click to resize", e -> {
+        addComponent(new Button("Click to resize", event -> {
             for (int i = 1; i < getLayout().getComponentCount(); ++i) {
                 Component c = getLayout().getComponent(i);
                 c.setWidth("400px");

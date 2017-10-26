@@ -14,15 +14,15 @@ public class ShortcutAddAndRemove extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         final Button logButton = new Button("Log a row (enter shortcut)");
         logButton.setClickShortcut(KeyCode.ENTER);
-        logButton.addClickListener(e -> log.log("Log button was clicked"));
+        logButton.addClickListener(event -> log.log("Log button was clicked"));
 
         final Button removeShortcut = new Button("Remove shortcut");
-        removeShortcut.addClickListener(e -> {
+        removeShortcut.addClickListener(event -> {
             logButton.removeClickShortcut();
             logButton.setCaption("Log a row (no shortcut)");
         });
         final Button addShortcut = new Button("Add shortcut");
-        addShortcut.addClickListener(e -> {
+        addShortcut.addClickListener(event -> {
             logButton.setClickShortcut(KeyCode.ENTER);
             logButton.setCaption("Log a row (enter shortcut)");
         });

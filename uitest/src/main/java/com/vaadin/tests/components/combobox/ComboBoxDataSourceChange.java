@@ -52,7 +52,7 @@ public class ComboBoxDataSourceChange extends TestBase {
         state.addComponent(t);
 
         Button b = new Button("Use ds1");
-        b.addClickListener(e -> {
+        b.addClickListener(event -> {
             cb2.setContainerDataSource(ds1);
             currentDS.setValue("ds1");
         });
@@ -64,7 +64,7 @@ public class ComboBoxDataSourceChange extends TestBase {
         state.addComponent(t);
 
         b = new Button("Use ds2");
-        b.addClickListener(e -> {
+        b.addClickListener(event -> {
             cb2.setContainerDataSource(ds2);
             currentDS.setValue("ds2");
         });
@@ -72,8 +72,8 @@ public class ComboBoxDataSourceChange extends TestBase {
 
         addComponent(hl);
 
-        cb2.addValueChangeListener(e -> currentValue
-                .setValue(String.valueOf(e.getProperty().getValue())));
+        cb2.addValueChangeListener(event -> currentValue
+                .setValue(String.valueOf(event.getProperty().getValue())));
     }
 
     @Override

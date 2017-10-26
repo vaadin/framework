@@ -22,8 +22,8 @@ public class ApplicationCloseTest extends TestBase {
 
         addComponent(applications);
         Label thisApp = new Label("This applications: " + this);
-        Button close = new Button("Close this", e -> {
-            LegacyWindow ui = (LegacyWindow) e.getButton().getUI();
+        Button close = new Button("Close this", event -> {
+            LegacyWindow ui = (LegacyWindow) event.getButton().getUI();
             ui.getApplication().close();
         });
 

@@ -70,7 +70,7 @@ public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
 
         mainLayout
                 .addComponent(new Button("Hide/show both middle Column and row",
-                        e -> {
+                        event -> {
                             for (int i = 0; i < ROWS; i++) {
                                 for (int j = 0; j < COLS; j++) {
                                     if (j == 2 || i == 2) {
@@ -84,7 +84,7 @@ public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
                             }
                         }));
         mainLayout.addComponent(new Button("Hide/show middle Column",
-                e -> {
+                event -> {
                     for (int i = 0; i < ROWS; i++) {
                         if (labels[i][2].isVisible()) {
                             labels[i][2].setVisible(false);
@@ -94,7 +94,7 @@ public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
                     }
                 }));
         mainLayout.addComponent(
-                new Button("Hide/show middle Row", e -> {
+                new Button("Hide/show middle Row", event -> {
                     for (int j = 0; j < COLS; j++) {
                         if (labels[2][j].isVisible()) {
                             labels[2][j].setVisible(false);
@@ -104,7 +104,7 @@ public class GridLayoutHideMiddleCells extends AbstractReindeerTestUI {
                     }
                 }));
         mainLayout.addComponent(
-                new Button("Hide Random button", e -> {
+                new Button("Hide Random button", event -> {
                     // TODO Auto-generated method stub
                     Random rand = new Random();
                     int i = rand.nextInt(ROWS);

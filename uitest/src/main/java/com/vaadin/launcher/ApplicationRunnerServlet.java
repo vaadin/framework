@@ -132,7 +132,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     protected void servletInitialized() throws ServletException {
         super.servletInitialized();
         getService().addSessionInitListener(
-                e -> onVaadinSessionStarted(e.getRequest(), e.getSession()));
+                event -> onVaadinSessionStarted(event.getRequest(), event.getSession()));
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,

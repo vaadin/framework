@@ -52,7 +52,7 @@ public class AccordionRemoveTab extends AbstractReindeerTestUI {
         last.setCaption("Three");
 
         addButton("Remove First",
-                e -> tabs.removeComponent(tabs.iterator().next()));
+                event -> tabs.removeComponent(tabs.iterator().next()));
     }
 
     @Override

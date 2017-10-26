@@ -22,7 +22,7 @@ public class ComboBoxSlowInFF extends TestBase {
         }
 
         Button fill = new Button("fill it");
-        fill.addClickListener(e -> {
+        fill.addClickListener(event -> {
             t.removeAllItems();
             for (int i = 0; i < 200; i++) {
                 Item item = t.addItem(i);

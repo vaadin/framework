@@ -42,7 +42,7 @@ public class PrimaryStyle extends AbstractReindeerTestUI {
         addComponent(tf);
 
         Button updateButton = new Button("Update styles",
-                e -> {
+                event -> {
                     label.setPrimaryStyleName("updated");
                     label.setStyleName("correctly");
 

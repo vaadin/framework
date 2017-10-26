@@ -50,7 +50,7 @@ public class WebkitScrollbarTest extends AbstractReindeerTestUI {
         gl.setMargin(true);
 
         final Button testButton = new Button("Open Window",
-                e -> UI.getCurrent().addWindow(testWindow));
+                event -> UI.getCurrent().addWindow(testWindow));
         uiLayout.addComponent(testButton);
     }
 

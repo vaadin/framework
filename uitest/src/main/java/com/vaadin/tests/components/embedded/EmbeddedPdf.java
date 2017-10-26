@@ -27,7 +27,8 @@ public class EmbeddedPdf extends TestBase {
         player.setSource(new ClassResource(getClass(), "test.pdf"));
         addComponent(player);
 
-        addComponent(new Button("Remove pdf", e -> removeComponent(player)));
+        addComponent(
+                new Button("Remove pdf", event -> removeComponent(player)));
 
         player.getUI().addWindow(new Window("Testwindow"));
     }

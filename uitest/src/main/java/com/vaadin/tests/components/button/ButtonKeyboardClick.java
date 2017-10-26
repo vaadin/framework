@@ -34,23 +34,23 @@ public class ButtonKeyboardClick extends AbstractReindeerTestUI {
             labels[i] = new Label();
         }
 
-        Button button = new Button("button", e -> {
-            Label label = new Label(String.valueOf(e.getClientX()));
+        Button button = new Button("button", event -> {
+            Label label = new Label(String.valueOf(event.getClientX()));
             label.addStyleName("x");
             getLayout().replaceComponent(labels[0], label);
             labels[0] = label;
 
-            label = new Label(String.valueOf(e.getClientY()));
+            label = new Label(String.valueOf(event.getClientY()));
             label.addStyleName("y");
             getLayout().replaceComponent(labels[1], label);
             labels[1] = label;
 
-            label = new Label(String.valueOf(e.getRelativeX()));
+            label = new Label(String.valueOf(event.getRelativeX()));
             label.addStyleName("xRelative");
             getLayout().replaceComponent(labels[2], label);
             labels[2] = label;
 
-            label = new Label(String.valueOf(e.getRelativeY()));
+            label = new Label(String.valueOf(event.getRelativeY()));
             label.addStyleName("yRelative");
             getLayout().replaceComponent(labels[3], label);
             labels[3] = label;

@@ -23,7 +23,7 @@ public class SessionExpiration extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         getSession().getSession().setMaxInactiveInterval(2);
-        addButton("Click to avoid expiration", e -> log("Clicked"));
+        addButton("Click to avoid expiration", event -> log("Clicked"));
     }
 
     @Override

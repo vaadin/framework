@@ -19,7 +19,8 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
         Button invisibleButton = new Button("Invisible button with shortcut");
         invisibleButton.setClickShortcut(KeyCode.A);
         invisibleButton
-                .addClickListener(e -> log("Click event for invisible button"));
+                .addClickListener(
+                        event -> log("Click event for invisible button"));
 
         invisibleButton.setVisible(false);
         addComponent(invisibleButton);
@@ -27,7 +28,8 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
         Button disabledButton = new Button("Disabled button with shortcut");
         disabledButton.setClickShortcut(KeyCode.B);
         disabledButton
-                .addClickListener(e -> log("Click event for disabled button"));
+                .addClickListener(
+                        event -> log("Click event for disabled button"));
 
         disabledButton.setEnabled(false);
         addComponent(disabledButton);
@@ -35,7 +37,8 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
         Button enabledButton = new Button("Enabled button with shortcut");
         enabledButton.setClickShortcut(KeyCode.C);
         enabledButton
-                .addClickListener(e -> log("Click event for enabled button"));
+                .addClickListener(
+                        event -> log("Click event for enabled button"));
 
         addComponent(enabledButton);
     }

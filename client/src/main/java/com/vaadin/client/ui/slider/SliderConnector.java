@@ -34,7 +34,7 @@ public class SliderConnector extends AbstractFieldConnector
     protected SliderServerRpc rpc = RpcProxy.create(SliderServerRpc.class,
             this);
 
-    private final ElementResizeListener resizeListener = e -> getWidget()
+    private final ElementResizeListener resizeListener = event -> getWidget()
             .iLayout();
 
     @Override

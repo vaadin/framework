@@ -42,11 +42,12 @@ public class LayoutAfterHidingError extends AbstractReindeerTestUI {
         gl.addComponent(df);
 
         Button err = new Button("Set error");
-        err.addClickListener(e -> df.setComponentError(new UserError("foo")));
+        err.addClickListener(
+                event -> df.setComponentError(new UserError("foo")));
         gl.addComponent(err);
 
         err = new Button("Clear error");
-        err.addClickListener(e -> df.setComponentError(null));
+        err.addClickListener(event -> df.setComponentError(null));
         gl.addComponent(err);
     }
 

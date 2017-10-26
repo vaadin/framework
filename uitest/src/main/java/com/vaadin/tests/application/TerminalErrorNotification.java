@@ -25,7 +25,7 @@ public class TerminalErrorNotification extends TestBase {
     @Override
     protected void setup() {
         Button button = new Button("Throw exception",
-                e -> {
+                event -> {
                     throw new RuntimeException("You asked for it");
                 });
 

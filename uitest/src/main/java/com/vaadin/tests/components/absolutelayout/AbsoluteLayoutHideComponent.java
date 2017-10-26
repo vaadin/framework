@@ -70,7 +70,7 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         btnLogin.setCaption("Login");
         btnLogin.setWidth("-1px");
         btnLogin.setHeight("-1px");
-        btnLogin.addClickListener(e -> login());
+        btnLogin.addClickListener(event -> login());
         layoutLogin.addComponent(btnLogin);
 
         for (int index = 0; index < layoutLogin.getComponentCount(); index++) {
@@ -104,17 +104,17 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         GridLayout gridButtons = new GridLayout(2, 3);
 
         Button btn1 = new Button("Button one");
-        btn1.addClickListener(e -> {
+        btn1.addClickListener(event -> {
         });
         gridButtons.addComponent(btn1, 0, 0);
 
         Button btn2 = new Button("Button two");
-        btn2.addClickListener(e -> {
+        btn2.addClickListener(event -> {
         });
         gridButtons.addComponent(btn2, 0, 1);
 
         Button btn3 = new Button("Button three");
-        btn3.addClickListener(e -> {
+        btn3.addClickListener(event -> {
         });
         gridButtons.addComponent(btn3, 1, 0);
 

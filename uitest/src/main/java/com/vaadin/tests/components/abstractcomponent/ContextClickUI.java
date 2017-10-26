@@ -24,12 +24,12 @@ public class ContextClickUI extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final ContextClickListener listener = e -> log(
-                "Received context click at (" + e.getClientX() + ", "
-                        + e.getClientY() + ")");
+        final ContextClickListener listener = event -> log(
+                "Received context click at (" + event.getClientX() + ", "
+                        + event.getClientY() + ")");
         getUI().addContextClickListener(listener);
 
         addComponent(new Button("Remove listener",
-                e -> getUI().removeContextClickListener(listener)));
+                event -> getUI().removeContextClickListener(listener)));
     }
 }

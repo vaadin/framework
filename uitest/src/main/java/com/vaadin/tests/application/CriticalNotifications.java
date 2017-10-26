@@ -41,14 +41,14 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
 
         Button sessionExpired = new Button("Session expired");
         addComponent(sessionExpired);
-        sessionExpired.addClickListener(e ->
+        sessionExpired.addClickListener(event ->
             showCriticalNotification(systemMessages.getSessionExpiredCaption(),
                 systemMessages.getSessionExpiredMessage(), getDetailsMessage(),
                 systemMessages.getSessionExpiredURL()));
 
         Button authenticationError = new Button("Authentication error");
         addComponent(authenticationError);
-        authenticationError.addClickListener(e ->
+        authenticationError.addClickListener(event ->
             showCriticalNotification(systemMessages.getAuthenticationErrorCaption(),
                 systemMessages.getAuthenticationErrorMessage(),
                 getDetailsMessage(),
@@ -56,7 +56,7 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
 
         Button communicationError = new Button("Communication error");
         addComponent(communicationError);
-        communicationError.addClickListener(e ->
+        communicationError.addClickListener(event ->
             showCriticalNotification(systemMessages.getCommunicationErrorCaption(),
                 systemMessages.getCommunicationErrorMessage(),
                 getDetailsMessage(),
@@ -64,20 +64,21 @@ public class CriticalNotifications extends AbstractReindeerTestUI {
 
         Button internalError = new Button("Internal error");
         addComponent(internalError);
-        internalError.addClickListener(e ->
+        internalError.addClickListener(event ->
             showCriticalNotification(systemMessages.getInternalErrorCaption(),
                 systemMessages.getInternalErrorMessage(), getDetailsMessage(),
                 systemMessages.getInternalErrorURL()));
 
         Button cookiesDisabled = new Button("Cookies disabled");
         addComponent(cookiesDisabled);
-        cookiesDisabled.addClickListener(e -> showCriticalNotification(
+        cookiesDisabled.addClickListener(event -> showCriticalNotification(
                 systemMessages.getCookiesDisabledCaption(),
                 systemMessages.getCookiesDisabledMessage(), getDetailsMessage(),
                 systemMessages.getCookiesDisabledURL()));
         Button custom = new Button("Custom");
         addComponent(custom);
-        custom.addClickListener(e ->
+        custom.addClickListener(
+                event ->
                 showCriticalNotification("Custom caption", "Custom message",
                 "Custom details", "custom url"));
     }

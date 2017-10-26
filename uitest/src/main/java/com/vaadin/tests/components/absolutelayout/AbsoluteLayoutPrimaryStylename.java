@@ -23,7 +23,8 @@ public class AbsoluteLayoutPrimaryStylename extends TestBase {
         addComponent(layout);
 
         addComponent(new Button("Change primary stylename",
-                e -> layout.setPrimaryStyleName("my-second-absolute-layout")));
+                event -> layout
+                        .setPrimaryStyleName("my-second-absolute-layout")));
     }
 
     @Override

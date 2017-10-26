@@ -139,8 +139,8 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         calendar = calendarPanel;
         calendar.setParentField(this);
-        calendar.setFocusOutListener(e -> {
-            e.preventDefault();
+        calendar.setFocusOutListener(event -> {
+            event.preventDefault();
             closeCalendarPanel();
             return true;
         });

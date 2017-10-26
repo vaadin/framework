@@ -57,6 +57,7 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     @Parameter(1)
     public String path;
 
+    @Override
     @Before
     public void setup() throws Exception {
         Assume.assumeTrue(
@@ -79,7 +80,7 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     public void basicPush() {
         assertEquals(0, getServerCounter());
         getServerCounterStartButton().click();
-        waitUntil(e -> getServerCounter() > 1, 10);
+        waitUntil(event -> getServerCounter() > 1, 10);
     }
 
     @Override

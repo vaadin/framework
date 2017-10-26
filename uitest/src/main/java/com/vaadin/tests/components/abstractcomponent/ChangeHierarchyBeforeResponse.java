@@ -47,7 +47,7 @@ public class ChangeHierarchyBeforeResponse extends AbstractReindeerTestUI {
     };
 
     private Button buttonToAdd = new Button("Added from beforeClientResponse",
-            e -> layout.addComponent(labelToRemove)) {
+            event -> layout.addComponent(labelToRemove)) {
         @Override
         public void beforeClientResponse(boolean initial) {
             super.beforeClientResponse(initial);

@@ -24,7 +24,7 @@ public class Html5DropDenied extends AbstractTestUIWithLog {
         Button neverButton = new Button("Never accepts drop");
         neverButton.setId("never");
         neverButton.addClickListener(
-                e -> log("click on " + e.getButton().getCaption()));
+                event -> log("click on " + event.getButton().getCaption()));
 
         DragAndDropWrapper neverAccept = new DragAndDropWrapper(neverButton);
         neverAccept.setSizeFull();
@@ -44,7 +44,7 @@ public class Html5DropDenied extends AbstractTestUIWithLog {
         Button alwaysButton = new Button("always accepts drop");
         alwaysButton.setId("always");
         alwaysButton.addClickListener(
-                e -> log("click on " + e.getButton().getCaption()));
+                event -> log("click on " + event.getButton().getCaption()));
 
         DragAndDropWrapper alwaysAccept = new DragAndDropWrapper(alwaysButton);
         alwaysAccept.setSizeFull();

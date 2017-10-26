@@ -45,7 +45,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
                 .sort(new Object[] { CAPTION }, new boolean[] { true });
         cb.setImmediate(true);
         cb.addValueChangeListener(
-                e -> updateLocale((Locale) localeSelect.getValue()));
+                event -> updateLocale((Locale) localeSelect.getValue()));
         return cb;
     }
 

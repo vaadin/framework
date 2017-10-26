@@ -30,7 +30,7 @@ public class AbstractFieldDataSourceReadOnly extends TestBase {
 
         // Button
         Button button = new Button("Make data source read-only");
-        button.addListener(e -> stateHolder.buttonClicked());
+        button.addListener(event -> stateHolder.buttonClicked());
 
         // Input field
         TextField input = new TextField("Field");

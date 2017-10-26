@@ -32,7 +32,7 @@ public class ButtonEnterWithWindowShortcut extends TestBase {
         });
 
         Button button = new Button("Focus me and press enter",
-                e -> log.log("button click listener fired"));
+                event -> log.log("button click listener fired"));
         button.focus();
 
         addComponent(log);

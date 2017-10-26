@@ -69,13 +69,13 @@ public class FormLayoutConnector extends AbstractLayoutConnector
 
     private Map<ComponentConnector, String> oldMaxWidths = null;
 
-    private static final ElementResizeListener dummyFirstCellResizeListener = e -> {
+    private static final ElementResizeListener dummyFirstCellResizeListener = event -> {
         // Ignore event, listener added just to make measurements available
     };
 
     // Detects situations when there's something inside the FormLayout that
     // prevents it from shrinking
-    private ElementResizeListener resizeListener = e -> {
+    private ElementResizeListener resizeListener = event -> {
         LayoutManager layoutManager = getLayoutManager();
         double tableWidth = layoutManager
                 .getOuterWidthDouble(getWidget().table.getElement());

@@ -21,7 +21,7 @@ public class ComboBoxResetValue extends AbstractReindeerTestUI {
         final ComboBox cbNullSelectionNotAllowed = getComboBoxWithNullSelectionNotAllowed();
 
         Button b = new Button("Reset");
-        b.addClickListener(e -> {
+        b.addClickListener(event -> {
             cbNullSelectionAllowedWithSetNullSelectionItemId.setValue(null);
             cbNullSelectionAllowedWithoutNullSelectionItemId.setValue(null);
             cbNullSelectionNotAllowed.setValue(null);

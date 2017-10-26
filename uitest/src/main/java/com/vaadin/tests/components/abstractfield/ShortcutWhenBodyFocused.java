@@ -23,7 +23,7 @@ import com.vaadin.ui.Button;
 public class ShortcutWhenBodyFocused extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
-        Button b = new Button("Hello", e -> log("Hello clicked"));
+        Button b = new Button("Hello", event -> log("Hello clicked"));
         b.setClickShortcut(KeyCode.A);
         addComponent(b);
 

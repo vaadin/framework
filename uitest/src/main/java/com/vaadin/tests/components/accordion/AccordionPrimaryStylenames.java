@@ -17,7 +17,8 @@ public class AccordionPrimaryStylenames extends TestBase {
 
         addComponent(
                 new Button("Set primary stylename",
-                        e -> acc.setPrimaryStyleName("my-second-accordion")));
+                        event -> acc
+                                .setPrimaryStyleName("my-second-accordion")));
     }
 
     @Override
