@@ -34,7 +34,6 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
@@ -43,7 +42,8 @@ import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
 import com.vaadin.v7.shared.ui.datefield.Resolution;
 
-public class VTextualDate extends VDateField implements Field, ChangeHandler,
+public class VTextualDate extends VDateField
+        implements ChangeHandler,
         Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, KeyDownHandler {
 

@@ -15,15 +15,13 @@
  */
 package com.vaadin.shared.data.sort;
 
-import java.io.Serializable;
-
 /**
  * Describes sorting direction.
  *
  * @since 7.4
  * @author Vaadin Ltd
  */
-public enum SortDirection implements Serializable {
+public enum SortDirection {
 
     /**
      * Ascending (e.g. A-Z, 1..9) sort order

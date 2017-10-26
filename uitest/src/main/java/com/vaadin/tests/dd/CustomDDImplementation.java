@@ -9,7 +9,6 @@ import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Layout;
@@ -78,7 +77,7 @@ public class CustomDDImplementation extends CustomComponent {
      * operations that are controlled via server side api.
      *
      */
-    public class MyDragSource extends AbstractComponent implements Component {
+    public class MyDragSource extends AbstractComponent {
 
     }
 

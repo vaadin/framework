@@ -26,7 +26,6 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -76,8 +75,7 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
      * A ListBox which catches double clicks.
      *
      */
-    public class DoubleClickListBox extends ListBox
-            implements HasDoubleClickHandlers {
+    public class DoubleClickListBox extends ListBox {
         public DoubleClickListBox(boolean isMultipleSelect) {
             super(isMultipleSelect);
         }
