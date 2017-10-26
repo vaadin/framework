@@ -40,6 +40,9 @@ public class MenuBarNavigation extends AbstractTestUIWithLog
         edit.addItem("Cut", this);
         edit.addItem("Paste", this);
         mb.addItem("Help", this);
+        MenuItem disabled = mb.addItem("Disabled", this);
+        disabled.setEnabled(false);
+        disabled.addItem("Can't reach", this);
 
         addComponent(mb);
     }
