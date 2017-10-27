@@ -46,7 +46,7 @@ public class OptionGroupDeclarativeTest
         og.addItems("foo", "bar", "baz", "bang");
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
@@ -66,7 +66,7 @@ public class OptionGroupDeclarativeTest
         og.setItemEnabled("baz", false);
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
@@ -86,7 +86,7 @@ public class OptionGroupDeclarativeTest
         og.setItemIcon("bar", new ThemeResource("foobar.png"));
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option icon='theme://foobar.png'>bar</option>"
@@ -110,7 +110,7 @@ public class OptionGroupDeclarativeTest
         og.setItemCaption("bar", "<font color='red'>False</font>");
 
         //@formatter:off
-        String expected = 
+        String expected =
                 "<vaadin7-option-group html-content-allowed>"
                 + "<option item-id=\"foo\"><b>True</b></option>"
                 + "<option item-id=\"bar\"><font color='red'>False</font></option>"

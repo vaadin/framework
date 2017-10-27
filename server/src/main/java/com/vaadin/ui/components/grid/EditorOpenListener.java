@@ -21,10 +21,10 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event listener for a {@link Grid} editor save events.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.1
- * 
+ *
  * @param <T>
  *            the bean type
  *
@@ -36,7 +36,7 @@ public interface EditorOpenListener<T> extends Serializable {
 
     /**
      * Called when the editor is opened.
-     * 
+     *
      * @param event
      *            open event
      */

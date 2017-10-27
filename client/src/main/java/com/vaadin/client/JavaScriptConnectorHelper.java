@@ -30,7 +30,6 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.ServerRpcQueue;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -254,13 +253,8 @@ public class JavaScriptConnectorHelper {
         if (listener == null) {
             LayoutManager layoutManager = LayoutManager
                     .get(connector.getConnection());
-            listener = new ElementResizeListener() {
-                @Override
-                public void onElementResize(ElementResizeEvent e) {
-                    invokeElementResizeCallback(e.getElement(),
-                            callbackFunction);
-                }
-            };
+            listener = event -> invokeElementResizeCallback(event.getElement(),
+                    callbackFunction);
             layoutManager.addElementResizeListener(element, listener);
             elementListeners.put(callbackFunction, listener);
         }

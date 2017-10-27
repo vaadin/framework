@@ -111,8 +111,8 @@ public final class VDebugWindow extends VOverlay {
     protected int fontSize = 1; // 0-2
 
     // Timers since application start, and last timer reset
-    private static final Duration start = new Duration();
-    private static Duration lastReset = start;
+    private static final Duration START = new Duration();
+    private static Duration lastReset = START;
 
     // outer panel
     protected FlowPanel window = new FlowPanel();
@@ -624,7 +624,7 @@ public final class VDebugWindow extends VOverlay {
      * @return
      */
     static int getMillisSinceStart() {
-        return start.elapsedMillis();
+        return START.elapsedMillis();
     }
 
     /**

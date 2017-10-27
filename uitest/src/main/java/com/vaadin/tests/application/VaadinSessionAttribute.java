@@ -19,7 +19,6 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 
 public class VaadinSessionAttribute extends AbstractReindeerTestUI {
@@ -32,16 +31,12 @@ public class VaadinSessionAttribute extends AbstractReindeerTestUI {
         getSession().setAttribute(Integer.class, Integer.valueOf(42 * 2));
 
         addComponent(
-                new Button("Show attribute values", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Notification notification = new Notification(
-                                getSession().getAttribute(ATTR_NAME) + " & "
-                                        + getSession()
-                                                .getAttribute(Integer.class));
-                        notification.setDelayMsec(Notification.DELAY_FOREVER);
-                        notification.show(getPage());
-                    }
+                new Button("Show attribute values", event -> {
+                    Notification notification = new Notification(
+                            getSession().getAttribute(ATTR_NAME) + " & "
+                                    + getSession().getAttribute(Integer.class));
+                    notification.setDelayMsec(Notification.DELAY_FOREVER);
+                    notification.show(getPage());
                 }));
     }
 
