@@ -236,7 +236,7 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         Select select = new Select(
                 getListSelect().findElement(By.tagName("select")));
         return select.getAllSelectedOptions().stream()
-                .map(event -> event.getText())
+                .map(element -> element.getText())
                 .collect(Collectors.toList());
     }
 

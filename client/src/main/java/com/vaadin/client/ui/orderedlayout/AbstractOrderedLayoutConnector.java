@@ -73,25 +73,22 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            // Child state has changed, update stuff it hasn't already been done
-            updateInternalState();
+    private StateChangeHandler childStateChangeHandler = event -> {
+        // Child state has changed, update stuff it hasn't already been done
+        updateInternalState();
 
-            /*
-             * Some changes must always be done after each child's own state
-             * change handler has been run because it might have changed some
-             * styles that are overridden here.
-             */
-            ServerConnector child = stateChangeEvent.getConnector();
-            if (child instanceof ComponentConnector) {
-                ComponentConnector component = (ComponentConnector) child;
-                Slot slot = getWidget().getSlot(component.getWidget());
+        /*
+         * Some changes must always be done after each child's own state change
+         * handler has been run because it might have changed some styles that
+         * are overridden here.
+         */
+        ServerConnector child = event.getConnector();
+        if (child instanceof ComponentConnector) {
+            ComponentConnector component = (ComponentConnector) child;
+            Slot slot = getWidget().getSlot(component.getWidget());
 
-                slot.setRelativeWidth(component.isRelativeWidth());
-                slot.setRelativeHeight(component.isRelativeHeight());
-            }
+            slot.setRelativeWidth(component.isRelativeWidth());
+            slot.setRelativeHeight(component.isRelativeHeight());
         }
     };
 

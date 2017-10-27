@@ -16,12 +16,9 @@
 package com.vaadin.client.debug.internal;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -132,50 +129,29 @@ public class HierarchySection implements Section {
     public HierarchySection() {
         controls.add(showHierarchy);
         showHierarchy.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        showHierarchy.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                showHierarchy();
-            }
-        });
+        showHierarchy.addClickHandler(event -> showHierarchy());
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        find.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleFind(inspectComponent);
-            }
-        });
+        find.addClickHandler(event -> toggleFind(inspectComponent));
 
         controls.add(analyze);
         analyze.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        analyze.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                stopFind();
-                analyzeLayouts();
-            }
+        analyze.addClickHandler(event -> {
+            stopFind();
+            analyzeLayouts();
         });
 
         controls.add(generateWS);
         generateWS.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        generateWS.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                generateWidgetset();
-            }
-        });
+        generateWS.addClickHandler(event -> generateWidgetset());
 
         controls.add(generateDesign);
         generateDesign.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        generateDesign.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                content.setWidget(new HTML(
-                        "Select a layout or component to generate the declarative design"));
-                toggleFind(showComponentDesign);
-            }
+        generateDesign.addClickHandler(event -> {
+            content.setWidget(new HTML(
+                    "Select a layout or component to generate the declarative design"));
+            toggleFind(showComponentDesign);
         });
 
         hierarchyPanel.addListener(
@@ -321,76 +297,70 @@ public class HierarchySection implements Section {
         content.setWidget(infoPanel);
     }
 
-    private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
+    private final NativePreviewHandler highlightModeHandler = event -> {
+        if (event.getTypeInt() == Event.ONKEYDOWN
+                && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            stopFind();
+            Highlight.hideAll();
+            return;
+        }
+        if (event.getTypeInt() == Event.ONMOUSEMOVE) {
+            Highlight.hideAll();
+            Element eventTarget = WidgetUtil.getElementFromPoint(
+                    event.getNativeEvent().getClientX(),
+                    event.getNativeEvent().getClientY());
 
-        @Override
-        public void onPreviewNativeEvent(NativePreviewEvent event) {
-
-            if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent()
-                    .getKeyCode() == KeyCodes.KEY_ESCAPE) {
-                stopFind();
-                Highlight.hideAll();
+            if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
+                // Do not prevent using debug window controls
+                infoPanel.clear();
                 return;
             }
-            if (event.getTypeInt() == Event.ONMOUSEMOVE) {
-                Highlight.hideAll();
-                Element eventTarget = WidgetUtil.getElementFromPoint(
-                        event.getNativeEvent().getClientX(),
-                        event.getNativeEvent().getClientY());
 
-                if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
-                    // Do not prevent using debug window controls
-                    infoPanel.clear();
+            for (ApplicationConnection a : ApplicationConfiguration
+                    .getRunningApplications()) {
+                ComponentConnector connector = Util.getConnectorForElement(a,
+                        a.getUIConnector().getWidget(), eventTarget);
+                if (connector == null) {
+                    connector = Util.getConnectorForElement(a, RootPanel.get(),
+                            eventTarget);
+                }
+                if (connector != null) {
+                    activeFindHandler.onHover(connector);
+                    event.cancel();
+                    event.consume();
+                    event.getNativeEvent().stopPropagation();
                     return;
                 }
-
-                for (ApplicationConnection a : ApplicationConfiguration
-                        .getRunningApplications()) {
-                    ComponentConnector connector = Util.getConnectorForElement(
-                            a, a.getUIConnector().getWidget(), eventTarget);
-                    if (connector == null) {
-                        connector = Util.getConnectorForElement(a,
-                                RootPanel.get(), eventTarget);
-                    }
-                    if (connector != null) {
-                        activeFindHandler.onHover(connector);
-                        event.cancel();
-                        event.consume();
-                        event.getNativeEvent().stopPropagation();
-                        return;
-                    }
-                }
-                // Not over any connector
-                activeFindHandler.onHover(null);
             }
-            if (event.getTypeInt() == Event.ONCLICK) {
-                Highlight.hideAll();
-                event.cancel();
-                event.consume();
-                event.getNativeEvent().stopPropagation();
-                Element eventTarget = WidgetUtil.getElementFromPoint(
-                        event.getNativeEvent().getClientX(),
-                        event.getNativeEvent().getClientY());
-                for (ApplicationConnection a : ApplicationConfiguration
-                        .getRunningApplications()) {
-                    ComponentConnector connector = Util.getConnectorForElement(
-                            a, a.getUIConnector().getWidget(), eventTarget);
-                    if (connector == null) {
-                        connector = Util.getConnectorForElement(a,
-                                RootPanel.get(), eventTarget);
-                    }
-
-                    if (connector != null) {
-                        activeFindHandler.onSelected(connector);
-                        return;
-                    }
-                }
-                // Click on something else -> stop find operation
-                stopFind();
-            }
-            event.cancel();
+            // Not over any connector
+            activeFindHandler.onHover(null);
         }
+        if (event.getTypeInt() == Event.ONCLICK) {
+            Highlight.hideAll();
+            event.cancel();
+            event.consume();
+            event.getNativeEvent().stopPropagation();
+            Element eventTarget = WidgetUtil.getElementFromPoint(
+                    event.getNativeEvent().getClientX(),
+                    event.getNativeEvent().getClientY());
+            for (ApplicationConnection a : ApplicationConfiguration
+                    .getRunningApplications()) {
+                ComponentConnector connector = Util.getConnectorForElement(a,
+                        a.getUIConnector().getWidget(), eventTarget);
+                if (connector == null) {
+                    connector = Util.getConnectorForElement(a, RootPanel.get(),
+                            eventTarget);
+                }
 
+                if (connector != null) {
+                    activeFindHandler.onSelected(connector);
+                    return;
+                }
+            }
+            // Click on something else -> stop find operation
+            stopFind();
+        }
+        event.cancel();
     };
 
 }

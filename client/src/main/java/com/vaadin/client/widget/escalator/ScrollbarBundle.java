@@ -435,12 +435,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
             }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
-                    new ScrollHandler() {
-                        @Override
-                        public void onScroll(ScrollEvent event) {
-                            setOffsetSizeNow(px);
-                        }
-                    });
+                    event -> setOffsetSizeNow(px));
             setScrollPos(0);
         } else {
             setOffsetSizeNow(px);
@@ -523,12 +518,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
             if (scrollInProgress == null) {
                 // Only used for tracking that there is "workPending"
-                scrollInProgress = addScrollHandler(new ScrollHandler() {
-                    @Override
-                    public void onScroll(ScrollEvent event) {
-                        scrollInProgress.removeHandler();
-                        scrollInProgress = null;
-                    }
+                scrollInProgress = addScrollHandler(event -> {
+                    scrollInProgress.removeHandler();
+                    scrollInProgress = null;
                 });
             }
             if (isInvisibleScrollbar) {
@@ -662,12 +654,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                     scrollSizeTemporaryScrollHandler.removeHandler();
                 }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
-                        new ScrollHandler() {
-                            @Override
-                            public void onScroll(ScrollEvent event) {
-                                setScrollSizeNow(px);
-                            }
-                        });
+                        event -> setScrollSizeNow(px));
             }
             setScrollPos(0);
             if (!delayedSizeSet) {
