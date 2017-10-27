@@ -707,7 +707,7 @@ public class ApplicationConfiguration implements EntryPoint {
         PointerEventSupport.init();
 
         if (LogConfiguration.loggingIsEnabled()) {
-            GWT.setUncaughtExceptionHandler(event -> {
+            GWT.setUncaughtExceptionHandler(throwable -> {
 
                 /*
                  * If the debug window is not enabled (?debug), this will not
@@ -715,7 +715,8 @@ public class ApplicationConfiguration implements EntryPoint {
                  * errors helps nobody, especially end user. It does not work
                  * tells just as much.
                  */
-                getLogger().log(Level.SEVERE, event.getMessage(), event);
+                getLogger().log(Level.SEVERE, throwable.getMessage(),
+                        throwable);
             });
 
             if (isProductionMode()) {

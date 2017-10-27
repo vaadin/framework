@@ -362,7 +362,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
         Set<String> movedItems = moveSelectedItems(optionsListBox,
                 selectionsListBox);
         selectionChangeListeners
-                .forEach(event -> event.accept(movedItems,
+                .forEach(listener -> listener.accept(movedItems,
                         Collections.emptySet()));
     }
 
@@ -370,7 +370,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
         Set<String> movedItems = moveSelectedItems(selectionsListBox,
                 optionsListBox);
         selectionChangeListeners
-                .forEach(event -> event.accept(Collections.emptySet(),
+                .forEach(listener -> listener.accept(Collections.emptySet(),
                         movedItems));
     }
 

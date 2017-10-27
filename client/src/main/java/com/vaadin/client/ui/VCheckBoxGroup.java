@@ -106,9 +106,9 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
      */
     public JsonObject getItem(Element element) {
         return optionsToItems.entrySet().stream()
-                .filter(event -> event.getKey().getElement()
+                .filter(entry -> entry.getKey().getElement()
                         .isOrHasChild(element))
-                .map(event -> event.getValue()).findFirst().orElse(null);
+                .map(entry -> entry.getValue()).findFirst().orElse(null);
     }
 
     private void remove(Widget widget) {

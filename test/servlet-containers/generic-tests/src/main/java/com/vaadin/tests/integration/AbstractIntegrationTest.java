@@ -56,7 +56,7 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
         driver.get(url);
 
         if (!isElementPresent(UIElement.class)) {
-            waitUntil(event -> isElementPresent(UIElement.class), 10);
+            waitUntil(e -> isElementPresent(UIElement.class), 10);
         }
     }
 

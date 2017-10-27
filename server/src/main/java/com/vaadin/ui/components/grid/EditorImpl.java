@@ -102,14 +102,14 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
     private EditorErrorGenerator<T> errorGenerator = (fieldToColumn,
             status) -> {
         String message = status.getFieldValidationErrors().stream()
-                .filter(event -> event.getMessage().isPresent()
-                        && fieldToColumn.containsKey(event.getField()))
-                .map(event -> fieldToColumn.get(event.getField()).getCaption()
-                        + ": " + event.getMessage().get())
+                .filter(e -> e.getMessage().isPresent()
+                        && fieldToColumn.containsKey(e.getField()))
+                .map(e -> fieldToColumn.get(e.getField()).getCaption() + ": "
+                        + e.getMessage().get())
                 .collect(Collectors.joining("; "));
 
         String beanMessage = status.getBeanValidationErrors().stream()
-                .map(event -> event.getErrorMessage())
+                .map(e -> e.getErrorMessage())
                 .collect(Collectors.joining("; "));
 
         message = Stream.of(message, beanMessage).filter(s -> !s.isEmpty())
