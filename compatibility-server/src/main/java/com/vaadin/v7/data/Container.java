@@ -1092,7 +1092,7 @@ public interface Container extends Serializable {
      * </p>
      */
     @Deprecated
-    public interface Editor extends Container.Viewer, Serializable {
+    public interface Editor extends Container.Viewer {
 
     }
 

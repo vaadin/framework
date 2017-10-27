@@ -67,7 +67,7 @@ import com.vaadin.shared.ui.notification.NotificationState;
  * </p>
  *
  */
-public class Notification extends AbstractExtension implements Serializable {
+public class Notification extends AbstractExtension {
 
     /**
      * The server RPC.
@@ -522,7 +522,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * CloseListener to a Notification and
      * {@link CloseListener#notificationClose(CloseEvent)} will be called
      * whenever the Notification is closed.
-     * 
+     *
      * @since 8.2
      */
     @FunctionalInterface

@@ -121,7 +121,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer
-        implements Action.Container, Action.Notifier, PollNotifier,
+        implements Action.Notifier, PollNotifier,
         LegacyComponent, Focusable {
 
     /**
@@ -795,7 +795,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the part of path (from browser's URL) that points to this UI,
      *         without possible view identifiers or path parameters
-     * 
+     *
      * @since 8.2
      */
     public String getUiRootPath() {
@@ -819,7 +819,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the path info part of the request; {@code null} if no request
      *         from client has been processed
-     * 
+     *
      * @since 8.2
      */
     public String getUiPathInfo() {

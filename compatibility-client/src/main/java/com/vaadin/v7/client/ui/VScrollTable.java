@@ -74,7 +74,6 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -142,7 +141,7 @@ import com.vaadin.v7.shared.ui.table.TableConstants;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel
-        implements HasWidgets, ScrollHandler, VHasDropHandler, FocusHandler,
+        implements ScrollHandler, VHasDropHandler, FocusHandler,
         BlurHandler, Focusable, ActionOwner, SubPartAware, DeferredWorker {
 
     /**

@@ -58,7 +58,6 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HasChildMeasurementHint;
-import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UniqueSerializable;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -108,8 +107,8 @@ import com.vaadin.v7.shared.ui.table.TableState;
 @Deprecated
 @SuppressWarnings({ "deprecation" })
 public class Table extends AbstractSelect implements Action.Container,
-        Container.Ordered, Container.Sortable, ItemClickNotifier, DragSource,
-        DropTarget, HasComponents, HasChildMeasurementHint {
+        Container.Sortable, ItemClickNotifier, DragSource, DropTarget,
+        HasChildMeasurementHint {
 
     private transient Logger logger = null;
 
