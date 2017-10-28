@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.client.connectors;
 
-import java.util.logging.Logger;
-
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.data.DataSource.RowHandle;
@@ -31,8 +29,9 @@ import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelServerRpc;
 import com.vaadin.v7.shared.ui.grid.selection.SingleSelectionModelState;
 import com.vaadin.v7.ui.Grid.SingleSelectionModel;
-
 import elemental.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Connector for server-side {@link SingleSelectionModel}.
@@ -85,7 +84,7 @@ public class SingleSelectionModelConnector extends
             ((HasUserSelectionAllowed) selectionModel)
                     .setUserSelectionAllowed(getState().userSelectionAllowed);
         } else {
-            getLogger().warning("userSelectionAllowed set to "
+            getLogger().warn("userSelectionAllowed set to "
                     + getState().userSelectionAllowed
                     + " but the selection model does not implement "
                     + HasUserSelectionAllowed.class.getSimpleName());
@@ -93,7 +92,7 @@ public class SingleSelectionModelConnector extends
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(SingleSelectionModelConnector.class.getName());
+        return LoggerFactory.getLogger(SingleSelectionModelConnector.class);
     }
 
     /**

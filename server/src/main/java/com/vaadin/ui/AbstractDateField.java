@@ -15,39 +15,13 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAdjuster;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.jsoup.nodes.Element;
-
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.data.Result;
 import com.vaadin.data.ValidationResult;
 import com.vaadin.data.Validator;
 import com.vaadin.data.ValueContext;
 import com.vaadin.data.validator.RangeValidator;
-import com.vaadin.event.FieldEvents.BlurEvent;
-import com.vaadin.event.FieldEvents.BlurListener;
-import com.vaadin.event.FieldEvents.BlurNotifier;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.FieldEvents.FocusNotifier;
+import com.vaadin.event.FieldEvents.*;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
@@ -57,6 +31,19 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.util.TimeZoneUtil;
+import org.jsoup.nodes.Element;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAdjuster;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A date editor component with {@link LocalDate} as an input value.
@@ -624,9 +611,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
                         .parse(design.attr("value"), clazz);
                 // formatting will return null if it cannot parse the string
                 if (date == null) {
-                    Logger.getLogger(AbstractDateField.class.getName())
-                            .info("cannot parse " + design.attr("value")
-                                    + " as date");
+                    LoggerFactory.getLogger(AbstractDateField.class)
+                            .info("cannot parse {} as date",
+                                    design.attr("value"));
                 }
                 doSetValue(date);
             } else {

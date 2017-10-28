@@ -15,15 +15,6 @@
  */
 package com.vaadin.tests.widgetset.client.v7.grid;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
@@ -34,32 +25,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.MenuItemSeparator;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.data.DataSource.RowHandle;
 import com.vaadin.client.ui.VLabel;
 import com.vaadin.tests.widgetset.client.v7.grid.GridBasicClientFeaturesWidget.Data;
-import com.vaadin.v7.client.renderers.DateRenderer;
-import com.vaadin.v7.client.renderers.HtmlRenderer;
-import com.vaadin.v7.client.renderers.NumberRenderer;
-import com.vaadin.v7.client.renderers.Renderer;
-import com.vaadin.v7.client.renderers.TextRenderer;
-import com.vaadin.v7.client.widget.grid.CellReference;
-import com.vaadin.v7.client.widget.grid.CellStyleGenerator;
-import com.vaadin.v7.client.widget.grid.DetailsGenerator;
-import com.vaadin.v7.client.widget.grid.EditorHandler;
-import com.vaadin.v7.client.widget.grid.EventCellReference;
-import com.vaadin.v7.client.widget.grid.RendererCellReference;
-import com.vaadin.v7.client.widget.grid.RowReference;
-import com.vaadin.v7.client.widget.grid.RowStyleGenerator;
+import com.vaadin.v7.client.renderers.*;
+import com.vaadin.v7.client.widget.grid.*;
 import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
 import com.vaadin.v7.client.widget.grid.datasources.ListSorter;
 import com.vaadin.v7.client.widget.grid.events.BodyKeyDownHandler;
@@ -78,6 +50,7 @@ import com.vaadin.v7.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyDownHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyPressHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyUpHandler;
+import com.vaadin.v7.client.widget.grid.events.*;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.None;
 import com.vaadin.v7.client.widgets.Grid;
@@ -86,6 +59,9 @@ import com.vaadin.v7.client.widgets.Grid.FooterRow;
 import com.vaadin.v7.client.widgets.Grid.HeaderRow;
 import com.vaadin.v7.client.widgets.Grid.SelectionMode;
 import com.vaadin.v7.shared.ui.grid.ScrollDestination;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Grid basic client features test application.
@@ -103,7 +79,7 @@ public class GridBasicClientFeaturesWidget
     public static final String CELL_STYLE_GENERATOR_SIMPLE = "Simple";
     public static final String CELL_STYLE_GENERATOR_COL_INDEX = "Column index";
 
-    public static enum Renderers {
+    public enum Renderers {
         TEXT_RENDERER, HTML_RENDERER, NUMBER_RENDERER, DATE_RENDERER;
     }
 
@@ -167,7 +143,7 @@ public class GridBasicClientFeaturesWidget
                 ds.asList().set(request.getRowIndex(), rowData);
                 request.success();
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).warning(e.toString());
+                LoggerFactory.getLogger(getClass()).warn(e.toString());
                 request.failure(null, null);
             }
         }
@@ -1498,8 +1474,8 @@ public class GridBasicClientFeaturesWidget
 
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(GridBasicClientFeaturesWidget.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(GridBasicClientFeaturesWidget.class);
     }
 
     private void createSidebarMenu() {

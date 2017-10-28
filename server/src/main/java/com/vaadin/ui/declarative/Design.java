@@ -15,28 +15,6 @@
  */
 package com.vaadin.ui.declarative;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.beans.IntrospectionException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Document.OutputSettings.Syntax;
-import org.jsoup.nodes.DocumentType;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
-
 import com.vaadin.annotations.DesignRoot;
 import com.vaadin.server.VaadinServiceClassLoaderUtil;
 import com.vaadin.shared.util.SharedUtil;
@@ -47,6 +25,27 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreatedEvent;
 import com.vaadin.ui.declarative.DesignContext.ComponentCreationListener;
 import com.vaadin.util.ReflectTools;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Document.OutputSettings.Syntax;
+import org.jsoup.nodes.DocumentType;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.IntrospectionException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Locale;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Design is used for reading a component hierarchy from an html string or input
@@ -618,13 +617,13 @@ public class Design implements Serializable {
             try {
                 stream.close();
             } catch (IOException e) {
-                getLogger().log(Level.FINE, "Error closing design stream", e);
+                getLogger().debug("Error closing design stream", e);
             }
         }
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(Design.class.getName());
+        return LoggerFactory.getLogger(Design.class);
     }
 
     /**
@@ -698,7 +697,7 @@ public class Design implements Serializable {
             try {
                 stream.close();
             } catch (IOException e) {
-                getLogger().log(Level.FINE, "Error closing design stream", e);
+                getLogger().debug("Error closing design stream", e);
             }
         }
     }

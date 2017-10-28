@@ -15,18 +15,16 @@
  */
 package com.vaadin.server;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
@@ -36,8 +34,8 @@ public class ConnectorResourceHandler implements RequestHandler {
     private static final Pattern CONNECTOR_RESOURCE_PATTERN = Pattern
             .compile("^" + CONNECTOR_RESOURCE_PREFIX + "(\\d+)/(\\d+)/(.*)");
 
-    private static Logger getLogger() {
-        return Logger.getLogger(ConnectorResourceHandler.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(ConnectorResourceHandler.class);
 
     }
 
@@ -120,7 +118,7 @@ public class ConnectorResourceHandler implements RequestHandler {
 
             if (!loggedDecodingWarning) {
                 loggedDecodingWarning = true;
-                getLogger().warning(
+                getLogger().warn(
                         "Request path contains a new line character. This typically means that the server is incorrectly configured to use something else than UTF-8 for URL decoding (requestPath: "
                                 + requestPath + ")");
             }
@@ -129,7 +127,8 @@ public class ConnectorResourceHandler implements RequestHandler {
 
     private static boolean error(VaadinRequest request, VaadinResponse response,
             String logMessage) throws IOException {
-        getLogger().log(Level.WARNING, logMessage);
+        getLogger().warn(logMessage);
+
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");
 

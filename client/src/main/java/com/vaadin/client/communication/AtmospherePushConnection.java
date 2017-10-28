@@ -16,8 +16,6 @@
 
 package com.vaadin.client.communication;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
@@ -35,8 +33,9 @@ import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.shared.util.SharedUtil;
-
 import elemental.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
@@ -377,7 +376,7 @@ public class AtmospherePushConnection implements PushConnection {
      * tried.
      */
     protected void onTransportFailure() {
-        getLogger().warning("Push connection using primary method ("
+        getLogger().warn("Push connection using primary method ("
                 + getConfig().getTransport() + ") failed. Trying with "
                 + getConfig().getFallbackTransport());
     }
@@ -613,7 +612,7 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(AtmospherePushConnection.class.getName());
+        return LoggerFactory.getLogger(AtmospherePushConnection.class);
     }
 
     private ConnectionStateHandler getConnectionStateHandler() {

@@ -16,35 +16,23 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.vaadin.server.*;
+import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
+import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.communication.PushMode;
+import com.vaadin.ui.UI;
+import elemental.json.JsonException;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
-import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
-import com.vaadin.server.ServiceException;
-import com.vaadin.server.ServletPortletHelper;
-import com.vaadin.server.SessionExpiredException;
-import com.vaadin.server.SystemMessages;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinServletService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.communication.PushMode;
-import com.vaadin.ui.UI;
-
-import elemental.json.JsonException;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Collection;
 
 /**
  * Handles incoming push connections and messages and dispatches them to the
@@ -73,9 +61,9 @@ public class PushHandler {
      */
     private final PushEventCallback establishCallback = (
             AtmosphereResource resource, UI ui) -> {
-        getLogger().log(Level.FINER,
-                "New push connection for resource {0} with transport {1}",
-                new Object[] { resource.uuid(), resource.transport() });
+        getLogger().trace(
+                "New push connection for resource {} with transport {}",
+                resource.uuid(), resource.transport());
 
         resource.getResponse().setContentType("text/plain; charset=UTF-8");
 
@@ -92,8 +80,8 @@ public class PushHandler {
         String requestToken = resource.getRequest()
                 .getParameter(ApplicationConstants.PUSH_ID_PARAMETER);
         if (!isPushIdValid(session, requestToken)) {
-            getLogger().log(Level.WARNING,
-                    "Invalid identifier in new connection received from {0}",
+            getLogger().warn(
+                    "Invalid identifier in new connection received from {}",
                     resource.getRequest().getRemoteHost());
             // Refresh on client side, create connection just for
             // sending a message
@@ -117,8 +105,8 @@ public class PushHandler {
      */
     private final PushEventCallback receiveCallback = (
             AtmosphereResource resource, UI ui) -> {
-        getLogger().log(Level.FINER, "Received message from resource {0}",
-                resource.uuid());
+        getLogger().trace("Received message from resource {}", resource.uuid
+                ());
 
         AtmosphereRequest req = resource.getRequest();
 
@@ -145,12 +133,12 @@ public class PushHandler {
             new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
             connection.push(false);
         } catch (JsonException e) {
-            getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
+            getLogger().error("Error writing JSON to response", e);
             // Refresh on client side
             sendRefreshAndDisconnect(resource);
         } catch (InvalidUIDLSecurityKeyException e) {
-            getLogger().log(Level.WARNING,
-                    "Invalid security key received from {0}",
+            getLogger().warn(
+                    "Invalid security key received from {}",
                     resource.getRequest().getRemoteHost());
             // Refresh on client side
             sendRefreshAndDisconnect(resource);
@@ -207,7 +195,7 @@ public class PushHandler {
                 assert VaadinSession.getCurrent() == session;
 
             } catch (ServiceException e) {
-                getLogger().log(Level.SEVERE,
+                getLogger().error(
                         "Could not get session. This should never happen", e);
                 return;
             } catch (SessionExpiredException e) {
@@ -261,8 +249,7 @@ public class PushHandler {
                 try {
                     session.unlock();
                 } catch (Exception e) {
-                    getLogger().log(Level.WARNING,
-                            "Error while unlocking session", e);
+                    getLogger().warn("Error while unlocking session", e);
                     // can't call ErrorHandler, we (hopefully) don't have a lock
                 }
             }
@@ -272,7 +259,7 @@ public class PushHandler {
                     service.requestEnd(vaadinRequest, null, session);
                 }
             } catch (Exception e) {
-                getLogger().log(Level.WARNING, "Error while ending request", e);
+                getLogger().warn("Error while ending request", e);
 
                 // can't call ErrorHandler, we don't have a lock
             }
@@ -291,7 +278,7 @@ public class PushHandler {
             }
         } catch (Exception ex) {
             // Let's not allow error handling to cause trouble; log fails
-            getLogger().log(Level.WARNING, "ErrorHandler call failed", ex);
+            getLogger().warn("ErrorHandler call failed", ex);
         }
     }
 
@@ -309,16 +296,14 @@ public class PushHandler {
         // request active and does requestStart and requestEnd among other
         // things.
         if (event == null) {
-            getLogger().log(Level.SEVERE,
-                    "Could not get event. This should never happen.");
+            getLogger().error("Could not get event. This should never happen.");
             return;
         }
 
         AtmosphereResource resource = event.getResource();
 
         if (resource == null) {
-            getLogger().log(Level.SEVERE,
-                    "Could not get resource. This should never happen.");
+            getLogger().error("Could not get resource. This should never happen.");
             return;
         }
 
@@ -329,16 +314,14 @@ public class PushHandler {
         try {
             session = service.findVaadinSession(vaadinRequest);
         } catch (ServiceException e) {
-            getLogger().log(Level.SEVERE,
-                    "Could not get session. This should never happen", e);
+            getLogger().error("Could not get session. This should never happen", e);
             return;
         } catch (SessionExpiredException e) {
             // This happens at least if the server is restarted without
             // preserving the session. After restart the client reconnects, gets
             // a session expired notification and then closes the connection and
             // ends up here
-            getLogger().log(Level.FINER,
-                    "Session expired before push disconnect event was received",
+            getLogger().trace("Session expired before push disconnect event was received",
                     e);
             return;
         }
@@ -362,13 +345,13 @@ public class PushHandler {
                 ui = findUiUsingResource(resource, session.getUIs());
 
                 if (ui == null) {
-                    getLogger().log(Level.FINE,
+                    getLogger().debug(
                             "Could not get UI. This should never happen,"
                                     + " except when reloading in Firefox and Chrome -"
                                     + " see http://dev.vaadin.com/ticket/14251.");
                     return;
                 } else {
-                    getLogger().log(Level.INFO,
+                    getLogger().info(
                             "No UI was found based on data in the request,"
                                     + " but a slower lookup based on the AtmosphereResource succeeded."
                                     + " See http://dev.vaadin.com/ticket/14251 for more details.");
@@ -381,25 +364,24 @@ public class PushHandler {
             String id = resource.uuid();
 
             if (pushConnection == null) {
-                getLogger().log(Level.WARNING,
-                        "Could not find push connection to close: {0} with transport {1}",
-                        new Object[] { id, resource.transport() });
+                getLogger().warn(
+                        "Could not find push connection to close: {} with transport {}",
+                        id, resource.transport());
             } else {
                 if (!pushMode.isEnabled()) {
                     /*
                      * The client is expected to close the connection after push
                      * mode has been set to disabled.
                      */
-                    getLogger().log(Level.FINER,
-                            "Connection closed for resource {0}", id);
+                    getLogger().trace("Connection closed for resource {}", id);
                 } else {
                     /*
                      * Unexpected cancel, e.g. if the user closes the browser
                      * tab.
                      */
-                    getLogger().log(Level.FINER,
-                            "Connection unexpectedly closed for resource {0} with transport {1}",
-                            new Object[] { id, resource.transport() });
+                    getLogger().trace(
+                            "Connection unexpectedly closed for resource {} with transport {}",
+                            id, resource.transport());
                 }
 
                 pushConnection.connectionLost();
@@ -411,8 +393,7 @@ public class PushHandler {
             try {
                 session.unlock();
             } catch (Exception e) {
-                getLogger().log(Level.WARNING, "Error while unlocking session",
-                        e);
+                getLogger().warn("Error while unlocking session", e);
                 // can't call ErrorHandler, we (hopefully) don't have a lock
             }
         }
@@ -463,20 +444,20 @@ public class PushHandler {
                     && !((AtmosphereResourceImpl) resource).isInScope()) {
                 // The resource is no longer valid so we should not write
                 // anything to it
-                getLogger().fine(
+                getLogger().debug(
                         "sendNotificationAndDisconnect called for resource no longer in scope");
                 return;
             }
             resource.getResponse().getWriter().write(notificationJson);
             resource.resume();
         } catch (Exception e) {
-            getLogger().log(Level.FINEST,
+            getLogger().trace(
                     "Failed to send critical notification to client", e);
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(PushHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(PushHandler.class);
     }
 
     /**

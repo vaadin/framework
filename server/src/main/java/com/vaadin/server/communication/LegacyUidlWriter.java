@@ -16,6 +16,15 @@
 
 package com.vaadin.server.communication;
 
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.LegacyPaint;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.LegacyComponent;
+import com.vaadin.ui.UI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -23,14 +32,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
-
-import com.vaadin.server.ClientConnector;
-import com.vaadin.server.LegacyPaint;
-import com.vaadin.server.PaintTarget;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.LegacyComponent;
-import com.vaadin.ui.UI;
 
 /**
  * Serializes legacy UIDL changes to JSON.
@@ -72,8 +73,7 @@ public class LegacyUidlWriter implements Serializable {
 
         writer.write("[");
         for (Component c : legacyComponents) {
-            getLogger()
-                    .fine("Painting LegacyComponent " + c.getClass().getName()
+            getLogger().trace("Painting LegacyComponent " + c.getClass().getName()
                             + "@" + Integer.toHexString(c.hashCode()));
             target.startTag("change");
             final String pid = c.getConnectorId();
@@ -109,7 +109,7 @@ public class LegacyUidlWriter implements Serializable {
         });
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(LegacyUidlWriter.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(LegacyUidlWriter.class);
     }
 }

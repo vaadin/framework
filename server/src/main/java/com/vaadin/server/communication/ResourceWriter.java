@@ -16,19 +16,15 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Serializes resources to JSON. Currently only used for {@link CustomLayout}
@@ -72,8 +68,7 @@ public class ResourceWriter implements Serializable {
                         ui.getTheme(), resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger().log(Level.FINER,
-                        "Failed to get theme resource stream.", e);
+                getLogger().debug("Failed to get theme resource stream.", e);
             }
             if (is != null) {
 
@@ -84,25 +79,25 @@ public class ResourceWriter implements Serializable {
                 try (InputStreamReader r = new InputStreamReader(is,
                         StandardCharsets.UTF_8)) {
                     final char[] buffer = new char[20000];
-                    int charsRead = 0;
+                    int charsRead;
                     while ((charsRead = r.read(buffer)) > 0) {
                         layout.append(buffer, 0, charsRead);
                     }
                 } catch (final IOException e) {
                     // FIXME: Handle exception
-                    getLogger().log(Level.INFO, "Resource transfer failed", e);
+                    getLogger().info("Resource transfer failed", e);
                 }
                 writer.write("\""
                         + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
             } else {
                 // FIXME: Handle exception
-                getLogger().severe("CustomLayout not found: " + resource);
+                getLogger().error("CustomLayout not found: " + resource);
             }
         }
         writer.write("}");
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(ResourceWriter.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(ResourceWriter.class);
     }
 }

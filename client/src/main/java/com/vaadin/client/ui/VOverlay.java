@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -27,6 +25,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.widgets.Overlay;
+import org.slf4j.LoggerFactory;
 
 /**
  * In Vaadin UI this VOverlay should always be used for all elements that
@@ -108,7 +107,7 @@ public class VOverlay extends Overlay {
         if (ac == null) {
             // could not figure out which one we belong to, styling will
             // probably fail
-            Logger.getLogger(getClass().getSimpleName()).warning(
+            LoggerFactory.getLogger(getClass()).warn(
                     "Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
             return super.getOverlayContainer();
         } else {

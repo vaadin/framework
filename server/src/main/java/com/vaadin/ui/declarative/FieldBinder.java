@@ -15,19 +15,14 @@
  */
 package com.vaadin.ui.declarative;
 
+import com.vaadin.ui.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.IntrospectionException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import com.vaadin.ui.Component;
+import java.util.*;
 
 /**
  * Binder utility that binds member fields of a design class instance to given
@@ -92,7 +87,7 @@ public class FieldBinder implements Serializable {
             }
         }
         if (!unboundFields.isEmpty()) {
-            getLogger().severe(
+            getLogger().error(
                     "Found unbound fields in component root :" + unboundFields);
         }
         return unboundFields;
@@ -151,8 +146,8 @@ public class FieldBinder implements Serializable {
         if (!success) {
             String idInfo = "localId: " + localId + " id: " + instance.getId()
                     + " caption: " + instance.getCaption();
-            getLogger().finest("Could not bind component to a field "
-                    + instance.getClass().getName() + " " + idInfo);
+            getLogger().trace("Could not bind component to a field {} {}",
+                    instance.getClass().getName(), idInfo);
         }
         return success;
     }
@@ -182,15 +177,16 @@ public class FieldBinder implements Serializable {
             // validate that the field can be found
             Field field = fieldMap.get(fieldName.toLowerCase(Locale.ROOT));
             if (field == null) {
-                getLogger()
-                        .fine("No field was found by identifier " + identifier);
+                getLogger().debug("No field was found by identifier {}",
+                        identifier);
                 return false;
             }
             // validate that the field is not set
             Object fieldValue = getFieldValue(bindTarget, field);
             if (fieldValue != null) {
-                getLogger().fine("The field \"" + fieldName
-                        + "\" was already mapped. Ignoring.");
+                getLogger().debug(
+                        "The field \"{}\" was already mapped. Ignoring.",
+                        fieldName);
             } else {
                 // set the field value
                 field.set(bindTarget, instance);
@@ -255,7 +251,7 @@ public class FieldBinder implements Serializable {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(FieldBinder.class.getName());
+        return LoggerFactory.getLogger(FieldBinder.class);
     }
 
 }

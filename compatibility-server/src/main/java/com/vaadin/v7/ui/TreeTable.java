@@ -16,20 +16,6 @@
 
 package com.vaadin.v7.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.jsoup.nodes.Element;
-
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
@@ -48,6 +34,12 @@ import com.vaadin.v7.ui.Tree.CollapseEvent;
 import com.vaadin.v7.ui.Tree.CollapseListener;
 import com.vaadin.v7.ui.Tree.ExpandEvent;
 import com.vaadin.v7.ui.Tree.ExpandListener;
+import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a
@@ -95,7 +87,7 @@ public class TreeTable extends Table implements Hierarchical {
 
         public Collection<?> getItemIds();
 
-        public void containerItemSetChange(ItemSetChangeEvent event);
+        public void containerItemSetChange(Container.ItemSetChangeEvent event);
     }
 
     private abstract class AbstractStrategy implements ContainerStrategy {
@@ -117,7 +109,7 @@ public class TreeTable extends Table implements Hierarchical {
         }
 
         @Override
-        public void containerItemSetChange(ItemSetChangeEvent event) {
+        public void containerItemSetChange(Container.ItemSetChangeEvent event) {
         }
 
     }
@@ -263,10 +255,10 @@ public class TreeTable extends Table implements Hierarchical {
             boolean removed = openItems.remove(itemId);
             if (!removed) {
                 openItems.add(itemId);
-                getLogger().log(Level.FINEST, "Item {0} is now expanded",
+                getLogger().trace("Item {} is now expanded",
                         itemId);
             } else {
-                getLogger().log(Level.FINEST, "Item {0} is now collapsed",
+                getLogger().trace("Item {} is now collapsed",
                         itemId);
             }
             clearPreorderCache();
@@ -321,7 +313,7 @@ public class TreeTable extends Table implements Hierarchical {
         }
 
         @Override
-        public void containerItemSetChange(ItemSetChangeEvent event) {
+        public void containerItemSetChange(Container.ItemSetChangeEvent event) {
             // preorder becomes invalid on sort, item additions etc.
             clearPreorderCache();
             super.containerItemSetChange(event);
@@ -889,8 +881,8 @@ public class TreeTable extends Table implements Hierarchical {
         markAsDirty();
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(TreeTable.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(TreeTable.class);
     }
 
     @Override

@@ -16,9 +16,6 @@
 
 package com.vaadin.client.communication;
 
-import java.util.Collection;
-import java.util.logging.Logger;
-
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.ServerConnector;
@@ -27,8 +24,11 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.MethodInvocation;
-
 import elemental.json.JsonArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
  * Client side RPC manager that can invoke methods based on RPC calls received
@@ -144,6 +144,6 @@ public class RpcManager {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(RpcManager.class.getName());
+        return LoggerFactory.getLogger(RpcManager.class);
     }
 }

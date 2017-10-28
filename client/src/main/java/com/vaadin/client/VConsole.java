@@ -15,16 +15,17 @@
  */
 package com.vaadin.client;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.logging.client.LogConfiguration;
 import com.vaadin.client.debug.internal.VDebugWindow;
+import org.slf4j.LoggerFactory;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A helper class to do some client side logging.
  *
- * @deprecated as of 7.1, use {@link Logger} from java.util.logging instead.
+ * @deprecated as of 7.1, use {@link Logger} from org.slf4j instead.
  */
 @Deprecated
 public class VConsole {
@@ -43,7 +44,7 @@ public class VConsole {
         if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
             // Check for null, so no NullPointerException is generated when
             // formatting (#12588)
-            getLogger().log(Level.INFO, msg == null ? "null" : msg);
+            getLogger().info(msg == null ? "null" : msg);
         }
     }
 
@@ -51,7 +52,7 @@ public class VConsole {
         if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
             // Check for null, so no NullPointerException is generated when
             // formatting (#12588)
-            getLogger().log(Level.INFO,
+            getLogger().info(
                     e.getMessage() == null ? "" : e.getMessage(), e);
         }
     }
@@ -60,7 +61,7 @@ public class VConsole {
         if (LogConfiguration.loggingIsEnabled(Level.SEVERE)) {
             // Check for null, so no NullPointerException is generated when
             // formatting (#12588)
-            getLogger().log(Level.SEVERE,
+            getLogger().error(
                     e.getMessage() == null ? "" : e.getMessage(), e);
         }
     }
@@ -69,7 +70,7 @@ public class VConsole {
         if (LogConfiguration.loggingIsEnabled(Level.SEVERE)) {
             // Check for null, so no NullPointerException is generated when
             // formatting (#12588)
-            getLogger().log(Level.SEVERE, msg == null ? "null" : msg);
+            getLogger().error(msg == null ? "null" : msg);
         }
     }
 
@@ -96,8 +97,7 @@ public class VConsole {
         }
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(VConsole.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(VConsole.class);
     }
-
 }

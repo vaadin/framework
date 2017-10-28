@@ -15,14 +15,8 @@
  */
 package com.vaadin.client.ui.window;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,25 +25,16 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.LayoutManager;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
+import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
-import com.vaadin.client.ui.ClickEventHandler;
-import com.vaadin.client.ui.PostLayoutListener;
-import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.SimpleManagedLayout;
-import com.vaadin.client.ui.VWindow;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
+import org.slf4j.LoggerFactory;
 
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractSingleComponentContainerConnector
@@ -274,8 +259,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         VWindow window = getWidget();
 
         if (!window.isAttached()) {
-            Logger.getLogger(WindowConnector.class.getName())
-                    .warning("Called postLayout to detached Window.");
+            LoggerFactory.getLogger(WindowConnector.class)
+                    .warn("Called postLayout to detached Window.");
             return;
         }
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {

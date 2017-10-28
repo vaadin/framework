@@ -1,11 +1,5 @@
 package com.vaadin.tests.components.table;
 
-import java.util.AbstractList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -14,6 +8,13 @@ import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.AbstractContainer;
 import com.vaadin.v7.data.util.BeanItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class ExpandingContainer extends AbstractContainer implements
@@ -23,7 +24,7 @@ public class ExpandingContainer extends AbstractContainer implements
             "column1", "column2");
 
     private final Label sizeLabel;
-    private final Logger log = Logger.getLogger(this.getClass().getName());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private int currentSize = 300;
 

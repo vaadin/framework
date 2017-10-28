@@ -16,22 +16,21 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.ui.LegacyComponent;
+import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.ui.LegacyComponent;
-import com.vaadin.ui.UI;
-import com.vaadin.util.CurrentInstance;
 
 /**
  * A {@link RequestHandler} that takes care of {@link ConnectorResource}s that
@@ -227,12 +226,12 @@ public class GlobalResourceHandler implements RequestHandler {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(GlobalResourceHandler.class.getName());
+        return LoggerFactory.getLogger(GlobalResourceHandler.class);
     }
 
     private static boolean error(VaadinRequest request, VaadinResponse response,
             String logMessage) throws IOException {
-        getLogger().log(Level.WARNING, logMessage);
+        getLogger().warn(logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");
 

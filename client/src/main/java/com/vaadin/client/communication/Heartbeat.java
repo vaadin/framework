@@ -15,18 +15,14 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.logging.Logger;
-
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles sending of heartbeats to the server and reacting to the response.
@@ -48,7 +44,7 @@ public class Heartbeat {
     private int interval = -1;
 
     private static Logger getLogger() {
-        return Logger.getLogger(Heartbeat.class.getName());
+        return LoggerFactory.getLogger(Heartbeat.class);
     }
 
     /**
@@ -113,7 +109,7 @@ public class Heartbeat {
         rb.setCallback(callback);
 
         try {
-            getLogger().fine("Sending heartbeat request...");
+            getLogger().debug("Sending heartbeat request...");
             rb.send();
         } catch (RequestException re) {
             callback.onError(null, re);
@@ -134,11 +130,10 @@ public class Heartbeat {
      */
     public void schedule() {
         if (interval > 0) {
-            getLogger()
-                    .fine("Scheduling heartbeat in " + interval + " seconds");
+            getLogger().debug("Scheduling heartbeat in {} seconds", interval);
             timer.schedule(interval * 1000);
         } else {
-            getLogger().fine("Disabling heartbeat");
+            getLogger().debug("Disabling heartbeat");
             timer.cancel();
         }
     }

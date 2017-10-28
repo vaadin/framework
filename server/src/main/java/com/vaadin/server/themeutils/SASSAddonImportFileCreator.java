@@ -15,22 +15,14 @@
  */
 package com.vaadin.server.themeutils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.server.widgetsetutils.ClassPathExplorer;
 import com.vaadin.server.widgetsetutils.ClassPathExplorer.LocationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.URL;
+import java.util.*;
 
 /**
  * Helper class for managing the addon imports and creating an a SCSS file for
@@ -124,12 +116,12 @@ public class SASSAddonImportFileCreator {
 
         } catch (FileNotFoundException e) {
             // Should not happen since file is checked before this
-            getLogger().log(Level.WARNING, "Error updating addons.scss", e);
+            getLogger().warn("Error updating addons.scss", e);
         }
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(SASSAddonImportFileCreator.class.getName());
+        return LoggerFactory.getLogger(SASSAddonImportFileCreator.class);
     }
 
     private static List<String> addImport(PrintStream stream, String file,

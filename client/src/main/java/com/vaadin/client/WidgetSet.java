@@ -16,9 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
@@ -26,6 +23,8 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.UnknownExtensionConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WidgetSet {
     /**
@@ -63,7 +62,7 @@ public class WidgetSet {
                         .getUnknownServerClassNameByTag(tag);
                 if (classType == UnknownExtensionConnector.class) {
                     // Display message in the console for non-visual connectors
-                    getLogger().severe(UnknownComponentConnector
+                    getLogger().error(UnknownComponentConnector
                             .createMessage(serverSideName));
                     return GWT.create(UnknownExtensionConnector.class);
                 } else {
@@ -145,8 +144,7 @@ public class WidgetSet {
 
                 @Override
                 public void failed(Throwable reason) {
-                    getLogger().log(Level.SEVERE, "Error loading bundle",
-                            reason);
+                    getLogger().error("Error loading bundle", reason);
                     ApplicationConfiguration.endDependencyLoading();
                 }
             });
@@ -154,6 +152,6 @@ public class WidgetSet {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(WidgetSet.class.getName());
+        return LoggerFactory.getLogger(WidgetSet.class);
     }
 }

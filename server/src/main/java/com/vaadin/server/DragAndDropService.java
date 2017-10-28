@@ -15,23 +15,9 @@
  */
 package com.vaadin.server;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DragSource;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.DropTarget;
-import com.vaadin.event.dd.TargetDetails;
-import com.vaadin.event.dd.TargetDetailsImpl;
+import com.vaadin.event.dd.*;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Registration;
@@ -41,8 +27,16 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.dnd.DragSourceExtension;
 import com.vaadin.ui.dnd.DropTargetExtension;
-
 import elemental.json.JsonObject;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 /**
  *
@@ -77,14 +71,14 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
                 .get("component");
         if (sourceComponent != null && !sourceComponent.isConnectorEnabled()) {
             // source component not supposed to be enabled
-            getLogger().warning("Client dropped from " + sourceComponent
+            getLogger().warn("Client dropped from " + sourceComponent
                     + " even though it's disabled");
             return;
         }
 
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
-            getLogger().severe("DropHandler owner " + owner
+            getLogger().error("DropHandler owner " + owner
                     + " must implement DropTarget");
             return;
         }
@@ -93,7 +87,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropTarget dropTarget = (DropTarget) owner;
 
         if (!dropTarget.isConnectorEnabled()) {
-            getLogger().warning("Client dropped on " + owner
+            getLogger().warn("Client dropped on " + owner
                     + " even though it's disabled");
             return;
         }
@@ -122,8 +116,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropHandler dropHandler = dropTarget.getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            getLogger().log(Level.FINE,
-                    "DropTarget.getDropHandler() returned null for owner: {0}",
+            getLogger().debug(
+                    "DropTarget.getDropHandler() returned null for owner: {}",
                     dropTarget);
             return;
         }
@@ -340,8 +334,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public void removeExtension(Extension extension) {
     }
 
-    private Logger getLogger() {
-        return Logger.getLogger(DragAndDropService.class.getName());
+    private org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(DragAndDropService.class);
     }
 
     @Override

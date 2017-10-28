@@ -15,10 +15,6 @@
  */
 package com.vaadin.client.debug.internal;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ApplicationConfiguration;
@@ -27,6 +23,11 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.UnknownExtensionConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Optimized widgetset view panel of the debug window.
@@ -97,7 +98,7 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
             tag++;
             if (tag > 10000) {
                 // Sanity check
-                getLogger().severe(
+                getLogger().error(
                         "Search for used connector classes was forcefully terminated");
                 break;
             }
@@ -140,6 +141,6 @@ public class OptimizedWidgetsetPanel extends FlowPanel {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(OptimizedWidgetsetPanel.class.getName());
+        return LoggerFactory.getLogger(OptimizedWidgetsetPanel.class);
     }
 }

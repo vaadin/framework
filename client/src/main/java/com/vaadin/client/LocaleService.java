@@ -16,13 +16,14 @@
 
 package com.vaadin.client;
 
+import com.vaadin.shared.ui.ui.UIState.LocaleData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
-
-import com.vaadin.shared.ui.ui.UIState.LocaleData;
 
 /**
  * Date / time etc. localization service for all widgets. Caches all loaded
@@ -42,7 +43,7 @@ public class LocaleService {
         if (cache.containsKey(key)) {
             cache.remove(key);
         }
-        getLogger().fine("Received locale data for " + key);
+        getLogger().debug("Received locale data for {}", key);
         cache.put(key, localeData);
         if (cache.size() == 1) {
             setDefaultLocale(key);
@@ -140,6 +141,6 @@ public class LocaleService {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(LocaleService.class.getName());
+        return LoggerFactory.getLogger(LocaleService.class);
     }
 }

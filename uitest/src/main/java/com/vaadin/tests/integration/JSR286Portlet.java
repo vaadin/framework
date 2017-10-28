@@ -1,42 +1,19 @@
 package com.vaadin.tests.integration;
 
+import com.vaadin.annotations.StyleSheet;
+import com.vaadin.server.*;
+import com.vaadin.server.VaadinPortletSession.PortletListener;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.*;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.v7.ui.TextField;
+import org.slf4j.LoggerFactory;
+
+import javax.portlet.*;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.EventRequest;
-import javax.portlet.EventResponse;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletURL;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-import javax.portlet.WindowState;
-
-import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.VaadinPortletRequest;
-import com.vaadin.server.VaadinPortletService;
-import com.vaadin.server.VaadinPortletSession;
-import com.vaadin.server.VaadinPortletSession.PortletListener;
-import com.vaadin.shared.ui.ContentMode;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.ui.TextField;
 
 /**
  * Adapted from old PortletDemo to support integration testing.
@@ -172,7 +149,8 @@ public class JSR286Portlet extends UI {
             portletEdit.setResource(new ExternalResource(url.toString()));
         } catch (Exception e) {
             portletEdit.setEnabled(false);
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+
+            LoggerFactory.getLogger(getClass()).error(
                     "Error creating edit mode link", e);
         }
 
@@ -190,7 +168,8 @@ public class JSR286Portlet extends UI {
             portletMax.setResource(new ExternalResource(url.toString()));
         } catch (Exception e) {
             portletMax.setEnabled(false);
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+
+            LoggerFactory.getLogger(getClass()).error(
                     "Error creating state change link", e);
         }
 

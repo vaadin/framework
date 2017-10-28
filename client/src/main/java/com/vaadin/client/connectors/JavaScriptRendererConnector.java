@@ -15,11 +15,6 @@
  */
 package com.vaadin.client.connectors;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.NativeEvent;
@@ -34,9 +29,14 @@ import com.vaadin.client.widget.grid.CellReference;
 import com.vaadin.client.widget.grid.RendererCellReference;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.ui.Connect;
-
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Connector for server-side renderer implemented using JavaScript.
@@ -139,7 +139,7 @@ public class JavaScriptRendererConnector
         }
 
         if (hasFunction("destory")) {
-            getLogger().severe("Your JavaScript connector ("
+            getLogger().error("Your JavaScript connector ("
                     + helper.getInitFunctionName()
                     + ") has a typo. The destory method should be renamed to destroy.");
         }
@@ -192,7 +192,7 @@ public class JavaScriptRendererConnector
 
             @Override
             public void destroy(RendererCellReference cell) {
-                getLogger().warning("Destprying: " + cell.getRowIndex() + " "
+                getLogger().warn("Destroying: " + cell.getRowIndex() + " "
                         + cell.getColumnIndexDOM());
                 if (hasDestroy) {
                     destroy(helper.getConnectorWrapper(), getJsCell(cell));
@@ -274,7 +274,7 @@ public class JavaScriptRendererConnector
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(JavaScriptRendererConnector.class.getName());
+        return LoggerFactory.getLogger(JavaScriptRendererConnector.class);
     }
 
     @Override

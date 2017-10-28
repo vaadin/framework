@@ -16,18 +16,15 @@
 
 package com.vaadin.event;
 
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.EventObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -94,8 +91,8 @@ public class ListenerMethod implements EventListener, Serializable {
             out.writeObject(name);
             out.writeObject(paramTypes);
         } catch (NotSerializableException e) {
-            getLogger().log(Level.WARNING,
-                    "Error in serialization of the application: Class {0} must implement serialization.",
+            getLogger().warn(
+                    "Error in serialization of the application: Class {} must implement serialization.",
                     target.getClass().getName());
             throw e;
         }
@@ -113,7 +110,7 @@ public class ListenerMethod implements EventListener, Serializable {
             // inner classes
             method = findHighestMethod(target.getClass(), name, paramTypes);
         } catch (SecurityException e) {
-            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
+            getLogger().error("Internal deserialization error", e);
         }
     }
 
@@ -651,8 +648,7 @@ public class ListenerMethod implements EventListener, Serializable {
         return target;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(ListenerMethod.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(ListenerMethod.class);
     }
-
 }

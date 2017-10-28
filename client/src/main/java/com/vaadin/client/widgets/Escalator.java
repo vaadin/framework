@@ -15,22 +15,6 @@
  */
 package com.vaadin.client.widgets;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
@@ -40,19 +24,9 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
-import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.DOM;
@@ -61,31 +35,15 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.Profiler;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.client.widget.escalator.Cell;
-import com.vaadin.client.widget.escalator.ColumnConfiguration;
-import com.vaadin.client.widget.escalator.EscalatorUpdater;
-import com.vaadin.client.widget.escalator.FlyweightCell;
-import com.vaadin.client.widget.escalator.FlyweightRow;
-import com.vaadin.client.widget.escalator.PositionFunction;
+import com.vaadin.client.widget.escalator.*;
 import com.vaadin.client.widget.escalator.PositionFunction.Translate3DPosition;
 import com.vaadin.client.widget.escalator.PositionFunction.TranslatePosition;
 import com.vaadin.client.widget.escalator.PositionFunction.WebkitTranslate3DPosition;
-import com.vaadin.client.widget.escalator.Row;
-import com.vaadin.client.widget.escalator.RowContainer;
 import com.vaadin.client.widget.escalator.RowContainer.BodyRowContainer;
-import com.vaadin.client.widget.escalator.RowVisibilityChangeEvent;
-import com.vaadin.client.widget.escalator.RowVisibilityChangeHandler;
-import com.vaadin.client.widget.escalator.ScrollbarBundle;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.HorizontalScrollbarBundle;
 import com.vaadin.client.widget.escalator.ScrollbarBundle.VerticalScrollbarBundle;
-import com.vaadin.client.widget.escalator.Spacer;
-import com.vaadin.client.widget.escalator.SpacerUpdater;
 import com.vaadin.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.client.widget.grid.events.ScrollEvent;
 import com.vaadin.client.widget.grid.events.ScrollHandler;
@@ -94,6 +52,12 @@ import com.vaadin.shared.Range;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.util.SharedUtil;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
+import java.util.logging.Level;
 
 /*-
 
@@ -2574,8 +2538,8 @@ public class Escalator extends Widget
 
         private void setTopRowLogicalIndex(int topRowLogicalIndex) {
             if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
-                Logger.getLogger("Escalator.BodyRowContainer")
-                        .fine("topRowLogicalIndex: " + this.topRowLogicalIndex
+                LoggerFactory.getLogger("Escalator.BodyRowContainer")
+                        .debug("topRowLogicalIndex: " + this.topRowLogicalIndex
                                 + " -> " + topRowLogicalIndex);
             }
             assert topRowLogicalIndex >= 0 : "topRowLogicalIndex became negative (top left cell contents: "
@@ -2949,14 +2913,14 @@ public class Escalator extends Widget
                             rowTop += getDefaultRowHeight();
                         }
                     } catch (Exception e) {
-                        Logger logger = getLogger();
-                        logger.warning(
+                        org.slf4j.Logger logger = getLogger();
+                        logger.warn(
                                 "Ignored out-of-bounds row element access");
-                        logger.warning("Escalator state: start=" + start
+                        logger.warn("Escalator state: start=" + start
                                 + ", end=" + end + ", visualTargetIndex="
                                 + visualTargetIndex + ", visualRowOrder.size()="
                                 + visualRowOrder.size());
-                        logger.warning(e.toString());
+                        logger.warn(e.toString());
                     }
                 }
 
@@ -6037,8 +6001,8 @@ public class Escalator extends Widget
         }
     }
 
-    private Logger getLogger() {
-        return Logger.getLogger(getClass().getName());
+    private org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(getClass());
     }
 
     private static native boolean hasProperty(Style style, String name)
@@ -6971,7 +6935,7 @@ public class Escalator extends Widget
                 try {
                     return getSubPart(container, indices);
                 } catch (Exception e) {
-                    getLogger().log(Level.SEVERE, e.getMessage());
+                    getLogger().error(e.getMessage());
                 }
             }
         }
@@ -7088,7 +7052,7 @@ public class Escalator extends Widget
     }
 
     private void logWarning(String message) {
-        getLogger().warning(message);
+        getLogger().warn(message);
     }
 
     /**

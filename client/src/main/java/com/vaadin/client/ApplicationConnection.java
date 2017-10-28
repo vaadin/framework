@@ -16,10 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
@@ -28,12 +24,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.gwt.event.shared.*;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -42,27 +33,20 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
-import com.vaadin.client.communication.ConnectionStateHandler;
-import com.vaadin.client.communication.Heartbeat;
-import com.vaadin.client.communication.MessageHandler;
-import com.vaadin.client.communication.MessageSender;
-import com.vaadin.client.communication.RpcManager;
-import com.vaadin.client.communication.ServerRpcQueue;
+import com.vaadin.client.communication.*;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
-import com.vaadin.client.ui.AbstractComponentConnector;
-import com.vaadin.client.ui.AbstractConnector;
-import com.vaadin.client.ui.FontIcon;
-import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ImageIcon;
-import com.vaadin.client.ui.VContextMenu;
-import com.vaadin.client.ui.VNotification;
-import com.vaadin.client.ui.VOverlay;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.VaadinUriResolver;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.util.SharedUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -383,7 +367,7 @@ public class ApplicationConnection implements HasHandlers {
                 + cnf.getServletVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
-            getLogger().severe(
+            getLogger().error(
                     "Warning: your widget set seems to be built with a different "
                             + "version than the one used on server. Unexpected "
                             + "behavior may occur.");
@@ -631,14 +615,14 @@ public class ApplicationConnection implements HasHandlers {
 
             // Show this message just once
             if (cssWaits++ == 0) {
-                getLogger().warning("Assuming CSS loading is not complete, "
+                getLogger().warn("Assuming CSS loading is not complete, "
                         + "postponing render phase. "
                         + "(.v-loading-indicator height == 0)");
             }
         } else {
             cssLoaded = true;
             if (cssWaits >= MAX_CSS_WAITS) {
-                getLogger().severe("CSS files may have not loaded properly.");
+                getLogger().error("CSS files may have not loaded properly.");
             }
 
             c.execute();
@@ -666,7 +650,7 @@ public class ApplicationConnection implements HasHandlers {
      *
      */
     public void showCommunicationError(String details, int statusCode) {
-        getLogger().severe("Communication error: " + details);
+        getLogger().error("Communication error: " + details);
         showError(details, configuration.getCommunicationError());
     }
 
@@ -677,7 +661,7 @@ public class ApplicationConnection implements HasHandlers {
      *            Optional details.
      */
     public void showAuthenticationError(String details) {
-        getLogger().severe("Authentication error: " + details);
+        getLogger().error("Authentication error: " + details);
         showError(details, configuration.getAuthorizationError());
     }
 
@@ -688,7 +672,7 @@ public class ApplicationConnection implements HasHandlers {
      *            Optional details.
      */
     public void showSessionExpiredError(String details) {
-        getLogger().severe("Session expired: " + details);
+        getLogger().error("Session expired: " + details);
         showError(details, configuration.getSessionExpiredError());
     }
 
@@ -1336,7 +1320,7 @@ public class ApplicationConnection implements HasHandlers {
         }
 
         if (!manageCaption) {
-            getLogger().warning(Util.getConnectorString(connector)
+            getLogger().warn(Util.getConnectorString(connector)
                     + " called updateComponent with manageCaption=false. The parameter was ignored - override delegateCaption() to return false instead. It is however not recommended to use caption this way at all.");
         }
         return false;
@@ -1418,27 +1402,23 @@ public class ApplicationConnection implements HasHandlers {
     public void setApplicationRunning(boolean applicationRunning) {
         if (getApplicationState() == ApplicationState.TERMINATED) {
             if (applicationRunning) {
-                getLogger().severe(
-                        "Tried to restart a terminated application. This is not supported");
+                getLogger().warn("Tried to restart a terminated application. This is not supported");
             } else {
-                getLogger().warning(
-                        "Tried to stop a terminated application. This should not be done");
+                getLogger().warn("Tried to stop a terminated application. This should not be done");
             }
             return;
         } else if (getApplicationState() == ApplicationState.INITIALIZING) {
             if (applicationRunning) {
                 applicationState = ApplicationState.RUNNING;
             } else {
-                getLogger().warning(
-                        "Tried to stop the application before it has started. This should not be done");
+                getLogger().warn("Tried to stop the application before it has started. This should not be done");
             }
         } else if (getApplicationState() == ApplicationState.RUNNING) {
             if (!applicationRunning) {
                 applicationState = ApplicationState.TERMINATED;
                 eventBus.fireEvent(new ApplicationStoppedEvent());
             } else {
-                getLogger().warning(
-                        "Tried to start an already running application. This should not be done");
+                getLogger().warn("Tried to start an already running application. This should not be done");
             }
         }
     }
@@ -1492,7 +1472,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ApplicationConnection.class.getName());
+        return LoggerFactory.getLogger(ApplicationConnection.class);
     }
 
     /**

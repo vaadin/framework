@@ -16,15 +16,14 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.communication.ServerRpc;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * Server side RPC manager that handles RPC calls coming from the client.
@@ -115,10 +114,10 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
         if (manager != null) {
             manager.applyInvocation(invocation);
         } else {
-            getLogger().log(Level.WARNING,
-                    "RPC call received for RpcTarget {0} ({1}) but the target has not registered any RPC interfaces",
-                    new Object[] { target.getClass().getName(),
-                            invocation.getConnectorId() });
+            getLogger().warn(
+                    "RPC call received for RpcTarget {} ({}) but the target has not registered any RPC interfaces",
+                    target.getClass().getName(),
+                    invocation.getConnectorId());
         }
     }
 
@@ -161,8 +160,8 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
         }
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(ServerRpcManager.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(ServerRpcManager.class);
     }
 
     /**

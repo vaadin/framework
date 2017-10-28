@@ -15,20 +15,18 @@
  */
 package com.vaadin.tools;
 
+import com.google.gwt.dev.shell.CheckForUpdates;
+import com.vaadin.shared.Version;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import org.apache.commons.io.IOUtils;
-
-import com.google.gwt.dev.shell.CheckForUpdates;
-import com.vaadin.shared.Version;
 
 public class ReportUsage {
 
@@ -121,17 +119,15 @@ public class ReportUsage {
             // TODO use the results
             IOUtils.toByteArray(is);
             return;
-        } catch (MalformedURLException e) {
-            caught = e;
         } catch (IOException e) {
             caught = e;
         } finally {
             IOUtils.closeQuietly(is);
         }
 
-        Logger.getLogger(ReportUsage.class.getName())
-                .fine("Caught an exception while executing HTTP query: "
-                        + caught.getMessage());
+        LoggerFactory.getLogger(ReportUsage.class)
+                .debug("Caught an exception while executing HTTP query: {}",
+                        caught.getMessage());
     }
 
     private static String makeUserAgent() {

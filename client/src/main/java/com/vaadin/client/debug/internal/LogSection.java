@@ -149,6 +149,7 @@ public class LogSection implements Section {
             selectText(el);
         });
 
+        // Set up logging in JUL, since slf4j-gwt use it as backend
         // Add handler to the root logger
         Logger.getLogger("").addHandler(new LogSectionHandler());
     }

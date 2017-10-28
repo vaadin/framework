@@ -15,24 +15,19 @@
  */
 package com.vaadin.client.metadata;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
-import com.google.gwt.dom.client.Style.WhiteSpace;
+import com.google.gwt.dom.client.Style.*;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.FastStringMap;
 import com.vaadin.client.metadata.AsyncBundleLoader.State;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ConnectorBundleLoader {
 
@@ -213,7 +208,7 @@ public abstract class ConnectorBundleLoader {
 
                 @Override
                 public void failed(Throwable reason) {
-                    getLogger().log(Level.SEVERE,
+                    getLogger().error(
                             "Error loading deferred bundle", reason);
                 }
             });
@@ -221,7 +216,7 @@ public abstract class ConnectorBundleLoader {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ConnectorBundleLoader.class.getName());
+        return LoggerFactory.getLogger(ConnectorBundleLoader.class);
     }
 
     /**

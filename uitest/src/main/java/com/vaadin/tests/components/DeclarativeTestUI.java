@@ -15,6 +15,12 @@
  */
 package com.vaadin.tests.components;
 
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.declarative.Design;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.annotation.ElementType;
@@ -23,12 +29,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.declarative.Design;
 
 /**
  * Declarative test UI. Provides simple instantiation of HTML designs located
@@ -92,7 +92,7 @@ public class DeclarativeTestUI extends AbstractTestUI {
 
     private Component readDesign() throws Exception {
         String path = getDesignPath();
-        getLogger().log(Level.INFO, "Reading design from " + path);
+        getLogger().info("Reading design from {}", path);
 
         File file = new File(path);
         return Design.read(new FileInputStream(file));
@@ -108,7 +108,7 @@ public class DeclarativeTestUI extends AbstractTestUI {
             try {
                 component = readDesign();
             } catch (Exception e1) {
-                getLogger().log(Level.SEVERE, "Error reading design", e1);
+                getLogger().error("Error reading design", e1);
                 return;
             }
 
@@ -120,17 +120,9 @@ public class DeclarativeTestUI extends AbstractTestUI {
                 if (m.isAnnotationPresent(OnLoad.class)) {
                     try {
                         m.invoke(this, (Object[]) null);
-                    } catch (IllegalAccessException e) {
-                        getLogger().log(Level.SEVERE,
-                                "Error invoking @OnLoad method", e);
-                        return;
-                    } catch (IllegalArgumentException e) {
-                        getLogger().log(Level.SEVERE,
-                                "Error invoking @OnLoad method", e);
-                        return;
-                    } catch (InvocationTargetException e) {
-                        getLogger().log(Level.SEVERE,
-                                "Error invoking @OnLoad method", e);
+                    } catch (IllegalAccessException | InvocationTargetException
+                            | IllegalArgumentException e) {
+                        getLogger().error("Error invoking @OnLoad method", e);
                         return;
                     }
                 }
@@ -155,8 +147,7 @@ public class DeclarativeTestUI extends AbstractTestUI {
         try {
             return (T) component;
         } catch (ClassCastException ex) {
-            getLogger().log(Level.SEVERE, "Component code/design type mismatch",
-                    ex);
+            getLogger().error("Component code/design type mismatch", ex);
         }
         return null;
     }
@@ -168,7 +159,7 @@ public class DeclarativeTestUI extends AbstractTestUI {
      */
     protected Logger getLogger() {
         if (logger == null) {
-            logger = Logger.getLogger(getClass().getName());
+            logger = LoggerFactory.getLogger(getClass());
         }
         return logger;
     }

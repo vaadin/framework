@@ -16,22 +16,18 @@
 
 package com.vaadin.server;
 
-import java.io.InputStream;
-import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Inherited;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.annotations.Push;
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
+import com.vaadin.annotations.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.InputStream;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Inherited;
 
 public abstract class UIProvider implements Serializable {
 
@@ -224,13 +220,13 @@ public abstract class UIProvider implements Serializable {
             try {
                 return cls.newInstance();
             } catch (InstantiationException e) {
-                getLogger().log(Level.INFO,
-                        "Unexpected trying to instantiate class "
-                                + cls.getName(),
+                getLogger().info(
+                        "Unexpected trying to instantiate class {}",
+                        cls.getName(),
                         e);
             } catch (IllegalAccessException e) {
-                getLogger().log(Level.INFO,
-                        "Unexpected trying to access class " + cls.getName(),
+                getLogger().info(
+                        "Unexpected trying to access class {}", cls.getName(),
                         e);
             }
         }
@@ -316,8 +312,7 @@ public abstract class UIProvider implements Serializable {
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(UIProvider.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(UIProvider.class);
     }
-
 }

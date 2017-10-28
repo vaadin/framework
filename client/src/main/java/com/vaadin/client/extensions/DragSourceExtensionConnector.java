@@ -15,11 +15,6 @@
  */
 package com.vaadin.client.extensions;
 
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.dom.client.DataTransfer;
 import com.google.gwt.dom.client.Element;
@@ -39,10 +34,14 @@ import com.vaadin.shared.ui.dnd.DragSourceRpc;
 import com.vaadin.shared.ui.dnd.DragSourceState;
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.dnd.DragSourceExtension;
-
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventTarget;
+import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Extension to add drag source functionality to a widget for using HTML5 drag
@@ -362,7 +361,7 @@ public class DragSourceExtensionConnector extends AbstractExtensionConnector {
                     .trim();
             return Integer.parseInt(x);
         } catch (NumberFormatException nfe) {
-            Logger.getLogger(DragSourceExtensionConnector.class.getName()).info(
+            LoggerFactory.getLogger(DragSourceExtensionConnector.class).info(
                     "Unable to parse \"transform: translate(...)\" matrix " + n
                             + ". value from computed style, matrix \"" + matrix
                             + "\", drag image might not be visible");

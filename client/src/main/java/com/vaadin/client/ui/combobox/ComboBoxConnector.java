@@ -15,10 +15,6 @@
  */
 package com.vaadin.client.ui.combobox;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 import com.vaadin.client.Profiler;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -42,8 +38,10 @@ import com.vaadin.shared.ui.combobox.ComboBoxConstants;
 import com.vaadin.shared.ui.combobox.ComboBoxServerRpc;
 import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.ui.ComboBox;
-
 import elemental.json.JsonObject;
+
+import java.util.List;
+import java.util.Objects;
 
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractListingConnector
@@ -379,9 +377,6 @@ public class ComboBoxConnector extends AbstractListingConnector
             getWidget().currentPage = 0;
         }
     }
-
-    private static final Logger LOGGER = Logger
-            .getLogger(ComboBoxConnector.class.getName());
 
     private class PagedDataChangeHandler implements DataChangeHandler {
 

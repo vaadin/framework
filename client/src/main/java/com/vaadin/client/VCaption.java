@@ -16,8 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
@@ -27,16 +25,14 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.HasErrorIndicator;
-import com.vaadin.client.ui.HasErrorIndicatorElement;
-import com.vaadin.client.ui.HasRequiredIndicator;
-import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ImageIcon;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.ErrorLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VCaption extends HTML implements HasErrorIndicatorElement {
 
@@ -444,7 +440,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
             if (owner != null) {
                 Util.notifyParentOfSizeChange(owner.getWidget(), true);
             } else {
-                getLogger().warning(
+                getLogger().warn(
                         "Warning: Icon load event was not propagated because VCaption owner is unknown.");
             }
         }
@@ -770,7 +766,7 @@ public class VCaption extends HTML implements HasErrorIndicatorElement {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(VCaption.class.getName());
+        return LoggerFactory.getLogger(VCaption.class);
     }
 
     @Override

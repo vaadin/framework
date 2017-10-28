@@ -16,19 +16,12 @@
 
 package com.vaadin.v7.data.util;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * A specialized Container whose contents can be accessed like it was a
@@ -449,7 +442,7 @@ public class HierarchicalContainer extends IndexedContainer
 
     private void enableAndFireContentsChangeEvents() {
         if (contentChangedEventsDisabledCount <= 0) {
-            getLogger().log(Level.WARNING,
+            getLogger().warn(
                     "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
             contentChangedEventsDisabledCount = 0;
         } else {
@@ -819,7 +812,7 @@ public class HierarchicalContainer extends IndexedContainer
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(HierarchicalContainer.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(HierarchicalContainer.class);
     }
 }

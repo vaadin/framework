@@ -15,10 +15,8 @@
  */
 package com.vaadin.tools;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.server.widgetsetutils.WidgetSetBuilder;
+import org.slf4j.LoggerFactory;
 
 /**
  * A wrapper for the GWT compiler that runs the compiler in a new thread after
@@ -79,8 +77,7 @@ public class WidgetsetCompiler {
                         System.out.println("Starting GWT compiler");
                         com.google.gwt.dev.Compiler.main(args);
                     } catch (Throwable thr) {
-                        getLogger().log(Level.SEVERE,
-                                "Widgetset compilation failed", thr);
+                        getLogger().error("Widgetset compilation failed", thr);
                     }
                 }
             };
@@ -89,11 +86,11 @@ public class WidgetsetCompiler {
             runThread.join();
             System.out.println("Widgetset compilation finished");
         } catch (Throwable thr) {
-            getLogger().log(Level.SEVERE, "Widgetset compilation failed", thr);
+            getLogger().error("Widgetset compilation failed", thr);
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(WidgetsetCompiler.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(WidgetsetCompiler.class);
     }
 }

@@ -15,45 +15,6 @@
  */
 package com.vaadin.server;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
@@ -63,10 +24,29 @@ import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
-
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
@@ -137,7 +117,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                             lastModified = file.lastModified();
                         }
                     } catch (URISyntaxException e) {
-                        getLogger().log(Level.WARNING,
+                        getLogger().warn(
                                 "Could not resolve timestamp for " + resource,
                                 e);
                     }
@@ -147,8 +127,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
                      * Ignore missing files found in the classpath, report
                      * problem and abort for other files.
                      */
-                    getLogger().log(Level.WARNING,
-                            "Could not resolve timestamp for {0}, Scss on the fly caching will be disabled",
+                    getLogger().warn(
+                            "Could not resolve timestamp for {}, Scss on the fly caching will be disabled",
                             uri);
                     // -1 means this cache entry will never be valid
                     return -1;
@@ -692,7 +672,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected static String getResourcePath(ServletContext servletContext,
             String path) {
-        String resultPath = null;
+        String resultPath;
         resultPath = servletContext.getRealPath(path);
         if (resultPath != null) {
             return resultPath;
@@ -702,8 +682,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger().log(Level.INFO,
-                        "Could not find resource path " + path, e);
+                getLogger().info("Could not find resource path {}", path, e);
             }
         }
         return resultPath;
@@ -814,8 +793,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             } else {
                 // cannot serve requested file
-                getLogger().log(Level.INFO,
-                        "Requested resource [{0}] not found from filesystem or through class loader."
+                getLogger().info(
+                        "Requested resource [{}] not found from filesystem or through class loader."
                                 + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.",
                         filename);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -826,8 +805,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // security check: do not permit navigation out of the VAADIN
         // directory
         if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
-            getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+            getLogger().info(
+                    "Requested resource [{}] not accessible in the VAADIN " +
+                            "directory or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -860,7 +840,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
         } catch (Exception e) {
             // Failed to find out last modified timestamp. Continue without it.
-            getLogger().log(Level.FINEST,
+            getLogger().trace(
                     "Failed to find out last modified timestamp. Continuing without it.",
                     e);
         } finally {
@@ -875,8 +855,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } catch (FileNotFoundException e) {
                 // Not logging when the file does not exist.
             } catch (IOException e) {
-                getLogger().log(Level.INFO,
-                        "Error closing URLConnection input stream", e);
+                getLogger().info("Error closing URLConnection input stream", e);
             }
         }
 
@@ -955,7 +934,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } catch (IOException e) {
                 // NOP: will be still tried with non gzipped version
             } catch (Exception e) {
-                getLogger().log(Level.FINE,
+                getLogger().debug(
                         "Unexpected exception looking for gzipped version of resource "
                                 + urlStr,
                         e);
@@ -1072,8 +1051,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // security check: do not permit navigation out of the VAADIN
         // directory
         if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
-            getLogger().log(Level.INFO,
-                    "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+            getLogger().info(
+                    "Requested resource [{}] not accessible in the VAADIN directory or access to it is forbidden.",
                     filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
@@ -1082,8 +1061,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         if (getService().getDeploymentConfiguration().isProductionMode()) {
             // This is not meant for production mode.
-            getLogger().log(Level.INFO,
-                    "Request for {0} not handled by sass compiler while in production mode",
+            getLogger().info(
+                    "Request for {} not handled by sass compiler while in production mode",
                     filename);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             // Handled, return true so no further processing is done
@@ -1097,8 +1076,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 try {
                     cacheEntry = loadPersistedScssCache(scssFilename, sc);
                 } catch (Exception e) {
-                    getLogger().log(Level.WARNING,
-                            "Could not read persisted scss cache", e);
+                    getLogger().warn("Could not read persisted scss cache", e);
                 }
             }
 
@@ -1162,17 +1140,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         if (scss == null) {
-            getLogger().log(Level.WARNING,
-                    "Scss file {0} exists but ScssStylesheet was not able to find it",
+            getLogger().warn(
+                    "Scss file {} exists but ScssStylesheet was not able to find it",
                     scssFilename);
             return null;
         }
         try {
-            getLogger().log(Level.FINE, "Compiling {0} for request to {1}",
-                    new Object[] { realFilename, filename });
+            getLogger().debug("Compiling {} for request to {}", realFilename,
+                    filename);
             scss.compile();
         } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Scss compilation failed", e);
+            getLogger().warn("Scss compilation failed", e);
             return null;
         }
 
@@ -1214,13 +1192,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // loader sees it.
             if (!resourcePath.contains("!/VAADIN/")
                     && !resourcePath.contains("!/META-INF/resources/VAADIN/")) {
-                getLogger().log(Level.INFO,
-                        "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
+                getLogger().info(
+                        "Blocked attempt to access a JAR entry not starting with /VAADIN/: {}",
                         resourceUrl);
                 return false;
             }
-            getLogger().log(Level.FINE,
-                    "Accepted access to a JAR entry using a class loader: {0}",
+            getLogger().debug(
+                    "Accepted access to a JAR entry using a class loader: {}",
                     resourceUrl);
             return true;
         } else {
@@ -1231,12 +1209,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // "/../"
             if (!resourcePath.contains("/VAADIN/")
                     || resourcePath.contains("/../")) {
-                getLogger().log(Level.INFO,
-                        "Blocked attempt to access file: {0}", resourceUrl);
+                getLogger().info("Blocked attempt to access file: {}",
+                        resourceUrl);
                 return false;
             }
-            getLogger().log(Level.FINE,
-                    "Accepted access to a file using a class loader: {0}",
+            getLogger().debug(
+                    "Accepted access to a file using a class loader: {}",
                     resourceUrl);
             return true;
         }
@@ -1439,7 +1417,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String scssFileName = cacheEntry.getScssFileName();
         if (scssFileName == null) {
             if (!scssCompileWarWarningEmitted) {
-                getLogger().warning(
+                getLogger().warn(
                         "Could not persist scss cache because no real file was found for the compiled scss file. "
                                 + "This might happen e.g. if serving the scss file directly from a .war file.");
                 scssCompileWarWarningEmitted = true;
@@ -1455,8 +1433,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         try {
             writeFile(cacheEntryJsonString, cacheFile, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            getLogger().log(Level.WARNING,
-                    "Error persisting scss cache " + cacheFile, e);
+            getLogger().warn("Error persisting scss cache " + cacheFile, e);
         }
     }
 
@@ -1529,8 +1506,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         ;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinServlet.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(VaadinServlet.class);
     }
-
 }

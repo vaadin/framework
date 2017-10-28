@@ -16,27 +16,17 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
+import com.vaadin.shared.communication.PushConstants;
+import com.vaadin.ui.UI;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.util.Version;
+import org.slf4j.LoggerFactory;
 
-import com.vaadin.shared.communication.PushConstants;
-import com.vaadin.ui.UI;
+import java.io.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * A {@link PushConnection} implementation using the Atmosphere push support
@@ -283,8 +273,7 @@ public class AtmospherePushConnection implements PushConnection {
         if (resource == null) {
             // Already disconnected. Should not happen but if it does, we don't
             // want to cause NPEs
-            getLogger().fine(
-                    "AtmospherePushConnection.disconnect() called twice, this should not happen");
+            getLogger().debug("AtmospherePushConnection.disconnect() called twice, this should not happen");
             return;
         }
         if (resource.isResumed()) {
@@ -301,11 +290,9 @@ public class AtmospherePushConnection implements PushConnection {
             try {
                 outgoingMessage.get(1000, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
-                getLogger().log(Level.INFO,
-                        "Timeout waiting for messages to be sent to client before disconnect");
+                getLogger().info("Timeout waiting for messages to be sent to client before disconnect");
             } catch (Exception e) {
-                getLogger().log(Level.INFO,
-                        "Error waiting for messages to be sent to client before disconnect");
+                getLogger().info("Error waiting for messages to be sent to client before disconnect");
             }
             outgoingMessage = null;
         }
@@ -313,8 +300,7 @@ public class AtmospherePushConnection implements PushConnection {
         try {
             resource.close();
         } catch (IOException e) {
-            getLogger().log(Level.INFO, "Error when closing push connection",
-                    e);
+            getLogger().info("Error when closing push connection", e);
         }
         connectionLost();
     }
@@ -353,8 +339,8 @@ public class AtmospherePushConnection implements PushConnection {
         state = State.DISCONNECTED;
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(AtmospherePushConnection.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(AtmospherePushConnection.class);
     }
 
     /**
@@ -364,24 +350,6 @@ public class AtmospherePushConnection implements PushConnection {
      * @since 7.6
      */
     public static void enableAtmosphereDebugLogging() {
-        Level level = Level.FINEST;
-
-        Logger atmosphereLogger = Logger.getLogger("org.atmosphere");
-        if (atmosphereLogger.getLevel() == level) {
-            // Already enabled
-            return;
-        }
-
-        atmosphereLogger.setLevel(level);
-
-        // Without this logging, we will have a ClassCircularityError
-        LogRecord record = new LogRecord(Level.INFO,
-                "Enabling Atmosphere debug logging");
-        atmosphereLogger.log(record);
-
-        ConsoleHandler ch = new ConsoleHandler();
-        ch.setLevel(Level.ALL);
-        atmosphereLogger.addHandler(ch);
+        // it is not required any more, since SLF4J is enabled by default
     }
-
 }

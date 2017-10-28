@@ -15,12 +15,12 @@
  */
 package com.vaadin.client;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles loading of dependencies (style sheets and scripts) in the
@@ -52,7 +52,7 @@ public class DependencyLoader {
             if (event.getResourceUrl().endsWith("css")) {
                 error += " or the load detection failed because the stylesheet is empty.";
             }
-            getLogger().severe(error);
+            getLogger().error(error);
             // The show must go on
             onLoad(event);
         }
@@ -119,7 +119,7 @@ public class DependencyLoader {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(DependencyLoader.class.getName());
+        return LoggerFactory.getLogger(DependencyLoader.class);
     }
 
 }

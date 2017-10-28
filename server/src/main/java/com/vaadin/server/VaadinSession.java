@@ -16,42 +16,30 @@
 
 package com.vaadin.server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Contains everything that Vaadin needs to store for a specific user. This is
@@ -140,7 +128,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                     errorHandler.error(errorEvent);
                 }
             } catch (Exception e) {
-                getLogger().log(Level.SEVERE, e.getMessage(), e);
+                getLogger().error(e.getMessage(), e);
             }
         }
     }
@@ -289,7 +277,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         // closing
         // Notify the service
         if (service == null) {
-            getLogger().warning(
+            getLogger().warn(
                     "A VaadinSession instance not associated to any service is getting unbound. "
                             + "Session destroy events will not be fired and UIs in the session will not get detached. "
                             + "This might happen if a session is deserialized but never used before it expires.");
@@ -1030,7 +1018,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                     try {
                         ui.getConnectorTracker().cleanConnectorMap(false);
                     } catch (AssertionError | Exception e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Exception while cleaning connector map for ui "
                                         + ui.getUIId(),
                                 e);
@@ -1312,8 +1300,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         this.state = state;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinSession.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(VaadinSession.class);
     }
 
     /**

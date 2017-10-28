@@ -16,18 +16,6 @@
 
 package com.vaadin.v7.ui;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.logging.Logger;
-
-import org.jsoup.nodes.Element;
-
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -49,6 +37,12 @@ import com.vaadin.v7.event.FieldEvents;
 import com.vaadin.v7.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.v7.shared.ui.datefield.Resolution;
 import com.vaadin.v7.shared.ui.datefield.TextualDateFieldState;
+import org.jsoup.nodes.Element;
+import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.*;
 
 /**
  * <p>
@@ -1058,8 +1052,8 @@ public class DateField extends AbstractField<Date> implements
                     .parse(design.attr("value"), Date.class);
             // formatting will return null if it cannot parse the string
             if (date == null) {
-                Logger.getLogger(DateField.class.getName()).info(
-                        "cannot parse " + design.attr("value") + " as date");
+                LoggerFactory.getLogger(DateField.class).info(
+                        "cannot parse {} as date", design.attr("value"));
             }
             this.setValue(date, false, true);
         }

@@ -15,6 +15,9 @@
  */
 package com.vaadin.data.util;
 
+import com.vaadin.data.validator.BeanValidator;
+import org.slf4j.LoggerFactory;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -24,10 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.data.validator.BeanValidator;
 
 /**
  * Utility class for Java Beans information access.
@@ -237,10 +236,11 @@ public final class BeanUtil implements Serializable {
                 return true;
             } catch (ClassNotFoundException | NoSuchMethodException
                     | InvocationTargetException e) {
-                Logger.getLogger(BeanValidator.class.getName()).log(Level.INFO,
+                LoggerFactory.getLogger(BeanValidator.class)
+                        .info(
                         "A JSR-303 bean validation implementation not found on the classpath or could not be initialized. "
-                                + BeanValidator.class.getSimpleName()
-                                + " cannot be used.",
+                        + "{} cannot be used.",
+                        BeanValidator.class.getSimpleName(),
                         e);
                 return false;
             } catch (IllegalAccessException | IllegalArgumentException e) {

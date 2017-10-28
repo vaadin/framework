@@ -15,6 +15,18 @@
  */
 package com.vaadin.server;
 
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.vaadin.server.communication.PortletDummyRequestHandler;
+import com.vaadin.server.communication.PortletUIInitHandler;
+import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.portlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -23,33 +35,6 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.EventRequest;
-import javax.portlet.EventResponse;
-import javax.portlet.GenericPortlet;
-import javax.portlet.PortalContext;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.server.communication.PortletDummyRequestHandler;
-import com.vaadin.server.communication.PortletUIInitHandler;
-import com.vaadin.ui.UI;
-import com.vaadin.util.CurrentInstance;
 
 /**
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
@@ -370,7 +355,7 @@ public class VaadinPortlet extends GenericPortlet
             } catch (Exception e) {
                 if (!warningLogged) {
                     warningLogged = true;
-                    getLogger().log(Level.WARNING,
+                    getLogger().warn(
                             "Could not determine underlying servlet request for WebLogic Portal portlet request",
                             e);
                 }
@@ -639,8 +624,8 @@ public class VaadinPortlet extends GenericPortlet
         getService().destroy();
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinPortlet.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(VaadinPortlet.class);
     }
 
     /**

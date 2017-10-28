@@ -37,6 +37,18 @@
             </exclusions>
         </dependency>
 
+        <!-- SLF4J API and implementation -->
+        <dependency>
+            <groupId>ru.finam</groupId>
+            <artifactId>slf4j-gwt</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!-- Needed GWT dependencies, includes gwt-user -->
         <dependency>
             <groupId>com.google.gwt</groupId>

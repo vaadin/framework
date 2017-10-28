@@ -15,13 +15,6 @@
  */
 package com.vaadin.client.ui.treegrid;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
@@ -42,13 +35,11 @@ import com.vaadin.shared.Range;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.treegrid.FocusParentRpc;
-import com.vaadin.shared.ui.treegrid.FocusRpc;
-import com.vaadin.shared.ui.treegrid.NodeCollapseRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridClientRpc;
-import com.vaadin.shared.ui.treegrid.TreeGridState;
-
+import com.vaadin.shared.ui.treegrid.*;
 import elemental.json.JsonObject;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * A connector class for the TreeGrid component.
@@ -143,8 +134,8 @@ public class TreeGridConnector extends GridConnector {
 
                 hierarchyColumnId = newHierarchyColumnId;
             } else {
-                Logger.getLogger(TreeGridConnector.class.getName()).warning(
-                        "Couldn't find column: " + newHierarchyColumnId);
+                LoggerFactory.getLogger(TreeGridConnector.class).warn(
+                        "Couldn't find column: {}", newHierarchyColumnId);
             }
         });
         hierarchyColumnUpdateScheduled = true;

@@ -16,25 +16,17 @@
 
 package com.vaadin.server.communication;
 
+import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
+import com.vaadin.server.*;
+import com.vaadin.shared.JsonConstants;
+import com.vaadin.ui.UI;
+import elemental.json.JsonException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
-import com.vaadin.server.ServletPortletHelper;
-import com.vaadin.server.SessionExpiredHandler;
-import com.vaadin.server.SynchronizedRequestHandler;
-import com.vaadin.server.SystemMessages;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.JsonConstants;
-import com.vaadin.ui.UI;
-
-import elemental.json.JsonException;
 
 /**
  * Processes a UIDL request from the client.
@@ -91,13 +83,13 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
 
             writeUidl(request, response, uI, stringWriter);
         } catch (JsonException e) {
-            getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
+            getLogger().error("Error writing JSON to response", e);
             // Refresh on client side
             writeRefresh(request, response);
             return true;
         } catch (InvalidUIDLSecurityKeyException e) {
-            getLogger().log(Level.WARNING,
-                    "Invalid security key received from {0}",
+            getLogger().warn(
+                    "Invalid security key received from {}",
                     request.getRemoteHost());
             // Refresh on client side
             writeRefresh(request, response);
@@ -143,8 +135,8 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
         outWriter.write("for(;;);[{");
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(UidlRequestHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(UidlRequestHandler.class);
     }
 
     /*
@@ -198,5 +190,4 @@ public class UidlRequestHandler extends SynchronizedRequestHandler
 
         return json;
     }
-
 }

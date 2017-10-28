@@ -16,36 +16,27 @@
 
 package com.vaadin.server.communication;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.server.LegacyApplicationUIProvider;
-import com.vaadin.server.SynchronizedRequestHandler;
-import com.vaadin.server.UIClassSelectionEvent;
-import com.vaadin.server.UICreateEvent;
-import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.*;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
-
 import elemental.json.Json;
 import elemental.json.JsonException;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.util.List;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Handles an initial request from the client to initialize a {@link UI}.
@@ -227,7 +218,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // Warn if the window can't be preserved
         if (embedId == null
                 && vaadinService.preserveUIOnRefresh(provider, event)) {
-            getLogger().warning("There is no embed id available for UI "
+            getLogger().warn("There is no embed id available for UI "
                     + uiClass + " that should be preserved.");
         }
 
@@ -294,7 +285,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             writer.write("}");
 
             String initialUIDL = writer.toString();
-            getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
+            getLogger().trace("Initial UIDL:" + initialUIDL);
             return initialUIDL;
         }
     }
@@ -325,7 +316,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
                 + session.getPushId() + "\",";
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(UIInitHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(UIInitHandler.class);
     }
 }

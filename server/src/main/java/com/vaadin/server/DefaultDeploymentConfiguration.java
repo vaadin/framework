@@ -16,11 +16,12 @@
 
 package com.vaadin.server;
 
+import com.vaadin.shared.communication.PushMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Locale;
 import java.util.Properties;
-import java.util.logging.Logger;
-
-import com.vaadin.shared.communication.PushMode;
 
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
@@ -271,7 +272,7 @@ public class DefaultDeploymentConfiguration
                 Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false")
                         .equals("true");
         if (!productionMode) {
-            getLogger().warning(Constants.NOT_PRODUCTION_MODE_INFO);
+            getLogger().warn(Constants.NOT_PRODUCTION_MODE_INFO);
         }
     }
 
@@ -283,7 +284,7 @@ public class DefaultDeploymentConfiguration
                 Constants.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false")
                         .equals("true");
         if (!xsrfProtectionEnabled) {
-            getLogger().warning(Constants.WARNING_XSRF_PROTECTION_DISABLED);
+            getLogger().warn(Constants.WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
 
@@ -296,8 +297,7 @@ public class DefaultDeploymentConfiguration
                     Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
                     Integer.toString(DEFAULT_RESOURCE_CACHE_TIME)));
         } catch (NumberFormatException e) {
-            getLogger().warning(
-                    Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            getLogger().warn(Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
             resourceCacheTime = DEFAULT_RESOURCE_CACHE_TIME;
         }
     }
@@ -308,8 +308,7 @@ public class DefaultDeploymentConfiguration
                     Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
                     Integer.toString(DEFAULT_HEARTBEAT_INTERVAL)));
         } catch (NumberFormatException e) {
-            getLogger()
-                    .warning(Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            getLogger().warn(Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
             heartbeatInterval = DEFAULT_HEARTBEAT_INTERVAL;
         }
     }
@@ -328,7 +327,7 @@ public class DefaultDeploymentConfiguration
             pushMode = Enum.valueOf(PushMode.class,
                     mode.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
+            getLogger().warn(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
             pushMode = PushMode.DISABLED;
         }
     }
@@ -347,7 +346,6 @@ public class DefaultDeploymentConfiguration
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(getClass().getName());
+        return LoggerFactory.getLogger(getClass());
     }
-
 }

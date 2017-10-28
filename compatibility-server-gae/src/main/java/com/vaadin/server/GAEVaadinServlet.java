@@ -15,38 +15,24 @@
  */
 package com.vaadin.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.google.appengine.api.datastore.Blob;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.FetchOptions.Builder;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
@@ -225,7 +211,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    getLogger().finer(
+                    getLogger().trace(
                             "Thread.sleep() interrupted while waiting for lock. Trying again. "
                                     + e);
                 }
@@ -270,18 +256,16 @@ public class GAEVaadinServlet extends VaadinServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            getLogger().log(Level.WARNING, "DeadlineExceeded for {0}",
-                    session.getId());
+            getLogger().warn("DeadlineExceeded for {}", session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
-            getLogger().log(Level.SEVERE, "Not serializable!", e);
+            getLogger().error("Not serializable!", e);
 
             // TODO this notification is usually not shown - should we redirect
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
         } catch (Exception e) {
-            getLogger().log(Level.WARNING,
-                    "An exception occurred while servicing request.", e);
+            getLogger().warn("An exception occurred while servicing request.", e);
 
             sendCriticalErrorNotification(request, response);
         } finally {
@@ -303,7 +287,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     protected int getMaxInactiveIntervalSeconds(final HttpSession session) {
         int interval = session.getMaxInactiveInterval();
         if (interval <= 0) {
-            getLogger().log(Level.FINE,
+            getLogger().debug(
                     "Undefined session expiration time, using default value instead.");
             return DEFAULT_MAX_INACTIVE_INTERVAL;
         }
@@ -342,14 +326,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 VaadinSession vaadinSession = (VaadinSession) ois.readObject();
                 getService().storeSession(vaadinSession,
                         new WrappedHttpSession(session));
-            } catch (IOException e) {
-                getLogger().log(Level.WARNING,
-                        "Could not de-serialize ApplicationContext for "
-                                + session.getId()
-                                + " A new one will be created. ",
-                        e);
-            } catch (ClassNotFoundException e) {
-                getLogger().log(Level.WARNING,
+            } catch (IOException | ClassNotFoundException e) {
+                getLogger().warn(
                         "Could not de-serialize ApplicationContext for "
                                 + session.getId()
                                 + " A new one will be created. ",
@@ -426,8 +404,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq
                         .asList(Builder.withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().log(Level.INFO,
-                            "Vaadin cleanup deleting {0} expired Vaadin sessions.",
+                    getLogger().info(
+                            "Vaadin cleanup deleting {} expired Vaadin sessions.",
                             entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
@@ -446,8 +424,8 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq
                         .asList(Builder.withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().log(Level.INFO,
-                            "Vaadin cleanup deleting {0} expired appengine sessions.",
+                    getLogger().info(
+                            "Vaadin cleanup deleting {} expired appengine sessions.",
                             entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
@@ -457,11 +435,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 }
             }
         } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Exception while cleaning.", e);
+            getLogger().warn("Exception while cleaning.", e);
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(GAEVaadinServlet.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(GAEVaadinServlet.class);
     }
 }

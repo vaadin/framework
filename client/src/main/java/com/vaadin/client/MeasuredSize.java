@@ -15,10 +15,10 @@
  */
 package com.vaadin.client;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MeasuredSize {
     private static final boolean DEBUG_SIZE_CHANGES = false;
@@ -293,7 +293,7 @@ public class MeasuredSize {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(MeasuredSize.class.getName());
+        return LoggerFactory.getLogger(MeasuredSize.class);
     }
 
 }
