@@ -16,24 +16,16 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.user.client.Timer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * ResourceLoader lets you dynamically include external scripts and styles on
@@ -466,7 +458,7 @@ public class ResourceLoader {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ResourceLoader.class.getName());
+        return LoggerFactory.getLogger(ResourceLoader.class);
     }
 
     private static native boolean supportsHtmlWhenReady()

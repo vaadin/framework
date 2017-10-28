@@ -15,14 +15,13 @@
  */
 package com.vaadin.v7.data.util.sqlcontainer.connection;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @deprecated As of 8.0, no replacement available.
@@ -74,8 +73,8 @@ public class J2EEConnectionPool implements JDBCConnectionPool {
             try {
                 conn.close();
             } catch (SQLException e) {
-                Logger.getLogger(J2EEConnectionPool.class.getName())
-                        .log(Level.FINE, "Could not release SQL connection", e);
+                LoggerFactory.getLogger(J2EEConnectionPool.class)
+                        .debug("Could not release SQL connection", e);
             }
         }
     }

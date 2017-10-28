@@ -13,6 +13,7 @@
     <inherits name="com.google.gwt.http.HTTP" />
 
     <inherits name="com.google.gwt.logging.Logging" />
+    <inherits name="ru.finam.slf4jgwt.logging.gwt.Logging"/>
     <set-property name="gwt.logging.enabled" value="TRUE" />
 
     <source path="client" />

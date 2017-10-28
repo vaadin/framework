@@ -15,15 +15,6 @@
  */
 package com.vaadin.v7.client.connectors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.vaadin.client.ServerConnector;
@@ -51,8 +42,11 @@ import com.vaadin.v7.shared.ui.grid.GridState;
 import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelServerRpc;
 import com.vaadin.v7.shared.ui.grid.selection.MultiSelectionModelState;
 import com.vaadin.v7.ui.Grid.MultiSelectionModel;
-
 import elemental.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Connector for server-side {@link MultiSelectionModel}.
@@ -104,7 +98,7 @@ public class MultiSelectionModelConnector extends
             ((HasUserSelectionAllowed) selectionModel)
                     .setUserSelectionAllowed(getState().userSelectionAllowed);
         } else {
-            getLogger().warning("userSelectionAllowed set to "
+            getLogger().warn("userSelectionAllowed set to "
                     + getState().userSelectionAllowed
                     + " but the selection model does not implement "
                     + HasUserSelectionAllowed.class.getSimpleName());
@@ -112,7 +106,7 @@ public class MultiSelectionModelConnector extends
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(MultiSelectionModelConnector.class.getName());
+        return LoggerFactory.getLogger(MultiSelectionModelConnector.class);
     }
 
     /**

@@ -15,8 +15,6 @@
  */
 package com.vaadin.client;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.UrlBuilder;
@@ -25,6 +23,8 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.vaadin.client.ui.VNotification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
@@ -67,10 +67,10 @@ public class SuperDevMode {
 
                     @Override
                     public void onSuccess(RecompileResult result) {
-                        getLogger().fine("JSONP compile call successful");
+                        getLogger().debug("JSONP compile call successful");
 
                         if (!result.ok()) {
-                            getLogger().fine("* result: " + result);
+                            getLogger().debug("* result: " + result);
                             failed();
                             return;
                         }
@@ -80,16 +80,16 @@ public class SuperDevMode {
                                         serverUrl));
                         setSession(SKIP_RECOMPILE, "1");
 
-                        getLogger().fine("* result: OK. Reloading");
+                        getLogger().debug("* result: OK. Reloading");
                         Location.reload();
                     }
 
                     @Override
                     public void onFailure(Throwable caught) {
-                        getLogger().severe("JSONP compile call failed");
+                        getLogger().error("JSONP compile call failed");
                         // Don't log exception as they are shown as
                         // notifications
-                        getLogger().severe(caught.getClass().getSimpleName()
+                        getLogger().error(caught.getClass().getSimpleName()
                                 + ": " + caught.getMessage());
                         failed();
 
@@ -263,6 +263,6 @@ public class SuperDevMode {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(SuperDevMode.class.getName());
+        return LoggerFactory.getLogger(SuperDevMode.class);
     }
 }

@@ -16,25 +16,16 @@
 
 package com.vaadin.server;
 
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * User Interface Description Language Target.
@@ -664,10 +655,10 @@ public class JsonPaintTarget implements PaintTarget {
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
-        if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(Level.FINE, "startPaintable for {0}@{1}",
-                    new Object[] { connector.getClass().getName(),
-                            Integer.toHexString(connector.hashCode()) });
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("startPaintable for {}@{}",
+                    connector.getClass().getName(),
+                    Integer.toHexString(connector.hashCode()));
         }
         startTag(tagName, true);
 
@@ -690,10 +681,10 @@ public class JsonPaintTarget implements PaintTarget {
 
     @Override
     public void endPaintable(Component paintable) throws PaintException {
-        if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(Level.FINE, "endPaintable for {0}@{1}",
-                    new Object[] { paintable.getClass().getName(),
-                            Integer.toHexString(paintable.hashCode()) });
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("endPaintable for {}@{}",
+                    paintable.getClass().getName(),
+                    Integer.toHexString(paintable.hashCode()));
         }
 
         ClientConnector openPaintable = openPaintables.peek();
@@ -1030,8 +1021,7 @@ public class JsonPaintTarget implements PaintTarget {
         return !cacheEnabled;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(JsonPaintTarget.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(JsonPaintTarget.class);
     }
-
 }

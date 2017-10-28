@@ -32,10 +32,12 @@
         <!-- Used in OSGi manifests -->
         <javax.validation.version>1.0.0.GA</javax.validation.version>
         <jsoup.version>1.8.3</jsoup.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <slf4j-gwt.version>1.7.7.1</slf4j-gwt.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
-        <atmosphere.runtime.version>2.4.11.vaadin2</atmosphere.runtime.version>
+        <atmosphere.runtime.version>2.4.11</atmosphere.runtime.version>
 
         <!-- OSGi -->
         <osgi.execution.environment>JavaSE-1.8</osgi.execution.environment>
@@ -162,7 +164,7 @@
                 <version>${vaadin.gwt.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.vaadin.external.atmosphere</groupId>
+                <groupId>org.atmosphere</groupId>
                 <artifactId>atmosphere-runtime</artifactId>
                 <version>${atmosphere.runtime.version}</version>
             </dependency>
@@ -217,6 +219,21 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ru.finam</groupId>
+                <artifactId>slf4j-gwt</artifactId>
+                <version>${slf4j-gwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.http.client.Request;
@@ -29,8 +27,8 @@ import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.AtmospherePushConnection.AtmosphereResponse;
 import com.vaadin.shared.ui.ui.UIState.ReconnectDialogConfigurationState;
-
 import elemental.json.JsonObject;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of the connection state handler.
@@ -118,8 +116,8 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         return reconnectionCause != null;
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(DefaultConnectionStateHandler.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(DefaultConnectionStateHandler.class);
     }
 
     /**
@@ -139,14 +137,14 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     @Override
     public void heartbeatException(Request request, Throwable exception) {
-        getLogger().severe("Heartbeat exception: " + exception.getMessage());
+        getLogger().error("Heartbeat exception: ", exception.getMessage());
         handleRecoverableError(Type.HEARTBEAT, null);
     }
 
     @Override
     public void heartbeatInvalidStatusCode(Request request, Response response) {
         int statusCode = response.getStatusCode();
-        getLogger().warning("Heartbeat request returned " + statusCode);
+        getLogger().warn("Heartbeat request returned " + statusCode);
 
         if (response.getStatusCode() == Response.SC_GONE) {
             // Session expired
@@ -171,7 +169,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
     private void debug(String msg) {
         if (false) {
-            getLogger().warning(msg);
+            getLogger().warn(msg);
         }
     }
 
@@ -195,7 +193,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         if (!isReconnecting()) {
             // First problem encounter
             reconnectionCause = type;
-            getLogger().warning("Reconnecting because of " + type + " failure");
+            getLogger().warn("Reconnecting because of " + type + " failure");
             // Precaution only as there should never be a dialog at this point
             // and no timer running
             stopDialogTimer();
@@ -212,7 +210,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
             // If a higher priority issues is resolved, we can assume the lower
             // one will be also
             if (type.isHigherPriorityThan(reconnectionCause)) {
-                getLogger().warning(
+                getLogger().warn(
                         "Now reconnecting because of " + type + " failure");
                 reconnectionCause = type;
             }
@@ -277,7 +275,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
         if (!connection.isApplicationRunning()) {
             // This should not happen as nobody should call this if the
             // application has been stopped
-            getLogger().warning(
+            getLogger().warn(
                     "Trying to reconnect after application has been stopped. Giving up");
             return;
         }
@@ -449,7 +447,7 @@ public class DefaultConnectionStateHandler implements ConnectionStateHandler {
 
         Response response = xhrConnectionError.getResponse();
         int statusCode = response.getStatusCode();
-        getLogger().warning("Server returned " + statusCode + " for xhr");
+        getLogger().warn("Server returned " + statusCode + " for xhr");
 
         if (statusCode == 401) {
             // Authentication/authorization failed, no need to re-try

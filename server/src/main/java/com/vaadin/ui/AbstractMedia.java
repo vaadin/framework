@@ -16,32 +16,25 @@
 
 package com.vaadin.ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-
-import com.vaadin.server.ConnectorResource;
-import com.vaadin.server.DownloadStream;
-import com.vaadin.server.Resource;
-import com.vaadin.server.ResourceReference;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.*;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
 import com.vaadin.shared.ui.PreloadMode;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract base class for the HTML5 media components.
@@ -112,8 +105,7 @@ public abstract class AbstractMedia extends AbstractComponent {
             int sourceIndex = Integer.parseInt(matcher.group(1));
 
             if (sourceIndex < 0 || sourceIndex >= sources.size()) {
-                getLogger().log(Level.WARNING,
-                        "Requested source index {0} is out of bounds",
+                getLogger().warn("Requested source index {} is out of bounds",
                         sourceIndex);
                 return false;
             }
@@ -131,7 +123,7 @@ public abstract class AbstractMedia extends AbstractComponent {
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(AbstractMedia.class.getName());
+        return LoggerFactory.getLogger(AbstractMedia.class);
     }
 
     /**

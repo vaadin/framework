@@ -16,15 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
@@ -33,8 +24,12 @@ import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
-
 import elemental.json.JsonArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class JavaScriptConnectorHelper {
 
@@ -154,8 +149,8 @@ public class JavaScriptConnectorHelper {
                 this.initFunctionName = initFunctionName;
                 return true;
             } else {
-                getLogger().warning("No JavaScript function " + initFunctionName
-                        + " found");
+                getLogger().warn("No JavaScript function {} found",
+                        initFunctionName);
             }
         }
         getLogger().info("No JavaScript init for connector found");
@@ -514,6 +509,6 @@ public class JavaScriptConnectorHelper {
     }-*/;
 
     private static Logger getLogger() {
-        return Logger.getLogger(JavaScriptConnectorHelper.class.getName());
+        return LoggerFactory.getLogger(JavaScriptConnectorHelper.class);
     }
 }

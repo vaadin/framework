@@ -15,14 +15,6 @@
  */
 package com.vaadin.client;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
@@ -37,6 +29,10 @@ import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.LayoutDependencyTree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class LayoutManager {
     private static final String STATE_CHANGE_MESSAGE = "Cannot run layout while processing state change from the server.";
@@ -234,8 +230,8 @@ public class LayoutManager {
         }
         layoutCounts.put(layout.getConnectorId(), count);
         if (count.intValue() > 2) {
-            getLogger().severe(Util.getConnectorString(layout)
-                    + " has been layouted " + count.intValue() + " times");
+            getLogger().error(Util.getConnectorString(layout)
+                    + " has been layouted {} times", count.intValue());
         }
     }
 
@@ -257,7 +253,7 @@ public class LayoutManager {
             assert false : STATE_CHANGE_MESSAGE;
 
             // Else just log a warning and postpone the layout
-            getLogger().warning(STATE_CHANGE_MESSAGE);
+            getLogger().warn(STATE_CHANGE_MESSAGE);
 
             // Framework will call layoutNow when the state update is completed
             return;
@@ -382,8 +378,7 @@ public class LayoutManager {
                                     Profiler.leave(key);
                                 }
                             } catch (RuntimeException e) {
-                                getLogger().log(Level.SEVERE,
-                                        "Error in resize listener", e);
+                                getLogger().error("Error in resize listener", e);
                             }
                         }
                         Profiler.leave(
@@ -426,8 +421,7 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger().log(Level.SEVERE,
-                                    "Error in ManagedLayout handling", e);
+                            getLogger().error("Error in ManagedLayout handling", e);
                         }
                         countLayout(layoutCounts, cl);
                     } else {
@@ -450,7 +444,7 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger().log(Level.SEVERE,
+                            getLogger().error(
                                     "Error in SimpleManagedLayout (horizontal) handling",
                                     e);
 
@@ -486,7 +480,7 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger().log(Level.SEVERE,
+                            getLogger().error(
                                     "Error in DirectionalManagedLayout handling",
                                     e);
                         }
@@ -511,7 +505,7 @@ public class LayoutManager {
                                 Profiler.leave(key);
                             }
                         } catch (RuntimeException e) {
-                            getLogger().log(Level.SEVERE,
+                            getLogger().error(
                                     "Error in SimpleManagedLayout (vertical) handling",
                                     e);
                         }
@@ -560,7 +554,7 @@ public class LayoutManager {
                     + " layouts.");
 
             if (passes > 100) {
-                getLogger().severe(LOOP_ABORT_MESSAGE);
+                getLogger().error(LOOP_ABORT_MESSAGE);
                 if (ApplicationConfiguration.isDebugMode()) {
                     VNotification
                             .createNotification(VNotification.DELAY_FOREVER,
@@ -597,7 +591,7 @@ public class LayoutManager {
 
         // Ensure temporary variables are cleaned
         if (!pendingOverflowFixes.isEmpty()) {
-            getLogger().warning(
+            getLogger().warn(
                     "pendingOverflowFixes is not empty at the end of doLayout: "
                             + pendingOverflowFixes.dump());
             pendingOverflowFixes = FastStringSet.create();
@@ -912,7 +906,7 @@ public class LayoutManager {
      */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
         if (isLayoutRunning()) {
-            getLogger().warning(
+            getLogger().warn(
                     "setNeedsHorizontalLayout should not be run while a layout phase is in progress.");
         }
         needsHorizontalLayout.add(layout.getConnectorId());
@@ -937,7 +931,7 @@ public class LayoutManager {
      */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
         if (isLayoutRunning()) {
-            getLogger().warning(
+            getLogger().warn(
                     "setNeedsVerticalLayout should not be run while a layout phase is in progress.");
         }
         needsVerticalLayout.add(layout.getConnectorId());
@@ -1824,7 +1818,7 @@ public class LayoutManager {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(LayoutManager.class.getName());
+        return LoggerFactory.getLogger(LayoutManager.class);
     }
 
     /**

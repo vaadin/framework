@@ -16,12 +16,13 @@
 
 package com.vaadin.v7.data.util.converter;
 
+import com.vaadin.server.VaadinSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.logging.Logger;
-
-import com.vaadin.server.VaadinSession;
 
 /**
  * Default implementation of {@link ConverterFactory}. Provides converters for
@@ -39,8 +40,8 @@ import com.vaadin.server.VaadinSession;
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private static final Logger LOG = Logger
-            .getLogger(DefaultConverterFactory.class.getName());
+    private static final Logger LOG = LoggerFactory
+            .getLogger(DefaultConverterFactory.class);
 
     @Override
     public <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> createConverter(
@@ -48,8 +49,8 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<PRESENTATION, MODEL> converter = findConverter(
                 presentationType, modelType);
         if (converter != null) {
-            LOG.finest(getClass().getName() + " created a "
-                    + converter.getClass());
+            LOG.trace("{} created a {}",
+                    getClass().getName(), converter.getClass());
             return converter;
         }
 
@@ -57,16 +58,15 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<MODEL, PRESENTATION> reverseConverter = findConverter(
                 modelType, presentationType);
         if (reverseConverter != null) {
-            LOG.finest(getClass().getName() + " created a reverse "
-                    + reverseConverter.getClass());
+            LOG.trace("{} created a reverse {}",
+                    getClass().getName(), reverseConverter.getClass());
             return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
-        LOG.finest(getClass().getName() + " could not find a converter for "
-                + presentationType.getName() + " to " + modelType.getName()
-                + " conversion");
+        LOG.trace("{} could not find a converter for {} to {} conversion",
+                getClass().getName(), presentationType.getName(),
+                modelType.getName());
         return null;
-
     }
 
     protected <PRESENTATION, MODEL> Converter<PRESENTATION, MODEL> findConverter(

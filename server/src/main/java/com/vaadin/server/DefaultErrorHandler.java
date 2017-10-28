@@ -16,17 +16,17 @@
 
 package com.vaadin.server;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.SocketException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.event.ListenerMethod.MethodException;
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.InvocationTargetException;
+import java.net.SocketException;
 
 public class DefaultErrorHandler implements ErrorHandler {
     @Override
@@ -55,7 +55,7 @@ public class DefaultErrorHandler implements ErrorHandler {
         }
 
         // also print the error on console
-        getLogger().log(Level.SEVERE, "", t);
+        getLogger().error("", t);
     }
 
     /**
@@ -93,7 +93,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(DefaultErrorHandler.class.getName());
+        return LoggerFactory.getLogger(DefaultErrorHandler.class);
     }
 
     /**

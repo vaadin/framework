@@ -15,15 +15,9 @@
  */
 package com.vaadin.client.ui.customlayout;
 
-import java.util.logging.Logger;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
+import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -31,6 +25,8 @@ import com.vaadin.client.ui.VCustomLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 import com.vaadin.ui.CustomLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Connect(CustomLayout.class)
 public class CustomLayoutConnector extends AbstractLayoutConnector
@@ -111,7 +107,7 @@ public class CustomLayoutConnector extends AbstractLayoutConnector
                 getWidget().setWidget(child.getWidget(), location);
             } catch (final IllegalArgumentException e) {
                 // If no location is found, this component is not visible
-                getLogger().warning("Child not rendered as no slot with id '"
+                getLogger().warn("Child not rendered as no slot with id '"
                         + location + "' has been defined");
             }
         }
@@ -151,6 +147,6 @@ public class CustomLayoutConnector extends AbstractLayoutConnector
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(CustomLayoutConnector.class.getName());
+        return LoggerFactory.getLogger(CustomLayoutConnector.class);
     }
 }

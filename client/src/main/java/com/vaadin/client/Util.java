@@ -16,14 +16,6 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
@@ -44,9 +36,12 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.util.SharedUtil;
-
 import elemental.js.json.JsJsonValue;
 import elemental.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class Util {
 
@@ -733,7 +728,7 @@ public class Util {
         if (connector != null) {
             getLogger().info("\t" + id + " (" + connector.getClass() + ") :");
         } else {
-            getLogger().warning("\t" + id
+            getLogger().warn("\t" + id
                     + ": Warning: no corresponding connector for id " + id);
         }
         for (MethodInvocation invocation : invocations) {
@@ -794,7 +789,7 @@ public class Util {
                 printConnectorInvocations(invocations, curId, c);
             }
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "Error logging method invocations",
+            getLogger().error("Error logging method invocations",
                     e);
         }
     }
@@ -1256,6 +1251,6 @@ public class Util {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(Util.class.getName());
+        return LoggerFactory.getLogger(Util.class);
     }
 }

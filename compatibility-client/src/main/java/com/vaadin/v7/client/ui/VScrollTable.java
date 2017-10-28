@@ -16,107 +16,37 @@
 
 package com.vaadin.v7.client.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Style.Visibility;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
-import com.google.gwt.dom.client.Touch;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.dom.client.ScrollEvent;
-import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.dom.client.Style.*;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.DeferredWorker;
+import com.google.gwt.user.client.ui.*;
+import com.vaadin.client.*;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.HasChildMeasurementHintConnector.ChildMeasurementHint;
-import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.StyleConstants;
-import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.VTooltip;
-import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
-import com.vaadin.client.ui.FocusableScrollPanel;
-import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.SubPartAware;
-import com.vaadin.client.ui.TouchScrollDelegate;
-import com.vaadin.client.ui.TreeAction;
-import com.vaadin.client.ui.VContextMenu;
-import com.vaadin.client.ui.VEmbedded;
-import com.vaadin.client.ui.VOverlay;
-import com.vaadin.client.ui.dd.DDUtil;
-import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
-import com.vaadin.client.ui.dd.VDragAndDropManager;
-import com.vaadin.client.ui.dd.VDragEvent;
-import com.vaadin.client.ui.dd.VHasDropHandler;
-import com.vaadin.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.*;
+import com.vaadin.client.ui.dd.*;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.v7.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.v7.shared.ui.table.CollapseMenuContent;
 import com.vaadin.v7.shared.ui.table.TableConstants;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * VScrollTable
@@ -788,9 +718,6 @@ public class VScrollTable extends FlowPanel
     private HandlerRegistration addCloseHandler;
 
     /**
-     * Changes to manage mouseDown and mouseUp
-     */
-    /**
      * The element where the last mouse down event was registered.
      */
     private Element lastMouseDownTarget;
@@ -822,7 +749,7 @@ public class VScrollTable extends FlowPanel
                         .isOrHasChild(elementUnderMouse)) {
                     mouseUpPreviewMatched = true;
                 } else {
-                    getLogger().log(Level.FINEST,
+                    getLogger().trace(
                             "Ignoring mouseup from " + elementUnderMouse
                                     + " when mousedown was on "
                                     + lastMouseDownTarget);
@@ -8380,8 +8307,8 @@ public class VScrollTable extends FlowPanel
         return lazyAdjustColumnWidths.isRunning();
     }
 
-    private static Logger getLogger() {
-        return Logger.getLogger(VScrollTable.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(VScrollTable.class);
     }
 
     public ChildMeasurementHint getChildMeasurementHint() {
@@ -8398,7 +8325,7 @@ public class VScrollTable extends FlowPanel
                     .getIEFocusedElement();
             if (!getElement().isOrHasChild(focusedElement)) {
                 // Does not really have focus but a blur event has been lost
-                getLogger().warning(
+                getLogger().warn(
                         "IE did not send a blur event, firing manually");
                 onBlur();
             }

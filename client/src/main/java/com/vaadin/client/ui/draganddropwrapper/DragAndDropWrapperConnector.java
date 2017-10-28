@@ -15,17 +15,7 @@
  */
 package com.vaadin.client.ui.draganddropwrapper;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
+import com.vaadin.client.*;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
 import com.vaadin.client.ui.VDragAndDropWrapper;
@@ -34,6 +24,11 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperConstants;
 import com.vaadin.shared.ui.draganddropwrapper.DragAndDropWrapperServerRpc;
 import com.vaadin.ui.DragAndDropWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  *
@@ -113,7 +108,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                         .getConnector(dragImageComponentConnectorId);
 
                 if (connector == null) {
-                    getLogger().log(Level.WARNING,
+                    getLogger().warn(
                             "DragAndDropWrapper drag image component"
                                     + " connector now found. Make sure the"
                                     + " component is attached.");
@@ -136,7 +131,7 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(DragAndDropWrapperConnector.class.getName());
+        return LoggerFactory.getLogger(DragAndDropWrapperConnector.class);
     }
 
     @Override

@@ -15,16 +15,16 @@
  */
 package com.vaadin.v7.data.util;
 
+import com.vaadin.util.ReflectTools;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.util.SerializerHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.util.ReflectTools;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.util.SerializerHelper;
 
 /**
  * Property descriptor that is able to create simple {@link MethodProperty}
@@ -124,10 +124,8 @@ public class MethodPropertyDescriptor<BT>
             } else {
                 readMethod = null;
             }
-        } catch (SecurityException e) {
-            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
-        } catch (NoSuchMethodException e) {
-            getLogger().log(Level.SEVERE, "Internal deserialization error", e);
+        } catch (SecurityException | NoSuchMethodException e) {
+            getLogger().error("Internal deserialization error", e);
         }
     }
 
@@ -147,7 +145,7 @@ public class MethodPropertyDescriptor<BT>
                 writeMethod);
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(MethodPropertyDescriptor.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(MethodPropertyDescriptor.class);
     }
 }

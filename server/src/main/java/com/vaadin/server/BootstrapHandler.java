@@ -16,34 +16,6 @@
 
 package com.vaadin.server;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.jsoup.nodes.DataNode;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.DocumentType;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.parser.Tag;
-
 import com.vaadin.annotations.Viewport;
 import com.vaadin.annotations.ViewportGeneratorClass;
 import com.vaadin.server.DependencyFilter.FilterContext;
@@ -56,11 +28,22 @@ import com.vaadin.ui.Dependency;
 import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
-
 import elemental.json.Json;
 import elemental.json.JsonException;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
+import org.jsoup.nodes.*;
+import org.jsoup.parser.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Handles the initial request to start the application.
@@ -598,7 +581,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 head.appendElement("link").attr("rel", "stylesheet")
                         .attr("type", "text/css").attr("href", url);
             } else {
-                getLogger().severe("Ignoring unknown dependency type "
+                getLogger().error("Ignoring unknown dependency type "
                         + dependency.getType());
             }
         }
@@ -609,7 +592,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(BootstrapHandler.class.getName());
+        return LoggerFactory.getLogger(BootstrapHandler.class);
     }
 
     protected String getMainDivStyle(BootstrapContext context) {
@@ -704,11 +687,13 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         Element mainScriptTag = new Element(Tag.valueOf("script"), "")
                 .attr("type", "text/javascript");
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("//<![CDATA[\n");
-        builder.append("if (!window.vaadin) alert(" + JsonUtil.quote(
-                "Failed to load the bootstrap javascript: " + bootstrapLocation)
-                + ");\n");
+        StringBuilder builder = new StringBuilder()
+                .append("//<![CDATA[\n")
+                .append("if (!window.vaadin) alert(")
+                .append(
+                        JsonUtil.quote("Failed to load the bootstrap javascript: "
+                                + bootstrapLocation))
+                .append(");\n");
 
         appendMainScriptTagContents(context, builder);
 
@@ -716,7 +701,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         mainScriptTag.appendChild(
                 new DataNode(builder.toString(), mainScriptTag.baseUri()));
         fragmentNodes.add(mainScriptTag);
-
     }
 
     protected void appendMainScriptTagContents(BootstrapContext context,

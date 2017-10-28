@@ -1,8 +1,5 @@
 package com.vaadin.tests.widgetset.client.dd;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -16,12 +13,13 @@ import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ui.Connect;
+import org.slf4j.LoggerFactory;
 
 @Connect(com.vaadin.tests.dd.SpacebarPanner.class)
 public class SpacebarPannerConnector extends AbstractExtensionConnector {
 
-    Logger logger = Logger
-            .getLogger(SpacebarPannerConnector.class.getSimpleName());
+    org.slf4j.Logger logger = LoggerFactory
+            .getLogger(SpacebarPannerConnector.class);
 
     private boolean trigger = false;
     private VUI vui;
@@ -76,7 +74,7 @@ public class SpacebarPannerConnector extends AbstractExtensionConnector {
                     }
                     break;
                 case Event.ONMOUSEDOWN:
-                    logger.log(Level.INFO, "Drag started");
+                    logger.info("Drag started");
                     lastMouseX = ne.getClientX();
                     lastMouseY = ne.getClientY();
 
@@ -91,12 +89,12 @@ public class SpacebarPannerConnector extends AbstractExtensionConnector {
 
                 case Event.ONMOUSEMOVE:
                     if (mouseDown && shouldPan) {
-                        logger.log(Level.INFO, "In mousemove: mouseDown:"
+                        logger.info("In mousemove: mouseDown:"
                                 + mouseDown + ", shouldPan: " + shouldPan);
                         trigger = false;
                         vui.removeStyleName("triggered");
 
-                        logger.log(Level.INFO, "Panning!");
+                        logger.info("Panning!");
                         int currentClientX = ne.getClientX();
                         int currentClientY = ne.getClientY();
 

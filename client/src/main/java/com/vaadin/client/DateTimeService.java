@@ -16,14 +16,14 @@
 
 package com.vaadin.client;
 
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.vaadin.shared.ui.datefield.DateResolution;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 /**
  * This class provides date/time parsing services to all components on the
@@ -75,7 +75,7 @@ public class DateTimeService {
         try {
             return LocaleService.getMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getMonth", e);
+            getLogger().error("Error in getMonth", e);
             return null;
         }
     }
@@ -84,7 +84,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getShortMonth", e);
+            getLogger().error("Error in getShortMonth", e);
             return null;
         }
     }
@@ -93,7 +93,7 @@ public class DateTimeService {
         try {
             return LocaleService.getDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getDay", e);
+            getLogger().error("Error in getDay", e);
             return null;
         }
     }
@@ -109,7 +109,7 @@ public class DateTimeService {
         try {
             return LocaleService.getShortDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getShortDay", e);
+            getLogger().error("Error in getShortDay", e);
             return null;
         }
     }
@@ -123,7 +123,7 @@ public class DateTimeService {
         try {
             return LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getFirstDayOfWeek", e);
+            getLogger().error("Error in getFirstDayOfWeek", e);
             return 0;
         }
     }
@@ -138,7 +138,7 @@ public class DateTimeService {
         try {
             return LocaleService.isTwelveHourClock(locale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in isTwelveHourClock", e);
+            getLogger().error("Error in isTwelveHourClock", e);
             return false;
         }
     }
@@ -147,7 +147,7 @@ public class DateTimeService {
         try {
             return LocaleService.getClockDelimiter(locale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Error in getClockDelimiter", e);
+            getLogger().error("Error in getClockDelimiter", e);
             return ":";
         }
     }
@@ -159,7 +159,7 @@ public class DateTimeService {
             return LocaleService.getAmPmStrings(locale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
-            getLogger().log(Level.SEVERE,
+            getLogger().error(
                     "Locale not loaded, using fallback : AM/PM", e);
             return DEFAULT_AMPM_STRINGS;
         }
@@ -179,8 +179,7 @@ public class DateTimeService {
         try {
             firstDay = LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
-            getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
-                    e);
+            getLogger().error("Locale not loaded, using fallback 0", e);
             firstDay = 0;
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
@@ -606,6 +605,6 @@ public class DateTimeService {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(DateTimeService.class.getName());
+        return LoggerFactory.getLogger(DateTimeService.class);
     }
 }

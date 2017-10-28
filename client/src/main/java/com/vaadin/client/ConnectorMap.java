@@ -15,15 +15,16 @@
  */
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ConnectorMap {
 
@@ -173,7 +174,7 @@ public class ConnectorMap {
      */
     public void unregisterConnector(ServerConnector connector) {
         if (connector == null) {
-            getLogger().severe("Trying to unregister null connector");
+            getLogger().error("Trying to unregister null connector");
             return;
         }
 
@@ -290,6 +291,6 @@ public class ConnectorMap {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ConnectorMap.class.getName());
+        return LoggerFactory.getLogger(ConnectorMap.class);
     }
 }

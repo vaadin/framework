@@ -80,6 +80,16 @@
             <artifactId>vaadin-icons</artifactId>
         </dependency>
 
+        <!-- Logging Facade -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+        </dependency>
+
         <!-- Jsoup for BootstrapHandler -->
         <dependency>
             <groupId>org.jsoup</groupId>

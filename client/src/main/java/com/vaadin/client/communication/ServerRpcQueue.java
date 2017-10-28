@@ -15,11 +15,6 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
@@ -30,10 +25,15 @@ import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
-
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  * Manages the queue of server invocations (RPC) which are waiting to be sent to
@@ -78,7 +78,7 @@ public class ServerRpcQueue {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ServerRpcQueue.class.getName());
+        return LoggerFactory.getLogger(ServerRpcQueue.class);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ServerRpcQueue {
      */
     public void add(MethodInvocation invocation, boolean lastOnly) {
         if (!connection.isApplicationRunning()) {
-            getLogger().warning(
+            getLogger().warn(
                     "Trying to invoke method on not yet started or stopped application");
             return;
         }

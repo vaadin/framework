@@ -16,36 +16,26 @@
 
 package com.vaadin.client;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Utility methods which are related to client side code only.
@@ -126,7 +116,7 @@ public class WidgetUtil {
         try {
             return Float.parseFloat(size.substring(0, size.length() - 1));
         } catch (Exception e) {
-            getLogger().warning("Unable to parse relative size");
+            getLogger().warn("Unable to parse relative size");
             return -1;
         }
     }
@@ -1590,7 +1580,7 @@ public class WidgetUtil {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(WidgetUtil.class.getName());
+        return LoggerFactory.getLogger(WidgetUtil.class);
     }
 
     /**

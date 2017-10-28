@@ -15,32 +15,6 @@
  */
 package com.vaadin.v7.ui;
 
-import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EventListener;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.dd.DropHandler;
@@ -60,39 +34,27 @@ import com.vaadin.v7.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.v7.shared.ui.calendar.CalendarState;
 import com.vaadin.v7.shared.ui.calendar.CalendarState.EventSortOrder;
 import com.vaadin.v7.shared.ui.calendar.DateConstants;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.BackwardEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResize;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.MoveEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.WeekClick;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.WeekClickHandler;
-import com.vaadin.v7.ui.components.calendar.CalendarDateRange;
-import com.vaadin.v7.ui.components.calendar.CalendarTargetDetails;
-import com.vaadin.v7.ui.components.calendar.ContainerEventProvider;
+import com.vaadin.v7.ui.components.calendar.*;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.*;
 import com.vaadin.v7.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEvent.EventChangeListener;
 import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
-import com.vaadin.v7.ui.components.calendar.handler.BasicBackwardHandler;
-import com.vaadin.v7.ui.components.calendar.handler.BasicDateClickHandler;
-import com.vaadin.v7.ui.components.calendar.handler.BasicEventMoveHandler;
-import com.vaadin.v7.ui.components.calendar.handler.BasicEventResizeHandler;
-import com.vaadin.v7.ui.components.calendar.handler.BasicForwardHandler;
-import com.vaadin.v7.ui.components.calendar.handler.BasicWeekClickHandler;
+import com.vaadin.v7.ui.components.calendar.handler.*;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * <p>
@@ -242,7 +204,7 @@ public class Calendar extends AbstractLegacyComponent
      * Returns the logger for the calendar.
      */
     protected Logger getLogger() {
-        return Logger.getLogger(Calendar.class.getName());
+        return LoggerFactory.getLogger(Calendar.class);
     }
 
     /**
@@ -1755,7 +1717,7 @@ public class Calendar extends AbstractLegacyComponent
                         fireEventMove(eventIndex, d);
                     }
                 } catch (ParseException e) {
-                    getLogger().log(Level.WARNING, e.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
             }
         }
@@ -1889,8 +1851,7 @@ public class Calendar extends AbstractLegacyComponent
                 }
 
             } catch (ParseException e) {
-                getLogger().log(Level.WARNING,
-                        "Could not parse action date string");
+                getLogger().warn("Could not parse action date string");
             }
 
         }

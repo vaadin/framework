@@ -16,63 +16,41 @@
 
 package com.vaadin.server;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.portlet.Portlet;
-import javax.portlet.PortletContext;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.VaadinSession.FutureAccess;
 import com.vaadin.server.VaadinSession.State;
-import com.vaadin.server.communication.AtmospherePushConnection;
-import com.vaadin.server.communication.FileUploadHandler;
-import com.vaadin.server.communication.HeartbeatHandler;
-import com.vaadin.server.communication.PublishedFileHandler;
-import com.vaadin.server.communication.SessionRequestHandler;
-import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.server.communication.*;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
-
 import elemental.json.Json;
 import elemental.json.JsonException;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.portlet.Portlet;
+import javax.portlet.PortletContext;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -1239,7 +1217,7 @@ public abstract class VaadinService implements Serializable {
             if (session.getState() == State.OPEN) {
                 closeSession(session);
                 if (session.getSession() != null) {
-                    getLogger().log(Level.FINE, "Closing inactive session {0}",
+                    getLogger().debug("Closing inactive session {}",
                             session.getSession().getId());
                 }
             }
@@ -1271,7 +1249,7 @@ public abstract class VaadinService implements Serializable {
         for (final UI ui : uis) {
             if (ui.isClosing()) {
                 ui.accessSynchronously(() -> {
-                    getLogger().log(Level.FINER, "Removing closed UI {0}",
+                    getLogger().debug("Removing closed UI {}",
                             ui.getUIId());
                     session.removeUI(ui);
                 });
@@ -1290,7 +1268,7 @@ public abstract class VaadinService implements Serializable {
         for (final UI ui : session.getUIs()) {
             if (!isUIActive(ui) && !ui.isClosing()) {
                 ui.accessSynchronously(() -> {
-                    getLogger().log(Level.FINE,
+                    getLogger().debug(
                             "Closing inactive UI #{0} in session {1}",
                             new Object[] { ui.getUIId(), sessionId });
                     ui.close();
@@ -1395,8 +1373,8 @@ public abstract class VaadinService implements Serializable {
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinService.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(VaadinService.class);
     }
 
     /**
@@ -1631,7 +1609,7 @@ public abstract class VaadinService implements Serializable {
                 } catch (IOException e) {
                     // An exception occurred while writing the response. Log
                     // it and continue handling only the original error.
-                    getLogger().log(Level.WARNING,
+                    getLogger().warn(
                             "Failed to write critical notification response to the client",
                             e);
                 }
@@ -1765,7 +1743,7 @@ public abstract class VaadinService implements Serializable {
             json.put(ApplicationConstants.SERVER_SYNC_ID, -1);
             returnString = JsonUtil.stringify(json);
         } catch (JsonException e) {
-            getLogger().log(Level.WARNING,
+            getLogger().warn(
                     "Error creating critical notification JSON message", e);
         }
 
@@ -1809,8 +1787,7 @@ public abstract class VaadinService implements Serializable {
         } else {
             if (!pushWarningEmitted) {
                 pushWarningEmitted = true;
-                getLogger().log(Level.WARNING,
-                        Constants.ATMOSPHERE_MISSING_ERROR);
+                getLogger().warn(Constants.ATMOSPHERE_MISSING_ERROR);
             }
             return false;
         }
@@ -1823,11 +1800,10 @@ public abstract class VaadinService implements Serializable {
         }
 
         if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
-            getLogger().log(Level.WARNING,
+            getLogger().warn(
                     Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                    new Object[] {
-                            Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
-                            rawVersion });
+                    Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
+                    rawVersion);
         }
         return true;
     }
@@ -2095,8 +2071,7 @@ public abstract class VaadinService implements Serializable {
             setClassLoader(
                     VaadinServiceClassLoaderUtil.findDefaultClassLoader());
         } catch (SecurityException e) {
-            getLogger().log(Level.SEVERE,
-                    Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);
+            getLogger().error(Constants.CANNOT_ACQUIRE_CLASSLOADER_SEVERE, e);
             throw e;
         }
     }

@@ -16,25 +16,6 @@
 
 package com.vaadin.ui;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -47,38 +28,14 @@ import com.vaadin.event.UIEvents.PollListener;
 import com.vaadin.event.UIEvents.PollNotifier;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.PushStateNavigation;
-import com.vaadin.server.ClientConnector;
-import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.server.*;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
-import com.vaadin.server.DefaultErrorHandler;
-import com.vaadin.server.ErrorHandler;
-import com.vaadin.server.ErrorHandlingRunnable;
-import com.vaadin.server.LocaleService;
-import com.vaadin.server.Page;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
-import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSession.State;
 import com.vaadin.server.communication.PushConnection;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.Connector;
-import com.vaadin.shared.EventId;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.Registration;
+import com.vaadin.shared.*;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.WindowOrderRpc;
-import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
-import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
-import com.vaadin.shared.ui.ui.PageClientRpc;
-import com.vaadin.shared.ui.ui.ScrollClientRpc;
-import com.vaadin.shared.ui.ui.UIClientRpc;
-import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.shared.ui.ui.UIServerRpc;
-import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.shared.ui.ui.*;
 import com.vaadin.ui.Component.Focusable;
 import com.vaadin.ui.Dependency.Type;
 import com.vaadin.ui.Window.WindowOrderChangeListener;
@@ -88,6 +45,18 @@ import com.vaadin.ui.dnd.DropTargetExtension;
 import com.vaadin.util.ConnectorHelper;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.Future;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * The topmost component in any component hierarchy. There is one UI for every
@@ -237,8 +206,9 @@ public abstract class UI extends AbstractSingleComponentContainer
         @Override
         public void showServerDesign(Connector connector) {
             if (!(connector instanceof Component)) {
-                getLogger().severe("Tried to output declarative design for "
-                        + connector + ", which is not a component");
+                getLogger().error(
+                        "Tried to output declarative design for {}" +
+                                " which is not a component", connector);
                 return;
             }
             if (connector instanceof UI) {
@@ -253,8 +223,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                         + " requested from debug window:\n"
                         + baos.toString(UTF_8.name()));
             } catch (IOException e) {
-                getLogger().log(Level.WARNING,
-                        "Error producing design for " + connector, e);
+                getLogger().warn("Error producing design for {}", connector, e);
             }
 
         }
@@ -510,8 +479,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                 try {
                     detach();
                 } catch (Exception e) {
-                    getLogger().log(Level.WARNING,
-                            "Error while detaching UI from session", e);
+                    getLogger().warn("Error while detaching UI from session", e);
                 }
                 // Disable push when the UI is detached. Otherwise the
                 // push connection and possibly VaadinSession will live
@@ -1593,7 +1561,7 @@ public abstract class UI extends AbstractSingleComponentContainer
                         errorHandler.error(errorEvent);
                     }
                 } catch (Exception e) {
-                    getLogger().log(Level.SEVERE, e.getMessage(), e);
+                    getLogger().error(e.getMessage(), e);
                 }
             }
         });
@@ -1820,7 +1788,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(UI.class.getName());
+        return LoggerFactory.getLogger(UI.class);
     }
 
     /**

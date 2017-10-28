@@ -16,28 +16,19 @@
 
 package com.vaadin.server;
 
-import static com.vaadin.shared.util.SharedUtil.trimTrailingSlashes;
+import com.vaadin.server.VaadinPortlet.RequestType;
+import com.vaadin.server.communication.*;
+import com.vaadin.ui.UI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.portlet.*;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.portlet.EventRequest;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-
-import com.vaadin.server.VaadinPortlet.RequestType;
-import com.vaadin.server.communication.PortletBootstrapHandler;
-import com.vaadin.server.communication.PortletDummyRequestHandler;
-import com.vaadin.server.communication.PortletListenerNotifier;
-import com.vaadin.server.communication.PortletStateAwareRequestHandler;
-import com.vaadin.server.communication.PortletUIInitHandler;
-import com.vaadin.ui.UI;
+import static com.vaadin.shared.util.SharedUtil.trimTrailingSlashes;
 
 public class VaadinPortletService extends VaadinService {
     private final VaadinPortlet portlet;
@@ -175,7 +166,7 @@ public class VaadinPortletService extends VaadinService {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger().log(Level.INFO,
+                getLogger().info(
                         "Cannot access base directory, possible security issue "
                                 + "with Application Server or Servlet Container",
                         e);
@@ -184,8 +175,8 @@ public class VaadinPortletService extends VaadinService {
         return null;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinPortletService.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(VaadinPortletService.class);
     }
 
     @Override
@@ -338,7 +329,7 @@ public class VaadinPortletService extends VaadinService {
             VaadinResponse response) {
         // TODO Figure out a better way to deal with
         // SessionExpiredExceptions
-        getLogger().finest("A user session has expired");
+        getLogger().trace("A user session has expired");
     }
 
     private WrappedPortletSession getWrappedPortletSession(

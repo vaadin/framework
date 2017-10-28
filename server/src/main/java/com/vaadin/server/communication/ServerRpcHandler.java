@@ -16,29 +16,9 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.ClientConnector;
-import com.vaadin.server.Constants;
-import com.vaadin.server.JsonCodec;
-import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.*;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
-import com.vaadin.server.ServerRpcManager;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
-import com.vaadin.server.ServerRpcMethodInvocation;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VariableOwner;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.Version;
@@ -50,12 +30,19 @@ import com.vaadin.shared.data.DataRequestRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
-
 import elemental.json.JsonArray;
 import elemental.json.JsonException;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
 import elemental.json.impl.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Handles a client-to-server message containing serialized {@link ServerRpc
@@ -121,7 +108,7 @@ public class ServerRpcHandler implements Serializable {
                         .getNumber(ApplicationConstants.CLIENT_TO_SERVER_ID);
             } else {
                 getLogger()
-                        .warning("Server message without client id received");
+                        .warn("Server message without client id received");
                 clientToServerMessageId = -1;
             }
             invocations = json.getArray(ApplicationConstants.RPC_INVOCATIONS);
@@ -259,11 +246,11 @@ public class ServerRpcHandler implements Serializable {
                 // It has already been handled by the server so it is safe to
                 // ignore
                 getLogger()
-                        .fine("Ignoring old message from the client. Expected: "
+                        .debug("Ignoring old message from the client. Expected: "
                                 + expectedId + ", got: "
                                 + rpcRequest.getClientToServerId());
             } else {
-                getLogger().warning(
+                getLogger().warn(
                         "Unexpected message id from the client. Expected: "
                                 + expectedId + ", got: "
                                 + rpcRequest.getClientToServerId());
@@ -297,7 +284,7 @@ public class ServerRpcHandler implements Serializable {
         }
 
         if (!Version.getFullVersion().equals(widgetsetVersion)) {
-            getLogger().warning(String.format(Constants.WIDGETSET_MISMATCH_INFO,
+            getLogger().warn(String.format(Constants.WIDGETSET_MISMATCH_INFO,
                     Version.getFullVersion(), widgetsetVersion));
         }
     }
@@ -385,7 +372,7 @@ public class ServerRpcHandler implements Serializable {
                     }
 
                     // Connector is disabled, log a warning and move to the next
-                    getLogger().warning(
+                    getLogger().warn(
                             getIgnoredDisabledError("RPC call", connector));
                     continue;
                 }
@@ -401,7 +388,7 @@ public class ServerRpcHandler implements Serializable {
                         }
                     }
                     msg += " in closed UI";
-                    getLogger().warning(msg);
+                    getLogger().warn(msg);
                     continue;
 
                 }
@@ -415,7 +402,7 @@ public class ServerRpcHandler implements Serializable {
                 }
             }
         } catch (JsonException e) {
-            getLogger().warning("Unable to parse RPC call from the client: "
+            getLogger().warn("Unable to parse RPC call from the client: "
                     + e.getMessage());
             throw new RuntimeException(e);
         }
@@ -423,9 +410,9 @@ public class ServerRpcHandler implements Serializable {
 
     private void logUnknownConnector(String connectorId, String interfaceName,
             String methodName) {
-        getLogger().log(Level.FINE,
-                "Received RPC call for unknown connector with id {0} (tried to invoke {1}.{2})",
-                new Object[] { connectorId, interfaceName, methodName });
+        getLogger().debug(
+                "Received RPC call for unknown connector with id {} (tried to invoke {}.{})",
+                connectorId, interfaceName, methodName);
     }
 
     /**
@@ -595,7 +582,7 @@ public class ServerRpcHandler implements Serializable {
                     + connector.getClass().getName() + "(" + connectorId
                     + ") as no RPC implementation is registered";
             assert rpcManager != null : message;
-            getLogger().warning(message);
+            getLogger().warn(message);
             return null;
         }
 
@@ -641,8 +628,8 @@ public class ServerRpcHandler implements Serializable {
         return sb.toString();
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(ServerRpcHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(ServerRpcHandler.class);
     }
 
     /**

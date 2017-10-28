@@ -15,10 +15,6 @@
  */
 package com.vaadin.client.ui.customfield;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -32,6 +28,11 @@ import com.vaadin.client.ui.VCustomField;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.customfield.CustomFieldState;
 import com.vaadin.ui.CustomField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
 
 @Connect(value = CustomField.class)
 public class CustomFieldConnector extends AbstractFieldConnector
@@ -73,7 +74,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
                 getWidget().setFocusDelegate(
                         (com.google.gwt.user.client.ui.Focusable) widget);
             } else {
-                getLogger().warning(
+                getLogger().warn(
                         "The given focus delegate does not implement Focusable: "
                                 + widget.getClass().getName());
             }
@@ -84,7 +85,7 @@ public class CustomFieldConnector extends AbstractFieldConnector
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(CustomFieldConnector.class.getName());
+        return LoggerFactory.getLogger(CustomFieldConnector.class);
     }
 
     @Override

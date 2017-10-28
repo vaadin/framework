@@ -16,23 +16,17 @@
 
 package com.vaadin.server.communication;
 
+import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.StyleSheet;
+import com.vaadin.server.*;
+import com.vaadin.shared.ApplicationConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.vaadin.annotations.JavaScript;
-import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.Constants;
-import com.vaadin.server.LegacyCommunicationManager;
-import com.vaadin.server.RequestHandler;
-import com.vaadin.server.ServletPortletHelper;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Serves a connector resource from the classpath if the resource has previously
@@ -70,8 +64,7 @@ public class PublishedFileHandler implements RequestHandler {
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
         if (fileName.startsWith("/")) {
-            getLogger()
-                    .warning("Published file request starting with / rejected: "
+            getLogger().warn("Published file request starting with / rejected: "
                             + fileName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return true;
@@ -90,7 +83,7 @@ public class PublishedFileHandler implements RequestHandler {
         // Security check: don't serve resource if the name hasn't been
         // registered in the map
         if (context == null) {
-            getLogger().warning(
+            getLogger().warn(
                     "Rejecting published file request for file that has not been published: "
                             + fileName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
@@ -100,7 +93,7 @@ public class PublishedFileHandler implements RequestHandler {
         // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(fileName);
         if (in == null) {
-            getLogger().warning(fileName + " published by " + context.getName()
+            getLogger().warn(fileName + " published by " + context.getName()
                     + " not found. Verify that the file "
                     + context.getPackage().getName().replace('.', '/') + '/'
                     + fileName + " is available on the classpath.");
@@ -150,7 +143,7 @@ public class PublishedFileHandler implements RequestHandler {
         return true;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(PublishedFileHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(PublishedFileHandler.class);
     }
 }

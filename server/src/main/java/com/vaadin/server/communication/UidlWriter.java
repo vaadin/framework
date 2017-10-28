@@ -16,36 +16,24 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.ClientConnector;
+import com.vaadin.server.*;
 import com.vaadin.server.DependencyFilter.FilterContext;
-import com.vaadin.server.JsonPaintTarget;
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
-import com.vaadin.server.SystemMessages;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.Dependency;
 import com.vaadin.ui.UI;
-
 import elemental.json.Json;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import elemental.json.impl.JsonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * Serializes pending server-side changes to UI state to JSON. This includes
@@ -86,7 +74,7 @@ public class UidlWriter implements Serializable {
         boolean repaintAll = clientCache.isEmpty();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
-        getLogger().log(Level.FINE, "* Creating response to client");
+        getLogger().debug("* Creating response to client");
 
         while (true) {
             List<ClientConnector> connectorsToProcess = new ArrayList<>();
@@ -130,8 +118,8 @@ public class UidlWriter implements Serializable {
             }
         }
 
-        getLogger().log(Level.FINE, "Found " + processedConnectors.size()
-                + " dirty connectors to paint");
+        getLogger().debug("Found {} dirty connectors to paint",
+                processedConnectors.size());
 
         uiConnectorTracker.setWritingResponse(true);
         try {
@@ -354,7 +342,7 @@ public class UidlWriter implements Serializable {
         }
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(UidlWriter.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(UidlWriter.class);
     }
 }

@@ -15,14 +15,12 @@
  */
 package com.vaadin.event.dd.acceptcriteria;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.ui.Component;
+import org.slf4j.LoggerFactory;
 
 /**
  * Client side criteria that checks if the drag source is one of the given
@@ -48,10 +46,9 @@ public class SourceIs extends ClientSideCriterion {
             if (c.isAttached()) {
                 target.addAttribute("component" + paintedComponents++, c);
             } else {
-                Logger.getLogger(SourceIs.class.getName()).log(Level.WARNING,
-                        "SourceIs component {0} at index {1} is not attached to the component hierachy and will thus be ignored",
-                        new Object[] { c.getClass().getName(),
-                                Integer.valueOf(i) });
+                LoggerFactory.getLogger(SourceIs.class).warn(
+                        "SourceIs component {} at index {} is not attached to the component hierachy and will thus be ignored",
+                        c.getClass().getName(), i);
             }
         }
         target.addAttribute("c", paintedComponents);

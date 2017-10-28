@@ -15,6 +15,19 @@
  */
 package com.vaadin.ui.declarative;
 
+import com.googlecode.gentyref.GenericTypeReflector;
+import com.vaadin.data.Converter;
+import com.vaadin.data.ValueContext;
+import com.vaadin.shared.ui.AlignmentInfo;
+import com.vaadin.shared.util.SharedUtil;
+import com.vaadin.ui.Alignment;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -22,28 +35,10 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Attributes;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-
-import com.googlecode.gentyref.GenericTypeReflector;
-import com.vaadin.data.Converter;
-import com.vaadin.data.ValueContext;
-import com.vaadin.shared.ui.AlignmentInfo;
-import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.ui.Alignment;
 
 /**
  * Default attribute handler implementation used when parsing designs to
@@ -56,7 +51,7 @@ import com.vaadin.ui.Alignment;
 public class DesignAttributeHandler implements Serializable {
 
     private static Logger getLogger() {
-        return Logger.getLogger(DesignAttributeHandler.class.getName());
+        return LoggerFactory.getLogger(DesignAttributeHandler.class);
     }
 
     private static final Map<Class<?>, AttributeCacheEntry> CACHE = new ConcurrentHashMap<>();
@@ -125,7 +120,7 @@ public class DesignAttributeHandler implements Serializable {
                 success = true;
             }
         } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Failed to set value \"" + value
+            getLogger().warn("Failed to set value \"" + value
                     + "\" to attribute " + attribute, e);
         }
         if (!success) {
@@ -206,7 +201,7 @@ public class DesignAttributeHandler implements Serializable {
             Attributes attr, Object defaultInstance, DesignContext context) {
         Method getter = findGetterForAttribute(component.getClass(), attribute);
         if (getter == null) {
-            getLogger().warning(
+            getLogger().warn(
                     "Could not find getter for attribute " + attribute);
         } else {
             try {
@@ -218,7 +213,7 @@ public class DesignAttributeHandler implements Serializable {
                                 component.getClass()),
                         context);
             } catch (Exception e) {
-                getLogger().log(Level.SEVERE,
+                getLogger().error(
                         "Failed to invoke getter for attribute " + attribute,
                         e);
             }

@@ -16,9 +16,6 @@
 
 package com.vaadin.client.extensions;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
@@ -30,6 +27,8 @@ import com.vaadin.server.Responsive;
 import com.vaadin.shared.extension.responsive.ResponsiveState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.util.SharedUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The client side connector for the Responsive extension.
@@ -76,15 +75,15 @@ public class ResponsiveConnector extends AbstractExtensionConnector
     protected static String parsedTheme;
 
     private static Logger getLogger() {
-        return Logger.getLogger(ResponsiveConnector.class.getName());
+        return LoggerFactory.getLogger(ResponsiveConnector.class);
     }
 
     private static void error(String message) {
-        getLogger().log(Level.SEVERE, message);
+        getLogger().error(message);
     }
 
     private static void warning(String message) {
-        getLogger().warning(message);
+        getLogger().warn(message);
     }
 
     @Override

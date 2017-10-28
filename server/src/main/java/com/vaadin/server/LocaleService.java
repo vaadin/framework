@@ -14,10 +14,13 @@
  * the License.
  */
 
-/**
- *
- */
 package com.vaadin.server;
+
+import com.vaadin.shared.ui.ui.UIState.LocaleData;
+import com.vaadin.shared.ui.ui.UIState.LocaleServiceState;
+import com.vaadin.ui.UI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -26,11 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.logging.Logger;
-
-import com.vaadin.shared.ui.ui.UIState.LocaleData;
-import com.vaadin.shared.ui.ui.UIState.LocaleServiceState;
-import com.vaadin.ui.UI;
 
 /**
  * Server side service which handles locale and the transmission of locale date
@@ -163,12 +161,12 @@ public class LocaleService implements Serializable {
         DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT,
                 locale);
         if (!(dateFormat instanceof SimpleDateFormat)) {
-            getLogger().warning("Unable to get default date pattern for locale "
+            getLogger().warn("Unable to get default date pattern for locale "
                     + locale.toString());
             dateFormat = new SimpleDateFormat();
         }
         if (!(timeFormat instanceof SimpleDateFormat)) {
-            getLogger().warning("Unable to get default time pattern for locale "
+            getLogger().warn("Unable to get default time pattern for locale "
                     + locale.toString());
             timeFormat = new SimpleDateFormat();
         }
@@ -195,7 +193,6 @@ public class LocaleService implements Serializable {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(LocaleService.class.getName());
+        return LoggerFactory.getLogger(LocaleService.class);
     }
-
 }

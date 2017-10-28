@@ -66,11 +66,11 @@ public interface Constants {
             + "=================================================================";
 
     // Keep the version number in sync with pom.xml
-    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.4.11.vaadin2";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "2.4.11";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
-            + "Vaadin depends on Atmosphere {0} but version {1} was found.\n"
+            + "Vaadin depends on Atmosphere {} but version {} was found.\n"
             + "This might cause compatibility problems if push is used.\n"
             + "=================================================================";
 
@@ -89,7 +89,7 @@ public interface Constants {
 
     static final String PUSH_NOT_SUPPORTED_ERROR = "\n"
             + "=================================================================\n"
-            + "Push is not supported for {0}\n" + "Will fall back to using "
+            + "Push is not supported for {}\n" + "Will fall back to using "
             + PushMode.class.getSimpleName() + "." + PushMode.DISABLED.name()
             + ".\n"
             + "=================================================================";

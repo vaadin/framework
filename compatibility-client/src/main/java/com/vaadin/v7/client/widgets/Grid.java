@@ -15,46 +15,13 @@
  */
 package com.vaadin.v7.client.widgets;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.BrowserEvents;
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.EventTarget;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.dom.client.TableSectionElement;
-import com.google.gwt.dom.client.Touch;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyEvent;
-import com.google.gwt.event.dom.client.MouseEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -66,17 +33,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
@@ -96,87 +53,22 @@ import com.vaadin.shared.Range;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.v7.client.renderers.ComplexRenderer;
-import com.vaadin.v7.client.renderers.ProgressBarRenderer;
-import com.vaadin.v7.client.renderers.Renderer;
-import com.vaadin.v7.client.renderers.TextRenderer;
-import com.vaadin.v7.client.renderers.WidgetRenderer;
-import com.vaadin.v7.client.widget.escalator.Cell;
-import com.vaadin.v7.client.widget.escalator.ColumnConfiguration;
-import com.vaadin.v7.client.widget.escalator.EscalatorUpdater;
-import com.vaadin.v7.client.widget.escalator.FlyweightCell;
-import com.vaadin.v7.client.widget.escalator.Row;
-import com.vaadin.v7.client.widget.escalator.RowContainer;
-import com.vaadin.v7.client.widget.escalator.RowVisibilityChangeEvent;
-import com.vaadin.v7.client.widget.escalator.RowVisibilityChangeHandler;
+import com.vaadin.v7.client.renderers.*;
+import com.vaadin.v7.client.widget.escalator.*;
 import com.vaadin.v7.client.widget.escalator.ScrollbarBundle.Direction;
-import com.vaadin.v7.client.widget.escalator.Spacer;
-import com.vaadin.v7.client.widget.escalator.SpacerUpdater;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedHandler;
-import com.vaadin.v7.client.widget.grid.AutoScroller;
+import com.vaadin.v7.client.widget.grid.*;
 import com.vaadin.v7.client.widget.grid.AutoScroller.AutoScrollerCallback;
 import com.vaadin.v7.client.widget.grid.AutoScroller.ScrollAxis;
-import com.vaadin.v7.client.widget.grid.CellReference;
-import com.vaadin.v7.client.widget.grid.CellStyleGenerator;
-import com.vaadin.v7.client.widget.grid.DataAvailableEvent;
-import com.vaadin.v7.client.widget.grid.DataAvailableHandler;
-import com.vaadin.v7.client.widget.grid.DefaultEditorEventHandler;
-import com.vaadin.v7.client.widget.grid.DetailsGenerator;
-import com.vaadin.v7.client.widget.grid.EditorHandler;
 import com.vaadin.v7.client.widget.grid.EditorHandler.EditorRequest;
-import com.vaadin.v7.client.widget.grid.EventCellReference;
-import com.vaadin.v7.client.widget.grid.GridEventHandler;
-import com.vaadin.v7.client.widget.grid.HeightAwareDetailsGenerator;
-import com.vaadin.v7.client.widget.grid.RendererCellReference;
-import com.vaadin.v7.client.widget.grid.RowReference;
-import com.vaadin.v7.client.widget.grid.RowStyleGenerator;
 import com.vaadin.v7.client.widget.grid.datasources.ListDataSource;
-import com.vaadin.v7.client.widget.grid.events.AbstractGridKeyEventHandler;
-import com.vaadin.v7.client.widget.grid.events.AbstractGridMouseEventHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyClickHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyDoubleClickHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyKeyDownHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyKeyPressHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyKeyUpHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnReorderEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnReorderHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnResizeEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnResizeHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnVisibilityChangeEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnVisibilityChangeHandler;
-import com.vaadin.v7.client.widget.grid.events.FooterClickHandler;
-import com.vaadin.v7.client.widget.grid.events.FooterDoubleClickHandler;
-import com.vaadin.v7.client.widget.grid.events.FooterKeyDownHandler;
-import com.vaadin.v7.client.widget.grid.events.FooterKeyPressHandler;
-import com.vaadin.v7.client.widget.grid.events.FooterKeyUpHandler;
-import com.vaadin.v7.client.widget.grid.events.GridClickEvent;
-import com.vaadin.v7.client.widget.grid.events.GridDoubleClickEvent;
-import com.vaadin.v7.client.widget.grid.events.GridEnabledEvent;
-import com.vaadin.v7.client.widget.grid.events.GridEnabledHandler;
-import com.vaadin.v7.client.widget.grid.events.GridKeyDownEvent;
-import com.vaadin.v7.client.widget.grid.events.GridKeyPressEvent;
-import com.vaadin.v7.client.widget.grid.events.GridKeyUpEvent;
-import com.vaadin.v7.client.widget.grid.events.HeaderClickHandler;
-import com.vaadin.v7.client.widget.grid.events.HeaderDoubleClickHandler;
-import com.vaadin.v7.client.widget.grid.events.HeaderKeyDownHandler;
-import com.vaadin.v7.client.widget.grid.events.HeaderKeyPressHandler;
-import com.vaadin.v7.client.widget.grid.events.HeaderKeyUpHandler;
+import com.vaadin.v7.client.widget.grid.events.*;
 import com.vaadin.v7.client.widget.grid.events.ScrollEvent;
 import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
-import com.vaadin.v7.client.widget.grid.events.SelectAllEvent;
-import com.vaadin.v7.client.widget.grid.events.SelectAllHandler;
-import com.vaadin.v7.client.widget.grid.selection.HasSelectionHandlers;
-import com.vaadin.v7.client.widget.grid.selection.HasUserSelectionAllowed;
-import com.vaadin.v7.client.widget.grid.selection.MultiSelectionRenderer;
-import com.vaadin.v7.client.widget.grid.selection.SelectionEvent;
-import com.vaadin.v7.client.widget.grid.selection.SelectionHandler;
-import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
+import com.vaadin.v7.client.widget.grid.selection.*;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Multi;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.Single;
-import com.vaadin.v7.client.widget.grid.selection.SelectionModelMulti;
-import com.vaadin.v7.client.widget.grid.selection.SelectionModelNone;
-import com.vaadin.v7.client.widget.grid.selection.SelectionModelSingle;
 import com.vaadin.v7.client.widget.grid.sort.Sort;
 import com.vaadin.v7.client.widget.grid.sort.SortEvent;
 import com.vaadin.v7.client.widget.grid.sort.SortHandler;
@@ -186,12 +78,13 @@ import com.vaadin.v7.client.widgets.Escalator.SubPartArguments;
 import com.vaadin.v7.client.widgets.Grid.Editor.State;
 import com.vaadin.v7.client.widgets.Grid.StaticSection.StaticCell;
 import com.vaadin.v7.client.widgets.Grid.StaticSection.StaticRow;
-import com.vaadin.v7.shared.ui.grid.ColumnResizeMode;
-import com.vaadin.v7.shared.ui.grid.GridConstants;
+import com.vaadin.v7.shared.ui.grid.*;
 import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
-import com.vaadin.v7.shared.ui.grid.GridStaticCellType;
-import com.vaadin.v7.shared.ui.grid.HeightMode;
-import com.vaadin.v7.shared.ui.grid.ScrollDestination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * A data grid view that supports columns and lazy loading of data rows from a
@@ -1380,7 +1273,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private final Timer saveTimeout = new Timer() {
             @Override
             public void run() {
-                getLogger().warning(
+                getLogger().warn(
                         "Editor save action is taking longer than expected ("
                                 + SAVE_TIMEOUT_MS + "ms). Does your "
                                 + EditorHandler.class.getSimpleName()
@@ -1416,7 +1309,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         private final Timer bindTimeout = new Timer() {
             @Override
             public void run() {
-                getLogger().warning(
+                getLogger().warn(
                         "Editor bind action is taking longer than expected ("
                                 + BIND_TIMEOUT_MS + "ms). Does your "
                                 + EditorHandler.class.getSimpleName()
@@ -2456,7 +2349,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
      * An initial height that is given to new details rows before rendering the
      * appropriate widget that we then can be measure
      *
-     * @see GridSpacerUpdater
+     * @see Grid.GridSpacerUpdater
      */
     private static final double DETAILS_ROW_INITIAL_HEIGHT = 50;
 
@@ -3638,7 +3531,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             try {
                 detailsWidget = detailsGenerator.getDetails(rowIndex);
             } catch (Throwable e) {
-                getLogger().log(Level.SEVERE,
+                getLogger().error(
                         "Exception while generating details for row "
                                 + rowIndex,
                         e);
@@ -4713,7 +4606,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             @Override
             public void render(RendererCellReference cell, Object data) {
                 if (!warned && !(data instanceof String)) {
-                    getLogger().warning(
+                    getLogger().warn(
                             Column.this + ": " + DEFAULT_RENDERER_WARNING);
                     warned = true;
                 }
@@ -5475,7 +5368,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         ((ComplexRenderer<?>) renderer)
                                 .init(rendererCellReference);
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error initing cell in column "
                                         + cell.getColumn(),
                                 e);
@@ -5505,7 +5398,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         // Logical attach
                         setParent(widget, Grid.this);
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error attaching child widget in column "
                                         + cell.getColumn(),
                                 e);
@@ -5551,7 +5444,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                                 .getStyle(rowReference);
                         setCustomStyleName(rowElement, rowStylename);
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error generating styles for row "
                                         + row.getRow(),
                                 e);
@@ -5586,7 +5479,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                                 .getStyle(cellReference);
                         setCustomStyleName(cell.getElement(), generatedStyle);
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error generating style for cell in column "
                                         + cell.getColumn(),
                                 e);
@@ -5628,7 +5521,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         cell.getElement().removeAllChildren();
                     }
                 } catch (RuntimeException e) {
-                    getLogger().log(Level.SEVERE,
+                    getLogger().error(
                             "Error rendering cell in column "
                                     + cell.getColumn(),
                             e);
@@ -5653,7 +5546,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                             cell.getElement().removeChild(w.getElement());
                         }
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error detaching widget in column "
                                         + cell.getColumn(),
                                 e);
@@ -5679,7 +5572,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         ((ComplexRenderer) renderer)
                                 .destroy(rendererCellReference);
                     } catch (RuntimeException e) {
-                        getLogger().log(Level.SEVERE,
+                        getLogger().error(
                                 "Error destroying cell in column "
                                         + cell.getColumn(),
                                 e);
@@ -5744,7 +5637,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                         content.setClassName(getStylePrimaryName()
                                 + "-column-footer-content");
                     } else {
-                        getLogger().severe("Unhandled static row type "
+                        getLogger().error("Unhandled static row type "
                                 + staticRow.getClass().getCanonicalName());
                     }
 
@@ -7259,8 +7152,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         return escalator.getScrollWidth();
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(Grid.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(Grid.class);
     }
 
     /**
@@ -7736,7 +7629,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             int detailIdx = subPart.indexOf("/");
             if (detailIdx > 0) {
                 String detail = subPart.substring(detailIdx + 1);
-                getLogger().severe("Looking up detail from index " + detailIdx
+                getLogger().error("Looking up detail from index " + detailIdx
                         + " onward: \"" + detail + "\"");
                 if (detail.equalsIgnoreCase("content")) {
                     // XXX: Fix this to look up by class name!

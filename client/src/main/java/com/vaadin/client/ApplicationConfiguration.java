@@ -15,35 +15,13 @@
  */
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.core.client.*;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.vaadin.client.debug.internal.ErrorNotificationHandler;
-import com.vaadin.client.debug.internal.HierarchySection;
-import com.vaadin.client.debug.internal.InfoSection;
-import com.vaadin.client.debug.internal.LogSection;
-import com.vaadin.client.debug.internal.NetworkSection;
-import com.vaadin.client.debug.internal.ProfilerSection;
-import com.vaadin.client.debug.internal.Section;
-import com.vaadin.client.debug.internal.TestBenchSection;
-import com.vaadin.client.debug.internal.VDebugWindow;
+import com.vaadin.client.debug.internal.*;
 import com.vaadin.client.debug.internal.theme.DebugWindowStyles;
 import com.vaadin.client.event.PointerEventSupport;
 import com.vaadin.client.metadata.NoDataException;
@@ -53,6 +31,12 @@ import com.vaadin.client.ui.UnknownExtensionConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ApplicationConfiguration implements EntryPoint {
 
@@ -682,7 +666,7 @@ public class ApplicationConfiguration implements EntryPoint {
         // Don't run twice if the module has been inherited several times,
         // and don't continue if vaadinBootstrap was not executed.
         if (moduleLoaded || !vaadinBootstrapLoaded()) {
-            getLogger().log(Level.WARNING,
+            getLogger().warn(
                     "vaadinBootstrap.js was not loaded, skipping vaadin application configuration.");
             return;
         }
@@ -715,11 +699,11 @@ public class ApplicationConfiguration implements EntryPoint {
                  * errors helps nobody, especially end user. It does not work
                  * tells just as much.
                  */
-                getLogger().log(Level.SEVERE, throwable.getMessage(),
-                        throwable);
+                getLogger().error(throwable.getMessage(), throwable);
             });
 
             if (isProductionMode()) {
+                // Set up logging in JUL, since slf4j-gwt use it as backend
                 // Disable all logging if in production mode
                 Logger.getLogger("").setLevel(Level.OFF);
             }
@@ -784,6 +768,7 @@ public class ApplicationConfiguration implements EntryPoint {
         // Connect to the legacy API
         VConsole.setImplementation(window);
 
+        // Set up logging in JUL, since slf4j-gwt use it as backend
         Handler errorNotificationHandler = GWT
                 .create(ErrorNotificationHandler.class);
         Logger.getLogger("").addHandler(errorNotificationHandler);
@@ -895,7 +880,7 @@ public class ApplicationConfiguration implements EntryPoint {
         widgetsetVersionSent = true;
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(ApplicationConfiguration.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(ApplicationConfiguration.class);
     }
 }

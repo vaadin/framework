@@ -15,33 +15,15 @@
  */
 package com.vaadin.server;
 
+import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.ui.*;
+import com.vaadin.ui.GridLayout.Area;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintStream;
 import java.io.Serializable;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.Sizeable.Unit;
-import com.vaadin.ui.AbstractOrderedLayout;
-import com.vaadin.ui.AbstractSplitPanel;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.GridLayout.Area;
-import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+import java.util.*;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class ComponentSizeValidator implements Serializable {
@@ -162,8 +144,7 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineHeight(component);
         } catch (Exception e) {
-            getLogger().log(Level.FINER,
-                    "An exception occurred while validating sizes.", e);
+            getLogger().debug("An exception occurred while validating sizes.", e);
             return true;
         }
     }
@@ -182,8 +163,7 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineWidth(component);
         } catch (Exception e) {
-            getLogger().log(Level.FINER,
-                    "An exception occurred while validating sizes.", e);
+            getLogger().debug("An exception occurred while validating sizes.", e);
             return true;
         }
     }
@@ -659,15 +639,14 @@ public class ComponentSizeValidator implements Serializable {
                 map.put(object, cl);
                 return;
             } catch (Exception e) {
-                getLogger().log(Level.FINER,
-                        "An exception occurred while validating sizes.", e);
+                getLogger().debug("An exception occurred while validating sizes.", e);
             }
 
         }
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(ComponentSizeValidator.class.getName());
+        return LoggerFactory.getLogger(ComponentSizeValidator.class);
     }
 
     /**

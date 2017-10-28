@@ -16,6 +16,19 @@
 
 package com.vaadin.server;
 
+import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
+import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JavaScriptConnectorState;
+import com.vaadin.shared.JavaScriptExtensionState;
+import com.vaadin.shared.communication.SharedState;
+import com.vaadin.shared.ui.JavaScriptComponentState;
+import com.vaadin.ui.*;
+import com.vaadin.util.ReflectTools;
+import elemental.json.JsonObject;
+import elemental.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,23 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.JavaScriptConnectorState;
-import com.vaadin.shared.JavaScriptExtensionState;
-import com.vaadin.shared.communication.SharedState;
-import com.vaadin.shared.ui.JavaScriptComponentState;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ConnectorTracker;
-import com.vaadin.ui.HasComponents;
-import com.vaadin.ui.SelectiveRenderer;
-import com.vaadin.ui.UI;
-import com.vaadin.util.ReflectTools;
-
-import elemental.json.JsonObject;
-import elemental.json.JsonValue;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -130,8 +126,8 @@ public class LegacyCommunicationManager implements Serializable {
                     stateType, null);
             return encodeResult.getEncodedValue();
         } catch (Exception e) {
-            getLogger().log(Level.WARNING,
-                    "Error creating reference object for state of type {0}",
+            getLogger().warn(
+                    "Error creating reference object for state of type {}",
                     stateType.getName());
             return null;
         }
@@ -192,8 +188,7 @@ public class LegacyCommunicationManager implements Serializable {
             // Bare path interpreted as published file
             return registerPublishedFile(resourceUri, context);
         } catch (URISyntaxException e) {
-            getLogger().log(Level.WARNING,
-                    "Could not parse resource url " + resourceUri, e);
+            getLogger().warn("Could not parse resource url {}", resourceUri, e);
             return resourceUri;
         }
     }
@@ -211,9 +206,9 @@ public class LegacyCommunicationManager implements Serializable {
         if (publishedFileContexts.containsKey(name)) {
             Class<?> oldContext = publishedFileContexts.get(name);
             if (oldContext != context) {
-                getLogger().log(Level.WARNING,
-                        "{0} published by both {1} and {2}. File from {2} will be used.",
-                        new Object[] { name, context, oldContext });
+                getLogger().warn(
+                        "{} published by both {} and {}. File from {} will be used.",
+                        name, context, oldContext, oldContext);
             }
         } else {
             publishedFileContexts.put(name, context);
@@ -335,10 +330,8 @@ public class LegacyCommunicationManager implements Serializable {
         if (id == null) {
             id = nextTypeKey++;
             typeToKey.put(class1, id);
-            if (getLogger().isLoggable(Level.FINE)) {
-                getLogger().log(Level.FINE, "Mapping {0} to {1}",
-                        new Object[] { class1.getName(), id });
-            }
+
+            getLogger().debug("Mapping {} to {}", class1.getName(), id);
         }
         return id.toString();
     }
@@ -440,7 +433,7 @@ public class LegacyCommunicationManager implements Serializable {
         ui.getConnectorTracker().markAllClientSidesUninitialized();
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(LegacyCommunicationManager.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(LegacyCommunicationManager.class);
     }
 }

@@ -15,93 +15,47 @@
  */
 package com.vaadin.client.ui.ui;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.HeadElement;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.*;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.Focusable;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
-import com.vaadin.client.ServerConnector;
-import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.ValueMap;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
 import com.vaadin.client.extensions.DropTargetExtensionConnector;
-import com.vaadin.client.ui.AbstractConnector;
-import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
-import com.vaadin.client.ui.ClickEventHandler;
-import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VOverlay;
-import com.vaadin.client.ui.VUI;
-import com.vaadin.client.ui.VWindow;
+import com.vaadin.client.ui.*;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.client.ui.window.WindowOrderEvent;
 import com.vaadin.client.ui.window.WindowOrderHandler;
 import com.vaadin.server.Page.Styles;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.Connector;
-import com.vaadin.shared.EventId;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.Version;
+import com.vaadin.shared.*;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.WindowOrderRpc;
-import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
-import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
-import com.vaadin.shared.ui.ui.PageClientRpc;
-import com.vaadin.shared.ui.ui.PageState;
-import com.vaadin.shared.ui.ui.ScrollClientRpc;
-import com.vaadin.shared.ui.ui.UIClientRpc;
-import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.shared.ui.ui.UIServerRpc;
-import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.shared.ui.ui.*;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.UI;
-
 import elemental.client.Browser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractSingleComponentContainerConnector
@@ -389,7 +343,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     } else if (toBeFocused instanceof Focusable) {
                         ((Focusable) toBeFocused).focus();
                     } else {
-                        getLogger().severe(
+                        getLogger().error(
                                 "Server is trying to set focus to the widget of connector "
                                         + Util.getConnectorString(connector)
                                         + " but it is not focusable. The widget should implement either "
@@ -939,7 +893,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
             if (tagToReplace == null) {
                 getLogger()
-                        .warning("Did not find the link tag for the old theme ("
+                        .warn("Did not find the link tag for the old theme ("
                                 + oldThemeUrl
                                 + "), adding a new stylesheet for the new theme ("
                                 + newThemeUrl + ")");
@@ -1036,7 +990,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
                     @Override
                     public void onError(ResourceLoadEvent event) {
-                        getLogger().warning("Could not load theme from "
+                        getLogger().warn("Could not load theme from "
                                 + getThemeUrl(newTheme));
                     }
                 }, null);
@@ -1100,7 +1054,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             if (child instanceof AbstractConnector) {
                 forceStateChangeRecursively((AbstractConnector) child);
             } else {
-                getLogger().warning(
+                getLogger().warn(
                         "Could not force state change for unknown connector type: "
                                 + child.getClass().getName());
             }
@@ -1151,7 +1105,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(UIConnector.class.getName());
+        return LoggerFactory.getLogger(UIConnector.class);
     }
 
     private void setWindowOrderAndPosition() {

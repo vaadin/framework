@@ -15,32 +15,21 @@
  */
 package com.vaadin.v7.ui.components.colorpicker;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.shared.ui.colorpicker.Color;
 import com.vaadin.v7.ui.AbstractColorPicker.Coordinates2Color;
 import com.vaadin.v7.ui.Slider;
 import com.vaadin.v7.ui.Slider.ValueOutOfBoundsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * A component that represents color selection popup within a color picker.
@@ -562,10 +551,9 @@ public class ColorPickerPopup extends Window
             blueSlider.setValue(((Integer) color.getBlue()).doubleValue());
             greenSlider.setValue(((Integer) color.getGreen()).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            getLogger().log(Level.WARNING,
-                    "Unable to set RGB color value to " + color.getRed() + ","
-                            + color.getGreen() + "," + color.getBlue(),
-                    e);
+            getLogger().warn(
+                    "Unable to set RGB color value to {},{},{}",
+                    color.getRed(), color.getGreen(), color.getBlue(), e);
         }
     }
 
@@ -575,8 +563,8 @@ public class ColorPickerPopup extends Window
             saturationSlider.setValue(((Float) (hsv[1] * 100f)).doubleValue());
             valueSlider.setValue(((Float) (hsv[2] * 100f)).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            getLogger().log(Level.WARNING, "Unable to set HSV color value to "
-                    + hsv[0] + "," + hsv[1] + "," + hsv[2], e);
+            getLogger().warn("Unable to set HSV color value to {},{},{}",
+                    hsv[0], hsv[1], hsv[2], e);
         }
     }
 
@@ -763,6 +751,6 @@ public class ColorPickerPopup extends Window
     };
 
     private static Logger getLogger() {
-        return Logger.getLogger(ColorPickerPopup.class.getName());
+        return LoggerFactory.getLogger(ColorPickerPopup.class);
     }
 }

@@ -16,36 +16,20 @@
 
 package com.vaadin.server.communication;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.vaadin.server.*;
+import com.vaadin.shared.communication.PushConstants;
+import org.atmosphere.cache.UUIDBroadcasterCache;
+import org.atmosphere.client.TrackMessageSizeInterceptor;
+import org.atmosphere.cpr.*;
+import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
+import org.atmosphere.interceptor.HeartbeatInterceptor;
+import org.atmosphere.util.VoidAnnotationProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
-import org.atmosphere.cache.UUIDBroadcasterCache;
-import org.atmosphere.client.TrackMessageSizeInterceptor;
-import org.atmosphere.cpr.ApplicationConfig;
-import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.AtmosphereFramework.AtmosphereHandlerWrapper;
-import org.atmosphere.cpr.AtmosphereHandler;
-import org.atmosphere.cpr.AtmosphereInterceptor;
-import org.atmosphere.cpr.AtmosphereRequestImpl;
-import org.atmosphere.cpr.AtmosphereResponseImpl;
-import org.atmosphere.interceptor.HeartbeatInterceptor;
-import org.atmosphere.util.VoidAnnotationProcessor;
-
-import com.vaadin.server.RequestHandler;
-import com.vaadin.server.ServiceException;
-import com.vaadin.server.ServletPortletHelper;
-import com.vaadin.server.SessionExpiredHandler;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinServletResponse;
-import com.vaadin.server.VaadinServletService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.communication.PushConstants;
+import java.io.IOException;
 
 /**
  * Handles requests to open a push (bidirectional) communication channel between
@@ -75,12 +59,12 @@ public class PushRequestHandler
         atmosphere = getPreInitializedAtmosphere(vaadinServletConfig);
         if (atmosphere == null) {
             // Not initialized by JSR356WebsocketInitializer
-            getLogger().fine("Initializing Atmosphere for servlet "
+            getLogger().debug("Initializing Atmosphere for servlet "
                     + vaadinServletConfig.getServletName());
             try {
                 atmosphere = initAtmosphere(vaadinServletConfig);
             } catch (Exception e) {
-                getLogger().log(Level.WARNING,
+                getLogger().warn(
                         "Failed to initialize Atmosphere for "
                                 + service.getServlet().getServletName()
                                 + ". Push will not work.",
@@ -88,7 +72,7 @@ public class PushRequestHandler
                 return;
             }
         } else {
-            getLogger().fine("Using pre-initialized Atmosphere for servlet "
+            getLogger().debug("Using pre-initialized Atmosphere for servlet "
                     + vaadinServletConfig.getServletName());
         }
         pushHandler.setLongPollingSuspendTimeout(
@@ -123,8 +107,8 @@ public class PushRequestHandler
         return new PushHandler(service);
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(PushRequestHandler.class.getName());
+    private static Logger getLogger() {
+        return LoggerFactory.getLogger(PushRequestHandler.class);
     }
 
     /**

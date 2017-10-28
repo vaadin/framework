@@ -16,18 +16,6 @@
 
 package com.vaadin.v7.client.connectors;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Logger;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -37,13 +25,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.DeferredWorker;
-import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.ServerConnector;
-import com.vaadin.client.TooltipInfo;
-import com.vaadin.client.WidgetUtil;
+import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -59,47 +41,24 @@ import com.vaadin.v7.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.v7.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedHandler;
-import com.vaadin.v7.client.widget.grid.CellReference;
-import com.vaadin.v7.client.widget.grid.CellStyleGenerator;
-import com.vaadin.v7.client.widget.grid.EditorHandler;
-import com.vaadin.v7.client.widget.grid.EventCellReference;
-import com.vaadin.v7.client.widget.grid.HeightAwareDetailsGenerator;
-import com.vaadin.v7.client.widget.grid.RowReference;
-import com.vaadin.v7.client.widget.grid.RowStyleGenerator;
-import com.vaadin.v7.client.widget.grid.events.BodyClickHandler;
-import com.vaadin.v7.client.widget.grid.events.BodyDoubleClickHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnReorderEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnReorderHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnResizeEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnResizeHandler;
-import com.vaadin.v7.client.widget.grid.events.ColumnVisibilityChangeEvent;
-import com.vaadin.v7.client.widget.grid.events.ColumnVisibilityChangeHandler;
-import com.vaadin.v7.client.widget.grid.events.GridClickEvent;
-import com.vaadin.v7.client.widget.grid.events.GridDoubleClickEvent;
+import com.vaadin.v7.client.widget.grid.*;
+import com.vaadin.v7.client.widget.grid.events.*;
 import com.vaadin.v7.client.widget.grid.sort.SortEvent;
 import com.vaadin.v7.client.widget.grid.sort.SortHandler;
 import com.vaadin.v7.client.widget.grid.sort.SortOrder;
 import com.vaadin.v7.client.widgets.Grid;
-import com.vaadin.v7.client.widgets.Grid.Column;
-import com.vaadin.v7.client.widgets.Grid.FooterCell;
-import com.vaadin.v7.client.widgets.Grid.FooterRow;
-import com.vaadin.v7.client.widgets.Grid.HeaderCell;
-import com.vaadin.v7.client.widgets.Grid.HeaderRow;
-import com.vaadin.v7.shared.ui.grid.EditorClientRpc;
-import com.vaadin.v7.shared.ui.grid.EditorServerRpc;
-import com.vaadin.v7.shared.ui.grid.GridClientRpc;
-import com.vaadin.v7.shared.ui.grid.GridColumnState;
-import com.vaadin.v7.shared.ui.grid.GridConstants;
+import com.vaadin.v7.client.widgets.Grid.*;
+import com.vaadin.v7.shared.ui.grid.*;
 import com.vaadin.v7.shared.ui.grid.GridConstants.Section;
-import com.vaadin.v7.shared.ui.grid.GridServerRpc;
-import com.vaadin.v7.shared.ui.grid.GridState;
-import com.vaadin.v7.shared.ui.grid.GridStaticSectionState;
 import com.vaadin.v7.shared.ui.grid.GridStaticSectionState.CellState;
 import com.vaadin.v7.shared.ui.grid.GridStaticSectionState.RowState;
-import com.vaadin.v7.shared.ui.grid.ScrollDestination;
-
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Connects the client side {@link Grid} widget with the server side
@@ -469,7 +428,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                         }
                     }
                 } else {
-                    getLogger().warning(
+                    getLogger().warn(
                             "Visibility changed for a unknown column type in Grid: "
                                     + column + ", type " + column.getClass());
                 }
@@ -1209,7 +1168,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(getClass().getName());
+        return LoggerFactory.getLogger(getClass());
     }
 
     /**

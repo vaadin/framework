@@ -15,25 +15,16 @@
  */
 package com.vaadin.client.ui.layout;
 
+import com.google.gwt.core.client.JsArrayString;
+import com.vaadin.client.*;
+import com.vaadin.client.ui.ManagedLayout;
+import com.vaadin.shared.AbstractComponentState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
-
-import com.google.gwt.core.client.JsArrayString;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.FastStringMap;
-import com.vaadin.client.FastStringSet;
-import com.vaadin.client.HasComponentsConnector;
-import com.vaadin.client.JsArrayObject;
-import com.vaadin.client.Profiler;
-import com.vaadin.client.ServerConnector;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.ManagedLayout;
-import com.vaadin.shared.AbstractComponentState;
 
 /**
  * Internal class used to keep track of layout dependencies during one layout
@@ -498,7 +489,7 @@ public class LayoutDependencyTree {
                 connector = (ComponentConnector) ConnectorMap.get(connection)
                         .getConnector(connectorId);
                 if (connector == null) {
-                    getLogger().warning("No connector found for id "
+                    getLogger().warn("No connector found for id "
                             + connectorId + " while creating LayoutDependency");
                     return null;
                 }
@@ -537,8 +528,7 @@ public class LayoutDependencyTree {
         if (dependency != null) {
             dependency.setNeedsLayout(needsLayout);
         } else {
-            getLogger()
-                    .warning("No dependency found in setNeedsHorizontalLayout");
+            getLogger().warn("No dependency found in setNeedsHorizontalLayout");
         }
     }
 
@@ -562,10 +552,8 @@ public class LayoutDependencyTree {
         if (dependency != null) {
             dependency.setNeedsLayout(needsLayout);
         } else {
-            getLogger()
-                    .warning("No dependency found in setNeedsVerticalLayout");
+            getLogger().warn("No dependency found in setNeedsVerticalLayout");
         }
-
     }
 
     public void markAsHorizontallyLayouted(ManagedLayout layout) {
@@ -756,7 +744,6 @@ public class LayoutDependencyTree {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(LayoutDependencyTree.class.getName());
+        return LoggerFactory.getLogger(LayoutDependencyTree.class);
     }
-
 }

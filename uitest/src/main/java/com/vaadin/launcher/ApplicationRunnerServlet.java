@@ -15,6 +15,20 @@
  */
 package com.vaadin.launcher;
 
+import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
+import com.vaadin.server.*;
+import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,43 +39,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import com.vaadin.launcher.CustomDeploymentConfiguration.Conf;
-import com.vaadin.server.DefaultDeploymentConfiguration;
-import com.vaadin.server.DeploymentConfiguration;
-import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.LegacyVaadinServlet;
-import com.vaadin.server.ServiceException;
-import com.vaadin.server.SystemMessages;
-import com.vaadin.server.SystemMessagesInfo;
-import com.vaadin.server.SystemMessagesProvider;
-import com.vaadin.server.UIClassSelectionEvent;
-import com.vaadin.server.UICreateEvent;
-import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinServletService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.UI;
-import com.vaadin.util.CurrentInstance;
+import java.util.*;
 
 @SuppressWarnings("serial")
 public class ApplicationRunnerServlet extends LegacyVaadinServlet {
@@ -119,7 +97,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             try {
                 path = new URI(path).getPath();
             } catch (URISyntaxException e) {
-                getLogger().log(Level.FINE, "Failed to decode url", e);
+                getLogger().debug("Failed to decode url", e);
             }
             File comVaadinTests = new File(path).getParentFile()
                     .getParentFile();
@@ -410,7 +388,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                     // Ignore as this is expected for many packages
                 } catch (Exception e2) {
                     // TODO: handle exception
-                    getLogger().log(Level.FINE,
+                    getLogger().debug(
                             "Failed to find application class " + pkg + "."
                                     + baseName,
                             e2);
@@ -426,7 +404,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     private Logger getLogger() {
-        return Logger.getLogger(ApplicationRunnerServlet.class.getName());
+        return LoggerFactory.getLogger(ApplicationRunnerServlet.class);
     }
 
     @Override

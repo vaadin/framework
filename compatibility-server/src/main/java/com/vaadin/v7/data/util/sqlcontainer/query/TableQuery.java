@@ -15,37 +15,20 @@
  */
 package com.vaadin.v7.data.util.sqlcontainer.query;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EventObject;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.util.filter.Compare.Equal;
-import com.vaadin.v7.data.util.sqlcontainer.ColumnProperty;
-import com.vaadin.v7.data.util.sqlcontainer.OptimisticLockException;
+import com.vaadin.v7.data.util.sqlcontainer.*;
 import com.vaadin.v7.data.util.sqlcontainer.RowId;
-import com.vaadin.v7.data.util.sqlcontainer.RowItem;
-import com.vaadin.v7.data.util.sqlcontainer.SQLUtil;
-import com.vaadin.v7.data.util.sqlcontainer.TemporaryRowId;
 import com.vaadin.v7.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.DefaultSQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.MSSQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.v7.data.util.sqlcontainer.query.generator.StatementHelper;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.*;
 
 /**
  * @deprecated As of 8.0, no replacement available.
@@ -196,7 +179,8 @@ public class TableQuery extends AbstractTransactionalQuery
 
     @Override
     public int getCount() throws SQLException {
-        getLogger().log(Level.FINE, "Fetching count...");
+        getLogger().debug("Fetching count...");
+
         StatementHelper sh = sqlGenerator.generateSelectQuery(
                 getFullTableName(), filters, null, 0, 0, "COUNT(*)");
         boolean shouldCloseTransaction = false;
@@ -313,7 +297,9 @@ public class TableQuery extends AbstractTransactionalQuery
             pstmt = connection.prepareStatement(sh.getQueryString(),
                     primaryKeyColumns.toArray(new String[0]));
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+
+            getLogger().debug("DB -> {}", sh.getQueryString());
+
             int result = pstmt.executeUpdate();
             RowId newId = null;
             if (result > 0) {
@@ -355,13 +341,13 @@ public class TableQuery extends AbstractTransactionalQuery
     @Override
     public void beginTransaction()
             throws UnsupportedOperationException, SQLException {
-        getLogger().log(Level.FINE, "DB -> begin transaction");
+        getLogger().debug("DB -> begin transaction");
         super.beginTransaction();
     }
 
     @Override
     public void commit() throws UnsupportedOperationException, SQLException {
-        getLogger().log(Level.FINE, "DB -> commit");
+        getLogger().debug("DB -> commit");
         super.commit();
 
         /* Handle firing row ID change events */
@@ -379,7 +365,7 @@ public class TableQuery extends AbstractTransactionalQuery
 
     @Override
     public void rollback() throws UnsupportedOperationException, SQLException {
-        getLogger().log(Level.FINE, "DB -> rollback");
+        getLogger().debug("DB -> rollback");
         super.rollback();
     }
 
@@ -473,7 +459,7 @@ public class TableQuery extends AbstractTransactionalQuery
         try {
             pstmt = connection.prepareStatement(sh.getQueryString());
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+            getLogger().debug("DB -> {}", sh.getQueryString());
             return pstmt.executeQuery();
         } catch (SQLException e) {
             releaseConnection(null, pstmt, null);
@@ -499,7 +485,7 @@ public class TableQuery extends AbstractTransactionalQuery
             connection = getConnection();
             pstmt = connection.prepareStatement(sh.getQueryString());
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+            getLogger().debug("DB -> {}", sh.getQueryString());
             int retval = pstmt.executeUpdate();
             return retval;
         } finally {
@@ -532,7 +518,7 @@ public class TableQuery extends AbstractTransactionalQuery
             pstmt = connection.prepareStatement(sh.getQueryString(),
                     primaryKeyColumns.toArray(new String[0]));
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+            getLogger().debug("DB -> {}", sh.getQueryString());
             int result = pstmt.executeUpdate();
             genKeys = pstmt.getGeneratedKeys();
             RowId newId = getNewRowId(row, genKeys);
@@ -655,8 +641,8 @@ public class TableQuery extends AbstractTransactionalQuery
             }
             return new RowId(newRowId.toArray());
         } catch (Exception e) {
-            getLogger().log(Level.FINE,
-                    "Failed to fetch key values on insert: {0}",
+            getLogger().debug(
+                    "Failed to fetch key values on insert: {}",
                     e.getMessage());
             return null;
         }
@@ -665,10 +651,9 @@ public class TableQuery extends AbstractTransactionalQuery
     @Override
     public boolean removeRow(RowItem row)
             throws UnsupportedOperationException, SQLException {
-        if (getLogger().isLoggable(Level.FINE)) {
-            getLogger().log(Level.FINE, "Removing row with id: {0}",
-                    row.getId().getId()[0]);
-        }
+        getLogger().debug("Removing row with id: {}",
+                row.getId().getId()[0]);
+
         if (executeUpdate(sqlGenerator.generateDeleteQuery(getFullTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
             return true;
@@ -798,7 +783,7 @@ public class TableQuery extends AbstractTransactionalQuery
         removeRowIdChangeListener(listener);
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(TableQuery.class.getName());
+    private static org.slf4j.Logger getLogger() {
+        return LoggerFactory.getLogger(TableQuery.class);
     }
 }

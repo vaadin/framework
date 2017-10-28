@@ -15,32 +15,23 @@
  */
 package com.vaadin.client.communication;
 
-import java.util.logging.Logger;
-
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.*;
 import com.vaadin.client.ApplicationConnection.CommunicationHandler;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingEndedEvent;
 import com.vaadin.client.ApplicationConnection.ResponseHandlingStartedEvent;
-import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.Profiler;
-import com.vaadin.client.Util;
-import com.vaadin.client.ValueMap;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
-
 import elemental.json.JsonObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides a connection to the /UIDL url on the server and knows how to send
@@ -102,7 +93,7 @@ public class XhrConnection {
     }
 
     private static Logger getLogger() {
-        return Logger.getLogger(XhrConnection.class.getName());
+        return LoggerFactory.getLogger(XhrConnection.class);
     }
 
     protected XhrResponseHandler createResponseHandler() {
