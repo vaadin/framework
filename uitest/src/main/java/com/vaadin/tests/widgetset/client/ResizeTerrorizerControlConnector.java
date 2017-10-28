@@ -21,8 +21,6 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
@@ -122,13 +120,7 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
                 // Then add history change listener
                 historyHandlerRegistration = History.addValueChangeHandler(
-                        new ValueChangeHandler<String>() {
-                            @Override
-                            public void onValueChange(
-                                    ValueChangeEvent<String> event) {
-                                updateFromHistoryToken(event.getValue());
-                            }
-                        });
+                        event -> updateFromHistoryToken(event.getValue()));
             } else if (!useUriFragments && historyHandlerRegistration != null) {
                 historyHandlerRegistration.removeHandler();
                 historyHandlerRegistration = null;

@@ -19,10 +19,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.parallel.Browser;
@@ -108,12 +106,9 @@ public class ComboboxSelectedItemTextTest extends MultiBrowserTest {
     }
 
     private void waitForPopup(final WebElement comboBox) {
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return comboBox.findElements(By.vaadin("#popup")).isEmpty();
-            }
-        }, 10);
+        waitUntilNot(
+                input -> comboBox.findElements(By.vaadin("#popup")).isEmpty(),
+                10);
     }
 
 }

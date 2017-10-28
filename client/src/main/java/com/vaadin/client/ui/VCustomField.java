@@ -47,13 +47,7 @@ public class VCustomField extends VCustomComponent implements Focusable {
      */
     public void setFocusDelegate(
             final com.google.gwt.user.client.ui.Focusable focusDelegate) {
-        this.focusDelegate = new Focusable() {
-            @Override
-            public void focus() {
-                focusDelegate.setFocus(true);
-            }
-        };
-
+        this.focusDelegate = () -> focusDelegate.setFocus(true);
     }
 
 }

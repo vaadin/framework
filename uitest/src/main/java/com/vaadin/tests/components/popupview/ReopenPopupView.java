@@ -19,7 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.PopupView;
 
 public class ReopenPopupView extends AbstractReindeerTestUI {
@@ -29,12 +28,7 @@ public class ReopenPopupView extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(log);
         addComponent(new PopupView("PopupView",
-                new Button("Button", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.log("Button clicked");
-                    }
-                })));
+                new Button("Button", event -> log.log("Button clicked"))));
     }
 
     @Override

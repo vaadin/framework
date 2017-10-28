@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -27,12 +26,9 @@ public class ReloadWidgets extends AbstractReindeerTestUI {
 
         Button button = new Button("Refresh");
         button.setId("refresh");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.removeAllItems();
-                fillTable(table);
-            }
+        button.addClickListener(event -> {
+            table.removeAllItems();
+            fillTable(table);
         });
         getLayout().addComponent(button);
         getLayout().addComponent(table);

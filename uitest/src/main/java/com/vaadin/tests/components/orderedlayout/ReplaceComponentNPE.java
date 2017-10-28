@@ -2,7 +2,6 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 
 public class ReplaceComponentNPE extends TestBase {
@@ -25,12 +24,9 @@ public class ReplaceComponentNPE extends TestBase {
         outer.setMargin(true);
 
         Button changer = new Button("ReplaceComponent");
-        changer.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getLayout().replaceComponent(button, outer);
-                outer.addComponent(button);
-            }
+        changer.addClickListener(event -> {
+            getLayout().replaceComponent(button, outer);
+            outer.addComponent(button);
         });
 
         getLayout().addComponent(button);

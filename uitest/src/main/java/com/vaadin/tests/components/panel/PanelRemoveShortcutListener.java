@@ -19,8 +19,6 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -61,13 +59,9 @@ public class PanelRemoveShortcutListener extends AbstractReindeerTestUI {
 
     private ClickListener createClickListener(final Panel panel,
             final ShortcutListener shortcut) {
-        return new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                panel.removeShortcutListener(shortcut);
-                addComponent(new Label("shortcut removed"));
-            }
+        return event -> {
+            panel.removeShortcutListener(shortcut);
+            addComponent(new Label("shortcut removed"));
         };
     }
 

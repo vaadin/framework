@@ -20,8 +20,6 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
@@ -100,14 +98,8 @@ public class TestForTrees extends CustomComponent implements Handler {
         main.addComponent(ol);
         contextTree = t;
 
-        final Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        final Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
-
     }
 
     public Tree createTestTree() {
@@ -148,12 +140,9 @@ public class TestForTrees extends CustomComponent implements Handler {
         statusLayout.setMargin(true);
         final Panel status = new Panel("Events", statusLayout);
         final Button clear = new Button("c");
-        clear.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                statusLayout.removeAllComponents();
-                statusLayout.addComponent(clear);
-            }
+        clear.addClickListener(event -> {
+            statusLayout.removeAllComponents();
+            statusLayout.addComponent(clear);
         });
         statusLayout.addComponent(clear);
 
@@ -162,15 +151,11 @@ public class TestForTrees extends CustomComponent implements Handler {
 
         ol.addComponent(status);
 
-        t.addListener(new Listener() {
-            @Override
-            public void componentEvent(Event event) {
-                statusLayout
-                        .addComponent(new Label(event.getClass().getName()));
-                // TODO should not use LegacyField.toString()
-                statusLayout.addComponent(
-                        new Label("selected: " + event.getSource().toString()));
-            }
+        t.addListener((Listener) event -> {
+            statusLayout.addComponent(new Label(event.getClass().getName()));
+            // TODO should not use LegacyField.toString()
+            statusLayout.addComponent(
+                    new Label("selected: " + event.getSource().toString()));
         });
 
         return ol;

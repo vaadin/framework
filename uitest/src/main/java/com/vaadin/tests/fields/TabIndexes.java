@@ -7,8 +7,6 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -60,55 +58,39 @@ public class TabIndexes extends AbstractTestUIWithLog {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         addComponent(buttonLayout);
         Button clearTabIndexes = new Button("Set all tab indexes to 0");
-        clearTabIndexes.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("Setting tab indexes to 0");
-                for (Focusable f : fields) {
-                    f.setTabIndex(0);
-                }
-                updateCaptions();
+        clearTabIndexes.addClickListener(event -> {
+            log("Setting tab indexes to 0");
+            for (Focusable f : fields) {
+                f.setTabIndex(0);
             }
+            updateCaptions();
         });
         Button setTabIndexesToOne = new Button("Set all tab indexes to 1");
-        setTabIndexesToOne.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("Setting tab indexes to 1");
-                for (Focusable f : fields) {
-                    f.setTabIndex(1);
-                }
-                updateCaptions();
+        setTabIndexesToOne.addClickListener(event -> {
+            log("Setting tab indexes to 1");
+            for (Focusable f : fields) {
+                f.setTabIndex(1);
             }
+            updateCaptions();
         });
         Button setTabIndexesInOrder = new Button("Set tab indexes to 1..N");
-        setTabIndexesInOrder.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                int tabIndex = 1;
-                log("Setting tab indexes to 1..N");
-                for (Focusable f : fields) {
-                    f.setTabIndex(tabIndex++);
-                }
-                updateCaptions();
+        setTabIndexesInOrder.addClickListener(event -> {
+            int tabIndex = 1;
+            log("Setting tab indexes to 1..N");
+            for (Focusable f : fields) {
+                f.setTabIndex(tabIndex++);
             }
+            updateCaptions();
         });
         Button setTabIndexesInReverseOrder = new Button(
                 "Set tab indexes to N..1");
-        setTabIndexesInReverseOrder.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                int tabIndex = fields.size();
-                log("Setting tab indexes to N..1");
-                for (Focusable f : fields) {
-                    f.setTabIndex(tabIndex--);
-                }
-                updateCaptions();
+        setTabIndexesInReverseOrder.addClickListener(event -> {
+            int tabIndex = fields.size();
+            log("Setting tab indexes to N..1");
+            for (Focusable f : fields) {
+                f.setTabIndex(tabIndex--);
             }
+            updateCaptions();
         });
 
         clearTabIndexes.click();
@@ -123,7 +105,6 @@ public class TabIndexes extends AbstractTestUIWithLog {
             vl.addComponent(f);
         }
         addComponent(vl);
-
     }
 
     protected void updateCaptions() {

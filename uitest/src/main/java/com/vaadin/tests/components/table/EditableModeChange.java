@@ -44,16 +44,12 @@ public class EditableModeChange extends AbstractReindeerTestUI {
                     .setValue(new FormattedDate(cal.getTime().getTime()));
         }
 
-        items.addItemClickListener(new ItemClickEvent.ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    selectionEvent = event;
-                    items.setEditable(true);
-                } else if (items.isEditable()) {
-                    items.setEditable(false);
-                }
+        items.addItemClickListener(event -> {
+            if (event.isDoubleClick()) {
+                selectionEvent = event;
+                items.setEditable(true);
+            } else if (items.isEditable()) {
+                items.setEditable(false);
             }
         });
 

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.textarea;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TextArea;
 
 /**
@@ -25,48 +23,20 @@ public class ScrollCursor extends TestBase {
                 + "ds\n" + "fds\n" + "fds\nfs");
         addComponent(textArea);
         Button button = new Button("Scroll");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                textArea.setCursorPosition(getPosition());
-            }
-        });
+        button.addClickListener(
+                event -> textArea.setCursorPosition(getPosition()));
         Button wrap = new Button("Set wrap");
-        wrap.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                textArea.setWordWrap(false);
-            }
-        });
+        wrap.addClickListener(event -> textArea.setWordWrap(false));
 
         Button toBegin = new Button("To begin");
-        toBegin.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                position = 3;
-            }
-        });
+        toBegin.addClickListener(event -> position = 3);
 
         Button toMiddle = new Button("To middle");
-        toMiddle.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                position = 130;
-            }
-        });
+        toMiddle.addClickListener(event -> position = 130);
 
         Button toEnd = new Button("To end");
-        toEnd.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                position = textArea.getValue().length();
-            }
-        });
+        toEnd.addClickListener(
+                event -> position = textArea.getValue().length());
 
         addComponent(button);
         addComponent(wrap);

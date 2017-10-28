@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 
@@ -16,12 +15,7 @@ public class HiddenTabSheetBrowserResize extends TestBase {
         tabSheet.addTab(new Label("Label2"), "Tab2");
 
         Button toggleButton = new Button("Toggle TabSheet",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        tabSheet.setVisible(!tabSheet.isVisible());
-                    }
-                });
+                event -> tabSheet.setVisible(!tabSheet.isVisible()));
         addComponent(toggleButton);
         addComponent(tabSheet);
     }

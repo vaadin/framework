@@ -5,8 +5,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class SafariRenderingBugWhiteSpace extends TestBase {
@@ -32,15 +30,11 @@ public class SafariRenderingBugWhiteSpace extends TestBase {
         table.setSelectable(true);
         table.setImmediate(true);
         table.setSizeFull();
-        table.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table.getValue() == null) {
-                    split.setSplitPosition(100, Sizeable.UNITS_PERCENTAGE);
-                } else {
-                    split.setSplitPosition(20, Sizeable.UNITS_PERCENTAGE);
-                }
+        table.addValueChangeListener(event -> {
+            if (table.getValue() == null) {
+                split.setSplitPosition(100, Sizeable.UNITS_PERCENTAGE);
+            } else {
+                split.setSplitPosition(20, Sizeable.UNITS_PERCENTAGE);
             }
         });
 

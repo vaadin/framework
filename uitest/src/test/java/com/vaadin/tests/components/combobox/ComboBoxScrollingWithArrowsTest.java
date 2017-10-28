@@ -22,9 +22,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -95,11 +93,6 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
     }
 
     private void waitUntilNextPageIsVisible() {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return getSelectedItemText().equals("item " + PAGESIZE);
-            }
-        }, 5);
+        waitUntil(inpu -> getSelectedItemText().equals("item " + PAGESIZE), 5);
     }
 }

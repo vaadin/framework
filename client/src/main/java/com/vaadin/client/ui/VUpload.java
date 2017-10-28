@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -253,35 +252,32 @@ public class VUpload extends SimplePanel {
      */
     private void onSubmitComplete() {
         /* Needs to be run dereferred to avoid various browser issues. */
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (submitted) {
-                    if (client != null) {
-                        if (t != null) {
-                            t.cancel();
-                        }
-                        VConsole.log("VUpload:Submit complete");
-                        if (isAttached()) {
-                            // no need to call poll() if component is already
-                            // detached #8728
-                            ((UploadConnector) ConnectorMap.get(client)
-                                    .getConnector(VUpload.this))
-                                            .getRpcProxy(UploadServerRpc.class)
-                                            .poll();
-                        }
+        Scheduler.get().scheduleDeferred(() -> {
+            if (submitted) {
+                if (client != null) {
+                    if (t != null) {
+                        t.cancel();
                     }
-
-                    rebuildPanel();
-
-                    submitted = false;
-                    enableUpload();
-                    if (!isAttached()) {
-                        /*
-                         * Upload is complete when upload is already abandoned.
-                         */
-                        cleanTargetFrame();
+                    VConsole.log("VUpload:Submit complete");
+                    if (isAttached()) {
+                        // no need to call poll() if component is already
+                        // detached #8728
+                        ((UploadConnector) ConnectorMap.get(client)
+                                .getConnector(VUpload.this))
+                                        .getRpcProxy(UploadServerRpc.class)
+                                        .poll();
                     }
+                }
+
+                rebuildPanel();
+
+                submitted = false;
+                enableUpload();
+                if (!isAttached()) {
+                    /*
+                     * Upload is complete when upload is already abandoned.
+                     */
+                    cleanTargetFrame();
                 }
             }
         });

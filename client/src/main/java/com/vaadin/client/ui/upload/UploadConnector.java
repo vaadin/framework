@@ -34,12 +34,7 @@ public class UploadConnector extends AbstractComponentConnector
         implements Paintable {
 
     public UploadConnector() {
-        registerRpc(UploadClientRpc.class, new UploadClientRpc() {
-            @Override
-            public void submitUpload() {
-                getWidget().submit();
-            }
-        });
+        registerRpc(UploadClientRpc.class, () -> getWidget().submit());
     }
 
     @Override

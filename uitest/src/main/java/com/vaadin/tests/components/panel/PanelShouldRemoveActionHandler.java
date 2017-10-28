@@ -9,7 +9,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TextField;
@@ -35,33 +34,11 @@ public class PanelShouldRemoveActionHandler extends TestBase {
         panel = new Panel("A panel", layout);
         layout.addComponent(new TextField());
         Button add = new Button("Add an action handler",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        add();
-                    }
-
-                });
+                event -> add());
         Button addAnother = new Button("Add another action handler",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        addAnother();
-                    }
-
-                });
+                event -> addAnother());
         Button remove = new Button("Remove an action handler",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        remove();
-                    }
-
-                });
-
+                event -> remove());
         addComponent(panel);
         addComponent(add);
         addComponent(addAnother);

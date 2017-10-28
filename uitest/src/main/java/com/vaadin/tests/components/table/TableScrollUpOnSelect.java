@@ -19,8 +19,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.TextField;
 
@@ -51,15 +49,10 @@ public class TableScrollUpOnSelect extends AbstractReindeerTestUI {
 
         final VerticalLayout layout = new VerticalLayout();
 
-        table.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (table.getValue() != null) {
-                    text.setValue(table.getValue().toString());
-                }
+        table.addValueChangeListener(event -> {
+            if (table.getValue() != null) {
+                text.setValue(table.getValue().toString());
             }
-
         });
 
         table.setCurrentPageFirstItemIndex(49);

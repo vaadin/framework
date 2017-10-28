@@ -18,7 +18,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
@@ -39,18 +38,13 @@ public class TableParentEnabledStateChange extends AbstractTestUIWithLog {
 
         toggle = new Button(
                 "Toggle enabled state ; " + customComponent.isEnabled());
-        toggle.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                customComponent.setEnabled(!customComponent.isEnabled());
-                toggle.setCaption("Toggle enabled state ; "
-                        + customComponent.isEnabled());
-            }
+        toggle.addClickListener(event -> {
+            customComponent.setEnabled(!customComponent.isEnabled());
+            toggle.setCaption(
+                    "Toggle enabled state ; " + customComponent.isEnabled());
         });
         addComponent(toggle);
         addComponent(customComponent);
-
     }
 
     class MyCustomComponent extends CustomComponent {

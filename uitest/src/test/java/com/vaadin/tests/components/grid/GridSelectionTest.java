@@ -9,10 +9,8 @@ import java.util.HashSet;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.GridElement;
@@ -475,13 +473,8 @@ public class GridSelectionTest extends GridBasicsTest {
 
     private void waitUntilCheckBoxValue(final WebElement checkBoxElememnt,
             final boolean expectedValue) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return expectedValue ? checkBoxElememnt.isSelected()
-                        : !checkBoxElememnt.isSelected();
-            }
-        }, 5);
+        waitUntil(input -> expectedValue ? checkBoxElememnt.isSelected()
+                : !checkBoxElememnt.isSelected(), 5);
     }
 
     private GridRowElement getRow(int i) {

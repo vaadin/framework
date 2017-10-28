@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -67,33 +65,27 @@ public class ContainerChangeWithPartlySamePropertyIds extends TestBase {
         public TableTestComponent() {
 
             Button switchContainerButton = new Button("switch container");
-            switchContainerButton.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    if (testTable.getContainerDataSource() == containerA) {
-                        testTable.setContainerDataSource(containerB);
-                    } else {
-                        testTable.setContainerDataSource(containerA);
-                    }
+            switchContainerButton.addClickListener(event -> {
+                if (testTable.getContainerDataSource() == containerA) {
+                    testTable.setContainerDataSource(containerB);
+                } else {
+                    testTable.setContainerDataSource(containerA);
                 }
             });
             this.addComponent(switchContainerButton);
 
             Button clearButton = new Button("clear (click twice)");
-            clearButton.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    try {
-                        me.removeComponent(testTable);
+            clearButton.addClickListener(event -> {
+                try {
+                    me.removeComponent(testTable);
 
-                        testTable = new Table();
-                        createContainers();
-                        testTable.setContainerDataSource(containerA);
+                    testTable = new Table();
+                    createContainers();
+                    testTable.setContainerDataSource(containerA);
 
-                        me.addComponent(testTable);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    me.addComponent(testTable);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
             this.addComponent(clearButton);

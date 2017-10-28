@@ -122,12 +122,7 @@ public class MenuBarConnector extends AbstractComponentConnector
                 if (itemHasCommand || itemIsCheckable) {
                     // Construct a command that fires onMenuClick(int) with the
                     // item's id-number
-                    cmd = new Command() {
-                        @Override
-                        public void execute() {
-                            getWidget().hostReference.onMenuClick(itemId);
-                        }
-                    };
+                    cmd = () -> getWidget().hostReference.onMenuClick(itemId);
                 }
             }
 

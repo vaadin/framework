@@ -74,15 +74,12 @@ public class JavaScriptCallbackHelper implements Serializable {
         if (javascriptCallbackRpc == null) {
             // Note that javascriptCallbackRpc is not a lambda to make sure it
             // can be serialized properly
-            javascriptCallbackRpc = new JavaScriptCallbackRpc() {
-                @Override
-                public void call(String name, JsonArray arguments) {
-                    JavaScriptFunction callback = callbacks.get(name);
-                    try {
-                        callback.call(arguments);
-                    } catch (JsonException e) {
-                        throw new IllegalArgumentException(e);
-                    }
+            javascriptCallbackRpc = (name, arguments) -> {
+                JavaScriptFunction callback = callbacks.get(name);
+                try {
+                    callback.call(arguments);
+                } catch (JsonException e) {
+                    throw new IllegalArgumentException(e);
                 }
             };
             connector.registerRpc(javascriptCallbackRpc);

@@ -21,7 +21,6 @@ import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.aria.client.Id;
@@ -45,7 +44,6 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -522,13 +520,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public static void deferOrdering() {
         if (!orderingDefered) {
             orderingDefered = true;
-            Scheduler.get().scheduleFinally(new Command() {
-
-                @Override
-                public void execute() {
-                    doServerSideOrdering();
-                    VNotification.bringNotificationsToFront();
-                }
+            Scheduler.get().scheduleFinally(() -> {
+                doServerSideOrdering();
+                VNotification.bringNotificationsToFront();
             });
         }
     }
@@ -536,26 +530,24 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private static void doServerSideOrdering() {
         orderingDefered = false;
         VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
-        Arrays.sort(array, new Comparator<VWindow>() {
+        Arrays.sort(array, (o1, o2) -> {
 
-            @Override
-            public int compare(VWindow o1, VWindow o2) {
-                /*
-                 * Order by modality, then by bringtofront sequence.
-                 */
-
-                if (o1.vaadinModality && !o2.vaadinModality) {
-                    return 1;
-                } else if (!o1.vaadinModality && o2.vaadinModality) {
-                    return -1;
-                } else if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
-                    return 1;
-                } else if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+            /*
+             * Order by modality, then by bringtofront sequence.
+             */
+            if (o1.vaadinModality && !o2.vaadinModality) {
+                return 1;
             }
+            if (!o1.vaadinModality && o2.vaadinModality) {
+                return -1;
+            }
+            if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
+                return 1;
+            }
+            if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
+                return -1;
+            }
+            return 0;
         });
         for (VWindow w : array) {
             if (w.bringToFrontSequence != -1 || w.vaadinModality) {

@@ -8,8 +8,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableMultiSelectSimple extends TestBase {
@@ -26,14 +24,10 @@ public class TableMultiSelectSimple extends TestBase {
         t.setMultiSelect(true);
         t.setMultiSelectMode(MultiSelectMode.SIMPLE);
         t.setImmediate(true);
-        t.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                TreeSet<?> sorted = new TreeSet<Object>(
-                        (Set<?>) event.getProperty().getValue());
-                log.log("Selected value: " + sorted);
-            }
+        t.addValueChangeListener(event -> {
+            TreeSet<?> sorted = new TreeSet<Object>(
+                    (Set<?>) event.getProperty().getValue());
+            log.log("Selected value: " + sorted);
         });
 
         t.addContainerProperty("string", String.class, null);

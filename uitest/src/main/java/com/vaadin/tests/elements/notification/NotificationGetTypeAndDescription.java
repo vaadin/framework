@@ -32,13 +32,7 @@ public class NotificationGetTypeAndDescription extends AbstractTestUI {
         // add extra button which shows Notification only with caption #14356
         Button btn = new Button("Show notification");
         btn.setId("showid");
-        btn.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show("test");
-            }
-        });
+        btn.addClickListener(event -> Notification.show("test"));
         addComponent(btn);
     }
 

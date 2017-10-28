@@ -18,17 +18,14 @@ public class CalendarUI extends AbstractTestUI {
 
         Button monthView = new Button("Month view");
         monthView.setId("month-view");
-        monthView.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                java.util.Calendar javaCalendar = java.util.Calendar
-                        .getInstance(Locale.ENGLISH);
-                javaCalendar.set(DAY_OF_MONTH, 1);
-                calendar.setStartDate(javaCalendar.getTime());
-                javaCalendar.set(DAY_OF_MONTH,
-                        javaCalendar.getActualMaximum(DAY_OF_MONTH));
-                calendar.setEndDate(javaCalendar.getTime());
-            }
+        monthView.addClickListener(event -> {
+            java.util.Calendar javaCalendar = java.util.Calendar
+                    .getInstance(Locale.ENGLISH);
+            javaCalendar.set(DAY_OF_MONTH, 1);
+            calendar.setStartDate(javaCalendar.getTime());
+            javaCalendar.set(DAY_OF_MONTH,
+                    javaCalendar.getActualMaximum(DAY_OF_MONTH));
+            calendar.setEndDate(javaCalendar.getTime());
         });
 
         addComponents(monthView, calendar);

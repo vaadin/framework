@@ -1,10 +1,8 @@
 package com.vaadin.v7.tests.components.tree;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.HierarchicalContainer;
-import com.vaadin.v7.ui.AbstractSelect;
 import com.vaadin.v7.ui.Tree;
 
 public class TreeToolTips extends TestBase {
@@ -13,13 +11,9 @@ public class TreeToolTips extends TestBase {
     protected void setup() {
         final Tree tree = new Tree(null, createContainer());
         tree.setItemDescriptionGenerator(
-                new AbstractSelect.ItemDescriptionGenerator() {
-                    @Override
-                    public String generateDescription(Component source,
-                            Object itemId, Object propertyId) {
-                        return "This is a tooltip for item id '" + itemId + "'";
-                    }
-                });
+                (source, itemId,
+                        propertyId) -> "This is a tooltip for item id '"
+                                + itemId + "'");
 
         for (Object rootItems : tree.rootItemIds()) {
             tree.expandItemsRecursively(rootItems);

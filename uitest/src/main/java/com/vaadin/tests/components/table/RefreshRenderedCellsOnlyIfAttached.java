@@ -19,7 +19,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
@@ -75,15 +74,11 @@ public class RefreshRenderedCellsOnlyIfAttached extends AbstractReindeerTestUI {
         addComponent(l2);
         addComponent(layout);
 
-        Button b = new Button("Detach table", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                check = true;
-                removeTableParent();
-                // call refreshRenderedCells
-                t.setColumnCollapsingAllowed(true);
-            }
+        Button b = new Button("Detach table", event -> {
+            check = true;
+            removeTableParent();
+            // call refreshRenderedCells
+            t.setColumnCollapsingAllowed(true);
         });
         b.setId("button");
         addComponent(b);

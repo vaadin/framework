@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -20,15 +19,11 @@ public class TextFieldValueGoesMissing extends AbstractReindeerTestUI {
         final Label label2 = new Label("2");
 
         Button button = new Button("Replace label");
-        button.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (verticalLayout.getComponentIndex(label1) > -1) {
-                    verticalLayout.replaceComponent(label1, label2);
-                } else {
-                    verticalLayout.replaceComponent(label2, label1);
-                }
+        button.addClickListener(event -> {
+            if (verticalLayout.getComponentIndex(label1) > -1) {
+                verticalLayout.replaceComponent(label1, label2);
+            } else {
+                verticalLayout.replaceComponent(label2, label1);
             }
         });
         verticalLayout.addComponent(button);

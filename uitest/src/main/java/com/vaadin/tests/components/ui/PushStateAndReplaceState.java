@@ -4,12 +4,9 @@ import java.net.URI;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.PopStateEvent;
-import com.vaadin.server.Page.PopStateListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -26,13 +23,9 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
         addComponent(locationLabel);
         updateLabel();
 
-        getPage().addPopStateListener(new PopStateListener() {
-
-            @Override
-            public void uriChanged(PopStateEvent event) {
-                Notification.show("Popstate event");
-                updateLabel();
-            }
+        getPage().addPopStateListener(event -> {
+            Notification.show("Popstate event");
+            updateLabel();
         });
 
         replace = new CheckBox("replace");
@@ -47,17 +40,14 @@ public class PushStateAndReplaceState extends AbstractReindeerTestUI {
 
     private Button createButton(String id, String caption,
             final String newUri) {
-        Button button = new Button(caption, new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().setTitle(caption);
-                if (replace.getValue()) {
-                    getPage().replaceState(newUri);
-                } else {
-                    getPage().pushState(newUri);
-                }
-                updateLabel();
+        Button button = new Button(caption, event -> {
+            getPage().setTitle(caption);
+            if (replace.getValue()) {
+                getPage().replaceState(newUri);
+            } else {
+                getPage().pushState(newUri);
             }
+            updateLabel();
         });
 
         button.setId(id);

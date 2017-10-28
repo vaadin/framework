@@ -39,8 +39,6 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.tests.components.embedded.EmbeddedPdf;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -106,26 +104,17 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
         addComponent(downloadUtf8File);
 
         addComponent(
-                new Button("Remove first download button", new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Layout parent = (Layout) firstDownloadComponent
-                                .getParent();
-                        parent.removeComponent(firstDownloadComponent);
-                    }
+                new Button("Remove first download button", event -> {
+                    Layout parent = (Layout) firstDownloadComponent.getParent();
+                    parent.removeComponent(firstDownloadComponent);
                 }));
         addComponent(
                 new Button("Detach FileDownloader from first download button",
-                        new ClickListener() {
-
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                FileDownloader e = (FileDownloader) firstDownloadComponent
-                                        .getExtensions().iterator().next();
-                                e.remove();
-                                log("FileDownload detached");
-                            }
+                        event -> {
+                            FileDownloader e = (FileDownloader) firstDownloadComponent
+                                    .getExtensions().iterator().next();
+                            e.remove();
+                            log("FileDownload detached");
                         }));
     }
 
@@ -152,11 +141,7 @@ public class FileDownloaderUI extends AbstractTestUIWithLog {
                 new FileDownloader(resource).extend(c);
 
                 if (c instanceof Button) {
-                    ((Button) c).addClickListener(new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                        }
+                    ((Button) c).addClickListener(event -> {
                     });
                 }
             } catch (Exception e) {
