@@ -28,8 +28,8 @@ public class ExtendedDesignWithEmptyAnnotation
         customField.setPlaceholder("Something");
         addComponent(customField);
 
-        ok.addClickListener(e -> Notification.show("OK"));
+        ok.addClickListener(event -> Notification.show("OK"));
 
-        CaNCEL.addClickListener(e -> Notification.show("cancel"));
+        CaNCEL.addClickListener(event -> Notification.show("cancel"));
     }
 }

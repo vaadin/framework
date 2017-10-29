@@ -101,7 +101,7 @@ public class WindowMaximizeRestoreTest extends AbstractReindeerTestUI {
         center.addClickListener(event -> w.center());
         ((ComponentContainer) w.getContent()).addComponent(center);
 
-        w.addCloseListener(e -> {
+        w.addCloseListener(event -> {
             windowList.add(w);
             addWindowAgain.setItems(windowList);
         });

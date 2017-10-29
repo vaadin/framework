@@ -2,8 +2,6 @@ package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.data.validator.StringLengthValidator;
@@ -32,35 +30,30 @@ public class AbstractFieldCommitWithInvalidValues extends TestBase {
         tf.setBuffered(true);
         tf.setRequired(true);
 
-        Button b = new Button("Commit", new ClickListener() {
+        Button b = new Button("Commit", event -> {
+            try {
+                tf.commit();
+                if (tf.isValid()) {
+                    getMainWindow().showNotification(
+                            "OK! Form validated and no error was thrown",
+                            Notification.TYPE_HUMANIZED_MESSAGE);
+                } else {
+                    getMainWindow().showNotification(
+                            "Form is invalid but no exception was thrown",
+                            Notification.TYPE_ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                if (tf.isValid()) {
+                    getMainWindow().showNotification(
+                            "Form is valid but an exception was thrown",
+                            Notification.TYPE_ERROR_MESSAGE);
+                } else {
+                    getMainWindow().showNotification(
+                            "OK! Error was thrown for an invalid input",
+                            Notification.TYPE_HUMANIZED_MESSAGE);
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    tf.commit();
-                    if (tf.isValid()) {
-                        getMainWindow().showNotification(
-                                "OK! Form validated and no error was thrown",
-                                Notification.TYPE_HUMANIZED_MESSAGE);
-                    } else {
-                        getMainWindow().showNotification(
-                                "Form is invalid but no exception was thrown",
-                                Notification.TYPE_ERROR_MESSAGE);
-                    }
-                } catch (Exception e) {
-                    if (tf.isValid()) {
-                        getMainWindow().showNotification(
-                                "Form is valid but an exception was thrown",
-                                Notification.TYPE_ERROR_MESSAGE);
-                    } else {
-                        getMainWindow().showNotification(
-                                "OK! Error was thrown for an invalid input",
-                                Notification.TYPE_HUMANIZED_MESSAGE);
-
-                    }
                 }
             }
-
         });
 
         addComponent(tf);

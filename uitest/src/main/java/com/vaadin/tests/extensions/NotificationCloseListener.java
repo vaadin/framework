@@ -31,7 +31,7 @@ public class NotificationCloseListener extends AbstractTestUI {
         addComponent(checkBox);
 
         Notification notification = Notification.show("something");
-        notification.addCloseListener(e -> checkBox.setValue(true));
+        notification.addCloseListener(event -> checkBox.setValue(true));
     }
 
     @Override

@@ -38,7 +38,7 @@ public class GridRendererSwitch extends AbstractTestUI {
             }
             textRenderer = !textRenderer;
         }));
-        addComponent(new Button("Reverse", e -> {
+        addComponent(new Button("Reverse", event -> {
             if (reverse) {
                 grid.setColumnOrder(column, secondColumn);
             } else {

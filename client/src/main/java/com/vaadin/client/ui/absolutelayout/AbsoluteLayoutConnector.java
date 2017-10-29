@@ -58,24 +58,20 @@ public class AbsoluteLayoutConnector extends AbstractComponentContainerConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            ComponentConnector child = (ComponentConnector) stateChangeEvent
-                    .getConnector();
-            List<String> childStyles = child.getState().styles;
-            if (childStyles == null) {
-                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
-                        (String[]) null);
-            } else {
-                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
-                        childStyles.toArray(new String[childStyles.size()]));
-            }
+    private StateChangeHandler childStateChangeHandler = event -> {
+        ComponentConnector child = (ComponentConnector) event.getConnector();
+        List<String> childStyles = child.getState().styles;
+        if (childStyles == null) {
+            getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                    (String[]) null);
+        } else {
+            getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                    childStyles.toArray(new String[childStyles.size()]));
+        }
 
-            if (stateChangeEvent.hasPropertyChanged("height")
-                    || stateChangeEvent.hasPropertyChanged("width")) {
-                setChildWidgetPosition(child);
-            }
+        if (event.hasPropertyChanged("height")
+                || event.hasPropertyChanged("width")) {
+            setChildWidgetPosition(child);
         }
     };
 

@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui.upload;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
@@ -48,13 +46,10 @@ public class UploadConnector extends AbstractComponentConnector
     protected void init() {
         super.init();
 
-        getWidget().fu.addChangeHandler(new ChangeHandler() {
-            @Override
-            public void onChange(ChangeEvent event) {
-                if (hasEventListener(EventId.CHANGE)) {
-                    getRpcProxy(UploadServerRpc.class)
-                            .change(getWidget().fu.getFilename());
-                }
+        getWidget().fu.addChangeHandler(event -> {
+            if (hasEventListener(EventId.CHANGE)) {
+                getRpcProxy(UploadServerRpc.class)
+                        .change(getWidget().fu.getFilename());
             }
         });
     }

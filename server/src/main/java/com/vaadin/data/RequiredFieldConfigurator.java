@@ -26,10 +26,10 @@ import com.vaadin.server.SerializablePredicate;
  * This interface represents a predicate which returns {@code true} if bound
  * field should be configured to have required indicator via
  * {@link HasValue#setRequiredIndicatorVisible(boolean)}.
- * 
+ *
  * @see BeanValidationBinder
  * @see BeanValidationBinder#setRequiredConfigurator(RequiredFieldConfigurator)
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  *

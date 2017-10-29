@@ -4,8 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
 
@@ -27,21 +25,9 @@ public class AccordionTabIds extends AbstractReindeerTestUI {
         final Tab firstTab = accordion.addTab(new Label(FIRST_TAB_MESSAGE));
         firstTab.setId(FIRST_TAB_ID);
         Button setIdButton = new Button("Set id");
-        setIdButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                firstTab.setId(FIRST_TAB_ID);
-            }
-        });
+        setIdButton.addClickListener(event -> firstTab.setId(FIRST_TAB_ID));
         Button clearIdButton = new Button("Clear id");
-        clearIdButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                firstTab.setId(null);
-            }
-        });
+        clearIdButton.addClickListener(event -> firstTab.setId(null));
         addComponents(setIdButton, clearIdButton, accordion);
     }
 

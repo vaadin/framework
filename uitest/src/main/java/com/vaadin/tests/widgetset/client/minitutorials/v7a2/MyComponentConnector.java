@@ -1,7 +1,5 @@
 package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.annotations.OnStateChange;
@@ -18,16 +16,12 @@ public class MyComponentConnector extends AbstractComponentConnector {
             this);
 
     public MyComponentConnector() {
-        getWidget().addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
+        getWidget().addClickHandler(event -> {
+            final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
+                    .buildMouseEventDetails(event.getNativeEvent(),
+                            getWidget().getElement());
 
-                final MouseEventDetails mouseDetails = MouseEventDetailsBuilder
-                        .buildMouseEventDetails(event.getNativeEvent(),
-                                getWidget().getElement());
-
-                rpc.clicked(mouseDetails);
-            }
+            rpc.clicked(mouseDetails);
         });
         registerRpc(MyComponentClientRpc.class, new MyComponentClientRpc() {
             @Override

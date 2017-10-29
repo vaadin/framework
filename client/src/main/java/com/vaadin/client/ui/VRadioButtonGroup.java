@@ -121,8 +121,8 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
 
     private Optional<JsonObject> tryGetItem(Element element) {
         return optionsToItems.entrySet().stream()
-                .filter(e -> e.getKey().getElement().equals(element))
-                .map(e -> e.getValue()).findFirst();
+                .filter(entry -> entry.getKey().getElement().equals(element))
+                .map(entry -> entry.getValue()).findFirst();
     }
 
     private void remove(Widget widget) {

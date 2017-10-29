@@ -40,6 +40,8 @@ public class DateTimeService {
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
 
+    private static final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
+
     /**
      * Creates a new date time service with the application default locale.
      */
@@ -98,7 +100,7 @@ public class DateTimeService {
 
     /**
      * Returns the localized short name of the specified day.
-     * 
+     *
      * @param day
      *            the day, {@code 0} is {@code SUNDAY}
      * @return the localized short name
@@ -114,7 +116,7 @@ public class DateTimeService {
 
     /**
      * Returns the first day of the week, according to the used Locale.
-     * 
+     *
      * @return the localized first day of the week, {@code 0} is {@code SUNDAY}
      */
     public int getFirstDayOfWeek() {
@@ -128,7 +130,7 @@ public class DateTimeService {
 
     /**
      * Returns whether the locale has twelve hour, or twenty four hour clock.
-     * 
+     *
      * @return {@code true} if the locale has twelve hour clock, {@code false}
      *         for twenty four clock
      */
@@ -165,7 +167,7 @@ public class DateTimeService {
 
     /**
      * Returns the first day of week of the specified {@code month}.
-     * 
+     *
      * @param month
      *            the month, not {@code null}
      * @return the first day of week,
@@ -286,7 +288,6 @@ public class DateTimeService {
      * @return The ISO-8601 week number for {@literal date}
      */
     public static int getISOWeekNumber(Date date) {
-        final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
         int dayOfWeek = date.getDay(); // 0 == sunday
 
         // ISO 8601 use weeks that start on monday so we use
@@ -473,7 +474,7 @@ public class DateTimeService {
     /**
      * Replaces the {@code z} characters of the specified {@code formatStr} with
      * the given {@code timeZoneName}.
-     * 
+     *
      * @param formatStr
      *            The format string, which is the pattern describing the date
      *            and time format
