@@ -24,6 +24,7 @@ import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
 import com.vaadin.client.connectors.data.HasDataSource;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.HasErrorIndicator;
@@ -200,6 +201,13 @@ public class ComboBoxConnector extends AbstractListingConnector
      */
     public void requestPage(int page, String filter) {
         setFilter(filter);
+
+        if (!Objects.equals(filter, getWidget().lastFilter)) {
+            DataSource<JsonObject> ds = getDataSource();
+            if (ds instanceof AbstractRemoteDataSource) {
+                ((AbstractRemoteDataSource<JsonObject>) ds).clearCache();
+            }
+        }
 
         if (page < 0) {
             if (getState().scrollToSelectedItem) {

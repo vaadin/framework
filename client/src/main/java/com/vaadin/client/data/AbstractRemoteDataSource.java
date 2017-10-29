@@ -932,4 +932,13 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
     protected boolean canFetchData() {
         return true;
     }
+
+    /**
+     * Clears the cached records.
+     *
+     * @since
+     */
+    public void clearCache() {
+        resetDataAndSize(0);
+    }
 }

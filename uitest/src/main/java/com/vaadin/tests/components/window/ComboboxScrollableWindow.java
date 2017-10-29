@@ -34,7 +34,6 @@ public class ComboboxScrollableWindow extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-
         Window w = new Window();
         w.setId(WINDOW_ID);
         w.setWidth("300px");
@@ -47,12 +46,13 @@ public class ComboboxScrollableWindow extends AbstractReindeerTestUI {
         w.setContent(content);
         content.setHeight("1000px");
         ComboBox<String> cb = new ComboBox<>();
+        cb.setEmptySelectionAllowed(false);
+        cb.setItems(" ");
         cb.setId(COMBOBOX_ID);
         content.addComponent(cb);
         content.setComponentAlignment(cb, Alignment.BOTTOM_CENTER);
 
         addWindow(w);
-
     }
 
     @Override

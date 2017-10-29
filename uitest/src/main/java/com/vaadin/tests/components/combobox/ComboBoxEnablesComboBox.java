@@ -6,14 +6,12 @@ import com.vaadin.ui.ComboBox;
 
 public class ComboBoxEnablesComboBox extends TestBase {
 
-    private ComboBox cb2;
-
     @Override
     protected void setup() {
         ComboBox<String> cb = new ComboBox<>("Always enabled");
+        ComboBox<String> cb2 = new ComboBox<>("Initially disabled");
         cb.setDataProvider(new ItemDataProvider(10));
         cb.addValueChangeListener(event -> cb2.setEnabled(true));
-        cb2 = new ComboBox<String>("Initially disabled");
         cb.setDataProvider(new ItemDataProvider(10));
         cb2.setEnabled(false);
 

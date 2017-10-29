@@ -43,6 +43,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
      * @param text
      *            the text of the option to select
      */
+    @Override
     public void selectByText(String text) {
         if (isReadOnly()) {
             throw new ReadOnlyException();
@@ -84,10 +85,12 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
     }
 
     private boolean selectSuggestion(String text) {
-        for (WebElement suggestion : getPopupSuggestionElements()) {
-            if (text.equals(suggestion.getText())) {
-                clickElement(suggestion);
-                return true;
+        if (isPopupOpen()) {
+            for (WebElement suggestion : getPopupSuggestionElements()) {
+                if (text.equals(suggestion.getText())) {
+                    clickElement(suggestion);
+                    return true;
+                }
             }
         }
         return false;
@@ -203,6 +206,7 @@ public class ComboBoxElement extends AbstractSingleSelectElement {
      *
      * @return value of the combo box element
      */
+    @Override
     public String getValue() {
         return getInputField().getAttribute("value");
     }

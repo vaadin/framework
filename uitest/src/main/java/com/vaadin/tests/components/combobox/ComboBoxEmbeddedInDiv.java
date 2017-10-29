@@ -15,6 +15,7 @@ public class ComboBoxEmbeddedInDiv extends AbstractTestUI {
             vl.addComponent(new Label("" + i));
         }
         ComboBox<String> cb = new ComboBox<>();
+        cb.setItems("Something");
         vl.addComponent(cb);
         for (int i = 0; i < 20; i++) {
             vl.addComponent(new Label("" + i));
