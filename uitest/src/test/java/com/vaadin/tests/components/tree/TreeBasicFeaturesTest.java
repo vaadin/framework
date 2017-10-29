@@ -21,21 +21,18 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class TreeBasicFeaturesTest extends MultiBrowserTest {
 
-    private static final Predicate<TestBenchElement> THEME_RESOURCE = e -> {
-        return e.isElementPresent(By.tagName("img"))
-                && e.findElement(By.tagName("img")).getAttribute("src")
-                        .contains("bullet.png");
-    };
-    private static final Predicate<TestBenchElement> VAADIN_ICON = e -> {
-        return e.isElementPresent(By.className("v-icon"))
-                && e.findElement(By.className("v-icon")).getAttribute("class")
-                        .contains("Vaadin-Icons");
-    };
-    private static final Predicate<TestBenchElement> CLASS_RESOURCE = e -> {
-        return e.isElementPresent(By.tagName("img"))
-                && e.findElement(By.tagName("img")).getAttribute("src")
-                        .contains("m.gif");
-    };
+    private static final Predicate<TestBenchElement> THEME_RESOURCE =
+            e -> e.isElementPresent(By.tagName("img"))
+            && e.findElement(By.tagName("img")).getAttribute("src")
+                    .contains("bullet.png");
+    private static final Predicate<TestBenchElement> VAADIN_ICON =
+            e -> e.isElementPresent(By.className("v-icon"))
+            && e.findElement(By.className("v-icon")).getAttribute("class")
+                    .contains("Vaadin-Icons");
+    private static final Predicate<TestBenchElement> CLASS_RESOURCE =
+            e -> e.isElementPresent(By.tagName("img"))
+            && e.findElement(By.tagName("img")).getAttribute("src")
+                    .contains("m.gif");
 
     @Before
     public void before() {

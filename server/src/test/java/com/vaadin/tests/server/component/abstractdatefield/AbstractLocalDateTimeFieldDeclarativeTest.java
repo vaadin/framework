@@ -74,7 +74,7 @@ public abstract class AbstractLocalDateTimeFieldDeclarativeTest<T extends Abstra
                         + "date-format='%s' lenient parse-error-message='%s'/>",
                 getComponentTag(), DATE_FORMATTER.format(end),
                 DATE_FORMATTER.format(start), dateOutOfRange,
-                resolution.name().toLowerCase(Locale.ENGLISH), dateFormat,
+                resolution.name().toLowerCase(Locale.ROOT), dateFormat,
                 parseErrorMsg);
 
         T component = getComponentClass().newInstance();

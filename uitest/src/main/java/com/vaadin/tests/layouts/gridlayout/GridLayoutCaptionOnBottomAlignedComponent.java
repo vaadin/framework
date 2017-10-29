@@ -21,9 +21,8 @@ public class GridLayoutCaptionOnBottomAlignedComponent extends AbstractTestUI {
 
         addComponent(layout);
 
-        Button realign = new Button("Realign", evt -> {
-            layout.setComponentAlignment(component, Alignment.TOP_LEFT);
-        });
+        Button realign = new Button("Realign", evt -> layout
+                .setComponentAlignment(component, Alignment.TOP_LEFT));
         addComponent(realign);
     }
 }

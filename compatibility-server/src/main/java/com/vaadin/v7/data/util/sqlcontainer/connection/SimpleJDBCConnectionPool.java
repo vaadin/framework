@@ -22,6 +22,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Set;
  * the JDBC driver, setting up the connections and ensuring they are still
  * usable upon release.
  *
- *  @deprecated As of 8.0, no replacement available.
+ * @deprecated As of 8.0, no replacement available.
  */
 @SuppressWarnings("serial")
 @Deprecated
@@ -145,7 +146,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
         Connection c = DriverManager.getConnection(connectionUri, userName,
                 password);
         c.setAutoCommit(false);
-        if (driverName.toLowerCase().contains("mysql")) {
+        if (driverName.toLowerCase(Locale.ROOT).contains("mysql")) {
             try {
                 Statement s = c.createStatement();
                 s.execute("SET SESSION sql_mode = 'ANSI'");
@@ -176,8 +177,7 @@ public class SimpleJDBCConnectionPool implements JDBCConnectionPool {
 
     }
 
-    private void writeObject(ObjectOutputStream out)
-            throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         initialized = false;
         out.defaultWriteObject();
     }

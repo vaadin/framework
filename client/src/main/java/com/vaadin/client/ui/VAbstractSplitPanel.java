@@ -852,7 +852,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Ensures the panels are scrollable eg. after style name changes
+     * Ensures the panels are scrollable e.g. after style name changes
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */

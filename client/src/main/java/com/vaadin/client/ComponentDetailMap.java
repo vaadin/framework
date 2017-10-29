@@ -57,7 +57,7 @@ final class ComponentDetailMap extends JavaScriptObject {
     final native int size()
     /*-{
         var count = 0;
-        for(var key in this) {
+        for (var key in this) {
             count++;
         }
         return count;
@@ -65,8 +65,8 @@ final class ComponentDetailMap extends JavaScriptObject {
 
     final native void clear()
     /*-{
-        for(var key in this) {
-            if(this.hasOwnProperty(key)) {
+        for (var key in this) {
+            if (this.hasOwnProperty(key)) {
                 delete this[key];
             }
         }
@@ -74,7 +74,7 @@ final class ComponentDetailMap extends JavaScriptObject {
 
     private final native void fillWithValues(Collection<ComponentDetail> list)
     /*-{
-        for(var key in this) {
+        for (var key in this) {
             // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(this[key]);
         }
@@ -89,7 +89,7 @@ final class ComponentDetailMap extends JavaScriptObject {
     public native JsArrayObject<ComponentDetail> valuesAsJsArray()
     /*-{
         var result = [];
-        for(var key in this) {
+        for (var key in this) {
             if (this.hasOwnProperty(key)) {
                 result.push(this[key]);
             }

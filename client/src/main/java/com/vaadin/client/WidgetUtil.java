@@ -18,12 +18,12 @@ package com.vaadin.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -60,7 +60,7 @@ public class WidgetUtil {
      */
     public static native void browserDebugger()
     /*-{
-        if($wnd.console)
+        if ($wnd.console)
             debugger;
     }-*/;
 
@@ -112,7 +112,7 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        if(el != null && el.nodeType == 3) {
+        if (el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
         return el;
@@ -680,7 +680,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
-         if(heightPx == 'auto'){
+         if (heightPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -700,7 +700,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
-         if(widthPx == 'auto'){
+         if (widthPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -791,7 +791,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-    
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -806,7 +806,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-    
+
      }-*/;
 
     /**
@@ -820,7 +820,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-    
+
         }
     }-*/;
 
@@ -1151,19 +1151,14 @@ public class WidgetUtil {
             ((Focusable) targetWidget).focus();
         }
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                try {
-                    target.dispatchEvent(createMouseDownEvent);
-                    target.dispatchEvent(createMouseUpEvent);
-                    target.dispatchEvent(createMouseClickEvent);
-                } catch (Exception e) {
-                }
-
+        Scheduler.get().scheduleDeferred(() -> {
+            try {
+                target.dispatchEvent(createMouseDownEvent);
+                target.dispatchEvent(createMouseUpEvent);
+                target.dispatchEvent(createMouseClickEvent);
+            } catch (Exception e) {
             }
         });
-
     }
 
     /**
@@ -1176,7 +1171,7 @@ public class WidgetUtil {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-    
+
        return null;
      }-*/;
 
@@ -1247,11 +1242,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1260,12 +1255,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-    
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1433,7 +1428,7 @@ public class WidgetUtil {
     /**
      * Wrap a css size value and its unit and translate back and forth to the
      * string representation.<br/>
-     * Eg. 50%, 123px, ...
+     * E.g. 50%, 123px, ...
      *
      * @since 7.2.6
      * @author Vaadin Ltd
@@ -1714,7 +1709,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-    
+
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1872,6 +1867,19 @@ public class WidgetUtil {
     }
 
     /**
+     * Returns whether the given object is a string.
+     *
+     * @param obj
+     *            the object of which the type is examined
+     * @return {@code true} if the object is a string; {@code false} if not
+     * @since
+     */
+    public static native boolean isString(Object obj)
+    /*-{
+        return typeof obj === 'string' || obj instanceof String;
+    }-*/;
+
+    /**
      * Utility methods for displaying error message on components.
      *
      * @since 8.2
@@ -1894,7 +1902,7 @@ public class WidgetUtil {
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
                 String className = prefix + "-"
-                        + errorLevelValue.toString().toLowerCase();
+                        + errorLevelValue.toString().toLowerCase(Locale.ROOT);
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {

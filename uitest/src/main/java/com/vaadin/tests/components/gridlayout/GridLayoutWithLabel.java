@@ -16,9 +16,8 @@ public class GridLayoutWithLabel extends AbstractTestUI {
         layout.addComponent(new Label("This is the label"), 0, 0);
 
         CheckBox cb = new CheckBox("Unchecked");
-        cb.addValueChangeListener(evt -> {
-            cb.setCaption(evt.getValue() ? "Checked" : "Unchecked");
-        });
+        cb.addValueChangeListener(
+                evt -> cb.setCaption(evt.getValue() ? "Checked" : "Unchecked"));
 
         layout.addComponent(cb, 1, 0);
 

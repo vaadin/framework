@@ -49,10 +49,9 @@ public class DragAndDropFocusObtain extends AbstractTestUIWithLog {
         }
     };
 
-    private ValueChangeListener<String> listener = event -> {
-        log("Value of " + ((AbstractTextField) event.getSource()).getCaption()
-                + " changed to " + event.getValue());
-    };
+    private ValueChangeListener<String> listener = event -> log(
+            "Value of " + ((AbstractTextField) event.getSource()).getCaption()
+                    + " changed to " + event.getValue());
 
     @Override
     protected void setup(VaadinRequest request) {

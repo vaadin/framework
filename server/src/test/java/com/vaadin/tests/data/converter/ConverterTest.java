@@ -14,9 +14,8 @@ public class ConverterTest {
     SerializableFunction<String, Result<String>> toModel = presentation -> {
         if (presentation.startsWith("presentation-")) {
             return Result.ok(presentation.substring("presentation-".length()));
-        } else {
-            return Result.error("invalid prefix: " + presentation);
         }
+        return Result.error("invalid prefix: " + presentation);
     };
 
     SerializableFunction<String, String> toPresentation = model -> "presentation-"

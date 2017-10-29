@@ -396,7 +396,7 @@ public class JavaScriptConnectorHelper {
             JavaScriptObject input)
     /*-{
         // Copy all fields to existing state object
-        for(var key in input) {
+        for (var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
             }
@@ -438,7 +438,7 @@ public class JavaScriptConnectorHelper {
         if (!targets) {
             return;
         }
-        for(var i = 0; i < targets.length; i++) {
+        for (var i = 0; i < targets.length; i++) {
             var target = targets[i];
             target[methodName].apply(target, parameters);
         }

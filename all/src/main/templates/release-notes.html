@@ -124,6 +124,8 @@
         <li><tt>SharedState</tt> field <tt>registeredEventListeners</tt> is a <tt>Map</tt> instead of <tt>Set</tt>.</li>
         <li>The client side <tt>SelectionModel</tt> interface has a new method <tt>isMultiSelectionAllowed</tt>.</li>
         <li><tt>AbstractDateField</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
+        <li><tt>AbstractDateField</tt>.<tt>formatDate</tt> is now abstract.</li>
+        <li><tt>VAbstractTextualDate</tt>.<tt>updateDateVariables()</tt> is now <tt>updateBufferedResolutions()</tt> and <tt>updateAndSendBufferedValues()</tt>.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
         
@@ -155,7 +157,7 @@
                 </li>
             </ul>
             </li>
-            <li>The Maven GWT compilation for <tt>Vaadin7WidgetSet</tt> requires at least 1G of memory, when using the <tt>vaadin-client-compability</tt> package. If compiled inside Eclipse, possibly even more.</li>
+            <li>The Maven GWT compilation for <tt>Vaadin7WidgetSet</tt> requires at least 1G of memory, when using the <tt>vaadin-client-compatibility</tt> package. If compiled inside Eclipse, possibly even more.</li>
         </ul>
 
 
@@ -270,7 +272,7 @@
             being part of the non-compatibility modules.
         </p>
         <p>
-        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compability-themes</tt> package.
+        All applications using either <tt>Reindeer</tt>, <tt>Runo</tt>, <tt>Chameleon</tt> or <tt>Base</tt> theme must include the <tt>vaadin-compatibility-themes</tt> package.
         </p>
 
         <p>

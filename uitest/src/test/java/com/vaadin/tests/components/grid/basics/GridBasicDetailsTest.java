@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,20 +22,20 @@ public class GridBasicDetailsTest extends GridBasicsTest {
      * awkward with two scroll commands back to back.
      */
     private static final int ALMOST_LAST_INDEX = 995;
-    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = {
-            "Component", "Details", "Open " + ALMOST_LAST_INDEX };
-    private static final String[] OPEN_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Open First" };
-    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = {
-            "Component", "Details", "Toggle First" };
-    private static final String[] DETAILS_GENERATOR_NULL = {
-            "Component", "Details", "Generators", "NULL" };
-    private static final String[] DETAILS_GENERATOR_WATCHING = {
-            "Component", "Details", "Generators", "\"Watching\"" };
-    private static final String[] DETAILS_GENERATOR_PERSISTING = {
-            "Component", "Details", "Generators", "Persisting" };
-    private static final String[] CHANGE_HIERARCHY = { "Component",
-            "Details", "Generators", "- Change Component" };
+    private static final String[] OPEN_ALMOST_LAST_ITEM_DETAILS = { "Component",
+            "Details", "Open " + ALMOST_LAST_INDEX };
+    private static final String[] OPEN_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Open First" };
+    private static final String[] TOGGLE_FIRST_ITEM_DETAILS = { "Component",
+            "Details", "Toggle First" };
+    private static final String[] DETAILS_GENERATOR_NULL = { "Component",
+            "Details", "Generators", "NULL" };
+    private static final String[] DETAILS_GENERATOR_WATCHING = { "Component",
+            "Details", "Generators", "\"Watching\"" };
+    private static final String[] DETAILS_GENERATOR_PERSISTING = { "Component",
+            "Details", "Generators", "Persisting" };
+    private static final String[] CHANGE_HIERARCHY = { "Component", "Details",
+            "Generators", "- Change Component" };
 
     @Override
     @Before

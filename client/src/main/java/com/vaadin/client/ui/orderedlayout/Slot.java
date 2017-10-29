@@ -17,6 +17,7 @@
 package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
@@ -387,8 +388,8 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
         if (caption == null) {
             return;
         }
-        captionWrap.removeClassName(
-                "v-caption-on-" + this.captionPosition.name().toLowerCase());
+        captionWrap.removeClassName("v-caption-on-"
+                + this.captionPosition.name().toLowerCase(Locale.ROOT));
 
         this.captionPosition = captionPosition;
         if (captionPosition == CaptionPosition.BOTTOM
@@ -398,8 +399,8 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
             captionWrap.insertFirst(caption);
         }
 
-        captionWrap.addClassName(
-                "v-caption-on-" + captionPosition.name().toLowerCase());
+        captionWrap.addClassName("v-caption-on-"
+                + captionPosition.name().toLowerCase(Locale.ROOT));
     }
 
     /**

@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -330,7 +331,7 @@ public class DesignAttributeHandler implements Serializable {
             if (builder.length() != 0) {
                 builder.append('-');
             }
-            builder.append(word.toLowerCase());
+            builder.append(word.toLowerCase(Locale.ROOT));
         }
         return builder.toString();
     }
@@ -356,13 +357,13 @@ public class DesignAttributeHandler implements Serializable {
             // written in lower case
             if (matcher.group(1).isEmpty()) {
                 matcher.appendReplacement(result,
-                        matched.toLowerCase() + matcher.group(3));
+                        matched.toLowerCase(Locale.ROOT) + matcher.group(3));
                 // otherwise the first character of the group stays uppercase,
                 // while the others are lower case
             } else {
                 matcher.appendReplacement(result,
                         matcher.group(1) + matched.substring(0, 1)
-                                + matched.substring(1).toLowerCase()
+                                + matched.substring(1).toLowerCase(Locale.ROOT)
                                 + matcher.group(3));
             }
             // in both cases the uppercase letter of the next word (or string's

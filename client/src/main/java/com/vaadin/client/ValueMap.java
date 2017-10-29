@@ -50,9 +50,9 @@ public final class ValueMap extends JavaScriptObject {
     /*-{
         var a = new Array();
         var attr = this;
-        for(var j in attr) {
+        for (var j in attr) {
             // workaround for the infamous chrome hosted mode hack (__gwt_ObjectId)
-            if(attr.hasOwnProperty(j))
+            if (attr.hasOwnProperty(j))
                 a.push(j);
         }
         return a;

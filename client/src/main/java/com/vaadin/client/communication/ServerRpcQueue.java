@@ -191,16 +191,13 @@ public class ServerRpcQueue {
         Scheduler.get().scheduleFinally(scheduledFlushCommand);
     }
 
-    private final ScheduledCommand scheduledFlushCommand = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            flushScheduled = false;
-            if (!isFlushPending()) {
-                // Somebody else cleared the queue before we had the chance
-                return;
-            }
-            connection.getMessageSender().sendInvocationsToServer();
+    private final ScheduledCommand scheduledFlushCommand = () -> {
+        flushScheduled = false;
+        if (!isFlushPending()) {
+            // Somebody else cleared the queue before we had the chance
+            return;
         }
+        connection.getMessageSender().sendInvocationsToServer();
     };
 
     /**

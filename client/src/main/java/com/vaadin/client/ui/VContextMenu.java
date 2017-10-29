@@ -16,8 +16,9 @@
 
 package com.vaadin.client.ui;
 
+import java.util.Locale;
+
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.TableRowElement;
@@ -66,12 +67,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    imagesLoaded();
-                }
-            });
+            () -> imagesLoaded());
 
     /**
      * This method should be used only by Client object as only one per client
@@ -293,7 +289,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             com.google.gwt.user.client.Element subElement) {
         if (getElement().isOrHasChild(subElement)) {
             com.google.gwt.dom.client.Element e = subElement;
-            while (e != null && !e.getTagName().toLowerCase().equals("tr")) {
+            while (e != null
+                    && !e.getTagName().toLowerCase(Locale.ROOT).equals("tr")) {
                 e = e.getParentElement();
                 // ApplicationConnection.getConsole().log("Found row");
             }

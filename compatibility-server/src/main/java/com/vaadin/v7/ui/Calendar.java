@@ -1958,8 +1958,8 @@ public class Calendar extends AbstractLegacyComponent
 
         Attributes attr = design.attributes();
         if (design.hasAttr("time-format")) {
-            setTimeFormat(TimeFormat.valueOf(
-                    "Format" + design.attr("time-format").toUpperCase()));
+            setTimeFormat(TimeFormat.valueOf("Format"
+                    + design.attr("time-format").toUpperCase(Locale.ROOT)));
         }
 
         if (design.hasAttr("start-date")) {

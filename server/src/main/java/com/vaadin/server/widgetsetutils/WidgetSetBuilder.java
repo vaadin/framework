@@ -29,6 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -180,7 +181,7 @@ public class WidgetSetBuilder {
     }
 
     static boolean isWidgetset(String gwtModuleName) {
-        return gwtModuleName.toLowerCase().contains("widgetset");
+        return gwtModuleName.toLowerCase(Locale.ROOT).contains("widgetset");
     }
 
     private static String readFile(File widgetsetFile) throws IOException {

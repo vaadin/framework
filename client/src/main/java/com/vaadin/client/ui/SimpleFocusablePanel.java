@@ -35,8 +35,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 
 /**
- * Compared to FocusPanel in GWT this panel does not support eg. accesskeys, but
- * is simpler by its dom hierarchy nor supports focusing via java api.
+ * Compared to FocusPanel in GWT this panel does not support e.g. accesskeys,
+ * but is simpler by its dom hierarchy nor supports focusing via java api.
  */
 public class SimpleFocusablePanel extends SimplePanel
         implements HasFocusHandlers, HasBlurHandlers, HasKeyDownHandlers,

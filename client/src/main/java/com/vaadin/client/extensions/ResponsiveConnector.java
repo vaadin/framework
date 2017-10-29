@@ -174,13 +174,13 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         var heightRanges = @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache;
     
         // Can't do squat if we can't parse stylesheets
-        if(!$doc.styleSheets)
+        if (!$doc.styleSheets)
             return;
     
         var sheets = $doc.styleSheets;
     
         // Loop all stylesheets on the page and process them individually
-        for(var i = 0, len = sheets.length; i < len; i++) {
+        for (var i = 0, len = sheets.length; i < len; i++) {
             var sheet = sheets[i];
             @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(sheet);
         }
@@ -220,21 +220,21 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         }
     
         // Loop through the rulesets
-        for(var i = 0, len = theRules.length; i < len; i++) {
+        for (var i = 0, len = theRules.length; i < len; i++) {
             var rule = theRules[i];
     
-            if(rule.type == 3) {
+            if (rule.type == 3) {
                 // @import rule, traverse recursively
                 @com.vaadin.client.extensions.ResponsiveConnector::searchStylesheetForBreakPoints(Lcom/google/gwt/core/client/JavaScriptObject;)(rule.styleSheet);
     
-            } else if(rule.type == 1 || !rule.type) {
+            } else if (rule.type == 1 || !rule.type) {
                 // Regular selector rule
     
                 // Helper function
                 var pushToCache = function(ranges, selector, min, max) {
                     // Avoid adding duplicates
                     var duplicate = false;
-                    for(var l = 0, len3 = ranges.length; l < len3; l++) {
+                    for (var l = 0, len3 = ranges.length; l < len3; l++) {
                         var bp = ranges[l];
                         if (selector == bp[0] && min == bp[1] && max == bp[2]) {
                             duplicate = true;
@@ -253,7 +253,7 @@ public class ResponsiveConnector extends AbstractExtensionConnector
                 var selectorRegEx = IEOrEdge ? /\[.*\]([\.|#]\S+)/ : /([\.|#]\S+?)\[.*\]/;
     
                 // Loop all the selectors in this ruleset
-                for(var k = 0, len2 = haystack.length; k < len2; k++) {
+                for (var k = 0, len2 = haystack.length; k < len2; k++) {
     
                     // Split the haystack into parts.
                     var widthRange = haystack[k].match(/\[width-range.*?\]/);
@@ -303,18 +303,18 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         var widthRanges = @com.vaadin.client.extensions.ResponsiveConnector::widthRangeCache;
         var heightRanges = @com.vaadin.client.extensions.ResponsiveConnector::heightRangeCache;
     
-        for(var i = 0, len = widthRanges.length; i < len; i++) {
+        for (var i = 0, len = widthRanges.length; i < len; i++) {
             var bp = widthRanges[i];
-            for(var j = 0, len2 = selectors.length; j < len2; j++) {
-                if(bp[0] == selectors[j])
+            for (var j = 0, len2 = selectors.length; j < len2; j++) {
+                if (bp[0] == selectors[j])
                     widthBreakpoints.push(bp);
             }
         }
     
-        for(var i = 0, len = heightRanges.length; i < len; i++) {
+        for (var i = 0, len = heightRanges.length; i < len; i++) {
             var bp = heightRanges[i];
-            for(var j = 0, len2 = selectors.length; j < len2; j++) {
-                if(bp[0] == selectors[j])
+            for (var j = 0, len2 = selectors.length; j < len2; j++) {
+                if (bp[0] == selectors[j])
                     heightBreakpoints.push(bp);
             }
         }
@@ -381,25 +381,25 @@ public class ResponsiveConnector extends AbstractExtensionConnector
         var breakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::widthBreakpoints;
     
         // Use height breakpoints if we're measuring the height
-        if(which == "height")
+        if (which == "height")
             breakpoints = this.@com.vaadin.client.extensions.ResponsiveConnector::heightBreakpoints;
     
         // Output string that goes into either the "width-range" or "height-range" attribute in the element
         var ranges = "";
     
         // Loop the breakpoints
-        for(var i = 0, len = breakpoints.length; i < len; i++) {
+        for (var i = 0, len = breakpoints.length; i < len; i++) {
             var bp = breakpoints[i];
     
             var min = parseInt(bp[1]);
             var max = parseInt(bp[2]);
     
-            if(!isNaN(min) && !isNaN(max)) {
-                if(min <= size && size <= max) {
+            if (!isNaN(min) && !isNaN(max)) {
+                if (min <= size && size <= max) {
                     ranges += " " + bp[1] + "-" + bp[2];
                 }
             } else if (!isNaN(min)) {
-                if(min <= size) {
+                if (min <= size) {
                     ranges += " " + bp[1] + "-";
                 }
             } else if (!isNaN(max)) {

@@ -149,12 +149,10 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void createDescriptionMenu(MenuItem descriptionMenu) {
-        descriptionMenu.addItem("No Description", menu -> {
-            tree.setItemDescriptionGenerator(t -> null);
-        });
-        descriptionMenu.addItem("String.valueOf", menu -> {
-            tree.setItemDescriptionGenerator(String::valueOf);
-        });
+        descriptionMenu.addItem("No Description",
+                menu -> tree.setItemDescriptionGenerator(t -> null));
+        descriptionMenu.addItem("String.valueOf",
+                menu -> tree.setItemDescriptionGenerator(String::valueOf));
     }
 
     private void createContentModeMenu(MenuItem contentModeMenu) {
