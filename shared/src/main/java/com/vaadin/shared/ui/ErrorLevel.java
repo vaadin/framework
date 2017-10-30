@@ -17,7 +17,7 @@ package com.vaadin.shared.ui;
 
 /**
  * Represents the error levels displayed on components.
- *
+ * 
  * @author Vaadin Ltd
  * @since 8.2
  */

@@ -49,7 +49,7 @@ public class EmbeddedState extends AbstractEmbeddedState {
 
     /**
      * The MIME-Type of the code.
-     *
+     * 
      * @since 8.2
      */
     public String codetype;
@@ -57,7 +57,7 @@ public class EmbeddedState extends AbstractEmbeddedState {
     /**
      * May be used to specify the location of an object's implementation via a
      * URI.
-     *
+     * 
      * @since 8.2
      */
     public String classId;
@@ -65,14 +65,14 @@ public class EmbeddedState extends AbstractEmbeddedState {
     /**
      * May be used to specify a space-separated list of URIs for archives
      * containing resources relevant to the object.
-     *
+     * 
      * @since 8.2
      */
     public String archive;
 
     /**
      * The component's "alt-text".
-     *
+     * 
      * @since 8.2
      */
     public String altText;
@@ -80,7 +80,7 @@ public class EmbeddedState extends AbstractEmbeddedState {
     /**
      * Specifies a message that a user agent may render while loading the
      * object's implementation and data.
-     *
+     * 
      * @since 8.2
      */
     public String standby;
@@ -88,7 +88,7 @@ public class EmbeddedState extends AbstractEmbeddedState {
     /**
      * Object parameters. Parameters are optional information, and they are
      * passed to the instantiated object.
-     *
+     * 
      * @since 8.2
      */
     public final Map<String, String> parameters = new HashMap<>();

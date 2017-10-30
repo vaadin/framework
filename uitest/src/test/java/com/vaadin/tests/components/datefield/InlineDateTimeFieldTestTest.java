@@ -21,7 +21,7 @@ import com.google.gwt.editor.client.Editor.Ignore;
 
 /**
  * Reuse tests from super DateTimeFieldTestTest class.
- *
+ * 
  * @author Vaadin Ltd
  *
  */

@@ -23,7 +23,7 @@ import com.vaadin.v7.ui.Grid.SelectionMode;
 @Push
 @SuppressWarnings("serial")
 /**
- *
+ * 
  * Uses scrollToEnd() method in Grid. Should be migrated once it's available.
  *
  */

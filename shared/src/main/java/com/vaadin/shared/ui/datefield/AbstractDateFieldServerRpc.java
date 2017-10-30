@@ -28,7 +28,7 @@ public interface AbstractDateFieldServerRpc extends ServerRpc {
 
     /**
      * Updates the typed data string and resolution names and values.
-     *
+     * 
      * @param newDateString
      *            the value of the text field part. It enables analyzing invalid
      *            input on the server. {@code null} if the date was chosen with

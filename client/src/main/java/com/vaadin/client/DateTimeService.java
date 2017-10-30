@@ -98,7 +98,7 @@ public class DateTimeService {
 
     /**
      * Returns the localized short name of the specified day.
-     *
+     * 
      * @param day
      *            the day, {@code 0} is {@code SUNDAY}
      * @return the localized short name
@@ -114,7 +114,7 @@ public class DateTimeService {
 
     /**
      * Returns the first day of the week, according to the used Locale.
-     *
+     * 
      * @return the localized first day of the week, {@code 0} is {@code SUNDAY}
      */
     public int getFirstDayOfWeek() {
@@ -128,7 +128,7 @@ public class DateTimeService {
 
     /**
      * Returns whether the locale has twelve hour, or twenty four hour clock.
-     *
+     * 
      * @return {@code true} if the locale has twelve hour clock, {@code false}
      *         for twenty four clock
      */
@@ -165,7 +165,7 @@ public class DateTimeService {
 
     /**
      * Returns the first day of week of the specified {@code month}.
-     *
+     * 
      * @param month
      *            the month, not {@code null}
      * @return the first day of week,
@@ -473,7 +473,7 @@ public class DateTimeService {
     /**
      * Replaces the {@code z} characters of the specified {@code formatStr} with
      * the given {@code timeZoneName}.
-     *
+     * 
      * @param formatStr
      *            The format string, which is the pattern describing the date
      *            and time format

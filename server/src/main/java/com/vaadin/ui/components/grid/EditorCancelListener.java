@@ -21,13 +21,13 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event listener for a {@link Grid} editor cancel events.
- *
+ * 
  * @author Vaadin Ltd
  * @since 8.0
  *
  * @see EditorCancelEvent
  * @see Editor#addCancelListener(EditorCancelListener)
- *
+ * 
  * @param <T>
  *            the bean type
  */
@@ -36,7 +36,7 @@ public interface EditorCancelListener<T> extends Serializable {
 
     /**
      * Called when the editor is cancelled.
-     *
+     * 
      * @param event
      *            cancel event
      */

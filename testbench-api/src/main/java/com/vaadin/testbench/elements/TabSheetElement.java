@@ -42,7 +42,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Gets a list of Tabs inside the Tab container.
-     *
+     * 
      * @return List of tabs
      */
     public List<String> getTabCaptions() {
@@ -55,7 +55,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Gets the number of tabs contained in this tab sheet.
-     *
+     * 
      * @return Number of tabs.
      */
     public int getTabCount() {
@@ -64,7 +64,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Opens the tab with the given index.
-     *
+     * 
      * @param index
      *            The zero-based index of the tab to be opened.
      */
@@ -80,7 +80,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Opens a Tab that has caption equal to given tabCaption.
-     *
+     * 
      * @param tabCaption
      *            Caption of the tab to be opened
      */
@@ -102,7 +102,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
     /**
      * Opens the given tab by clicking its caption text or icon. If the tab has
      * neither text caption nor icon, clicks at a fixed position.
-     *
+     * 
      * @param tabCell
      *            The tab to be opened.
      */
@@ -127,7 +127,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * If the tab with given index is closable, closes it.
-     *
+     * 
      * @param index
      *            The index of the tab to be closed
      */
@@ -144,7 +144,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * If tab with given caption is closable, closes it.
-     *
+     * 
      * @param tabCaption
      *            Caption of the tab to be closed
      */
@@ -163,7 +163,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Closes the given tab if it is closable.
-     *
+     * 
      * @param tabCell
      *            The tab to be closed
      */
@@ -179,7 +179,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
 
     /**
      * Gets TabSheet content and wraps it in given class.
-     *
+     * 
      * @param clazz
      *            Components element class
      * @return TabSheet content wrapped in given class
@@ -193,7 +193,7 @@ public class TabSheetElement extends AbstractComponentContainerElement {
     /**
      * Returns the caption text of the given tab. If the tab has no caption,
      * returns null.
-     *
+     * 
      * @param tabCell
      *            A web element representing a tab, as given by
      *            findElements(byTabCell).get(index).

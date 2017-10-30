@@ -34,12 +34,12 @@ public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
     /**
      * Get the number of immediate child data items for the parent item returned
      * by a given query.
-     *
+     * 
      * @param query
      *            given query to request the count for
      * @return the count of child data items for the data item
      *         {@link HierarchicalQuery#getParent()}
-     *
+     * 
      * @throws IllegalArgumentException
      *             if the query is not of type HierarchicalQuery
      */
@@ -56,11 +56,11 @@ public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
      * Fetches data from this HierarchicalDataProvider using given
      * {@code query}. Only the immediate children of
      * {@link HierarchicalQuery#getParent()} will be returned.
-     *
+     * 
      * @param query
      *            given query to request data with
      * @return a stream of data objects resulting from the query
-     *
+     * 
      * @throws IllegalArgumentException
      *             if the query is not of type HierarchicalQuery
      */
@@ -76,7 +76,7 @@ public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
     /**
      * Get the number of immediate child data items for the parent item returned
      * by a given query.
-     *
+     * 
      * @param query
      *            given query to request the count for
      * @return the count of child data items for the data item
@@ -88,7 +88,7 @@ public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
      * Fetches data from this HierarchicalDataProvider using given
      * {@code query}. Only the immediate children of
      * {@link HierarchicalQuery#getParent()} will be returned.
-     *
+     * 
      * @param query
      *            given query to request data with
      * @return a stream of data objects resulting from the query
@@ -97,7 +97,7 @@ public interface HierarchicalDataProvider<T, F> extends DataProvider<T, F> {
 
     /**
      * Check whether a given item has any children associated with it.
-     *
+     * 
      * @param item
      *            the item to check for children
      * @return whether the given item has children

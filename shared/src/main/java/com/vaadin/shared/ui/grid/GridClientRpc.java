@@ -53,7 +53,7 @@ public interface GridClientRpc extends ClientRpc {
 
     /**
      * Command client Grid to recalculate column widths.
-     *
+     * 
      * @since 8.1.1
      */
     public void recalculateColumnWidths();

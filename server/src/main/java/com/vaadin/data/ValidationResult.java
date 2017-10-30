@@ -87,7 +87,7 @@ public interface ValidationResult extends Serializable {
      *
      * @return optional error level; error level is present for validation
      *         results that have not passed validation
-     *
+     * 
      * @since 8.2
      */
     Optional<ErrorLevel> getErrorLevel();
@@ -136,7 +136,7 @@ public interface ValidationResult extends Serializable {
      * Creates the validation result with the given {@code errorMessage} and
      * {@code errorLevel}. Results with {@link ErrorLevel} of {@code INFO} or
      * {@code WARNING} are not errors by default.
-     *
+     * 
      * @see #ok()
      * @see #error(String)
      *

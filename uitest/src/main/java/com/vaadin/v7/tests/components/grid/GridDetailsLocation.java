@@ -35,7 +35,7 @@ import com.vaadin.v7.ui.Grid.SelectionMode;
 /**
  * This test cannot be migrated to V8 since there is no Grid::scrollTo method.
  * Will it be there in the future ? (may be this test should be just removed).
- *
+ * 
  * @author Vaadin Ltd
  *
  */

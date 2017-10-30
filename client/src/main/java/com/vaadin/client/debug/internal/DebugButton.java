@@ -44,7 +44,7 @@ public class DebugButton extends Button {
     public DebugButton(String caption) {
         this(null, null, caption);
     }
-
+    
     public DebugButton(String caption, String title) {
         this(null, title, caption);
     }

@@ -28,7 +28,7 @@ import com.vaadin.ui.AbstractLocalDateTimeField;
 
 /**
  * The client-side connector for AbstractLocalDateTimeField.
- *
+ * 
  * @author Vaadin Ltd
  * @since 8.0
  */

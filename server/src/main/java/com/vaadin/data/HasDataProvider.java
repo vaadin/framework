@@ -25,7 +25,7 @@ import com.vaadin.data.provider.DataProvider;
  * <p>
  * A listing component should implement either this interface or
  * {@link HasFilterableDataProvider}, but not both.
- *
+ * 
  * @author Vaadin Ltd.
  *
  * @param <T>

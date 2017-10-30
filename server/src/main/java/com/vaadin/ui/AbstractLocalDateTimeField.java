@@ -32,7 +32,7 @@ import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
  * Abstract DateField class for {@link LocalDateTime} type.
- *
+ * 
  * @author Vaadin Ltd
  *
  * @since 8.0

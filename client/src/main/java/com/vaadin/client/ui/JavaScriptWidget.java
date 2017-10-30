@@ -31,7 +31,7 @@ public class JavaScriptWidget extends Widget {
 
     /**
      * Creates a JavaScriptWidget based on an element with the given tag.
-     *
+     * 
      * @param tagName
      *            the tag to use for the element
      */

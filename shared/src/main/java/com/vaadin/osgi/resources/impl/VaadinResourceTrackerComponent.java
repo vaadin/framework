@@ -45,9 +45,9 @@ import com.vaadin.osgi.resources.VaadinResourceService;
 /**
  * Tracks {@link OsgiVaadinWidgetset} and {@link OsgiVaadinTheme} registration
  * and uses {@link HttpService} to register them.
- *
+ * 
  * @author Vaadin Ltd.
- *
+ * 
  * @since 8.1
  */
 @Component(immediate = true)

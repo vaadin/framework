@@ -65,7 +65,7 @@ public class SharedState implements Serializable {
     /**
      * A Map of event identifiers with registered listeners, {@code key} is
      * event identifier, {@code value} is the listeners count.
-     *
+     * 
      * @since
      */
     @NoLayout

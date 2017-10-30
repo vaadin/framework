@@ -20,7 +20,7 @@ import com.vaadin.client.ui.textfield.AbstractTextFieldConnector;
 /**
  * Implemented by all widgets used by a connector extending
  * {@link AbstractTextFieldConnector}.
- *
+ * 
  * @since 8.0
  */
 public interface AbstractTextFieldWidget {

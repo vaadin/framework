@@ -25,16 +25,16 @@ import com.vaadin.osgi.resources.impl.VaadinResourceServiceImpl;
  * {@link BundleActivator} used to provide access to the
  * {@link VaadinResourceService} singleton for publishing themes, widgetsets and
  * other necessary resources.
- *
+ * 
  * @author Vaadin Ltd.
- *
+ * 
  * @since 8.1
  */
 public class OsgiVaadinResources implements BundleActivator {
 
     /**
      * Thrown if a method is called when the Resource bundle is not active.
-     *
+     * 
      * @author Vaadin Ltd.
      *
      * @since 8.1
@@ -54,7 +54,7 @@ public class OsgiVaadinResources implements BundleActivator {
     /**
      * Returns the {@link VaadinResourceService} instance. Always returns
      * non-null.
-     *
+     * 
      * @return the {@link VaadinResourceService resource service} to use for
      *         publishing themes, widgetsets and other necessary resources
      * @throws ResourceBundleInactiveException

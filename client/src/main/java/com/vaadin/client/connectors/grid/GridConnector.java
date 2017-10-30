@@ -522,10 +522,10 @@ public class GridConnector extends AbstractListingConnector
      * Method called by {@code CustomColumn} when its renderer changes. This
      * method is used to maintain hierarchical renderer wrap in
      * {@code TreeGrid}.
-     *
+     * 
      * @param column
      *            the column which now has a new renderer
-     *
+     * 
      * @since 8.1
      */
     public void onColumnRendererChanged(CustomColumn column) {

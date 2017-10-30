@@ -25,7 +25,7 @@ public class ProgressBarElement extends AbstractFieldElement {
 
     /**
      * Returns the value of the progress bar.
-     *
+     * 
      * @return
      */
     public double getValue() {

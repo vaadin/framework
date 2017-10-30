@@ -48,7 +48,7 @@ public abstract class AbstractFieldConnector
      * <p>
      * NOTE: since 8.0 this only delegates to
      * {@link #isRequiredIndicatorVisible()}, and is left for legacy reasons.
-     *
+     * 
      * @deprecated Use {@link #isRequiredIndicatorVisible()} instead.
      *
      * @return true if required indicator should be shown

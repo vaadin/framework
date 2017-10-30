@@ -21,7 +21,7 @@ import com.vaadin.ui.Grid;
 
 /**
  * An event listener for a {@link Grid} editor save events.
- *
+ * 
  * @author Vaadin Ltd
  * @since 8.0
  *
@@ -33,7 +33,7 @@ public interface EditorSaveListener<T> extends Serializable {
 
     /**
      * Called when the editor is saved.
-     *
+     * 
      * @param event
      *            save event
      */

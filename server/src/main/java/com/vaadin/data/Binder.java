@@ -330,7 +330,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         *
+         * 
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
@@ -394,7 +394,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         *
+         * 
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(

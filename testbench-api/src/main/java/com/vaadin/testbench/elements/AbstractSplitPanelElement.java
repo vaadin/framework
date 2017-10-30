@@ -37,7 +37,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets the first component of a split panel and wraps it in given class.
-     *
+     * 
      * @param clazz
      *            Components element class
      * @return First component wrapped in given class
@@ -48,7 +48,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets the second component of a split panel and wraps it in given class.
-     *
+     * 
      * @param clazz
      *            Components element class
      * @return Second component wrapped in given class
@@ -59,7 +59,7 @@ public class AbstractSplitPanelElement
 
     /**
      * Gets a component of a split panel and wraps it in the given class.
-     *
+     * 
      * @param clazz
      *            Components element class
      * @param byContainer

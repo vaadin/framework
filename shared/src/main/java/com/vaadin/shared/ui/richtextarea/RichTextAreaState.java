@@ -22,7 +22,7 @@ import com.vaadin.shared.ui.ValueChangeMode;
 
 /**
  * State for RichTextArea.
- *
+ * 
  * @since 8.0
  */
 public class RichTextAreaState extends AbstractFieldState {

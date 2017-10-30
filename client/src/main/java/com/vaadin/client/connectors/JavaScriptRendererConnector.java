@@ -66,7 +66,7 @@ public class JavaScriptRendererConnector
     private static native JavaScriptObject createCellReferenceWrapper()
     /*-{
         var reference = {};
-
+    
         var setProperty = function(name, getter, setter) {
             var descriptor = {
                 get: getter
@@ -76,25 +76,25 @@ public class JavaScriptRendererConnector
             }
             Object.defineProperty(reference, name, descriptor);
         };
-
+    
         setProperty("element", function() {
             return reference.target.@CellReference::getElement()();
         }, null);
-
+    
         setProperty("rowIndex", function() {
             return reference.target.@CellReference::getRowIndex()();
         }, null);
-
+    
         setProperty("columnIndex", function() {
             return reference.target.@CellReference::getColumnIndex()();
         }, null);
-
+    
         setProperty("colSpan", function() {
             return reference.target.@RendererCellReference::getColSpan()();
         }, function(colSpan) {
             reference.target.@RendererCellReference::setColSpan(*)(colSpan);
         });
-
+    
         return reference;
     }-*/;
 
