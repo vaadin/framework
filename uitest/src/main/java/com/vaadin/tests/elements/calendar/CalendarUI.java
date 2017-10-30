@@ -2,6 +2,7 @@ package com.vaadin.tests.elements.calendar;
 
 import static java.util.Calendar.DAY_OF_MONTH;
 
+import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
@@ -14,6 +15,7 @@ public class CalendarUI extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final Calendar calendar = new Calendar();
+        calendar.setStartDate(new Date(2020 - 1900, 8 - 1, 1));
         calendar.setWidth("100%");
 
         Button monthView = new Button("Month view");
