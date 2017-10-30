@@ -52,22 +52,22 @@ import elemental.json.JsonValue;
  */
 public class JsonDecoder {
 
-    private static final FastStringSet decodedWithoutReference = FastStringSet
+    private static final FastStringSet DECODED_WITHOUT_REFERENCE = FastStringSet
             .create();
     static {
-        decodedWithoutReference.add(String.class.getName());
-        decodedWithoutReference.add(Boolean.class.getName());
-        decodedWithoutReference.add(Byte.class.getName());
-        decodedWithoutReference.add(Character.class.getName());
-        decodedWithoutReference.add(Short.class.getName());
-        decodedWithoutReference.add(Integer.class.getName());
-        decodedWithoutReference.add(Long.class.getName());
-        decodedWithoutReference.add(Float.class.getName());
-        decodedWithoutReference.add(Double.class.getName());
-        decodedWithoutReference.add(Connector.class.getName());
-        decodedWithoutReference.add(Map.class.getName());
-        decodedWithoutReference.add(List.class.getName());
-        decodedWithoutReference.add(Set.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(String.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Boolean.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Byte.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Character.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Short.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Integer.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Long.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Float.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Double.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Connector.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Map.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(List.class.getName());
+        DECODED_WITHOUT_REFERENCE.add(Set.class.getName());
     }
 
     /**
@@ -193,7 +193,7 @@ public class JsonDecoder {
     }
 
     private static boolean needsReferenceValue(Type type) {
-        return !decodedWithoutReference.contains(type.getBaseTypeName());
+        return !DECODED_WITHOUT_REFERENCE.contains(type.getBaseTypeName());
     }
 
     private static Map<Object, Object> decodeMap(Type type, JsonValue jsonMap,

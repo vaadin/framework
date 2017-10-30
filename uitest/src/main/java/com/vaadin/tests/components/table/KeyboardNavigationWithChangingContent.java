@@ -5,8 +5,6 @@ import java.util.Arrays;
 import com.vaadin.server.Sizeable;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -32,21 +30,16 @@ public class KeyboardNavigationWithChangingContent extends TestBase {
 
         getLayout().addComponent(t);
         getLayout().addComponent(new Button("Change elements and selection",
-                new ClickListener() {
+                event -> {
+                    bic.removeAllItems();
+                    ValueHolder<String> v4 = null;
+                    for (int i = 4; i < 30; i++) {
+                        v4 = new ValueHolder<>("test" + i);
+                        bic.addBean(v4);
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-
-                        bic.removeAllItems();
-                        ValueHolder<String> v4 = null;
-                        for (int i = 4; i < 30; i++) {
-                            v4 = new ValueHolder<>("test" + i);
-                            bic.addBean(v4);
-
-                        }
-                        t.select(t.firstItemId());
-                        t.focus();
                     }
+                    t.select(t.firstItemId());
+                    t.focus();
                 }));
     }
 

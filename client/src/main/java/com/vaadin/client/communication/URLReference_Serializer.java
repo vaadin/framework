@@ -38,10 +38,10 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
         JsonObject json = (JsonObject) jsonValue;
         if (json.hasKey(URL_FIELD)) {
             JsonValue jsonURL = json.get(URL_FIELD);
-            String URL = (String) JsonDecoder.decodeValue(
+            String url = (String) JsonDecoder.decodeValue(
                     new Type(String.class.getName(), null), jsonURL, null,
                     connection);
-            reference.setURL(URL);
+            reference.setURL(url);
         }
         return reference;
     }

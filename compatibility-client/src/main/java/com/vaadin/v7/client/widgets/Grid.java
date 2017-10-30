@@ -4708,7 +4708,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         private final class DefaultTextRenderer implements Renderer<Object> {
             boolean warned = false;
-            private final String DEFAULT_RENDERER_WARNING = "This column uses a dummy default TextRenderer. "
+            private static final String DEFAULT_RENDERER_WARNING = "This column uses a dummy default TextRenderer. "
                     + "A more suitable renderer should be set using the setRenderer() method.";
 
             @Override
