@@ -867,18 +867,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     menuHeight -= up.getOffsetHeight() + down.getOffsetHeight()
                             + status.getOffsetHeight();
                 } else {
-                    final ComputedStyle menuStyle = new ComputedStyle(
+                    final ComputedStyle s = new ComputedStyle(
                             menu.getElement());
-                    final ComputedStyle popupStyle = new ComputedStyle(
-                            suggestionPopup.getElement());
-                    menuHeight -= menuStyle.getIntProperty("marginBottom")
-                            + menuStyle.getIntProperty("marginTop")
-                            + menuStyle.getIntProperty("paddingBottom")
-                            + menuStyle.getIntProperty("paddingTop")
-                            + popupStyle.getIntProperty("marginBottom")
-                            + popupStyle.getIntProperty("marginTop")
-                            + popupStyle.getIntProperty("paddingBottom")
-                            + popupStyle.getIntProperty("paddingTop");
+                    menuHeight -= s.getIntProperty("marginBottom")
+                            + s.getIntProperty("marginTop");
                 }
 
                 // If the available page height is really tiny then this will be
