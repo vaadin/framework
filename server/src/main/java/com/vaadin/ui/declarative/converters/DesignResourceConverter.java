@@ -185,22 +185,22 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             return ((ExternalResource) value).getURL();
         }
 
-        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> TYPE_TO_CONVERTER = new HashMap<>();
+        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
 
         static {
-            TYPE_TO_CONVERTER.put(ExternalResource.class, HTTP);
+            typeToConverter.put(ExternalResource.class, HTTP);
             // ^ any of non-specialized would actually work
-            TYPE_TO_CONVERTER.put(ThemeResource.class, THEME);
-            TYPE_TO_CONVERTER.put(FontIcon.class, FONTICON);
-            TYPE_TO_CONVERTER.put(FileResource.class, FILE);
+            typeToConverter.put(ThemeResource.class, THEME);
+            typeToConverter.put(FontIcon.class, FONTICON);
+            typeToConverter.put(FileResource.class, FILE);
 
         }
 
         public static ResourceConverterByProtocol byType(
                 Class<? extends Resource> resourceType) {
-            for (Class<?> type : TYPE_TO_CONVERTER.keySet()) {
+            for (Class<?> type : typeToConverter.keySet()) {
                 if (type.isAssignableFrom(resourceType)) {
-                    return TYPE_TO_CONVERTER.get(type);
+                    return typeToConverter.get(type);
                 }
             }
             return null;

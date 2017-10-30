@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.Document;
 
 public class VAudio extends VMediaBase {
-    private static final String CLASSNAME = "v-audio";
+    private static String CLASSNAME = "v-audio";
 
     private AudioElement audio;
 

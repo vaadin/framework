@@ -101,7 +101,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
     private EventSortOrder eventSortOrder = EventSortOrder.DURATION_DESC;
 
-    private static final EventDurationComparator DEFAULT_COMPARATOR = new EventDurationComparator(
+    private static EventDurationComparator DEFAULT_COMPARATOR = new EventDurationComparator(
             false);
 
     private CalendarDropHandler dropHandler;
@@ -656,7 +656,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
 
         for (CalendarDay day : days) {
             String date = day.getDate();
-            String localizedDateFormat = day.getLocalizedDateFormat();
+            String localized_date_format = day.getLocalizedDateFormat();
             Date d = dateformat_date.parse(date);
             int dayOfWeek = day.getDayOfWeek();
             if (dayOfWeek < getFirstDayNumber()
@@ -670,7 +670,7 @@ public class VCalendar extends Composite implements VHasDropHandler {
                 isToday = true;
             }
             dayToolbar.add(realDayNames[dayOfWeek - 1], date,
-                    localizedDateFormat, isToday ? "today" : null);
+                    localized_date_format, isToday ? "today" : null);
             weeklyLongEvents.addDate(d);
             weekGrid.addDate(d);
             if (isToday) {

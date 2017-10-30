@@ -27,14 +27,14 @@ import com.vaadin.client.event.PointerEvent.EventType;
  */
 public class PointerEventSupport {
 
-    private static final PointerEventSupportImpl IMPL = GWT
+    private static final PointerEventSupportImpl impl = GWT
             .create(PointerEventSupportImpl.class);
 
     private PointerEventSupport() {
     }
 
     public static void init() {
-        IMPL.init();
+        impl.init();
     }
 
     /**
@@ -42,7 +42,7 @@ public class PointerEventSupport {
      *         otherwise
      */
     public static boolean isSupported() {
-        return IMPL.isSupported();
+        return impl.isSupported();
     }
 
     /**
@@ -50,6 +50,6 @@ public class PointerEventSupport {
      * @return the native event name of the given event
      */
     public static String getNativeEventName(EventType eventType) {
-        return IMPL.getNativeEventName(eventType);
+        return impl.getNativeEventName(eventType);
     }
 }

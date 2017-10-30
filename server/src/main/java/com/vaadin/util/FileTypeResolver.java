@@ -54,7 +54,7 @@ public class FileTypeResolver implements Serializable {
     /**
      * Initial file extension to mime-type mapping.
      */
-    private static final String INITIAL_EXT_TO_MIME_MAP = "application/cu-seeme                            csm cu,"
+    private static final String initialExtToMIMEMap = "application/cu-seeme                            csm cu,"
             + "application/dsptype                             tsp,"
             + "application/futuresplash                        spl,"
             + "application/mac-binhex40                        hqx,"
@@ -221,7 +221,7 @@ public class FileTypeResolver implements Serializable {
     static {
 
         // Initialize extension to MIME map
-        final StringTokenizer lines = new StringTokenizer(INITIAL_EXT_TO_MIME_MAP,
+        final StringTokenizer lines = new StringTokenizer(initialExtToMIMEMap,
                 ",");
         while (lines.hasMoreTokens()) {
             final String line = lines.nextToken();
@@ -356,24 +356,24 @@ public class FileTypeResolver implements Serializable {
      * @param extension
      *            the filename extension to be associated with
      *            <code>MIMEType</code>.
-     * @param mimeType
+     * @param MIMEType
      *            the new mime-type for <code>extension</code>.
      */
-    public static void addExtension(String extension, String mimeType) {
-        EXT_TO_MIME_MAP.put(extension.toLowerCase(Locale.ROOT), mimeType);
+    public static void addExtension(String extension, String MIMEType) {
+        EXT_TO_MIME_MAP.put(extension.toLowerCase(Locale.ROOT), MIMEType);
     }
 
     /**
      * Adds a icon for the given mime-type. If the mime-type also has a
      * corresponding icon, it is replaced with the new icon.
      *
-     * @param mimeType
+     * @param MIMEType
      *            the mime-type whose icon is to be changed.
      * @param icon
      *            the new icon to be associated with <code>MIMEType</code>.
      */
-    public static void addIcon(String mimeType, Resource icon) {
-        MIME_TO_ICON_MAP.put(mimeType, icon);
+    public static void addIcon(String MIMEType, Resource icon) {
+        MIME_TO_ICON_MAP.put(MIMEType, icon);
     }
 
     /**

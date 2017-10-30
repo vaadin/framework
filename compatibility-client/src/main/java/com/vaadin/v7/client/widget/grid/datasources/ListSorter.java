@@ -144,17 +144,17 @@ public class ListSorter<T> {
                     Grid.Column column = o.getColumn();
                     Comparator cmp = ListSorter.this.comparators.get(column);
                     int result = 0;
-                    Object valueA = column.getValue(a);
-                    Object valueB = column.getValue(b);
+                    Object value_a = column.getValue(a);
+                    Object value_b = column.getValue(b);
                     if (cmp != null) {
-                        result = cmp.compare(valueA, valueB);
+                        result = cmp.compare(value_a, value_b);
                     } else {
-                        if (!(valueA instanceof Comparable)) {
+                        if (!(value_a instanceof Comparable)) {
                             throw new IllegalStateException("Column " + column
                                     + " has no assigned comparator and value "
-                                    + valueA + " isn't naturally comparable");
+                                    + value_a + " isn't naturally comparable");
                         }
-                        result = ((Comparable) valueA).compareTo(valueB);
+                        result = ((Comparable) value_a).compareTo(value_b);
                     }
 
                     if (result != 0) {

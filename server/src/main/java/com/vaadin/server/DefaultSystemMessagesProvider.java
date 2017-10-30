@@ -25,7 +25,7 @@ package com.vaadin.server;
  */
 public class DefaultSystemMessagesProvider implements SystemMessagesProvider {
 
-    private static final DefaultSystemMessagesProvider INSTANCE = new DefaultSystemMessagesProvider();
+    private static final DefaultSystemMessagesProvider instance = new DefaultSystemMessagesProvider();
 
     private DefaultSystemMessagesProvider() {
         // Singleton
@@ -43,7 +43,7 @@ public class DefaultSystemMessagesProvider implements SystemMessagesProvider {
      * @return the default system messages provider.
      */
     public static SystemMessagesProvider get() {
-        return INSTANCE;
+        return instance;
     }
 
 }

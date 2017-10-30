@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 public class URLReference implements Serializable {
 
-    private String url;
+    private String URL;
 
     /**
      * Returns the URL that this object refers to.
@@ -29,15 +29,15 @@ public class URLReference implements Serializable {
      * @return The URL for this reference or null if unknown.
      */
     public String getURL() {
-        return url;
+        return URL;
     }
 
     /**
      * Sets the URL that this object refers to.
      *
-     * @param url
+     * @param URL
      */
-    public void setURL(String url) {
-        this.url = url;
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 }

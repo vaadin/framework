@@ -36,8 +36,8 @@ public class CalendarEvent {
     private int slotIndex = -1;
     private boolean format24h;
 
-    DateTimeFormat dateformatDate = DateTimeFormat.getFormat("h:mm a");
-    DateTimeFormat dateformatDate24 = DateTimeFormat.getFormat("H:mm");
+    DateTimeFormat dateformat_date = DateTimeFormat.getFormat("h:mm a");
+    DateTimeFormat dateformat_date24 = DateTimeFormat.getFormat("H:mm");
     private boolean allDay;
 
     /**
@@ -241,9 +241,9 @@ public class CalendarEvent {
      */
     public String getTimeAsText() {
         if (format24h) {
-            return dateformatDate24.format(startTime);
+            return dateformat_date24.format(startTime);
         } else {
-            return dateformatDate.format(startTime);
+            return dateformat_date.format(startTime);
         }
     }
 

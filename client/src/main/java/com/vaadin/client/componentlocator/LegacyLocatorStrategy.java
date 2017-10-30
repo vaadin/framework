@@ -74,7 +74,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     private final ApplicationConnection client;
 
-    private static final RegExp VALID_SYNTAX = RegExp.compile(
+    private static final RegExp validSyntax = RegExp.compile(
             "^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9.' ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
 
     public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
@@ -83,7 +83,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     @Override
     public boolean validatePath(String path) {
-        return VALID_SYNTAX.test(path);
+        return validSyntax.test(path);
     }
 
     @Override

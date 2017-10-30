@@ -50,7 +50,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         com.google.gwt.user.client.ui.Focusable, HasResizeHandlers,
         HasScrollHandlers {
 
-    private static final int MONITOR_PARENT_TIMER_INTERVAL = 1000;
+    private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;

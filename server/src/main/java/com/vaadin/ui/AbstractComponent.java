@@ -1251,7 +1251,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        List<String> l = new ArrayList<>(Arrays.asList(CUSTOM_ATTRIBUTES));
+        List<String> l = new ArrayList<>(Arrays.asList(customAttributes));
         if (this instanceof Focusable) {
             l.add("tab-index");
             l.add("tabindex");
@@ -1259,7 +1259,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] CUSTOM_ATTRIBUTES = { "width", "height",
+    private static final String[] customAttributes = { "width", "height",
             "debug-id", "error", "width-auto", "height-auto", "width-full",
             "height-full", "size-auto", "size-full", "immediate", "locale",
             "read-only", "_id" };

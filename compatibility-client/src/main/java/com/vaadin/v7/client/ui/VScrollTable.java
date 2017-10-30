@@ -314,11 +314,11 @@ public class VScrollTable extends FlowPanel
      * multiple of pagelength which component will cache when requesting more
      * rows
      */
-    private double cacheRate = CACHE_RATE_DEFAULT;
+    private double cache_rate = CACHE_RATE_DEFAULT;
     /**
      * fraction of pageLength which can be scrolled without making new request
      */
-    private double cacheReactRate = 0.75 * cacheRate;
+    private double cache_react_rate = 0.75 * cache_rate;
 
     public static final char ALIGN_CENTER = 'c';
     public static final char ALIGN_LEFT = 'b';
@@ -404,7 +404,7 @@ public class VScrollTable extends FlowPanel
 
     private boolean enableDebug = false;
 
-    private static final boolean HAS_NATIVE_TOUCH_SCROLLLING = BrowserInfo.get()
+    private static final boolean hasNativeTouchScrolling = BrowserInfo.get()
             .isTouchDevice()
             && !BrowserInfo.get().requiresTouchScrollDelegate();
 
@@ -1649,9 +1649,9 @@ public class VScrollTable extends FlowPanel
     }
 
     private void setCacheRate(double d) {
-        if (cacheRate != d) {
-            cacheRate = d;
-            cacheReactRate = 0.75 * d;
+        if (cache_rate != d) {
+            cache_rate = d;
+            cache_react_rate = 0.75 * d;
         }
     }
 
@@ -1797,9 +1797,9 @@ public class VScrollTable extends FlowPanel
      */
     protected void discardRowsOutsideCacheWindow() {
         int firstRowToKeep = (int) (firstRowInViewPort
-                - pageLength * cacheRate);
+                - pageLength * cache_rate);
         int lastRowToKeep = (int) (firstRowInViewPort + pageLength
-                + pageLength * cacheRate);
+                + pageLength * cache_rate);
         // sanity checks:
         if (firstRowToKeep < 0) {
             firstRowToKeep = 0;
@@ -2474,12 +2474,12 @@ public class VScrollTable extends FlowPanel
         if (enabled) {
             // Do we need cache rows
             if (scrollBody.getLastRendered() + 1 < firstRowInViewPort
-                    + pageLength + (int) cacheReactRate * pageLength) {
+                    + pageLength + (int) cache_react_rate * pageLength) {
                 if (totalRows - 1 > scrollBody.getLastRendered()) {
                     // fetch cache rows
                     int firstInNewSet = scrollBody.getLastRendered() + 1;
                     int lastInNewSet = (int) (firstRowInViewPort + pageLength
-                            + cacheRate * pageLength);
+                            + cache_rate * pageLength);
                     if (lastInNewSet > totalRows - 1) {
                         lastInNewSet = totalRows - 1;
                     }
@@ -2648,8 +2648,8 @@ public class VScrollTable extends FlowPanel
                  */
 
                 setReqFirstRow(
-                        (firstRowInViewPort - (int) (pageLength * cacheRate)));
-                int last = firstRowInViewPort + (int) (cacheRate * pageLength)
+                        (firstRowInViewPort - (int) (pageLength * cache_rate)));
+                int last = firstRowInViewPort + (int) (cache_rate * pageLength)
                         + pageLength - 1;
                 if (last >= totalRows) {
                     last = totalRows - 1;
@@ -2672,9 +2672,9 @@ public class VScrollTable extends FlowPanel
                 if (reqFirstRow < firstToBeRendered) {
                     firstToBeRendered = reqFirstRow;
                 } else if (firstRowInViewPort
-                        - (int) (cacheRate * pageLength) > firstToBeRendered) {
+                        - (int) (cache_rate * pageLength) > firstToBeRendered) {
                     firstToBeRendered = firstRowInViewPort
-                            - (int) (cacheRate * pageLength);
+                            - (int) (cache_rate * pageLength);
                     if (firstToBeRendered < 0) {
                         firstToBeRendered = 0;
                     }
@@ -2697,9 +2697,9 @@ public class VScrollTable extends FlowPanel
                 if (lastReqRow > lastToBeRendered) {
                     lastToBeRendered = lastReqRow;
                 } else if (firstRowInViewPort + pageLength
-                        + pageLength * cacheRate < lastToBeRendered) {
+                        + pageLength * cache_rate < lastToBeRendered) {
                     lastToBeRendered = (firstRowInViewPort + pageLength
-                            + (int) (pageLength * cacheRate));
+                            + (int) (pageLength * cache_rate));
                     if (lastToBeRendered >= totalRows) {
                         lastToBeRendered = totalRows - 1;
                     }
@@ -2767,8 +2767,8 @@ public class VScrollTable extends FlowPanel
          */
         public void refreshContent() {
             isRequestHandlerRunning = true;
-            int first = (int) (firstRowInViewPort - pageLength * cacheRate);
-            int reqRows = (int) (2 * pageLength * cacheRate + pageLength);
+            int first = (int) (firstRowInViewPort - pageLength * cache_rate);
+            int reqRows = (int) (2 * pageLength * cache_rate + pageLength);
             if (first < 0) {
                 reqRows = reqRows + first;
                 first = 0;
@@ -2906,18 +2906,18 @@ public class VScrollTable extends FlowPanel
                 addStyleName(primaryStyleName + "-header-sortable");
             }
 
-            final String alignPrefix = primaryStyleName
+            final String ALIGN_PREFIX = primaryStyleName
                     + "-caption-container-align-";
 
             switch (align) {
             case ALIGN_CENTER:
-                captionContainer.addClassName(alignPrefix + "center");
+                captionContainer.addClassName(ALIGN_PREFIX + "center");
                 break;
             case ALIGN_RIGHT:
-                captionContainer.addClassName(alignPrefix + "right");
+                captionContainer.addClassName(ALIGN_PREFIX + "right");
                 break;
             default:
-                captionContainer.addClassName(alignPrefix + "left");
+                captionContainer.addClassName(ALIGN_PREFIX + "left");
                 break;
             }
 
@@ -3236,7 +3236,7 @@ public class VScrollTable extends FlowPanel
                         firstvisible = 0;
                         rowRequestHandler.setReqFirstRow(0);
                         rowRequestHandler
-                                .setReqRows((int) (2 * pageLength * cacheRate
+                                .setReqRows((int) (2 * pageLength * cache_rate
                                         + pageLength));
                         rowRequestHandler.deferRowFetch(); // some validation +
                                                            // defer 250ms
@@ -4941,9 +4941,9 @@ public class VScrollTable extends FlowPanel
             }
 
             int reactFirstRow = (int) (firstRowInViewPort
-                    - pageLength * cacheReactRate);
+                    - pageLength * cache_react_rate);
             int reactLastRow = (int) (firstRowInViewPort + pageLength
-                    + pageLength * cacheReactRate);
+                    + pageLength * cache_react_rate);
             if (reactFirstRow < 0) {
                 reactFirstRow = 0;
             }
@@ -5944,7 +5944,7 @@ public class VScrollTable extends FlowPanel
 
                 boolean touchEventHandled = false;
 
-                if (enabled && HAS_NATIVE_TOUCH_SCROLLLING) {
+                if (enabled && hasNativeTouchScrolling) {
                     touchContextProvider.handleTouchEvent(event);
 
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
@@ -7390,12 +7390,12 @@ public class VScrollTable extends FlowPanel
         }
 
         int postLimit = (int) (firstRowInViewPort + (pageLength - 1)
-                + pageLength * cacheReactRate);
+                + pageLength * cache_react_rate);
         if (postLimit > totalRows - 1) {
             postLimit = totalRows - 1;
         }
         int preLimit = (int) (firstRowInViewPort
-                - pageLength * cacheReactRate);
+                - pageLength * cache_react_rate);
         if (preLimit < 0) {
             preLimit = 0;
         }
@@ -7415,8 +7415,8 @@ public class VScrollTable extends FlowPanel
         if (allRenderedRowsAreNew()) {
             // need a totally new set of rows
             rowRequestHandler.setReqFirstRow(
-                    (firstRowInViewPort - (int) (pageLength * cacheRate)));
-            int last = firstRowInViewPort + (int) (cacheRate * pageLength)
+                    (firstRowInViewPort - (int) (pageLength * cache_rate)));
+            int last = firstRowInViewPort + (int) (cache_rate * pageLength)
                     + pageLength - 1;
             if (last >= totalRows) {
                 last = totalRows - 1;
@@ -7431,7 +7431,7 @@ public class VScrollTable extends FlowPanel
             // need some rows to the beginning of the rendered area
 
             rowRequestHandler.setReqFirstRow(
-                    (int) (firstRowInViewPort - pageLength * cacheRate));
+                    (int) (firstRowInViewPort - pageLength * cache_rate));
             rowRequestHandler.setReqRows(
                     firstRendered - rowRequestHandler.getReqFirstRow());
             rowRequestHandler.deferRowFetch();
@@ -7441,7 +7441,7 @@ public class VScrollTable extends FlowPanel
         if (postLimit > lastRendered) {
             // need some rows to the end of the rendered area
             int reqRows = (int) ((firstRowInViewPort + pageLength
-                    + pageLength * cacheRate) - lastRendered);
+                    + pageLength * cache_rate) - lastRendered);
             rowRequestHandler.triggerRowFetch(lastRendered + 1, reqRows);
         }
     }
@@ -7450,9 +7450,9 @@ public class VScrollTable extends FlowPanel
         int firstRowInViewPort = calcFirstRowInViewPort();
         int firstRendered = scrollBody.getFirstRendered();
         int lastRendered = scrollBody.getLastRendered();
-        return (firstRowInViewPort - pageLength * cacheRate > lastRendered
+        return (firstRowInViewPort - pageLength * cache_rate > lastRendered
                 || firstRowInViewPort + pageLength
-                        + pageLength * cacheRate < firstRendered);
+                        + pageLength * cache_rate < firstRendered);
     }
 
     protected int calcFirstRowInViewPort() {

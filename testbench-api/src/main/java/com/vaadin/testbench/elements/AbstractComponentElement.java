@@ -25,7 +25,6 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.AbstractComponent")
 public class AbstractComponentElement extends AbstractElement {
-
     /**
      * Returns the caption of the Component element.
      *
@@ -33,16 +32,16 @@ public class AbstractComponentElement extends AbstractElement {
      * @return component caption
      */
     public String getCaption() {
-        final String gwtIdAttribute = "aria-labelledby";
+        final String GWT_ID_ATTRIBUTE = "aria-labelledby";
         WebElement captElem = null;
         String captionId = null;
-        captionId = getAttribute(gwtIdAttribute);
+        captionId = getAttribute(GWT_ID_ATTRIBUTE);
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
         if (captionId == null || captionId.isEmpty()) {
             WebElement elem = findElement(
-                    By.xpath(".//*[@" + gwtIdAttribute + "]"));
-            captionId = elem.getAttribute(gwtIdAttribute);
+                    By.xpath(".//*[@" + GWT_ID_ATTRIBUTE + "]"));
+            captionId = elem.getAttribute(GWT_ID_ATTRIBUTE);
         }
         // element ids are unique, we can search the whole page
         captElem = getDriver().findElement(By.id(captionId));
@@ -54,11 +53,12 @@ public class AbstractComponentElement extends AbstractElement {
     }
 
     public boolean isReadOnly() {
+        final String READONLY_CSS_CLASS = "v-readonly";
         String readonlyClass = getAttribute("class");
         // looking for READONLY_CSS_CLASS string
         String[] cssSelectors = readonlyClass.split("\\s");
         for (String selector : cssSelectors) {
-            if (selector.equals("v-readonly")) {
+            if (selector.equals(READONLY_CSS_CLASS)) {
                 return true;
             }
         }

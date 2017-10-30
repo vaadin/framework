@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
 
-    private static Type<VisibilityChangeHandler> type;
+    private static Type<VisibilityChangeHandler> TYPE;
 
     private boolean visible;
 
@@ -37,10 +37,10 @@ public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
     }
 
     public static Type<VisibilityChangeHandler> getType() {
-        if (type == null) {
-            type = new Type<>();
+        if (TYPE == null) {
+            TYPE = new Type<>();
         }
-        return type;
+        return TYPE;
     }
 
     @Override

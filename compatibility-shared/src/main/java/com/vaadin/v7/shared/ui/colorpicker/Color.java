@@ -39,7 +39,7 @@ public class Color implements Serializable {
     private int blue;
     private int alpha;
 
-    private static final String OUTOFRANGE = "Value must be within the range [0-255]. Was: ";
+    private String OUTOFRANGE = "Value must be within the range [0-255]. Was: ";
 
     /**
      * Creates a color that has the specified red, green, blue, and alpha values

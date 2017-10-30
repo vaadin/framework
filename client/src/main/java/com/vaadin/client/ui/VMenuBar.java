@@ -505,7 +505,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * root menus on mouse hover.
      */
     private static class LazyCloser extends Timer {
-        static LazyCloser instance;
+        static LazyCloser INSTANCE;
         private VMenuBar activeRoot;
 
         @Override
@@ -517,27 +517,27 @@ public class VMenuBar extends SimpleFocusablePanel
         }
 
         public static void cancelClosing() {
-            if (instance != null) {
-                instance.cancel();
+            if (INSTANCE != null) {
+                INSTANCE.cancel();
             }
         }
 
         public static void prepare(VMenuBar vMenuBar) {
-            if (instance == null) {
-                instance = new LazyCloser();
+            if (INSTANCE == null) {
+                INSTANCE = new LazyCloser();
             }
-            if (instance.activeRoot == vMenuBar) {
-                instance.cancel();
-            } else if (instance.activeRoot != null) {
-                instance.cancel();
-                instance.run();
+            if (INSTANCE.activeRoot == vMenuBar) {
+                INSTANCE.cancel();
+            } else if (INSTANCE.activeRoot != null) {
+                INSTANCE.cancel();
+                INSTANCE.run();
             }
-            instance.activeRoot = vMenuBar;
+            INSTANCE.activeRoot = vMenuBar;
         }
 
         public static void schedule() {
-            if (instance != null && instance.activeRoot != null) {
-                instance.schedule(750);
+            if (INSTANCE != null && INSTANCE.activeRoot != null) {
+                INSTANCE.schedule(750);
             }
         }
 
@@ -1587,7 +1587,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     }
 
-    private static final String SUBPART_PREFIX = "item";
+    private final String SUBPART_PREFIX = "item";
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(

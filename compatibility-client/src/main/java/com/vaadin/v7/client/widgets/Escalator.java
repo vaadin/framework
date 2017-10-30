@@ -390,8 +390,7 @@ public class Escalator extends Widget
             private boolean touching = false;
             // Two movement objects for storing status and processing touches
             private Movement yMov, xMov;
-            static final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500,
-                    F_ACC = 0.7,
+            final double MIN_VEL = 0.6, MAX_VEL = 4, F_VEL = 1500, F_ACC = 0.7,
                     F_AXIS = 1;
 
             // The object to deal with one direction scrolling

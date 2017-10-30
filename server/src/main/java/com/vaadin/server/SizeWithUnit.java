@@ -32,7 +32,7 @@ import com.vaadin.shared.util.SharedUtil;
 public class SizeWithUnit implements Serializable {
     private final float size;
     private final Unit unit;
-    private static final Pattern SIZE_PATTERN = Pattern
+    private static final Pattern sizePattern = Pattern
             .compile(SharedUtil.SIZE_PATTERN);
 
     /**
@@ -90,7 +90,7 @@ public class SizeWithUnit implements Serializable {
         }
         float size = 0;
         Unit unit = null;
-        Matcher matcher = SIZE_PATTERN.matcher(s);
+        Matcher matcher = sizePattern.matcher(s);
         if (matcher.find()) {
             size = Float.parseFloat(matcher.group(1));
             if (size < 0) {
@@ -107,7 +107,7 @@ public class SizeWithUnit implements Serializable {
             }
         } else {
             throw new IllegalArgumentException("Invalid size argument: \"" + s
-                    + "\" (should match " + SIZE_PATTERN.pattern() + ")");
+                    + "\" (should match " + sizePattern.pattern() + ")");
         }
         return new SizeWithUnit(size, unit);
     }

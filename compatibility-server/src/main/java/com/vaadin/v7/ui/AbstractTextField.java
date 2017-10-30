@@ -73,7 +73,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
 
-    private static final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
+    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
 
     private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 

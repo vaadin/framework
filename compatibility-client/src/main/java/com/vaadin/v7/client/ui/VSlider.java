@@ -82,7 +82,7 @@ public class VSlider extends SimpleFocusablePanel
 
     /* DOM element for slider's base */
     private final Element base;
-    private static final int BASE_BORDER_WIDTH = 1;
+    private final int BASE_BORDER_WIDTH = 1;
 
     /* DOM element for slider's handle */
     private final Element handle;

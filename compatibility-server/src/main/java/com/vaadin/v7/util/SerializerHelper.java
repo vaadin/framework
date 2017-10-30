@@ -107,7 +107,7 @@ public class SerializerHelper {
      * List of primitive classes. Google App Engine has problems
      * serializing/deserializing these (#3064).
      */
-    private static final Class<?>[] PRIMITIVE_CLASSES = {
+    private static final Class<?>[] primitiveClasses = {
             byte.class, short.class, int.class, long.class, float.class,
             double.class, boolean.class, char.class };
 
@@ -122,7 +122,7 @@ public class SerializerHelper {
      */
     public static Class<?> resolveClass(String className)
             throws ClassNotFoundException {
-        for (Class<?> c : PRIMITIVE_CLASSES) {
+        for (Class<?> c : primitiveClasses) {
             if (className.equals(c.getName())) {
                 return c;
             }

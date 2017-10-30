@@ -50,7 +50,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
  */
 public abstract class ScrollbarBundle implements DeferredWorker {
 
-    private static final boolean SUPPORTS_REQUEST_ANIMATION_FRAME = new AnimationSupportDetector()
+    private static final boolean supportsRequestAnimationFrame = new AnimationSupportDetector()
             .isNativelySupported();
 
     private class ScrollEventFirer {
@@ -92,7 +92,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * We'll gather all the scroll events, and only fire once, once
                  * everything has calmed down.
                  */
-                if (SUPPORTS_REQUEST_ANIMATION_FRAME) {
+                if (supportsRequestAnimationFrame) {
                     // Chrome MUST use this as deferred commands will sometimes
                     // be run with a 300+ ms delay when scrolling.
                     AnimationScheduler.get().requestAnimationFrame(

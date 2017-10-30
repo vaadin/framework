@@ -58,7 +58,7 @@ public class CurrentInstance implements Serializable {
 
     private final WeakReference<Object> instance;
 
-    private static final ThreadLocal<Map<Class<?>, CurrentInstance>> INSTANCES = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Class<?>, CurrentInstance>> instances = new ThreadLocal<>();
 
     private CurrentInstance(Object instance) {
         this.instance = new WeakReference<>(instance);
@@ -73,7 +73,7 @@ public class CurrentInstance implements Serializable {
      *         if there is no current instance.
      */
     public static <T> T get(Class<T> type) {
-        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
+        Map<Class<?>, CurrentInstance> map = instances.get();
         if (map == null) {
             return null;
         }
@@ -97,7 +97,7 @@ public class CurrentInstance implements Serializable {
                 removeStaleInstances(map);
 
                 if (map.isEmpty()) {
-                    INSTANCES.remove();
+                    instances.remove();
                 }
 
                 return null;
@@ -135,14 +135,14 @@ public class CurrentInstance implements Serializable {
      *            the actual instance
      */
     public static <T> CurrentInstance set(Class<T> type, T instance) {
-        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
+        Map<Class<?>, CurrentInstance> map = instances.get();
         CurrentInstance previousInstance = null;
         if (instance == null) {
             // remove the instance
             if (map != null) {
                 previousInstance = map.remove(type);
                 if (map.isEmpty()) {
-                    INSTANCES.remove();
+                    instances.remove();
                     map = null;
                 }
             }
@@ -150,7 +150,7 @@ public class CurrentInstance implements Serializable {
             assert type.isInstance(instance) : "Invald instance type";
             if (map == null) {
                 map = new HashMap<>();
-                INSTANCES.set(map);
+                instances.set(map);
             }
 
             previousInstance = map.put(type, new CurrentInstance(instance));
@@ -165,7 +165,7 @@ public class CurrentInstance implements Serializable {
      * Clears all current instances.
      */
     public static void clearAll() {
-        INSTANCES.remove();
+        instances.remove();
     }
 
     /**
@@ -220,7 +220,7 @@ public class CurrentInstance implements Serializable {
      * @return a map containing the current instances
      */
     public static Map<Class<?>, CurrentInstance> getInstances() {
-        Map<Class<?>, CurrentInstance> map = INSTANCES.get();
+        Map<Class<?>, CurrentInstance> map = instances.get();
         if (map == null) {
             return Collections.emptyMap();
         } else {
@@ -237,7 +237,7 @@ public class CurrentInstance implements Serializable {
             if (removeStale) {
                 removeStaleInstances(map);
                 if (map.isEmpty()) {
-                    INSTANCES.remove();
+                    instances.remove();
                 }
             }
             return copy;

@@ -40,8 +40,8 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     protected void init() {
         registerRpc(ExecuteJavaScriptRpc.class, new ExecuteJavaScriptRpc() {
             @Override
-            public void executeJavaScript(String script) {
-                eval(script);
+            public void executeJavaScript(String Script) {
+                eval(Script);
             }
         });
     }

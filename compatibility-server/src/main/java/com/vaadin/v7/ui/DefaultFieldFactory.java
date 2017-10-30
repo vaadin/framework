@@ -38,7 +38,7 @@ import com.vaadin.v7.data.Property;
 public class DefaultFieldFactory
         implements FormFieldFactory, TableFieldFactory {
 
-    private static final DefaultFieldFactory INSTANCE = new DefaultFieldFactory();
+    private static final DefaultFieldFactory instance = new DefaultFieldFactory();
 
     /**
      * Singleton method to get an instance of DefaultFieldFactory.
@@ -46,7 +46,7 @@ public class DefaultFieldFactory
      * @return an instance of DefaultFieldFactory
      */
     public static DefaultFieldFactory get() {
-        return INSTANCE;
+        return instance;
     }
 
     protected DefaultFieldFactory() {

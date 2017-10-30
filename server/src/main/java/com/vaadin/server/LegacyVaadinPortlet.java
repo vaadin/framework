@@ -24,7 +24,7 @@ import com.vaadin.util.ReflectTools;
 
 public class LegacyVaadinPortlet extends VaadinPortlet {
 
-    private static final LegacyApplicationUIProvider PROVIDER = new LegacyApplicationUIProvider() {
+    private static final LegacyApplicationUIProvider provider = new LegacyApplicationUIProvider() {
         @Override
         protected LegacyApplication createApplication() {
             VaadinPortlet portlet = VaadinPortlet.getCurrent();
@@ -80,7 +80,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private void onVaadinSessionStarted(VaadinPortletRequest request,
             VaadinPortletSession session) throws PortletException {
-        session.addUIProvider(PROVIDER);
+        session.addUIProvider(provider);
     }
 
     protected boolean shouldCreateApplication(PortletRequest request) {

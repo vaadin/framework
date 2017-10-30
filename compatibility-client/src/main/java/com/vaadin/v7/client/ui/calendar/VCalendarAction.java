@@ -41,7 +41,7 @@ public class VCalendarAction extends Action {
 
     private CalendarEvent event;
 
-    private static final DateTimeFormat DATE_FORMAT_DATE_TIME = DateTimeFormat
+    private final DateTimeFormat dateformat_datetime = DateTimeFormat
             .getFormat(DateConstants.ACTION_DATE_FORMAT_PATTERN);
 
     /**
@@ -76,8 +76,8 @@ public class VCalendarAction extends Action {
      */
     @Override
     public void execute() {
-        String startDate = DATE_FORMAT_DATE_TIME.format(actionStartDate);
-        String endDate = DATE_FORMAT_DATE_TIME.format(actionEndDate);
+        String startDate = dateformat_datetime.format(actionStartDate);
+        String endDate = dateformat_datetime.format(actionEndDate);
 
         if (event == null) {
             rpc.actionOnEmptyCell(actionKey.split("-")[0], startDate, endDate);

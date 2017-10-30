@@ -99,7 +99,7 @@ public abstract class AbstractClientConnector
      * ShareState classes. Using WeakHashMap since entries are recalculated on
      * demand.
      */
-    private static final Map<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> STATE_TYPE_CACHE = Collections
+    private static final Map<Class<? extends AbstractClientConnector>, Class<? extends SharedState>> stateTypeCache = Collections
             .synchronizedMap(new WeakHashMap<>());
 
     @Override
@@ -315,7 +315,7 @@ public abstract class AbstractClientConnector
         // exceptions flying around
         if (stateType == null) {
             // Cache because we don't need to do this once per instance
-            stateType = STATE_TYPE_CACHE.computeIfAbsent(this.getClass(),
+            stateType = stateTypeCache.computeIfAbsent(this.getClass(),
                     key -> findStateType());
         }
 

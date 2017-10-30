@@ -32,7 +32,7 @@ import com.vaadin.client.widgets.Grid;
 @SuppressWarnings("rawtypes")
 public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
-    private static final Type<SelectionHandler> EVENT_TYPE = new Type<>();
+    private static final Type<SelectionHandler> eventType = new Type<>();
 
     private final Grid<T> grid;
     private final List<T> added;
@@ -142,12 +142,12 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
      * @return a {@link Type} identifier.
      */
     public static Type<SelectionHandler> getType() {
-        return EVENT_TYPE;
+        return eventType;
     }
 
     @Override
     public Type<SelectionHandler> getAssociatedType() {
-        return EVENT_TYPE;
+        return eventType;
     }
 
     @Override

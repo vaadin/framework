@@ -131,7 +131,7 @@ public class WidgetUtil {
         }
     }
 
-    private static final Element ESCAPE_HTML_HELPER = DOM.createDiv();
+    private static final Element escapeHtmlHelper = DOM.createDiv();
 
     /**
      * Converts html entities to text.
@@ -140,8 +140,8 @@ public class WidgetUtil {
      * @return escaped string presentation of given html
      */
     public static String escapeHTML(String html) {
-        DOM.setInnerText(ESCAPE_HTML_HELPER, html);
-        String escapedText = DOM.getInnerHTML(ESCAPE_HTML_HELPER);
+        DOM.setInnerText(escapeHtmlHelper, html);
+        String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
         return escapedText;
     }
 
@@ -1460,7 +1460,7 @@ public class WidgetUtil {
         /*
          * Regex to parse the size.
          */
-        private static final RegExp SIZE_PATTERN = RegExp
+        private static final RegExp sizePattern = RegExp
                 .compile(SharedUtil.SIZE_PATTERN);
 
         /**
@@ -1483,7 +1483,7 @@ public class WidgetUtil {
             float size = 0;
             Unit unit = null;
 
-            MatchResult matcher = SIZE_PATTERN.exec(s);
+            MatchResult matcher = sizePattern.exec(s);
             if (matcher.getGroupCount() > 1) {
 
                 size = Float.parseFloat(matcher.getGroup(1));
@@ -1498,7 +1498,7 @@ public class WidgetUtil {
             } else {
                 throw new IllegalArgumentException(
                         "Invalid size argument: \"" + s + "\" (should match "
-                                + SIZE_PATTERN.getSource() + ")");
+                                + sizePattern.getSource() + ")");
             }
             return new CssSize(size, unit);
         }

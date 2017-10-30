@@ -371,13 +371,13 @@ public class ComponentSizeValidator implements Serializable {
     private static void showComponent(Component component, String attribute,
             StringBuilder err, StringBuilder indent, boolean widthError) {
 
-        FileLocation createLoc = CREATION_LOCATIONS.get(component);
+        FileLocation createLoc = creationLocations.get(component);
 
         FileLocation sizeLoc;
         if (widthError) {
-            sizeLoc = WIDTH_LOCATIONS.get(component);
+            sizeLoc = widthLocations.get(component);
         } else {
-            sizeLoc = HEIGHT_LOCATIONS.get(component);
+            sizeLoc = heightLocations.get(component);
         }
 
         err.append(indent);
@@ -600,9 +600,9 @@ public class ComponentSizeValidator implements Serializable {
 
     }
 
-    private static final Map<Object, FileLocation> CREATION_LOCATIONS = new HashMap<>();
-    private static final Map<Object, FileLocation> WIDTH_LOCATIONS = new HashMap<>();
-    private static final Map<Object, FileLocation> HEIGHT_LOCATIONS = new HashMap<>();
+    private static final Map<Object, FileLocation> creationLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> widthLocations = new HashMap<>();
+    private static final Map<Object, FileLocation> heightLocations = new HashMap<>();
 
     public static class FileLocation implements Serializable {
         public String method;
@@ -622,15 +622,15 @@ public class ComponentSizeValidator implements Serializable {
     }
 
     public static void setCreationLocation(Object object) {
-        setLocation(CREATION_LOCATIONS, object);
+        setLocation(creationLocations, object);
     }
 
     public static void setWidthLocation(Object object) {
-        setLocation(WIDTH_LOCATIONS, object);
+        setLocation(widthLocations, object);
     }
 
     public static void setHeightLocation(Object object) {
-        setLocation(HEIGHT_LOCATIONS, object);
+        setLocation(heightLocations, object);
     }
 
     private static void setLocation(Map<Object, FileLocation> map,

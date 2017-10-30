@@ -50,8 +50,8 @@ import com.vaadin.v7.shared.ui.calendar.DateConstants;
 public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
         MouseDownHandler, MouseOverHandler, MouseMoveHandler {
 
-    private static int bottomSpacerHeight = -1;
-    private static int eventHeight = -1;
+    private static int BOTTOMSPACERHEIGHT = -1;
+    private static int EVENTHEIGHT = -1;
     private static final int BORDERPADDINGSIZE = 1;
 
     private final VCalendar calendar;
@@ -111,8 +111,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
 
     @Override
     public void onLoad() {
-        bottomSpacerHeight = bottomspacer.getOffsetHeight();
-        eventHeight = bottomSpacerHeight;
+        BOTTOMSPACERHEIGHT = bottomspacer.getOffsetHeight();
+        EVENTHEIGHT = BOTTOMSPACERHEIGHT;
     }
 
     public void setMonthGrid(MonthGrid monthGrid) {
@@ -180,8 +180,8 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
         } else {
             // Dynamic height by the content
             DOM.removeElementAttribute(getElement(), "height");
-            slots = (intHeight - caption.getOffsetHeight() - bottomSpacerHeight)
-                    / eventHeight;
+            slots = (intHeight - caption.getOffsetHeight() - BOTTOMSPACERHEIGHT)
+                    / EVENTHEIGHT;
             if (slots > 10) {
                 slots = 10;
             }
@@ -221,11 +221,11 @@ public class SimpleDayCell extends FocusableFlowPanel implements MouseUpHandler,
             }
         }
 
-        int remainingSpace = intHeight - ((slots * eventHeight)
-                + bottomSpacerHeight + caption.getOffsetHeight());
-        int newHeight = remainingSpace + bottomSpacerHeight;
+        int remainingSpace = intHeight - ((slots * EVENTHEIGHT)
+                + BOTTOMSPACERHEIGHT + caption.getOffsetHeight());
+        int newHeight = remainingSpace + BOTTOMSPACERHEIGHT;
         if (newHeight < 0) {
-            newHeight = eventHeight;
+            newHeight = EVENTHEIGHT;
         }
         bottomspacer.setHeight(newHeight + "px");
 

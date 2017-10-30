@@ -185,7 +185,7 @@ public class VTabsheet extends VTabsheetBase
 
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
             if (!enabled) {
-                FOCUS_IMPL.setTabIndex(td, -1);
+                focusImpl.setTabIndex(td, -1);
             }
         }
 
@@ -297,11 +297,11 @@ public class VTabsheet extends VTabsheetBase
 
         public void focus() {
             getTabsheet().scrollIntoView(this);
-            FOCUS_IMPL.focus(td);
+            focusImpl.focus(td);
         }
 
         public void blur() {
-            FOCUS_IMPL.blur(td);
+            focusImpl.blur(td);
         }
 
         public boolean hasTooltip() {
@@ -739,9 +739,6 @@ public class VTabsheet extends VTabsheetBase
     public static final String TABS_CLASSNAME = CLASSNAME + "-tabcontainer";
     public static final String SCROLLER_CLASSNAME = CLASSNAME + "-scroller";
 
-    private static final FocusImpl FOCUS_IMPL = FocusImpl
-            .getFocusImplForPanel();
-
     /** For internal use only. May be removed or replaced in the future. */
     // tabbar and 'scroller' container
     public final Element tabs;
@@ -751,6 +748,8 @@ public class VTabsheet extends VTabsheetBase
      * this to avoid confusion with activeTabIndex.
      */
     int tabulatorIndex = 0;
+
+    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 
     // tab-scroller element
     private final Element scroller;

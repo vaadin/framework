@@ -24,7 +24,7 @@ import com.vaadin.util.ReflectTools;
 
 public class LegacyVaadinServlet extends VaadinServlet {
 
-    private static final UIProvider PROVIDER = new LegacyApplicationUIProvider() {
+    private static final UIProvider provider = new LegacyApplicationUIProvider() {
         @Override
         protected LegacyApplication createApplication() {
 
@@ -84,7 +84,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServletException {
-        session.addUIProvider(PROVIDER);
+        session.addUIProvider(provider);
     }
 
 }

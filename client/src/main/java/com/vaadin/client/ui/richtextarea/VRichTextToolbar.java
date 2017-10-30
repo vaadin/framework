@@ -201,7 +201,7 @@ public class VRichTextToolbar extends Composite {
                 fonts.setSelectedIndex(0);
             } else if (sender == fontSizes) {
                 basic.setFontSize(
-                        FONT_SIZES_CONSTANTS[fontSizes.getSelectedIndex() - 1]);
+                        fontSizesConstants[fontSizes.getSelectedIndex() - 1]);
                 fontSizes.setSelectedIndex(0);
             }
         }
@@ -275,7 +275,7 @@ public class VRichTextToolbar extends Composite {
         }
     }
 
-    private static final RichTextArea.FontSize[] FONT_SIZES_CONSTANTS = {
+    private static final RichTextArea.FontSize[] fontSizesConstants = {
             RichTextArea.FontSize.XX_SMALL, RichTextArea.FontSize.X_SMALL,
             RichTextArea.FontSize.SMALL, RichTextArea.FontSize.MEDIUM,
             RichTextArea.FontSize.LARGE, RichTextArea.FontSize.X_LARGE,

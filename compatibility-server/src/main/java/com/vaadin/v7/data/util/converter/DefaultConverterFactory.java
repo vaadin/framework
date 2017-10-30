@@ -39,7 +39,7 @@ import com.vaadin.server.VaadinSession;
 @Deprecated
 public class DefaultConverterFactory implements ConverterFactory {
 
-    private static final Logger LOG = Logger
+    private static final Logger log = Logger
             .getLogger(DefaultConverterFactory.class.getName());
 
     @Override
@@ -48,7 +48,7 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<PRESENTATION, MODEL> converter = findConverter(
                 presentationType, modelType);
         if (converter != null) {
-            LOG.finest(getClass().getName() + " created a "
+            log.finest(getClass().getName() + " created a "
                     + converter.getClass());
             return converter;
         }
@@ -57,12 +57,12 @@ public class DefaultConverterFactory implements ConverterFactory {
         Converter<MODEL, PRESENTATION> reverseConverter = findConverter(
                 modelType, presentationType);
         if (reverseConverter != null) {
-            LOG.finest(getClass().getName() + " created a reverse "
+            log.finest(getClass().getName() + " created a reverse "
                     + reverseConverter.getClass());
             return new ReverseConverter<PRESENTATION, MODEL>(reverseConverter);
         }
 
-        LOG.finest(getClass().getName() + " could not find a converter for "
+        log.finest(getClass().getName() + " could not find a converter for "
                 + presentationType.getName() + " to " + modelType.getName()
                 + " conversion");
         return null;

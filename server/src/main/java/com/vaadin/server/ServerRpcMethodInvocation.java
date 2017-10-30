@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.ServerRpc;
 
 public class ServerRpcMethodInvocation extends MethodInvocation {
 
-    private static final Map<String, Method> INVOCATION_METHOD_CACHE = new ConcurrentHashMap<>(
+    private static final Map<String, Method> invocationMethodCache = new ConcurrentHashMap<>(
             128, 0.75f, 1);
 
     private final Method method;
@@ -67,14 +67,14 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
         // signature
         String signature = targetType.getName() + "." + methodName + "("
                 + parameterCount;
-        Method invocationMethod = INVOCATION_METHOD_CACHE.get(signature);
+        Method invocationMethod = invocationMethodCache.get(signature);
 
         if (invocationMethod == null) {
             invocationMethod = doFindInvocationMethod(targetType, methodName,
                     parameterCount);
 
             if (invocationMethod != null) {
-                INVOCATION_METHOD_CACHE.put(signature, invocationMethod);
+                invocationMethodCache.put(signature, invocationMethod);
             }
         }
 
