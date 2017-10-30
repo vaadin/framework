@@ -65,4 +65,4 @@ run.
 Related pages
 ~~~~~~~~~~~~~
 
-link:IIInjectionAndScopes.asciidoc[II - Injection and scopes]
+<<IIInjectionAndScopes#ii-injection-and-scopes,"II - Injection and scopes">>
