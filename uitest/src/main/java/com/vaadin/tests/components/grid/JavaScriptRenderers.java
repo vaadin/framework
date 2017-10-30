@@ -104,7 +104,7 @@ public class JavaScriptRenderers extends AbstractReindeerTestUI {
         grid = createGrid(items);
         addComponent(grid);
 
-        addComponent(new Button("Recreate grid", e -> {
+        addComponent(new Button("Recreate grid", event -> {
             Grid<ItemBean> newGrid = createGrid(items);
             replaceComponent(grid, newGrid);
             grid = newGrid;

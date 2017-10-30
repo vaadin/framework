@@ -47,14 +47,14 @@ public class JavaScriptStateTracking extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         StateTrackingComponent stateTrackingComponent = new StateTrackingComponent();
 
-        Button setField2 = new Button("Set field2", e -> {
+        Button setField2 = new Button("Set field2", event -> {
             stateTrackingComponent.getState().counter++;
             stateTrackingComponent.getState().field2 = "updated value "
                     + stateTrackingComponent.getState().counter;
         });
         setField2.setId("setField2");
 
-        Button clearField1 = new Button("Clear field1", e -> {
+        Button clearField1 = new Button("Clear field1", event -> {
             stateTrackingComponent.getState().counter++;
             stateTrackingComponent.getState().field1 = null;
         });

@@ -127,7 +127,7 @@ public class GridBasics extends AbstractTestUIWithLog {
 
             cssLayout
                     .addComponent(new Button("Press me",
-                            e -> Notification.show("You clicked on the "
+                            event -> Notification.show("You clicked on the "
                                     + "button in the details for " + "row "
                                     + dataObj.getRowNumber())));
             return cssLayout;
@@ -434,11 +434,12 @@ public class GridBasics extends AbstractTestUIWithLog {
             public void menuSelected(MenuItem selectedItem) {
                 removeRegistration();
                 if (selectedItem.isChecked()) {
-                    registration = grid.addItemClickListener(e -> {
-                        grid.setDetailsVisible(e.getItem(),
-                                !grid.isDetailsVisible(e.getItem()));
-                        log("Item click on row " + e.getItem().getRowNumber()
-                                + ", Column '" + e.getColumn().getCaption()
+                    registration = grid.addItemClickListener(event -> {
+                        grid.setDetailsVisible(event.getItem(),
+                                !grid.isDetailsVisible(event.getItem()));
+                        log("Item click on row "
+                                + event.getItem().getRowNumber() + ", Column '"
+                                + event.getColumn().getCaption()
                                 + "'");
                     });
                     log("Registered an item click listener.");
@@ -480,7 +481,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .setCheckable(true);
 
         MenuItem enableItem = stateMenu.addItem("Enabled",
-                e -> grid.setEnabled(e.isChecked()));
+                event -> grid.setEnabled(event.isChecked()));
         enableItem.setCheckable(true);
         enableItem.setChecked(true);
 
@@ -766,9 +767,9 @@ public class GridBasics extends AbstractTestUIWithLog {
                 .editRow(grid.getDataCommunicator().getDataProviderSize() - 1));
 
         editorMenu.addItem("Change save caption",
-                e -> grid.getEditor().setSaveCaption("ǝʌɐS"));
+                event -> grid.getEditor().setSaveCaption("ǝʌɐS"));
         editorMenu.addItem("Change cancel caption",
-                e -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
+                event -> grid.getEditor().setCancelCaption("ʃǝɔuɐↃ"));
 
     }
 

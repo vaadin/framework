@@ -3,7 +3,6 @@ package com.vaadin.tests.components.image;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Image;
 
 public class ImageAltText extends TestBase {
@@ -17,12 +16,7 @@ public class ImageAltText extends TestBase {
         addComponent(image);
 
         Button changeAltTexts = new Button("Change alt text",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        image.setAlternateText("New alt text!");
-                    }
-                });
+                event -> image.setAlternateText("New alt text!"));
         addComponent(changeAltTexts);
     }
 

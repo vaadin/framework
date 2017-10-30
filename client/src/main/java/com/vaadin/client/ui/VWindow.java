@@ -49,7 +49,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -82,7 +81,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static List<VWindow> windowOrder = new ArrayList<>();
 
-    private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
+    private static final HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
 
     private static boolean orderingDefered;

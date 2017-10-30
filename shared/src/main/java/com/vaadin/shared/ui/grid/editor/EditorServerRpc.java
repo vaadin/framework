@@ -47,7 +47,7 @@ public interface EditorServerRpc extends ServerRpc {
      * Tells the server to cancel editing. When sending a cancel request, the
      * client does not need to wait for confirmation by the server before hiding
      * the editor.
-     * 
+     *
      * @param afterBeingSaved
      *            if {@code true} then this method is called to close editor
      *            after save action, otherwise it represents a cancel action

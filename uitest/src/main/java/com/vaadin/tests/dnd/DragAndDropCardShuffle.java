@@ -126,12 +126,13 @@ public class DragAndDropCardShuffle extends AbstractTestUIWithLog {
         dragSource.setPayload("card_value", cardValue);
 
         // Add listeners
-        dragSource.addDragStartListener(e -> log(
-                e.getComponent().getValue() + " dragstart, effectsAllowed="
-                        + e.getEffectAllowed()));
+        dragSource.addDragStartListener(event -> log(
+                event.getComponent().getValue() + " dragstart, effectsAllowed="
+                        + event.getEffectAllowed()));
 
-        dragSource.addDragEndListener(e -> log(e.getComponent().getValue()
-                        + " dragend, dropEffect=" + e.getDropEffect()));
+        dragSource
+                .addDragEndListener(event -> log(event.getComponent().getValue()
+                        + " dragend, dropEffect=" + event.getDropEffect()));
 
         sources.add(dragSource);
     }

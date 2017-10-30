@@ -2,8 +2,6 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.PopupView.PopupVisibilityEvent;
-import com.vaadin.ui.PopupView.PopupVisibilityListener;
 import com.vaadin.v7.ui.ComboBox;
 
 public class ComboBoxInPopupView extends TestBase {
@@ -29,13 +27,7 @@ public class ComboBoxInPopupView extends TestBase {
         final ComboBox cb2 = new ComboBox();
         cb2.setWidth("260px");
         PopupView pv2 = new PopupView("<u>2. focused (click)</u>", cb2);
-        pv2.addPopupVisibilityListener(new PopupVisibilityListener() {
-
-            @Override
-            public void popupVisibilityChange(PopupVisibilityEvent event) {
-                cb2.focus();
-            }
-        });
+        pv2.addPopupVisibilityListener(event -> cb2.focus());
         getLayout().addComponent(pv2);
 
     }

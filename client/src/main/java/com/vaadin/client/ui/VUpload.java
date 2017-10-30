@@ -23,8 +23,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -143,15 +141,12 @@ public class VUpload extends SimplePanel {
         panel.add(maxfilesize);
         panel.add(fu);
         submitButton = new VButton();
-        submitButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (isImmediateMode()) {
-                    // fire click on upload (e.g. focused button and hit space)
-                    fireNativeClick(fu.getElement());
-                } else {
-                    submit();
-                }
+        submitButton.addClickHandler(event -> {
+            if (isImmediateMode()) {
+                // fire click on upload (e.g. focused button and hit space)
+                fireNativeClick(fu.getElement());
+            } else {
+                submit();
             }
         });
         panel.add(submitButton);
