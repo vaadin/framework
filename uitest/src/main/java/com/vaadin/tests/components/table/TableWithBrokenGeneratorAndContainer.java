@@ -18,8 +18,6 @@ package com.vaadin.tests.components.table;
 import java.lang.reflect.InvocationTargetException;
 
 import com.vaadin.event.ListenerMethod.MethodException;
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
@@ -118,25 +116,21 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
 
     protected void setErrorHandler(boolean enabled) {
         if (enabled) {
-            VaadinSession.getCurrent().setErrorHandler(new ErrorHandler() {
-
-                @Override
-                public void error(ErrorEvent event) {
-                    Throwable t = event.getThrowable();
-                    if (t instanceof RpcInvocationException) {
+            VaadinSession.getCurrent().setErrorHandler(event -> {
+                Throwable t = event.getThrowable();
+                if (t instanceof RpcInvocationException) {
+                    t = t.getCause();
+                    if (t instanceof InvocationTargetException) {
                         t = t.getCause();
-                        if (t instanceof InvocationTargetException) {
+                        if (t instanceof MethodException) {
                             t = t.getCause();
-                            if (t instanceof MethodException) {
-                                t = t.getCause();
-                                if (t instanceof CacheUpdateException) {
-                                    Table table = ((CacheUpdateException) t)
-                                            .getTable();
-                                    table.removeAllItems();
-                                    Notification.show(
-                                            "Problem updating table. Please try again later",
-                                            Notification.Type.ERROR_MESSAGE);
-                                }
+                            if (t instanceof CacheUpdateException) {
+                                Table table = ((CacheUpdateException) t)
+                                        .getTable();
+                                table.removeAllItems();
+                                Notification.show(
+                                        "Problem updating table. Please try again later",
+                                        Notification.Type.ERROR_MESSAGE);
                             }
                         }
                     }

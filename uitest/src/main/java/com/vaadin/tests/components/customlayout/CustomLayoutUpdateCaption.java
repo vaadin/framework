@@ -3,8 +3,6 @@ package com.vaadin.tests.components.customlayout;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -31,12 +29,9 @@ public class CustomLayoutUpdateCaption extends UI {
         content.addComponent(new VerticalLayout(username2), "test2");
         content.addComponent(loginButton, "okbutton");
 
-        loginButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent e) {
-                username1.setCaption("updated");
-                username2.setCaption("updated");
-            }
+        loginButton.addClickListener(event -> {
+            username1.setCaption("updated");
+            username2.setCaption("updated");
         });
     }
 }

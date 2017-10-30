@@ -150,7 +150,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Default value of the field, displayed when nothing has been selected.
-     * 
+     *
      * @since 8.1.2
      */
     private T defaultValue;
@@ -234,7 +234,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @param oldDate
      *            used as a fallback to get needed values if they are not
      *            defined in the specified {@code resolutions}
-     * 
+     *
      * @return the date object built from the specified resolutions
      * @since
      */

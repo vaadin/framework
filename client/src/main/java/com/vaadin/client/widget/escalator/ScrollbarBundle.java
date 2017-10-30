@@ -31,7 +31,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
@@ -50,7 +49,7 @@ import com.vaadin.client.widget.grid.events.ScrollHandler;
  */
 public abstract class ScrollbarBundle implements DeferredWorker {
 
-    private static final boolean supportsRequestAnimationFrame = new AnimationSupportDetector()
+    private static final boolean SUPPORTS_REQUEST_ANIMATION_FRAME = new AnimationSupportDetector()
             .isNativelySupported();
 
     private class ScrollEventFirer {
@@ -92,7 +91,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * We'll gather all the scroll events, and only fire once, once
                  * everything has calmed down.
                  */
-                if (supportsRequestAnimationFrame) {
+                if (SUPPORTS_REQUEST_ANIMATION_FRAME) {
                     // Chrome MUST use this as deferred commands will sometimes
                     // be run with a 300+ ms delay when scrolling.
                     AnimationScheduler.get().requestAnimationFrame(
@@ -436,12 +435,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
             }
             // must be a field because Java insists.
             offsetSizeTemporaryScrollHandler = addScrollHandler(
-                    new ScrollHandler() {
-                        @Override
-                        public void onScroll(ScrollEvent event) {
-                            setOffsetSizeNow(px);
-                        }
-                    });
+                    event -> setOffsetSizeNow(px));
             setScrollPos(0);
         } else {
             setOffsetSizeNow(px);
@@ -524,12 +518,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         if (!WidgetUtil.pixelValuesEqual(oldScrollPos, scrollPos)) {
             if (scrollInProgress == null) {
                 // Only used for tracking that there is "workPending"
-                scrollInProgress = addScrollHandler(new ScrollHandler() {
-                    @Override
-                    public void onScroll(ScrollEvent event) {
-                        scrollInProgress.removeHandler();
-                        scrollInProgress = null;
-                    }
+                scrollInProgress = addScrollHandler(event -> {
+                    scrollInProgress.removeHandler();
+                    scrollInProgress = null;
                 });
             }
             if (isInvisibleScrollbar) {
@@ -663,12 +654,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                     scrollSizeTemporaryScrollHandler.removeHandler();
                 }
                 scrollSizeTemporaryScrollHandler = addScrollHandler(
-                        new ScrollHandler() {
-                            @Override
-                            public void onScroll(ScrollEvent event) {
-                                setScrollSizeNow(px);
-                            }
-                        });
+                        event -> setScrollSizeNow(px));
             }
             setScrollPos(0);
             if (!delayedSizeSet) {
@@ -727,12 +713,9 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
         if (isInvisibleScrollbar) {
             Event.sinkEvents(root, Event.ONSCROLL);
-            Event.setEventListener(root, new EventListener() {
-                @Override
-                public void onBrowserEvent(Event event) {
-                    invisibleScrollbarTemporaryResizer.show();
-                }
-            });
+            Event.setEventListener(root,
+                    event -> invisibleScrollbarTemporaryResizer.show());
+
             root.getStyle().setVisibility(Visibility.HIDDEN);
         } else {
             Event.sinkEvents(root, 0);

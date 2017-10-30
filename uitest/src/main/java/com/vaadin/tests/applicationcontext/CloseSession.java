@@ -26,7 +26,6 @@ import com.vaadin.server.WrappedHttpSession;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
 public class CloseSession extends AbstractReindeerTestUI {
@@ -68,84 +67,59 @@ public class CloseSession extends AbstractReindeerTestUI {
         addComponent(log);
         addComponent(
                 new Button("Close VaadinServiceSession and redirect elsewhere",
-                        new Button.ClickListener() {
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                // Assuming Vaadin is deployed to the root
-                                // context
-                                getPage().setLocation(
-                                        "/statictestfiles/static.html");
-                                getSession().close();
-                            }
+                        event -> {
+                            // Assuming Vaadin is deployed to the root
+                            // context
+                            getPage().setLocation(
+                                    "/statictestfiles/static.html");
+                            getSession().close();
                         }));
         addComponent(new Button("Close VaadinServiceSession and reopen page",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getPage().setLocation(reopenUrl);
-                        getSession().close();
-                    }
+                event -> {
+                    getPage().setLocation(reopenUrl);
+                    getSession().close();
                 }));
         addComponent(new Button("Just close VaadinSession",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getSession().close();
-                    }
-                }));
+                event -> getSession().close()));
         addComponent(new Button("Just close HttpSession",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getSession().getSession().invalidate();
-                    }
-                }));
+                event -> getSession().getSession().invalidate()));
         addComponent(new Button("Invalidate HttpSession and reopen page",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        VaadinService.getCurrentRequest().getWrappedSession()
-                                .invalidate();
-                        getPage().setLocation(reopenUrl);
-                    }
+                event -> {
+                    VaadinService.getCurrentRequest().getWrappedSession()
+                            .invalidate();
+                    getPage().setLocation(reopenUrl);
                 }));
         addComponent(new Button("Invalidate HttpSession and redirect elsewhere",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        VaadinService.getCurrentRequest().getWrappedSession()
-                                .invalidate();
-                        getPage().setLocation("/statictestfiles/static.html");
-                    }
+                event -> {
+                    VaadinService.getCurrentRequest().getWrappedSession()
+                            .invalidate();
+                    getPage().setLocation("/statictestfiles/static.html");
                 }));
         addComponent(new Button("Invalidate HttpSession in a background thread",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        final HttpSession session = ((WrappedHttpSession) VaadinService
-                                .getCurrentRequest().getWrappedSession())
-                                        .getHttpSession();
-                        Thread t = new Thread(new Runnable() {
+                event -> {
+                    final HttpSession session = ((WrappedHttpSession) VaadinService
+                            .getCurrentRequest().getWrappedSession())
+                                    .getHttpSession();
+                    Thread t = new Thread(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                System.out.println(
-                                        "Invalidating session from thread "
-                                                + session.getId());
-                                session.invalidate();
-                                System.out.println(
-                                        "Invalidated session from thread "
-                                                + session.getId());
-
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                        });
-                        t.start();
-                    }
+                            System.out
+                                    .println("Invalidating session from thread "
+                                            + session.getId());
+                            session.invalidate();
+                            System.out
+                                    .println("Invalidated session from thread "
+                                            + session.getId());
+
+                        }
+                    });
+                    t.start();
                 }));
     }
 

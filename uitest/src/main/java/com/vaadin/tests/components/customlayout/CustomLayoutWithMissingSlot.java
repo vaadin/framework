@@ -23,8 +23,6 @@ import java.io.IOException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.v7.ui.TextField;
 
@@ -40,13 +38,7 @@ public class CustomLayoutWithMissingSlot extends AbstractTestUIWithLog {
             cl.addComponent(new TextField("This should be visible"), "first");
             Button button = new Button(
                     "This button is visible, together with one label");
-            button.addClickListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    log("Button clicked");
-                }
-            });
+            button.addClickListener(event -> log("Button clicked"));
             cl.addComponent(button, "second");
             cl.addComponent(
                     new TextField("This won't be as the slot is missing"),

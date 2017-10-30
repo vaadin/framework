@@ -101,7 +101,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private static TouchScrollDelegate activeScrollDelegate;
 
-    private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
+    private static final boolean ANDROID_WITH_BROKEN_SCROLL_TOP = BrowserInfo.get()
             .isAndroidWithBrokenScrollTop();
 
     /**
@@ -330,7 +330,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getScrollTop() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             if (scrolledElement.getPropertyJSO("_vScrollTop") != null) {
                 return scrolledElement.getPropertyInt("_vScrollTop");
             }
@@ -360,7 +360,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         getLogger().info("Animate " + time + " " + from + " " + to);
         int translateTo = -to + origScrollTop;
         int fromY = -from + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -380,7 +380,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      * scrolltop, causing onscroll event.
      */
     private void moveTransformationToScrolloffset() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             scrolledElement.setPropertyInt("_vScrollTop", finalScrollTop);
             if (scrollHandler != null) {
                 scrollHandler.onScroll(null);
@@ -465,7 +465,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private void quickSetScrollPosition(int deltaX, int deltaY) {
         deltaScrollPos = deltaY;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             deltaY += origScrollTop;
             translateTo(-deltaY);
         } else {
@@ -570,7 +570,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
         int translateTo = -finalY + origScrollTop;
         int fromY = -currentY + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -652,7 +652,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getMaxOverScroll() {
-        return androidWithBrokenScrollTop ? 0
+        return ANDROID_WITH_BROKEN_SCROLL_TOP ? 0
                 : scrolledElement.getClientHeight() / 3;
     }
 

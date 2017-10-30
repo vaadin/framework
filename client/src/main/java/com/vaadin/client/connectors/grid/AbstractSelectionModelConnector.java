@@ -80,7 +80,7 @@ public abstract class AbstractSelectionModelConnector
 
     /**
      * Gets space selection handler registered for the Grid.
-     * 
+     *
      * @return space selection handler
      */
     protected SpaceSelectHandler<JsonObject> getSpaceSelectionHandler() {

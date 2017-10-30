@@ -540,7 +540,7 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
-    private final String CALENDAR_TOGGLE_ID = "popupButton";
+    private static final String CALENDAR_TOGGLE_ID = "popupButton";
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
