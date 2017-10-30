@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.TimeZone;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -13,7 +17,19 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class CalendarNavigationTest extends MultiBrowserTest {
 
+    private static TimeZone defaultTimeZone;
     private CalendarElement calendarElement;
+
+    @BeforeClass
+    public static void beforeAll() {
+        defaultTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
+
+    @AfterClass
+    public static void afterAll() {
+        TimeZone.setDefault(defaultTimeZone);
+    }
 
     @Override
     protected Class<?> getUIClass() {
