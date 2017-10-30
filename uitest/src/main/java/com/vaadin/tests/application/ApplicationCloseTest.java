@@ -3,6 +3,7 @@ package com.vaadin.tests.application;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 
@@ -22,9 +23,13 @@ public class ApplicationCloseTest extends TestBase {
 
         addComponent(applications);
         Label thisApp = new Label("This applications: " + this);
-        Button close = new Button("Close this", event -> {
-            LegacyWindow ui = (LegacyWindow) event.getButton().getUI();
-            ui.getApplication().close();
+        Button close = new Button("Close this", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                LegacyWindow ui = (LegacyWindow) event.getButton().getUI();
+                ui.getApplication().close();
+            }
         });
 
         StringBuilder sb = new StringBuilder();

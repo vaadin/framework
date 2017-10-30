@@ -15,15 +15,16 @@
  */
 package com.vaadin.tests.integration.push;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Push
 public class BasicPush extends AbstractTestUI {
@@ -58,9 +59,13 @@ public class BasicPush extends AbstractTestUI {
         addComponent(lbl);
 
         Button incrementButton = new Button("Increment",
-                event -> {
-                    clientCounter++;
-                    lbl.setValue(String.valueOf(clientCounter));
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        clientCounter++;
+                        lbl.setValue(String.valueOf(clientCounter));
+                    }
                 });
         incrementButton.setId(INCREMENT_BUTTON_ID);
         addComponent(incrementButton);
@@ -98,10 +103,13 @@ public class BasicPush extends AbstractTestUI {
         startTimer.setId(START_TIMER_ID);
         addComponent(startTimer);
 
-        Button stopTimer = new Button("Stop timer", event -> {
-            if (task != null) {
-                task.cancel();
-                task = null;
+        Button stopTimer = new Button("Stop timer", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (task != null) {
+                    task.cancel();
+                    task = null;
+                }
             }
         });
         stopTimer.setId(STOP_TIMER_ID);

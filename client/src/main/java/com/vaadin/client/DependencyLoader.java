@@ -56,6 +56,7 @@ public class DependencyLoader {
             // The show must go on
             onLoad(event);
         }
+
     };
 
     /**

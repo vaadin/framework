@@ -3,6 +3,7 @@ package com.vaadin.tests.components.absolutelayout;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.VerticalLayout;
 
@@ -19,7 +20,13 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         al.setHeight("200px");
 
         testButton = new Button("Click to move to inner layout",
-                event -> vl.addComponent(testButton));
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        vl.addComponent(testButton);
+                    }
+                });
 
         al.addComponent(testButton);
 
@@ -29,7 +36,13 @@ public class MoveComponentsFromAbsoluteLayoutToInnerLayout extends TestBase {
         addComponent(al);
 
         Button b = new Button("Repaint inner layout",
-                event -> vl.markAsDirty());
+                new Button.ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        vl.markAsDirty();
+                    }
+                });
 
         addComponent(b);
     }

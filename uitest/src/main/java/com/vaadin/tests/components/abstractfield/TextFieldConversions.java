@@ -5,6 +5,8 @@ import java.util.Date;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.UserError;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.v7.ui.TextField;
@@ -27,9 +29,14 @@ public class TextFieldConversions extends AbstractComponentDataBindingTest {
         dataType.addItem(Date.class);
         dataType.addItem(String.class);
 
-        dataType.addValueChangeListener(event ->
+        dataType.addListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
                 tf.setPropertyDataSource(new ObjectProperty<>(o,
-                (Class<Object>) dataType.getValue())));
+                        (Class<Object>) dataType.getValue()));
+            }
+        });
         addComponent(dataType);
 
         tf = new TextField("TextField");

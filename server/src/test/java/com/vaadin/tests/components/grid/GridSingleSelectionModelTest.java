@@ -75,7 +75,7 @@ public class GridSingleSelectionModelTest {
 
         selectionChanges = new ArrayList<>();
         selectionModel.addSingleSelectionListener(
-                event -> selectionChanges.add(event.getValue()));
+                e -> selectionChanges.add(e.getValue()));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -99,9 +99,9 @@ public class GridSingleSelectionModelTest {
         List<String> selectionChanges = new ArrayList<>();
         List<String> oldSelectionValues = new ArrayList<>();
         ((SingleSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addSingleSelectionListener(event -> {
-                    selectionChanges.add(event.getValue());
-                    oldSelectionValues.add(event.getOldValue());
+                .addSingleSelectionListener(e -> {
+                    selectionChanges.add(e.getValue());
+                    oldSelectionValues.add(e.getOldValue());
                 });
 
         customGrid.getSelectionModel().select("Foo");

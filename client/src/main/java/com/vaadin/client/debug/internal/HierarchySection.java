@@ -178,11 +178,19 @@ public class HierarchySection implements Section {
             }
         });
 
-        hierarchyPanel.addListener(
-                (connector, element) -> printState(connector, true));
+        hierarchyPanel.addListener(new SelectConnectorListener() {
+            @Override
+            public void select(ServerConnector connector, Element element) {
+                printState(connector, true);
+            }
+        });
 
-        analyzeLayoutsPanel.addListener(
-                (connector, element) -> printState(connector, true));
+        analyzeLayoutsPanel.addListener(new SelectConnectorListener() {
+            @Override
+            public void select(ServerConnector connector, Element element) {
+                printState(connector, true);
+            }
+        });
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-hierarchy");
 

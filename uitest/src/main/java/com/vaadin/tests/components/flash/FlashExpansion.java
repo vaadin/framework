@@ -31,7 +31,7 @@ public class FlashExpansion extends TestBase {
         player.setHeight("300px");
         player.setSource(new ClassResource("simple.swf"));
         addComponent(player);
-        Button button = new Button("click", event -> player.setSizeFull());
+        Button button = new Button("click", e -> player.setSizeFull());
         addComponent(button);
     }
 

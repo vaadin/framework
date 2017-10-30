@@ -19,11 +19,18 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 public class ShortcutWhenBodyFocused extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
-        Button b = new Button("Hello", event -> log("Hello clicked"));
+        Button b = new Button("Hello", new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Hello clicked");
+            }
+        });
         b.setClickShortcut(KeyCode.A);
         addComponent(b);
 

@@ -25,12 +25,11 @@ public class DateFieldSetAfterInvalid extends AbstractTestUI {
         addComponent(dateField);
 
         Button nowButton = new Button("Today");
-        nowButton
-                .addClickListener(event -> dateField.setValue(LocalDate.now()));
+        nowButton.addClickListener(e -> dateField.setValue(LocalDate.now()));
         addComponent(nowButton);
 
         Button clearButton = new Button("Clear");
-        clearButton.addClickListener(event -> dateField.clear());
+        clearButton.addClickListener(e -> dateField.clear());
         addComponent(clearButton);
     }
 

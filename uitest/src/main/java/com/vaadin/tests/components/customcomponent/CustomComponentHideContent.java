@@ -19,6 +19,7 @@ package com.vaadin.tests.components.customcomponent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 
@@ -31,7 +32,12 @@ public class CustomComponentHideContent extends AbstractReindeerTestUI {
         addComponent(customComponent);
 
         addComponent(new Button("Toggle content visibility",
-                event -> content.setVisible(!content.isVisible())));
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        content.setVisible(!content.isVisible());
+                    }
+                }));
     }
 
     @Override

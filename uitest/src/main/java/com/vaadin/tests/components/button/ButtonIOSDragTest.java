@@ -19,6 +19,7 @@ package com.vaadin.tests.components.button;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
 import com.vaadin.ui.Notification;
@@ -31,7 +32,12 @@ public class ButtonIOSDragTest extends AbstractReindeerTestUI {
         final VerticalLayout layout = new VerticalLayout();
 
         Button offset = new Button("Drag me");
-        offset.addClickListener(event -> Notification.show("Button clicked!"));
+        offset.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(com.vaadin.ui.Button.ClickEvent event) {
+                Notification.show("Button clicked!");
+            }
+        });
         DragAndDropWrapper dragMe = new DragAndDropWrapper(offset);
         dragMe.setDragStartMode(DragStartMode.WRAPPER);
         layout.addComponent(dragMe);

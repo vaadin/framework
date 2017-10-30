@@ -52,8 +52,8 @@ public class DelayedViewLeaveConfirmation extends AbstractTestUI {
             input = new TextField("Enter a value");
             input.setId("input");
             Button navigateAway = new Button("Navigate to the other view",
-                    event -> getUI().getNavigator().navigateTo("other"));
-            Button logout = new Button("Simulate logout", event -> getUI()
+                    e -> getUI().getNavigator().navigateTo("other"));
+            Button logout = new Button("Simulate logout", e -> getUI()
                     .getNavigator().runAfterLeaveConfirmation(() -> {
                         removeAllComponents();
                         addComponent(new Label("You have been logged out"));
@@ -87,12 +87,12 @@ public class DelayedViewLeaveConfirmation extends AbstractTestUI {
             VerticalLayout layout = new VerticalLayout();
             layout.addComponent(new Label(
                     "You have unsaved changes. Are you sure you want to leave?"));
-            Button leave = new Button("YES, LEAVE!", event -> {
+            Button leave = new Button("YES, LEAVE!", e -> {
                 close();
                 action.run();
             });
             leave.setId("leave");
-            Button stay = new Button("NO, STAY!", event -> close());
+            Button stay = new Button("NO, STAY!", e -> close());
             stay.setId("stay");
             layout.addComponents(new HorizontalLayout(leave, stay));
             setContent(layout);

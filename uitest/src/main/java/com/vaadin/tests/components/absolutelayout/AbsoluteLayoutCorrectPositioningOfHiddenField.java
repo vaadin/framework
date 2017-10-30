@@ -4,6 +4,8 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
 public class AbsoluteLayoutCorrectPositioningOfHiddenField extends TestBase {
@@ -23,15 +25,19 @@ public class AbsoluteLayoutCorrectPositioningOfHiddenField extends TestBase {
         abs.addComponent(l, "top:20px;left:20px");
 
         final Button action = new Button("Set visible");
-        action.addClickListener(event -> {
-            if (l.isVisible()) {
-                l.setValue("Top 70, Left 20");
-                ComponentPosition position = abs.getPosition(l);
-                position.setCSSString("top:70px;left:20px;");
-                abs.setPosition(l, position);
-            } else {
-                l.setVisible(true);
-                action.setCaption("Move down");
+        action.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (l.isVisible()) {
+                    l.setValue("Top 70, Left 20");
+                    ComponentPosition position = abs.getPosition(l);
+                    position.setCSSString("top:70px;left:20px;");
+                    abs.setPosition(l, position);
+                } else {
+                    l.setVisible(true);
+                    action.setCaption("Move down");
+                }
             }
         });
         action.setId("actionButton");

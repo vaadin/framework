@@ -1,6 +1,8 @@
 package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.NativeButton;
 
@@ -16,9 +18,14 @@ public class CustomComponentSizeUpdate extends TestBase {
         cc.setWidth("500px");
         cc.setHeight("500px");
 
-        nb.addClickListener(event -> {
-            cc.setWidth((cc.getWidth() - 20) + "px");
-            cc.setHeight((cc.getHeight() - 20) + "px");
+        nb.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                cc.setWidth((cc.getWidth() - 20) + "px");
+                cc.setHeight((cc.getHeight() - 20) + "px");
+
+            }
         });
 
         addComponent(cc);

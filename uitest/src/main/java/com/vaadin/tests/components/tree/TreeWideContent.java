@@ -29,7 +29,7 @@ public class TreeWideContent extends AbstractTestUI {
         tree.expand("Foo");
 
         addComponent(tree);
-        addComponent(new Button("Toggle auto recalc", event -> tree
+        addComponent(new Button("Toggle auto recalc", e -> tree
                 .setAutoRecalculateWidth(!tree.isAutoRecalculateWidth())));
     }
 

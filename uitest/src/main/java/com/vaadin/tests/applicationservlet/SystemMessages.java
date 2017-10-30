@@ -8,6 +8,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.NativeSelect;
 
 import elemental.json.JsonObject;
@@ -43,17 +47,25 @@ public class SystemMessages extends AbstractReindeerTestUI {
         localeSelect.addItem(new Locale("en", "US"));
         localeSelect.addItem(new Locale("fi", "FI"));
         localeSelect.addItem(Locale.GERMANY);
-        localeSelect.addValueChangeListener(event -> {
-            Locale locale = (Locale) localeSelect.getValue();
-            setLocale(locale);
+        localeSelect.addValueChangeListener(new ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                Locale locale = (Locale) localeSelect.getValue();
+                setLocale(locale);
+            }
         });
         localeSelect.setValue(new Locale("fi", "FI"));
         addComponent(localeSelect);
         final MyButton failButton = new MyButton();
         failButton.setCaption("Generate server side error");
-        failButton.addClickListener(event -> {
-            failButton.fail = true;
-            failButton.markAsDirty();
+        failButton.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                failButton.fail = true;
+                failButton.markAsDirty();
+            }
         });
         addComponent(failButton);
 

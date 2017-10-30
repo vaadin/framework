@@ -25,6 +25,8 @@ import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.VNotification.EventListener;
+import com.vaadin.client.ui.VNotification.HideEvent;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.
@@ -97,9 +99,13 @@ public class SuperDevMode {
 
                     private void failed() {
                         VNotification n = new VNotification();
-                        n.addEventListener(
-                                event -> recompileWidgetsetAndStartInDevMode(
-                                        serverUrl));
+                        n.addEventListener(new EventListener() {
+
+                            @Override
+                            public void notificationHidden(HideEvent event) {
+                                recompileWidgetsetAndStartInDevMode(serverUrl);
+                            }
+                        });
                         n.show("Recompilation failed.<br/>"
                                 + "Make sure CodeServer is running, "
                                 + "check its output and click to retry",

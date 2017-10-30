@@ -4,6 +4,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 
 public class EmbeddedAltText extends TestBase {
@@ -36,9 +37,12 @@ public class EmbeddedAltText extends TestBase {
         addComponent(player);
 
         Button changeAltTexts = new Button("Change alt texts",
-                event -> {
-                    e.setAlternateText("New alt text of the image!");
-                    player.setAlternateText("New alt text of the object!");
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        e.setAlternateText("New alt text of the image!");
+                        player.setAlternateText("New alt text of the object!");
+                    }
                 });
         addComponent(changeAltTexts);
     }

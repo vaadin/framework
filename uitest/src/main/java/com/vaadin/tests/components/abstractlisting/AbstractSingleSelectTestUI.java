@@ -32,8 +32,7 @@ public abstract class AbstractSingleSelectTestUI<T extends AbstractSingleSelect<
 
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners", c -> c
-                .addSelectionListener(
-                        event -> log("Selected: " + event.getValue())));
+                .addSelectionListener(e -> log("Selected: " + e.getValue())));
     }
 
     protected void createSelectionMenu() {

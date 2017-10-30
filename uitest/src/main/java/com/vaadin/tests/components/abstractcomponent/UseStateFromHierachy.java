@@ -22,6 +22,7 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.UseStateFromHierachyComponent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 @Widgetset(TestingWidgetSet.NAME)
@@ -33,8 +34,12 @@ public class UseStateFromHierachy extends AbstractReindeerTestUI {
         component.setContent(new Label("Content child"));
 
         addComponent(component);
-        addComponent(new Button("Remove component",
-                event -> removeComponent(component)));
+        addComponent(new Button("Remove component", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                removeComponent(component);
+            }
+        }));
     }
 
     @Override

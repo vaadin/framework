@@ -2,6 +2,7 @@ package com.vaadin.tests.components.combobox;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
@@ -22,13 +23,16 @@ public class ComboBoxSlowInFF extends TestBase {
         }
 
         Button fill = new Button("fill it");
-        fill.addClickListener(event -> {
-            t.removeAllItems();
-            for (int i = 0; i < 200; i++) {
-                Item item = t.addItem(i);
-                for (int j = 0; j < 5; j++) {
-                    item.getItemProperty("test" + j)
-                            .setValue(createComponent(i, j));
+        fill.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                t.removeAllItems();
+                for (int i = 0; i < 200; i++) {
+                    Item item = t.addItem(i);
+                    for (int j = 0; j < 5; j++) {
+                        item.getItemProperty("test" + j)
+                                .setValue(createComponent(i, j));
+                    }
                 }
             }
         });

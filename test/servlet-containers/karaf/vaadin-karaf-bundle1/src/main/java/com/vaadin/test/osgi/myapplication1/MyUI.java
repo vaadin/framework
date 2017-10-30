@@ -27,7 +27,7 @@ public class MyUI extends UI {
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener(event -> layout.addComponent(
+        button.addClickListener(e -> layout.addComponent(
                 new Label("Thanks " + name.getValue() + ", it works!")));
 
         layout.addComponents(name, button);

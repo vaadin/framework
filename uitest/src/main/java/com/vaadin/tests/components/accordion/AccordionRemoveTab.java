@@ -18,6 +18,8 @@ package com.vaadin.tests.components.accordion;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.VerticalLayout;
@@ -51,8 +53,13 @@ public class AccordionRemoveTab extends AbstractReindeerTestUI {
         Tab last = tabs.addTab(l);
         last.setCaption("Three");
 
-        addButton("Remove First",
-                event -> tabs.removeComponent(tabs.iterator().next()));
+        addButton("Remove First", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                tabs.removeComponent(tabs.iterator().next());
+            }
+        });
     }
 
     @Override

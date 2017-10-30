@@ -23,7 +23,7 @@ public class ConnectorTrackerMemoryLeakUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
 
         Button button = new Button(BUTTON_CAPTION);
-        button.addClickListener(event -> {
+        button.addClickListener(e -> {
             gc();
             long memory = Runtime.getRuntime().totalMemory();
             System.out.println("Before: " + memory);
@@ -69,7 +69,7 @@ public class ConnectorTrackerMemoryLeakUI extends UI {
 
     private static void updatePanel(CssLayout panel, List<String> items) {
         panel.removeAllComponents();
-        items.forEach(i -> panel.addComponent(new Button(i, event -> {
+        items.forEach(i -> panel.addComponent(new Button(i, e -> {
             Window w = new Window();
             UI.getCurrent().addWindow(w);
         })));

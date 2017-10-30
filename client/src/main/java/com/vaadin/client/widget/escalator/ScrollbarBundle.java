@@ -31,6 +31,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DeferredWorker;
@@ -726,9 +727,12 @@ public abstract class ScrollbarBundle implements DeferredWorker {
 
         if (isInvisibleScrollbar) {
             Event.sinkEvents(root, Event.ONSCROLL);
-            Event.setEventListener(root,
-                    event -> invisibleScrollbarTemporaryResizer.show());
-
+            Event.setEventListener(root, new EventListener() {
+                @Override
+                public void onBrowserEvent(Event event) {
+                    invisibleScrollbarTemporaryResizer.show();
+                }
+            });
             root.getStyle().setVisibility(Visibility.HIDDEN);
         } else {
             Event.sinkEvents(root, 0);

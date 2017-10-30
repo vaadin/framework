@@ -20,7 +20,7 @@ public class MyVaadinUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         setContent(new Button("Click Me",
-                event -> Notification.show(service.getText())));
+                e -> Notification.show(service.getText())));
     }
 
 }

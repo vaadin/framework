@@ -20,6 +20,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -55,44 +57,54 @@ public class Calc extends AbstractReindeerTestUI {
             addCommentButton = new Button("Add Comment");
             addCommentButton.setWidth("100%");
 
-            addCommentButton.addClickListener(event -> {
-                final Window w = new Window("Add comment");
-                VerticalLayout vl = new VerticalLayout();
-                vl.setMargin(true);
+            addCommentButton.addClickListener(new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
 
-                final TextField tf = new TextField();
-                tf.setSizeFull();
-                vl.addComponent(tf);
+                    final Window w = new Window("Add comment");
+                    VerticalLayout vl = new VerticalLayout();
+                    vl.setMargin(true);
 
-                HorizontalLayout hl = new HorizontalLayout();
+                    final TextField tf = new TextField();
+                    tf.setSizeFull();
+                    vl.addComponent(tf);
 
-                Button okButton = new Button("OK");
-                okButton.setWidth("100%");
-                okButton.addClickListener(event2 -> {
-                    addRow("[ " + tf.getValue() + " ]");
-                    tf.setValue("");
-                    w.close();
-                    removeWindow(w);
-                });
+                    HorizontalLayout hl = new HorizontalLayout();
 
-                Button cancelButton = new Button("Cancel");
-                cancelButton.setWidth("100%");
-                cancelButton.addClickListener(event2 -> {
-                    tf.setValue("");
-                    w.close();
-                    removeWindow(w);
-                });
+                    Button okButton = new Button("OK");
+                    okButton.setWidth("100%");
+                    okButton.addClickListener(new ClickListener() {
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                            addRow("[ " + tf.getValue() + " ]");
+                            tf.setValue("");
+                            w.close();
+                            removeWindow(w);
+                        }
+                    });
 
-                hl.addComponent(cancelButton);
-                hl.addComponent(okButton);
-                hl.setSpacing(true);
-                hl.setWidth("100%");
+                    Button cancelButton = new Button("Cancel");
+                    cancelButton.setWidth("100%");
+                    cancelButton.addClickListener(new ClickListener() {
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                            tf.setValue("");
+                            w.close();
+                            removeWindow(w);
+                        }
+                    });
 
-                vl.addComponent(hl);
-                vl.setSpacing(true);
+                    hl.addComponent(cancelButton);
+                    hl.addComponent(okButton);
+                    hl.setSpacing(true);
+                    hl.setWidth("100%");
 
-                w.setContent(vl);
-                addWindow(w);
+                    vl.addComponent(hl);
+                    vl.setSpacing(true);
+
+                    w.setContent(vl);
+                    addWindow(w);
+                }
             });
 
             addComponent(addCommentButton);
@@ -219,18 +231,21 @@ public class Calc extends AbstractReindeerTestUI {
             // Create a button and use this application for event handling
             Button button = new Button(caption);
             button.setWidth("40px");
-            button.addClickListener(event -> {
-                // Get the button that was clicked
-                Button b = event.getButton();
+            button.addClickListener(new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    // Get the button that was clicked
+                    Button button = event.getButton();
 
-                // Get the requested operation from the button caption
-                char requestedOperation = b.getCaption().charAt(0);
+                    // Get the requested operation from the button caption
+                    char requestedOperation = button.getCaption().charAt(0);
 
-                // Calculate the new value
-                double newValue = calculate(requestedOperation);
+                    // Calculate the new value
+                    double newValue = calculate(requestedOperation);
 
-                // Update the result label with the new value
-                display.setValue("" + newValue);
+                    // Update the result label with the new value
+                    display.setValue("" + newValue);
+                }
             });
             button.setId("button_" + caption);
 

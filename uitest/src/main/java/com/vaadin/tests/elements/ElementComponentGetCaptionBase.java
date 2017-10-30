@@ -77,7 +77,7 @@ public abstract class ElementComponentGetCaptionBase extends AbstractTestUI {
 
     static Component createGrid() {
         Grid grid = new Grid();
-        grid.addColumn(event -> "foo");
+        grid.addColumn(e -> "foo");
 
         return grid;
     }

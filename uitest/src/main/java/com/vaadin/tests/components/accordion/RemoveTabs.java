@@ -7,6 +7,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
@@ -44,16 +45,36 @@ public class RemoveTabs extends TestBase {
         getLayout().addComponent(accordion);
 
         closeCurrent = new Button("Close current tab");
-        closeCurrent.addClickListener(event -> closeCurrentTab());
+        closeCurrent.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                closeCurrentTab();
+            }
+        });
 
         closeFirst = new Button("close first tab");
-        closeFirst.addClickListener(event -> closeFirstTab());
+        closeFirst.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                closeFirstTab();
+            }
+        });
 
         closeLast = new Button("close last tab");
-        closeLast.addClickListener(event -> closeLastTab());
+        closeLast.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                closeLastTab();
+            }
+        });
 
         reorderTabs = new Button("reorder");
-        reorderTabs.addClickListener(event -> reorder());
+        reorderTabs.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                reorder();
+            }
+        });
 
         getLayout().addComponent(closeFirst);
         getLayout().addComponent(closeLast);

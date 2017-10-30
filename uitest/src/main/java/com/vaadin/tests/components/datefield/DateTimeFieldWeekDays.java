@@ -40,7 +40,7 @@ public class DateTimeFieldWeekDays extends AbstractTestUI {
         CheckBox weekNumbersToggle = new CheckBox("Toggle week numbers",
                 dateTimeField.isShowISOWeekNumbers());
         weekNumbersToggle.addValueChangeListener(
-                event -> dateTimeField.setShowISOWeekNumbers(event.getValue()));
+                e -> dateTimeField.setShowISOWeekNumbers(e.getValue()));
 
         Button toEnglish = new Button("Change locale",
                 click -> dateTimeField.setLocale(Locale.ENGLISH));

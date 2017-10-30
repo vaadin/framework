@@ -30,12 +30,12 @@ public class GridRemoveColumnAndDetach extends AbstractTestUIWithLog {
         addComponent(grid);
 
         Button detachButton = new Button("Detach grid",
-                event -> removeComponent(grid));
+                e -> removeComponent(grid));
         detachButton.setId("detach");
         addComponent(detachButton);
         for (int i = 0; i < 4; i++) {
             final int idx = i;
-            Button button = new Button("Remove col " + i, event -> {
+            Button button = new Button("Remove col " + i, e -> {
                 grid.removeColumn(grid.getColumns().get(idx));
                 logFrozenColumns();
             });

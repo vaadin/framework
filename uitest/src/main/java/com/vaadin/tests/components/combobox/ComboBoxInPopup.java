@@ -3,6 +3,7 @@ package com.vaadin.tests.components.combobox;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
@@ -18,7 +19,13 @@ public class ComboBoxInPopup extends TestBase {
         final Window w = new Window();
         w.setContent(layout);
         layout.addComponent(createComboBox());
-        Button close = new Button("Close window", event -> w.close());
+        Button close = new Button("Close window", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                w.close();
+            }
+        });
         close.setClickShortcut(KeyCode.ESCAPE, null);
         layout.addComponent(close);
 

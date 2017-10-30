@@ -32,11 +32,11 @@ public class ConnectorBundleStatus extends AbstractTestUI {
         statusDisplay.setId("bundleStatus");
 
         Button refreshButton = new Button("Refresh status",
-                event -> statusDisplay.updateStatus());
+                e -> statusDisplay.updateStatus());
         refreshButton.setId("refresh");
 
         Button rtaButton = new Button("Add RichTextArea (in the lazy bundle)",
-                event -> addComponent(new RichTextArea()));
+                e -> addComponent(new RichTextArea()));
         rtaButton.setId("rta");
 
         addComponents(statusDisplay, refreshButton, rtaButton);

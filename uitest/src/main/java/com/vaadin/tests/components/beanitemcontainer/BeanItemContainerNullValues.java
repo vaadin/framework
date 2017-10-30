@@ -2,6 +2,7 @@ package com.vaadin.tests.components.beanitemcontainer;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 
 public class BeanItemContainerNullValues extends TestBase {
@@ -26,13 +27,18 @@ public class BeanItemContainerNullValues extends TestBase {
                 BeanItemContainerGenerator.createContainer(100, 1));
         table.setColumnCollapsingAllowed(true);
 
-        Button b = new Button("Disable sorting", event -> {
-            table.setSortEnabled(!table.isSortEnabled());
-            if (table.isSortEnabled()) {
-                event.getButton().setCaption("Disable sorting");
-            } else {
-                event.getButton().setCaption("Enable sorting");
+        Button b = new Button("Disable sorting", new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                table.setSortEnabled(!table.isSortEnabled());
+                if (table.isSortEnabled()) {
+                    event.getButton().setCaption("Disable sorting");
+                } else {
+                    event.getButton().setCaption("Enable sorting");
+                }
             }
+
         });
 
         addComponent(table);

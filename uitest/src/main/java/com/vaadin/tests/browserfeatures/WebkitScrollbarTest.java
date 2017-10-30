@@ -19,6 +19,7 @@ package com.vaadin.tests.browserfeatures;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -50,8 +51,14 @@ public class WebkitScrollbarTest extends AbstractReindeerTestUI {
         gl.setMargin(true);
 
         final Button testButton = new Button("Open Window",
-                event -> UI.getCurrent().addWindow(testWindow));
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        UI.getCurrent().addWindow(testWindow);
+                    }
+                });
         uiLayout.addComponent(testButton);
+
     }
 
     @Override

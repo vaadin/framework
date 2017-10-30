@@ -27,12 +27,12 @@ public class NativeSelectCaptionGeneration extends UI {
 
             buttons.addComponents(
                     new Button("toString",
-                            event -> nativeSelect
+                            e -> nativeSelect
                                     .setItemCaptionGenerator(String::toString)),
                     new Button("Only number",
-                            event -> nativeSelect.setItemCaptionGenerator(
+                            e -> nativeSelect.setItemCaptionGenerator(
                                     str -> str.substring(7))),
-                    new Button("Declarative", event -> nativeSelect
+                    new Button("Declarative", e -> nativeSelect
                             .setItemCaptionGenerator(declarative)));
         }
     }

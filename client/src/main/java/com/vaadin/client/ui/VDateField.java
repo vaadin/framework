@@ -270,8 +270,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     public void sendBufferedValues() {
         rpc.update(bufferedDateString,
                 bufferedResolutions.entrySet().stream().collect(Collectors
-                        .toMap(e -> e.getKey().name(),
-                                e -> e.getValue())));
+                        .toMap(e -> e.getKey().name(), e -> e.getValue())));
         bufferedDateString = null;
         bufferedResolutions.clear();
     }

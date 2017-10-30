@@ -18,6 +18,7 @@ package com.vaadin.tests.components.formlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
@@ -40,11 +41,14 @@ public class FormLayoutResizing extends AbstractReindeerTestUI {
 
         addComponent(view);
 
-        addComponent(new Button("Toggle width", event -> {
-            if ((int) view.getWidth() == 400) {
-                view.setWidth("600px");
-            } else {
-                view.setWidth("400px");
+        addComponent(new Button("Toggle width", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if ((int) view.getWidth() == 400) {
+                    view.setWidth("600px");
+                } else {
+                    view.setWidth("400px");
+                }
             }
         }));
     }

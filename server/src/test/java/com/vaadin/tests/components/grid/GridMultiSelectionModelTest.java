@@ -136,10 +136,10 @@ public class GridMultiSelectionModelTest {
         List<String> selectionChanges = new ArrayList<>();
         Capture<List<String>> oldSelectionCapture = new Capture<>();
         ((MultiSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addMultiSelectionListener(event -> {
-                    selectionChanges.addAll(event.getValue());
+                .addMultiSelectionListener(e -> {
+                    selectionChanges.addAll(e.getValue());
                     oldSelectionCapture
-                            .setValue(new ArrayList<>(event.getOldSelection()));
+                            .setValue(new ArrayList<>(e.getOldSelection()));
                 });
 
         customGrid.getSelectionModel().select("Foo");

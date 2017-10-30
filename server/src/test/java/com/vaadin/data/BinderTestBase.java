@@ -50,8 +50,7 @@ public abstract class BinderTestBase<BINDER extends Binder<ITEM>, ITEM> implemen
     protected Validator<String> notEmpty = Validator.from(val -> !val.isEmpty(),
             EMPTY_ERROR_MESSAGE);
     protected Converter<String, Integer> stringToInteger = Converter.from(
-            Integer::valueOf, String::valueOf,
-            e -> NOT_NUMBER_ERROR_MESSAGE);
+            Integer::valueOf, String::valueOf, e -> NOT_NUMBER_ERROR_MESSAGE);
     protected Validator<Integer> notNegative = Validator.from(x -> x >= 0,
             NEGATIVE_ERROR_MESSAGE);
 

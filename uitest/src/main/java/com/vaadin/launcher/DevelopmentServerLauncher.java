@@ -48,7 +48,6 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.Scanner;
-import org.eclipse.jetty.util.Scanner.BulkListener;
 import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -250,11 +249,15 @@ public class DevelopmentServerLauncher {
                 scanner.setScanInterval(interval);
 
                 scanner.setRecursive(true);
-                scanner.addListener((BulkListener) e-> {
-                    webappcontext.stop();
-                    server.stop();
-                    webappcontext.start();
-                    server.start();
+                scanner.addListener(new Scanner.BulkListener() {
+                    @Override
+                    public void filesChanged(List<String> filenames)
+                            throws Exception {
+                        webappcontext.stop();
+                        server.stop();
+                        webappcontext.start();
+                        server.start();
+                    }
                 });
                 scanner.setReportExistingFilesOnStartup(false);
                 scanner.setFilenameFilter(new FilenameFilter() {

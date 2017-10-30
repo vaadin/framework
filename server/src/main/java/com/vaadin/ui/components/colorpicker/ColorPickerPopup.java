@@ -277,8 +277,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         blueSlider = createRGBSlider("Blue", "blue");
         setRgbSliderValues(color);
 
-        redSlider.addValueChangeListener(event -> {
-            double red = event.getValue();
+        redSlider.addValueChangeListener(e -> {
+            double red = e.getValue();
             if (!updatingColors) {
                 Color newColor = new Color((int) red, selectedColor.getGreen(),
                         selectedColor.getBlue());
@@ -288,8 +288,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
 
         sliders.addComponent(redSlider);
 
-        greenSlider.addValueChangeListener(event -> {
-            double green = event.getValue();
+        greenSlider.addValueChangeListener(e -> {
+            double green = e.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(), (int) green,
                         selectedColor.getBlue());
@@ -298,8 +298,8 @@ public class ColorPickerPopup extends Window implements HasValue<Color> {
         });
         sliders.addComponent(greenSlider);
 
-        blueSlider.addValueChangeListener(event -> {
-            double blue = event.getValue();
+        blueSlider.addValueChangeListener(e -> {
+            double blue = e.getValue();
             if (!updatingColors) {
                 Color newColor = new Color(selectedColor.getRed(),
                         selectedColor.getGreen(), (int) blue);

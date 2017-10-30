@@ -3,6 +3,7 @@ package com.vaadin.tests.components.embedded;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -29,8 +30,12 @@ public class EmbeddedApplet extends TestBase {
         applet.setSource(new ExternalResource("/statictestfiles/applet.html"));
         addComponent(applet);
 
-        addComponent(
-                new Button("Remove applet", event -> removeComponent(applet)));
+        addComponent(new Button("Remove applet", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                removeComponent(applet);
+            }
+        }));
 
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);

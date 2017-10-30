@@ -72,7 +72,7 @@ public class OsgiUIProvider extends UIProvider {
     public UI createInstance(UICreateEvent event) {
         if (prototype) {
             UI ui = serviceObjects.getService();
-            ui.addDetachListener(event2 -> serviceObjects.ungetService(ui));
+            ui.addDetachListener(e -> serviceObjects.ungetService(ui));
             return ui;
         }
         logService.ifPresent(log -> log.log(LogService.LOG_WARNING,

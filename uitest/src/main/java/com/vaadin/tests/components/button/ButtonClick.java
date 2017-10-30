@@ -19,6 +19,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -31,12 +33,22 @@ public class ButtonClick extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         final VerticalLayout rootLayout = new VerticalLayout();
         final Label statusLabel = new Label("Test initialized");
-        rootLayout.addComponent(new Button("Click here", event ->
-            statusLabel.setValue(SUCCESS_TEXT)));
-        Button visitLocation = new Button("Drag here",
-                event ->
-                statusLabel.setValue(WRONG_BUTTON_TEXT)
-        );
+        rootLayout.addComponent(new Button("Click here", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                statusLabel.setValue(SUCCESS_TEXT);
+            }
+
+        }));
+        Button visitLocation = new Button("Drag here", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                statusLabel.setValue(WRONG_BUTTON_TEXT);
+            }
+
+        });
         rootLayout.addComponent(statusLabel);
         rootLayout.addComponent(visitLocation);
         rootLayout.setComponentAlignment(visitLocation, Alignment.BOTTOM_RIGHT);

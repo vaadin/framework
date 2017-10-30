@@ -30,7 +30,7 @@ public class ComboBoxTest {
 
         // Reset value whenever it changes (in a real case, this listener would
         // do something with the selected value before discarding it)
-        comboBox.addValueChangeListener(event -> comboBox.setValue(null));
+        comboBox.addValueChangeListener(e -> comboBox.setValue(null));
 
         // "Attach" the component and initialize diffstate
         new MockUI().setContent(comboBox);

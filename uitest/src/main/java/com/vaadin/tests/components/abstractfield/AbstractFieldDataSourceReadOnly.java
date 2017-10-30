@@ -2,6 +2,8 @@ package com.vaadin.tests.components.abstractfield;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.Component.Listener;
 import com.vaadin.v7.data.util.ObjectProperty;
 import com.vaadin.v7.ui.TextField;
 
@@ -30,7 +32,12 @@ public class AbstractFieldDataSourceReadOnly extends TestBase {
 
         // Button
         Button button = new Button("Make data source read-only");
-        button.addListener(event -> stateHolder.buttonClicked());
+        button.addListener(new Listener() {
+            @Override
+            public void componentEvent(Event event) {
+                stateHolder.buttonClicked();
+            }
+        });
 
         // Input field
         TextField input = new TextField("Field");

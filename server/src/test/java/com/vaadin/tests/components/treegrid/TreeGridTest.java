@@ -34,8 +34,8 @@ public class TreeGridTest {
         treeData.addItem("Foo", "Baz");
         treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
 
-        treeGrid.addExpandListener(event -> expandEventFired = true);
-        treeGrid.addCollapseListener(event -> collapseEventFired = true);
+        treeGrid.addExpandListener(e -> expandEventFired = true);
+        treeGrid.addCollapseListener(e -> collapseEventFired = true);
 
         // Test expand event
         assertFalse(expandEventFired);

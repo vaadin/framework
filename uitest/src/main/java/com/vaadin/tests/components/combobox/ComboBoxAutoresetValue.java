@@ -29,15 +29,15 @@ public class ComboBoxAutoresetValue extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.setItems(RESET, CHANGE, SOMETHING);
-        comboBox.addValueChangeListener(event -> {
-            String value = event.getValue();
+        comboBox.addValueChangeListener(e -> {
+            String value = e.getValue();
             log("Value changed to " + value);
 
-            if (event.isUserOriginated()) {
+            if (e.isUserOriginated()) {
                 if (RESET.equals(value)) {
-                    event.getSource().setValue(null);
+                    e.getSource().setValue(null);
                 } else if (CHANGE.equals(value)) {
-                    event.getSource().setValue(SOMETHING);
+                    e.getSource().setValue(SOMETHING);
                 }
             }
         });

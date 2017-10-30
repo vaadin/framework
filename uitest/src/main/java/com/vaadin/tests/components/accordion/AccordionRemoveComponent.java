@@ -19,6 +19,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 
 /**
  * Test for removing component from Accordion.
@@ -31,8 +32,13 @@ public class AccordionRemoveComponent extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         final Accordion accordion = new Accordion();
         Button button = new Button("remove");
-        button.addClickListener(
-                event -> accordion.removeComponent(event.getButton()));
+        button.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                accordion.removeComponent(event.getButton());
+            }
+        });
         accordion.addComponent(button);
         addComponent(accordion);
     }

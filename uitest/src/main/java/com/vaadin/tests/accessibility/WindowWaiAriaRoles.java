@@ -21,6 +21,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowRole;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 /**
@@ -40,24 +42,36 @@ public class WindowWaiAriaRoles extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         Button closeButton = new Button("Close windows");
-        closeButton.addClickListener(event -> {
-            while (!windows.isEmpty()) {
-                Window window = windows.pop();
-                removeWindow(window);
+        closeButton.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                while (!windows.isEmpty()) {
+                    Window window = windows.pop();
+                    removeWindow(window);
+                }
             }
+
         });
 
         Button regularButton = new Button("Regular");
-        regularButton.addClickListener(event -> {
-            Window regularWindow = new Window("Regular window");
-            openWindow(regularWindow);
+        regularButton.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Window regularWindow = new Window("Regular window");
+                openWindow(regularWindow);
+            }
         });
 
         Button alertButton = new Button("Alert");
-        alertButton.addClickListener(event -> {
-            Window alertWindow = new Window("Alert window");
-            alertWindow.setAssistiveRole(WindowRole.ALERTDIALOG);
-            openWindow(alertWindow);
+        alertButton.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Window alertWindow = new Window("Alert window");
+                alertWindow.setAssistiveRole(WindowRole.ALERTDIALOG);
+                openWindow(alertWindow);
+            }
         });
         addComponent(closeButton);
         addComponent(regularButton);

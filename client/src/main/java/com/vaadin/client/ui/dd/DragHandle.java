@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DragAndDropHandler.DragAndDropCallback;
 
@@ -169,9 +170,12 @@ public class DragHandle {
         dndHandler = new DragAndDropHandler();
 
         DOM.sinkEvents(element, Event.ONMOUSEDOWN | Event.ONTOUCHSTART);
-        DOM.setEventListener(element, event -> {
-            dndHandler.onDragStartOnDraggableElement(event, dndCallback);
-            event.stopPropagation();
+        DOM.setEventListener(element, new EventListener() {
+            @Override
+            public void onBrowserEvent(Event event) {
+                dndHandler.onDragStartOnDraggableElement(event, dndCallback);
+                event.stopPropagation();
+            }
         });
     }
 

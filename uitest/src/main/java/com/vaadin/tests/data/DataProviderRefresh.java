@@ -109,8 +109,8 @@ public class DataProviderRefresh extends AbstractTestUI {
         grid.addColumn(Object::toString).setCaption("toString");
         addComponent(grid);
         addComponent(new Button("Replace item",
-                event -> dataProvider.refreshItem(new Bean("Bar", 10))));
-        addComponent(new Button("Select old", event -> grid.select(foo)));
+                e -> dataProvider.refreshItem(new Bean("Bar", 10))));
+        addComponent(new Button("Select old", e -> grid.select(foo)));
     }
 
 }

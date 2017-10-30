@@ -21,6 +21,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
 public class CloseUI extends AbstractTestUIWithLog {
@@ -51,33 +53,53 @@ public class CloseUI extends AbstractTestUIWithLog {
             log("Same WrappedSession id? " + oldSessionId.equals(sessionId));
         }
 
-        addButton("Log 'hello'", event -> log("Hello"));
-        addButton("Close UI", event -> close());
+        addButton("Log 'hello'", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Hello");
+            }
+        });
+        addButton("Close UI", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                close();
+            }
+        });
 
-        addButton("Close UI (background)", event -> {
-            new UIRunSafelyThread(CloseUI.this) {
-                @Override
-                protected void runSafely() {
-                    close();
-                }
-            }.start();
+        addButton("Close UI (background)", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                new UIRunSafelyThread(CloseUI.this) {
+                    @Override
+                    protected void runSafely() {
+                        close();
+                    }
+                }.start();
+            }
         });
         addButton("Close UI and redirect to /statictestfiles/static.html",
-                event -> {
-                    getPage().setLocation("/statictestfiles/static.html");
-                    close();
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        getPage().setLocation("/statictestfiles/static.html");
+                        close();
+                    }
                 });
         addButton(
                 "Close UI and redirect to /statictestfiles/static.html (background)",
-                event -> {
-                    new UIRunSafelyThread(CloseUI.this) {
-                        @Override
-                        protected void runSafely() {
-                            getPage().setLocation(
-                                    "/statictestfiles/static.html");
-                            close();
-                        }
-                    }.start();
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        new UIRunSafelyThread(CloseUI.this) {
+
+                            @Override
+                            protected void runSafely() {
+                                getPage().setLocation(
+                                        "/statictestfiles/static.html");
+                                close();
+                            }
+                        }.start();
+                    }
                 });
 
     }

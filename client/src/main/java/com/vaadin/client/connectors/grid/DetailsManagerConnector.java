@@ -29,6 +29,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
@@ -57,10 +58,14 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private Registration dataChangeRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
-    private final ElementResizeListener detailsRowResizeListener = event -> {
-        if (elementToResizeCommand.containsKey(event.getElement())) {
-            Scheduler.get().scheduleFinally(
-                    elementToResizeCommand.get(event.getElement()));
+    private final ElementResizeListener detailsRowResizeListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            if (elementToResizeCommand.containsKey(e.getElement())) {
+                Scheduler.get().scheduleFinally(
+                        elementToResizeCommand.get(e.getElement()));
+            }
         }
     };
 

@@ -18,6 +18,7 @@ package com.vaadin.tests.components.formlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.v7.ui.TextField;
 
@@ -31,9 +32,12 @@ public class HtmlCaptionInFormLayout extends AbstractReindeerTestUI {
 
         addComponent(new FormLayout(asHtml, asText));
 
-        addComponent(new Button("Toggle", event -> {
-            asHtml.setCaptionAsHtml(!asHtml.isCaptionAsHtml());
-            asText.setCaptionAsHtml(!asText.isCaptionAsHtml());
+        addComponent(new Button("Toggle", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                asHtml.setCaptionAsHtml(!asHtml.isCaptionAsHtml());
+                asText.setCaptionAsHtml(!asText.isCaptionAsHtml());
+            }
         }));
     }
 }

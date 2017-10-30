@@ -4,6 +4,7 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 
 public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
 
@@ -18,27 +19,36 @@ public class ActionsOnInvisibleComponents extends AbstractTestUIWithLog {
 
         Button invisibleButton = new Button("Invisible button with shortcut");
         invisibleButton.setClickShortcut(KeyCode.A);
-        invisibleButton
-                .addClickListener(
-                        event -> log("Click event for invisible button"));
+        invisibleButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Click event for invisible button");
+            }
+        });
 
         invisibleButton.setVisible(false);
         addComponent(invisibleButton);
 
         Button disabledButton = new Button("Disabled button with shortcut");
         disabledButton.setClickShortcut(KeyCode.B);
-        disabledButton
-                .addClickListener(
-                        event -> log("Click event for disabled button"));
+        disabledButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Click event for disabled button");
+            }
+        });
 
         disabledButton.setEnabled(false);
         addComponent(disabledButton);
 
         Button enabledButton = new Button("Enabled button with shortcut");
         enabledButton.setClickShortcut(KeyCode.C);
-        enabledButton
-                .addClickListener(
-                        event -> log("Click event for enabled button"));
+        enabledButton.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Click event for enabled button");
+            }
+        });
 
         addComponent(enabledButton);
     }

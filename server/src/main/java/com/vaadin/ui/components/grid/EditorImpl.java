@@ -283,7 +283,6 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
      *             if the {@code rowNumber} is not in the backing data provider
      * @see #setEnabled(boolean)
      */
-    @Override
     public void editRow(int rowNumber)
             throws IllegalStateException, IllegalArgumentException {
         if (!isEnabled()) {

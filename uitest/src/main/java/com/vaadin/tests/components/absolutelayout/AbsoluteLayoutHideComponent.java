@@ -21,6 +21,7 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -70,7 +71,12 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         btnLogin.setCaption("Login");
         btnLogin.setWidth("-1px");
         btnLogin.setHeight("-1px");
-        btnLogin.addClickListener(event -> login());
+        btnLogin.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                login();
+            }
+        });
         layoutLogin.addComponent(btnLogin);
 
         for (int index = 0; index < layoutLogin.getComponentCount(); index++) {
@@ -104,17 +110,29 @@ public class AbsoluteLayoutHideComponent extends AbstractReindeerTestUI {
         GridLayout gridButtons = new GridLayout(2, 3);
 
         Button btn1 = new Button("Button one");
-        btn1.addClickListener(event -> {
+        btn1.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+            }
         });
         gridButtons.addComponent(btn1, 0, 0);
 
         Button btn2 = new Button("Button two");
-        btn2.addClickListener(event -> {
+        btn2.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+            }
         });
         gridButtons.addComponent(btn2, 0, 1);
 
         Button btn3 = new Button("Button three");
-        btn3.addClickListener(event -> {
+        btn3.addClickListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+            }
         });
         gridButtons.addComponent(btn3, 1, 0);
 

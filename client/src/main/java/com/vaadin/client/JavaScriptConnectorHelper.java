@@ -32,6 +32,7 @@ import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.ServerRpcQueue;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -260,8 +261,13 @@ public class JavaScriptConnectorHelper {
         if (listener == null) {
             LayoutManager layoutManager = LayoutManager
                     .get(connector.getConnection());
-            listener = event -> invokeElementResizeCallback(event.getElement(),
-                    callbackFunction);
+            listener = new ElementResizeListener() {
+                @Override
+                public void onElementResize(ElementResizeEvent e) {
+                    invokeElementResizeCallback(e.getElement(),
+                            callbackFunction);
+                }
+            };
             layoutManager.addElementResizeListener(element, listener);
             elementListeners.put(callbackFunction, listener);
         }

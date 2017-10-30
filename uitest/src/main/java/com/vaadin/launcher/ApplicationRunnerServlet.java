@@ -46,6 +46,8 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.SessionInitEvent;
+import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
@@ -131,8 +133,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() throws ServletException {
         super.servletInitialized();
-        getService().addSessionInitListener(
-                event -> onVaadinSessionStarted(event.getRequest(), event.getSession()));
+        getService().addSessionInitListener(new SessionInitListener() {
+            @Override
+            public void sessionInit(SessionInitEvent event)
+                    throws ServiceException {
+                onVaadinSessionStarted(event.getRequest(), event.getSession());
+            }
+        });
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,

@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class DetachOldUIOnReload extends AbstractTestUIWithLog {
@@ -31,11 +32,19 @@ public class DetachOldUIOnReload extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(new Label("This is UI " + getUIId()));
-        addComponent(new Button("Reload page", event -> getPage().reload()));
+        addComponent(new Button("Reload page", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                getPage().reload();
+            }
+        }));
         addComponent(new Button("Read log messages from session",
-                event -> {
-                    for (String message : getSessionMessages(false)) {
-                        log(message);
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        for (String message : getSessionMessages(false)) {
+                            log(message);
+                        }
                     }
                 }));
     }

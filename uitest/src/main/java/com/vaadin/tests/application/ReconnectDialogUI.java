@@ -18,6 +18,8 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 public class ReconnectDialogUI extends AbstractReindeerTestUIWithLog {
 
@@ -28,7 +30,13 @@ public class ReconnectDialogUI extends AbstractReindeerTestUIWithLog {
                     .parseInt(request.getParameter("reconnectAttempts")));
         }
         Button b = new Button("Say hello");
-        b.addClickListener(event -> log("Hello from the server"));
+        b.addClickListener(new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                log("Hello from the server");
+            }
+        });
 
         addComponent(b);
     }

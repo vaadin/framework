@@ -54,12 +54,11 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         tree.setDataProvider(inMemoryDataProvider);
 
         tree.addSelectionListener(
-                event -> log("SelectionEvent: " + event.getAllSelectedItems()));
+                e -> log("SelectionEvent: " + e.getAllSelectedItems()));
 
-        tree.addExpandListener(
-                event -> log("ExpandEvent: " + event.getExpandedItem()));
+        tree.addExpandListener(e -> log("ExpandEvent: " + e.getExpandedItem()));
         tree.addCollapseListener(
-                event -> log("ExpandEvent: " + event.getCollapsedItem()));
+                e -> log("ExpandEvent: " + e.getCollapsedItem()));
 
         layout.addComponents(createMenu(), tree);
 
@@ -88,7 +87,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
                 if (selectedItem.isChecked()) {
                     registration = tree.addItemClickListener(
-                            event -> log("ItemClick: " + event.getItem()));
+                            e -> log("ItemClick: " + e.getItem()));
                 }
             }
 

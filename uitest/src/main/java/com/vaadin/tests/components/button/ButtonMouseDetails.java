@@ -3,6 +3,7 @@ package com.vaadin.tests.components.button;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class ButtonMouseDetails extends TestBase {
@@ -11,26 +12,30 @@ public class ButtonMouseDetails extends TestBase {
 
     private int clickCounter = 1;
 
-    private Button.ClickListener clickListener = event -> {
-        StringBuilder str = new StringBuilder(out.getValue());
-        str.append(clickCounter + ":\t");
+    private Button.ClickListener clickListener = new Button.ClickListener() {
 
-        // Modifier keys
-        str.append("ctrl=" + event.isCtrlKey() + ",\t");
-        str.append("alt=" + event.isAltKey() + ",\t");
-        str.append("meta=" + event.isMetaKey() + ",\t");
-        str.append("shift=" + event.isShiftKey() + ",\t");
+        @Override
+        public void buttonClick(ClickEvent event) {
+            StringBuilder str = new StringBuilder(out.getValue());
+            str.append(clickCounter + ":\t");
 
-        // Coordinates
-        str.append("X=" + event.getRelativeX() + ",\t");
-        str.append("Y=" + event.getRelativeY() + ",\t");
-        str.append("clientX=" + event.getClientX() + ",\t");
-        str.append("clientY=" + event.getClientY());
+            // Modifier keys
+            str.append("ctrl=" + event.isCtrlKey() + ",\t");
+            str.append("alt=" + event.isAltKey() + ",\t");
+            str.append("meta=" + event.isMetaKey() + ",\t");
+            str.append("shift=" + event.isShiftKey() + ",\t");
 
-        str.append("\n");
+            // Coordinates
+            str.append("X=" + event.getRelativeX() + ",\t");
+            str.append("Y=" + event.getRelativeY() + ",\t");
+            str.append("clientX=" + event.getClientX() + ",\t");
+            str.append("clientY=" + event.getClientY());
 
-        out.setValue(str.toString());
-        clickCounter++;
+            str.append("\n");
+
+            out.setValue(str.toString());
+            clickCounter++;
+        }
     };
 
     @Override

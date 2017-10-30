@@ -57,7 +57,7 @@ public class RadioButtonGroupConnector
         super.init();
 
         selectionChangeRegistration = getWidget().addSelectionChangeHandler(
-                event -> selectionRpc.select(getRowKey(event)));
+                e -> selectionRpc.select(getRowKey(e)));
     }
 
     @Override

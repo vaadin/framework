@@ -33,8 +33,8 @@ public class SliderUpdateFromValueChange extends AbstractReindeerTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         final Slider slider = new Slider(0, 100, 1);
-        slider.addValueChangeListener(event -> {
-            Double value = event.getValue();
+        slider.addValueChangeListener(e -> {
+            Double value = e.getValue();
             if (value < 100.0) {
                 slider.setValue(100.0);
             }

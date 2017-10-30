@@ -24,6 +24,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -46,6 +47,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.VAbstractCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -139,10 +141,13 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         calendar = calendarPanel;
         calendar.setParentField(this);
-        calendar.setFocusOutListener(event -> {
-            event.preventDefault();
-            closeCalendarPanel();
-            return true;
+        calendar.setFocusOutListener(new FocusOutListener() {
+            @Override
+            public boolean onFocusOut(DomEvent<?> event) {
+                event.preventDefault();
+                closeCalendarPanel();
+                return true;
+            }
         });
 
         // FIXME: Problem is, that the element with the provided id does not

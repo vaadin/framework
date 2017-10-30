@@ -38,6 +38,7 @@ import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.communication.URLReference;
@@ -95,64 +96,73 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private ElementResizeListener slotCaptionResizeListener = event -> {
+    private ElementResizeListener slotCaptionResizeListener = new ElementResizeListener() {
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
 
-        // Get all needed element references
-        Element captionElement = event.getElement();
+            // Get all needed element references
+            Element captionElement = e.getElement();
 
-        // Caption position determines if the widget element is the first or
-        // last child inside the caption wrap
-        CaptionPosition pos = getWidget().getCaptionPositionFromElement(
-                captionElement.getParentElement());
+            // Caption position determines if the widget element is the first or
+            // last child inside the caption wrap
+            CaptionPosition pos = getWidget().getCaptionPositionFromElement(
+                    captionElement.getParentElement());
 
-        // The default is the last child
-        Element widgetElement = captionElement.getParentElement().getLastChild()
-                .cast();
+            // The default is the last child
+            Element widgetElement = captionElement.getParentElement()
+                    .getLastChild().cast();
 
-        // ...but if caption position is bottom or right, the widget is the
-        // first child
-        if (pos == CaptionPosition.BOTTOM || pos == CaptionPosition.RIGHT) {
-            widgetElement = captionElement.getParentElement()
-                    .getFirstChildElement().cast();
-        }
-
-        if (captionElement == widgetElement) {
-            // Caption element already detached
-            Slot slot = getWidget().getSlot(widgetElement);
-            if (slot != null) {
-                slot.setCaptionResizeListener(null);
+            // ...but if caption position is bottom or right, the widget is the
+            // first child
+            if (pos == CaptionPosition.BOTTOM || pos == CaptionPosition.RIGHT) {
+                widgetElement = captionElement.getParentElement()
+                        .getFirstChildElement().cast();
             }
-            return;
-        }
 
-        String widgetWidth = widgetElement.getStyle().getWidth();
-        String widgetHeight = widgetElement.getStyle().getHeight();
+            if (captionElement == widgetElement) {
+                // Caption element already detached
+                Slot slot = getWidget().getSlot(widgetElement);
+                if (slot != null) {
+                    slot.setCaptionResizeListener(null);
+                }
+                return;
+            }
 
-        if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
-                || pos == CaptionPosition.BOTTOM)) {
-            getWidget().updateCaptionOffset(captionElement);
-        } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
-                || pos == CaptionPosition.RIGHT)) {
-            getWidget().updateCaptionOffset(captionElement);
-        }
+            String widgetWidth = widgetElement.getStyle().getWidth();
+            String widgetHeight = widgetElement.getStyle().getHeight();
 
-        updateLayoutHeight();
+            if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
+                    || pos == CaptionPosition.BOTTOM)) {
+                getWidget().updateCaptionOffset(captionElement);
+            } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
+                    || pos == CaptionPosition.RIGHT)) {
+                getWidget().updateCaptionOffset(captionElement);
+            }
 
-        if (needsExpand()) {
-            getWidget().updateExpandCompensation();
+            updateLayoutHeight();
+
+            if (needsExpand()) {
+                getWidget().updateExpandCompensation();
+            }
         }
     };
 
-    private ElementResizeListener childComponentResizeListener = event -> {
-        updateLayoutHeight();
-        if (needsExpand()) {
-            getWidget().updateExpandCompensation();
+    private ElementResizeListener childComponentResizeListener = new ElementResizeListener() {
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            updateLayoutHeight();
+            if (needsExpand()) {
+                getWidget().updateExpandCompensation();
+            }
         }
     };
 
-    private ElementResizeListener spacingResizeListener = event -> {
-        if (needsExpand()) {
-            getWidget().updateExpandCompensation();
+    private ElementResizeListener spacingResizeListener = new ElementResizeListener() {
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            if (needsExpand()) {
+                getWidget().updateExpandCompensation();
+            }
         }
     };
 

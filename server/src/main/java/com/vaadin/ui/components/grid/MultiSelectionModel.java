@@ -86,8 +86,7 @@ public interface MultiSelectionModel<T>
     @Override
     public default Registration addSelectionListener(
             SelectionListener<T> listener) {
-        return addMultiSelectionListener(
-                event -> listener.selectionChange(event));
+        return addMultiSelectionListener(e -> listener.selectionChange(e));
     }
 
     /**

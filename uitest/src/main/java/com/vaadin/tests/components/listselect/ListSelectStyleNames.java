@@ -37,14 +37,14 @@ public class ListSelectStyleNames extends AbstractTestUIWithLog {
         nativeSelect.addStyleName("custominitial");
         addComponent(nativeSelect);
 
-        Button button = new Button("Add style 'new'", event -> {
+        Button button = new Button("Add style 'new'", e -> {
             testselect.addStyleName("new");
             nativeSelect.addStyleName("new");
         });
         button.setId("add");
         addComponent(button);
 
-        button = new Button("Change primary style to 'newprimary'", event -> {
+        button = new Button("Change primary style to 'newprimary'", e -> {
             testselect.setPrimaryStyleName("newprimary");
             nativeSelect.setPrimaryStyleName("newprimary");
         });

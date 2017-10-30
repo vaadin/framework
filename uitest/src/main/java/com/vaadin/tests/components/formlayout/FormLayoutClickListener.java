@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.FormLayout;
@@ -39,12 +41,16 @@ public class FormLayoutClickListener extends AbstractTestUIWithLog {
         label.setId("label");
         layout.addComponent(label);
 
-        layout.addLayoutClickListener(event -> {
-            log("Child component: " + (event.getChildComponent() == null ? null
-                    : event.getChildComponent().getId()));
-            log("Clicked component: " + (event.getClickedComponent() == null ? null
-                    : event.getClickedComponent().getId()));
-            log("Source component: " + event.getComponent().getId());
+        layout.addLayoutClickListener(new LayoutClickListener() {
+
+            @Override
+            public void layoutClick(LayoutClickEvent event) {
+                log("Child component: " + (event.getChildComponent() == null
+                        ? null : event.getChildComponent().getId()));
+                log("Clicked component: " + (event.getClickedComponent() == null
+                        ? null : event.getClickedComponent().getId()));
+                log("Source component: " + event.getComponent().getId());
+            }
         });
 
         addComponent(layout);

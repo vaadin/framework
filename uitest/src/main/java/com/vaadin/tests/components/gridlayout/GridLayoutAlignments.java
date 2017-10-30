@@ -59,7 +59,11 @@ public class GridLayoutAlignments extends UI {
         return new Button(
                 "Align " + topLeft.getVerticalAlignment() + ", "
                         + topLeft.getHorizontalAlignment(),
-                event -> g.setComponentAlignment(g.getComponent(0, 0),
-                        topLeft));
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(Button.ClickEvent clickEvent) {
+                        g.setComponentAlignment(g.getComponent(0, 0), topLeft);
+                    }
+                });
     }
 }

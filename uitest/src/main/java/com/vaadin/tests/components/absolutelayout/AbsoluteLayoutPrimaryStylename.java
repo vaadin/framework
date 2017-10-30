@@ -3,6 +3,7 @@ package com.vaadin.tests.components.absolutelayout;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
 
@@ -23,8 +24,12 @@ public class AbsoluteLayoutPrimaryStylename extends TestBase {
         addComponent(layout);
 
         addComponent(new Button("Change primary stylename",
-                event -> layout
-                        .setPrimaryStyleName("my-second-absolute-layout")));
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        layout.setPrimaryStyleName("my-second-absolute-layout");
+                    }
+                }));
     }
 
     @Override

@@ -65,7 +65,7 @@ public class PushRequestHandler
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        service.addServiceDestroyListener(event -> destroy());
+        service.addServiceDestroyListener(e -> destroy());
 
         final ServletConfig vaadinServletConfig = service.getServlet()
                 .getServletConfig();

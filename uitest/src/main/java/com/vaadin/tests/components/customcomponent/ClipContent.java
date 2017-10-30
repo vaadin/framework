@@ -5,6 +5,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.TextField;
 
 public class ClipContent extends TestBase {
@@ -22,16 +23,27 @@ public class ClipContent extends TestBase {
 
         final TextField w = new TextField("Width");
         w.setValue("20px");
-        w.addValueChangeListener(event -> cc.setWidth(w.getValue()));
+        w.addListener(new TextField.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                cc.setWidth(w.getValue());
+            }
+        });
         addComponent(w);
         final TextField h = new TextField("Height");
         h.setValue("20px");
-        h.addValueChangeListener(event -> cc.setHeight(h.getValue()));
+        h.addListener(new TextField.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                cc.setHeight(h.getValue());
+            }
+        });
         addComponent(h);
         Button b = new Button("apply");
         addComponent(b);
 
         addComponent(cc);
+
     }
 
     @Override

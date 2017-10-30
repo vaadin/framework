@@ -6,6 +6,8 @@ import java.util.TimeZone;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class WebBrowserTimeZone extends AbstractReindeerTestUI {
@@ -23,24 +25,29 @@ public class WebBrowserTimeZone extends AbstractReindeerTestUI {
                 "Browser to Europe/Helsinki offset difference");
         final Label containsLabel = addLabel("Browser could be in Helsinki");
 
-        addButton("Get TimeZone from browser", event -> {
-            TimeZone hkiTZ = TimeZone.getTimeZone("Europe/Helsinki");
-            int hkiOffset = hkiTZ.getOffset(new Date().getTime());
+        addButton("Get TimeZone from browser", new Button.ClickListener() {
 
-            int browserOffset = getBrowser().getTimezoneOffset();
-            int browserRawOffset = getBrowser().getRawTimezoneOffset();
-            String[] tzs = TimeZone.getAvailableIDs(browserRawOffset);
+            @Override
+            public void buttonClick(ClickEvent event) {
+                TimeZone hkiTZ = TimeZone.getTimeZone("Europe/Helsinki");
+                int hkiOffset = hkiTZ.getOffset(new Date().getTime());
 
-            boolean contains = Arrays.asList(tzs).contains(hkiTZ.getID());
+                int browserOffset = getBrowser().getTimezoneOffset();
+                int browserRawOffset = getBrowser().getRawTimezoneOffset();
+                String[] tzs = TimeZone.getAvailableIDs(browserRawOffset);
 
-            offsetLabel.setValue(String.valueOf(browserOffset));
-            rawOffsetLabel.setValue(String.valueOf(browserRawOffset));
-            diffLabel.setValue(String.valueOf(browserOffset - hkiOffset));
-            containsLabel.setValue(contains ? "Yes" : "No");
-            dstDiffLabel.setValue(String.valueOf(getBrowser().getDSTSavings()));
-            dstInEffectLabel
-                    .setValue(getBrowser().isDSTInEffect() ? "Yes" : "No");
-            curDateLabel.setValue(getBrowser().getCurrentDate().toString());
+                boolean contains = Arrays.asList(tzs).contains(hkiTZ.getID());
+
+                offsetLabel.setValue(String.valueOf(browserOffset));
+                rawOffsetLabel.setValue(String.valueOf(browserRawOffset));
+                diffLabel.setValue(String.valueOf(browserOffset - hkiOffset));
+                containsLabel.setValue(contains ? "Yes" : "No");
+                dstDiffLabel
+                        .setValue(String.valueOf(getBrowser().getDSTSavings()));
+                dstInEffectLabel
+                        .setValue(getBrowser().isDSTInEffect() ? "Yes" : "No");
+                curDateLabel.setValue(getBrowser().getCurrentDate().toString());
+            }
         });
     }
 

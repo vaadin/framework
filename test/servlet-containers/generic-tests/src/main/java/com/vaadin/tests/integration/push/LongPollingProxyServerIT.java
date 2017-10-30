@@ -57,7 +57,6 @@ public class LongPollingProxyServerIT extends AbstractIntegrationTest {
     @Parameter(1)
     public String path;
 
-    @Override
     @Before
     public void setup() throws Exception {
         Assume.assumeTrue(

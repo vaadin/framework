@@ -52,8 +52,7 @@ public interface SingleSelectionModel<T> extends GridSelectionModel<T>,
     @Override
     public default Registration addSelectionListener(
             SelectionListener<T> listener) {
-        return addSingleSelectionListener(
-                event -> listener.selectionChange(event));
+        return addSingleSelectionListener(e -> listener.selectionChange(e));
     }
 
     /**
