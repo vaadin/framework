@@ -180,13 +180,6 @@ public class GridBasics extends AbstractTestUIWithLog {
                                 + watchingCount++ + ")"));
         persistingDetails = new PersistingDetailsGenerator();
         generators.put("Persisting", persistingDetails);
-        Window window = new Window();
-        window.setModal(true);
-        TextField textField = new TextField("A text field");
-        CheckBox checkBox = new CheckBox("Check?");
-        VerticalLayout layout = new VerticalLayout(textField, checkBox);
-        window.setContent(layout);
-        addWindow(window);
     }
 
     @Override

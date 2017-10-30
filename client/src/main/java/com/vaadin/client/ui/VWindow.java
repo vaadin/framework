@@ -443,13 +443,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 logger.warning("Top event blocker caught Shift+Tab event "
                         + nativeEvent.getType() + " with target "
                         + nativeEvent.getEventTarget().cast());
+                Element e = FocusUtil.getLastFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
                 logger.warning("Turning focus around to the bottom");
-                FocusUtil.getLastFocusableElement(this).focus();
+                FocusUtil.getLastFocusableElement(this.getElement()).focus();
             }
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
@@ -464,13 +465,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 logger.warning("Bottom event blocker caught Tab event "
                         + nativeEvent.getType() + " with target "
                         + nativeEvent.getEventTarget().cast());
+                Element e = FocusUtil.getFirstFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && !nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
                 logger.warning("Turning focus around to the top");
-                FocusUtil.getFirstFocusableElement(this).focus();
+                FocusUtil.getFirstFocusableElement(this.getElement()).focus();
             }
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
