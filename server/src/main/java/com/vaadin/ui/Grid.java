@@ -1203,36 +1203,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
-         * Sets the header aria-label for this column.
-         *
-         * @param caption
-         *            the header aria-label, null removes
-         *            the aria-label from this column
-         *
-         * @return this column
-         *
-         * @since
-         */
-        public Column<T, V> setAssistiveCaption(String caption) {
-            if (Objects.equals(caption, getAssistiveCaption())) {
-                return this;
-            }
-            getState().assistiveCaption = caption;
-            return this;
-        }
-
-        /**
-         * Gets the header caption for this column.
-         *
-         * @return header caption
-         *
-         * @since
-         */
-        public String getAssistiveCaption() {
-            return getState(false).assistiveCaption;
-        }
-
-        /**
          * Sets the header caption for this column.
          *
          * @param caption
@@ -2160,10 +2130,6 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
             if (design.hasAttr("hiding-toggle-caption")) {
                 setHidingToggleCaption(DesignAttributeHandler.readAttribute(
                         "hiding-toggle-caption", attributes, String.class));
-            }
-            if (design.hasAttr("assistive-caption")) {
-                setAssistiveCaption(DesignAttributeHandler.readAttribute(
-                        "assistive-caption", attributes, String.class));
             }
 
             // Read size info where necessary.

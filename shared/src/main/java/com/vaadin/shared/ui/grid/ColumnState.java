@@ -30,9 +30,6 @@ public class ColumnState extends AbstractGridExtensionState {
     public boolean sortable = false;
     public boolean editable = false;
 
-    /** The assistive device caption for the column. */
-    public String assistiveCaption;
-
     /** The caption for the column hiding toggle. */
     public String hidingToggleCaption;
 
