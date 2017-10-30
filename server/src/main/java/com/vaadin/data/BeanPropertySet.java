@@ -105,7 +105,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     private abstract static class AbstractBeanPropertyDefinition<T, V>
             implements PropertyDefinition<T, V> {
-        private final PropertyDescriptor descriptor;
+        protected final PropertyDescriptor descriptor;
         private final BeanPropertySet<T> propertySet;
         private final Class<?> propertyHolderType;
 
@@ -250,6 +250,16 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             return Optional.of(setter);
         }
 
+        @Override
+        public String getName() {
+            return parent.getName() + "." + descriptor.getName();
+        }
+        
+        @Override
+        public String getTopLevelName() {
+            return descriptor.getName();
+        }
+        
         private Object writeReplace() {
             /*
              * Instead of serializing this actual property definition, only
@@ -257,8 +267,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * property definition from the cache.
              */
             return new SerializedPropertyDefinition(getPropertySet().beanType,
-                    parent.getName() + "." + getName());
+                    getName());
         }
+        
 
         /**
          * Gets the parent property definition.
