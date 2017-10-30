@@ -69,12 +69,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         /**
          * Called when calendar user triggers a submitting operation in calendar
-         * panel. Eg. clicking on day or hitting enter.
+         * panel. E.g. clicking on day or hitting enter.
          */
         void onSubmit();
 
         /**
-         * On eg. ESC key.
+         * On e.g. ESC key.
          */
         void onCancel();
     }

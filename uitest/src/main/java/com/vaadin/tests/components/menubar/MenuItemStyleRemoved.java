@@ -36,7 +36,7 @@ public class MenuItemStyleRemoved extends AbstractReindeerTestUI {
                 }
                 JavaScript.getCurrent()
                         .execute("var x=document." + method + ";"
-                                + " var i; for(i=0; i < x.length; i++)"
+                                + " var i; for (i=0; i < x.length; i++)"
                                 + " {x[i].className += ' custom-menu-item'};");
             }
         });

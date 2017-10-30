@@ -40,8 +40,8 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     protected void init() {
         registerRpc(ExecuteJavaScriptRpc.class, new ExecuteJavaScriptRpc() {
             @Override
-            public void executeJavaScript(String Script) {
-                eval(Script);
+            public void executeJavaScript(String script) {
+                eval(script);
             }
         });
     }
@@ -71,15 +71,15 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
         var m = this;
         var target = $wnd;
         var parts = name.split('.');
-    
-        for(var i = 0; i < parts.length - 1; i++) {
+
+        for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
                 target[part] = {};
             }
             target = target[part];
         }
-    
+
         target[parts[parts.length - 1]] = $entry(function() {
             //Must make a copy because arguments is an array-like object (not instanceof Array), causing suboptimal JSON encoding
             var args = Array.prototype.slice.call(arguments, 0);
@@ -94,8 +94,8 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     /*-{
         var target = $wnd;
         var parts = name.split('.');
-    
-        for(var i = 0; i < parts.length - 1; i++) {
+
+        for (var i = 0; i < parts.length - 1; i++) {
             var part = parts[i];
             if (target[part] === undefined) {
                 $wnd.console.log(part,'not defined in',target);
@@ -104,14 +104,14 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
             }
             target = target[part];
         }
-    
+
         $wnd.console.log('removing',parts[parts.length - 1],'from',target);
         delete target[parts[parts.length - 1]];
     }-*/;
 
     private static native void eval(String script)
     /*-{
-        if(script) {
+        if (script) {
             (new $wnd.Function(script)).apply($wnd);
         }
     }-*/;

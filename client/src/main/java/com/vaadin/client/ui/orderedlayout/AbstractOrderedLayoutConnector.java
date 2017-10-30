@@ -18,7 +18,6 @@ package com.vaadin.client.ui.orderedlayout;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,7 +38,6 @@ import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.aria.AriaHelper;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.communication.URLReference;
@@ -75,95 +73,83 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            // Child state has changed, update stuff it hasn't already been done
-            updateInternalState();
+    private StateChangeHandler childStateChangeHandler = event -> {
+        // Child state has changed, update stuff it hasn't already been done
+        updateInternalState();
 
-            /*
-             * Some changes must always be done after each child's own state
-             * change handler has been run because it might have changed some
-             * styles that are overridden here.
-             */
-            ServerConnector child = stateChangeEvent.getConnector();
-            if (child instanceof ComponentConnector) {
-                ComponentConnector component = (ComponentConnector) child;
-                Slot slot = getWidget().getSlot(component.getWidget());
+        /*
+         * Some changes must always be done after each child's own state change
+         * handler has been run because it might have changed some styles that
+         * are overridden here.
+         */
+        ServerConnector child = event.getConnector();
+        if (child instanceof ComponentConnector) {
+            ComponentConnector component = (ComponentConnector) child;
+            Slot slot = getWidget().getSlot(component.getWidget());
 
-                slot.setRelativeWidth(component.isRelativeWidth());
-                slot.setRelativeHeight(component.isRelativeHeight());
-            }
+            slot.setRelativeWidth(component.isRelativeWidth());
+            slot.setRelativeHeight(component.isRelativeHeight());
         }
     };
 
-    private ElementResizeListener slotCaptionResizeListener = new ElementResizeListener() {
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
+    private ElementResizeListener slotCaptionResizeListener = event -> {
 
-            // Get all needed element references
-            Element captionElement = e.getElement();
+        // Get all needed element references
+        Element captionElement = event.getElement();
 
-            // Caption position determines if the widget element is the first or
-            // last child inside the caption wrap
-            CaptionPosition pos = getWidget().getCaptionPositionFromElement(
-                    captionElement.getParentElement());
+        // Caption position determines if the widget element is the first or
+        // last child inside the caption wrap
+        CaptionPosition pos = getWidget().getCaptionPositionFromElement(
+                captionElement.getParentElement());
 
-            // The default is the last child
-            Element widgetElement = captionElement.getParentElement()
-                    .getLastChild().cast();
+        // The default is the last child
+        Element widgetElement = captionElement.getParentElement().getLastChild()
+                .cast();
 
-            // ...but if caption position is bottom or right, the widget is the
-            // first child
-            if (pos == CaptionPosition.BOTTOM || pos == CaptionPosition.RIGHT) {
-                widgetElement = captionElement.getParentElement()
-                        .getFirstChildElement().cast();
+        // ...but if caption position is bottom or right, the widget is the
+        // first child
+        if (pos == CaptionPosition.BOTTOM || pos == CaptionPosition.RIGHT) {
+            widgetElement = captionElement.getParentElement()
+                    .getFirstChildElement().cast();
+        }
+
+        if (captionElement == widgetElement) {
+            // Caption element already detached
+            Slot slot = getWidget().getSlot(widgetElement);
+            if (slot != null) {
+                slot.setCaptionResizeListener(null);
             }
+            return;
+        }
 
-            if (captionElement == widgetElement) {
-                // Caption element already detached
-                Slot slot = getWidget().getSlot(widgetElement);
-                if (slot != null) {
-                    slot.setCaptionResizeListener(null);
-                }
-                return;
-            }
+        String widgetWidth = widgetElement.getStyle().getWidth();
+        String widgetHeight = widgetElement.getStyle().getHeight();
 
-            String widgetWidth = widgetElement.getStyle().getWidth();
-            String widgetHeight = widgetElement.getStyle().getHeight();
+        if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
+                || pos == CaptionPosition.BOTTOM)) {
+            getWidget().updateCaptionOffset(captionElement);
+        } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
+                || pos == CaptionPosition.RIGHT)) {
+            getWidget().updateCaptionOffset(captionElement);
+        }
 
-            if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
-                    || pos == CaptionPosition.BOTTOM)) {
-                getWidget().updateCaptionOffset(captionElement);
-            } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
-                    || pos == CaptionPosition.RIGHT)) {
-                getWidget().updateCaptionOffset(captionElement);
-            }
+        updateLayoutHeight();
 
-            updateLayoutHeight();
-
-            if (needsExpand()) {
-                getWidget().updateExpandCompensation();
-            }
+        if (needsExpand()) {
+            getWidget().updateExpandCompensation();
         }
     };
 
-    private ElementResizeListener childComponentResizeListener = new ElementResizeListener() {
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            updateLayoutHeight();
-            if (needsExpand()) {
-                getWidget().updateExpandCompensation();
-            }
+    private ElementResizeListener childComponentResizeListener = event -> {
+        updateLayoutHeight();
+        if (needsExpand()) {
+            getWidget().updateExpandCompensation();
         }
     };
 
-    private ElementResizeListener spacingResizeListener = new ElementResizeListener() {
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            if (needsExpand()) {
-                getWidget().updateExpandCompensation();
-            }
+    private ElementResizeListener spacingResizeListener = event -> {
+        if (needsExpand()) {
+            getWidget().updateExpandCompensation();
         }
     };
 
@@ -520,12 +506,8 @@ public abstract class AbstractOrderedLayoutConnector
             // updateExpandedSizes causes fixed size components to temporarily
             // lose their size. updateExpandCompensation must be delayed until
             // the browser has a chance to measure them.
-            Scheduler.get().scheduleFinally(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getWidget().updateExpandCompensation();
-                }
-            });
+            Scheduler.get().scheduleFinally(
+                    () -> getWidget().updateExpandCompensation());
         } else {
             getWidget().clearExpand();
         }

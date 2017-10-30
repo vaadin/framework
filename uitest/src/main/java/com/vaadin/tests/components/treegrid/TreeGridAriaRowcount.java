@@ -35,19 +35,22 @@ public class TreeGridAriaRowcount extends AbstractTestUI {
         addComponent(grid);
 
         addComponent(new Button("addFooter", event -> grid.addFooterRowAt(0)));
-        addComponent(new Button("removeFooter", event -> grid.removeFooterRow(0)));
+        addComponent(
+                new Button("removeFooter", event -> grid.removeFooterRow(0)));
 
         addComponent(new Button("addHeader", event -> grid.addHeaderRowAt(1)));
-        addComponent(new Button("removeHeader", event -> grid.removeHeaderRow(1)));
+        addComponent(
+                new Button("removeHeader", event -> grid.removeHeaderRow(1)));
 
-        addComponent(new Button("setItemsTo3", event -> grid.setItems("a", "b", "c")));
-        addComponent(new Button("setItemsTo6", event -> grid.setItems("a", "b", "c", "d", "e", "f")));
+        addComponent(new Button("setItemsTo3",
+                event -> grid.setItems("a", "b", "c")));
+        addComponent(new Button("setItemsTo6",
+                event -> grid.setItems("a", "b", "c", "d", "e", "f")));
 
         addComponent(new Button("updateAll", event -> {
             grid.addFooterRowAt(0);
             grid.addHeaderRowAt(0);
             grid.setItems("a", "b", "c", "d");
         }));
-
     }
 }

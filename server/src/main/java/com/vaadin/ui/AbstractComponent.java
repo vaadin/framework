@@ -91,7 +91,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     /**
      * The internal error message of the component.
      */
-    private ErrorMessage componentError = null;
+    private ErrorMessage componentError;
 
     /**
      * Locale of this component.
@@ -1251,7 +1251,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      *         implementation
      */
     protected Collection<String> getCustomAttributes() {
-        List<String> l = new ArrayList<>(Arrays.asList(customAttributes));
+        List<String> l = new ArrayList<>(Arrays.asList(CUSTOM_ATTRIBUTES));
         if (this instanceof Focusable) {
             l.add("tab-index");
             l.add("tabindex");
@@ -1259,7 +1259,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         return l;
     }
 
-    private static final String[] customAttributes = { "width", "height",
+    private static final String[] CUSTOM_ATTRIBUTES = { "width", "height",
             "debug-id", "error", "width-auto", "height-auto", "width-full",
             "height-full", "size-auto", "size-full", "immediate", "locale",
             "read-only", "_id" };
@@ -1388,10 +1388,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
         // called if there are no listeners on the server-side. A client-side
         // connector can override this and use a different RPC channel.
         if (getRpcManager(ContextClickRpc.class.getName()) == null) {
-            registerRpc((ContextClickRpc) (MouseEventDetails details) -> {
-                fireEvent(
-                        new ContextClickEvent(AbstractComponent.this, details));
-            });
+            registerRpc(
+                    (ContextClickRpc) (MouseEventDetails details) -> fireEvent(
+                            new ContextClickEvent(AbstractComponent.this,
+                                    details)));
         }
 
         return addListener(EventId.CONTEXT_CLICK, ContextClickEvent.class,

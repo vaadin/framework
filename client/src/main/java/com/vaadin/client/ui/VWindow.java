@@ -28,7 +28,6 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -49,7 +48,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -82,7 +80,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static List<VWindow> windowOrder = new ArrayList<>();
 
-    private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
+    private static final HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
 
     private static boolean orderingDefered;
@@ -203,13 +201,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public int bringToFrontSequence = -1;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    updateContentsSize();
-                }
-            });
+            () -> updateContentsSize());
 
     public VWindow() {
         super(false, false); // no autohide, not modal
@@ -327,7 +319,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static VWindow getTopmostWindow() {
-        if (windowOrder.size() > 0) {
+        if (!windowOrder.isEmpty()) {
             return windowOrder.get(windowOrder.size() - 1);
         }
         return null;
@@ -441,35 +433,29 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         // Handlers to Prevent tab to leave the window
         // and backspace to cause browser navigation
-        topEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        topEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
 
-        bottomEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && !nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        bottomEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && !nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
     }

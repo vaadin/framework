@@ -48,12 +48,11 @@ import com.vaadin.event.FieldEvents.BlurNotifier;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.Registration;
+import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldState;
-import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.declarative.DesignAttributeHandler;
 import com.vaadin.ui.declarative.DesignContext;
@@ -73,8 +72,76 @@ import com.vaadin.util.TimeZoneUtil;
  *
  */
 public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
-        extends AbstractField<T>
-        implements LegacyComponent, FocusNotifier, BlurNotifier {
+        extends AbstractField<T> implements FocusNotifier, BlurNotifier {
+
+    private AbstractDateFieldServerRpc rpc = new AbstractDateFieldServerRpc() {
+
+        @Override
+        public void update(String newDateString,
+                Map<String, Integer> resolutions) {
+            Set<String> resolutionNames = getResolutions().map(Enum::name)
+                    .collect(Collectors.toSet());
+            resolutionNames.retainAll(resolutions.keySet());
+            if (!isReadOnly()
+                    && (!resolutionNames.isEmpty() || newDateString != null)) {
+
+                // Old and new dates
+                final T oldDate = getValue();
+
+                T newDate;
+
+                boolean hasChanges = false;
+
+                if ("".equals(newDateString)) {
+
+                    newDate = null;
+                } else {
+                    newDate = reconstructDateFromFields(resolutions, oldDate);
+                }
+
+                hasChanges |= !Objects.equals(dateString, newDateString)
+                        || !Objects.equals(oldDate, newDate);
+
+                if (hasChanges) {
+                    dateString = newDateString;
+                    currentParseErrorMessage = null;
+                    if (newDateString == null || newDateString.isEmpty()) {
+                        setValue(newDate, true);
+                    } else {
+                        // invalid date string
+                        if (resolutions.isEmpty()) {
+                            Result<T> parsedDate = handleUnparsableDateString(
+                                    dateString);
+                            parsedDate.ifOk(v -> setValue(v, true));
+                            if (parsedDate.isError()) {
+                                dateString = null;
+                                currentParseErrorMessage = parsedDate
+                                        .getMessage().orElse("Parsing error");
+
+                                if (!isDifferentValue(null)) {
+                                    doSetValue(null);
+                                } else {
+                                    setValue(null, true);
+                                }
+                            }
+                        } else {
+                            setValue(newDate, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void focus() {
+            fireEvent(new FocusEvent(AbstractDateField.this));
+        }
+
+        @Override
+        public void blur() {
+            fireEvent(new BlurEvent(AbstractDateField.this));
+        }
+    };
 
     /**
      * Value of the field.
@@ -83,38 +150,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * Default value of the field, displayed when nothing has been selected.
-     * 
+     *
      * @since 8.1.2
      */
-    private T defaultValue = null;
+    private T defaultValue;
+
     /**
      * Specified smallest modifiable unit for the date field.
      */
     private R resolution;
 
-    /**
-     * Overridden format string
-     */
-    private String dateFormat;
-
     private ZoneId zoneId;
-
-    private boolean lenient = false;
 
     private String dateString = "";
 
     private String currentParseErrorMessage;
-
-    /**
-     * Was the last entered string parsable? If this flag is false, datefields
-     * internal validator does not pass.
-     */
-    private boolean uiHasValidDateString = true;
-
-    /**
-     * Determines if week numbers are shown in the date selector.
-     */
-    private boolean showISOWeekNumbers = false;
 
     private String defaultParseErrorMessage = "Date format not recognized";
 
@@ -123,23 +173,24 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /* Constructors */
 
     /**
-     * Constructs an empty <code>AbstractDateField</code> with no caption and
+     * Constructs an empty {@code AbstractDateField} with no caption and
      * specified {@code resolution}.
      *
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(R resolution) {
-        this.resolution = resolution;
+        registerRpc(rpc);
+        setResolution(resolution);
     }
 
     /**
-     * Constructs an empty <code>AbstractDateField</code> with caption.
+     * Constructs an empty {@code AbstractDateField} with caption.
      *
      * @param caption
-     *            the caption of the datefield.
+     *            the caption of the datefield
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(String caption, R resolution) {
         this(resolution);
@@ -147,15 +198,15 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Constructs a new <code>AbstractDateField</code> with the given caption
-     * and initial text contents.
+     * Constructs a new {@code AbstractDateField} with the given caption and
+     * initial text contents.
      *
      * @param caption
-     *            the caption <code>String</code> for the editor.
+     *            the caption {@code String} for the editor.
      * @param value
      *            the date/time value.
      * @param resolution
-     *            initial resolution for the field
+     *            initial resolution for the field, not {@code null}
      */
     public AbstractDateField(String caption, T value, R resolution) {
         this(caption, resolution);
@@ -164,156 +215,43 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /* Component basic features */
 
-    /*
-     * Paints this component. Don't add a JavaDoc comment here, we use the
-     * default documentation from implemented interface.
-     */
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
 
-        // Adds the locale as attribute
-        final Locale l = getLocale();
-        if (l != null) {
-            target.addAttribute("locale", l.toString());
-        }
-
-        if (getDateFormat() != null) {
-            target.addAttribute("format", getDateFormat());
-        }
-
-        if (!isLenient()) {
-            target.addAttribute("strict", true);
-        }
-
-        target.addAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS,
-                isShowISOWeekNumbers());
-        target.addAttribute("parsable", uiHasValidDateString);
-        final T currentDate = getValue();
-
-        // Only paint variables for the resolution and up, e.g. Resolution DAY
-        // paints DAY,MONTH,YEAR
-        for (R res : getResolutionsHigherOrEqualTo(getResolution())) {
-            int value = -1;
-            if (currentDate != null) {
-                value = getDatePart(currentDate, res);
-            }
-            String variableName = getResolutionVariable(res);
-            target.addVariable(this, variableName, value);
-            if (defaultValue != null) {
-                int defaultValuePart = getDatePart(defaultValue, res);
-                target.addVariable(this, "default-" + variableName,
-                        defaultValuePart);
-            } else {
-                target.addVariable(this, "default-" + variableName, -1);
-            }
-        }
-    }
-
-    /*
-     * Invoked when a variable of the component changes. Don't add a JavaDoc
-     * comment here, we use the default documentation from implemented
-     * interface.
-     */
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        Set<String> resolutionNames = getResolutions()
-                .map(this::getResolutionVariable).collect(Collectors.toSet());
-        resolutionNames.retainAll(variables.keySet());
-        if (!isReadOnly() && (!resolutionNames.isEmpty()
-                || variables.containsKey("dateString"))) {
-
-            // Old and new dates
-            final T oldDate = getValue();
-
-            // this enables analyzing invalid input on the server
-            // this variable is null if the date was chosen with popup calendar
-            // or contains user-typed string
-            final String newDateString = (String) variables.get("dateString");
-
-            T newDate;
-
-            boolean hasChanges = false;
-
-            if ("".equals(newDateString)) {
-
-                newDate = null;
-                // TODO check if the following 3 lines are necessary
-                hasChanges = !uiHasValidDateString;
-                uiHasValidDateString = true;
-                currentParseErrorMessage = null;
-            } else {
-                newDate = reconstructDateFromFields(variables, oldDate);
-            }
-
-            hasChanges |= !Objects.equals(dateString, newDateString)
-                    || !Objects.equals(oldDate, newDate);
-
-            if (hasChanges) {
-                dateString = newDateString;
-                if (newDateString == null || newDateString.isEmpty()) {
-                    uiHasValidDateString = true;
-                    currentParseErrorMessage = null;
-                    setComponentError(null);
-                    setValue(newDate, true);
-                } else {
-                    if (variables.get("lastInvalidDateString") != null) {
-                        Result<T> parsedDate = handleUnparsableDateString(
-                                dateString);
-                        parsedDate.ifOk(v -> {
-                            uiHasValidDateString = true;
-                            currentParseErrorMessage = null;
-                            setValue(v, true);
-                        });
-                        if (parsedDate.isError()) {
-                            dateString = null;
-                            uiHasValidDateString = false;
-                            currentParseErrorMessage = parsedDate.getMessage()
-                                    .orElse("Parsing error");
-                            setComponentError(
-                                    new UserError(getParseErrorMessage()));
-                            setValue(null, true);
-                        }
-                    } else {
-                        uiHasValidDateString = true;
-                        currentParseErrorMessage = null;
-                        setValue(newDate, true);
-                    }
-                }
-                markAsDirty();
-            }
-        }
-
-        if (variables.containsKey(FocusEvent.EVENT_ID)) {
-            fireEvent(new FocusEvent(this));
-        }
-
-        if (variables.containsKey(BlurEvent.EVENT_ID)) {
-            fireEvent(new BlurEvent(this));
-        }
+        Locale locale = getLocale();
+        getState().locale = locale == null ? null : locale.toString();
     }
 
     /**
      * Construct a date object from the individual field values received from
      * the client.
      *
-     * @since 8.1.1
+     * @param resolutions
+     *            map of time unit (resolution) name and value, the key is the
+     *            resolution name e.g. "HOUR", "MINUTE", the value can be
+     *            {@code null}
+     * @param oldDate
+     *            used as a fallback to get needed values if they are not
+     *            defined in the specified {@code resolutions}
+     *
+     * @return the date object built from the specified resolutions
+     * @since
      */
-    protected T reconstructDateFromFields(Map<String, Object> variables,
+    protected T reconstructDateFromFields(Map<String, Integer> resolutions,
             T oldDate) {
         Map<R, Integer> calendarFields = new HashMap<>();
 
         for (R resolution : getResolutionsHigherOrEqualTo(getResolution())) {
             // Only handle what the client is allowed to send. The same
             // resolutions that are painted
-            String variableName = getResolutionVariable(resolution);
+            String resolutionName = resolution.name();
 
-            Integer newValue = (Integer) variables.get(variableName);
-            if (newValue != null && newValue >= 0) {
-                calendarFields.put(resolution, newValue);
-            } else {
-                calendarFields.put(resolution,
-                        getDatePart(oldDate, resolution));
+            Integer newValue = resolutions.get(resolutionName);
+            if (newValue == null) {
+                newValue = getDatePart(oldDate, resolution);
             }
+            calendarFields.put(resolution, newValue);
         }
         return buildDate(calendarFields);
     }
@@ -321,8 +259,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Sets the start range for this component. If the value is set before this
      * date (taking the resolution into account), the component will not
-     * validate. If <code>startDate</code> is set to <code>null</code>, any
-     * value before <code>endDate</code> will be accepted by the range
+     * validate. If {@code startDate} is set to {@code null}, any value before
+     * {@code endDate} will be accepted by the range
      *
      * @param startDate
      *            - the allowed range's start date
@@ -378,18 +316,18 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     public void setResolution(R resolution) {
         this.resolution = resolution;
-        markAsDirty();
+        updateResolutions();
     }
 
     /**
      * Sets the end range for this component. If the value is set after this
      * date (taking the resolution into account), the component will not
-     * validate. If <code>endDate</code> is set to <code>null</code>, any value
-     * after <code>startDate</code> will be accepted by the range.
+     * validate. If {@code endDate} is set to {@code null}, any value after
+     * {@code startDate} will be accepted by the range.
      *
      * @param endDate
-     *            - the allowed range's end date (inclusive, based on the
-     *            current resolution)
+     *            the allowed range's end date (inclusive, based on the current
+     *            resolution)
      */
     public void setRangeEnd(T endDate) {
         Date date = convertToDate(endDate);
@@ -405,7 +343,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns the precise rangeStart used.
      *
-     * @return the precise rangeStart used, may be null.
+     * @return the precise rangeStart used, may be {@code null}.
      */
     public T getRangeStart() {
         return convertFromDate(getState(false).rangeStart);
@@ -414,7 +352,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     /**
      * Returns the precise rangeEnd used.
      *
-     * @return the precise rangeEnd used, may be null.
+     * @return the precise rangeEnd used, may be {@code null}.
      */
     public T getRangeEnd() {
         return convertFromDate(getState(false).rangeEnd);
@@ -429,23 +367,23 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * override formatting. See Vaadin issue #2200.
      *
      * @param dateFormat
-     *            the dateFormat to set
+     *            the dateFormat to set, can be {@code null}
      *
      * @see com.vaadin.ui.AbstractComponent#setLocale(Locale))
      */
     public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
-        markAsDirty();
+        getState().format = dateFormat;
     }
 
     /**
-     * Returns a format string used to format date value on client side or null
-     * if default formatting from {@link Component#getLocale()} is used.
+     * Returns a format string used to format date value on client side or
+     * {@code null} if default formatting from {@link Component#getLocale()} is
+     * used.
      *
      * @return the dateFormat
      */
     public String getDateFormat() {
-        return dateFormat;
+        return getState(false).format;
     }
 
     /**
@@ -484,6 +422,32 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
         super.setLocale(locale);
     }
 
+    private void updateResolutions() {
+        final T currentDate = getValue();
+
+        Map<String, Integer> resolutions = getState().resolutions;
+        resolutions.clear();
+
+        // Only paint variables for the resolution and up, e.g. Resolution DAY
+        // paints DAY,MONTH,YEAR
+        for (R resolution : getResolutionsHigherOrEqualTo(getResolution())) {
+            String resolutionName = resolution.name();
+
+            Integer value = getValuePart(currentDate, resolution);
+            resolutions.put(resolutionName, value);
+
+            Integer defaultValuePart = getValuePart(defaultValue, resolution);
+            resolutions.put("default-" + resolutionName, defaultValuePart);
+        }
+    }
+
+    private Integer getValuePart(T date, R resolution) {
+        if (date == null) {
+            return null;
+        }
+        return getDatePart(date, resolution);
+    }
+
     /**
      * Returns the {@link ZoneId}, which is used when {@code z} is included
      * inside the {@link #setDateFormat(String)}.
@@ -507,20 +471,19 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            be turned off.
      */
     public void setLenient(boolean lenient) {
-        this.lenient = lenient;
-        markAsDirty();
+        getState().lenient = lenient;
     }
 
     /**
-     * Returns whether date/time interpretation is to be lenient.
+     * Returns whether date/time interpretation is lenient.
      *
      * @see #setLenient(boolean)
      *
-     * @return true if the interpretation mode of this calendar is lenient;
-     *         false otherwise.
+     * @return {@code true} if the interpretation mode of this calendar is
+     *         lenient; {@code false} otherwise.
      */
     public boolean isLenient() {
-        return lenient;
+        return getState(false).lenient;
     }
 
     @Override
@@ -545,10 +508,12 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * default value is set, current date/time is used.
      *
      * @param defaultValue
+     *            the default value, may be {@code null}
      * @since 8.1.2
      */
     public void setDefaultValue(T defaultValue) {
         this.defaultValue = defaultValue;
+        updateResolutions();
     }
 
     /**
@@ -560,13 +525,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @Override
     public void setValue(T value) {
+        currentParseErrorMessage = null;
         /*
          * First handle special case when the client side component have a date
          * string but value is null (e.g. unparsable date string typed in by the
          * user). No value changes should happen, but we need to do some
          * internal housekeeping.
          */
-        if (value == null && !uiHasValidDateString) {
+        if (value == null && !getState(false).parsable) {
             /*
              * Side-effects of doSetValue clears possible previous strings and
              * flags about invalid input.
@@ -585,7 +551,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @return true if week numbers are shown, false otherwise.
      */
     public boolean isShowISOWeekNumbers() {
-        return showISOWeekNumbers;
+        return getState(false).showISOWeekNumbers;
     }
 
     /**
@@ -597,8 +563,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            true if week numbers should be shown, false otherwise.
      */
     public void setShowISOWeekNumbers(boolean showWeekNumbers) {
-        showISOWeekNumbers = showWeekNumbers;
-        markAsDirty();
+        getState().showISOWeekNumbers = showWeekNumbers;
     }
 
     /**
@@ -624,9 +589,11 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * {@link #handleUnparsableDateString(String)} method is overridden, the
      * localized message from its exception is used.
      *
+     * @param parsingErrorMessage
+     *            the default parsing error message
+     *
      * @see #getParseErrorMessage()
      * @see #handleUnparsableDateString(String)
-     * @param parsingErrorMessage
      */
     public void setParseErrorMessage(String parsingErrorMessage) {
         defaultParseErrorMessage = parsingErrorMessage;
@@ -671,8 +638,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
     }
 
     /**
-     * Formats date according to the components locale. To be reimplemented in
-     * subclasses.
+     * Formats date according to the components locale.
      *
      * @param value
      *            the date or {@code null}
@@ -680,9 +646,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *         {@code null}
      * @since 8.1.1
      */
-    protected String formatDate(T value) {
-        return Objects.toString(value, "");
-    }
+    protected abstract String formatDate(T value);
 
     @Override
     public void writeDesign(Element design, DesignContext designContext) {
@@ -727,24 +691,31 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
         this.value = value;
         // Also set the internal dateString
-        if (value != null) {
-            dateString = formatDate(value);
-        } else {
-            dateString = formatDate(getEmptyValue());
+        if (value == null) {
+            value = getEmptyValue();
         }
+        dateString = formatDate(value);
         RangeValidator<T> validator = getRangeValidator();// TODO move range
                                                           // check to internal
                                                           // validator?
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
+
         if (result.isError()) {
             currentParseErrorMessage = getDateOutOfRangeMessage();
         }
+
+        getState().parsable = currentParseErrorMessage == null;
+
+        ErrorMessage errorMessage;
         if (currentParseErrorMessage == null) {
-            setComponentError(null);
+            errorMessage = null;
         } else {
-            setComponentError(new UserError(currentParseErrorMessage));
+            errorMessage = new UserError(currentParseErrorMessage);
         }
+        setComponentError(errorMessage);
+
+        updateResolutions();
     }
 
     /**
@@ -752,9 +723,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * given {@code resolution}.
      *
      * @param date
-     *            the given date
+     *            the given date, can be {@code null}
      * @param resolution
-     *            the resolution to extract a value from the date by
+     *            the resolution to extract a value from the date by, not
+     *            {@code null}
      * @return the integer value part of the date by the given resolution
      */
     protected abstract int getDatePart(T date, R resolution);
@@ -799,10 +771,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     protected abstract Date convertToDate(T date);
 
-    private String getResolutionVariable(R resolution) {
-        return resolution.name().toLowerCase(Locale.ENGLISH);
-    }
-
     @SuppressWarnings("unchecked")
     private Stream<R> getResolutions() {
         Type resolutionType = GenericTypeReflector.getTypeParameter(getClass(),
@@ -811,11 +779,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             Class<?> clazz = (Class<?>) resolutionType;
             return Stream.of(clazz.getEnumConstants())
                     .map(object -> (R) object);
-        } else {
-            throw new RuntimeException("Cannot detect resoluton type "
-                    + Optional.ofNullable(resolutionType).map(Type::getTypeName)
-                            .orElse(null));
         }
+        throw new RuntimeException("Cannot detect resoluton type "
+                + Optional.ofNullable(resolutionType).map(Type::getTypeName)
+                        .orElse(null));
     }
 
     private Iterable<R> getResolutionsHigherOrEqualTo(R resoution) {

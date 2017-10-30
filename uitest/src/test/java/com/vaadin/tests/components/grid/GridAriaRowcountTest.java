@@ -15,12 +15,15 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
-import org.junit.Assert;
-import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -35,6 +38,14 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
         openTestURL();
 
         grid = $(GridElement.class).first();
+
+        // default grid should contain at least one of each role
+        String gridHtml = grid.getHTML();
+        assertTrue("Grid should contain a role=\"rowheader\"", gridHtml.contains("role=\"rowheader\""));
+        assertTrue("Grid should contain a role=\"columnheader\"", gridHtml.contains("role=\"columnheader\""));
+        assertTrue("Grid should contain a role=\"row\"", gridHtml.contains("role=\"row\""));
+        assertTrue("Grid should contain a role=\"gridcell\"", gridHtml.contains("role=\"gridcell\""));
+        assertTrue("Grid should contain a role=\"rowgroup\"", gridHtml.contains("role=\"rowgroup\""));
 
         // default with 1 header row and 2 body rows.
         assertTrue("Grid should have 3 rows", containsRows(3));
@@ -69,6 +80,7 @@ public class GridAriaRowcountTest extends SingleBrowserTest {
     }
 
     private boolean containsRows(int rowcount) {
-        return grid.getHTML().contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
+        return grid.getHTML()
+                .contains("aria-rowcount=\"" + String.valueOf(rowcount) + "\"");
     }
 }

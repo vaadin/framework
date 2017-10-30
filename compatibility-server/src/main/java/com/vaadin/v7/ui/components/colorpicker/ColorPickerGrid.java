@@ -156,8 +156,8 @@ public class ColorPickerGrid extends AbstractComponent
     private void sendChangedColors() {
         if (!changedColors.isEmpty()) {
             String[] colors = new String[changedColors.size()];
-            String[] XCoords = new String[changedColors.size()];
-            String[] YCoords = new String[changedColors.size()];
+            String[] xCoords = new String[changedColors.size()];
+            String[] yCoords = new String[changedColors.size()];
             int counter = 0;
             for (Point p : changedColors.keySet()) {
                 Color c = changedColors.get(p);
@@ -168,13 +168,13 @@ public class ColorPickerGrid extends AbstractComponent
                 String color = c.getCSS();
 
                 colors[counter] = color;
-                XCoords[counter] = String.valueOf(p.getX());
-                YCoords[counter] = String.valueOf(p.getY());
+                xCoords[counter] = String.valueOf(p.getX());
+                yCoords[counter] = String.valueOf(p.getY());
                 counter++;
             }
             getState().changedColor = colors;
-            getState().changedX = XCoords;
-            getState().changedY = YCoords;
+            getState().changedX = xCoords;
+            getState().changedY = yCoords;
 
             changedColors.clear();
         }

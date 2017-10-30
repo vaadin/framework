@@ -21,7 +21,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VAbstractCalendarPanel;
-import com.vaadin.client.ui.VAbstractCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VAbstractDateFieldCalendar;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 
@@ -39,13 +38,45 @@ import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends AbstractDateFieldConnector<R> {
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        super.updateFromUIDL(uidl, client);
-        if (!isRealUpdate(uidl)) {
-            return;
+    /**
+     * Updates listeners registered (or register them) for the widget based on
+     * the current resolution.
+     * <p>
+     * Subclasses may override this method to keep the common logic inside the
+     * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
+     * customizing only listeners logic.
+     */
+    protected void updateListeners() {
+        if (isResolutionMonthOrHigher()) {
+            getWidget().calendarPanel
+                    .setFocusChangeListener(date -> {
+                        Date date2 = new Date();
+                        if (getWidget().calendarPanel.getDate() != null) {
+                            date2.setTime(getWidget().calendarPanel.getDate()
+                                    .getTime());
+                        }
+                        /*
+                         * Update the value of calendarPanel
+                         */
+                        date2.setYear(date.getYear());
+                        date2.setMonth(date.getMonth());
+                        getWidget().calendarPanel.setDate(date2);
+                        /*
+                         * Then update the value from panel to server
+                         */
+                        getWidget().updateValueFromPanel();
+                    });
+        } else {
+            getWidget().calendarPanel.setFocusChangeListener(null);
         }
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setTabIndex(getState().tabIndex);
+        getWidget().calendarPanel.setRangeStart(getState().rangeStart);
+        getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
 
         getWidget().calendarPanel
                 .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
@@ -64,50 +95,6 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
 
         // Update possible changes
         getWidget().calendarPanel.renderCalendar();
-    }
-
-    /**
-     * Updates listeners registered (or register them) for the widget based on
-     * the current resolution.
-     * <p>
-     * Subclasses may override this method to keep the common logic inside the
-     * {@link #updateFromUIDL(UIDL, ApplicationConnection)} method as is and
-     * customizing only listeners logic.
-     */
-    protected void updateListeners() {
-        if (isResolutionMonthOrHigher()) {
-            getWidget().calendarPanel
-                    .setFocusChangeListener(new FocusChangeListener() {
-                        @Override
-                        public void focusChanged(Date date) {
-                            Date date2 = new Date();
-                            if (getWidget().calendarPanel.getDate() != null) {
-                                date2.setTime(getWidget().calendarPanel
-                                        .getDate().getTime());
-                            }
-                            /*
-                             * Update the value of calendarPanel
-                             */
-                            date2.setYear(date.getYear());
-                            date2.setMonth(date.getMonth());
-                            getWidget().calendarPanel.setDate(date2);
-                            /*
-                             * Then update the value from panel to server
-                             */
-                            getWidget().updateValueFromPanel();
-                        }
-                    });
-        } else {
-            getWidget().calendarPanel.setFocusChangeListener(null);
-        }
-    }
-
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-        getWidget().setTabIndex(getState().tabIndex);
-        getWidget().calendarPanel.setRangeStart(getState().rangeStart);
-        getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
     }
 
     @Override

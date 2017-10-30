@@ -459,7 +459,7 @@ public class VTree extends FocusElementPanel
     public void setSelected(TreeNode treeNode, boolean selected) {
         if (selected) {
             if (!isMultiselect) {
-                while (selectedIds.size() > 0) {
+                while (!selectedIds.isEmpty()) {
                     final String id = selectedIds.iterator().next();
                     final TreeNode oldSelection = getNodeByKey(id);
                     if (oldSelection != null) {
@@ -1725,7 +1725,7 @@ public class VTree extends FocusElementPanel
             TreeNode node = null;
             // If node is open and has children then move in to the children
             if (!focusedNode.isLeaf() && focusedNode.getState()
-                    && focusedNode.getChildren().size() > 0) {
+                    && !focusedNode.getChildren().isEmpty()) {
                 node = focusedNode.getChildren().get(0);
             } else {
                 // Move down to the next sibling
@@ -1906,8 +1906,7 @@ public class VTree extends FocusElementPanel
      * @return The bottom most child
      */
     private TreeNode getLastVisibleChildInTree(TreeNode root) {
-        if (root.isLeaf() || !root.getState()
-                || root.getChildren().size() == 0) {
+        if (root.isLeaf() || !root.getState() || root.getChildren().isEmpty()) {
             return root;
         }
         List<TreeNode> children = root.getChildren();
@@ -1971,7 +1970,7 @@ public class VTree extends FocusElementPanel
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     /**
@@ -2073,8 +2072,8 @@ public class VTree extends FocusElementPanel
         return KeyCodes.KEY_END;
     }
 
-    private final String SUBPART_NODE_PREFIX = "n";
-    private final String EXPAND_IDENTIFIER = "expand";
+    private static final String SUBPART_NODE_PREFIX = "n";
+    private static final String EXPAND_IDENTIFIER = "expand";
 
     /*
      * In webkit, focus may have been requested for this component but not yet

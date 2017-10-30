@@ -1,5 +1,10 @@
 package com.vaadin.tests.components.datefield;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
+
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Binder;
 import com.vaadin.data.Result;
@@ -10,11 +15,6 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class DateTextHandling extends AbstractTestUI {
@@ -60,7 +60,7 @@ public class DateTextHandling extends AbstractTestUI {
         layout.addComponent(buttonValidate);
 
         Button setValueButton = new Button("Set 2011-12-13",
-                e -> dateField.setValue(LocalDate.of(2011, 12, 13)));
+                event -> dateField.setValue(LocalDate.of(2011, 12, 13)));
         layout.addComponent(setValueButton);
         addComponent(layout);
     }

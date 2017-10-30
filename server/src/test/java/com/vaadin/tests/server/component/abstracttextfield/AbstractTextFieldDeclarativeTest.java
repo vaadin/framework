@@ -43,7 +43,7 @@ public abstract class AbstractTextFieldDeclarativeTest<T extends AbstractTextFie
                 "<%s maxlength='%d' placeholder='%s' "
                         + "value-change-mode='%s' value-change-timeout='%d'/>",
                 getComponentTag(), maxLength, placeholder,
-                mode.name().toLowerCase(Locale.ENGLISH), timeout);
+                mode.name().toLowerCase(Locale.ROOT), timeout);
 
         T component = getComponentClass().newInstance();
 

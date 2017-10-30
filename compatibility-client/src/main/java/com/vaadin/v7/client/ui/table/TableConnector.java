@@ -334,7 +334,7 @@ public class TableConnector extends AbstractFieldConnector
                     // in selection and exists with same index
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().focusedRow.getKey()));
-                } else if (getWidget().selectedRowKeys.size() > 0) {
+                } else if (!getWidget().selectedRowKeys.isEmpty()) {
                     // try to focus any row in selection
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().selectedRowKeys.iterator().next()));

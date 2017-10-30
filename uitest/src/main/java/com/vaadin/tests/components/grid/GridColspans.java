@@ -85,14 +85,14 @@ public class GridColspans extends AbstractTestUI {
             if (column != null) {
                 grid.removeColumn(column);
             } else {
-                grid.addColumn(Person::getFirstName).setId("firstName").setCaption("First name");
+                grid.addColumn(Person::getFirstName).setId("firstName")
+                        .setCaption("First name");
             }
         }));
 
-        addComponent(new Button("Change column order", event -> {
-            grid.setColumnOrder(grid.getColumn("ageColumn"),
-                    grid.getColumn("firstName"));
-        }));
+        addComponent(new Button("Change column order",
+                event -> grid.setColumnOrder(grid.getColumn("ageColumn"),
+                        grid.getColumn("firstName"))));
     }
 
     @Override

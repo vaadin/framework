@@ -141,7 +141,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
         draggedItems = getDraggedRows(nativeEvent);
 
         // Ignore event if there are no items dragged
-        if (draggedItems.size() == 0) {
+        if (draggedItems.isEmpty()) {
             return;
         }
 
@@ -214,9 +214,12 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             final Element selectionColumnCell = getGrid().getSelectionColumn()
                     .isPresent()
                     // -1 is used when even selection column is not frozen
-                    && frozenColumnCount != -1 ? draggedRowElement
-                            .removeChild(draggedRowElement.getFirstChild())
-                            .cast() : null;
+                    && frozenColumnCount != -1
+                            ? draggedRowElement
+                                    .removeChild(
+                                            draggedRowElement.getFirstChild())
+                                    .cast()
+                            : null;
 
             final List<String> frozenCellsTransforms = new ArrayList<>();
             for (int i = 0; i < getGrid().getColumnCount(); i++) {
@@ -331,7 +334,7 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
             return;
         }
         // Ignore event if there are no items dragged
-        if (draggedItems != null && draggedItems.size() > 0) {
+        if (draggedItems != null && !draggedItems.isEmpty()) {
             super.onDragEnd(event);
         }
 
@@ -448,8 +451,8 @@ public class GridDragSourceConnector extends DragSourceExtensionConnector {
      * @return Stream of dragged table row elements.
      */
     private Stream<TableRowElement> getDraggedRowElementStream() {
-        return draggedItems.stream()
-                .map(row -> ((AbstractRemoteDataSource<JsonObject>) gridConnector
+        return draggedItems.stream().map(
+                row -> ((AbstractRemoteDataSource<JsonObject>) gridConnector
                         .getDataSource()).indexOf(row))
                 .map(getGridBody()::getRowElement);
     }

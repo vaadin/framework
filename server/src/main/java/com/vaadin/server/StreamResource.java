@@ -41,7 +41,7 @@ public class StreamResource implements ConnectorResource {
     /**
      * Explicit mime-type.
      */
-    private String MIMEType;
+    private String mimeType;
 
     /**
      * Filename.
@@ -76,8 +76,8 @@ public class StreamResource implements ConnectorResource {
      */
     @Override
     public String getMIMEType() {
-        if (MIMEType != null) {
-            return MIMEType;
+        if (mimeType != null) {
+            return mimeType;
         }
         return FileTypeResolver.getMIMEType(filename);
     }
@@ -85,11 +85,11 @@ public class StreamResource implements ConnectorResource {
     /**
      * Sets the mime type of the resource.
      *
-     * @param MIMEType
+     * @param mimeType
      *            the MIME type to be set.
      */
-    public void setMIMEType(String MIMEType) {
-        this.MIMEType = MIMEType;
+    public void setMIMEType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     /**
@@ -223,7 +223,7 @@ public class StreamResource implements ConnectorResource {
         } else if (obj instanceof StreamResource) {
             StreamResource that = (StreamResource) obj;
             return SharedUtil.equals(getStreamSource(), that.getStreamSource())
-                    && SharedUtil.equals(MIMEType, that.MIMEType)
+                    && SharedUtil.equals(mimeType, that.mimeType)
                     && SharedUtil.equals(getFilename(), that.getFilename())
                     && getBufferSize() == that.getBufferSize()
                     && getCacheTime() == that.getCacheTime();
@@ -234,7 +234,7 @@ public class StreamResource implements ConnectorResource {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] { getStreamSource(), MIMEType,
+        return Arrays.hashCode(new Object[] { getStreamSource(), mimeType,
                 getFilename(), getBufferSize(), getCacheTime() });
     }
 

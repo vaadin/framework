@@ -46,13 +46,11 @@ public class CompositeChainUI extends AbstractTestUIWithLog {
         addComponent(container);
 
         Button updateCaption = new Button("Update caption");
-        updateCaption.addClickListener(e -> {
-            innermostComponent
-                    .setCaption(innermostComponent.getCaption() + " - updated");
-        });
+        updateCaption.addClickListener(event -> innermostComponent
+                .setCaption(innermostComponent.getCaption() + " - updated"));
         addComponent(updateCaption);
         Button replaceWithAnotherComposite = new Button(
-                "Replace with another Composite", e -> {
+                "Replace with another Composite", event -> {
                     Composite oldOuter = outerComposite;
                     createComposite();
                     layout.replaceComponent(oldOuter, outerComposite);

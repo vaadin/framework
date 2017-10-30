@@ -25,13 +25,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
-import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.DOM;
@@ -140,36 +136,24 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
         makeScrollable();
 
-        addDomHandler(new TouchCancelHandler() {
-            @Override
-            public void onTouchCancel(TouchCancelEvent event) {
-                // TODO When does this actually happen??
-                VConsole.log("TOUCH CANCEL");
-            }
+        addDomHandler(event -> {
+            // TODO When does this actually happen??
+            VConsole.log("TOUCH CANCEL");
         }, TouchCancelEvent.getType());
-        addDomHandler(new TouchStartHandler() {
-            @Override
-            public void onTouchStart(TouchStartEvent event) {
-                Node target = event.getTouches().get(0).getTarget().cast();
-                if (splitter.isOrHasChild(target)) {
-                    onMouseDown(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            Node target = event.getTouches().get(0).getTarget().cast();
+            if (splitter.isOrHasChild(target)) {
+                onMouseDown(Event.as(event.getNativeEvent()));
             }
         }, TouchStartEvent.getType());
-        addDomHandler(new TouchMoveHandler() {
-            @Override
-            public void onTouchMove(TouchMoveEvent event) {
-                if (resizing) {
-                    onMouseMove(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            if (resizing) {
+                onMouseMove(Event.as(event.getNativeEvent()));
             }
         }, TouchMoveEvent.getType());
-        addDomHandler(new TouchEndHandler() {
-            @Override
-            public void onTouchEnd(TouchEndEvent event) {
-                if (resizing) {
-                    onMouseUp(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            if (resizing) {
+                onMouseUp(Event.as(event.getNativeEvent()));
             }
         }, TouchEndEvent.getType());
 
@@ -852,7 +836,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Ensures the panels are scrollable eg. after style name changes
+     * Ensures the panels are scrollable e.g. after style name changes
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */

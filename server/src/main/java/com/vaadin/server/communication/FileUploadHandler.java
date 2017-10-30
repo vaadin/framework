@@ -694,9 +694,7 @@ public class FileUploadHandler implements RequestHandler {
 
     private void cleanStreamVariable(VaadinSession session, final UI ui,
             final ClientConnector owner, final String variableName) {
-        session.accessSynchronously(() -> {
-            ui.getConnectorTracker().cleanStreamVariable(owner.getConnectorId(),
-                    variableName);
-        });
+        session.accessSynchronously(() -> ui.getConnectorTracker()
+                .cleanStreamVariable(owner.getConnectorId(), variableName));
     }
 }

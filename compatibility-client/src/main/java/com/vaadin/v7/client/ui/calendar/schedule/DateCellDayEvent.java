@@ -61,7 +61,7 @@ public class DateCellDayEvent extends FocusableHTML
     private int startY = -1;
     private int startX = -1;
     private String moveWidth;
-    public static final int halfHourInMilliSeconds = 1800 * 1000;
+    public static final int HALF_HOUR_IN_MILLI_SECONDS = 1800 * 1000;
     private Date startDatetimeFrom;
     private Date startDatetimeTo;
     private boolean mouseMoveStarted;
@@ -396,7 +396,7 @@ public class DateCellDayEvent extends FocusableHTML
             long daysMs = dayDiff * DateConstants.DAYINMILLIS;
             from.setTime(startDatetimeFrom.getTime() + daysMs);
             from.setTime(from.getTime()
-                    + ((long) halfHourInMilliSeconds * halfHourDiff));
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff));
             to.setTime((from.getTime() + duration));
 
             calendarEvent.setStartTime(from);
@@ -425,7 +425,7 @@ public class DateCellDayEvent extends FocusableHTML
         } else if (clickTarget == topResizeBar) {
             long oldStartTime = startDatetimeFrom.getTime();
             long newStartTime = oldStartTime
-                    + ((long) halfHourInMilliSeconds * halfHourDiff);
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff);
 
             if (!isTimeRangeTooSmall(newStartTime, startDatetimeTo.getTime())) {
                 newStartTime = startDatetimeTo.getTime() - getMinTimeRange();
@@ -445,7 +445,7 @@ public class DateCellDayEvent extends FocusableHTML
         } else if (clickTarget == bottomResizeBar) {
             long oldEndTime = startDatetimeTo.getTime();
             long newEndTime = oldEndTime
-                    + ((long) halfHourInMilliSeconds * halfHourDiff);
+                    + ((long) HALF_HOUR_IN_MILLI_SECONDS * halfHourDiff);
 
             if (!isTimeRangeTooSmall(startDatetimeFrom.getTime(), newEndTime)) {
                 newEndTime = startDatetimeFrom.getTime() + getMinTimeRange();

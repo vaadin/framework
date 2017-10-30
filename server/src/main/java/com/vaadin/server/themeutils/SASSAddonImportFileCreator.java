@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,12 +102,12 @@ public class SASSAddonImportFileCreator {
             // last
             List<String> paths = new ArrayList<>(addonThemes.keySet());
             Collections.sort(paths, (String path1, String path2) -> {
-                if (path1.toLowerCase().endsWith(".css")
-                        && path2.toLowerCase().endsWith(".scss")) {
+                if (path1.toLowerCase(Locale.ROOT).endsWith(".css")
+                        && path2.toLowerCase(Locale.ROOT).endsWith(".scss")) {
                     return -1;
                 }
-                if (path1.toLowerCase().endsWith(".scss")
-                        && path2.toLowerCase().endsWith(".css")) {
+                if (path1.toLowerCase(Locale.ROOT).endsWith(".scss")
+                        && path2.toLowerCase(Locale.ROOT).endsWith(".css")) {
                     return 1;
                 }
                 return 0;

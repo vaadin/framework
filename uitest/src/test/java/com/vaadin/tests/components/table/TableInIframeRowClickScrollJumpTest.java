@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -24,8 +25,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 /**
@@ -96,7 +97,7 @@ public class TableInIframeRowClickScrollJumpTest extends MultiBrowserTest {
 
     public void switchIntoIframe() {
         List<WebElement> frames = driver.findElements(By.tagName("iframe"));
-        assertThat("No frames was found", frames.size() > 0);
+        assertFalse("No frames was found", frames.isEmpty());
         driver.switchTo().frame(frames.get(0));
     }
 

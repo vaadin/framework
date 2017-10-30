@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.themes.valo;
 
+import java.util.Locale;
+
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -185,7 +187,8 @@ public class CommonParts extends VerticalLayout implements View {
                             typeString = "";
                             notification.setStyleName(styleString.trim());
                         } else {
-                            typeString = selectedItem.getText().toLowerCase();
+                            typeString = selectedItem.getText()
+                                    .toLowerCase(Locale.ROOT);
                             notification.setStyleName(
                                     (typeString + " " + styleString.trim())
                                             .trim());
@@ -214,8 +217,8 @@ public class CommonParts extends VerticalLayout implements View {
                         styleString = "";
                         for (MenuItem item : style.getItems()) {
                             if (item.isChecked()) {
-                                styleString += " "
-                                        + item.getText().toLowerCase();
+                                styleString += " " + item.getText()
+                                        .toLowerCase(Locale.ROOT);
                             }
                         }
                         if (!styleString.trim().isEmpty()) {
@@ -603,7 +606,8 @@ public class CommonParts extends VerticalLayout implements View {
                         if (selectedItem.getText()
                                 .equals("Borderless Toolbars")) {
                             toolbarStyle = selectedItem.isChecked()
-                                    ? ValoTheme.MENUBAR_BORDERLESS : null;
+                                    ? ValoTheme.MENUBAR_BORDERLESS
+                                    : null;
                         }
 
                         win.setContent(windowContent());
@@ -638,8 +642,9 @@ public class CommonParts extends VerticalLayout implements View {
                     @Override
                     public void menuSelected(MenuItem selectedItem) {
                         if (selectedItem.getText().equals("Caption")) {
-                            win.setCaption(selectedItem.isChecked()
-                                    ? "Window Caption" : null);
+                            win.setCaption(
+                                    selectedItem.isChecked() ? "Window Caption"
+                                            : null);
                         } else if (selectedItem.getText().equals("Closable")) {
                             win.setClosable(selectedItem.isChecked());
                         } else if (selectedItem.getText().equals("Resizable")) {

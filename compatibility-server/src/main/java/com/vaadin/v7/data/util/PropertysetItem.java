@@ -325,7 +325,7 @@ public class PropertysetItem
     @Override
     public boolean equals(Object obj) {
 
-        if (obj == null || !(obj instanceof PropertysetItem)) {
+        if (!(obj instanceof PropertysetItem)) {
             return false;
         }
 

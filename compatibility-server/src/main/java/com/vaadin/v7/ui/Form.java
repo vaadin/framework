@@ -1058,7 +1058,7 @@ public class Form extends AbstractField<Object>
      */
     private Field<?> getFirstFocusableField() {
         Collection<?> itemPropertyIds = getItemPropertyIds();
-        if (itemPropertyIds != null && itemPropertyIds.size() > 0) {
+        if (itemPropertyIds != null && !itemPropertyIds.isEmpty()) {
             for (Object id : itemPropertyIds) {
                 if (id != null) {
                     Field<?> field = getField(id);

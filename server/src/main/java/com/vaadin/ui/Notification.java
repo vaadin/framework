@@ -74,9 +74,8 @@ public class Notification extends AbstractExtension implements Serializable {
      *
      * @since 8.2
      */
-    protected NotificationServerRpc rpc = () -> {
-        fireEvent(new CloseEvent(Notification.this));
-    };
+    protected NotificationServerRpc rpc = () -> fireEvent(
+            new CloseEvent(Notification.this));
 
     public enum Type {
         HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE(
@@ -523,7 +522,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * CloseListener to a Notification and
      * {@link CloseListener#notificationClose(CloseEvent)} will be called
      * whenever the Notification is closed.
-     * 
+     *
      * @since 8.2
      */
     @FunctionalInterface

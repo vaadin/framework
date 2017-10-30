@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.ui.themes;
 
+import java.util.Locale;
+
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -27,7 +29,7 @@ public class Runo extends BaseTheme {
     public static final String THEME_NAME = "runo";
 
     public static String themeName() {
-        return THEME_NAME.toLowerCase();
+        return THEME_NAME.toLowerCase(Locale.ROOT);
     }
 
     /***************************************************************************

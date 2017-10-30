@@ -8,7 +8,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -40,13 +39,10 @@ public class KeyControl extends TestBase {
         table1.setImmediate(true);
         layout1.addComponent(table1);
 
-        table1.addListener(new Table.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                @SuppressWarnings("unchecked")
-                Set<String> value = (Set<String>) table1.getValue();
-                selected1.setValue(value + " TOTAL: " + value.size());
-            }
+        table1.addValueChangeListener(event -> {
+            @SuppressWarnings("unchecked")
+            Set<String> value = (Set<String>) table1.getValue();
+            selected1.setValue(value + " TOTAL: " + value.size());
         });
 
         layout1.addComponent(selected1);
@@ -63,13 +59,10 @@ public class KeyControl extends TestBase {
         table2.setImmediate(true);
         layout2.addComponent(table2);
 
-        table2.addListener(new Table.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                String value = table2.getValue() == null ? "No selected items"
-                        : table2.getValue().toString();
-                selected2.setValue(value);
-            }
+        table2.addValueChangeListener(event -> {
+            String value = table2.getValue() == null ? "No selected items"
+                    : table2.getValue().toString();
+            selected2.setValue(value);
         });
 
         layout2.addComponent(selected2);
@@ -87,14 +80,11 @@ public class KeyControl extends TestBase {
         table3.setImmediate(true);
         layout3.addComponent(table3);
 
-        table3.addListener(new Table.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                @SuppressWarnings("unchecked")
-                Set<String> value = (Set<String>) table3.getValue();
-                selected3.setValue(value.size() == 0 ? "No selected items"
-                        : value + ": Total " + value.size() + " items");
-            }
+        table3.addValueChangeListener(event -> {
+            @SuppressWarnings("unchecked")
+            Set<String> value = (Set<String>) table3.getValue();
+            selected3.setValue(value.isEmpty() ? "No selected items"
+                    : value + ": Total " + value.size() + " items");
         });
 
         selected3.setWidth("300px");

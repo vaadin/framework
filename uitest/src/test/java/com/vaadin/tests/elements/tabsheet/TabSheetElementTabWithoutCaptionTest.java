@@ -104,7 +104,7 @@ public class TabSheetElementTabWithoutCaptionTest extends MultiBrowserTest {
         List<WebElement> openTabCaptionElements = tab
                 .findElement(By.className("v-caption"))
                 .findElements(By.className("v-captiontext"));
-        if (openTabCaptionElements.size() > 0) {
+        if (!openTabCaptionElements.isEmpty()) {
             String openTabCaption = openTabCaptionElements.get(0).getText();
             assertEquals("Wrong tab is open.", caption, openTabCaption);
         } else {
@@ -127,9 +127,9 @@ public class TabSheetElementTabWithoutCaptionTest extends MultiBrowserTest {
         boolean tabsOpen = false;
         for (int i = 0; i < tabs.size(); i++) {
             WebElement tab = tabs.get(i);
-            boolean isOpened = tab
+            boolean isOpened = !tab
                     .findElements(By.className("v-tabsheet-tabitem-selected"))
-                    .size() > 0;
+                    .isEmpty();
             if (isOpened) {
                 tabsOpen = true;
                 assertEquals("The wrong tab is open.", index, i);

@@ -24,12 +24,9 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -47,7 +44,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.VAbstractCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -79,16 +75,16 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     /** For internal use only. May be removed or replaced in the future. */
     public boolean parsable = true;
 
-    private boolean open = false;
+    private boolean open;
 
     /*
      * #14857: If calendarToggle button is clicked when calendar popup is
      * already open we should prevent calling openCalendarPanel() in onClick,
      * since we don't want to reopen it again right after it closes.
      */
-    private boolean preventOpenPopupCalendar = false;
-    private boolean cursorOverCalendarToggleButton = false;
-    private boolean toggleButtonClosesWithGuarantee = false;
+    private boolean preventOpenPopupCalendar;
+    private boolean cursorOverCalendarToggleButton;
+    private boolean toggleButtonClosesWithGuarantee;
 
     private boolean textFieldEnabled = true;
 
@@ -98,7 +94,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
     private Element descriptionForAssistiveDevicesElement;
 
-    private final String CALENDAR_TOGGLE_ID = "popupButton";
+    private static final String CALENDAR_TOGGLE_ID = "popupButton";
 
     public VAbstractPopupCalendar(PANEL calendarPanel, R resolution) {
         super(resolution);
@@ -106,19 +102,13 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
 
-        calendarToggle.addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                cursorOverCalendarToggleButton = true;
-            }
-        }, MouseOverEvent.getType());
+        calendarToggle.addDomHandler(
+                event -> cursorOverCalendarToggleButton = true,
+                MouseOverEvent.getType());
 
-        calendarToggle.addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                cursorOverCalendarToggleButton = false;
-            }
-        }, MouseOutEvent.getType());
+        calendarToggle.addDomHandler(
+                event -> cursorOverCalendarToggleButton = false,
+                MouseOutEvent.getType());
 
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
@@ -141,13 +131,10 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
         calendar = calendarPanel;
         calendar.setParentField(this);
-        calendar.setFocusOutListener(new FocusOutListener() {
-            @Override
-            public boolean onFocusOut(DomEvent<?> event) {
-                event.preventDefault();
-                closeCalendarPanel();
-                return true;
-            }
+        calendar.setFocusOutListener(event -> {
+            event.preventDefault();
+            closeCalendarPanel();
+            return true;
         });
 
         // FIXME: Problem is, that the element with the provided id does not
@@ -217,25 +204,30 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         closeCalendarPanel();
     }
 
+    /**
+     * Changes the current date, and updates the
+     * {@link VDateField#bufferedResolutions}, possibly
+     * {@link VDateField#sendBufferedValues()} to the server if needed
+     *
+     * @param newDate
+     *            the new {@code Date} to update
+     */
     @SuppressWarnings("deprecation")
     public void updateValue(Date newDate) {
         Date currentDate = getCurrentDate();
+        R resolution = getCurrentResolution();
         if (currentDate == null || newDate.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) newDate.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(
-                            calendar.getResolution(calendar::isYear)),
-                    newDate.getYear() + 1900, false);
-            if (!calendar.isYear(getCurrentResolution())) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(
-                                calendar.getResolution(calendar::isMonth)),
-                        newDate.getMonth() + 1, false);
-                if (!calendar.isMonth(getCurrentResolution())) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(
-                                    calendar.getResolution(calendar::isDay)),
-                            newDate.getDate(), false);
+            bufferedResolutions.put(calendar.getResolution(calendar::isYear),
+                    newDate.getYear() + 1900);
+            if (!calendar.isYear(resolution)) {
+                bufferedResolutions.put(
+                        calendar.getResolution(calendar::isMonth),
+                        newDate.getMonth() + 1);
+                if (!calendar.isMonth(resolution)) {
+                    bufferedResolutions.put(
+                            calendar.getResolution(calendar::isDay),
+                            newDate.getDate());
                 }
             }
         }

@@ -30,8 +30,6 @@ public class GridResizeTerror extends UI {
     protected void init(VaadinRequest request) {
         Grid<Integer> grid = new Grid<>();
 
-        int cols = 10;
-
         IntStream.range(0, 10).forEach(i -> grid.addColumn(item -> "Data" + i));
 
         grid.setItems(IntStream.range(0, 500).boxed());

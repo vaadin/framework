@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 
 import java.util.List;
 
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
 import com.google.gwt.event.dom.client.ScrollEvent;
@@ -51,7 +50,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
         com.google.gwt.user.client.ui.Focusable, HasResizeHandlers,
         HasScrollHandlers {
 
-    private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
+    private static final int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;
@@ -97,14 +96,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     private TouchScrollHandler touchScrollHandler;
 
     private VLazyExecutor delayedResizeExecutor = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    performSizeCheck();
-                }
-
-            });
+            () -> performSizeCheck());
 
     private Element storedFocus;
 
@@ -345,8 +337,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
     private static native void loadAppIdListFromDOM(List<String> list)
     /*-{
-         var j;
-         for(j in $wnd.vaadin.vaadinConfigurations) {
+         for (var j in $wnd.vaadin.vaadinConfigurations) {
             // $entry not needed as function is not exported
             list.@java.util.Collection::add(Ljava/lang/Object;)(j);
          }
@@ -363,7 +354,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     }
 
     /**
-     * Ensures the widget is scrollable eg. after style name changes.
+     * Ensures the widget is scrollable e.g. after style name changes.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
