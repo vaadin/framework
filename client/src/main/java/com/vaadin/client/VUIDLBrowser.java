@@ -27,6 +27,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
@@ -102,7 +103,12 @@ public class VUIDLBrowser extends SimpleTree {
 
         protected StateChangeItem() {
             setTitle(HELP);
-            addDomHandler(event -> deHiglight(), MouseOutEvent.getType());
+            addDomHandler(new MouseOutHandler() {
+                @Override
+                public void onMouseOut(MouseOutEvent event) {
+                    deHiglight();
+                }
+            }, MouseOutEvent.getType());
         }
 
         @Override

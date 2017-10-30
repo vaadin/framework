@@ -22,8 +22,11 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -90,12 +93,15 @@ public class VPopupView extends HTML
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        addClickHandler(event -> {
-            if (isEnabled()) {
-                preparePopup(popup);
-                showPopup(popup);
-                center();
-                fireEvent(new VisibilityChangeEvent(true));
+        addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (isEnabled()) {
+                    preparePopup(popup);
+                    showPopup(popup);
+                    center();
+                    fireEvent(new VisibilityChangeEvent(true));
+                }
             }
         });
 
@@ -243,11 +249,13 @@ public class VPopupView extends HTML
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is
             // directly attached to the RootPanel.
-            addDomHandler(event -> {
-                if (shortcutActionHandler != null) {
-                    shortcutActionHandler
-                            .handleKeyboardEvent(
-                                    Event.as(event.getNativeEvent()));
+            addDomHandler(new KeyDownHandler() {
+                @Override
+                public void onKeyDown(KeyDownEvent event) {
+                    if (shortcutActionHandler != null) {
+                        shortcutActionHandler.handleKeyboardEvent(
+                                Event.as(event.getNativeEvent()));
+                    }
                 }
             }, KeyDownEvent.getType());
         }

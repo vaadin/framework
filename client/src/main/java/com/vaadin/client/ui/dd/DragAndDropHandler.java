@@ -104,44 +104,49 @@ public class DragAndDropHandler {
         }
     };
 
-    private final NativePreviewHandler dragPreviewHandler = event -> {
-        if (dragging) {
-            final int typeInt = event.getTypeInt();
-            switch (typeInt) {
-            case Event.ONMOUSEMOVE:
-            case Event.ONTOUCHMOVE:
-                callback.onDragUpdate(Event.as(event.getNativeEvent()));
-                break;
-            case Event.ONKEYDOWN:
-                // End drag if ESC is pressed
-                int keyCode = event.getNativeEvent().getKeyCode();
-                if (keyCode == KeyCodes.KEY_ESCAPE) {
+    private final NativePreviewHandler dragPreviewHandler = new NativePreviewHandler() {
+
+        @Override
+        public void onPreviewNativeEvent(NativePreviewEvent event) {
+            if (dragging) {
+                final int typeInt = event.getTypeInt();
+                switch (typeInt) {
+                case Event.ONMOUSEMOVE:
+                case Event.ONTOUCHMOVE:
+                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
+                    break;
+                case Event.ONKEYDOWN:
+                    // End drag if ESC is pressed
+                    int keyCode = event.getNativeEvent().getKeyCode();
+                    if (keyCode == KeyCodes.KEY_ESCAPE) {
+                        cancelDrag(event);
+                    }
+                    break;
+                case Event.ONTOUCHCANCEL:
                     cancelDrag(event);
+                    break;
+                case Event.ONTOUCHEND:
+                case Event.ONMOUSEUP:
+                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
+                    callback.onDrop();
+                    stopDrag();
+                    break;
+                case Event.ONCLICK:
+                    break;
+                default:
+                    break;
                 }
-                break;
-            case Event.ONTOUCHCANCEL:
-                cancelDrag(event);
-                break;
-            case Event.ONTOUCHEND:
-            case Event.ONMOUSEUP:
-                callback.onDragUpdate(Event.as(event.getNativeEvent()));
-                callback.onDrop();
+            } else {
                 stopDrag();
-                break;
-            case Event.ONCLICK:
-                break;
-            default:
-                break;
             }
-        } else {
-            stopDrag();
+
+            // Kill events - as long as this thing is active, we don't want to
+            // let any event through.
+            event.getNativeEvent().stopPropagation();
+            event.getNativeEvent().preventDefault();
+            event.cancel();
         }
 
-        // Kill events - as long as this thing is active, we don't want to
-        // let any event through.
-        event.getNativeEvent().stopPropagation();
-        event.getNativeEvent().preventDefault();
-        event.cancel();
     };
 
     /**

@@ -22,6 +22,8 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
@@ -278,7 +280,13 @@ public class GridClientColumnRendererConnector
                 @Override
                 public Button createWidget() {
                     final Button button = new Button("");
-                    button.addClickHandler(event -> button.setText("Clicked"));
+                    button.addClickHandler(new ClickHandler() {
+
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            button.setText("Clicked");
+                        }
+                    });
                     return button;
                 }
 

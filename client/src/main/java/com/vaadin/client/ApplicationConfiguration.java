@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -707,16 +708,18 @@ public class ApplicationConfiguration implements EntryPoint {
         PointerEventSupport.init();
 
         if (LogConfiguration.loggingIsEnabled()) {
-            GWT.setUncaughtExceptionHandler(throwable -> {
+            GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
-                /*
-                 * If the debug window is not enabled (?debug), this will not
-                 * show anything to normal users. "a1 is not an object" style
-                 * errors helps nobody, especially end user. It does not work
-                 * tells just as much.
-                 */
-                getLogger().log(Level.SEVERE, throwable.getMessage(),
-                        throwable);
+                @Override
+                public void onUncaughtException(Throwable e) {
+                    /*
+                     * If the debug window is not enabled (?debug), this will
+                     * not show anything to normal users. "a1 is not an object"
+                     * style errors helps nobody, especially end user. It does
+                     * not work tells just as much.
+                     */
+                    getLogger().log(Level.SEVERE, e.getMessage(), e);
+                }
             });
 
             if (isProductionMode()) {

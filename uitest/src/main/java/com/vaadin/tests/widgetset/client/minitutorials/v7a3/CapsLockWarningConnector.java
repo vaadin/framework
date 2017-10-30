@@ -1,6 +1,7 @@
 package com.vaadin.tests.widgetset.client.minitutorials.v7a3;
 
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
@@ -21,11 +22,14 @@ public class CapsLockWarningConnector extends AbstractExtensionConnector {
         warning.setOwner(passwordWidget);
         warning.add(new HTML("Caps Lock is enabled!"));
 
-        passwordWidget.addDomHandler(event -> {
-            if (isEnabled() && isCapsLockOn(event)) {
-                warning.showRelativeTo(passwordWidget);
-            } else {
-                warning.hide();
+        passwordWidget.addDomHandler(new KeyPressHandler() {
+            @Override
+            public void onKeyPress(KeyPressEvent event) {
+                if (isEnabled() && isCapsLockOn(event)) {
+                    warning.showRelativeTo(passwordWidget);
+                } else {
+                    warning.hide();
+                }
             }
         }, KeyPressEvent.getType());
     }

@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.shared.ui.Connect;
@@ -58,8 +60,13 @@ public class CsrfButtonConnector extends AbstractComponentConnector {
 
         getWidget().getElement().setId(ID);
         getWidget().setText(csrfTokenInfo());
-        getWidget()
-                .addClickHandler(event -> getWidget().setText(csrfTokenInfo()));
+        getWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                getWidget().setText(csrfTokenInfo());
+            }
+        });
     }
 
     private String csrfTokenInfo() {

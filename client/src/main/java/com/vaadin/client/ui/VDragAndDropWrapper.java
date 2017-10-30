@@ -26,8 +26,11 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
@@ -83,33 +86,47 @@ public class VDragAndDropWrapper extends VCustomComponent
         hookHtml5Events(getElement());
         setStyleName(CLASSNAME);
 
-        addDomHandler(event -> {
-            if (getConnector().isEnabled()
-                    && event.getNativeEvent().getButton() == Event.BUTTON_LEFT
-                    && startDrag(event.getNativeEvent())) {
-                event.preventDefault(); // prevent text selection
-                startX = event.getClientX();
-                startY = event.getClientY();
+        addDomHandler(new MouseDownHandler() {
+
+            @Override
+            public void onMouseDown(final MouseDownEvent event) {
+                if (getConnector().isEnabled()
+                        && event.getNativeEvent()
+                                .getButton() == Event.BUTTON_LEFT
+                        && startDrag(event.getNativeEvent())) {
+                    event.preventDefault(); // prevent text selection
+                    startX = event.getClientX();
+                    startY = event.getClientY();
+                }
             }
         }, MouseDownEvent.getType());
 
-        addDomHandler(event -> {
-            final int deltaX = Math.abs(event.getClientX() - startX);
-            final int deltaY = Math.abs(event.getClientY() - startY);
-            if ((deltaX + deltaY) < MIN_PX_DELTA) {
-                Element clickedElement = WidgetUtil.getElementFromPoint(
-                        event.getClientX(), event.getClientY());
-                clickedElement.focus();
+        addDomHandler(new MouseUpHandler() {
+
+            @Override
+            public void onMouseUp(final MouseUpEvent event) {
+                final int deltaX = Math.abs(event.getClientX() - startX);
+                final int deltaY = Math.abs(event.getClientY() - startY);
+                if ((deltaX + deltaY) < MIN_PX_DELTA) {
+                    Element clickedElement = WidgetUtil.getElementFromPoint(
+                            event.getClientX(), event.getClientY());
+                    clickedElement.focus();
+                }
             }
+
         }, MouseUpEvent.getType());
 
-        addDomHandler(event -> {
-            if (getConnector().isEnabled()
-                    && startDrag(event.getNativeEvent())) {
-                /*
-                 * Don't let e.g. panel start scrolling.
-                 */
-                event.stopPropagation();
+        addDomHandler(new TouchStartHandler() {
+
+            @Override
+            public void onTouchStart(TouchStartEvent event) {
+                if (getConnector().isEnabled()
+                        && startDrag(event.getNativeEvent())) {
+                    /*
+                     * Don't let e.g. panel start scrolling.
+                     */
+                    event.stopPropagation();
+                }
             }
         }, TouchStartEvent.getType());
 
@@ -209,14 +226,18 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     private boolean uploading;
 
-    private final ReadyStateChangeHandler readyStateChangeHandler = xhr -> {
-        if (xhr.getReadyState() == XMLHttpRequest.DONE) {
-            // #19616 Notify the upload handler that the request is complete
-            // and let it poll the server for changes.
-            uploadHandler.uploadDone();
-            uploading = false;
-            startNextUpload();
-            xhr.clearOnReadyStateChange();
+    private final ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
+
+        @Override
+        public void onReadyStateChange(XMLHttpRequest xhr) {
+            if (xhr.getReadyState() == XMLHttpRequest.DONE) {
+                // #19616 Notify the upload handler that the request is complete
+                // and let it poll the server for changes.
+                uploadHandler.uploadDone();
+                uploading = false;
+                startNextUpload();
+                xhr.clearOnReadyStateChange();
+            }
         }
     };
     private Timer dragleavetimer;

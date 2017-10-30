@@ -22,6 +22,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.logging.client.HtmlLogFormatter;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
@@ -123,30 +125,49 @@ public class LogSection implements Section {
         // clear log button
         controls.add(clear);
         clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        clear.addClickHandler(event -> clear());
+        clear.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                clear();
+            }
+        });
 
         // reset timer button
         controls.add(reset);
         reset.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        reset.addClickHandler(event -> resetTimer());
+        reset.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                resetTimer();
+            }
+        });
 
         // scroll lock toggle
         controls.add(scroll);
         scroll.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        scroll.addClickHandler(event -> toggleScrollLock());
+        scroll.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                toggleScrollLock();
+            }
+        });
 
         // select message if row is clicked
-        content.addClickHandler(event -> {
-            Element el = Element.as(event.getNativeEvent().getEventTarget());
-            while (!el.getClassName()
-                    .contains(VDebugWindow.STYLENAME + "-message")) {
-                if (el == contentElement) {
-                    // clicked something else
-                    return;
+        content.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                Element el = Element
+                        .as(event.getNativeEvent().getEventTarget());
+                while (!el.getClassName()
+                        .contains(VDebugWindow.STYLENAME + "-message")) {
+                    if (el == contentElement) {
+                        // clicked something else
+                        return;
+                    }
+                    el = el.getParentElement();
                 }
-                el = el.getParentElement();
+                selectText(el);
             }
-            selectText(el);
         });
 
         // Add handler to the root logger

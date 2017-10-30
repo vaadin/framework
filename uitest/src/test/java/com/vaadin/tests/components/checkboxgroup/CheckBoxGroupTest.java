@@ -256,7 +256,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     @Test
     public void testDisabled() {
         List<String> optionsCssClasses = getSelect().getOptionElements()
-                .stream().map(element -> element.getAttribute("class"))
+                .stream().map(event -> event.getAttribute("class"))
                 .collect(Collectors.toList());
         for (int i = 0; i < optionsCssClasses.size(); i++) {
             String cssClassList = optionsCssClasses.get(i);

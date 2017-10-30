@@ -39,6 +39,7 @@ import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
@@ -624,9 +625,13 @@ public class CalendarTest extends GridLayout implements View {
             }
         });
 
-        calendarComponent
-                .setHandler((EventClickHandler)
-        event -> showEventPopup(event.getCalendarEvent(), false));
+        calendarComponent.setHandler(new EventClickHandler() {
+
+            @Override
+            public void eventClick(EventClick event) {
+                showEventPopup(event.getCalendarEvent(), false);
+            }
+        });
 
         calendarComponent.setHandler(new BasicDateClickHandler() {
 
@@ -639,9 +644,13 @@ public class CalendarTest extends GridLayout implements View {
             }
         });
 
-        calendarComponent
-                .setHandler(
-                        (RangeSelectHandler) event -> handleRangeSelect(event));
+        calendarComponent.setHandler(new RangeSelectHandler() {
+
+            @Override
+            public void rangeSelect(RangeSelectEvent event) {
+                handleRangeSelect(event);
+            }
+        });
     }
 
     private ComboBox createTimeZoneSelect() {

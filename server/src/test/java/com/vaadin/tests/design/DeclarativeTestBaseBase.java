@@ -176,6 +176,7 @@ public abstract class DeclarativeTestBaseBase<T extends Component> {
 
             @Override
             public void close() throws SecurityException {
+
             }
         };
 

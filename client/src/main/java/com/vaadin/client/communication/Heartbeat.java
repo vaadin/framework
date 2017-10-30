@@ -24,6 +24,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.util.SharedUtil;
@@ -71,7 +72,14 @@ public class Heartbeat {
 
         connection.addHandler(
                 ApplicationConnection.ApplicationStoppedEvent.TYPE,
-                event -> setInterval(-1));
+                new ApplicationConnection.ApplicationStoppedHandler() {
+
+                    @Override
+                    public void onApplicationStopped(
+                            ApplicationStoppedEvent event) {
+                        setInterval(-1);
+                    }
+                });
     }
 
     /**

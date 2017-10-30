@@ -25,6 +25,7 @@ import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -150,17 +151,23 @@ public class AtmospherePushConnection implements PushConnection {
         this.connection = connection;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
-                event -> {
-                    if (state == State.DISCONNECT_PENDING
-                            || state == State.DISCONNECTED) {
-                        return;
-                    }
+                new ApplicationStoppedHandler() {
 
-                    disconnect(new Command() {
-                        @Override
-                        public void execute() {
+                    @Override
+                    public void onApplicationStopped(
+                            ApplicationStoppedEvent event) {
+                        if (state == State.DISCONNECT_PENDING
+                                || state == State.DISCONNECTED) {
+                            return;
                         }
-                    });
+
+                        disconnect(new Command() {
+                            @Override
+                            public void execute() {
+                            }
+                        });
+
+                    }
                 });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");

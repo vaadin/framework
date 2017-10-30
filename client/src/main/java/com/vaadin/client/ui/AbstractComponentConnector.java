@@ -21,10 +21,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.EventTarget;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Focusable;
@@ -106,15 +109,19 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     void handleContextClickListenerChange() {
         if (contextHandler == null && hasEventListener(EventId.CONTEXT_CLICK)) {
             contextHandler = getWidget()
-                    .addDomHandler(event -> {
-                        final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                                .buildMouseEventDetails(event.getNativeEvent(),
-                                        getWidget().getElement());
+                    .addDomHandler(new ContextMenuHandler() {
+                        @Override
+                        public void onContextMenu(ContextMenuEvent event) {
+                            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                                    .buildMouseEventDetails(
+                                            event.getNativeEvent(),
+                                            getWidget().getElement());
 
-                        event.preventDefault();
-                        event.stopPropagation();
-                        sendContextClickEvent(mouseEventDetails,
-                                event.getNativeEvent().getEventTarget());
+                            event.preventDefault();
+                            event.stopPropagation();
+                            sendContextClickEvent(mouseEventDetails,
+                                    event.getNativeEvent().getEventTarget());
+                        }
                     }, ContextMenuEvent.getType());
 
             // if the widget has a contextclick listener, add touch support as
@@ -171,55 +178,60 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     protected void registerTouchHandlers() {
-        touchStartHandler = getWidget().addDomHandler(event -> {
-            if (longTouchTimer != null && longTouchTimer.isRunning()) {
-                return;
-            }
+        touchStartHandler = getWidget().addDomHandler(new TouchStartHandler() {
 
-            // Prevent selection for the element while pending long tap.
-            WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
-                    false);
-
-            if (BrowserInfo.get().isAndroid()) {
-                // Android fires ContextMenu events automatically.
-                return;
-            }
-
-            /*
-             * we need to build mouseEventDetails eagerly - the event won't
-             * be guaranteed to be around when the timer executes. At least
-             * this was the case with iOS devices.
-             */
-
-            final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
-                    .buildMouseEventDetails(event.getNativeEvent(),
-                            getWidget().getElement());
-
-            final EventTarget eventTarget = event.getNativeEvent()
-                    .getEventTarget();
-
-            longTouchTimer = new Timer() {
-
-                @Override
-                public void run() {
-                    // we're handling this event, our parent components
-                    // don't need to bother with it anymore.
-                    cancelParentTouchTimers();
-                    // The default context click
-                    // implementation only provides the
-                    // mouse coordinates relative to root
-                    // element of widget.
-
-                    sendContextClickEvent(mouseEventDetails, eventTarget);
-                    preventNextTouchEnd = true;
+            @Override
+            public void onTouchStart(final TouchStartEvent event) {
+                if (longTouchTimer != null && longTouchTimer.isRunning()) {
+                    return;
                 }
-            };
 
-            Touch touch = event.getChangedTouches().get(0);
-            touchStartX = touch.getClientX();
-            touchStartY = touch.getClientY();
+                // Prevent selection for the element while pending long tap.
+                WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
+                        false);
 
-            longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+                if (BrowserInfo.get().isAndroid()) {
+                    // Android fires ContextMenu events automatically.
+                    return;
+                }
+
+                /*
+                 * we need to build mouseEventDetails eagerly - the event won't
+                 * be guaranteed to be around when the timer executes. At least
+                 * this was the case with iOS devices.
+                 */
+
+                final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
+                        .buildMouseEventDetails(event.getNativeEvent(),
+                                getWidget().getElement());
+
+                final EventTarget eventTarget = event.getNativeEvent()
+                        .getEventTarget();
+
+                longTouchTimer = new Timer() {
+
+                    @Override
+                    public void run() {
+                        // we're handling this event, our parent components
+                        // don't need to bother with it anymore.
+                        cancelParentTouchTimers();
+                        // The default context click
+                        // implementation only provides the
+                        // mouse coordinates relative to root
+                        // element of widget.
+
+                        sendContextClickEvent(mouseEventDetails, eventTarget);
+                        preventNextTouchEnd = true;
+                    }
+                };
+
+                Touch touch = event.getChangedTouches().get(0);
+                touchStartX = touch.getClientX();
+                touchStartY = touch.getClientY();
+
+                longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
+
+            }
         }, TouchStartEvent.getType());
 
         touchMoveHandler = getWidget().addDomHandler(new TouchMoveHandler() {
@@ -260,13 +272,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchMoveEvent.getType());
 
-        touchEndHandler = getWidget().addDomHandler(event -> {
-            // cancel the timer so the event doesn't fire
-            cancelTouchTimer();
+        touchEndHandler = getWidget().addDomHandler(new TouchEndHandler() {
 
-            if (preventNextTouchEnd) {
-                event.preventDefault();
-                preventNextTouchEnd = false;
+            @Override
+            public void onTouchEnd(TouchEndEvent event) {
+                // cancel the timer so the event doesn't fire
+                cancelTouchTimer();
+
+                if (preventNextTouchEnd) {
+                    event.preventDefault();
+                    preventNextTouchEnd = false;
+                }
             }
         }, TouchEndEvent.getType());
     }

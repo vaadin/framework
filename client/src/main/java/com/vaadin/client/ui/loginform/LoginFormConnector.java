@@ -18,11 +18,14 @@ package com.vaadin.client.ui.loginform;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -58,10 +61,15 @@ public class LoginFormConnector
         super.init();
 
         loginFormRpc = getRpcProxy(LoginFormRpc.class);
-        getWidget().addSubmitCompleteHandler(event -> {
-            valuesChanged();
-            loginFormRpc.submitCompleted();
-        });
+        getWidget().addSubmitCompleteHandler(
+                new FormPanel.SubmitCompleteHandler() {
+                    @Override
+                    public void onSubmitComplete(
+                            FormPanel.SubmitCompleteEvent event) {
+                        valuesChanged();
+                        loginFormRpc.submitCompleted();
+                    }
+                });
     }
 
     @Override
@@ -145,7 +153,12 @@ public class LoginFormConnector
     }
 
     private void addSubmitButtonClickHandler(FocusWidget button) {
-        button.addClickHandler(event -> login());
+        button.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                login();
+            }
+        });
     }
 
     private void valuesChanged() {

@@ -30,6 +30,8 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.ServerRpcQueue;
+import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -68,7 +70,12 @@ public class JavaScriptConnectorHelper {
     private int processedResponseId = -1;
 
     public void init() {
-        connector.addStateChangeHandler(event -> processStateChanges());
+        connector.addStateChangeHandler(new StateChangeHandler() {
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                processStateChanges();
+            }
+        });
     }
 
     /**

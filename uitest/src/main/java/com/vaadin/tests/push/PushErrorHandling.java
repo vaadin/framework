@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.util.AbstractInMemoryContainer;
 import com.vaadin.v7.data.util.BeanContainer;
@@ -22,16 +24,23 @@ public class PushErrorHandling extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
 
-        VaadinSession.getCurrent().setErrorHandler(event -> {
-            addComponent(
-                    new Label(
-                            "An error! " + event.getThrowable().getMessage()));
-            System.err
-                    .println("An error! " + event.getThrowable().getMessage());
+        VaadinSession.getCurrent().setErrorHandler(new ErrorHandler() {
+
+            @Override
+            public void error(com.vaadin.server.ErrorEvent event) {
+                addComponent(new Label(
+                        "An error! " + event.getThrowable().getMessage()));
+                System.err.println(
+                        "An error! " + event.getThrowable().getMessage());
+            }
         });
 
-        final Button button = new Button("Click for NPE!", event -> {
-                    ((String) null).length(); // Null-pointer exception
+        final Button button = new Button("Click for NPE!",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        ((String) null).length(); // Null-pointer exception
+                    }
                 });
         button.setId("npeButton");
         addComponent(button);

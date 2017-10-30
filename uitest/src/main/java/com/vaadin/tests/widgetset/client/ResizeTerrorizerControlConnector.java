@@ -19,8 +19,11 @@ import java.util.Arrays;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -60,10 +63,14 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
         private IntegerBox endHeight = new IntegerBox();
 
         private final Button terrorizeButton = new Button("Terrorize",
-                (ClickHandler) event -> terrorize(startWidth.getValue(),
-                        endWidth.getValue(), startHeight.getValue(),
-                        endHeight.getValue(),
-                        1000));
+                new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        terrorize(startWidth.getValue(), endWidth.getValue(),
+                                startHeight.getValue(), endHeight.getValue(),
+                                1000);
+                    }
+                });
 
         private HandlerRegistration historyHandlerRegistration;
 
@@ -91,9 +98,12 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
             // Emulate button click from enter on any of the text boxes
             for (IntegerBox box : Arrays.asList(startWidth, endWidth,
                     startHeight, endHeight)) {
-                box.addKeyUpHandler(event -> {
-                    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                        terrorizeButton.click();
+                box.addKeyUpHandler(new KeyUpHandler() {
+                    @Override
+                    public void onKeyUp(KeyUpEvent event) {
+                        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                            terrorizeButton.click();
+                        }
                     }
                 });
             }

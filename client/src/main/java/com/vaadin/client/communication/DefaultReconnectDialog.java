@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -79,9 +80,12 @@ public class DefaultReconnectDialog extends VOverlay
 
         // Click to refresh after giving up
         if (!reconnecting) {
-            clickHandler = addDomHandler(event -> {
-                // refresh
-                WidgetUtil.redirect(null);
+            clickHandler = addDomHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    // refresh
+                    WidgetUtil.redirect(null);
+                }
             }, ClickEvent.getType());
         } else {
             if (clickHandler != null) {

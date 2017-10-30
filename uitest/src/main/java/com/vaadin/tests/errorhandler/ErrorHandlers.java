@@ -38,8 +38,15 @@ public class ErrorHandlers extends AbstractReindeerTestUI {
 
         final VerticalLayout layoutWithErrorHandler = new VerticalLayout(
                 runtimeExceptionOnClick(new Button("Error handler on parent")));
-        ErrorHandler e = event -> layoutWithErrorHandler.addComponent(
-                new Label("Layout error: " + getErrorMessage(event)));
+        ErrorHandler e = new ErrorHandler() {
+
+            @Override
+            public void error(com.vaadin.server.ErrorEvent event) {
+                layoutWithErrorHandler.addComponent(
+                        new Label("Layout error: " + getErrorMessage(event)));
+            }
+
+        };
         layoutWithErrorHandler.setErrorHandler(e);
         layoutWithErrorHandler.addComponent(notificationErrorHandler(
                 npeOnClick(new Button("Error handler on button and parent"))));

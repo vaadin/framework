@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -64,7 +66,14 @@ public class GwtRpcButtonConnector extends AbstractComponentConnector {
         log("GwtRpcButtonTestConnector init");
 
         getWidget().setText("Click me");
-        getWidget().addClickHandler(event -> doRPC());
+        getWidget().addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                doRPC();
+            }
+
+        });
     }
 
     /**

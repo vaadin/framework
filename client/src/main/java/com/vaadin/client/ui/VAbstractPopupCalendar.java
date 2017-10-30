@@ -26,7 +26,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -102,13 +104,19 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
 
-        calendarToggle.addDomHandler(
-                event -> cursorOverCalendarToggleButton = true,
-                MouseOverEvent.getType());
+        calendarToggle.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                cursorOverCalendarToggleButton = true;
+            }
+        }, MouseOverEvent.getType());
 
-        calendarToggle.addDomHandler(
-                event -> cursorOverCalendarToggleButton = false,
-                MouseOutEvent.getType());
+        calendarToggle.addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                cursorOverCalendarToggleButton = false;
+            }
+        }, MouseOutEvent.getType());
 
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);

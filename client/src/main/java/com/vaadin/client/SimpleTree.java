@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
@@ -76,22 +77,27 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
         style.setDisplay(Display.NONE);
 
         getElement().appendChild(children);
-        addDomHandler(event -> {
-            if (event.getNativeEvent().getEventTarget().cast() == handle) {
-                if (children.getStyle().getDisplay().intern() == Display.NONE
-                        .getCssName()) {
-                    open(event.getNativeEvent().getAltKey());
-                } else {
-                    close();
-                }
+        addDomHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (event.getNativeEvent().getEventTarget().cast() == handle) {
+                    if (children.getStyle().getDisplay()
+                            .intern() == Display.NONE.getCssName()) {
+                        open(event.getNativeEvent().getAltKey());
+                    } else {
+                        close();
+                    }
 
-            } else if (event.getNativeEvent().getEventTarget().cast() == text) {
-                select(event);
+                } else if (event.getNativeEvent().getEventTarget()
+                        .cast() == text) {
+                    select(event);
+                }
             }
         }, ClickEvent.getType());
     }
 
     protected void select(ClickEvent event) {
+
     }
 
     public void close() {
@@ -172,9 +178,13 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
             DoubleClickHandler handler) {
         if (textDoubleClickHandlerManager == null) {
             textDoubleClickHandlerManager = new HandlerManager(this);
-            addDomHandler(event -> {
-                if (event.getNativeEvent().getEventTarget().cast() == text) {
-                    textDoubleClickHandlerManager.fireEvent(event);
+            addDomHandler(new DoubleClickHandler() {
+                @Override
+                public void onDoubleClick(DoubleClickEvent event) {
+                    if (event.getNativeEvent().getEventTarget()
+                            .cast() == text) {
+                        textDoubleClickHandlerManager.fireEvent(event);
+                    }
                 }
             }, DoubleClickEvent.getType());
         }

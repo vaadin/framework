@@ -2,6 +2,7 @@ package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -40,35 +41,47 @@ public class RunOverflowFixConnector
         overflowY.addStyleName("third-scrollbar");
 
         Button runFix = new Button("Click to runWebkitOverflowAutoFix",
-                (ClickHandler) event -> {
-                    overflow.getElement().getStyle()
-                            .setOverflow(Style.Overflow.SCROLL);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflow.getElement());
+                new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        overflow.getElement().getStyle()
+                                .setOverflow(Style.Overflow.SCROLL);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflow.getElement());
 
-                    overflowX.getElement().getStyle()
-                            .setOverflowX(Style.Overflow.HIDDEN);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflowX.getElement());
+                        overflowX.getElement().getStyle()
+                                .setOverflowX(Style.Overflow.HIDDEN);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowX.getElement());
 
-                    overflowY.getElement().getStyle()
-                            .setOverflowY(Style.Overflow.HIDDEN);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflowY.getElement());
+                        overflowY.getElement().getStyle()
+                                .setOverflowY(Style.Overflow.HIDDEN);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowY.getElement());
+                    }
                 });
         runFix.addStyleName("run-button-one");
         getWidget().add(runFix);
 
         Button runFix2 = new Button("Click to runWebkitOverflowAutoFix 2",
-                (ClickHandler) event -> {
-                    overflow.getElement().getStyle()
-                            .setOverflow(Style.Overflow.VISIBLE);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflow.getElement());
+                new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        overflow.getElement().getStyle()
+                                .setOverflow(Style.Overflow.VISIBLE);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflow.getElement());
 
-                    overflowX.getElement().getStyle()
-                            .setOverflowX(Style.Overflow.SCROLL);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflowX.getElement());
+                        overflowX.getElement().getStyle()
+                                .setOverflowX(Style.Overflow.SCROLL);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowX.getElement());
 
-                    overflowY.getElement().getStyle()
-                            .setOverflowY(Style.Overflow.AUTO);
-                    WidgetUtil.runWebkitOverflowAutoFix(overflowY.getElement());
+                        overflowY.getElement().getStyle()
+                                .setOverflowY(Style.Overflow.AUTO);
+                        WidgetUtil.runWebkitOverflowAutoFix(
+                                overflowY.getElement());
+                    }
                 });
         runFix2.addStyleName("run-button-two");
         getWidget().add(runFix2);
