@@ -43,6 +43,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.vaadin.data.BeanPropertySet;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition;
 import com.vaadin.data.Binder;
 import com.vaadin.data.Binder.Binding;
 import com.vaadin.data.HasDataProvider;
@@ -2402,8 +2403,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         setPropertySet(propertySet);
 
-        // Automatically add columns for all available properties
-        propertySet.getProperties().map(PropertyDefinition::getName)
+        // Automatically add columns for all available, non-nested properties
+        propertySet.getProperties().filter(item -> !item.getClass().isAssignableFrom(NestedBeanPropertyDefinition.class)).map(PropertyDefinition::getName)
                 .forEach(this::addColumn);
     }
 
