@@ -59,7 +59,7 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static final Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, AttributeCacheEntry> CACHE = new ConcurrentHashMap<>();
 
     // translates string <-> object
     private static final DesignFormatter FORMATTER = new DesignFormatter();
@@ -145,7 +145,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     public static Collection<String> getSupportedAttributes(Class<?> clazz) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getAttributes();
+        return CACHE.get(clazz).getAttributes();
     }
 
     /**
@@ -160,7 +160,7 @@ public class DesignAttributeHandler implements Serializable {
         if (clazz == null) {
             throw new IllegalArgumentException("The clazz can not be null");
         }
-        if (cache.containsKey(clazz)) {
+        if (CACHE.containsKey(clazz)) {
             // NO-OP
             return;
         }
@@ -184,7 +184,7 @@ public class DesignAttributeHandler implements Serializable {
                 entry.addAttribute(attribute, getter, setter);
             }
         }
-        cache.put(clazz, entry);
+        CACHE.put(clazz, entry);
     }
 
     /**
@@ -413,7 +413,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findSetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getSetter(attribute);
+        return CACHE.get(clazz).getSetter(attribute);
     }
 
     /**
@@ -429,7 +429,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findGetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getGetter(attribute);
+        return CACHE.get(clazz).getGetter(attribute);
     }
 
     /**

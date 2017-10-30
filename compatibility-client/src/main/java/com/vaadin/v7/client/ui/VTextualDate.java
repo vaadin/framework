@@ -376,7 +376,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         this.text.setText(text);
     }
 
-    private final String TEXTFIELD_ID = "field";
+    private static final String TEXTFIELD_ID = "field";
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(

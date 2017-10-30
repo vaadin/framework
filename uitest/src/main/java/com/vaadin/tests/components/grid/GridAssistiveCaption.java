@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 Vaadin Ltd.
+ * Copyright 2000-2017 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,35 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.extensions;
+package com.vaadin.tests.components.grid;
 
+import com.vaadin.data.ValueProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
 
-/**
- * UI used to validate Notification closes works.
- */
-public class NotificationCloseListener extends AbstractTestUI {
+public class GridAssistiveCaption extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        CheckBox checkBox = new CheckBox();
-        addComponent(checkBox);
+        Grid<String> grid = new Grid<>();
+        grid.addColumn(ValueProvider.identity());
+        grid.setItems("a", "b");
+        addComponent(grid);
 
-        Notification notification = Notification.show("something");
-        notification.addCloseListener(event -> checkBox.setValue(true));
+        addComponent(new Button("addAssistiveCaption", event -> {
+            grid.getColumns().get(0).setAssistiveCaption("Press Enter to sort.");
+        }));
+        addComponent(new Button("removeAssistiveCaption", event -> {
+            grid.getColumns().get(0).setAssistiveCaption(null);
+        }));
     }
-
-    @Override
-    protected String getTestDescription() {
-        return "Notification Close listener is called.";
-    }
-
-    @Override
-    protected Integer getTicketNumber() {
-        return 10027;
-    }
-
 }

@@ -35,7 +35,6 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VAbstractSplitPanel;
-import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -52,27 +51,21 @@ public abstract class AbstractSplitPanelConnector extends
         // TODO Remove
         getWidget().client = getConnection();
 
-        getWidget().addHandler(new SplitterMoveHandler() {
-
-            @Override
-            public void splitterMoved(SplitterMoveEvent event) {
-                String position = getWidget().getSplitterPosition();
-                float pos = 0;
-                if (position.indexOf("%") > 0) {
-                    // Send % values as a fraction to avoid that the splitter
-                    // "jumps" when server responds with the integer pct value
-                    // (e.g. dragged 16.6% -> should not jump to 17%)
-                    pos = Float.valueOf(
-                            position.substring(0, position.length() - 1));
-                } else {
-                    pos = Integer.parseInt(
-                            position.substring(0, position.length() - 2));
-                }
-
-                getRpcProxy(AbstractSplitPanelRpc.class)
-                        .setSplitterPosition(pos);
+        getWidget().addHandler(event -> {
+            String position = getWidget().getSplitterPosition();
+            float pos = 0;
+            if (position.indexOf("%") > 0) {
+                // Send % values as a fraction to avoid that the splitter
+                // "jumps" when server responds with the integer pct value
+                // (e.g. dragged 16.6% -> should not jump to 17%)
+                pos = Float
+                        .valueOf(position.substring(0, position.length() - 1));
+            } else {
+                pos = Integer
+                        .parseInt(position.substring(0, position.length() - 2));
             }
 
+            getRpcProxy(AbstractSplitPanelRpc.class).setSplitterPosition(pos);
         }, SplitterMoveEvent.TYPE);
     }
 

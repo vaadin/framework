@@ -37,7 +37,7 @@ import com.vaadin.ui.UI;
  * {@link DeploymentConfiguration} parameter
  * {@link DeploymentConfiguration#isSendUrlsAsParameters() SendUrlAsParameters}
  * must not be set to {@code false}.
- * 
+ *
  * @since 8.2
  */
 @Retention(RUNTIME)

@@ -36,11 +36,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -122,34 +119,27 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
      */
     private String currentLocation;
 
-    private final StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            // TODO Should use a more specific handler that only reacts to
-            // size changes
-            onChildSizeChange();
-        }
+    private final StateChangeHandler childStateChangeHandler = event -> {
+        // TODO Should use a more specific handler that only reacts to
+        // size changes
+        onChildSizeChange();
     };
 
-    private WindowOrderHandler windowOrderHandler = new WindowOrderHandler() {
-
-        @Override
-        public void onWindowOrderChange(WindowOrderEvent event) {
-            VWindow[] windows = event.getWindows();
-            Map<Integer, Connector> orders = new HashMap<>();
-            boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
-            for (VWindow window : windows) {
-                Connector connector = Util.findConnectorFor(window);
-                orders.put(window.getWindowOrder(), connector);
-                if (connector instanceof AbstractConnector
-                        && ((AbstractConnector) connector)
-                                .hasEventListener(EventId.WINDOW_ORDER)) {
-                    hasEventListener = true;
-                }
+    private WindowOrderHandler windowOrderHandler = event -> {
+        VWindow[] windows = event.getWindows();
+        Map<Integer, Connector> orders = new HashMap<>();
+        boolean hasEventListener = hasEventListener(EventId.WINDOW_ORDER);
+        for (VWindow window : windows) {
+            Connector connector = Util.findConnectorFor(window);
+            orders.put(window.getWindowOrder(), connector);
+            if (connector instanceof AbstractConnector
+                    && ((AbstractConnector) connector)
+                            .hasEventListener(EventId.WINDOW_ORDER)) {
+                hasEventListener = true;
             }
-            if (hasEventListener) {
-                getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
-            }
+        }
+        if (hasEventListener) {
+            getRpcProxy(WindowOrderRpc.class).windowOrderChanged(orders);
         }
     };
 
@@ -214,14 +204,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }-*/;
         });
 
-        getWidget().addResizeHandler(new ResizeHandler() {
-            @Override
-            public void onResize(ResizeEvent event) {
-                getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
-                        event.getHeight(), Window.getClientWidth(),
-                        Window.getClientHeight());
-                getConnection().getServerRpcQueue().flush();
-            }
+        getWidget().addResizeHandler(event -> {
+            getRpcProxy(UIServerRpc.class).resize(event.getWidth(),
+                    event.getHeight(), Window.getClientWidth(),
+                    Window.getClientHeight());
+            getConnection().getServerRpcQueue().flush();
         });
         getWidget().addScrollHandler(new ScrollHandler() {
             private int lastSentScrollTop = Integer.MAX_VALUE;
@@ -525,22 +512,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             shortcutContextWidget = RootPanel.get(); // document body
         }
 
-        shortcutContextWidget.addDomHandler(new KeyDownHandler() {
-            @Override
-            public void onKeyDown(KeyDownEvent event) {
-                if (VWindow.isModalWindowOpen()) {
-                    return;
-                }
-                if (ui.actionHandler != null) {
-                    Element target = Element
-                            .as(event.getNativeEvent().getEventTarget());
-                    if (target == Document.get().getBody()
-                            || ui.getElement().isOrHasChild(target)) {
-                        // Only react to body and elements inside the UI
-                        ui.actionHandler.handleKeyboardEvent(
-                                (Event) event.getNativeEvent().cast());
-                    }
-
+        shortcutContextWidget.addDomHandler(event -> {
+            if (VWindow.isModalWindowOpen()) {
+                return;
+            }
+            if (ui.actionHandler != null) {
+                Element target = Element
+                        .as(event.getNativeEvent().getEventTarget());
+                if (target == Document.get().getBody()
+                        || ui.getElement().isOrHasChild(target)) {
+                    // Only react to body and elements inside the UI
+                    ui.actionHandler.handleKeyboardEvent(
+                            (Event) event.getNativeEvent().cast());
                 }
             }
         }, KeyDownEvent.getType());
@@ -618,9 +601,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // but it's never a content widget
         if (connector instanceof WindowConnector) {
             return null;
-        } else {
-            return connector;
         }
+        return connector;
     }
 
     protected void onChildSizeChange() {

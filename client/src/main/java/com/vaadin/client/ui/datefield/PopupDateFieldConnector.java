@@ -21,7 +21,7 @@ import com.vaadin.ui.DateField;
 
 /**
  * The client-side connector for DateField.
- * 
+ *
  * @author Vaadin Ltd
  * @since 8.0
  */

@@ -522,7 +522,7 @@ public class Notification extends AbstractExtension implements Serializable {
      * CloseListener to a Notification and
      * {@link CloseListener#notificationClose(CloseEvent)} will be called
      * whenever the Notification is closed.
-     * 
+     *
      * @since 8.2
      */
     @FunctionalInterface

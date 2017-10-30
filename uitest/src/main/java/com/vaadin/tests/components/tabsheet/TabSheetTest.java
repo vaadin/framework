@@ -4,9 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.server.Resource;
 import com.vaadin.tests.components.AbstractComponentContainerTest;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.CloseHandler;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
@@ -42,23 +40,14 @@ public class TabSheetTest<T extends TabSheet> extends
         @Override
         public void execute(T c, Boolean value, Object data) {
             if (value) {
-                c.setCloseHandler(new CloseHandler() {
-                    @Override
-                    public void onTabClose(TabSheet tabsheet, Component c) {
-                        tabClosed(tabsheet, tabsheet.getTab(c));
-                        tabsheet.removeComponent(c);
-                    }
-
+                c.setCloseHandler((tabsheet, comp) -> {
+                    tabClosed(tabsheet, tabsheet.getTab(comp));
+                    tabsheet.removeComponent(comp);
                 });
             } else {
-                c.setCloseHandler(new CloseHandler() {
-                    @Override
-                    public void onTabClose(TabSheet tabsheet, Component c) {
-                        tabsheet.removeComponent(c);
-                    }
-                });
+                c.setCloseHandler(
+                        (tabsheet, comp) -> tabsheet.removeComponent(comp));
             }
-
         }
     };
     private Command<T, Boolean> setSelectedTabListener = new Command<T, Boolean>() {
