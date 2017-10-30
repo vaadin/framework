@@ -4,7 +4,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Grid;
 
-public class NestedPropertyBinding extends AbstractTestUI {
+public class NestedPropertyGridCreation extends AbstractTestUI {
     public static boolean INIT = true;
 
     @Override
