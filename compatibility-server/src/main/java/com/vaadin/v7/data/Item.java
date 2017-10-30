@@ -193,7 +193,7 @@ public interface Item extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addPropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Item.PropertySetChangeListener listener);
 
@@ -209,7 +209,7 @@ public interface Item extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(Item.PropertySetChangeListener listener);
     }

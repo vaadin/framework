@@ -5067,7 +5067,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemClickListener(ItemClickListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(ItemClickListener listener) {
@@ -5083,7 +5083,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemClickListener(ItemClickListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(ItemClickListener listener) {
@@ -5446,7 +5446,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addHeaderClickListener(HeaderClickListener)}
-     **/
+     */
     @Deprecated
     public void addListener(HeaderClickListener listener) {
         addHeaderClickListener(listener);
@@ -5466,7 +5466,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeHeaderClickListener(HeaderClickListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(HeaderClickListener listener) {
         removeHeaderClickListener(listener);
@@ -5492,7 +5492,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFooterClickListener(FooterClickListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FooterClickListener listener) {
         addFooterClickListener(listener);
@@ -5512,7 +5512,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFooterClickListener(FooterClickListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FooterClickListener listener) {
         removeFooterClickListener(listener);
@@ -5680,7 +5680,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addColumnResizeListener(ColumnResizeListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ColumnResizeListener listener) {
         addColumnResizeListener(listener);
@@ -5700,7 +5700,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeColumnResizeListener(ColumnResizeListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ColumnResizeListener listener) {
         removeColumnResizeListener(listener);
@@ -5818,7 +5818,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addColumnReorderListener(ColumnReorderListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ColumnReorderListener listener) {
         addColumnReorderListener(listener);
@@ -5838,7 +5838,7 @@ public class Table extends AbstractSelect implements Action.Container,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeColumnReorderListener(ColumnReorderListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ColumnReorderListener listener) {
         removeColumnReorderListener(listener);

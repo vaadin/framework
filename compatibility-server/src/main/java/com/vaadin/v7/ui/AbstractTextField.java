@@ -546,7 +546,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addTextChangeListener(TextChangeListener)}
-     **/
+     */
     @Deprecated
     public void addListener(TextChangeListener listener) {
         addTextChangeListener(listener);
@@ -561,7 +561,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeTextChangeListener(TextChangeListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(TextChangeListener listener) {
         removeTextChangeListener(listener);
@@ -714,7 +714,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -728,7 +728,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -742,7 +742,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     /**
      * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -756,7 +756,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);

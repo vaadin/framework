@@ -653,7 +653,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addStartedListener(StartedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(StartedListener listener) {
         addStartedListener(listener);
@@ -672,7 +672,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeStartedListener(StartedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(StartedListener listener) {
         removeStartedListener(listener);
@@ -691,7 +691,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFinishedListener(FinishedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FinishedListener listener) {
         addFinishedListener(listener);
@@ -710,7 +710,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFinishedListener(FinishedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FinishedListener listener) {
         removeFinishedListener(listener);
@@ -729,7 +729,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFailedListener(FailedListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FailedListener listener) {
         addFailedListener(listener);
@@ -748,7 +748,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFailedListener(FailedListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FailedListener listener) {
         removeFailedListener(listener);
@@ -767,7 +767,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addSucceededListener(SucceededListener)}
-     **/
+     */
     @Deprecated
     public void addListener(SucceededListener listener) {
         addSucceededListener(listener);
@@ -786,7 +786,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeSucceededListener(SucceededListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(SucceededListener listener) {
         removeSucceededListener(listener);
@@ -808,7 +808,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addProgressListener(ProgressListener)}
-     **/
+     */
     @Deprecated
     public void addListener(ProgressListener listener) {
         addProgressListener(listener);
@@ -850,7 +850,7 @@ public class Upload extends AbstractLegacyComponent
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeProgressListener(ProgressListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(ProgressListener listener) {
         removeProgressListener(listener);
