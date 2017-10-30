@@ -98,6 +98,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setHeaderCaption(getState().caption);
     }
 
+    @OnStateChange("assistiveCaption")
+    void updateAssistiveCaption() {
+        column.setAssistiveCaption(getState().assistiveCaption);
+    }
+
     @OnStateChange("sortable")
     void updateSortable() {
         column.setSortable(getState().sortable);

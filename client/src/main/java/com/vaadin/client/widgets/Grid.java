@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
@@ -4722,6 +4723,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private String headerCaption = "";
 
+        private String assistiveCaption = null;
+
         private String hidingToggleCaption = null;
 
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
@@ -4834,6 +4837,36 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         public String getHeaderCaption() {
             return headerCaption;
+        }
+
+        /**
+         * Sets the header aria-label for this column.
+         *
+         * @param caption
+         *            The header aria-label for this column
+         * @return the column itself
+         *
+         * @since
+         */
+        public Column<C, T> setAssistiveCaption(String caption) {
+            if (!Objects.equals(this.assistiveCaption, caption)) {
+                this.assistiveCaption = caption;
+                if (grid != null) {
+                    grid.getHeader().requestSectionRefresh();
+                }
+            }
+
+            return this;
+        }
+        /**
+         * Returns the current header aria-label for this column.
+         *
+         * @return the header aria-label string
+         *
+         * @since
+         */
+        public String getAssistiveCaption() {
+            return assistiveCaption;
         }
 
         private void updateHeader() {
@@ -5730,6 +5763,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
                 // Decorate default row with sorting indicators
                 if (staticRow instanceof HeaderRow) {
+                    addAriaLabelToHeaderRow(cell);
                     addSortingIndicatorsToHeaderRow((HeaderRow) staticRow,
                             cell);
                 }
@@ -5954,8 +5988,20 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
             }
         }
 
-        private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow,
-                FlyweightCell cell) {
+        private void addAriaLabelToHeaderRow(FlyweightCell cell) {
+
+            Element cellElement = cell.getElement();
+
+            final Column<?, T> column = getVisibleColumn(cell.getColumn());
+
+            if (column.getAssistiveCaption() != null) {
+                cellElement.setAttribute("aria-label", column.getAssistiveCaption());
+            } else {
+                cellElement.removeAttribute("aria-label");
+            }
+        }
+
+        private void addSortingIndicatorsToHeaderRow(HeaderRow headerRow, FlyweightCell cell) {
 
             Element cellElement = cell.getElement();
 
