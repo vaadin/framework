@@ -18,14 +18,13 @@ package com.vaadin.v7.client.ui;
 import com.google.gwt.user.client.ui.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.annotations.OnStateChange;
-import com.vaadin.client.ui.HasErrorIndicator;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.v7.shared.AbstractFieldState;
 
 @Deprecated
 public abstract class AbstractFieldConnector
         extends AbstractLegacyComponentConnector
-        implements HasRequiredIndicator, HasErrorIndicator {
+        implements HasRequiredIndicator {
 
     @Override
     public AbstractFieldState getState() {
@@ -53,6 +52,7 @@ public abstract class AbstractFieldConnector
      *
      * @return true if required indicator should be shown
      */
+    @Deprecated
     public boolean isRequired() {
         return isRequiredIndicatorVisible();
     }

@@ -23,11 +23,8 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
-import com.vaadin.client.connectors.data.HasDataSource;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
-import com.vaadin.client.ui.HasErrorIndicator;
-import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VComboBox;
 import com.vaadin.client.ui.VComboBox.ComboBoxSuggestion;
@@ -47,8 +44,7 @@ import elemental.json.JsonObject;
 
 @Connect(ComboBox.class)
 public class ComboBoxConnector extends AbstractListingConnector
-        implements HasRequiredIndicator, HasDataSource, SimpleManagedLayout,
-        HasErrorIndicator {
+        implements SimpleManagedLayout {
 
     private ComboBoxServerRpc rpc = getRpcProxy(ComboBoxServerRpc.class);
     private SelectionServerRpc selectionRpc = getRpcProxy(

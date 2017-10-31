@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.MouseEventDetailsBuilder;
@@ -63,7 +62,7 @@ import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.shared.ui.ui.UIState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector, HasErrorIndicator {
+        implements HasErrorIndicator {
 
     private HandlerRegistration contextHandler = null;
 

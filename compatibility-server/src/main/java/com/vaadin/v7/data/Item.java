@@ -16,11 +16,11 @@
 
 package com.vaadin.v7.data;
 
-import com.vaadin.data.Binder;
-import com.vaadin.data.provider.DataProvider;
-
 import java.io.Serializable;
 import java.util.Collection;
+
+import com.vaadin.data.Binder;
+import com.vaadin.data.provider.DataProvider;
 
 /**
  * <p>
@@ -123,7 +123,7 @@ public interface Item extends Serializable {
      * </p>
      */
     @Deprecated
-    public interface Editor extends Item.Viewer, Serializable {
+    public interface Editor extends Item.Viewer {
 
     }
 
