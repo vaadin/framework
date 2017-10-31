@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
@@ -432,25 +431,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
                 Id.of(headerText));
 
-        Logger logger = Logger.getLogger("");
-
         // Handlers to Prevent tab to leave the window (by circulating focus)
         // and backspace to cause browser navigation
         topEventBlocker = event -> {
-            NativeEvent nativeEvent = event.getNativeEvent();
-            if (nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                    && nativeEvent.getShiftKey()) {
-                logger.warning("Top event blocker caught Shift+Tab event "
-                        + nativeEvent.getType() + " with target "
-                        + nativeEvent.getEventTarget().cast());
-                Element e = FocusUtil.getLastFocusableElement(this.getElement());
+            if (!getElement().isOrHasChild(WidgetUtil.getFocusedElement())) {
+                return;
             }
+            NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
-                logger.warning("Turning focus around to the bottom");
-                FocusUtil.getLastFocusableElement(this.getElement()).focus();
+                FocusUtil.focusOnLastFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
@@ -459,20 +451,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         };
 
         bottomEventBlocker = event -> {
-            NativeEvent nativeEvent = event.getNativeEvent();
-            if (nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                    && !nativeEvent.getShiftKey()) {
-                logger.warning("Bottom event blocker caught Tab event "
-                        + nativeEvent.getType() + " with target "
-                        + nativeEvent.getEventTarget().cast());
-                Element e = FocusUtil.getFirstFocusableElement(this.getElement());
+            if (!getElement().isOrHasChild(WidgetUtil.getFocusedElement())) {
+                return;
             }
+            NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && !nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
-                logger.warning("Turning focus around to the top");
-                FocusUtil.getFirstFocusableElement(this.getElement()).focus();
+                FocusUtil.focusOnFirstFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {

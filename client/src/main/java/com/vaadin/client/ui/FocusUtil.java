@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.List;
-
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
@@ -98,33 +96,25 @@ public class FocusUtil {
         return focusable.getElement().getTabIndex();
     }
 
-    public static native Element getFirstFocusableElement(Element parent)
+    public static native Element[] getFocusableChildren(Element parent)
     /*-{
-        var focusableChildren = parent.querySelectorAll('[id][tabindex]:not([tabindex="-1"]), [class=v-window-maximizebox], [class=v-window-closebox]');
-        console.log('Found ' + focusableChildren.length + ' focusable elements:');
-        focusableChildren.forEach(function(item) {
-            console.log(item);
-        });
-        if (focusableChildren.length > 0) {
-            var firstFocusable = focusableChildren[0];
-            console.log('First is ' + firstFocusable.id);
-            return firstFocusable;
-        }
-        return null;
+        var focusableChildren = parent.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [role=button][tabindex]:not([tabindex="-1"])');
+        return focusableChildren;
     }-*/;
 
-    public static native Element getLastFocusableElement(Element parent)
-    /*-{
-        var focusableChildren = parent.querySelectorAll('[id][tabindex]:not([tabindex="-1"]), [class=v-window-maximizebox], [class=v-window-closebox]');
-        console.log('Found ' + focusableChildren.length + ' focusable elements:');
-        focusableChildren.forEach(function(item) {
-            console.log(item);
-        });
+    public static void focusOnFirstFocusableElement(Element parent)
+    {
+        Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
-            var lastFocusable = focusableChildren[focusableChildren.length - 1];
-            console.log('Last is ' + lastFocusable.id);
-            return lastFocusable;
+            focusableChildren[0].focus();
         }
-        return null;
-    }-*/;
+    }
+
+    public static void focusOnLastFocusableElement(Element parent)
+    {
+        Element[] focusableChildren = getFocusableChildren(parent);
+        if (focusableChildren.length > 0) {
+            focusableChildren[focusableChildren.length - 1].focus();
+        }
+    }
 }
