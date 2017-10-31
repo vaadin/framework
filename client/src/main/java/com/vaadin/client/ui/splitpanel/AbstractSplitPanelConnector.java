@@ -117,41 +117,42 @@ public abstract class AbstractSplitPanelConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setEnabled(isEnabled());
+        VAbstractSplitPanel panel = getWidget();
+        panel.setEnabled(isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration();
 
         if (ComponentStateUtil.hasStyles(getState())) {
-            getWidget().componentStyleNames = getState().styles;
+            panel.componentStyleNames = getState().styles;
         } else {
-            getWidget().componentStyleNames = new LinkedList<>();
+            panel.componentStyleNames = new LinkedList<>();
         }
 
         // Splitter updates
         SplitterState splitterState = getState().splitterState;
 
-        getWidget().setStylenames();
+        panel.setStylenames();
 
-        getWidget().minimumPosition = splitterState.minPosition
+        panel.minimumPosition = splitterState.minPosition
                 + splitterState.minPositionUnit;
 
-        getWidget().maximumPosition = splitterState.maxPosition
+        panel.maximumPosition = splitterState.maxPosition
                 + splitterState.maxPositionUnit;
 
-        getWidget().position = splitterState.position
+        panel.position = splitterState.position
                 + splitterState.positionUnit;
 
-        getWidget().setPositionReversed(splitterState.positionReversed);
+        panel.setPositionReversed(splitterState.positionReversed);
 
-        getWidget().setLocked(splitterState.locked);
+        panel.setLocked(splitterState.locked);
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
-        getConnection().runDescendentsLayout(getWidget());
+        getConnection().runDescendentsLayout(panel);
 
         getLayoutManager().setNeedsLayout(this);
 
-        getWidget().makeScrollable();
+        panel.makeScrollable();
 
         handleSingleComponentMove();
     }
@@ -180,7 +181,6 @@ public abstract class AbstractSplitPanelConnector extends
                 handleHierarchyChange();
             }
         }
-
     }
 
     @Override
