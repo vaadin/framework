@@ -26,7 +26,6 @@ import com.vaadin.data.provider.DataProvider;
  * Used to handle updates to the target grid's {@link DataProvider} after a
  * drop.
  *
- * @author Stephan Knitelius
  * @author Vaadin Ltd
  * @since
  *
@@ -42,8 +41,9 @@ public interface TargetDataProviderUpdater<T> extends Serializable {
      * @param dataProvider
      *            the target grid data provider
      * @param index
-     *            the Target index Integer.MAX when items should be added to
-     *            end.
+     *            the target index, {@link Integer#MAX_VALUE} is used for
+     *            dropping things always to the end of the grid without having
+     *            to fetch the size of the data provider
      * @param items
      *            items to be added.
      */
