@@ -21,7 +21,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.components.grid.DropIndexCalculator;
 import com.vaadin.ui.components.grid.GridDragger;
+import com.vaadin.ui.components.grid.SourceDataProviderUpdater;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
@@ -39,15 +41,15 @@ public class GridDraggerTwoGrids extends AbstractGridDnD {
 
         GridDragger<Person> gridDragger = new GridDragger<>(left, right);
 
-        CheckBox addItemsToEnd = new CheckBox("Add Items To End",
-                gridDragger.isAddItemsToEnd());
+        CheckBox addItemsToEnd = new CheckBox("Add Items To End", false);
         addItemsToEnd.addValueChangeListener(
-                event -> gridDragger.setAddItemsToEnd(event.getValue()));
+                event -> gridDragger.setDropIndexCalculator(event.getValue()
+                        ? DropIndexCalculator.ALWAYS_DROP_TO_END : null));
         CheckBox removeItemsFromSource = new CheckBox(
-                "Remove items from source grid",
-                gridDragger.isRemoveItemsFromSource());
+                "Remove items from source grid", true);
         removeItemsFromSource.addValueChangeListener(event -> gridDragger
-                .setRemoveItemsFromSource(event.getValue()));
+                .setSourceDataProviderUpdater(event.getValue() ? null
+                        : SourceDataProviderUpdater.NOOP));
 
         controls.addComponents(addItemsToEnd, removeItemsFromSource);
 
