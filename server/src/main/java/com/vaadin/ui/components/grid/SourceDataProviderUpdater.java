@@ -26,7 +26,6 @@ import com.vaadin.data.provider.DataProvider;
  * Used to handle updates to the source grid's {@link DataProvider} after a
  * drop.
  *
- * @author Stephan Knitelius
  * @author Vaadin Ltd
  * @since
  *
@@ -35,6 +34,13 @@ import com.vaadin.data.provider.DataProvider;
  */
 @FunctionalInterface
 public interface SourceDataProviderUpdater<T> extends Serializable {
+
+    /**
+     * A NOOP updater that does not do anything for the source data provider.
+     */
+    static SourceDataProviderUpdater<?> NOOP = (e, d) -> {
+    };
+
     /**
      * Called when Items have been dragged.
      *
