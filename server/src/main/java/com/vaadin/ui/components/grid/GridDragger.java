@@ -16,9 +16,9 @@
 package com.vaadin.ui.components.grid;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.vaadin.data.provider.ListDataProvider;
@@ -57,7 +57,7 @@ public class GridDragger<T> implements Serializable {
      * Set of items currently being dragged.
      */
     private Set<T> draggedItems;
-    private boolean removeFromSource = true;
+    private int shiftedDropIndex;
 
     /**
      * Enables DnD reordering for the rows in the given grid.
@@ -159,14 +159,7 @@ public class GridDragger<T> implements Serializable {
             draggedItems = event.getDraggedItems();
         });
 
-        gridDropTarget.addGridDropListener(event -> {
-            if (removeFromSource) {
-                handleSourceGridDrop(draggedItems);
-            }
-
-            int index = calculateDropIndex(event);
-            handleTargetGridDrop(index, draggedItems);
-        });
+        gridDropTarget.addGridDropListener(this::handleDrop);
     }
 
     /**
@@ -222,7 +215,7 @@ public class GridDragger<T> implements Serializable {
      *
      * @return the source grid drop handler
      */
-    public SourceDataProviderUpdater<T> getSourceGridDropHandler() {
+    public SourceDataProviderUpdater<T> getSourceDataProviderUpdater() {
         return sourceDataProviderUpdater;
     }
 
@@ -276,79 +269,146 @@ public class GridDragger<T> implements Serializable {
     }
 
     /**
-     * Returns whether dropped items are removed from the source grid or not.
-     * <p>
-     * Default value is {@code true} and the dropped items are removed from the
-     * source grid.
-     * <p>
-     * <em>NOTE: when this is set to {@code false}, any custom handler with
-     * {@link #setSourceDataProviderUpdater(SourceDataProviderUpdater)} is not
-     * triggered on drop.</em>
+     * Returns the currently dragged items captured from the source grid no drag
+     * start event, or {@code null} if no drag active.
      *
-     * @return {@code true} to remove dropped items, {@code false} to not
-     *         remove.
+     * @return the currenytly dragged items or {@code null}
      */
-    public boolean isRemoveItemsFromSource() {
-        return removeFromSource;
+    public Set<T> getDraggedItems() {
+        return draggedItems;
     }
 
-    private void handleSourceGridDrop(final Collection<T> droppedItems) {
+    /**
+     * This method is triggered when there has been a drop on the target grid.
+     * <p>
+     * <em>This method is protected only for testing reasons, you should not
+     * override this</em> but instead use
+     * {@link #setSourceDataProviderUpdater(SourceDataProviderUpdater)},
+     * {@link #setTargetDataProviderUpdater(TargetDataProviderUpdater)} and
+     * {@link #setDropIndexCalculator(DropIndexCalculator)} to customize how to
+     * handle the drops.
+     *
+     * @param event
+     *            the drop event on the target grid
+     */
+    protected void handleDrop(GridDropEvent<T> event) {
+        shiftedDropIndex = -1;
+        handleSourceGridDrop(event, getDraggedItems());
+
+        int index = calculateDropIndex(event);
+
+        handleTargetGridDrop(event, index, getDraggedItems());
+
+        draggedItems = null;
+    }
+
+    private void handleSourceGridDrop(GridDropEvent<T> event,
+            final Collection<T> droppedItems) {
         Grid<T> source = getGridDragSource().getGrid();
-        if (getSourceGridDropHandler() == null) {
-            if (!(source.getDataProvider() instanceof ListDataProvider)) {
-                throwIllegalStateExceptionForUnsupportedDataProvider(true);
-            }
-            ListDataProvider<T> listDataProvider = (ListDataProvider<T>) source
-                    .getDataProvider();
-            List<T> sourceItems = new ArrayList<>(listDataProvider.getItems());
-            sourceItems.removeAll(droppedItems);
-            source.setItems(sourceItems);
-        } else {
-            getSourceGridDropHandler().removeItems(source.getDataProvider(),
-                    droppedItems);
+
+        if (getSourceDataProviderUpdater() != null) {
+            getSourceDataProviderUpdater().removeItems(event.getDropEffect(),
+                    source.getDataProvider(), droppedItems);
+            return;
         }
+
+        if (!(source.getDataProvider() instanceof ListDataProvider)) {
+            throwIllegalStateExceptionForUnsupportedDataProvider(true);
+        }
+        ListDataProvider<T> listDataProvider = (ListDataProvider<T>) source
+                .getDataProvider();
+
+        // use the existing data source to keep filters and sort orders etc. in
+        // place
+        Collection<T> sourceItems = listDataProvider.getItems();
+
+        // if reordering the same grid and dropping on top of one of the dragged
+        // rows, need to calculate the new drop index before removing the items
+        if (getGridDragSource().getGrid() == getGridDropTarget().getGrid()
+                && sourceItems instanceof List
+                && event.getDropTargetRow().isPresent()
+                && getDraggedItems().contains(event.getDropTargetRow().get())) {
+            List<T> sourceItemsList = (List<T>) sourceItems;
+            shiftedDropIndex = sourceItemsList
+                    .indexOf(event.getDropTargetRow().get());
+            shiftedDropIndex -= getDraggedItems().stream().filter(
+                    item -> sourceItemsList.indexOf(item) < shiftedDropIndex)
+                    .count();
+        }
+
+        sourceItems.removeAll(droppedItems);
+        listDataProvider.refreshAll();
     }
 
-    private void handleTargetGridDrop(final int index,
+    private void handleTargetGridDrop(GridDropEvent event, final int index,
             Collection<T> droppedItems) {
         Grid<T> target = getGridDropTarget().getGrid();
-        if (targetDataProviderUpdater == null) {
-            if (!(target.getDataProvider() instanceof ListDataProvider)) {
-                throwIllegalStateExceptionForUnsupportedDataProvider(false);
-            }
-            ListDataProvider<T> listDataProvider = (ListDataProvider<T>) target
-                    .getDataProvider();
-            List<T> targetItems = new ArrayList<>(listDataProvider.getItems());
 
-            // DropIndexCalculator can return this to make sure things are added
-            // to end
-            if (index == Integer.MAX_VALUE) {
-                targetItems.addAll(droppedItems);
-            } else {
-                targetItems.addAll(index, droppedItems);
-            }
-            target.setItems(targetItems);
-        } else {
-            getTargetDataProviderUpdater().onDrop(target.getDataProvider(),
-                    index, droppedItems);
+        if (getTargetDataProviderUpdater() != null) {
+            getTargetDataProviderUpdater().onDrop(event.getDropEffect(),
+                    target.getDataProvider(), index, droppedItems);
+            return;
         }
+
+        if (!(target.getDataProvider() instanceof ListDataProvider)) {
+            throwIllegalStateExceptionForUnsupportedDataProvider(false);
+        }
+        ListDataProvider<T> listDataProvider = (ListDataProvider<T>) target
+                .getDataProvider();
+        // update the existing to keep filters etc.
+        Collection<T> targetItems = listDataProvider.getItems();
+
+        // If the user has create the list data provider by hand, then it
+        // can potentially have something else than a list
+        if (index != Integer.MAX_VALUE && targetItems instanceof List) {
+            ((List<T>) targetItems).addAll(index, droppedItems);
+        } else {
+            // for default we just add to the end
+            targetItems.addAll(droppedItems);
+        }
+        // instead of using setItems or creating a new data provider,
+        // refresh the existing one to keep filters etc. in place
+        listDataProvider.refreshAll();
     }
 
     private int calculateDropIndex(GridDropEvent<T> event) {
-        if (getDropIndexCalculator() == null) {
-            ListDataProvider<T> targetDataProvider = (ListDataProvider<T>) getGridDropTarget()
-                    .getGrid().getDataProvider();
-            List<T> items = new ArrayList<>(targetDataProvider.getItems());
-            int index = items.size();
-            if (event.getDropTargetRow().isPresent()) {
-                index = items.indexOf(event.getDropTargetRow().get())
-                        + (event.getDropLocation() == DropLocation.BELOW ? 1
-                                : 0);
-            }
-            return index;
-        } else {
+        // use custom calculator if present
+        if (getDropIndexCalculator() != null) {
             return getDropIndexCalculator().calculateDropIndex(event);
         }
+        // always drop to end if no custom calculator and no list data provider
+        // used
+        if (!(getGridDropTarget().getGrid()
+                .getDataProvider() instanceof ListDataProvider)) {
+            return Integer.MAX_VALUE;
+        }
+        // if the source and target grids are the same, then the index has been
+        // calculated before removing the items
+        if (shiftedDropIndex != -1) {
+            return shiftedDropIndex;
+        }
+
+        ListDataProvider<T> targetDataProvider = (ListDataProvider<T>) getGridDropTarget()
+                .getGrid().getDataProvider();
+        Collection<T> items = targetDataProvider.getItems();
+        // drop to end by default if collection doesn't support indexOf
+        int index = items.size();
+        if (items instanceof List) {
+            Optional<T> dropTargetRow = event.getDropTargetRow();
+            if (dropTargetRow.isPresent()) {
+                if (getGridDragSource().getGrid() == getGridDragSource()
+                        .getGrid()
+                        && getDraggedItems().contains(dropTargetRow.get())) {
+
+                } else {
+                    index = ((List<T>) items).indexOf(dropTargetRow.get())
+                            + (event.getDropLocation() == DropLocation.BELOW ? 1
+                                    : 0);
+                }
+            }
+        }
+
+        return index;
     }
 
     private static void throwIllegalStateExceptionForUnsupportedDataProvider(
@@ -359,7 +419,7 @@ public class GridDragger<T> implements Serializable {
                         .append(sourceGrid ? "remove " : "add ")
                         .append("items. Use GridDragger.set")
                         .append(sourceGrid ? "Source" : "Target")
-                        .append("GridDropHandler(...) to customize how to handle updating the data provider.")
+                        .append("DataProviderUpdater(...) to customize how to handle updating the data provider.")
                         .toString());
     }
 

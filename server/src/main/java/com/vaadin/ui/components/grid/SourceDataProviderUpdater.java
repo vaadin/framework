@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import com.vaadin.data.provider.DataProvider;
+import com.vaadin.shared.ui.dnd.DropEffect;
 
 /**
  * A handler for source grid data provider updater for {@link GridDragger}.
@@ -38,17 +39,19 @@ public interface SourceDataProviderUpdater<T> extends Serializable {
     /**
      * A NOOP updater that does not do anything for the source data provider.
      */
-    static SourceDataProviderUpdater<?> NOOP = (e, d) -> {
+    static SourceDataProviderUpdater NOOP = (e, dp, i) -> {
     };
 
     /**
      * Called when Items have been dragged.
      *
+     * @param dropEffect
+     *            the reported drop effect from the drop event
      * @param dataProvider
      *            the data provider for the source grid
      * @param items
      *            dragged items.
      */
-    public void removeItems(DataProvider<T, ?> dataProvider,
-            Collection<T> items);
+    public void removeItems(DropEffect dropEffect,
+            DataProvider<T, ?> dataProvider, Collection<T> items);
 }

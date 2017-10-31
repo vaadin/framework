@@ -34,7 +34,8 @@ public interface DropIndexCalculator<T> extends Serializable {
      * Calculator for always dropping items to the end of the target grid,
      * regardless of drop position.
      */
-    static DropIndexCalculator<?> ALWAYS_DROP_TO_END = (event -> Integer.MAX_VALUE);
+    @SuppressWarnings("rawtypes")
+    static DropIndexCalculator ALWAYS_DROP_TO_END = (event -> Integer.MAX_VALUE);
 
     /**
      * Called when Items are dropped onto a target grid.
