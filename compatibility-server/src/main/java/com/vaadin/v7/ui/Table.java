@@ -2811,8 +2811,8 @@ public class Table extends AbstractSelect implements Action.Container,
             final int length) {
         LinkedHashSet<Object> ids = new LinkedHashSet<Object>();
         for (int i = 0; i < length; i++) {
-            assert itemId != null; // should not be null unless client-server
-                                   // are out of sync
+            // should not be null unless client-server are out of sync
+            assert itemId != null;
             ids.add(itemId);
             itemId = nextItemId(itemId);
         }

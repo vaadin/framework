@@ -325,9 +325,11 @@ public class VScrollTable extends FlowPanel
     private static final int CHARCODE_SPACE = 32;
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
-    private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
-    private int firstvisibleOnLastPage = -1; // To detect if the first visible
-                                             // is on the last page
+    // to detect "serverside scroll"
+    private int lastRequestedFirstvisible = 0;
+    // To detect if the first visible
+    // is on the last page
+    private int firstvisibleOnLastPage = -1;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean showRowHeaders = false;
@@ -3180,8 +3182,9 @@ public class VScrollTable extends FlowPanel
                     colIndex = getColIndexByKey(cid);
                     DOM.setCapture(getElement());
                     headerX = tHead.getAbsoluteLeft();
-                    event.preventDefault(); // prevent selecting text &&
-                                            // generated touch events
+                    // prevent selecting text &&
+                    // generated touch events
+                    event.preventDefault();
                 }
                 break;
             case Event.ONMOUSEUP:
@@ -3237,10 +3240,12 @@ public class VScrollTable extends FlowPanel
                         rowRequestHandler
                                 .setReqRows((int) (2 * pageLength * cacheRate
                                         + pageLength));
-                        rowRequestHandler.deferRowFetch(); // some validation +
-                                                           // defer 250ms
-                        rowRequestHandler.cancel(); // instead of waiting
-                        rowRequestHandler.run(); // run immediately
+                        // some validation and defer 250ms
+                        // instead of waiting
+                        rowRequestHandler.deferRowFetch();
+                        rowRequestHandler.cancel();
+                        // run immediately
+                        rowRequestHandler.run();
                     }
                     fireHeaderClickedEvent(event);
                     if (WidgetUtil.isTouchEvent(event)) {
@@ -7867,8 +7872,9 @@ public class VScrollTable extends FlowPanel
                         VScrollTableRow toBeFocusedRow = scrollBody
                                 .getRowByRowIndex(indexOfToBeFocused);
 
-                        if (toBeFocusedRow != null) { // if the next focused row
-                                                      // is rendered
+                        if (toBeFocusedRow != null) {
+                            // if the next focused row is rendered
+
                             setRowFocus(toBeFocusedRow);
                             selectFocusedRow(ctrl, shift);
                             // TODO needs scrollintoview ?

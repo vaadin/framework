@@ -55,10 +55,9 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
                 findElements(By.className("v-table-header-cell")).size(), 2);
         checkHeaderAttributes(1);
 
-        changeOrderButton.click(); // change column order, column #1 now becomes
-                                   // column #0
+        // change column order, column #1 now becomes column #0
+        changeOrderButton.click();
         checkHeaderAttributes(0);
-
     }
 
     /*

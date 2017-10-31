@@ -38,8 +38,9 @@ public class UriFragmentTest extends MultiBrowserTest {
         assertEquals("Current URI fragment:", getFragmentLabelValue());
         navigateToTest();
         assertFragment("test");
-        navigateToNull(); // Setting to null when there is a fragment actually
-                          // sets it to #
+        // Setting to null when there is a fragment actually
+        // sets it to #
+        navigateToNull();
         assertEquals("Current URI fragment:", getFragmentLabelValue());
 
         // ensure IE works with new popstate based implementation, see

@@ -308,8 +308,9 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                     || "video".equalsIgnoreCase(old.getTagName())) {
                 if (!old.hasAttribute("controls")
                         && "audio".equalsIgnoreCase(old.getTagName())) {
-                    return null; // nothing to animate, so we won't add this to
-                                 // the clone
+                    // nothing to animate, so we won't add this to
+                    // the clone
+                    return null;
                 }
                 Element newEl = DOM.createElement(old.getTagName());
                 if (old.hasAttribute("controls")) {
