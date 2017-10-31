@@ -21,7 +21,6 @@ import java.io.Serializable;
  * A handler for calculating the index of the dropped items on the drop target
  * grid.
  *
- * @author Stephan Knitelius
  * @author Vaadin Ltd
  * @since
  * @see GridDragger
@@ -30,12 +29,20 @@ import java.io.Serializable;
  */
 @FunctionalInterface
 public interface DropIndexCalculator<T> extends Serializable {
+
+    /**
+     * Calculator for always dropping items to the end of the target grid,
+     * regardless of drop position.
+     */
+    static DropIndexCalculator<?> ALWAYS_DROP_TO_END = (event -> Integer.MAX_VALUE);
+
     /**
      * Called when Items are dropped onto a target grid.
      *
      * @param event
      *            the GridDropEvent.
-     * @return index the target index.
+     * @return index the target index, use {@link Integer#MAX_VALUE} for always
+     *         dropping to end
      */
     public int calculateDropIndex(GridDropEvent<T> event);
 }
