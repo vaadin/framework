@@ -58,7 +58,7 @@ public class TestForUpload extends CustomComponent
 
     private final Upload up;
 
-    private final Label l = new Label("Idle");
+    private final Label l;
 
     private final ProgressIndicator pi = new ProgressIndicator();
     private final ProgressIndicator pi2 = new ProgressIndicator();
@@ -100,6 +100,31 @@ public class TestForUpload extends CustomComponent
 
         up = new Upload("Upload", buffer);
         up.setImmediateMode(true);
+
+        final Button b = new Button("Reed state from upload",
+                event -> readState());
+
+        final Button c = new Button("Force GC", event -> gc());
+
+        main.addComponent(b);
+        main.addComponent(c);
+        main.addComponent(beSluggish);
+        main.addComponent(throwExecption);
+        main.addComponent(interrupt);
+        interrupt.addClickListener(event -> up.interruptUpload());
+
+        uploadBufferSelector = new Select("StreamVariable type");
+        uploadBufferSelector.setImmediate(true);
+        uploadBufferSelector.addItem("memory");
+        uploadBufferSelector.setValue("memory");
+        uploadBufferSelector.addItem("tempfile");
+        uploadBufferSelector.addValueChangeListener(event -> setBuffer());
+        main.addComponent(uploadBufferSelector);
+
+        main.addComponent(up);
+        l = new Label("Idle");
+        main.addComponent(l);
+
         up.addListener((Listener) event -> {
             // print out all events fired by upload for debug purposes
             System.out.println("Upload fired event | " + event);
@@ -156,29 +181,6 @@ public class TestForUpload extends CustomComponent
 
             refreshMemUsage();
         });
-
-        final Button b = new Button("Reed state from upload",
-                event -> readState());
-
-        final Button c = new Button("Force GC", event -> gc());
-
-        main.addComponent(b);
-        main.addComponent(c);
-        main.addComponent(beSluggish);
-        main.addComponent(throwExecption);
-        main.addComponent(interrupt);
-        interrupt.addClickListener(event -> up.interruptUpload());
-
-        uploadBufferSelector = new Select("StreamVariable type");
-        uploadBufferSelector.setImmediate(true);
-        uploadBufferSelector.addItem("memory");
-        uploadBufferSelector.setValue("memory");
-        uploadBufferSelector.addItem("tempfile");
-        uploadBufferSelector.addValueChangeListener(event -> setBuffer());
-        main.addComponent(uploadBufferSelector);
-
-        main.addComponent(up);
-        main.addComponent(l);
 
         pi.setVisible(false);
         pi.setPollingInterval(1000);

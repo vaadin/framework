@@ -37,7 +37,7 @@ public class ServletIntegrationUI extends UI {
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new LabelFromDesign();
-        table.addValueChangeListener(value -> selectedLabel
+        table.addValueChangeListener(event -> selectedLabel
                 .setValue(String.valueOf(table.getValue())));
         layout.addComponent(selectedLabel);
     }

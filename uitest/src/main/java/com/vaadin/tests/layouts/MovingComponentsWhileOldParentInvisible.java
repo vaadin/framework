@@ -26,8 +26,9 @@ import com.vaadin.ui.VerticalSplitPanel;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
-    private HasComponents cc = new AbsoluteLayout(); // initial dummy
-                                                     // contents
+    // initial dummy contents
+    private HasComponents cc = new AbsoluteLayout();
+
     private Label lab;
 
     @Override

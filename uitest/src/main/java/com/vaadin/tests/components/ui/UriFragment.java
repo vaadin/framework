@@ -16,7 +16,7 @@ public class UriFragment extends AbstractReindeerTestUI {
         fragmentLabel.setId("fragmentLabel");
         addComponent(fragmentLabel);
         updateLabel();
-        getPage().addUriFragmentChangedListener(even -> updateLabel());
+        getPage().addUriFragmentChangedListener(event -> updateLabel());
 
         addComponent(createButton("test", "Navigate to #test", "test"));
         addComponent(createButton("empty", "Navigate to #", ""));

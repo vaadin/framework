@@ -16,12 +16,12 @@
 
 package com.vaadin.v7.data;
 
+import java.io.Serializable;
+
 import com.vaadin.data.Binder;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.server.Setter;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -249,7 +249,7 @@ public interface Property<T> extends Serializable {
      * @since 3.0
      */
     @Deprecated
-    public interface Editor extends Property.Viewer, Serializable {
+    public interface Editor extends Property.Viewer {
 
     }
 

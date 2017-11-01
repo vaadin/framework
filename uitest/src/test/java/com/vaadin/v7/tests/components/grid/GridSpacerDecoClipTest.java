@@ -77,11 +77,13 @@ public class GridSpacerDecoClipTest extends MultiBrowserTest {
 
         GridElement.GridRowElement nearToBottomRow = gridElement.getRow(993);
 
-        nearToBottomRow.doubleClick(); // Open upper Row Details, lower Row
-                                       // Details goes out of visible range
+        // Open upper Row Details, lower Row
+        // Details goes out of visible range
+        nearToBottomRow.doubleClick();
         Thread.sleep(500);
-        nearToBottomRow.doubleClick(); // Close upper Row Details, lower Row
-                                       // Details goes back to visible range
+        // Close upper Row Details, lower Row
+        // Details goes back to visible range
+        nearToBottomRow.doubleClick();
 
         deco = getSpacerDeco(0);
         String clip = deco.getCssValue("clip");

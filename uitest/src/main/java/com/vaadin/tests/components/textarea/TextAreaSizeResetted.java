@@ -57,8 +57,9 @@ public class TextAreaSizeResetted extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        setPollInterval(500); // Short polling like 100ms jams up the TestBench
-                              // waitForVaadin -functionality.
+        // Short polling like 100ms jams up the TestBench
+        // waitForVaadin -functionality.
+        setPollInterval(500);
 
         final Label pollIndicator = new Label();
         pollIndicator.setId("pollIndicator");

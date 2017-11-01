@@ -115,8 +115,8 @@ public class NumberRenderer extends AbstractRenderer<Number> {
      */
     public NumberRenderer(String formatString, Locale locale)
             throws IllegalArgumentException {
-        this(formatString, locale, ""); // This will call #toString() during
-                                        // formatting
+        // This will call #toString() during formatting
+        this(formatString, locale, "");
     }
 
     /**

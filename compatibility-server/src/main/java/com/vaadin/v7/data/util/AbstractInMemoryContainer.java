@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -151,8 +150,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         }
     }
 
-    private abstract static class BaseItemAddOrRemoveEvent extends EventObject
-            implements Serializable {
+    private abstract static class BaseItemAddOrRemoveEvent extends EventObject {
         protected Object itemId;
         protected int index;
         protected int count;

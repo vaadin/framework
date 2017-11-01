@@ -298,9 +298,8 @@ public class VaadinTunesLayout extends AbstractReindeerTestUI {
         top.setHeight("75px"); // Same as the background image height
 
         playback.setStyleName("playback");
-        playback.setMargin(new MarginInfo(false, true, false, false)); // Add
-                                                                       // right-side
-                                                                       // margin
+        // Add right-side margin
+        playback.setMargin(new MarginInfo(false, true, false, false));
         play.setStyleName("play");
         next.setStyleName("next");
         prev.setStyleName("prev");

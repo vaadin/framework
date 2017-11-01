@@ -255,25 +255,26 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        getWidget().id = getConnectorId();
-        boolean firstPaint = getWidget().connection == null;
-        getWidget().connection = client;
+        VUI ui = getWidget();
+        ui.id = getConnectorId();
+        boolean firstPaint = ui.connection == null;
+        ui.connection = client;
 
-        getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
+        ui.resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         // this also implicitly removes old styles
         String styles = "";
-        styles += getWidget().getStylePrimaryName() + " ";
+        styles += ui.getStylePrimaryName() + " ";
         if (ComponentStateUtil.hasStyles(getState())) {
             for (String style : getState().styles) {
                 styles += style + " ";
             }
         }
         if (!client.getConfiguration().isStandalone()) {
-            styles += getWidget().getStylePrimaryName() + "-embedded";
+            styles += ui.getStylePrimaryName() + "-embedded";
         }
-        getWidget().setStyleName(styles.trim());
+        ui.setStyleName(styles.trim());
 
-        getWidget().makeScrollable();
+        ui.makeScrollable();
 
         clickEventHandler.handleEventHandlerRegistration();
 
@@ -344,11 +345,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
-                if (getWidget().actionHandler == null) {
-                    getWidget().actionHandler = new ShortcutActionHandler(
-                            getWidget().id, client);
+                if (ui.actionHandler == null) {
+                    ui.actionHandler = new ShortcutActionHandler(ui.id, client);
                 }
-                getWidget().actionHandler.updateActionMap(childUidl);
+                ui.actionHandler.updateActionMap(childUidl);
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -391,8 +391,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
-            Window.addWindowClosingHandler(getWidget());
-            Window.addResizeHandler(getWidget());
+            Window.addWindowClosingHandler(ui);
+            Window.addResizeHandler(ui);
         }
 
         if (uidl.hasAttribute("scrollTo")) {
@@ -416,7 +416,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             // Queue the initial window size to be sent with the following
             // request.
             Scheduler.get()
-                    .scheduleDeferred(() -> getWidget().sendClientResized());
+                    .scheduleDeferred(() -> ui.sendClientResized());
         }
     }
 
@@ -492,7 +492,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        Widget shortcutContextWidget = getWidget();
+        VUI ui = getWidget();
+        Widget shortcutContextWidget = ui;
         if (applicationConnection.getConfiguration().isStandalone()) {
             // Listen to body for standalone apps (#19392)
             shortcutContextWidget = RootPanel.get(); // document body
@@ -502,19 +503,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             if (VWindow.isModalWindowOpen()) {
                 return;
             }
-            if (getWidget().actionHandler != null) {
+            if (ui.actionHandler != null) {
                 Element target = Element
                         .as(event.getNativeEvent().getEventTarget());
                 if (target == Document.get().getBody()
-                        || getWidget().getElement().isOrHasChild(target)) {
+                        || ui.getElement().isOrHasChild(target)) {
                     // Only react to body and elements inside the UI
-                    getWidget().actionHandler.handleKeyboardEvent(
+                    ui.actionHandler.handleKeyboardEvent(
                             (Event) event.getNativeEvent().cast());
                 }
             }
         }, KeyDownEvent.getType());
 
-        DOM.sinkEvents(getWidget().getElement(), Event.ONSCROLL);
+        DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
 
         RootPanel root = RootPanel.get(rootPanelId);
 
@@ -528,18 +529,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         activeTheme = applicationConnection.getConfiguration().getThemeName();
         root.addStyleName(activeTheme);
 
-        root.add(getWidget());
+        root.add(ui);
 
         // Set default tab index before focus call. State change handler
         // will update this later if needed.
-        getWidget().setTabIndex(1);
+        ui.setTabIndex(1);
 
         if (applicationConnection.getConfiguration().isStandalone()) {
             // set focus to iview element by default to listen possible keyboard
             // shortcuts. For embedded applications this is unacceptable as we
             // don't want to steal focus from the main page nor we don't want
             // side-effects from focusing (scrollIntoView).
-            getWidget().getElement().focus();
+            ui.getElement().focus();
         }
 
         applicationConnection.addHandler(
@@ -587,9 +588,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // but it's never a content widget
         if (connector instanceof WindowConnector) {
             return null;
-        } else {
-            return connector;
         }
+        return connector;
     }
 
     protected void onChildSizeChange() {
@@ -709,7 +709,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     window.setVisible(false);
                     window.show();
                 }
-
             }
         }
 

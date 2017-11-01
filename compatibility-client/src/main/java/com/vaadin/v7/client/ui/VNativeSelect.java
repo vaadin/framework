@@ -23,9 +23,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.Field;
 
-public class VNativeSelect extends VOptionGroupBase implements Field {
+public class VNativeSelect extends VOptionGroupBase {
 
     public static final String CLASSNAME = "v-select";
 

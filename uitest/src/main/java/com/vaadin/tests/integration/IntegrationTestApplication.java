@@ -33,7 +33,7 @@ public class IntegrationTestApplication extends LegacyApplication {
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new Label();
-        table.addValueChangeListener(value -> selectedLabel
+        table.addValueChangeListener(event -> selectedLabel
                 .setValue(String.valueOf(table.getValue())));
         window.addComponent(selectedLabel);
     }

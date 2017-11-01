@@ -33,7 +33,7 @@ public class BasicCrudTable extends AbstractBasicCrud {
         table.setContainerDataSource(container);
 
         table.setVisibleColumns((Object[]) columns);
-        table.addValueChangeListener(value -> form.edit(
+        table.addValueChangeListener(event -> form.edit(
                 (BeanItem<ComplexPerson>) table.getItem(table.getValue())));
 
         table.setSizeFull();

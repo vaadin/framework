@@ -31,17 +31,17 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
         firstDelay = createIntegerTextField("First delay (ms)",
                 getState().loadingIndicatorConfiguration.firstDelay);
         firstDelay.addValueChangeListener(
-                value -> getLoadingIndicatorConfiguration().setFirstDelay(
+                event -> getLoadingIndicatorConfiguration().setFirstDelay(
                         (Integer) firstDelay.getConvertedValue()));
         secondDelay = createIntegerTextField("Second delay (ms)",
                 getState().loadingIndicatorConfiguration.secondDelay);
         secondDelay.addValueChangeListener(
-                value -> getLoadingIndicatorConfiguration().setSecondDelay(
+                event -> getLoadingIndicatorConfiguration().setSecondDelay(
                         (Integer) secondDelay.getConvertedValue()));
         thirdDelay = createIntegerTextField("Third delay (ms)",
                 getState().loadingIndicatorConfiguration.thirdDelay);
         thirdDelay.addValueChangeListener(
-                value -> getLoadingIndicatorConfiguration().setThirdDelay(
+                event -> getLoadingIndicatorConfiguration().setThirdDelay(
                         (Integer) thirdDelay.getConvertedValue()));
 
         getLayout().addComponents(firstDelay, secondDelay, thirdDelay);
@@ -51,7 +51,6 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
         hl.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
         hl.addComponents(delayField, delayButton);
         addComponent(hl);
-
     }
 
     private TextField createIntegerTextField(String caption, int initialValue) {
