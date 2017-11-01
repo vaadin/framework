@@ -30,22 +30,15 @@ public class DisabledParentLayout extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        VerticalLayout content = new VerticalLayout();
-
-        content.setSpacing(true);
-        content.setMargin(true);
 
         final VerticalLayout pane = new VerticalLayout();
         AbstractLocalDateField dateField = new TestDateField();
         pane.addComponent(dateField);
 
-        content.addComponent(pane);
-
         Button button = new Button("Test");
         button.addClickListener(event -> pane.setEnabled(!pane.isEnabled()));
-        content.addComponent(button);
 
-        addComponent(content);
+        addComponents(pane, button);
     }
 
     @Override
@@ -55,7 +48,7 @@ public class DisabledParentLayout extends AbstractReindeerTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        return 13124;
+        return 4773;
     }
 
 }

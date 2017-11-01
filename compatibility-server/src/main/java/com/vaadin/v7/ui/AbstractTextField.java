@@ -73,7 +73,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
 
-    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
+    private static final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
 
     private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 
@@ -787,8 +787,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("maxlength");
-        customAttributes.add("max-length"); // to prevent this appearing in
-                                            // output
+
+        // prevent this from appearing in output
+        customAttributes.add("max-length");
         customAttributes.add("cursor-position");
         return customAttributes;
     }

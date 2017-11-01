@@ -29,7 +29,6 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.widget.grid.HeightAwareDetailsGenerator;
 import com.vaadin.client.widgets.Grid;
@@ -58,14 +57,10 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
     private Registration dataChangeRegistration;
 
     private final Map<Element, ScheduledCommand> elementToResizeCommand = new HashMap<Element, Scheduler.ScheduledCommand>();
-    private final ElementResizeListener detailsRowResizeListener = new ElementResizeListener() {
-
-        @Override
-        public void onElementResize(ElementResizeEvent e) {
-            if (elementToResizeCommand.containsKey(e.getElement())) {
-                Scheduler.get().scheduleFinally(
-                        elementToResizeCommand.get(e.getElement()));
-            }
+    private final ElementResizeListener detailsRowResizeListener = event -> {
+        if (elementToResizeCommand.containsKey(event.getElement())) {
+            Scheduler.get().scheduleFinally(
+                    elementToResizeCommand.get(event.getElement()));
         }
     };
 
@@ -137,22 +132,17 @@ public class DetailsManagerConnector extends AbstractExtensionConnector {
 
         private ScheduledCommand createResizeCommand(final int rowIndex,
                 final Element element) {
-            return new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    // It should not be possible to get here without calculating
-                    // the spacerCellBorderHeights or without having the details
-                    // row open, nor for this command to be triggered while
-                    // layout is running, but it's safer to check anyway.
-                    if (spacerCellBorderHeights != null
-                            && !getLayoutManager().isLayoutRunning()
-                            && getDetailsComponentConnectorId(
-                                    rowIndex) != null) {
-                        double height = getLayoutManager().getOuterHeightDouble(
-                                element) + spacerCellBorderHeights;
-                        getWidget().setDetailsHeight(rowIndex, height);
-                    }
+            return () -> {
+                // It should not be possible to get here without calculating
+                // the spacerCellBorderHeights or without having the details
+                // row open, nor for this command to be triggered while
+                // layout is running, but it's safer to check anyway.
+                if (spacerCellBorderHeights != null
+                        && !getLayoutManager().isLayoutRunning()
+                        && getDetailsComponentConnectorId(rowIndex) != null) {
+                    double height = getLayoutManager().getOuterHeightDouble(
+                            element) + spacerCellBorderHeights;
+                    getWidget().setDetailsHeight(rowIndex, height);
                 }
             };
         }

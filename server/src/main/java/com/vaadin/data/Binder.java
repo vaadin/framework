@@ -330,7 +330,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         * 
+         *
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
@@ -394,7 +394,7 @@ public class Binder<BEAN> implements Serializable {
          * @return this binding, for chaining
          * @throws IllegalStateException
          *             if {@code bind} has already been called
-         * 
+         *
          * @since 8.2
          */
         public default BindingBuilder<BEAN, TARGET> withValidator(
@@ -617,6 +617,31 @@ public class Binder<BEAN> implements Serializable {
         public default BindingBuilder<BEAN, TARGET> asRequired(
                 String errorMessage) {
             return asRequired(context -> errorMessage);
+        }
+
+        /**
+         * Sets the field to be required. This means two things:
+         * <ol>
+         * <li>the required indicator will be displayed for this field</li>
+         * <li>the field value is validated for not being empty, i.e. that the
+         * field's value is not equal to what {@link HasValue#getEmptyValue()}
+         * returns</li>
+         * </ol>
+         * <p>
+         * For setting an error message, use {@link #asRequired(String)}.
+         * <p>
+         * For localizing the error message, use
+         * {@link #asRequired(ErrorMessageProvider)}.
+         *
+         * @see #asRequired(String)
+         * @see #asRequired(ErrorMessageProvider)
+         * @see HasValue#setRequiredIndicatorVisible(boolean)
+         * @see HasValue#isEmpty()
+         * @return this binding, for chaining
+         * @since 8.2
+         */
+        public default BindingBuilder<BEAN, TARGET> asRequired() {
+            return asRequired(context -> "");
         }
 
         /**
@@ -2585,7 +2610,7 @@ public class Binder<BEAN> implements Serializable {
     }
 
     private String minifyFieldName(String fieldName) {
-        return fieldName.toLowerCase(Locale.ENGLISH).replace("_", "");
+        return fieldName.toLowerCase(Locale.ROOT).replace("_", "");
     }
 
     private <V> void fireValueChangeEvent(ValueChangeEvent<V> event) {

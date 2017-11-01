@@ -58,14 +58,14 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
         addItemsToSelection("Item 4");
         assertEquals("4. Selected: [Item 2, Item 4]", getLogRow(0));
 
-        addItemsToSelection("Item 10", "Item 0", "Item 9"); // will cause 3
-                                                            // events
+        // will cause 3 events
+        addItemsToSelection("Item 10", "Item 0", "Item 9");
 
         assertEquals("7. Selected: [Item 2, Item 4, Item 10, Item 0, Item 9]",
                 getLogRow(0));
 
-        removeItemsFromSelection("Item 0", "Item 2", "Item 9"); // will cause 3
-                                                                // events
+        // will cause 3 events
+        removeItemsFromSelection("Item 0", "Item 2", "Item 9");
         assertEquals("10. Selected: [Item 4, Item 10]", getLogRow(0));
     }
 
@@ -235,7 +235,8 @@ public class ListSelectTest extends SingleBrowserTestPhantomJS2 {
     private List<String> getSelectedValues() {
         Select select = new Select(
                 getListSelect().findElement(By.tagName("select")));
-        return select.getAllSelectedOptions().stream().map(e -> e.getText())
+        return select.getAllSelectedOptions().stream()
+                .map(element -> element.getText())
                 .collect(Collectors.toList());
     }
 

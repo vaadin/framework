@@ -18,7 +18,6 @@ package com.vaadin.client.ui.window;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -309,8 +308,9 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
                     || "video".equalsIgnoreCase(old.getTagName())) {
                 if (!old.hasAttribute("controls")
                         && "audio".equalsIgnoreCase(old.getTagName())) {
-                    return null; // nothing to animate, so we won't add this to
-                                 // the clone
+                    // nothing to animate, so we won't add this to
+                    // the clone
+                    return null;
                 }
                 Element newEl = DOM.createElement(old.getTagName());
                 if (old.hasAttribute("controls")) {
@@ -403,13 +403,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         window.centered = state.centered;
         // Ensure centering before setting visible (#16486)
         if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
-            Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    getWidget().center();
-                }
-            });
+            Scheduler.get().scheduleFinally(() -> getWidget().center());
         }
         window.setVisible(true);
     }

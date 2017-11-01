@@ -15,7 +15,6 @@
  */
 package com.vaadin.data.provider;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +92,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
     protected class ActiveDataHandler
-            implements Serializable, DataGenerator<T> {
+            implements DataGenerator<T> {
 
         /**
          * Set of key strings for currently active data objects

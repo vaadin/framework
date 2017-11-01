@@ -47,9 +47,8 @@ public class TextFieldEmptyingPrompt extends AbstractReindeerTestUI {
         addComponent(label);
 
         textField.setPlaceholder(RANDOM_PROMPT);
-        textField.addValueChangeListener(listener -> {
-            label.setValue("Textfield value: " + listener.getValue());
-        });
+        textField.addValueChangeListener(listener -> label
+                .setValue("Textfield value: " + listener.getValue()));
         addComponent(textField);
 
         Button button = new Button("Click To Remove Prompt");

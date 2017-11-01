@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -133,7 +134,7 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private String getErrorLevelClassName(String prefix,
             ErrorLevel errorLevel) {
-        return prefix + "-" + errorLevel.toString().toLowerCase();
+        return prefix + "-" + errorLevel.toString().toLowerCase(Locale.ROOT);
     }
 
     private List<String> getErrorLevelClassNames(String prefix,
@@ -147,7 +148,8 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private void selectErrorLevel(ErrorLevel errorLevel) {
         errorLevelSelector.clear();
-        errorLevelSelector.sendKeys(errorLevel.toString().toLowerCase());
+        errorLevelSelector
+                .sendKeys(errorLevel.toString().toLowerCase(Locale.ROOT));
         errorLevelSelector.sendKeys(getReturn());
     }
 

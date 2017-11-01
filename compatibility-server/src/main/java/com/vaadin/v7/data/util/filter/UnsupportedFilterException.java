@@ -17,8 +17,6 @@ package com.vaadin.v7.data.util.filter;
 
 import com.vaadin.data.provider.Query;
 
-import java.io.Serializable;
-
 /**
  * Exception for cases where a container does not support a specific type of
  * filters.
@@ -33,8 +31,8 @@ import java.io.Serializable;
  * @deprecated As of 8.0, no replacement available. See {@link Query#getFilter()}
  */
 @Deprecated
-public class UnsupportedFilterException extends RuntimeException
-        implements Serializable {
+public class UnsupportedFilterException extends RuntimeException {
+
     public UnsupportedFilterException() {
     }
 

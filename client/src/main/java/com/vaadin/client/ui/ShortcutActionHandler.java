@@ -32,9 +32,9 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 
 /**
- * A helper class to implement keyboard shorcut handling. Keeps a list of owners
- * actions and fires actions to server. User class needs to delegate keyboard
- * events to handleKeyboardEvents function.
+ * A helper class to implement keyboard shortcut handling. Keeps a list of
+ * owners actions and fires actions to server. User class needs to delegate
+ * keyboard events to handleKeyboardEvents function.
  *
  * @author Vaadin Ltd
  */
@@ -150,14 +150,14 @@ public class ShortcutActionHandler {
 
     private static native void blur(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.blur();
        }
     }-*/;
 
     private static native void focus(Element e)
     /*-{
-        if(e.blur) {
+        if (e.blur) {
             e.focus();
        }
     }-*/;

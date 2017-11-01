@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -56,11 +57,11 @@ public class GridStructureTest extends GridBasicFeaturesTest {
         setDebug(true);
         openTestURL();
 
-        assertEquals("column 0",
-                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
+        assertEquals("column 0", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase(Locale.ROOT));
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
-        assertEquals("column 1",
-                getGridElement().getHeaderCell(0, 0).getText().toLowerCase());
+        assertEquals("column 1", getGridElement().getHeaderCell(0, 0).getText()
+                .toLowerCase(Locale.ROOT));
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
 
         // Column 0 is now the last column in Grid.
@@ -74,14 +75,16 @@ public class GridStructureTest extends GridBasicFeaturesTest {
 
         // Column 0 should be visible
         List<TestBenchElement> cells = getGridHeaderRowCells();
-        assertEquals("column 0", cells.get(0).getText().toLowerCase());
+        assertEquals("column 0",
+                cells.get(0).getText().toLowerCase(Locale.ROOT));
 
         // Hide column 0
         selectMenuPath("Component", "Columns", "Column 0", "Add / Remove");
 
         // Column 1 should now be the first cell
         cells = getGridHeaderRowCells();
-        assertEquals("column 1", cells.get(0).getText().toLowerCase());
+        assertEquals("column 1",
+                cells.get(0).getText().toLowerCase(Locale.ROOT));
     }
 
     @Test

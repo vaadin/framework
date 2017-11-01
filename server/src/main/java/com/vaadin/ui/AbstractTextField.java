@@ -19,10 +19,10 @@ package com.vaadin.ui;
 import java.util.Collection;
 import java.util.Objects;
 
-import com.vaadin.event.FieldEvents;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 
+import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
@@ -286,8 +286,8 @@ public abstract class AbstractTextField extends AbstractField<String>
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("maxlength");
-        customAttributes.add("max-length"); // to prevent this appearing in
-                                            // output
+        // to prevent this appearing in output
+        customAttributes.add("max-length");
         customAttributes.add("cursor-position");
         return customAttributes;
     }

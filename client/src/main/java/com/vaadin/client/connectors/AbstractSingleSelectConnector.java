@@ -17,7 +17,6 @@ package com.vaadin.client.connectors;
 
 import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.shared.ui.AbstractSingleSelectState;
 
 /**
@@ -27,8 +26,7 @@ import com.vaadin.shared.ui.AbstractSingleSelectState;
  * @since 8.0
  */
 public abstract class AbstractSingleSelectConnector<WIDGET extends Widget & HasAllFocusHandlers>
-        extends AbstractFocusableListingConnector<WIDGET>
-        implements HasRequiredIndicator {
+        extends AbstractFocusableListingConnector<WIDGET> {
 
     @Override
     public AbstractSingleSelectState getState() {

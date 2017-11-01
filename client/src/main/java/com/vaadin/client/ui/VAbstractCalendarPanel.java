@@ -28,7 +28,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -76,12 +75,12 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
         /**
          * Called when calendar user triggers a submitting operation in calendar
-         * panel. Eg. clicking on day or hitting enter.
+         * panel. E.g. clicking on day or hitting enter.
          */
         void onSubmit();
 
         /**
-         * On eg. ESC key.
+         * On e.g. ESC key.
          */
         void onCancel();
     }
@@ -125,43 +124,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private static final String CN_OUTSIDE_RANGE = "outside-range";
 
-    /**
-     * Represents a click handler for when a user selects a value by using the
-     * mouse
-     */
-    private ClickHandler dayClickHandler = new ClickHandler() {
-        /*
-         * (non-Javadoc)
-         *
-         * @see
-         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-         * .event.dom.client.ClickEvent)
-         */
-        @Override
-        public void onClick(ClickEvent event) {
-            if (!isEnabled() || isReadonly()) {
-                return;
-            }
-
-            Date newDate = ((Day) event.getSource()).getDate();
-            if (!isDateInsideRange(newDate,
-                    getResolution(VAbstractCalendarPanel.this::isDay))) {
-                return;
-            }
-            if (newDate.getMonth() != displayedMonth.getMonth()
-                    || newDate.getYear() != displayedMonth.getYear()) {
-                // If an off-month date was clicked, we must change the
-                // displayed month and re-render the calendar (#8931)
-                displayedMonth.setMonth(newDate.getMonth());
-                displayedMonth.setYear(newDate.getYear());
-                renderCalendar();
-            }
-            focusDay(newDate);
-            selectFocused();
-            onSubmit();
-        }
-    };
-
     private VEventButton prevYear;
 
     private VEventButton nextYear;
@@ -201,6 +163,33 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     private VDateField<R> parent;
 
     private boolean initialRenderDone = false;
+
+    /**
+     * Represents a click handler for when a user selects a value by using the
+     * mouse
+     */
+    private ClickHandler dayClickHandler = event -> {
+        if (!isEnabled() || isReadonly()) {
+            return;
+        }
+
+        Date newDate = ((Day) event.getSource()).getDate();
+        if (!isDateInsideRange(newDate,
+                getResolution(VAbstractCalendarPanel.this::isDay))) {
+            return;
+        }
+        if (newDate.getMonth() != displayedMonth.getMonth()
+                || newDate.getYear() != displayedMonth.getYear()) {
+            // If an off-month date was clicked, we must change the
+            // displayed month and re-render the calendar (#8931)
+            displayedMonth.setMonth(newDate.getMonth());
+            displayedMonth.setYear(newDate.getYear());
+            renderCalendar();
+        }
+        focusDay(newDate);
+        selectFocused();
+        onSubmit();
+    };
 
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
@@ -783,10 +772,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         // Print weekday names
         final int firstDay = getDateTimeService().getFirstDayOfWeek();
         for (int i = 0; i < 7; i++) {
-            int day = i + firstDay;
-            if (day > 6) {
-                day = 0;
-            }
+            int day = (i + firstDay) % 7;
             if (isBelowMonth(getResolution())) {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + getDateTimeService().getShortDay(day) + "</strong>");
@@ -1153,9 +1139,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
      *
      * @param sender
      *            The component that was clicked
-     * @param updateVariable
-     *            Should the value field be updated
-     *
      */
     private void processClickEvent(Widget sender) {
         if (!isEnabled() || isReadonly()) {

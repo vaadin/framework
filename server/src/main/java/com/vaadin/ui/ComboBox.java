@@ -69,7 +69,7 @@ import elemental.json.JsonObject;
  */
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
-        implements HasValue<T>, FieldEvents.BlurNotifier,
+        implements FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
 
     /**
@@ -678,10 +678,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> {
-            listener.valueChange(new ValueChangeEvent<>(event.getComponent(),
-                    this, event.getOldValue(), event.isUserOriginated()));
-        });
+        return addSelectionListener(event -> listener
+                .valueChange(new ValueChangeEvent<>(event.getComponent(), this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override

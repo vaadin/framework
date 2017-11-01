@@ -1970,7 +1970,7 @@ public class VTree extends FocusElementPanel
      */
     private native JavaScriptObject applyDisableTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     /**
@@ -2072,8 +2072,8 @@ public class VTree extends FocusElementPanel
         return KeyCodes.KEY_END;
     }
 
-    private final String SUBPART_NODE_PREFIX = "n";
-    private final String EXPAND_IDENTIFIER = "expand";
+    private static final String SUBPART_NODE_PREFIX = "n";
+    private static final String EXPAND_IDENTIFIER = "expand";
 
     /*
      * In webkit, focus may have been requested for this component but not yet

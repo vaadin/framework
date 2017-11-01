@@ -35,16 +35,18 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 @SuppressWarnings("deprecation")
 public class DateTimeService {
 
-    private String currentLocale;
+    private String locale;
 
     private static int[] maxDaysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30,
             31, 30, 31 };
+
+    private static final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
 
     /**
      * Creates a new date time service with the application default locale.
      */
     public DateTimeService() {
-        currentLocale = LocaleService.getDefaultLocale();
+        locale = LocaleService.getDefaultLocale();
     }
 
     /**
@@ -59,20 +61,19 @@ public class DateTimeService {
     }
 
     public void setLocale(String locale) throws LocaleNotLoadedException {
-        if (LocaleService.getAvailableLocales().contains(locale)) {
-            currentLocale = locale;
-        } else {
+        if (!LocaleService.getAvailableLocales().contains(locale)) {
             throw new LocaleNotLoadedException(locale);
         }
+        this.locale = locale;
     }
 
     public String getLocale() {
-        return currentLocale;
+        return locale;
     }
 
     public String getMonth(int month) {
         try {
-            return LocaleService.getMonthNames(currentLocale)[month];
+            return LocaleService.getMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getMonth", e);
             return null;
@@ -81,7 +82,7 @@ public class DateTimeService {
 
     public String getShortMonth(int month) {
         try {
-            return LocaleService.getShortMonthNames(currentLocale)[month];
+            return LocaleService.getShortMonthNames(locale)[month];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortMonth", e);
             return null;
@@ -90,34 +91,52 @@ public class DateTimeService {
 
     public String getDay(int day) {
         try {
-            return LocaleService.getDayNames(currentLocale)[day];
+            return LocaleService.getDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getDay", e);
             return null;
         }
     }
 
+    /**
+     * Returns the localized short name of the specified day.
+     *
+     * @param day
+     *            the day, {@code 0} is {@code SUNDAY}
+     * @return the localized short name
+     */
     public String getShortDay(int day) {
         try {
-            return LocaleService.getShortDayNames(currentLocale)[day];
+            return LocaleService.getShortDayNames(locale)[day];
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getShortDay", e);
             return null;
         }
     }
 
+    /**
+     * Returns the first day of the week, according to the used Locale.
+     *
+     * @return the localized first day of the week, {@code 0} is {@code SUNDAY}
+     */
     public int getFirstDayOfWeek() {
         try {
-            return LocaleService.getFirstDayOfWeek(currentLocale);
+            return LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getFirstDayOfWeek", e);
             return 0;
         }
     }
 
+    /**
+     * Returns whether the locale has twelve hour, or twenty four hour clock.
+     *
+     * @return {@code true} if the locale has twelve hour clock, {@code false}
+     *         for twenty four clock
+     */
     public boolean isTwelveHourClock() {
         try {
-            return LocaleService.isTwelveHourClock(currentLocale);
+            return LocaleService.isTwelveHourClock(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in isTwelveHourClock", e);
             return false;
@@ -126,7 +145,7 @@ public class DateTimeService {
 
     public String getClockDelimeter() {
         try {
-            return LocaleService.getClockDelimiter(currentLocale);
+            return LocaleService.getClockDelimiter(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Error in getClockDelimiter", e);
             return ":";
@@ -137,7 +156,7 @@ public class DateTimeService {
 
     public String[] getAmPmStrings() {
         try {
-            return LocaleService.getAmPmStrings(currentLocale);
+            return LocaleService.getAmPmStrings(locale);
         } catch (final LocaleNotLoadedException e) {
             // TODO can this practically even happen? Should die instead?
             getLogger().log(Level.SEVERE,
@@ -146,12 +165,19 @@ public class DateTimeService {
         }
     }
 
-    public int getStartWeekDay(Date date) {
-        final Date dateForFirstOfThisMonth = new Date(date.getYear(),
-                date.getMonth(), 1);
+    /**
+     * Returns the first day of week of the specified {@code month}.
+     *
+     * @param month
+     *            the month, not {@code null}
+     * @return the first day of week,
+     */
+    public int getStartWeekDay(Date month) {
+        final Date dateForFirstOfThisMonth = new Date(month.getYear(),
+                month.getMonth(), 1);
         int firstDay;
         try {
-            firstDay = LocaleService.getFirstDayOfWeek(currentLocale);
+            firstDay = LocaleService.getFirstDayOfWeek(locale);
         } catch (final LocaleNotLoadedException e) {
             getLogger().log(Level.SEVERE, "Locale not loaded, using fallback 0",
                     e);
@@ -159,7 +185,7 @@ public class DateTimeService {
         }
         int start = dateForFirstOfThisMonth.getDay() - firstDay;
         if (start < 0) {
-            start = 6;
+            start += 7;
         }
         return start;
     }
@@ -262,7 +288,6 @@ public class DateTimeService {
      * @return The ISO-8601 week number for {@literal date}
      */
     public static int getISOWeekNumber(Date date) {
-        final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
         int dayOfWeek = date.getDay(); // 0 == sunday
 
         // ISO 8601 use weeks that start on monday so we use
@@ -449,7 +474,7 @@ public class DateTimeService {
     /**
      * Replaces the {@code z} characters of the specified {@code formatStr} with
      * the given {@code timeZoneName}.
-     * 
+     *
      * @param formatStr
      *            The format string, which is the pattern describing the date
      *            and time format
@@ -578,7 +603,6 @@ public class DateTimeService {
         }
 
         return date;
-
     }
 
     private static Logger getLogger() {

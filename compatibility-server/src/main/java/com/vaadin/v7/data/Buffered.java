@@ -122,7 +122,7 @@ public interface Buffered extends Serializable {
     @SuppressWarnings("serial")
     @Deprecated
     public class SourceException extends RuntimeException
-            implements Serializable, ErrorMessageProducer {
+            implements ErrorMessageProducer {
 
         /** Source class implementing the buffered interface */
         private final Buffered source;

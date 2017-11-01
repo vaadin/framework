@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.google.gwt.aria.client.Roles;
@@ -256,12 +257,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.v7.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -934,7 +935,7 @@ public class VFilterSelect extends Composite
         private void setTdWidth(Node parent, int width) {
             for (int i = 0; i < parent.getChildCount(); i++) {
                 Node child = parent.getChild(i);
-                if ("td".equals(child.getNodeName().toLowerCase())) {
+                if ("td".equals(child.getNodeName().toLowerCase(Locale.ROOT))) {
                     ((Element) child).getStyle().setWidth(width, Unit.PX);
                 } else {
                     setTdWidth(child, width);
@@ -1204,10 +1205,11 @@ public class VFilterSelect extends Composite
                 }
             } else if (item != null && !"".equals(lastFilter)
                     && (filteringmode == FilteringMode.CONTAINS
-                            ? item.getText().toLowerCase()
-                                    .contains(lastFilter.toLowerCase())
-                            : item.getText().toLowerCase()
-                                    .startsWith(lastFilter.toLowerCase()))) {
+                            ? item.getText().toLowerCase(Locale.ROOT).contains(
+                                    lastFilter.toLowerCase(Locale.ROOT))
+                            : item.getText().toLowerCase(Locale.ROOT)
+                                    .startsWith(lastFilter
+                                            .toLowerCase(Locale.ROOT)))) {
                 doItemAction(item, true);
             } else {
                 // currentSuggestion has key="" for nullselection
@@ -2303,12 +2305,12 @@ public class VFilterSelect extends Composite
      */
     public native int minWidth(String captions)
     /*-{
-        if(!captions || captions.length <= 0)
+        if (!captions || captions.length <= 0)
                 return 0;
         captions = captions.split("|");
         var d = $wnd.document.createElement("div");
         var html = "";
-        for(var i=0; i < captions.length; i++) {
+        for (var i=0; i < captions.length; i++) {
                 html += "<div>" + captions[i] + "</div>";
                 // TODO apply same CSS classname as in suggestionmenu
         }

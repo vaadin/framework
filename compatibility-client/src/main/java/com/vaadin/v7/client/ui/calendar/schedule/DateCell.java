@@ -573,9 +573,9 @@ public class DateCell extends FocusableComplexPanel implements MouseDownHandler,
         boolean display = true;
         if (event.isTimeOnDifferentDays()) {
             display = true;
-        } else { // only in case of one-day event we are able not to display
-                 // event
-                 // which is placed in unpublished parts on calendar
+        } else {
+            // only in case of one-day event we are able not to display
+            // event which is placed in unpublished parts on calendar
             Date eventStart = event.getStartTime();
             Date eventEnd = event.getEndTime();
 

@@ -17,9 +17,7 @@ package com.vaadin.tests.components.table;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.TestBenchElement;
 import com.vaadin.testbench.elements.TableElement;
@@ -62,11 +60,6 @@ public class HeaderRightClickAfterDragTest extends MultiBrowserTest {
     private void closeWindow() {
         WindowElement window = $(WindowElement.class).first();
         window.findElement(By.className("v-window-closebox")).click();
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver driver) {
-                return findElements(By.className("v-window")).isEmpty();
-            }
-        });
+        waitUntil(input -> findElements(By.className("v-window")).isEmpty());
     }
 }

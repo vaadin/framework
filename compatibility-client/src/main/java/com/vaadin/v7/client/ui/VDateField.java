@@ -100,13 +100,13 @@ public class VDateField extends FlowPanel implements Field, HasEnabled {
     /*-{
        try {
            var date = new Date(2000,1,1,1); // don't use current date here
-           if(y && y >= 0) date.setFullYear(y);
-           if(m && m >= 1) date.setMonth(m-1);
-           if(d && d >= 0) date.setDate(d);
-           if(h >= 0) date.setHours(h);
-           if(mi >= 0) date.setMinutes(mi);
-           if(s >= 0) date.setSeconds(s);
-           if(ms >= 0) date.setMilliseconds(ms);
+           if (y && y >= 0) date.setFullYear(y);
+           if (m && m >= 1) date.setMonth(m-1);
+           if (d && d >= 0) date.setDate(d);
+           if (h >= 0) date.setHours(h);
+           if (mi >= 0) date.setMinutes(mi);
+           if (s >= 0) date.setSeconds(s);
+           if (ms >= 0) date.setMilliseconds(ms);
            return date.getTime();
        } catch (e) {
            // TODO print some error message on the console

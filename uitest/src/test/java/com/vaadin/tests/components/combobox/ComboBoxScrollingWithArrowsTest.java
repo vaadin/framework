@@ -89,8 +89,8 @@ public class ComboBoxScrollingWithArrowsTest extends MultiBrowserTest {
         waitUntilNextPageIsVisible();
         dropDownComboBox.sendKeys(Keys.UP);
 
-        assertEquals("item " + (PAGESIZE - 1), getSelectedItemText()); // item
-                                                                       // 9
+        // item 9
+        assertEquals("item " + (PAGESIZE - 1), getSelectedItemText());
     }
 
     private void waitUntilNextPageIsVisible() {

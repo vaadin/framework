@@ -397,7 +397,7 @@ public class ResourceLoader {
 
     private static native int getStyleSheetLength(String url)
     /*-{
-        for(var i = 0; i < $doc.styleSheets.length; i++) {
+        for (var i = 0; i < $doc.styleSheets.length; i++) {
             if ($doc.styleSheets[i].href === url) {
                 var sheet = $doc.styleSheets[i];
                 try {
@@ -405,12 +405,12 @@ public class ResourceLoader {
                     if (rules === undefined) {
                         rules = sheet.rules;
                     }
-    
+
                     if (rules === null) {
                         // Style sheet loaded, but can't access length because of XSS -> assume there's something there
                         return 1;
                     }
-    
+
                     // Return length so we can distinguish 0 (probably 404 error) from normal case.
                     return rules.length;
                 } catch (err) {
@@ -492,9 +492,7 @@ public class ResourceLoader {
      */
     protected void runWhenHtmlImportsReady(Runnable runnable) {
         if (GWT.isClient() && supportsHtmlWhenReady()) {
-            addHtmlImportsReadyHandler(() -> {
-                runnable.run();
-            });
+            addHtmlImportsReadyHandler(() -> runnable.run());
         } else {
             runnable.run();
         }

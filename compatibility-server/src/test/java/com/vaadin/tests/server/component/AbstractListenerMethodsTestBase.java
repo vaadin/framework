@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -43,7 +44,7 @@ public abstract class AbstractListenerMethodsTestBase {
                     String packageName = "com.vaadin.tests.server";
                     if (Component.class.isAssignableFrom(c)) {
                         packageName += ".component."
-                                + c.getSimpleName().toLowerCase();
+                                + c.getSimpleName().toLowerCase(Locale.ROOT);
                         continue;
                     }
 

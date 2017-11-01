@@ -16,9 +16,7 @@
 package com.vaadin.tests.components.layout;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -46,16 +44,13 @@ public class EmptySpaceOnPageAfterExpandedComponentTest
         final WebElement expandedElement = vaadinElementById("expandedElement");
         final WebElement containerElement = vaadinElementById("container");
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                int expandedElementBottom = expandedElement.getLocation().getY()
-                        + expandedElement.getSize().getHeight();
-                int containerElementBottom = containerElement.getLocation()
-                        .getY() + containerElement.getSize().getHeight();
+        waitUntil(input -> {
+            int expandedElementBottom = expandedElement.getLocation().getY()
+                    + expandedElement.getSize().getHeight();
+            int containerElementBottom = containerElement.getLocation().getY()
+                    + containerElement.getSize().getHeight();
 
-                return expandedElementBottom + 1 == containerElementBottom;
-            }
+            return expandedElementBottom + 1 == containerElementBottom;
         });
     }
 }

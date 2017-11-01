@@ -2,7 +2,6 @@ package com.vaadin.tests.components.customcomponent;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -23,12 +22,8 @@ public class CustomComponentGrowingContent extends TestBase {
             }
         });
 
-        addComponent(new Button("Set long content", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                label.setValue("Longer content that should be fully visible");
-            }
-        }));
+        addComponent(new Button("Set long content", event -> label
+                .setValue("Longer content that should be fully visible")));
     }
 
     @Override

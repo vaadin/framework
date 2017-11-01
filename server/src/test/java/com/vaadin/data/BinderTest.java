@@ -394,8 +394,9 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         String customNullPointerRepresentation = "foo";
         Binder<Person> binder = new Binder<>(Person.class);
         binder.forField(nameField)
-                .withConverter(value -> value, value -> value == null
-                        ? customNullPointerRepresentation : value)
+                .withConverter(value -> value,
+                        value -> value == null ? customNullPointerRepresentation
+                                : value)
                 .bind("firstName");
 
         Person person = new Person();
@@ -892,9 +893,8 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
                 .withConverter(new StringToIntegerConverter(ageError))
                 .bind(Person::getAge, Person::setAge);
 
-        binder.setValidationStatusHandler(status -> {
-            status.notifyBindingValidationStatusHandlers();
-        });
+        binder.setValidationStatusHandler(
+                status -> status.notifyBindingValidationStatusHandlers());
 
         String initialName = item.getFirstName();
         int initialAge = item.getAge();

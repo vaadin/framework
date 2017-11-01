@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -973,7 +974,8 @@ public class GridColumnHidingTest extends GridBasicClientFeaturesTest {
     private void verifyHeaderCellContent(int row, int column, String content) {
         GridCellElement headerCell = getGridElement().getHeaderCell(row,
                 column);
-        assertEquals(content.toLowerCase(), headerCell.getText().toLowerCase());
+        assertEquals(content.toLowerCase(Locale.ROOT),
+                headerCell.getText().toLowerCase(Locale.ROOT));
         assertTrue(headerCell.isDisplayed());
     }
 

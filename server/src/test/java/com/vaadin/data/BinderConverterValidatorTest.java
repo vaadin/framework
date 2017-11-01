@@ -127,9 +127,8 @@ public class BinderConverterValidatorTest
         Validator<Number> positiveNumberValidator = (value, context) -> {
             if (value.doubleValue() >= 0) {
                 return ValidationResult.ok();
-            } else {
-                return ValidationResult.error(NEGATIVE_ERROR_MESSAGE);
             }
+            return ValidationResult.error(NEGATIVE_ERROR_MESSAGE);
         };
         binder.forField(salaryField)
                 .withConverter(Double::valueOf, String::valueOf)
@@ -227,7 +226,8 @@ public class BinderConverterValidatorTest
                 .withConverter(presentation -> {
                     if (presentation.equals("OK")) {
                         return "1";
-                    } else if (presentation.equals("NOTOK")) {
+                    }
+                    if (presentation.equals("NOTOK")) {
                         return "2";
                     }
                     throw new IllegalArgumentException(
@@ -235,12 +235,12 @@ public class BinderConverterValidatorTest
                 }, model -> {
                     if (model.equals("1")) {
                         return "OK";
-                    } else if (model.equals("2")) {
-                        return "NOTOK";
-                    } else {
-                        throw new IllegalArgumentException(
-                                "Value in model must be 1 or 2");
                     }
+                    if (model.equals("2")) {
+                        return "NOTOK";
+                    }
+                    throw new IllegalArgumentException(
+                            "Value in model must be 1 or 2");
                 });
         binding.bind(StatusBean::getStatus, StatusBean::setStatus);
         binder.setBean(bean);
@@ -535,12 +535,9 @@ public class BinderConverterValidatorTest
         binder.forField(nameField).withConverter(fieldValue -> {
             if ("null".equals(fieldValue)) {
                 return null;
-            } else {
-                return fieldValue;
             }
-        }, model -> {
-            return model;
-        }).bind(Person::getFirstName, Person::setFirstName);
+            return fieldValue;
+        }, model -> model).bind(Person::getFirstName, Person::setFirstName);
 
         Person person = new Person();
         person.setFirstName("foo");

@@ -49,9 +49,8 @@ public class CheckBoxTest {
         CheckBox cb = new CheckBox();
         ui.setContent(cb);
         AtomicBoolean userOriginated = new AtomicBoolean(false);
-        cb.addValueChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-        });
+        cb.addValueChangeListener(
+                event -> userOriginated.set(event.isUserOriginated()));
         ComponentTest.syncToClient(cb);
         ServerRpcManager.getRpcProxy(cb, CheckBoxServerRpc.class)
                 .setChecked(true, new MouseEventDetails());
@@ -69,9 +68,8 @@ public class CheckBoxTest {
         CheckBox cb = new CheckBox();
         ui.setContent(cb);
         AtomicBoolean userOriginated = new AtomicBoolean(true);
-        cb.addValueChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-        });
+        cb.addValueChangeListener(
+                event -> userOriginated.set(event.isUserOriginated()));
         cb.setValue(true);
         assertFalse(userOriginated.get());
         userOriginated.set(true);

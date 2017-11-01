@@ -37,14 +37,12 @@ public class GridAriaMultiselectable extends AbstractTestUI {
 
         addComponent(grid);
 
-        Button singleSelectBtn = new Button("SingleSelect", event -> {
-            grid.setSelectionMode(SelectionMode.SINGLE);
-        });
+        Button singleSelectBtn = new Button("SingleSelect",
+                event -> grid.setSelectionMode(SelectionMode.SINGLE));
         addComponent(singleSelectBtn);
 
-        Button multiSelectBtn = new Button("MultiSelect", event -> {
-            grid.setSelectionMode(SelectionMode.MULTI);
-        });
+        Button multiSelectBtn = new Button("MultiSelect",
+                event -> grid.setSelectionMode(SelectionMode.MULTI));
         addComponent(multiSelectBtn);
     }
 }

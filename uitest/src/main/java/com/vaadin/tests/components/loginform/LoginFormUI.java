@@ -26,10 +26,9 @@ public class LoginFormUI extends AbstractReindeerTestUI {
         getPasswordCaption().ifPresent(loginForm::setPasswordCaption);
         getLoginCaption().ifPresent(loginForm::setLoginButtonCaption);
         updateCaption();
-        loginForm.addLoginListener(event -> {
-            login(event.getSource(), event.getLoginParameter("username"),
-                    event.getLoginParameter("password"));
-        });
+        loginForm.addLoginListener(event -> login(event.getSource(),
+                event.getLoginParameter("username"),
+                event.getLoginParameter("password")));
 
         loginFormLayout.addComponent(loginForm);
 

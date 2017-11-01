@@ -52,9 +52,9 @@ public class DateUtil {
      * @return given Date as String, for communicating to server-side
      */
     public static String formatClientSideDate(Date date) {
-        DateTimeFormat dateformat_date = DateTimeFormat
+        DateTimeFormat dateformatDate = DateTimeFormat
                 .getFormat(DateConstants.CLIENT_DATE_FORMAT);
-        return dateformat_date.format(date);
+        return dateformatDate.format(date);
     }
 
     /**
@@ -63,8 +63,8 @@ public class DateUtil {
      * @return given Date as String, for communicating to server-side
      */
     public static String formatClientSideTime(Date date) {
-        DateTimeFormat dateformat_date = DateTimeFormat
+        DateTimeFormat dateformatDate = DateTimeFormat
                 .getFormat(DateConstants.CLIENT_TIME_FORMAT);
-        return dateformat_date.format(date);
+        return dateformatDate.format(date);
     }
 }

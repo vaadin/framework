@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -205,19 +206,19 @@ public class JsonCodec implements Serializable {
      * happens to process Vaadin requests, so it must be protected from
      * corruption caused by concurrent access.
      */
-    private static final ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, Collection<BeanProperty>> TYPE_PROPERTY_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, String> typeToTransportType = new HashMap<>();
+    private static final Map<Class<?>, String> TYPE_TO_TRANSPORT_TYPE = new HashMap<>();
 
     /**
      * Note! This does not contain primitives.
      * <p>
      */
-    private static final Map<String, Class<?>> transportTypeToType = new HashMap<>();
+    private static final Map<String, Class<?>> TRANSPORT_TYPE_TO_TYPE = new HashMap<>();
 
-    private static final Map<Class<?>, JSONSerializer<?>> customSerializers = new HashMap<>();
+    private static final Map<Class<?>, JSONSerializer<?>> CUSTOM_SERIALIZERS = new HashMap<>();
     static {
-        customSerializers.put(Date.class, new DateSerializer());
+        CUSTOM_SERIALIZERS.put(Date.class, new DateSerializer());
     }
 
     static {
@@ -243,14 +244,14 @@ public class JsonCodec implements Serializable {
     }
 
     private static void registerType(Class<?> type, String transportType) {
-        typeToTransportType.put(type, transportType);
+        TYPE_TO_TRANSPORT_TYPE.put(type, transportType);
         if (!type.isPrimitive()) {
-            transportTypeToType.put(transportType, type);
+            TRANSPORT_TYPE_TO_TYPE.put(transportType, type);
         }
     }
 
     public static boolean isInternalTransportType(String transportType) {
-        return transportTypeToType.containsKey(transportType);
+        return TRANSPORT_TYPE_TO_TYPE.containsKey(transportType);
     }
 
     public static boolean isInternalType(Type type) {
@@ -266,7 +267,7 @@ public class JsonCodec implements Serializable {
             // value
             return true;
         }
-        return typeToTransportType.containsKey(getClassForType(type));
+        return TYPE_TO_TRANSPORT_TYPE.containsKey(getClassForType(type));
     }
 
     private static Class<?> getClassForType(Type type) {
@@ -280,7 +281,7 @@ public class JsonCodec implements Serializable {
     }
 
     private static Class<?> getType(String transportType) {
-        return transportTypeToType.get(transportType);
+        return TRANSPORT_TYPE_TO_TYPE.get(transportType);
     }
 
     public static Object decodeInternalOrCustomType(Type targetType,
@@ -328,8 +329,8 @@ public class JsonCodec implements Serializable {
             Class<?> classForType = getClassForType(targetType);
             return decodeEnum(classForType.asSubclass(Enum.class),
                     (JsonString) value);
-        } else if (customSerializers.containsKey(getClassForType(targetType))) {
-            return customSerializers.get(getClassForType(targetType))
+        } else if (CUSTOM_SERIALIZERS.containsKey(getClassForType(targetType))) {
+            return CUSTOM_SERIALIZERS.get(getClassForType(targetType))
                     .deserialize(targetType, value, connectorTracker);
         } else {
             return decodeObject(targetType, (JsonObject) value,
@@ -668,7 +669,7 @@ public class JsonCodec implements Serializable {
             toReturn = Json.create(((Connector) value).getConnectorId());
         } else if (value instanceof Enum) {
             toReturn = Json.create(((Enum<?>) value).name());
-        } else if (customSerializers.containsKey(value.getClass())) {
+        } else if (CUSTOM_SERIALIZERS.containsKey(value.getClass())) {
             toReturn = serializeJson(value, connectorTracker);
         } else if (valueType instanceof GenericArrayType) {
             toReturn = encodeArrayContents(
@@ -694,7 +695,7 @@ public class JsonCodec implements Serializable {
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
             throws IntrospectionException {
-        Collection<BeanProperty> cachedProperties = typePropertyCache.get(type);
+        Collection<BeanProperty> cachedProperties = TYPE_PROPERTY_CACHE.get(type);
         if (cachedProperties != null) {
             return cachedProperties;
         }
@@ -705,7 +706,7 @@ public class JsonCodec implements Serializable {
 
         // Doesn't matter if the same calculation is done multiple times from
         // different threads, so there's no need to do e.g. putIfAbsent
-        typePropertyCache.put(type, properties);
+        TYPE_PROPERTY_CACHE.put(type, properties);
         return properties;
     }
 
@@ -729,7 +730,7 @@ public class JsonCodec implements Serializable {
                     throw new RuntimeException("Can't encode "
                             + valueType.getName()
                             + " as it has multiple properties with the name "
-                            + fieldName.toLowerCase()
+                            + fieldName.toLowerCase(Locale.ROOT)
                             + ". This can happen if there are getters and setters for a public field (the framework can't know which to ignore) or if there are properties with only casing distinguishing between the names (e.g. getFoo() and getFOO())");
                 }
 
@@ -981,12 +982,12 @@ public class JsonCodec implements Serializable {
      * of the hot part.
      */
     private static String getInternalTransportType(Type valueType) {
-        return typeToTransportType.get(getClassForType(valueType));
+        return TYPE_TO_TRANSPORT_TYPE.get(getClassForType(valueType));
     }
 
     private static JsonValue serializeJson(Object value,
             ConnectorTracker connectorTracker) {
-        JSONSerializer serializer = customSerializers.get(value.getClass());
+        JSONSerializer serializer = CUSTOM_SERIALIZERS.get(value.getClass());
         return serializer.serialize(value, connectorTracker);
     }
 
