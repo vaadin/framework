@@ -302,10 +302,10 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         if (visibleRowRange.isEmpty()
                 || getState().dropMode == DropMode.ON_TOP) {
             return tableWrapper;
-        } else { // if dragged under the last row to empty space, drop target
-                 // needs to be below the last row
-            return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
         }
+        // if dragged under the last row to empty space, drop target
+        // needs to be below the last row
+        return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
     }
 
     @Override

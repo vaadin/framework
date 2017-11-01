@@ -82,9 +82,10 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         fieldSet.appendChild(legend);
         legend.appendChild(caption);
 
-        fieldSet.appendChild(desc); // Adding description for initial padding
-                                    // measurements, removed later if no
-                                    // description is set
+        // Adding description for initial padding
+        // measurements, removed later if no
+        // description is set
+        fieldSet.appendChild(desc);
 
         fieldSet.appendChild(fieldContainer);
         errorMessage.setVisible(false);

@@ -695,9 +695,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             value = getEmptyValue();
         }
         dateString = formatDate(value);
-        RangeValidator<T> validator = getRangeValidator();// TODO move range
-                                                          // check to internal
-                                                          // validator?
+        // TODO move range check to internal validator?
+        RangeValidator<T> validator = getRangeValidator();
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
 

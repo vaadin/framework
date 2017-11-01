@@ -1746,7 +1746,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of item set change event.
      */
     private static class ItemSetChangeEvent extends EventObject
-            implements Serializable, Container.ItemSetChangeEvent {
+            implements Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(Container source) {
             super(source);
@@ -1768,7 +1768,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of property set change event.
      */
     private static class PropertySetChangeEvent extends EventObject
-            implements Container.PropertySetChangeEvent, Serializable {
+            implements Container.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Container source) {
             super(source);

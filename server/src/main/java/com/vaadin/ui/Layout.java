@@ -29,7 +29,7 @@ import com.vaadin.shared.ui.MarginInfo;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface Layout extends ComponentContainer, Serializable {
+public interface Layout extends ComponentContainer {
 
     /**
      * AlignmentHandler is most commonly an advanced {@link Layout} that can

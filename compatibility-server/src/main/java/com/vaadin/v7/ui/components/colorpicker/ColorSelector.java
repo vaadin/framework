@@ -15,8 +15,6 @@
  */
 package com.vaadin.v7.ui.components.colorpicker;
 
-import java.io.Serializable;
-
 import com.vaadin.v7.shared.ui.colorpicker.Color;
 
 /**
@@ -25,7 +23,7 @@ import com.vaadin.v7.shared.ui.colorpicker.Color;
  * @since 7.0.0
  */
 @Deprecated
-public interface ColorSelector extends Serializable, HasColorChangeListener {
+public interface ColorSelector extends HasColorChangeListener {
 
     /**
      * Sets the color.

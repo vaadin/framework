@@ -48,8 +48,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.ui.Field;
-import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.v7.client.ui.VCalendarPanel.FocusOutListener;
@@ -67,7 +65,7 @@ import com.vaadin.v7.shared.ui.datefield.Resolution;
  *
  */
 public class VPopupCalendar extends VTextualDate
-        implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+        implements ClickHandler, CloseHandler<PopupPanel> {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();

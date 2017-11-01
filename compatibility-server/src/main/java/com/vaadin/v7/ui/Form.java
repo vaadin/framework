@@ -86,7 +86,7 @@ import com.vaadin.v7.shared.form.FormState;
  */
 @Deprecated
 public class Form extends AbstractField<Object>
-        implements Item.Editor, Buffered, Item, Validatable, Action.Notifier,
+        implements Item.Editor, Item, Action.Notifier,
         HasComponents, LegacyComponent {
 
     private Object propertyValue;

@@ -52,8 +52,9 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         // if theme has changed the resourceUrl may need to be updated
         updateResourceIfNecessary();
 
+        VEmbedded widget = getWidget();
         // Save details
-        getWidget().client = getConnection();
+        widget.client = getConnection();
 
         boolean clearBrowserElement = true;
 
@@ -62,22 +63,21 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         final EmbeddedState state = getState();
         if (state.type != Embedded.TYPE_OBJECT) {
             // remove old style name related to type
-            if (getWidget().type != null) {
-                getWidget().removeStyleName(
-                        VEmbedded.CLASSNAME + "-" + getWidget().type);
+            if (widget.type != null) {
+                widget.removeStyleName(VEmbedded.CLASSNAME + "-" + widget.type);
             }
             // remove old style name related to mime type
-            if (getWidget().mimetype != null) {
-                getWidget().removeStyleName(
-                        VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
+            if (widget.mimetype != null) {
+                widget.removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + widget.mimetype);
             }
-            getWidget().type = state.type == Embedded.TYPE_IMAGE ? "image"
+            widget.type = state.type == Embedded.TYPE_IMAGE ? "image"
                     : "browser";
-            if (getWidget().type.equals("image")) {
-                getWidget().addStyleName(VEmbedded.CLASSNAME + "-image");
+            if (widget.type.equals("image")) {
+                widget.addStyleName(VEmbedded.CLASSNAME + "-image");
                 Element el = null;
                 boolean created = false;
-                NodeList<Node> nodes = getWidget().getElement().getChildNodes();
+                NodeList<Node> nodes = widget.getElement().getChildNodes();
                 if (nodes != null && nodes.getLength() == 1) {
                     Node n = nodes.getItem(0);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -88,7 +88,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                     }
                 }
                 if (el == null) {
-                    getWidget().setHTML("");
+                    widget.setHTML("");
                     el = DOM.createImg();
                     created = true;
                     DOM.sinkEvents(el, Event.ONLOAD);
@@ -109,56 +109,55 @@ public class EmbeddedConnector extends AbstractComponentConnector {
 
                 if (created) {
                     // insert in dom late
-                    getWidget().getElement().appendChild(el);
+                    widget.getElement().appendChild(el);
                 }
 
                 /*
                  * Sink tooltip events so tooltip is displayed when hovering the
                  * image.
                  */
-                getWidget().sinkEvents(VTooltip.TOOLTIP_EVENTS);
+                widget.sinkEvents(VTooltip.TOOLTIP_EVENTS);
 
-            } else if (getWidget().type.equals("browser")) {
-                getWidget().addStyleName(VEmbedded.CLASSNAME + "-browser");
-                if (getWidget().browserElement == null) {
-                    getWidget().setHTML(
+            } else if (widget.type.equals("browser")) {
+                widget.addStyleName(VEmbedded.CLASSNAME + "-browser");
+                if (widget.browserElement == null) {
+                    widget.setHTML(
                             "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\""
                                     + " allowTransparency=\"true\" src=\"\""
                                     + " name=\"" + getConnectorId()
                                     + "\"></iframe>");
-                    getWidget().browserElement = DOM
-                            .getFirstChild(getWidget().getElement());
+                    widget.browserElement = DOM
+                            .getFirstChild(widget.getElement());
                 }
-                resourceElement = getWidget().browserElement;
+                resourceElement = widget.browserElement;
                 objectElement = null;
                 setResourceUrl(getResourceUrl("src"));
                 clearBrowserElement = false;
             } else {
                 getLogger().severe(
-                        "Unknown Embedded type '" + getWidget().type + "'");
+                        "Unknown Embedded type '" + widget.type + "'");
             }
         } else if (state.mimeType != null) {
             // remove old style name related to type
-            if (getWidget().type != null) {
-                getWidget().removeStyleName(
-                        VEmbedded.CLASSNAME + "-" + getWidget().type);
+            if (widget.type != null) {
+                widget.removeStyleName(VEmbedded.CLASSNAME + "-" + widget.type);
             }
             // remove old style name related to mime type
-            if (getWidget().mimetype != null) {
-                getWidget().removeStyleName(
-                        VEmbedded.CLASSNAME + "-" + getWidget().mimetype);
+            if (widget.mimetype != null) {
+                widget.removeStyleName(
+                        VEmbedded.CLASSNAME + "-" + widget.mimetype);
             }
             final String mime = state.mimeType;
             if (mime.equals("application/x-shockwave-flash")) {
-                getWidget().mimetype = "flash";
+                widget.mimetype = "flash";
                 // Handle embedding of Flash
-                getWidget().addStyleName(VEmbedded.CLASSNAME + "-flash");
-                getWidget().setHTML(getWidget().createFlashEmbed(state,
+                widget.addStyleName(VEmbedded.CLASSNAME + "-flash");
+                widget.setHTML(widget.createFlashEmbed(state,
                         getResourceUrl("src")));
 
             } else if (mime.equals("image/svg+xml")) {
-                getWidget().mimetype = "svg";
-                getWidget().addStyleName(VEmbedded.CLASSNAME + "-svg");
+                widget.mimetype = "svg";
+                widget.addStyleName(VEmbedded.CLASSNAME + "-svg");
                 String data;
                 Map<String, String> parameters = state.parameters;
                 ObjectElement obj = Document.get().createObjectElement();
@@ -172,7 +171,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                     data = "data:image/svg+xml," + parameters.get("data");
                     obj.setData(data);
                 }
-                getWidget().setHTML("");
+                widget.setHTML("");
                 obj.setType(mime);
                 if (!isUndefinedWidth()) {
                     obj.getStyle().setProperty("width", "100%");
@@ -195,7 +194,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
                 if (state.standby != null) {
                     obj.setAttribute("standby", state.standby);
                 }
-                getWidget().getElement().appendChild(obj);
+                widget.getElement().appendChild(obj);
                 if (state.altText != null) {
                     obj.setInnerText(state.altText);
                 }
@@ -207,7 +206,7 @@ public class EmbeddedConnector extends AbstractComponentConnector {
         }
 
         if (clearBrowserElement) {
-            getWidget().browserElement = null;
+            widget.browserElement = null;
         }
     }
 
