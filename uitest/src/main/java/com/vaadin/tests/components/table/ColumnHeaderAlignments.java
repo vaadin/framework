@@ -4,8 +4,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.Table;
 
@@ -28,12 +26,8 @@ public class ColumnHeaderAlignments extends TestBase {
         theme.setValue("reindeer");
         theme.setNullSelectionAllowed(false);
         theme.setImmediate(true);
-        theme.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                setTheme(String.valueOf(event.getProperty().getValue()));
-            }
-        });
+        theme.addValueChangeListener(event -> setTheme(
+                String.valueOf(event.getProperty().getValue())));
         addComponent(theme);
         CheckBox footers = new CheckBox("Show footers");
         footers.addValueChangeListener(event -> {

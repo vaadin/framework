@@ -85,12 +85,7 @@ public class TableNavigationPageDownTest extends MultiBrowserTest {
 
     private boolean waitUntilLastRowHasChanged(final int row) {
         try {
-            waitUntil(new ExpectedCondition<Boolean>() {
-                @Override
-                public Boolean apply(WebDriver input) {
-                    return row != getLastVisibleRowNumber();
-                }
-            }, 1);
+            waitUntil(input -> row != getLastVisibleRowNumber(), 1);
 
             return true;
         } catch (Exception e) {

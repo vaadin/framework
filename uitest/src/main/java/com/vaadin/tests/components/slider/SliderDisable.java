@@ -18,8 +18,6 @@ package com.vaadin.tests.components.slider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Slider;
 import com.vaadin.ui.VerticalLayout;
 
@@ -37,12 +35,7 @@ public class SliderDisable extends AbstractReindeerTestUI {
 
         Button disableButton = new Button("Disable slider");
         disableButton.setId("disableButton");
-        disableButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                slider.setEnabled(false);
-            }
-        });
+        disableButton.addClickListener(event -> slider.setEnabled(false));
 
         content.addComponent(slider);
         content.addComponent(disableButton);

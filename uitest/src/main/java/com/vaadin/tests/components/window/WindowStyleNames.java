@@ -2,8 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class WindowStyleNames extends TestBase {
 
@@ -20,33 +18,14 @@ public class WindowStyleNames extends TestBase {
     @Override
     protected void setup() {
         setWindowStyle("old");
-        addComponent(new Button("Set style to 'new'", new ClickListener() {
+        addComponent(new Button("Set style to 'new'",
+                event -> setWindowStyle("new")));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setWindowStyle("new");
-            }
+        addComponent(new Button("Set style to 'custom'",
+                event -> setWindowStyle("custom")));
 
-        }));
-
-        addComponent(new Button("Set style to 'custom'", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setWindowStyle("custom");
-            }
-
-        }));
-
-        addComponent(new Button("Add 'foo' style", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().addStyleName("foo");
-            }
-
-        }));
-
+        addComponent(new Button("Add 'foo' style",
+                event -> getMainWindow().addStyleName("foo")));
     }
 
     protected void setWindowStyle(String string) {

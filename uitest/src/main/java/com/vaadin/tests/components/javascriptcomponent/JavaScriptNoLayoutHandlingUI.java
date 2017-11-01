@@ -21,8 +21,6 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class JavaScriptNoLayoutHandlingUI extends AbstractTestUIWithLog {
 
@@ -54,15 +52,8 @@ public class JavaScriptNoLayoutHandlingUI extends AbstractTestUIWithLog {
         final MyJsComponent myComponent = new MyJsComponent();
         myComponent.setId("js");
         addComponent(myComponent);
-        addComponent(new Button("Send update", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                myComponent.getState().aaa++;
-            }
-
-        }));
-
+        addComponent(new Button("Send update",
+                event -> myComponent.getState().aaa++));
     }
 
 }

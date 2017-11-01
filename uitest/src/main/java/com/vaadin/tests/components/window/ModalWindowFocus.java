@@ -18,7 +18,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
@@ -30,33 +29,27 @@ public class ModalWindowFocus extends AbstractReindeerTestUI {
         Button button = new Button("Open windows");
         button.setId("firstButton");
         addComponent(button);
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Window w = new Window("This is first window");
-                w.setModal(true);
-                addWindow(w);
+        button.addClickListener(event -> {
+            Window w = new Window("This is first window");
+            w.setModal(true);
+            addWindow(w);
 
-                Window w2 = new Window("This is second window");
-                w2.setModal(true);
-                addWindow(w2);
+            Window w2 = new Window("This is second window");
+            w2.setModal(true);
+            addWindow(w2);
 
-                HorizontalLayout lay = new HorizontalLayout();
-                Button buttonInWindow = new Button("Open window");
-                buttonInWindow.setId("windowButton");
-                lay.addComponent(buttonInWindow);
-                w2.setContent(lay);
+            HorizontalLayout lay = new HorizontalLayout();
+            Button buttonInWindow = new Button("Open window");
+            buttonInWindow.setId("windowButton");
+            lay.addComponent(buttonInWindow);
+            w2.setContent(lay);
 
-                buttonInWindow.addClickListener(new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent e) {
-                        Window w3 = new Window("This is third window");
-                        w3.setModal(true);
-                        w3.setId("window3");
-                        addWindow(w3);
-                    }
-                });
-            }
+            buttonInWindow.addClickListener(clickEvent -> {
+                Window w3 = new Window("This is third window");
+                w3.setModal(true);
+                w3.setId("window3");
+                addWindow(w3);
+            });
         });
     }
 

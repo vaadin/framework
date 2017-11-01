@@ -121,36 +121,27 @@ public class TreeGrid<T> extends Grid<T>
             HierarchicalDataCommunicator<T> dataCommunicator) {
         super(propertySet, dataCommunicator);
 
-        registerRpc(new NodeCollapseRpc() {
-            @Override
-            public void setNodeCollapsed(String rowKey, int rowIndex,
-                    boolean collapse, boolean userOriginated) {
-                T item = getDataCommunicator().getKeyMapper().get(rowKey);
-                if (collapse && getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().doCollapse(item,
-                            Optional.of(rowIndex));
-                    fireCollapseEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey),
-                            userOriginated);
-                } else if (!collapse
-                        && !getDataCommunicator().isExpanded(item)) {
-                    getDataCommunicator().doExpand(item, Optional.of(rowIndex));
-                    fireExpandEvent(
-                            getDataCommunicator().getKeyMapper().get(rowKey),
-                            userOriginated);
-                }
+        registerRpc((NodeCollapseRpc) (rowKey, rowIndex, collapse,
+                userOriginated) -> {
+            T item = getDataCommunicator().getKeyMapper().get(rowKey);
+            if (collapse && getDataCommunicator().isExpanded(item)) {
+                getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
+                fireCollapseEvent(
+                        getDataCommunicator().getKeyMapper().get(rowKey),
+                        userOriginated);
+            } else if (!collapse && !getDataCommunicator().isExpanded(item)) {
+                getDataCommunicator().doExpand(item, Optional.of(rowIndex));
+                fireExpandEvent(
+                        getDataCommunicator().getKeyMapper().get(rowKey),
+                        userOriginated);
             }
         });
 
-        registerRpc(new FocusParentRpc() {
-            @Override
-            public void focusParent(String rowKey, int cellIndex) {
-                Integer parentIndex = getDataCommunicator().getParentIndex(
-                        getDataCommunicator().getKeyMapper().get(rowKey));
-                if (parentIndex != null) {
-                    getRpcProxy(FocusRpc.class).focusCell(parentIndex,
-                            cellIndex);
-                }
+        registerRpc((FocusParentRpc) (rowKey, cellIndex) -> {
+            Integer parentIndex = getDataCommunicator().getParentIndex(
+                    getDataCommunicator().getKeyMapper().get(rowKey));
+            if (parentIndex != null) {
+                getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
             }
         });
     }

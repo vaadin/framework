@@ -28,9 +28,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -77,15 +75,11 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
     public void gaveUpTheme() throws IOException {
         openTestURL("reconnectAttempts=3");
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                try {
-                    return $(ButtonElement.class).first() != null;
-                } catch (Exception e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return $(ButtonElement.class).first() != null;
+            } catch (Exception e) {
+                return false;
             }
         });
 
@@ -98,20 +92,16 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
     }
 
     private void waitForReconnectDialogWithText(final String text) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                try {
-                    final WebElement reconnectDialog = findElement(
-                            ReconnectDialogThemeTest.reconnectDialogBy);
-                    return reconnectDialog.findElement(By.className("text"))
-                            .getText().equals(text);
-                } catch (Exception e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                final WebElement reconnectDialog = findElement(
+                        ReconnectDialogThemeTest.reconnectDialogBy);
+                return reconnectDialog.findElement(By.className("text"))
+                        .getText().equals(text);
+            } catch (Exception e) {
+                return false;
             }
         }, 10);
-
     }
 
     private void assertHasManyColors(String message,

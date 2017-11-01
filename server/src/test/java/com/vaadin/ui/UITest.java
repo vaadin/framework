@@ -87,41 +87,35 @@ public class UITest {
         final ConcurrentLinkedQueue<Exception> exceptions = new ConcurrentLinkedQueue<Exception>();
 
         // Simulates the websocket close thread
-        Runnable websocketClose = new Runnable() {
-            @Override
-            public void run() {
-                externalLock.lock();
-                // Wait for disconnect thread to lock VaadinSession
-                websocketReachedCheckpoint.countDown();
-                try {
-                    uiDisconnectReachedCheckpoint.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    exceptions.add(e);
-                    return;
-                }
-                uiSession.lock();
-                externalLock.unlock();
+        Runnable websocketClose = () -> {
+            externalLock.lock();
+            // Wait for disconnect thread to lock VaadinSession
+            websocketReachedCheckpoint.countDown();
+            try {
+                uiDisconnectReachedCheckpoint.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                exceptions.add(e);
+                return;
             }
+            uiSession.lock();
+            externalLock.unlock();
         };
 
-        Runnable disconnectPushFromUI = new Runnable() {
-            @Override
-            public void run() {
-                uiSession.lock();
-                // Wait for websocket thread to lock external lock
-                uiDisconnectReachedCheckpoint.countDown();
-                try {
-                    websocketReachedCheckpoint.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    exceptions.add(e);
-                    return;
-                }
-
-                ui.setSession(null);
-                uiSession.unlock();
+        Runnable disconnectPushFromUI = () -> {
+            uiSession.lock();
+            // Wait for websocket thread to lock external lock
+            uiDisconnectReachedCheckpoint.countDown();
+            try {
+                websocketReachedCheckpoint.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                exceptions.add(e);
+                return;
             }
+
+            ui.setSession(null);
+            uiSession.unlock();
         };
 
         Thread websocketThread = new Thread(websocketClose);

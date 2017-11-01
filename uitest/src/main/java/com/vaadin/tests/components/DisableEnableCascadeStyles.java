@@ -3,8 +3,6 @@ package com.vaadin.tests.components;
 import java.util.Iterator;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Panel;
@@ -53,62 +51,37 @@ public class DisableEnableCascadeStyles extends TestBase {
         addComponent(outerPanel);
 
         enableDisablePanelButton = new Button("Disable panel",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(outerPanel, enableDisablePanelButton);
-
-                    }
-                });
+                event -> enableDisable(outerPanel, enableDisablePanelButton));
 
         enableDisableTabSheetButton = new Button("Disable TabSheet",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(innerTabsheet,
-                                enableDisableTabSheetButton);
-
-                    }
-                });
+                event -> enableDisable(innerTabsheet,
+                        enableDisableTabSheetButton));
 
         enableDisableLayoutButton = new Button("Disable Tab content (Layout)",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        enableDisable(layout, enableDisableLayoutButton);
-
-                    }
-                });
+                event -> enableDisable(layout, enableDisableLayoutButton));
         enableDisableComponentsButton = new Button("Disable Layout Components",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        for (Iterator<Component> i = layout
-                                .getComponentIterator(); i.hasNext();) {
-                            final Component c = i.next();
-                            if (c.isEnabled()) {
-                                c.setEnabled(false);
-                                c.setCaption(c.getCaption().replace("enabled",
-                                        "disabled"));
-                            } else {
-                                c.setEnabled(true);
-                                c.setCaption(c.getCaption().replace("disabled",
-                                        "enabled"));
-                            }
-                        }
-                        if (layout.getComponent(0).isEnabled()) {
-                            enableDisableComponentsButton.setCaption(
-                                    enableDisableComponentsButton.getCaption()
-                                            .replace("Enable", "Disable"));
+                event -> {
+                    for (Iterator<Component> i = layout
+                            .getComponentIterator(); i.hasNext();) {
+                        final Component c = i.next();
+                        if (c.isEnabled()) {
+                            c.setEnabled(false);
+                            c.setCaption(c.getCaption().replace("enabled",
+                                    "disabled"));
                         } else {
-                            enableDisableComponentsButton.setCaption(
-                                    enableDisableComponentsButton.getCaption()
-                                            .replace("Disable", "Enable"));
+                            c.setEnabled(true);
+                            c.setCaption(c.getCaption().replace("disabled",
+                                    "enabled"));
                         }
+                    }
+                    if (layout.getComponent(0).isEnabled()) {
+                        enableDisableComponentsButton.setCaption(
+                                enableDisableComponentsButton.getCaption()
+                                        .replace("Enable", "Disable"));
+                    } else {
+                        enableDisableComponentsButton.setCaption(
+                                enableDisableComponentsButton.getCaption()
+                                        .replace("Disable", "Enable"));
                     }
                 });
         addComponent(enableDisablePanelButton);

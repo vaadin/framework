@@ -2,14 +2,12 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.ComboBox;
 
 public class DeepComponentTrees extends TestBase {
@@ -44,14 +42,9 @@ public class DeepComponentTrees extends TestBase {
         root.setWidth("600px");
         root.setHeight("200px");
         final Button b = new Button("Go try your luck with " + i + " layouts!");
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                FF2KILLER(i++);
-                b.setCaption("Go try your luck with " + i + " layouts!");
-            }
-
+        b.addClickListener(event -> {
+            FF2KILLER(i++);
+            b.setCaption("Go try your luck with " + i + " layouts!");
         });
 
         final ComboBox s = new ComboBox("Restart game with select:");
@@ -61,18 +54,13 @@ public class DeepComponentTrees extends TestBase {
         s.addItem(VerticalLayout.class);
         s.addItem(HorizontalLayout.class);
         s.addItem(GridLayout.class);
-        s.addListener(new ComboBox.ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = s.getValue();
-                if (!value.equals("-- Choose value --")) {
-                    currentValue = (Class<?>) value;
-                    i = 0;
-                    s.setValue("-- Choose value --");
-                    b.setCaption("Go try your luck with " + i + " layouts!");
-                }
-
+        s.addValueChangeListener(event -> {
+            Object value = s.getValue();
+            if (!value.equals("-- Choose value --")) {
+                currentValue = (Class<?>) value;
+                i = 0;
+                s.setValue("-- Choose value --");
+                b.setCaption("Go try your luck with " + i + " layouts!");
             }
         });
         s.setImmediate(true);
@@ -81,7 +69,6 @@ public class DeepComponentTrees extends TestBase {
         main.addComponent(b);
         main.addComponent(s);
         main.addComponent(root);
-
     }
 
     private void FF2KILLER(int layouts) {

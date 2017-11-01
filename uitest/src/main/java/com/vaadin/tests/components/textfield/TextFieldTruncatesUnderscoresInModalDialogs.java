@@ -20,7 +20,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -38,13 +37,8 @@ public class TextFieldTruncatesUnderscoresInModalDialogs
         formLayout.setSpacing(true);
 
         formLayout.addComponent(
-                new Button("Disappear", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        event.getButton().setVisible(false);
-                    }
-                }));
+                new Button("Disappear",
+                        event -> event.getButton().setVisible(false)));
 
         formLayout.addComponent(new TextField(null, "____pqjgy____"));
 

@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.event.Action;
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -44,14 +42,8 @@ public class TableContextMenuOnField extends TestBase {
                 VerticalLayout layout = new VerticalLayout();
                 layout.addComponent(new TextField());
 
-                layout.addLayoutClickListener(new LayoutClickListener() {
-
-                    @Override
-                    public void layoutClick(LayoutClickEvent event) {
-                        getMainWindow().showNotification("HELLO");
-
-                    }
-                });
+                layout.addLayoutClickListener(
+                        event -> getMainWindow().showNotification("HELLO"));
 
                 return layout;
             }

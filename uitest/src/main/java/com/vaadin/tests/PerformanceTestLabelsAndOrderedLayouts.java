@@ -21,8 +21,6 @@ import java.util.Date;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -30,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
     private final AbstractOrderedLayout main;
 
-    private final AbstractOrderedLayout testContainer;
+    private final AbstractOrderedLayout testContainer = new VerticalLayout();
 
     private Date startTime;
 
@@ -49,24 +47,11 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
         main.addComponent(result);
 
         main.addComponent(
-                new Button("click when rendered", new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        endTest();
-                    }
-                }));
+                new Button("click when rendered", event -> endTest()));
 
         main.addComponent(
                 new Button("Click for layout repaint (cached components)",
-                        new ClickListener() {
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                testContainer.markAsDirty();
-                            }
-                        }));
-
-        testContainer = new VerticalLayout();
+                        event -> testContainer.markAsDirty()));
 
         for (int i = 0; i < INITIAL_COMPONENTS; i++) {
             Label l = new Label("foo" + i);

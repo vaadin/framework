@@ -18,7 +18,6 @@ package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -47,12 +46,9 @@ public class ParallelScheduler implements RunnerScheduler {
 
     @Override
     public void schedule(final Runnable childStatement) {
-        fResults.add(fService.submit(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                childStatement.run();
-                return null;
-            }
+        fResults.add(fService.submit(() -> {
+            childStatement.run();
+            return null;
         }));
     }
 

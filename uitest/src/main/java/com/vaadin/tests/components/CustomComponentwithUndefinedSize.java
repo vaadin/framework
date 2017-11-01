@@ -1,8 +1,6 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
@@ -57,25 +55,20 @@ public class CustomComponentwithUndefinedSize extends TestBase {
             widePanel.setHeight("200px");
             layout.addComponent(widePanel);
             Button button = new Button("Change panel size",
-                    new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            switch (step++ % 4) {
-                            case 0:
-                                widePanel.setWidth("200px");
-                                break;
-                            case 1:
-                                widePanel.setHeight("2000px");
-                                break;
-                            case 2:
-                                widePanel.setWidth("2000px");
-                                break;
-                            case 3:
-                                widePanel.setHeight("200px");
-                                break;
-                            }
-
+                    event -> {
+                        switch (step++ % 4) {
+                        case 0:
+                            widePanel.setWidth("200px");
+                            break;
+                        case 1:
+                            widePanel.setHeight("2000px");
+                            break;
+                        case 2:
+                            widePanel.setWidth("2000px");
+                            break;
+                        case 3:
+                            widePanel.setHeight("200px");
+                            break;
                         }
                     });
             panelLayout.addComponent(button);

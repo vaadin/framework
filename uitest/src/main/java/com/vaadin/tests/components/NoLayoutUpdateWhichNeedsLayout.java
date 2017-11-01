@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressBar;
@@ -52,12 +51,9 @@ public class NoLayoutUpdateWhichNeedsLayout extends UI {
                 Button closeB = new Button(
                         "2. Click to close after the progress is updated");
                 closeB.setId("closeWindow");
-                closeB.addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        w2.close();
-                        w2 = null;
-                    }
+                closeB.addClickListener(clickEvent -> {
+                    w2.close();
+                    w2 = null;
                 });
                 glo.addComponent(closeB);
                 addWindow(w2);
@@ -67,26 +63,18 @@ public class NoLayoutUpdateWhichNeedsLayout extends UI {
         });
 
         Button openWin = new Button("3. Finally, Click to open a new Window");
-        openWin.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                w = new Window("test");
-                w.setWidth("300px");
-                w.setHeight("300px");
-                w.setContent(new VerticalLayout(
-                        new Label("simple test label component")));
-                w.center();
-                getUI().addWindow(w);
-            }
+        openWin.addClickListener(event -> {
+            w = new Window("test");
+            w.setWidth("300px");
+            w.setHeight("300px");
+            w.setContent(new VerticalLayout(
+                    new Label("simple test label component")));
+            w.center();
+            getUI().addWindow(w);
         });
 
-        Button stopPolling = new Button("Stop polling", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setPollInterval(-1);
-            }
-        });
+        Button stopPolling = new Button("Stop polling",
+                event -> setPollInterval(-1));
         layout.addComponents(button, openWin, stopPolling);
     }
 
@@ -95,12 +83,7 @@ public class NoLayoutUpdateWhichNeedsLayout extends UI {
 
             @Override
             public void run() {
-                getUI().access(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateProgresBar(50);
-                    }
-                });
+                getUI().access(() -> updateProgresBar(50));
             }
         };
         ScheduledExecutorService worker = Executors

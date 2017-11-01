@@ -12,8 +12,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.util.AbstractInMemoryContainer;
 import com.vaadin.v7.data.util.BeanContainer;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class PushErrorHandling extends AbstractReindeerTestUI {
@@ -43,36 +41,29 @@ public class PushErrorHandling extends AbstractReindeerTestUI {
         view.setImmediate(true);
         view.setSizeFull();
 
-        view.addItemClickListener(new ItemClickListener() {
+        view.addItemClickListener(event -> {
+            BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>> metaContainer = new BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>>(
+                    AbstractInMemoryContainer.class) {
+                @Override
+                public Collection<String> getContainerPropertyIds() {
+                    List<String> cpropIds = new ArrayList<>(
+                            super.getContainerPropertyIds());
+                    cpropIds.add("testid");
+                    return cpropIds;
+                }
 
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>> metaContainer
-                        = new BeanContainer<String, AbstractInMemoryContainer<?, ?, ?>>(
-                        AbstractInMemoryContainer.class) {
-                    @Override
-                    public Collection<String> getContainerPropertyIds() {
-                        List<String> cpropIds = new ArrayList<>(
-                                super.getContainerPropertyIds());
-                        cpropIds.add("testid");
-                        return cpropIds;
-                    }
-
-                    @Override
-                    public Class<?> getType(Object propertyId) {
-                        ((Object) null).hashCode();
-                        return super.getType(propertyId);
-                    }
-                };
-                view.setContainerDataSource(metaContainer);
-
-            }
+                @Override
+                public Class<?> getType(Object propertyId) {
+                    ((Object) null).hashCode();
+                    return super.getType(propertyId);
+                }
+            };
+            view.setContainerDataSource(metaContainer);
         });
         view.addContainerProperty("Column", String.class, "Click for NPE");
         view.addItem(new Object());
 
         addComponent(view);
-
     }
 
     @Override

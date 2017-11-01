@@ -9,8 +9,6 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
@@ -32,13 +30,7 @@ public class DDInterrupt extends AbstractReindeerTestUI {
         layout.setWidth("500px");
         layout.setHeight("500px");
 
-        addButton("Click to interrupt next drag.", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                sp.interruptNext();
-            }
-        });
+        addButton("Click to interrupt next drag.", event -> sp.interruptNext());
 
         final Label draggableLabel = new Label("Drag me");
         draggableLabel.setId("draggable");

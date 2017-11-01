@@ -8,7 +8,6 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.Table.FooterClickEvent;
 
 public class FooterClick extends AbstractTestUIWithLog {
 
@@ -35,12 +34,9 @@ public class FooterClick extends AbstractTestUIWithLog {
         columnField.setId("ClickedColumn");
 
         // Add a footer click listener
-        table.addFooterClickListener(new Table.FooterClickListener() {
-            @Override
-            public void footerClick(FooterClickEvent event) {
-                columnField.setValue(String.valueOf(event.getPropertyId()));
-                log("Clicked on footer: " + event.getPropertyId());
-            }
+        table.addFooterClickListener(event -> {
+            columnField.setValue(String.valueOf(event.getPropertyId()));
+            log("Clicked on footer: " + event.getPropertyId());
         });
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");

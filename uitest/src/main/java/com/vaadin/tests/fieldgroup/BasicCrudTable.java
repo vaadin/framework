@@ -16,8 +16,6 @@
 package com.vaadin.tests.fieldgroup;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.ui.Table;
 
@@ -35,13 +33,8 @@ public class BasicCrudTable extends AbstractBasicCrud {
         table.setContainerDataSource(container);
 
         table.setVisibleColumns((Object[]) columns);
-        table.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                form.edit((BeanItem<ComplexPerson>) table
-                        .getItem(table.getValue()));
-            }
-        });
+        table.addValueChangeListener(event -> form.edit(
+                (BeanItem<ComplexPerson>) table.getItem(table.getValue())));
 
         table.setSizeFull();
 

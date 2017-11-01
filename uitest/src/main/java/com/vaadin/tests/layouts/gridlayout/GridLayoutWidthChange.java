@@ -3,7 +3,6 @@ package com.vaadin.tests.layouts.gridlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.NativeButton;
@@ -47,14 +46,7 @@ public class GridLayoutWidthChange extends AbstractReindeerTestUI {
         addComponent(cc);
 
         Button testButton = new Button("Reduce GridLayout parent width",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cc.setWidth((cc.getWidth() - 100) + "px");
-                    }
-
-                });
+                event -> cc.setWidth((cc.getWidth() - 100) + "px"));
         addComponent(testButton);
     }
 

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.select;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.ComboBox;
 
 /**
@@ -21,12 +19,7 @@ public class ComboBoxAddWhileFiltering extends TestBase {
         populate(comboBox);
 
         Button b = new Button("add item (^N)");
-        b.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addItem(comboBox);
-            }
-        });
+        b.addClickListener(event -> addItem(comboBox));
         addComponent(b);
         addComponent(comboBox);
         getMainWindow().addAction(new Button.ClickShortcut(b, "^n"));

@@ -3,8 +3,6 @@ package com.vaadin.tests;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -72,26 +70,23 @@ public class ScrollbarStressTest extends LegacyApplication {
         height.addItem("500px");
         height.setValue("100%");
 
-        final Button set = new Button("Set", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getTable = testComponent.getValue().equals("Table");
+        final Button set = new Button("Set", event -> {
+            getTable = testComponent.getValue().equals("Table");
 
-                if (context.getValue() == "Main window") {
-                    drawInMainWindow();
-                } else if (context.getValue() == "Subwindow") {
-                    drawInSubwindow();
-                } else if (context.getValue() == "Panel") {
-                    drawInPanel();
-                } else if (context.getValue() == "Split Panel") {
-                    drawInSplitPanel();
-                } else if (context.getValue() == "TabSheet") {
-                    drawInTabSheet(false);
-                } else if (context.getValue() == "Accordion") {
-                    drawInTabSheet(true);
-                } else if (context.getValue() == "ExpandLayout") {
-                    drawInExpandLayout();
-                }
+            if (context.getValue() == "Main window") {
+                drawInMainWindow();
+            } else if (context.getValue() == "Subwindow") {
+                drawInSubwindow();
+            } else if (context.getValue() == "Panel") {
+                drawInPanel();
+            } else if (context.getValue() == "Split Panel") {
+                drawInSplitPanel();
+            } else if (context.getValue() == "TabSheet") {
+                drawInTabSheet(false);
+            } else if (context.getValue() == "Accordion") {
+                drawInTabSheet(true);
+            } else if (context.getValue() == "ExpandLayout") {
+                drawInExpandLayout();
             }
         });
 

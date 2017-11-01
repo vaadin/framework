@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Container.Filter;
@@ -64,40 +63,34 @@ public class TableReduceContainerSize extends TestBase {
             final Label label = new Label();
             addComponent(label);
             Button button = new Button("Click");
-            button.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    try {
-                        reduceData = !reduceData;
-                        table.refreshRowCache();
-                        label.setValue("Index: "
-                                + table.getCurrentPageFirstItemIndex());
-                    } catch (Exception e) {
-                        label.setValue(
-                                "Exception: " + e.getClass().getSimpleName());
-                    }
+            button.addClickListener(event -> {
+                try {
+                    reduceData = !reduceData;
+                    table.refreshRowCache();
+                    label.setValue(
+                            "Index: " + table.getCurrentPageFirstItemIndex());
+                } catch (Exception e) {
+                    label.setValue(
+                            "Exception: " + e.getClass().getSimpleName());
                 }
             });
             addComponent(button);
             Button button2 = new Button("Filter");
-            button2.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    try {
-                        if (filter != null) {
-                            container.removeAllContainerFilters();
-                            filter = null;
-                        } else {
-                            filter = new DecimateFilter();
-                            container.addContainerFilter(filter);
-                        }
-                        table.refreshRowCache();
-                        label.setValue("Index: "
-                                + table.getCurrentPageFirstItemIndex());
-                    } catch (Exception e) {
-                        label.setValue(
-                                "Exception: " + e.getClass().getSimpleName());
+            button2.addClickListener(event -> {
+                try {
+                    if (filter != null) {
+                        container.removeAllContainerFilters();
+                        filter = null;
+                    } else {
+                        filter = new DecimateFilter();
+                        container.addContainerFilter(filter);
                     }
+                    table.refreshRowCache();
+                    label.setValue(
+                            "Index: " + table.getCurrentPageFirstItemIndex());
+                } catch (Exception e) {
+                    label.setValue(
+                            "Exception: " + e.getClass().getSimpleName());
                 }
             });
             addComponent(button2);

@@ -21,7 +21,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Audio;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 
 public class AudioTest extends TestBase {
@@ -68,13 +67,7 @@ public class AudioTest extends TestBase {
                 event -> audio.setAutoplay(event.getValue()));
         addComponent(checkBox);
 
-        Button b = new Button("Change", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                audio.setSources(s2);
-            }
-        });
+        Button b = new Button("Change", event -> audio.setSources(s2));
         addComponent(b);
         getLayout().setHeight("400px");
         getLayout().setExpandRatio(b, 1.0f);

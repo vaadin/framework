@@ -32,12 +32,9 @@ public final class VServerAccept extends VAcceptCriterion {
     public void accept(final VDragEvent drag, UIDL configuration,
             final VAcceptCallback callback) {
 
-        VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
-            @Override
-            public void handleResponse(boolean accepted, UIDL response) {
-                if (accepted) {
-                    callback.accepted(drag);
-                }
+        VDragEventServerCallback acceptCallback = (accepted, response) -> {
+            if (accepted) {
+                callback.accepted(drag);
             }
         };
         VDragAndDropManager.get().visitServer(acceptCallback);
