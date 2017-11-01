@@ -199,6 +199,11 @@ public class TreeGridBasicFeatures extends AbstractComponentTest<TreeGrid> {
         createClickAction("Collapse 2 | 1", "Server-side collapse",
                 (treeGrid, value, data) -> treeGrid.collapse(value),
                 new HierarchicalTestBean("/0/0/1/1", 2, 1));
+
+        createClickAction("Collapse 0 | 0 recursively", "Server-side collapse",
+                (treeGrid, value, data) -> treeGrid
+                        .collapseRecursively(Arrays.asList(value), 2),
+                new HierarchicalTestBean(null, 0, 0));
     }
 
     @SuppressWarnings("unchecked")
