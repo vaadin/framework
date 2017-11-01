@@ -18,9 +18,7 @@ package com.vaadin.tests.components.table;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.TableElement;
@@ -43,13 +41,7 @@ public class TableScrollUpOnSelectTest extends MultiBrowserTest {
         WebElement row = $(TableElement.class).first().getCell(49, 0);
         final WebElement scrollPositionDisplay = getDriver()
                 .findElement(By.className("v-table-scrollposition"));
-        waitUntilNot(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return scrollPositionDisplay.isDisplayed();
-            }
-        }, 10);
+        waitUntilNot(input -> scrollPositionDisplay.isDisplayed(), 10);
 
         int rowLocation = row.getLocation().getY();
         row.click();

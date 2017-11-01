@@ -19,13 +19,8 @@ import java.util.Arrays;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
@@ -63,14 +58,10 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
         private IntegerBox endHeight = new IntegerBox();
 
         private final Button terrorizeButton = new Button("Terrorize",
-                new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        terrorize(startWidth.getValue(), endWidth.getValue(),
-                                startHeight.getValue(), endHeight.getValue(),
-                                1000);
-                    }
-                });
+                (ClickHandler) event -> terrorize(startWidth.getValue(),
+                        endWidth.getValue(), startHeight.getValue(),
+                        endHeight.getValue(),
+                        1000));
 
         private HandlerRegistration historyHandlerRegistration;
 
@@ -98,12 +89,9 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
             // Emulate button click from enter on any of the text boxes
             for (IntegerBox box : Arrays.asList(startWidth, endWidth,
                     startHeight, endHeight)) {
-                box.addKeyUpHandler(new KeyUpHandler() {
-                    @Override
-                    public void onKeyUp(KeyUpEvent event) {
-                        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                            terrorizeButton.click();
-                        }
+                box.addKeyUpHandler(event -> {
+                    if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+                        terrorizeButton.click();
                     }
                 });
             }
@@ -132,13 +120,7 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
                 // Then add history change listener
                 historyHandlerRegistration = History.addValueChangeHandler(
-                        new ValueChangeHandler<String>() {
-                            @Override
-                            public void onValueChange(
-                                    ValueChangeEvent<String> event) {
-                                updateFromHistoryToken(event.getValue());
-                            }
-                        });
+                        event -> updateFromHistoryToken(event.getValue()));
             } else if (!useUriFragments && historyHandlerRegistration != null) {
                 historyHandlerRegistration.removeHandler();
                 historyHandlerRegistration = null;
@@ -254,17 +236,18 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
     @Override
     public void postLayout() {
-        if (getWidget().startWidth.getValue() == null) {
+        ResizeTerrorizerControlPanel panel = getWidget();
+        if (panel.startWidth.getValue() == null) {
             int width = getTarget().getWidget().getElement().getOffsetWidth();
-            getWidget().startWidth.setValue(width);
-            getWidget().endWidth
+            panel.startWidth.setValue(width);
+            panel.endWidth
                     .setValue(width + getState().defaultWidthOffset);
         }
 
-        if (getWidget().startHeight.getValue() == null) {
+        if (panel.startHeight.getValue() == null) {
             int height = getTarget().getWidget().getElement().getOffsetHeight();
-            getWidget().startHeight.setValue(height);
-            getWidget().endHeight
+            panel.startHeight.setValue(height);
+            panel.endHeight
                     .setValue(height + getState().defaultHeightOffset);
         }
     }

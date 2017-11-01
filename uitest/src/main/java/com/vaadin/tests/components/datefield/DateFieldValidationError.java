@@ -25,7 +25,8 @@ public class DateFieldValidationError extends AbstractTestUI {
             /* NO-OP */
             });
         addComponent(df);
-        addComponent(new Button("Validate", e -> Notification.show(binder.validate().isOk() ? "OK" : "Fail")));
+        addComponent(new Button("Validate", event -> Notification
+                .show(binder.validate().isOk() ? "OK" : "Fail")));
     }
 
 }

@@ -75,7 +75,7 @@ public class VSlider extends SimpleFocusablePanel
 
     /* DOM element for slider's base */
     private final Element base;
-    private final int BASE_BORDER_WIDTH = 1;
+    private static final int BASE_BORDER_WIDTH = 1;
 
     /* DOM element for slider's handle */
     private final Element handle;
@@ -231,12 +231,9 @@ public class VSlider extends SimpleFocusablePanel
 
         if (!isVertical()) {
             // Draw handle with a delay to allow base to gain maximum width
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    buildHandle();
-                    setValue(value, false);
-                }
+            Scheduler.get().scheduleDeferred(() -> {
+                buildHandle();
+                setValue(value, false);
             });
         } else {
             buildHandle();

@@ -26,7 +26,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -40,85 +39,56 @@ public class UIAccessExceptionHandling extends AbstractTestUIWithLog
         getSession().setErrorHandler(this);
 
         addComponent(new Button("Throw RuntimeException on UI.access",
-                new Button.ClickListener() {
+                event -> {
+                    log.clear();
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.clear();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                        // Ensure beforeClientResponse is invoked
-                        markAsDirty();
-
-                        future = access(new Runnable() {
-                            @Override
-                            public void run() {
-                                throw new RuntimeException();
-                            }
-                        });
-                    }
+                    future = access(() -> {
+                        throw new RuntimeException();
+                    });
                 }));
 
         addComponent(new Button("Throw RuntimeException on Session.access",
-                new Button.ClickListener() {
+                event -> {
+                    log.clear();
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.clear();
+                    // Ensure beforeClientResponse is invoked
+                    markAsDirty();
 
-                        // Ensure beforeClientResponse is invoked
-                        markAsDirty();
+                    VaadinService service = VaadinService.getCurrent();
 
-                        VaadinService service = VaadinService.getCurrent();
-
-                        future = service.accessSession(getSession(),
-                                new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        throw new RuntimeException();
-                                    }
-                                });
-                    }
+                    future = service.accessSession(getSession(), () -> {
+                        throw new RuntimeException();
+                    });
                 }));
 
         addComponent(
                 new Button("Throw RuntimeException after removing instances",
-                        new Button.ClickListener() {
+                        event -> {
+                            log.clear();
 
-                            @Override
-                            public void buttonClick(ClickEvent event) {
-                                log.clear();
+                            // Ensure beforeClientResponse is invoked
+                            markAsDirty();
 
-                                // Ensure beforeClientResponse is invoked
-                                markAsDirty();
+                            assert UI
+                                    .getCurrent() == UIAccessExceptionHandling.this;
 
-                                assert UI
-                                        .getCurrent() == UIAccessExceptionHandling.this;
+                            Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                                    .getInstances();
+                            CurrentInstance.clearAll();
 
-                                Map<Class<?>, CurrentInstance> instances = CurrentInstance
-                                        .getInstances();
-                                CurrentInstance.clearAll();
+                            assert UI.getCurrent() == null;
 
-                                assert UI.getCurrent() == null;
+                            future = access(() -> {
+                                throw new RuntimeException();
+                            });
 
-                                future = access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        throw new RuntimeException();
-                                    }
-                                });
-
-                                CurrentInstance.restoreInstances(instances);
-                            }
+                            CurrentInstance.restoreInstances(instances);
                         }));
 
-        addComponent(new Button("Clear", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.clear();
-            }
-        }));
+        addComponent(new Button("Clear", event -> log.clear()));
     }
 
     @Override

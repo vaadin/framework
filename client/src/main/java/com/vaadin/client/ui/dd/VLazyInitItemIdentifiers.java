@@ -47,20 +47,16 @@ public class VLazyInitItemIdentifiers extends VAcceptCriterion {
             }
         } else {
 
-            VDragEventServerCallback acceptCallback = new VDragEventServerCallback() {
-
-                @Override
-                public void handleResponse(boolean accepted, UIDL response) {
-                    hashSet = new HashSet<>();
-                    String[] stringArrayAttribute = response
-                            .getStringArrayAttribute("allowedIds");
-                    for (String attribute : stringArrayAttribute) {
-                        hashSet.add(attribute);
-                    }
-                    loaded = true;
-                    if (accepted) {
-                        callback.accepted(drag);
-                    }
+            VDragEventServerCallback acceptCallback = (accepted, response) -> {
+                hashSet = new HashSet<>();
+                String[] stringArrayAttribute = response
+                        .getStringArrayAttribute("allowedIds");
+                for (String attribute : stringArrayAttribute) {
+                    hashSet.add(attribute);
+                }
+                loaded = true;
+                if (accepted) {
+                    callback.accepted(drag);
                 }
             };
 

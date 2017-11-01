@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -28,7 +26,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -110,21 +107,11 @@ public class TestBenchSection implements Section {
 
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        find.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleFind();
-            }
-        });
+        find.addClickHandler(event -> toggleFind());
 
         controls.add(clear);
         clear.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
-        clear.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                clearResults();
-            }
-        });
+        clear.addClickHandler(event -> clearResults());
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-testbench");
         content.add(selectorPanel);
@@ -205,60 +192,54 @@ public class TestBenchSection implements Section {
         content.add(w);
     }
 
-    private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
-
-        @Override
-        public void onPreviewNativeEvent(NativePreviewEvent event) {
-
-            if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent()
-                    .getKeyCode() == KeyCodes.KEY_ESCAPE) {
-                stopFind();
-                Highlight.hideAll();
+    private final NativePreviewHandler highlightModeHandler = event -> {
+        if (event.getTypeInt() == Event.ONKEYDOWN
+                && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            stopFind();
+            Highlight.hideAll();
+            return;
+        }
+        if (event.getTypeInt() == Event.ONMOUSEMOVE
+                || event.getTypeInt() == Event.ONCLICK) {
+            Element eventTarget = WidgetUtil.getElementFromPoint(
+                    event.getNativeEvent().getClientX(),
+                    event.getNativeEvent().getClientY());
+            if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
+                if (isFindMode() && event.getTypeInt() == Event.ONCLICK) {
+                    stopFind();
+                    event.cancel();
+                }
                 return;
             }
-            if (event.getTypeInt() == Event.ONMOUSEMOVE
-                    || event.getTypeInt() == Event.ONCLICK) {
-                Element eventTarget = WidgetUtil.getElementFromPoint(
-                        event.getNativeEvent().getClientX(),
-                        event.getNativeEvent().getClientY());
-                if (VDebugWindow.get().getElement().isOrHasChild(eventTarget)) {
-                    if (isFindMode() && event.getTypeInt() == Event.ONCLICK) {
-                        stopFind();
-                        event.cancel();
-                    }
-                    return;
-                }
 
-                // make sure that not finding the highlight element only
-                Highlight.hideAll();
+            // make sure that not finding the highlight element only
+            Highlight.hideAll();
 
-                eventTarget = WidgetUtil.getElementFromPoint(
-                        event.getNativeEvent().getClientX(),
-                        event.getNativeEvent().getClientY());
-                ComponentConnector connector = findConnector(eventTarget);
+            eventTarget = WidgetUtil.getElementFromPoint(
+                    event.getNativeEvent().getClientX(),
+                    event.getNativeEvent().getClientY());
+            ComponentConnector connector = findConnector(eventTarget);
 
-                if (event.getTypeInt() == Event.ONMOUSEMOVE) {
-                    if (connector != null) {
-                        Highlight.showOnly(connector);
-                        event.cancel();
-                        event.consume();
-                        event.getNativeEvent().stopPropagation();
-                        return;
-                    }
-                } else if (event.getTypeInt() == Event.ONCLICK) {
+            if (event.getTypeInt() == Event.ONMOUSEMOVE) {
+                if (connector != null) {
+                    Highlight.showOnly(connector);
                     event.cancel();
                     event.consume();
                     event.getNativeEvent().stopPropagation();
-                    if (connector != null) {
-                        Highlight.showOnly(connector);
-                        pickSelector(connector, eventTarget);
-                        return;
-                    }
+                    return;
+                }
+            } else if (event.getTypeInt() == Event.ONCLICK) {
+                event.cancel();
+                event.consume();
+                event.getNativeEvent().stopPropagation();
+                if (connector != null) {
+                    Highlight.showOnly(connector);
+                    pickSelector(connector, eventTarget);
+                    return;
                 }
             }
-            event.cancel();
         }
-
+        event.cancel();
     };
 
     private ComponentConnector findConnector(Element element) {

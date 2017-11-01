@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.event.Action;
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.v7.ui.Table;
 
@@ -17,14 +15,11 @@ public class RowUpdateShouldRetainContextMenu extends TestBase {
     @Override
     protected void setup() {
         indicator.setWidth("200px");
-        indicator.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                // Do some changes to the table
-                table.setColumnHeader("Column", "Column " + ctr);
-                table.getItem(2).getItemProperty("Column")
-                        .setValue("Test " + ctr++);
-            }
+        indicator.addValueChangeListener(event -> {
+            // Do some changes to the table
+            table.setColumnHeader("Column", "Column " + ctr);
+            table.getItem(2).getItemProperty("Column")
+                    .setValue("Test " + ctr++);
         });
         Thread updater = new Thread() {
             private float progress = 0;

@@ -460,12 +460,8 @@ public class ApplicationConnection implements HasHandlers {
         // correct place in the DOM
         if (!tooltipInitialized) {
             tooltipInitialized = true;
-            ApplicationConfiguration.runWhenDependenciesLoaded(new Command() {
-                @Override
-                public void execute() {
-                    getVTooltip().initializeAssistiveTooltips();
-                }
-            });
+            ApplicationConfiguration.runWhenDependenciesLoaded(
+                    () -> getVTooltip().initializeAssistiveTooltips());
         }
     }
 
@@ -481,7 +477,7 @@ public class ApplicationConnection implements HasHandlers {
     }
 
     private native void initializeTestbenchHooks(
-            ComponentLocator componentLocator, String TTAppId)
+            ComponentLocator componentLocator, String ttAppId)
     /*-{
         var ap = this;
         var client = {};
@@ -494,7 +490,7 @@ public class ApplicationConnection implements HasHandlers {
                 return vi;
             }
         }
-    
+
         client.getProfilingData = $entry(function() {
             var smh = ap.@com.vaadin.client.ApplicationConnection::getMessageHandler()();
             var pd = [
@@ -509,7 +505,7 @@ public class ApplicationConnection implements HasHandlers {
             pd[pd.length] = smh.@com.vaadin.client.communication.MessageHandler::bootstrapTime;
             return pd;
         });
-    
+
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
@@ -526,8 +522,8 @@ public class ApplicationConnection implements HasHandlers {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/dom/client/Element;)(element);
         });
         client.initializing = false;
-    
-        $wnd.vaadin.clients[TTAppId] = client;
+
+        $wnd.vaadin.clients[ttAppId] = client;
     }-*/;
 
     /**

@@ -2,7 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
@@ -29,12 +28,7 @@ public class TreeTableInternalError extends TestBase {
 
         Button button = new Button("Resize") {
             {
-                addClickListener(new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        t.setHeight("300px");
-                    }
-                });
+                addClickListener(event -> t.setHeight("300px"));
             }
         };
         button.setId("resize");
@@ -71,15 +65,10 @@ public class TreeTableInternalError extends TestBase {
             String identifier = "Expand/Collapse";
             Button btnCol = new NativeButton(identifier);
             btnCol.setId("cacheTestButtonToggle-" + itemId);
-            btnCol.addClickListener(new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    t.setCollapsed(itemId, !t.isCollapsed(itemId));
-                }
-            });
+            btnCol.addClickListener(
+                    event -> t.setCollapsed(itemId, !t.isCollapsed(itemId)));
             return btnCol;
         }
-
     }
 
 }

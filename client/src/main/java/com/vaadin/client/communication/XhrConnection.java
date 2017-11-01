@@ -24,8 +24,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ClosingEvent;
-import com.google.gwt.user.client.Window.ClosingHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationHandler;
 import com.vaadin.client.ApplicationConnection.RequestStartingEvent;
@@ -63,12 +61,8 @@ public class XhrConnection {
     private boolean webkitMaybeIgnoringRequests = false;
 
     public XhrConnection() {
-        Window.addWindowClosingHandler(new ClosingHandler() {
-            @Override
-            public void onWindowClosing(ClosingEvent event) {
-                webkitMaybeIgnoringRequests = true;
-            }
-        });
+        Window.addWindowClosingHandler(
+                event -> webkitMaybeIgnoringRequests = true);
     }
 
     /**

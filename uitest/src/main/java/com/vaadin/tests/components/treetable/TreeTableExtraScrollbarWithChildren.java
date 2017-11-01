@@ -2,8 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -60,13 +58,9 @@ public class TreeTableExtraScrollbarWithChildren extends TestBase {
 
         Button button = new Button("Toggle");
         button.setId("button");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setCollapsed(parent, !table.isCollapsed(parent));
-                Notification.show("collapsed: " + table.isCollapsed(parent));
-            }
+        button.addClickListener(event -> {
+            table.setCollapsed(parent, !table.isCollapsed(parent));
+            Notification.show("collapsed: " + table.isCollapsed(parent));
         });
 
         addComponent(layout);

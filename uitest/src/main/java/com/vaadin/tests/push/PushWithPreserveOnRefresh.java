@@ -5,8 +5,6 @@ import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
 @PreserveOnRefresh
@@ -23,13 +21,8 @@ public class PushWithPreserveOnRefresh extends AbstractReindeerTestUI {
         addComponent(new Label("UI id: " + getUIId()));
         addComponent(log);
 
-        addButton("click me", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.log("Button has been clicked " + (++times) + " times");
-            }
-        });
+        addButton("click me", event -> log
+                .log("Button has been clicked " + (++times) + " times"));
     }
 
     @Override

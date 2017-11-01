@@ -18,10 +18,7 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
@@ -75,13 +72,8 @@ public class AutomaticImmediate extends AbstractTestUIWithLog {
         };
         textField.setId(FIELD);
 
-        final ValueChangeListener listener = new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log("Value changed: " + event.getProperty().getValue());
-            }
-        };
+        final ValueChangeListener listener = event -> log(
+                "Value changed: " + event.getProperty().getValue());
 
         final CheckBox checkBox = new CheckBox("Toggle listener");
         checkBox.addValueChangeListener(valueChange -> {
@@ -95,21 +87,11 @@ public class AutomaticImmediate extends AbstractTestUIWithLog {
 
         Button b = new Button(
                 "setImmediate(false), sets explicitly false and causes server roundtrip",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        textField.setImmediate(false);
-                    }
-                });
+                event -> textField.setImmediate(false));
         b.setId(EXPLICIT_FALSE);
 
         Button b2 = new Button("Hit server, causes server roundtrip",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                    }
+                event -> {
                 });
         b2.setId(BUTTON);
 

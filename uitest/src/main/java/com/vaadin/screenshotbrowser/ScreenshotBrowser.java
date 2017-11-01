@@ -17,7 +17,6 @@ package com.vaadin.screenshotbrowser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,15 +31,12 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -208,20 +204,11 @@ public class ScreenshotBrowser extends UI {
 
             left.addComponent(createSpacer());
             left.addComponent(
-                    new Button("Commit actions", new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            commitActions();
-                        }
-                    }));
+                    new Button("Commit actions", event -> commitActions()));
 
             left.addComponent(createSpacer());
-            left.addComponent(new Button("Refresh", new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    refreshTableContainer();
-                }
-            }));
+            left.addComponent(
+                    new Button("Refresh", event -> refreshTableContainer()));
 
             Label expandSpacer = createSpacer();
             left.addComponent(expandSpacer);
@@ -253,12 +240,7 @@ public class ScreenshotBrowser extends UI {
         }
 
         private ClickListener createSetActionListener(final Action action) {
-            return new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    setActions(action);
-                }
-            };
+            return event -> setActions(action);
         }
 
         public void setActions(final Action action) {
@@ -289,15 +271,13 @@ public class ScreenshotBrowser extends UI {
         table.setHeight("100%");
 
         table.setMultiSelect(true);
-        table.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                @SuppressWarnings("unchecked")
-                Collection<ComparisonFailure> selectedRows = (Collection<ComparisonFailure>) table
-                        .getValue();
+        table.addValueChangeListener(event -> {
 
-                viewer.setItems(selectedRows);
-            }
+            @SuppressWarnings("unchecked")
+            Collection<ComparisonFailure> selectedRows = (Collection<ComparisonFailure>) table
+                    .getValue();
+
+            viewer.setItems(selectedRows);
         });
 
         table.addShortcutListener(
@@ -376,12 +356,8 @@ public class ScreenshotBrowser extends UI {
     private void refreshTableContainer() {
         File errorsDir = new File(screenshotDir, "errors");
 
-        File[] failures = errorsDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".html");
-            }
-        });
+        File[] failures = errorsDir
+                .listFiles((dir, name) -> name.endsWith(".html"));
 
         BeanItemContainer<ComparisonFailure> container = new BeanItemContainer<>(
                 ComparisonFailure.class);

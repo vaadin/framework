@@ -17,8 +17,6 @@
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
@@ -93,14 +91,8 @@ public class TestForPreconfiguredComponents extends CustomComponent {
                 "OptionGroup + multiselect manually (configured from select)");
         main.addComponent(test);
 
-        final Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        final Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
-
     }
 
     public static void fillSelect(AbstractSelect s, int items) {
@@ -150,12 +142,9 @@ public class TestForPreconfiguredComponents extends CustomComponent {
         final VerticalLayout statusLayout = new VerticalLayout();
         final Panel status = new Panel("Events", statusLayout);
         final Button clear = new Button("clear event log");
-        clear.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                statusLayout.removeAllComponents();
-                statusLayout.addComponent(ol2);
-            }
+        clear.addClickListener(event -> {
+            statusLayout.removeAllComponents();
+            statusLayout.addComponent(ol2);
         });
         ol2.addComponent(clear);
         final Button commit = new Button("commit changes");
@@ -167,15 +156,11 @@ public class TestForPreconfiguredComponents extends CustomComponent {
 
         ol.addComponent(status);
 
-        t.addListener(new Listener() {
-            @Override
-            public void componentEvent(Event event) {
-                statusLayout
-                        .addComponent(new Label(event.getClass().getName()));
-                // TODO should not use LegacyField.toString()
-                statusLayout.addComponent(
-                        new Label("selected: " + event.getSource().toString()));
-            }
+        t.addListener(event -> {
+            statusLayout.addComponent(new Label(event.getClass().getName()));
+            // TODO should not use LegacyField.toString()
+            statusLayout.addComponent(
+                    new Label("selected: " + event.getSource().toString()));
         });
 
         return new Panel(ol);

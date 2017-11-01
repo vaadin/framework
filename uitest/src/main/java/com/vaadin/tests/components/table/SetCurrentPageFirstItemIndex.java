@@ -22,7 +22,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
@@ -62,21 +61,17 @@ public class SetCurrentPageFirstItemIndex extends AbstractReindeerTestUI {
 
         imageTable.setCurrentPageFirstItemIndex(index);
 
-        vl.addComponent(new Button("Click", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                }
-                if (index != 5) {
-                    index = 5;
-                    imageTable.setCurrentPageFirstItemIndex(index);
-                } else {
-                    index = 20;
-                    imageTable.setCurrentPageFirstItemIndex(index);
-                }
+        vl.addComponent(new Button("Click", event -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
+            if (index != 5) {
+                index = 5;
+                imageTable.setCurrentPageFirstItemIndex(index);
+            } else {
+                index = 20;
+                imageTable.setCurrentPageFirstItemIndex(index);
             }
         }));
     }

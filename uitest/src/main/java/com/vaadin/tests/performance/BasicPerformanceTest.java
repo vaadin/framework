@@ -6,7 +6,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
@@ -28,13 +27,10 @@ public class BasicPerformanceTest extends UI {
     private boolean reportBootstap = true;
     private String performanceTopic;
     private final Button reportPerformanceButton = new Button(
-            "Report some performance", new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    TestUtils.reportPerformance(performanceTopic, serverLimit,
-                            clientLimit, reportBootstap);
-                    event.getButton().setEnabled(false);
-                }
+            "Report some performance", event -> {
+                TestUtils.reportPerformance(performanceTopic, serverLimit,
+                        clientLimit, reportBootstap);
+                event.getButton().setEnabled(false);
             });
 
     @Override
@@ -73,90 +69,72 @@ public class BasicPerformanceTest extends UI {
         leftBar.addComponent(reportPerformanceButton);
 
         leftBar.addComponent(new Button("Set 20 panels as content",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        popupateContent(contentLayout, 20, true);
-                        updatePerformanceReporting("20 panels", 100, 100);
-                    }
+                event -> {
+                    popupateContent(contentLayout, 20, true);
+                    updatePerformanceReporting("20 panels", 100, 100);
                 }));
         leftBar.addComponent(new Button("Set 40 panels as content",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        popupateContent(contentLayout, 40, true);
-                        updatePerformanceReporting("40 panels", 100, 100);
-                    }
+                event -> {
+                    popupateContent(contentLayout, 40, true);
+                    updatePerformanceReporting("40 panels", 100, 100);
                 }));
         leftBar.addComponent(new Button("Set 40 layouts as content",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        popupateContent(contentLayout, 40, false);
-                        updatePerformanceReporting("40 layouts", 100, 100);
-                    }
+                event -> {
+                    popupateContent(contentLayout, 40, false);
+                    updatePerformanceReporting("40 layouts", 100, 100);
                 }));
 
         leftBar.addComponent(
-                new Button("Update all labels", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Iterator<Component> componentIterator = contentLayout
-                                .getComponentIterator();
-                        while (componentIterator.hasNext()) {
+                new Button("Update all labels", event -> {
+                    Iterator<Component> componentIterator = contentLayout
+                            .getComponentIterator();
+                    while (componentIterator.hasNext()) {
 
-                            Iterator<Component> columHolderIterator;
-                            Component child = componentIterator.next();
-                            if (child instanceof Panel) {
-                                columHolderIterator = ((ComponentContainer) ((Panel) child)
-                                        .getContent()).getComponentIterator();
-                            } else {
-                                columHolderIterator = ((ComponentContainer) child)
-                                        .getComponentIterator();
-                            }
-                            while (columHolderIterator.hasNext()) {
-                                VerticalLayout column = (VerticalLayout) columHolderIterator
-                                        .next();
-                                Iterator<Component> columnIterator = column
-                                        .getComponentIterator();
-                                while (columnIterator.hasNext()) {
-                                    Label label = (Label) columnIterator.next();
-                                    label.setValue("New value");
-                                }
-                            }
-                        }
-                        updatePerformanceReporting("Update labels", 100, 100);
-                    }
-                }));
-
-        leftBar.addComponent(
-                new Button("Update one label", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Component child = contentLayout.getComponent(0);
+                        Iterator<Component> columHolderIterator;
+                        Component child = componentIterator.next();
                         if (child instanceof Panel) {
-                            Panel panel = (Panel) child;
-                            child = panel.getContent();
+                            columHolderIterator = ((ComponentContainer) ((Panel) child)
+                                    .getContent()).getComponentIterator();
+                        } else {
+                            columHolderIterator = ((ComponentContainer) child)
+                                    .getComponentIterator();
                         }
-
-                        AbstractOrderedLayout layout = (AbstractOrderedLayout) ((AbstractOrderedLayout) child)
-                                .getComponent(0);
-                        Label label = (Label) layout.getComponent(0);
-
-                        label.setValue("New value " + updateOneCount++);
-
-                        updatePerformanceReporting("Update one", 10, 10);
+                        while (columHolderIterator.hasNext()) {
+                            VerticalLayout column = (VerticalLayout) columHolderIterator
+                                    .next();
+                            Iterator<Component> columnIterator = column
+                                    .getComponentIterator();
+                            while (columnIterator.hasNext()) {
+                                Label label = (Label) columnIterator.next();
+                                label.setValue("New value");
+                            }
+                        }
                     }
+                    updatePerformanceReporting("Update labels", 100, 100);
                 }));
 
         leftBar.addComponent(
-                new Button("Clear content", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        contentLayout.removeAllComponents();
-                        contentLayout.addComponent(new Label("No content"));
-                        updatePerformanceReporting("No content", 100, 100);
+                new Button("Update one label", event -> {
+                    Component child = contentLayout.getComponent(0);
+                    if (child instanceof Panel) {
+                        Panel panel = (Panel) child;
+                        child = panel.getContent();
                     }
+
+                    AbstractOrderedLayout layout = (AbstractOrderedLayout) ((AbstractOrderedLayout) child)
+                            .getComponent(0);
+                    Label label = (Label) layout.getComponent(0);
+
+                    label.setValue("New value " + updateOneCount++);
+
+                    updatePerformanceReporting("Update one", 10, 10);
+                }));
+
+        leftBar.addComponent(
+                new Button("Clear content", event -> {
+                    contentLayout.removeAllComponents();
+                    contentLayout.addComponent(new Label("No content"));
+                    updatePerformanceReporting("No content", 100, 100);
                 }));
 
         HorizontalLayout intermediateLayout = new HorizontalLayout();

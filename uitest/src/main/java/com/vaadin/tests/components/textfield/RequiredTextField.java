@@ -18,8 +18,6 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.TextField;
 
 /**
@@ -35,13 +33,8 @@ public class RequiredTextField extends AbstractReindeerTestUI {
 
         addComponent(field);
 
-        Button button = new Button("Set/unset required", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                field.setRequired(!field.isRequired());
-            }
-        });
+        Button button = new Button("Set/unset required",
+                event -> field.setRequired(!field.isRequired()));
         addComponent(button);
     }
 

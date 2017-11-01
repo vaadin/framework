@@ -4,8 +4,6 @@ import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
 public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
@@ -45,13 +43,10 @@ public class EnterShortcutMaySendInputPromptAsValue extends TestBase {
             }
 
         });
-        testField.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                String value = event.getProperty().getValue().toString();
-                addComponent(new Label("TextField sent value: " + value));
-                testField.setValue("");
-            }
+        testField.addValueChangeListener(event -> {
+            String value = event.getProperty().getValue().toString();
+            addComponent(new Label("TextField sent value: " + value));
+            testField.setValue("");
         });
 
         addComponent(testField);

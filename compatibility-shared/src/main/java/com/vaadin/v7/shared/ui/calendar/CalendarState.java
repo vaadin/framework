@@ -59,7 +59,7 @@ public class CalendarState extends AbstractLegacyComponentState {
      * (later event are shown first).
      * <li>{@code DURATION_ASC} means ascending sort by duration (shorter event
      * are shown first).
-     * 
+     *
      * </ul>
      */
     public enum EventSortOrder {

@@ -7,11 +7,9 @@ import com.vaadin.annotations.Push;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.Resource;
 import com.vaadin.server.StreamResource;
-import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 @Push
 public class DownloadWithPush extends AbstractTestUIWithLog {
@@ -66,22 +64,13 @@ public class DownloadWithPush extends AbstractTestUIWithLog {
     protected void setup(VaadinRequest request) {
         Button b = new Button("Download a "
                 + String.format("%.1f", fileSize / 1024.0 / 1024.0) + "MB file",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getUI().getPage().open(hugeFileResource, "", false);
-                    }
-                });
+                event -> getUI().getPage().open(hugeFileResource, "", false));
         addComponent(b);
     }
 
     private Resource createResource() {
-        Resource hugeFileResource = new DownloadResoure(new StreamSource() {
-            @Override
-            public InputStream getStream() {
-                return new GeneratedStream(fileSize);
-            }
-        }, "hugefile.txt");
+        Resource hugeFileResource = new DownloadResoure(
+                () -> new GeneratedStream(fileSize), "hugefile.txt");
         return hugeFileResource;
     }
 

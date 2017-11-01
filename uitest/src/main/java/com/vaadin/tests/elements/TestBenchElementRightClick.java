@@ -4,8 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TestBenchElementRightClick extends AbstractTestUI {
@@ -23,15 +21,11 @@ public class TestBenchElementRightClick extends AbstractTestUI {
         addComponent(table);
         addComponent(labelEvent);
         labelEvent.setValue("InitialValue");
-        table.addItemClickListener(new ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                if (event.getButton().equals(MouseButton.RIGHT)) {
-                    labelEvent.setValue("RightClick");
-                } else if (event.isDoubleClick()) {
-                    labelEvent.setValue("DoubleClick");
-                }
+        table.addItemClickListener(event -> {
+            if (event.getButton().equals(MouseButton.RIGHT)) {
+                labelEvent.setValue("RightClick");
+            } else if (event.isDoubleClick()) {
+                labelEvent.setValue("DoubleClick");
             }
         });
     }

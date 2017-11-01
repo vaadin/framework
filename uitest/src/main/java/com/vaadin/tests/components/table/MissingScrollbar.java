@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
@@ -42,23 +41,12 @@ public class MissingScrollbar extends TestBase {
         VerticalLayout buttonLayout = new VerticalLayout();
         buttonLayout.setWidth(null);
 
-        Button b = new Button("Set items to 2", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setContainerDataSource(container2);
-            }
-        });
+        Button b = new Button("Set items to 2",
+                event -> table.setContainerDataSource(container2));
         buttonLayout.addComponent(b);
 
-        b = new Button("Set items to 50", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setContainerDataSource(container50);
-            }
-
-        });
+        b = new Button("Set items to 50",
+                event -> table.setContainerDataSource(container50));
         buttonLayout.addComponent(b);
 
         hl.addComponent(buttonLayout);

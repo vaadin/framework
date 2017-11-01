@@ -50,14 +50,14 @@ public class ColorPickerHistory extends CustomComponent
     }
 
     /** The rows. */
-    private static final int rows = 4;
+    private static final int ROWS = 4;
 
     /** The columns. */
-    private static final int columns = 15;
+    private static final int COLUMNS = 15;
 
     /** Temporary color history for when the component is detached. */
     private ArrayBlockingQueue<Color> tempHistory = new ArrayBlockingQueue<Color>(
-            rows * columns);
+            ROWS * COLUMNS);
 
     /** The grid. */
     private final ColorPickerGrid grid;
@@ -68,7 +68,7 @@ public class ColorPickerHistory extends CustomComponent
     public ColorPickerHistory() {
         setPrimaryStyleName(STYLENAME);
 
-        grid = new ColorPickerGrid(rows, columns);
+        grid = new ColorPickerGrid(ROWS, COLUMNS);
         grid.setWidth("100%");
         grid.setPosition(0, 0);
         grid.addColorChangeListener(this);
@@ -86,7 +86,7 @@ public class ColorPickerHistory extends CustomComponent
         List<Color> tempColors = new ArrayList<Color>(tempHistory);
         if (getSession().getAttribute("colorPickerHistory") == null) {
             getSession().setAttribute("colorPickerHistory",
-                    new ArrayBlockingQueue<Color>(rows * columns));
+                    new ArrayBlockingQueue<Color>(ROWS * COLUMNS));
         }
         for (Color color : tempColors) {
             setColor(color);
@@ -137,11 +137,11 @@ public class ColorPickerHistory extends CustomComponent
         Collections.swap(colorList, colorList.indexOf(color), 0);
 
         // Create 2d color map
-        Color[][] colors = new Color[rows][columns];
+        Color[][] colors = new Color[ROWS][COLUMNS];
         Iterator<Color> iter = colorList.iterator();
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
                 if (iter.hasNext()) {
                     colors[row][col] = iter.next();
                 } else {

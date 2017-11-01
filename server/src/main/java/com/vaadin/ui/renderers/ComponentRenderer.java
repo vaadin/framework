@@ -38,7 +38,7 @@ import elemental.json.JsonValue;
  * instances.
  * <p>
  * Example of how to add a {@link Label} component to {@link Grid}:
- * 
+ *
  * <pre>
  * Grid<Person> grid;
  * grid.addColumn(person -> new Label(person.getFullName()),

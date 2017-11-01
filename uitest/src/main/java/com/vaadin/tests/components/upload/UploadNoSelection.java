@@ -21,8 +21,6 @@ import java.io.OutputStream;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FailedEvent;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 
 public class UploadNoSelection extends AbstractTestUIWithLog
@@ -56,22 +54,15 @@ public class UploadNoSelection extends AbstractTestUIWithLog
 
         addComponent(u);
 
-        u.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                log(UPLOAD_FINISHED);
-                log(FILE_LENGTH_PREFIX + " " + event.getLength());
-                log(FILE_NAME_PREFIX + " " + event.getFilename());
-            }
+        u.addFinishedListener(event -> {
+            log(UPLOAD_FINISHED);
+            log(FILE_LENGTH_PREFIX + " " + event.getLength());
+            log(FILE_NAME_PREFIX + " " + event.getFilename());
         });
-        u.addFailedListener(new Upload.FailedListener() {
-
-            @Override
-            public void uploadFailed(FailedEvent event) {
-                log("Upload Failed");
-                log(FILE_LENGTH_PREFIX + " " + event.getLength());
-                log(FILE_NAME_PREFIX + " " + event.getFilename());
-            }
+        u.addFailedListener(event -> {
+            log("Upload Failed");
+            log(FILE_LENGTH_PREFIX + " " + event.getLength());
+            log(FILE_NAME_PREFIX + " " + event.getFilename());
         });
     }
 

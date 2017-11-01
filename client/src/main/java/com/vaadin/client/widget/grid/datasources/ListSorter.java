@@ -133,45 +133,36 @@ public class ListSorter<T> {
                     "Grid " + grid + " data source is not a ListDataSource!");
         }
 
-        ((ListDataSource<T>) ds).sort(new Comparator<T>() {
-
-            @Override
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            public int compare(T a, T b) {
-
-                for (SortOrder o : order) {
-
-                    Grid.Column column = o.getColumn();
-                    Comparator cmp = ListSorter.this.comparators.get(column);
-                    int result = 0;
-                    Object value_a = column.getValue(a);
-                    Object value_b = column.getValue(b);
-                    if (cmp != null) {
-                        result = cmp.compare(value_a, value_b);
-                    } else {
-                        if (!(value_a instanceof Comparable)) {
-                            throw new IllegalStateException("Column " + column
-                                    + " has no assigned comparator and value "
-                                    + value_a + " isn't naturally comparable");
-                        }
-                        result = ((Comparable) value_a).compareTo(value_b);
+        ((ListDataSource<T>) ds).sort((a, b) -> {
+            for (SortOrder o : order) {
+                Grid.Column column = o.getColumn();
+                Comparator cmp = comparators.get(column);
+                int result = 0;
+                Object valueA = column.getValue(a);
+                Object valueB = column.getValue(b);
+                if (cmp != null) {
+                    result = cmp.compare(valueA, valueB);
+                } else {
+                    if (!(valueA instanceof Comparable)) {
+                        throw new IllegalStateException("Column " + column
+                                + " has no assigned comparator and value "
+                                + valueA + " isn't naturally comparable");
                     }
-
-                    if (result != 0) {
-                        return o.getDirection() == SortDirection.ASCENDING
-                                ? result
-                                : -result;
-                    }
+                    result = ((Comparable) valueA).compareTo(valueB);
                 }
 
-                if (!order.isEmpty()) {
-                    return order.get(0)
-                            .getDirection() == SortDirection.ASCENDING
-                                    ? a.hashCode() - b.hashCode()
-                                    : b.hashCode() - a.hashCode();
+                if (result != 0) {
+                    return o.getDirection() == SortDirection.ASCENDING ? result
+                            : -result;
                 }
-                return a.hashCode() - b.hashCode();
             }
+
+            if (!order.isEmpty()) {
+                return order.get(0).getDirection() == SortDirection.ASCENDING
+                        ? a.hashCode() - b.hashCode()
+                        : b.hashCode() - a.hashCode();
+            }
+            return a.hashCode() - b.hashCode();
         });
     }
 }

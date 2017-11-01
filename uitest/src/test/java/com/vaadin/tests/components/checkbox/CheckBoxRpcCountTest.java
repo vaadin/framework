@@ -17,9 +17,7 @@ package com.vaadin.tests.components.checkbox;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.LabelElement;
@@ -52,11 +50,6 @@ public class CheckBoxRpcCountTest extends MultiBrowserTest {
 
     private void waitUntilLabelIsUpdated(final WebElement countElem,
             final String expectedText) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return countElem.getText().equals(expectedText);
-            }
-        }, 5);
+        waitUntil(input -> countElem.getText().equals(expectedText), 5);
     }
 }

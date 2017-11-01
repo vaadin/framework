@@ -270,7 +270,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         }
     }
 
-    private static final ConcurrentMap<Class<?>, BeanPropertySet<?>> instances = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Class<?>, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
 
     private final Class<T> beanType;
 
@@ -306,7 +306,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
 
         // Cache the reflection results
-        return (PropertySet<T>) instances.computeIfAbsent(beanType,
+        return (PropertySet<T>) INSTANCES.computeIfAbsent(beanType,
                 BeanPropertySet::new);
     }
 

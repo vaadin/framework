@@ -21,15 +21,15 @@ public class FocusAndBlurListeners extends TestBase {
 
     private VerticalLayout messages = new VerticalLayout();
 
-    private FocusListener focusListener = e -> {
+    private FocusListener focusListener = event -> {
         Label msg = new Label(
-                new Date() + " Focused " + e.getComponent().getCaption());
+                new Date() + " Focused " + event.getComponent().getCaption());
         messages.addComponentAsFirst(msg);
     };
 
-    private BlurListener blurListener = e -> {
+    private BlurListener blurListener = event -> {
         Label msg = new Label(
-                new Date() + " Blurred " + e.getComponent().getCaption());
+                new Date() + " Blurred " + event.getComponent().getCaption());
         messages.addComponentAsFirst(msg);
     };
 

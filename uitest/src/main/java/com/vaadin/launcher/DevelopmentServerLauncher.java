@@ -17,7 +17,6 @@
 package com.vaadin.launcher;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -48,6 +47,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.Scanner;
+import org.eclipse.jetty.util.Scanner.BulkListener;
 import org.eclipse.jetty.util.log.JavaUtilLog;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -249,23 +249,15 @@ public class DevelopmentServerLauncher {
                 scanner.setScanInterval(interval);
 
                 scanner.setRecursive(true);
-                scanner.addListener(new Scanner.BulkListener() {
-                    @Override
-                    public void filesChanged(List<String> filenames)
-                            throws Exception {
-                        webappcontext.stop();
-                        server.stop();
-                        webappcontext.start();
-                        server.start();
-                    }
+                scanner.addListener((BulkListener) e-> {
+                    webappcontext.stop();
+                    server.stop();
+                    webappcontext.start();
+                    server.start();
                 });
                 scanner.setReportExistingFilesOnStartup(false);
-                scanner.setFilenameFilter(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File folder, String name) {
-                        return name.endsWith(".class");
-                    }
-                });
+                scanner.setFilenameFilter(
+                        (folder, name) -> name.endsWith(".class"));
 
                 scanner.setScanDirs(classFolders);
                 scanner.start();

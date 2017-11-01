@@ -121,7 +121,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer
-        implements Action.Container, Action.Notifier, PollNotifier,
+        implements Action.Notifier, PollNotifier,
         LegacyComponent, Focusable {
 
     /**
@@ -260,18 +260,14 @@ public abstract class UI extends AbstractSingleComponentContainer
         }
     };
 
-    private WindowOrderRpc windowOrderRpc = new WindowOrderRpc() {
-
-        @Override
-        public void windowOrderChanged(Map<Integer, Connector> windowOrders) {
-            Map<Integer, Window> orders = new LinkedHashMap<>();
-            for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
-                if (entry.getValue() instanceof Window) {
-                    orders.put(entry.getKey(), (Window) entry.getValue());
-                }
+    private WindowOrderRpc windowOrderRpc = windowOrders -> {
+        Map<Integer, Window> orders = new LinkedHashMap<>();
+        for (Entry<Integer, Connector> entry : windowOrders.entrySet()) {
+            if (entry.getValue() instanceof Window) {
+                orders.put(entry.getKey(), (Window) entry.getValue());
             }
-            fireWindowOrder(orders);
         }
+        fireWindowOrder(orders);
     };
 
     /**
@@ -518,18 +514,15 @@ public abstract class UI extends AbstractSingleComponentContainer
                 // on.
                 getPushConfiguration().setPushMode(PushMode.DISABLED);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // This intentionally does disconnect without locking
-                        // the VaadinSession to avoid deadlocks where the server
-                        // uses a lock for the websocket connection
+                new Thread(() -> {
+                    // This intentionally does disconnect without locking
+                    // the VaadinSession to avoid deadlocks where the server
+                    // uses a lock for the websocket connection
 
-                        // See https://dev.vaadin.com/ticket/18436
-                        // The underlying problem is
-                        // https://dev.vaadin.com/ticket/16919
-                        setPushConnection(null);
-                    }
+                    // See https://dev.vaadin.com/ticket/18436
+                    // The underlying problem is
+                    // https://dev.vaadin.com/ticket/16919
+                    setPushConnection(null);
                 }).start();
             }
             this.session = session;
@@ -795,7 +788,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the part of path (from browser's URL) that points to this UI,
      *         without possible view identifiers or path parameters
-     * 
+     *
      * @since 8.2
      */
     public String getUiRootPath() {
@@ -819,7 +812,7 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @return the path info part of the request; {@code null} if no request
      *         from client has been processed
-     * 
+     *
      * @since 8.2
      */
     public String getUiPathInfo() {

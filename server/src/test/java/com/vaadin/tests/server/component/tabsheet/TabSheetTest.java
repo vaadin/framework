@@ -317,9 +317,9 @@ public class TabSheetTest {
         Button b3 = new Button("b3");
         Button b4 = new Button("b4");
         TestTabsheet tabsheet = new TestTabsheet(b1, b2, b3, b4);
-        tabsheet.addSelectedTabChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-            selected.set(e.getTabSheet().getSelectedTab());
+        tabsheet.addSelectedTabChangeListener(event -> {
+            userOriginated.set(event.isUserOriginated());
+            selected.set(event.getTabSheet().getSelectedTab());
         });
 
         tabsheet.setSelectedTab(b2);

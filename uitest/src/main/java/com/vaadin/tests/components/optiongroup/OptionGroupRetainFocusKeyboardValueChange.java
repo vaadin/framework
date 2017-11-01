@@ -17,8 +17,6 @@ package com.vaadin.tests.components.optiongroup;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.OptionGroup;
 
 /**
@@ -40,17 +38,13 @@ public class OptionGroupRetainFocusKeyboardValueChange
         optiongroup.setItemCaption(3, "C");
         optiongroup.setImmediate(true);
 
-        optiongroup.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (optiongroup.isSelected(2)) {
-                    optiongroup.setItemCaption(1, "A+");
-                } else if (optiongroup.isSelected(3)) {
-                    optiongroup.removeItem(2);
-                    optiongroup.addItem(2);
-                    optiongroup.setItemCaption(2, "B");
-                }
+        optiongroup.addValueChangeListener(event -> {
+            if (optiongroup.isSelected(2)) {
+                optiongroup.setItemCaption(1, "A+");
+            } else if (optiongroup.isSelected(3)) {
+                optiongroup.removeItem(2);
+                optiongroup.addItem(2);
+                optiongroup.setItemCaption(2, "B");
             }
         });
 

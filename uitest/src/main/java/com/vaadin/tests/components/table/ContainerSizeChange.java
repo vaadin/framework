@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
@@ -30,30 +29,14 @@ public class ContainerSizeChange extends TestBase {
         table.setPageLength(5);
         addComponent(table);
 
-        Button b = new Button("Decrease size", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ds.decreaseSize();
-            }
-
-        });
+        Button b = new Button("Decrease size", event -> ds.decreaseSize());
 
         addComponent(b);
 
-        b = new Button("Increase size", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ds.increaseSize();
-            }
-
-        });
+        b = new Button("Increase size", event -> ds.increaseSize());
 
         addComponent(b);
-
     }
-
 }
 
 class MyDataSource extends IndexedContainer {

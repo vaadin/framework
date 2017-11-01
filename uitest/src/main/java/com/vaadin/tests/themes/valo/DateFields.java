@@ -26,8 +26,6 @@ import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -74,12 +72,8 @@ public class DateFields extends VerticalLayout implements View {
         final TestDateField date2 = new TestDateField();
         group.addComponent(date2);
 
-        Button today = new Button("Today", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                date2.setValue(LocalDate.now());
-            }
-        });
+        Button today = new Button("Today",
+                event -> date2.setValue(LocalDate.now()));
         group.addComponent(today);
 
         date = new TestDateField("Default resolution, explicit size");

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.select;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Select;
 
 public class StylingPopupOpener extends TestBase {
@@ -16,12 +15,8 @@ public class StylingPopupOpener extends TestBase {
         final Select select = new Select();
         addComponent(select);
 
-        addComponent(new Button("Update style", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                select.setStyleName("mystyle");
-            }
-        }));
+        addComponent(new Button("Update style",
+                event -> select.setStyleName("mystyle")));
     }
 
     @Override

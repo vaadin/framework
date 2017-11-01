@@ -32,12 +32,9 @@ public class LayoutDetectorConnector extends AbstractComponentConnector
         super.init();
         updateText();
 
-        registerRpc(NoLayoutRpc.class, new NoLayoutRpc() {
-            @Override
-            public void doRpc() {
-                rpcCount++;
-                updateText();
-            }
+        registerRpc(NoLayoutRpc.class, () -> {
+            rpcCount++;
+            updateText();
         });
     }
 

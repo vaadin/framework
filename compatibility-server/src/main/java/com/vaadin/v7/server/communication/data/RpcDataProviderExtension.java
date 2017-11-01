@@ -16,7 +16,6 @@
 
 package com.vaadin.v7.server.communication.data;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public class RpcDataProviderExtension extends AbstractExtension {
      *
      * @since 7.6
      */
-    private class ActiveItemHandler implements Serializable, DataGenerator {
+    private class ActiveItemHandler implements DataGenerator {
 
         private final Map<Object, GridValueChangeListener> activeItemMap = new HashMap<Object, GridValueChangeListener>();
         private final KeyMapper<Object> keyMapper = new KeyMapper<Object>();

@@ -1,6 +1,5 @@
 package com.vaadin.tests.util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,8 +9,7 @@ import java.util.Random;
 import com.vaadin.v7.data.util.BeanItemContainer;
 
 @SuppressWarnings("serial")
-public class PersonContainer extends BeanItemContainer<Person>
-        implements Serializable {
+public class PersonContainer extends BeanItemContainer<Person> {
 
     /**
      * Natural property order for Person bean. Used in tables and forms.
