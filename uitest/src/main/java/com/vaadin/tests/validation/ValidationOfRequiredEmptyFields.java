@@ -3,8 +3,6 @@ package com.vaadin.tests.validation;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.validator.IntegerValidator;
 import com.vaadin.v7.data.validator.StringLengthValidator;
@@ -32,12 +30,8 @@ public class ValidationOfRequiredEmptyFields extends AbstractReindeerTestUI {
 
         requiredErrorInput = new TextField("Required error message");
         requiredErrorInput.setImmediate(true);
-        requiredErrorInput.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError(requiredErrorInput.getValue());
-            }
-        });
+        requiredErrorInput.addValueChangeListener(
+                event -> tf.setRequiredError(requiredErrorInput.getValue()));
 
         integerValidatorInput = new CheckBox("Integer validator");
         integerValidatorInput.addValueChangeListener(event -> {

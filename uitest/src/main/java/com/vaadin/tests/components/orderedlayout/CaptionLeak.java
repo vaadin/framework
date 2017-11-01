@@ -49,20 +49,15 @@ public class CaptionLeak extends AbstractReindeerTestUI {
             final Class<? extends ComponentContainer> targetClass) {
         Button btn = new Button(caption);
         btn.setId(caption);
-        btn.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    ComponentContainer target = targetClass.newInstance();
-                    for (int i = 0; i < 61; i++) {
-                        target.addComponent(new TextField("Test"));
-                    }
-                    parent.setContent(target);
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+        btn.addClickListener(event -> {
+            try {
+                ComponentContainer target = targetClass.newInstance();
+                for (int i = 0; i < 61; i++) {
+                    target.addComponent(new TextField("Test"));
                 }
+                parent.setContent(target);
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         });
         return btn;

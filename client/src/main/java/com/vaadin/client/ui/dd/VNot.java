@@ -47,12 +47,7 @@ public final class VNot extends VAcceptCriterion {
 
         b1 = false;
 
-        VAcceptCallback accept1cb = new VAcceptCallback() {
-            @Override
-            public void accepted(VDragEvent event) {
-                b1 = true;
-            }
-        };
+        VAcceptCallback accept1cb = event -> b1 = true;
 
         crit1.accept(drag, configuration.getChildUIDL(0), accept1cb);
         if (!b1) {

@@ -5,7 +5,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Validator;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
@@ -33,23 +32,18 @@ public class MultipleValidationErrors extends AbstractReindeerTestUI {
         validationErrors.setId("validationErrors");
         addComponent(validationErrors);
 
-        addButton("Submit", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                validationErrors.setValue("");
-                try {
-                    fieldGroup.commit();
-                } catch (FieldGroup.CommitException e) {
-                    if (e.getCause() != null && e
-                            .getCause() instanceof Validator.InvalidValueException) {
-                        validationErrors.setValue(StringEscapeUtils
-                                .unescapeHtml(AbstractErrorMessage
-                                        .getErrorMessageForException(
-                                                e.getCause())
-                                        .getFormattedHtmlMessage()));
-                    }
+        addButton("Submit", event -> {
+            validationErrors.setValue("");
+            try {
+                fieldGroup.commit();
+            } catch (FieldGroup.CommitException e) {
+                if (e.getCause() != null && e
+                        .getCause() instanceof Validator.InvalidValueException) {
+                    validationErrors.setValue(
+                            StringEscapeUtils.unescapeHtml(AbstractErrorMessage
+                                    .getErrorMessageForException(e.getCause())
+                                    .getFormattedHtmlMessage()));
                 }
-
             }
         });
     }

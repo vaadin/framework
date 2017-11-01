@@ -21,7 +21,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
@@ -44,13 +43,8 @@ public class BackspaceKeyWithModalOpened extends AbstractReindeerTestUI {
 
         @Override
         public void enter(ViewChangeEvent event) {
-            Button btnNext = new Button("Next", new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    navigator.navigateTo(SECOND_VIEW_ID);
-                }
-            });
+            Button btnNext = new Button("Next",
+                    clickEvent -> navigator.navigateTo(SECOND_VIEW_ID));
 
             btnNext.setId(BTN_NEXT_ID);
             addComponent(btnNext);
@@ -62,29 +56,25 @@ public class BackspaceKeyWithModalOpened extends AbstractReindeerTestUI {
         @Override
         public void enter(ViewChangeEvent event) {
             Button btnOpenModal = new Button("Open modal",
-                    new Button.ClickListener() {
+                    clickEvent -> {
+                        Window window = new Window("Caption");
+                        window.setId(MODAL_ID);
 
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            Window window = new Window("Caption");
-                            window.setId(MODAL_ID);
+                        VerticalLayout layout = new VerticalLayout();
+                        layout.setWidth("300px");
+                        layout.setHeight("300px");
 
-                            VerticalLayout layout = new VerticalLayout();
-                            layout.setWidth("300px");
-                            layout.setHeight("300px");
+                        TextField textField = new TextField();
+                        textField.setId(TEXT_FIELD_IN_MODAL);
 
-                            TextField textField = new TextField();
-                            textField.setId(TEXT_FIELD_IN_MODAL);
+                        layout.addComponent(textField);
+                        window.setContent(layout);
 
-                            layout.addComponent(textField);
-                            window.setContent(layout);
+                        addWindow(window);
 
-                            addWindow(window);
+                        window.setModal(true);
 
-                            window.setModal(true);
-
-                            setFocusedComponent(window);
-                        }
+                        setFocusedComponent(window);
                     });
 
             btnOpenModal.setId(BTN_OPEN_MODAL_ID);

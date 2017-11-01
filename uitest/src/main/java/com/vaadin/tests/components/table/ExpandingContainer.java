@@ -68,12 +68,9 @@ public class ExpandingContainer extends AbstractContainer implements
         new Thread() {
             @Override
             public void run() {
-                ExpandingContainer.this.invoke(session, new Runnable() {
-                    @Override
-                    public void run() {
-                        log("*** Firing item set change event");
-                        ExpandingContainer.this.fireItemSetChange();
-                    }
+                ExpandingContainer.this.invoke(session, () -> {
+                    log("*** Firing item set change event");
+                    ExpandingContainer.this.fireItemSetChange();
                 });
             }
         }.start();

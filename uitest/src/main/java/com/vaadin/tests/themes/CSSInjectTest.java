@@ -10,7 +10,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.TextArea;
 
@@ -42,46 +41,33 @@ public class CSSInjectTest extends TestBase {
         cssToInject.setImmediate(true);
         addComponent(cssToInject);
 
-        Button inject = new Button("Inject!", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                stylesheet.add(cssToInject.getValue());
-                cssToInject.setValue("");
-            }
+        Button inject = new Button("Inject!", event -> {
+            stylesheet.add(cssToInject.getValue());
+            cssToInject.setValue("");
         });
         addComponent(inject);
 
         Button injectRandom = new Button("Inject as resource!",
-                new Button.ClickListener() {
+                event -> {
+                    final String css = cssToInject.getValue();
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
+                    stylesheet.add(new StreamResource(
+                            new StreamResource.StreamSource() {
 
-                        final String css = cssToInject.getValue();
+                                @Override
+                                public InputStream getStream() {
+                                    return new ByteArrayInputStream(
+                                            css.getBytes());
+                                }
+                            }, UUID.randomUUID() + ".css"));
 
-                        stylesheet.add(new StreamResource(
-                                new StreamResource.StreamSource() {
-
-                                    @Override
-                                    public InputStream getStream() {
-                                        return new ByteArrayInputStream(
-                                                css.getBytes());
-                                    }
-                                }, UUID.randomUUID() + ".css"));
-
-                        cssToInject.setValue("");
-                    }
+                    cssToInject.setValue("");
                 });
         addComponent(injectRandom);
 
         addComponent(
-                new Button("Inject initial again!", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        stylesheet.add(initialResource);
-                    }
-                }));
+                new Button("Inject initial again!",
+                        event -> stylesheet.add(initialResource)));
     }
 
     @Override

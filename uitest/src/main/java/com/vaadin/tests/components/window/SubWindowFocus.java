@@ -4,7 +4,6 @@ import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -41,49 +40,41 @@ public class SubWindowFocus extends TestBase {
         tf.setInputPrompt("Tab index 0");
         addComponent(tf);
 
-        Button b = new Button("new", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                VerticalLayout layout = new VerticalLayout();
-                layout.setMargin(true);
-                final Window win = new Window("Subwin", layout);
-                layout.setWidth(null);
-                win.center();
-                win.setClosable(false);
-                getMainWindow().addWindow(win);
-                layout.addComponent(new Label("SPACE notifies, ESC closes."));
+        Button b = new Button("new", event -> {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            final Window win = new Window("Subwin", layout);
+            layout.setWidth(null);
+            win.center();
+            win.setClosable(false);
+            getMainWindow().addWindow(win);
+            layout.addComponent(new Label("SPACE notifies, ESC closes."));
 
-                win.addActionHandler(new Action.Handler() {
+            win.addActionHandler(new Action.Handler() {
 
-                    ShortcutAction esc = new ShortcutAction("Close",
-                            ShortcutAction.KeyCode.ESCAPE, null);
-                    ShortcutAction spc = new ShortcutAction("Space",
-                            ShortcutAction.KeyCode.SPACEBAR, null);
+                ShortcutAction esc = new ShortcutAction("Close",
+                        ShortcutAction.KeyCode.ESCAPE, null);
+                ShortcutAction spc = new ShortcutAction("Space",
+                        ShortcutAction.KeyCode.SPACEBAR, null);
 
-                    @Override
-                    public Action[] getActions(Object target, Object sender) {
-                        return new Action[] { esc, spc };
+                @Override
+                public Action[] getActions(Object target, Object sender) {
+                    return new Action[] { esc, spc };
+                }
+
+                @Override
+                public void handleAction(Action action, Object sender,
+                        Object target) {
+                    if (action == esc) {
+                        getMainWindow().removeWindow(win);
+                    } else {
+                        getMainWindow().showNotification(action.getCaption());
                     }
+                }
+            });
 
-                    @Override
-                    public void handleAction(Action action, Object sender,
-                            Object target) {
-                        if (action == esc) {
-                            getMainWindow().removeWindow(win);
-                        } else {
-                            getMainWindow()
-                                    .showNotification(action.getCaption());
-                        }
-
-                    }
-
-                });
-
-                layout.addComponent(new TextField());
-            }
-
+            layout.addComponent(new TextField());
         });
         addComponent(b);
-
     }
 }

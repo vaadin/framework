@@ -240,13 +240,9 @@ public class FlyweightRow implements Row {
         assertSetup();
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
-        return new Iterable<FlyweightCell>() {
-            @Override
-            public Iterator<FlyweightCell> iterator() {
-                return CellIterator.attached(
+        return () -> CellIterator
+                .attached(
                         cells.subList(offset, offset + numberOfCells));
-            }
-        };
     }
 
     /**
@@ -269,13 +265,9 @@ public class FlyweightRow implements Row {
         assertSetup();
         assert offset >= 0 && offset + numberOfCells <= cells
                 .size() : "Invalid range of cells";
-        return new Iterable<FlyweightCell>() {
-            @Override
-            public Iterator<FlyweightCell> iterator() {
-                return CellIterator.unattached(
+        return () -> CellIterator
+                .unattached(
                         cells.subList(offset, offset + numberOfCells));
-            }
-        };
     }
 
     /**

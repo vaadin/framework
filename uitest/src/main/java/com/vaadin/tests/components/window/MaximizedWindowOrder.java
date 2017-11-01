@@ -4,8 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -14,12 +12,7 @@ public class MaximizedWindowOrder extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addButton("Open Maximized Window", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                openWindow(true);
-            }
-        });
+        addButton("Open Maximized Window", event -> openWindow(true));
     }
 
     private void openWindow(boolean maximized) {
@@ -30,14 +23,7 @@ public class MaximizedWindowOrder extends AbstractReindeerTestUI {
 
         layout.addComponent(label);
         Button button = new Button("Open Normal Window");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                openWindow(false);
-            }
-
-        });
+        button.addClickListener(event -> openWindow(false));
 
         layout.addComponent(button);
 

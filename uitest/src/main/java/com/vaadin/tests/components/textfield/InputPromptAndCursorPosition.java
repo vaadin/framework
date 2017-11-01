@@ -3,7 +3,6 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
@@ -18,15 +17,8 @@ public class InputPromptAndCursorPosition extends AbstractReindeerTestUI {
         tf.setPlaceholder("This is an input prompt");
 
         final Label l = new Label("Cursor position: ?");
-        Button button = new Button("Update cursor position",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        l.setValue(
-                                "Cursor position: " + tf.getCursorPosition());
-                    }
-                });
+        Button button = new Button("Update cursor position", event -> l
+                .setValue("Cursor position: " + tf.getCursorPosition()));
 
         addComponent(tf);
         addComponent(l);

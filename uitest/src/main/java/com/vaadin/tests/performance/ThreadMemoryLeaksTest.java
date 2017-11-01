@@ -33,13 +33,10 @@ public class ThreadMemoryLeaksTest extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         label = new Label(String.format("%d workers", workers));
         addComponent(label);
-        addComponent(new Button("Add worker", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                new Worker();
-                workers++;
-                label.setValue(String.format("%d workers", workers));
-            }
+        addComponent(new Button("Add worker", event -> {
+            new Worker();
+            workers++;
+            label.setValue(String.format("%d workers", workers));
         }));
     }
 

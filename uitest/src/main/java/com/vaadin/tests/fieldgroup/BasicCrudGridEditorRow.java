@@ -22,8 +22,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.BeanItem;
 import com.vaadin.v7.data.validator.IntegerRangeValidator;
-import com.vaadin.v7.event.SelectionEvent;
-import com.vaadin.v7.event.SelectionEvent.SelectionListener;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.renderers.DateRenderer;
 
@@ -41,13 +39,10 @@ public class BasicCrudGridEditorRow extends AbstractBasicCrud {
 
         grid.setColumnOrder((Object[]) columns);
         grid.removeColumn("salary");
-        grid.addSelectionListener(new SelectionListener() {
-            @Override
-            public void select(SelectionEvent event) {
-                Item item = grid.getContainerDataSource()
-                        .getItem(grid.getSelectedRow());
-                form.edit((BeanItem<ComplexPerson>) item);
-            }
+        grid.addSelectionListener(event -> {
+            Item item = grid.getContainerDataSource()
+                    .getItem(grid.getSelectedRow());
+            form.edit((BeanItem<ComplexPerson>) item);
         });
         grid.setEditorEnabled(true);
         grid.setSizeFull();

@@ -2,8 +2,6 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -41,13 +39,9 @@ public class VerticalLayoutWithRelativeSizeComponentsInitiallyHidden
 
         Button b = new Button(
                 "Click to set bar visible. Button should stay visible.");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                bar.setVisible(true);
-                foobar.setVisible(true);
-            }
+        b.addClickListener(event -> {
+            bar.setVisible(true);
+            foobar.setVisible(true);
         });
 
         verticalLayout.addComponent(bar);

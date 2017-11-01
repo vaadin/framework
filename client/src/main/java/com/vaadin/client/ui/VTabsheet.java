@@ -1347,15 +1347,9 @@ public class VTabsheet extends VTabsheetBase
              */
             final Style style = scroller.getStyle();
             style.setProperty("whiteSpace", "normal");
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    style.setProperty("whiteSpace", "");
-                }
-            });
+            Scheduler.get().scheduleDeferred(
+                    () -> style.setProperty("whiteSpace", ""));
         }
-
     }
 
     /** For internal use only. May be removed or replaced in the future. */

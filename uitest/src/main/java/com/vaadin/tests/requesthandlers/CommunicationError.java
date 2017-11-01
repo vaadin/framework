@@ -28,7 +28,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -68,21 +67,17 @@ public class CommunicationError extends UIProvider {
         @Override
         protected void setup(VaadinRequest request) {
             Button button = new Button("Send bad request",
-                    new Button.ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            try {
-                                // An unparseable response will cause
-                                // communication error
-                                PrintWriter writer = VaadinService
-                                        .getCurrentResponse().getWriter();
-                                writer.write("for(;;)[{FOOBAR}]");
-                                writer.flush();
-                                writer.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                    event -> {
+                        try {
+                            // An unparseable response will cause
+                            // communication error
+                            PrintWriter writer = VaadinService
+                                    .getCurrentResponse().getWriter();
+                            writer.write("for(;;)[{FOOBAR}]");
+                            writer.flush();
+                            writer.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     });
             addComponent(button);

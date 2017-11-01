@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -15,12 +14,8 @@ public class NestedTabSheetsHideTabs extends TestBase {
 
     @Override
     public void setup() {
-        addComponent(new Button("Toggle tabs", new Button.ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                main.hideTabs(!main.areTabsHidden());
-            }
-        }));
+        addComponent(new Button("Toggle tabs",
+                event -> main.hideTabs(!main.areTabsHidden())));
         sub = new TabSheet();
         sub.addTab(newPage(21), "Page 21");
         sub.addTab(newPage(22), "Page 22");

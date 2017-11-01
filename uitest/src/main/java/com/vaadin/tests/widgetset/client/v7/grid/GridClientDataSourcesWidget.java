@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.v7.client.renderers.TextRenderer;
 import com.vaadin.v7.client.widgets.Grid;
@@ -91,13 +90,8 @@ public class GridClientDataSourcesWidget
                 result.size = size;
                 result.rows = fetchRows(firstRowIndex, numberOfRows);
 
-                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        callback.onResponse(result);
-                    }
-                });
-
+                Scheduler.get()
+                        .scheduleDeferred(() -> callback.onResponse(result));
             }
 
             private List<String[]> fetchRows(int firstRowIndex,
@@ -139,12 +133,8 @@ public class GridClientDataSourcesWidget
         protected void requestRows(int firstRowIndex, int numberOfRows,
                 final RequestRowsCallback<String[]> callback) {
 
-            backend.query(firstRowIndex, numberOfRows, new RestCallback() {
-                @Override
-                public void onResponse(Backend.Result result) {
-                    callback.onResponse(result.rows, result.size);
-                }
-            });
+            backend.query(firstRowIndex, numberOfRows,
+                    result -> callback.onResponse(result.rows, result.size));
         }
 
         @Override
@@ -157,9 +147,16 @@ public class GridClientDataSourcesWidget
 
     private RestishDataSource restishDataSource;
 
-    private final ScheduledCommand setRestishCommand = new ScheduledCommand() {
-        @Override
-        public void execute() {
+    public GridClientDataSourcesWidget() {
+        super(new Grid<String[]>());
+        grid = getTestedWidget();
+
+        grid.getElement().getStyle().setZIndex(0);
+        grid.setHeight("400px");
+        grid.setSelectionMode(SelectionMode.NONE);
+        addNorth(grid, 400);
+
+        addMenuCommand("Use", () -> {
             for (Grid.Column<?, String[]> column : grid.getColumns()) {
                 grid.removeColumn(column);
             }
@@ -174,48 +171,22 @@ public class GridClientDataSourcesWidget
                     return row[1];
                 }
             });
-        }
-    };
+        }, "DataSources", "RESTish");
 
-    public GridClientDataSourcesWidget() {
-        super(new Grid<String[]>());
-        grid = getTestedWidget();
-
-        grid.getElement().getStyle().setZIndex(0);
-        grid.setHeight("400px");
-        grid.setSelectionMode(SelectionMode.NONE);
-        addNorth(grid, 400);
-
-        addMenuCommand("Use", setRestishCommand, "DataSources", "RESTish");
-        addMenuCommand("Next request +10", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restishDataSource.backend.addRows(10);
-            }
-        }, "DataSources", "RESTish");
-        addMenuCommand("Next request -10", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restishDataSource.backend.addRows(-10);
-            }
-        }, "DataSources", "RESTish");
-        addMenuCommand("Push data change", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restishDataSource.backend.pushRowChanges();
-            }
-        }, "DataSources", "RESTish");
-        addMenuCommand("Push data change +10", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restishDataSource.backend.pushRowChanges(10);
-            }
-        }, "DataSources", "RESTish");
-        addMenuCommand("Push data change -10", new ScheduledCommand() {
-            @Override
-            public void execute() {
-                restishDataSource.backend.pushRowChanges(-10);
-            }
-        }, "DataSources", "RESTish");
+        addMenuCommand("Next request +10",
+                () -> restishDataSource.backend.addRows(10), "DataSources",
+                "RESTish");
+        addMenuCommand("Next request -10",
+                () -> restishDataSource.backend.addRows(-10), "DataSources",
+                "RESTish");
+        addMenuCommand("Push data change",
+                () -> restishDataSource.backend.pushRowChanges(), "DataSources",
+                "RESTish");
+        addMenuCommand("Push data change +10",
+                () -> restishDataSource.backend.pushRowChanges(10),
+                "DataSources", "RESTish");
+        addMenuCommand("Push data change -10",
+                () -> restishDataSource.backend.pushRowChanges(-10),
+                "DataSources", "RESTish");
     }
 }

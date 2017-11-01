@@ -34,12 +34,7 @@ public class HelloWorldExtensionConnector extends AbstractExtensionConnector {
 
     @Override
     protected void init() {
-        registerRpc(GreetAgainRpc.class, new GreetAgainRpc() {
-            @Override
-            public void greetAgain() {
-                greet();
-            }
-        });
+        registerRpc(GreetAgainRpc.class, () -> greet());
     }
 
     @Override

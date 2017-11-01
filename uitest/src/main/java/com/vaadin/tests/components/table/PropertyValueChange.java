@@ -6,8 +6,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.AbstractSelect.NewItemHandler;
 import com.vaadin.v7.ui.ComboBox;
@@ -57,12 +55,8 @@ public class PropertyValueChange extends TestBase {
             // cases (e.g. edit mode)
             if (integer instanceof Property.ValueChangeNotifier) {
                 Property.ValueChangeNotifier notifier = (Property.ValueChangeNotifier) integer;
-                notifier.addListener(new ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        l.setValue(String.valueOf(getMultipliedValue(integer)));
-                    }
-                });
+                notifier.addValueChangeListener(event -> l
+                        .setValue(String.valueOf(getMultipliedValue(integer))));
             }
             return l;
         }

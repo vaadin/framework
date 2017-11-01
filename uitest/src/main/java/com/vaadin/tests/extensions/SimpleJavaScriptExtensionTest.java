@@ -25,7 +25,6 @@ import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;
 
@@ -102,20 +101,12 @@ public class SimpleJavaScriptExtensionTest extends AbstractReindeerTestUI {
         simpleJavascriptExtension.setPrefix("Prefix: ");
         addExtension(simpleJavascriptExtension);
         addComponent(
-                new Button("Send rpc greeting", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        simpleJavascriptExtension.greetRpc("Rpc greeting");
-                    }
-                }));
+                new Button("Send rpc greeting",
+                        event -> simpleJavascriptExtension
+                                .greetRpc("Rpc greeting")));
         addComponent(new Button("Send callback greeting",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        simpleJavascriptExtension
-                                .greetCallback("Callback greeting");
-                    }
-                }));
+                event -> simpleJavascriptExtension
+                        .greetCallback("Callback greeting")));
     }
 
     @Override

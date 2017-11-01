@@ -11,8 +11,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -104,21 +102,14 @@ public class EditableTableLeak extends TestBase {
 
         addComponent(sizeLabel);
 
-        addComponent(new Button("Show size of the table", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.markAsDirtyRecursive();
-                updateSize();
-            }
-
+        addComponent(new Button("Show size of the table", event -> {
+            table.markAsDirtyRecursive();
+            updateSize();
         }));
 
-        addComponent(new Button("Select the second row", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.select("AL");
-                updateSize();
-            }
+        addComponent(new Button("Select the second row", event -> {
+            table.select("AL");
+            updateSize();
         }));
     }
 

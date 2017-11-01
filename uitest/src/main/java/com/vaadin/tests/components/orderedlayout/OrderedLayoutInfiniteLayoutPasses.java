@@ -4,8 +4,6 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -28,13 +26,8 @@ public class OrderedLayoutInfiniteLayoutPasses extends UI {
 
     private Button createOpenWindowButton() {
         Button button = new Button("Open modal window");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                UI.getCurrent().addWindow(createWindow());
-            }
-        });
+        button.addClickListener(
+                event -> UI.getCurrent().addWindow(createWindow()));
         return button;
     }
 

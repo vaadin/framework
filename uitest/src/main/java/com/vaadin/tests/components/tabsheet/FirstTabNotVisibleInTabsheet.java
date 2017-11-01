@@ -25,12 +25,8 @@ public class FirstTabNotVisibleInTabsheet extends AbstractReindeerTestUI {
         }
 
         addComponent(new VerticalLayout(tabSheet,
-                new Button("Toggle first tab", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        firstTab.setVisible(!firstTab.isVisible());
-                    }
-                })));
+                new Button("Toggle first tab",
+                        event -> firstTab.setVisible(!firstTab.isVisible()))));
     }
 
     @Override

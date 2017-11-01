@@ -35,23 +35,13 @@ public class NullSelectionItemId extends TestBase implements ClickListener {
 
         button = new Button(
                 "Select null with select(NULL_ITEM_ID) (should make value null)",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        mySelect.select(NULL_ITEM_ID);
-                    }
-                });
+                event -> mySelect.select(NULL_ITEM_ID));
 
         addComponent(button);
 
         button = new Button(
                 "Select null with setValue(null) (should make value null)",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        mySelect.setValue(null);
-                    }
-                });
+                event -> mySelect.setValue(null));
 
         addComponent(button);
 

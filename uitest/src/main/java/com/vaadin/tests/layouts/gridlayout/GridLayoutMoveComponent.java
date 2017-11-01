@@ -3,7 +3,6 @@ package com.vaadin.tests.layouts.gridlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.TextField;
@@ -30,34 +29,25 @@ public class GridLayoutMoveComponent extends AbstractReindeerTestUI {
         grid.addComponent(tf, 0, 2);
 
         addComponent(
-                new Button("Shift label right", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // Moving component from 0,0 -> 1,0
-                        grid.removeComponent(l);
-                        grid.addComponent(l, 1, 0);
-                    }
+                new Button("Shift label right", event -> {
+                    // Moving component from 0,0 -> 1,0
+                    grid.removeComponent(l);
+                    grid.addComponent(l, 1, 0);
                 }));
 
         addComponent(
-                new Button("Shift button right", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        grid.removeComponent(b);
-                        grid.addComponent(b, 1, 1);
-                    }
+                new Button("Shift button right", event -> {
+                    grid.removeComponent(b);
+                    grid.addComponent(b, 1, 1);
                 }));
 
         addComponent(new Button("Shift text field right",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        grid.removeComponent(tf);
-                        Label label = new Label("I'm on left");
-                        label.setWidth("100%");
-                        grid.addComponent(label, 0, 2);
-                        grid.addComponent(tf, 1, 2);
-                    }
+                event -> {
+                    grid.removeComponent(tf);
+                    Label label = new Label("I'm on left");
+                    label.setWidth("100%");
+                    grid.addComponent(label, 0, 2);
+                    grid.addComponent(tf, 1, 2);
                 }));
     }
 

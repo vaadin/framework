@@ -18,8 +18,6 @@ package com.vaadin.tests.layouts.layouttester.GridLayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.Table;
 
@@ -43,22 +41,12 @@ public class GridLayoutMarginSpacing extends GridBaseLayoutTestUI {
         t2.setSizeFull();
 
         final Button btn1 = new Button("Toggle margin on/off");
-        btn1.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                boolean margin = layout.getMargin().hasLeft();
-                layout.setMargin(!margin);
-
-            }
+        btn1.addClickListener(event -> {
+            boolean margin = layout.getMargin().hasLeft();
+            layout.setMargin(!margin);
         });
         final Button btn2 = new Button("Toggle spacing on/off");
-        btn2.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.setSpacing(!layout.isSpacing());
-            }
-        });
+        btn2.addClickListener(event -> layout.setSpacing(!layout.isSpacing()));
         layout.addComponent(btn1);
         layout.addComponent(btn2);
 
