@@ -18,7 +18,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
@@ -81,32 +80,20 @@ public class CloseModalSubWindow extends AbstractTestUIWithLog {
         table.removeItem(itemId);
     }
 
-    private ClickListener deleteClickListener = new ClickListener() {
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            win = new ConfirmWindow(event.getButton().getData());
-            log("Modal sub-window opened");
-        }
+    private ClickListener deleteClickListener = event -> {
+        win = new ConfirmWindow(event.getButton().getData());
+        log("Modal sub-window opened");
     };
 
-    private ClickListener confirmClickListener = new ClickListener() {
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            deleteItem(event.getButton().getData());
-            win.close();
-            log("Modal sub-window closed");
-        }
+    private ClickListener confirmClickListener = event -> {
+        deleteItem(event.getButton().getData());
+        win.close();
+        log("Modal sub-window closed");
     };
 
-    private ClickListener cancelClickListener = new ClickListener() {
-
-        @Override
-        public void buttonClick(ClickEvent event) {
-            win.close();
-            log("Modal sub-window closed");
-        }
+    private ClickListener cancelClickListener = event -> {
+        win.close();
+        log("Modal sub-window closed");
     };
 
     /** Modal confirmation sub-window. */

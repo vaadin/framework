@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -59,7 +60,7 @@ public class DateTimeFieldIsValidTest extends MultiBrowserTest {
 
     private void assertLogText(String expected) throws Exception {
         String text = findElement(By.vaadin("PID_SLog_row_0")).getText();
-        Assert.assertTrue("Expected '" + expected + "' found '" + text + "'",
+        assertTrue("Expected '" + expected + "' found '" + text + "'",
                 text.equals(expected));
     }
 

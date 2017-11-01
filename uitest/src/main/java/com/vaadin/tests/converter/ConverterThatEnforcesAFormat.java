@@ -4,8 +4,6 @@ import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
 public class ConverterThatEnforcesAFormat extends AbstractTestUIWithLog {
@@ -18,18 +16,15 @@ public class ConverterThatEnforcesAFormat extends AbstractTestUIWithLog {
         // this is needed so that IE tests pass
         tf.setNullRepresentation("");
         tf.setConverter(new StringToDoubleConverterWithThreeFractionDigits());
-        tf.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log("Value changed to " + event.getProperty().getValue()
-                        + "(converted value is " + tf.getConvertedValue()
-                        + "). Two-way conversion gives: "
-                        + tf.getConverter().convertToPresentation(
-                                tf.getConverter().convertToModel(tf.getValue(),
-                                        Double.class, tf.getLocale()),
-                                String.class, tf.getLocale())
-                        + ")");
-            }
+        tf.addValueChangeListener(event -> {
+            log("Value changed to " + event.getProperty().getValue()
+                    + "(converted value is " + tf.getConvertedValue()
+                    + "). Two-way conversion gives: "
+                    + tf.getConverter().convertToPresentation(
+                            tf.getConverter().convertToModel(tf.getValue(),
+                                    Double.class, tf.getLocale()),
+                            String.class, tf.getLocale())
+                    + ")");
         });
         tf.setImmediate(true);
         addComponent(tf);

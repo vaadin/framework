@@ -66,7 +66,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    protected List<T> fetchItemsWithRange(int offset, int limit) {
+    public List<T> fetchItemsWithRange(int offset, int limit) {
         // Instead of adding logic to this class, delegate request to the
         // separate object handling hierarchies.
         return mapper.fetchItems(Range.withLength(offset, limit))
@@ -282,7 +282,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
     }
 
     @Override
-    protected int getDataProviderSize() {
+    public int getDataProviderSize() {
         return mapper.getTreeSize();
     }
 

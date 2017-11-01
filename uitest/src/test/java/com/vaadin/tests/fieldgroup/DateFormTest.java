@@ -1,6 +1,8 @@
 package com.vaadin.tests.fieldgroup;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -15,17 +17,16 @@ public class DateFormTest extends MultiBrowserTest {
     @Test
     public void testCorrectDateFormat() throws Exception {
         openTestURL();
-        Assert.assertEquals("Unexpected DateField value,", "1/20/84",
+        assertEquals("Unexpected DateField value,", "1/20/84",
                 getDateFieldValue());
-        Assert.assertEquals("Unexpected PopupDateField value,", "1/21/84",
+        assertEquals("Unexpected PopupDateField value,", "1/21/84",
                 getPopupDateFieldValue());
         WebElement day20 = getInlineDateFieldCalendarPanel()
                 .findElement(By.vaadin("#day20"));
-        Assert.assertTrue(
-                "Unexpected InlineDateField state, 20th not selected.",
+        assertTrue("Unexpected InlineDateField state, 20th not selected.",
                 hasCssClass(day20,
                         "v-inline-datefield-calendarpanel-day-selected"));
-        Assert.assertEquals("Unexpected TextField contents,",
+        assertEquals("Unexpected TextField contents,",
                 "Jan 20, 1984 4:34:49 PM",
                 $(TextFieldElement.class).first().getValue());
     }

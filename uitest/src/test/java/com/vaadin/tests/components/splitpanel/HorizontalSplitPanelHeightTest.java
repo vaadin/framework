@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.splitpanel;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -60,13 +62,13 @@ public class HorizontalSplitPanelHeightTest extends MultiBrowserTest {
     private void testSplitPanel(String id) {
         WebElement splitPanel = findElement(By.id(id));
         WebElement label = splitPanel.findElement(By.className("target"));
-        Assert.assertTrue(
+        assertTrue(
                 id + ": split panel height (" + splitPanel.getSize().getHeight()
                         + ") is less than " + "height of second component ("
                         + label.getSize().getHeight() + ")",
                 splitPanel.getSize().getHeight() >= label.getSize()
                         .getHeight());
-        Assert.assertEquals("Label text in the second panel is not visible",
-                "Label", label.getText());
+        assertEquals("Label text in the second panel is not visible", "Label",
+                label.getText());
     }
 }

@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,9 +116,7 @@ public class WidgetSetBuilder {
                     content);
 
             // add widgetsets that do not exist
-            Iterator<String> i = availableWidgetSets.keySet().iterator();
-            while (i.hasNext()) {
-                String ws = i.next();
+            for (String ws : availableWidgetSets.keySet()) {
                 if (ws.equals(widgetset)) {
                     // do not inherit the module itself
                     continue;
@@ -183,7 +181,7 @@ public class WidgetSetBuilder {
     }
 
     static boolean isWidgetset(String gwtModuleName) {
-        return gwtModuleName.toLowerCase().contains("widgetset");
+        return gwtModuleName.toLowerCase(Locale.ROOT).contains("widgetset");
     }
 
     private static String readFile(File widgetsetFile) throws IOException {

@@ -1,15 +1,10 @@
 package com.vaadin.tests.components.uitest;
 
-import com.vaadin.server.Page.UriFragmentChangedEvent;
-import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.TextField;
 
 public class BackButtonTest extends AbstractReindeerTestUI {
@@ -32,19 +27,14 @@ public class BackButtonTest extends AbstractReindeerTestUI {
 
         p2 = new Page2();
         getPage().addUriFragmentChangedListener(
-                new UriFragmentChangedListener() {
+                event -> {
+                    String f = event.getUriFragment();
+                    if ("page2".equals(f)) {
+                        showPage2();
+                    }
 
-                    @Override
-                    public void uriFragmentChanged(
-                            UriFragmentChangedEvent event) {
-                        String f = event.getUriFragment();
-                        if ("page2".equals(f)) {
-                            showPage2();
-                        }
-
-                        if ("page1".equals(f)) {
-                            showPage1();
-                        }
+                    if ("page1".equals(f)) {
+                        showPage1();
                     }
                 });
     }
@@ -57,12 +47,9 @@ public class BackButtonTest extends AbstractReindeerTestUI {
             l.setCaption("Data from Page 1 : " + value);
             addComponent(l);
 
-            Button b = new Button("Go to Page 2", new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    l.setCaption("Data from Page 1 : " + value);
-                    getPage().setUriFragment("page2");
-                }
+            Button b = new Button("Go to Page 2", event -> {
+                l.setCaption("Data from Page 1 : " + value);
+                getPage().setUriFragment("page2");
             });
             addComponent(b);
         }
@@ -86,25 +73,17 @@ public class BackButtonTest extends AbstractReindeerTestUI {
             setSizeFull();
 
             addComponent(f);
-            f.addValueChangeListener(new ValueChangeListener() {
-                @Override
-                public void valueChange(ValueChangeEvent event) {
-                    value = f.getValue();
-                    p1.l.setCaption("Data from Page 2 : " + value);
-                }
+            f.addValueChangeListener(event -> {
+                value = f.getValue();
+                p1.l.setCaption("Data from Page 2 : " + value);
             });
 
-            Button b = new Button("Go Back", new Button.ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    getPage().setUriFragment("page1");
-                }
-            });
+            Button b = new Button("Go Back",
+                    event -> getPage().setUriFragment("page1"));
             addComponent(b);
             addComponent(new Label(
                     "Go back with the back button without creating a blur event on the text field. Text should transfer to page1 label."));
         }
-
     }
 
     @Override

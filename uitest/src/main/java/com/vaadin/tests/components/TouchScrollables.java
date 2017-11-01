@@ -14,7 +14,6 @@ import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -78,19 +77,9 @@ public class TouchScrollables extends TestBase {
 
         final Label l = l50;
         Button button = new Button("Scroll to label 50",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getLayout().getUI().scrollIntoView(l);
-                    }
-                });
+                event -> getLayout().getUI().scrollIntoView(l));
         cssLayout.addComponent(button);
-        button = new Button("Scroll to 100px", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                p.setScrollTop(100);
-            }
-        });
+        button = new Button("Scroll to 100px", event -> p.setScrollTop(100));
         cssLayout.addComponent(button);
         cssLayout.addComponent(p);
         return cssLayout;
@@ -118,27 +107,20 @@ public class TouchScrollables extends TestBase {
         final Table table = new Table();
 
         Button button = new Button("Toggle lazyloading");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (table.getCacheRate() == 100) {
-                    table.setCacheRate(2);
-                    table.setPageLength(15);
-                } else {
-                    table.setCacheRate(100);
-                    table.setHeight("400px");
-                }
+        button.addClickListener(event -> {
+            if (table.getCacheRate() == 100) {
+                table.setCacheRate(2);
+                table.setPageLength(15);
+            } else {
+                table.setCacheRate(100);
+                table.setHeight("400px");
             }
         });
         cssLayout.addComponent(button);
 
         button = new Button("Toggle selectable");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setSelectable(!table.isSelectable());
-            }
-        });
+        button.addClickListener(
+                event -> table.setSelectable(!table.isSelectable()));
         cssLayout.addComponent(button);
 
         table.addContainerProperty("foo", String.class, "bar");
@@ -162,17 +144,14 @@ public class TouchScrollables extends TestBase {
     }
 
     private Component getSubWindowTest() {
-        Button b = new Button("Open subwindow", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                VerticalLayout layout = new VerticalLayout();
-                layout.setMargin(true);
-                Window w = new Window("Subwindow", layout);
-                w.center();
-                w.setHeight("200px");
-                layout.addComponent(getBigComponent());
-                getMainWindow().addWindow(w);
-            }
+        Button b = new Button("Open subwindow", event -> {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            Window w = new Window("Subwindow", layout);
+            w.center();
+            w.setHeight("200px");
+            layout.addComponent(getBigComponent());
+            getMainWindow().addWindow(w);
         });
         return b;
     }
@@ -189,8 +168,8 @@ public class TouchScrollables extends TestBase {
 
         table.addActionHandler(new Handler() {
 
-            Action[] actions = new Action[] { new Action("FOO"),
-                    new Action("BAR"), new Action("CAR") };
+            Action[] actions = { new Action("FOO"), new Action("BAR"),
+                    new Action("CAR") };
 
             @Override
             public Action[] getActions(Object target, Object sender) {
@@ -276,12 +255,9 @@ public class TouchScrollables extends TestBase {
                                 item.getItemProperty(propId).getValue());
                     }
 
-                    // TODO Auto-generated method stub
                 } catch (CloneNotSupportedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
             }
         });
         return table;

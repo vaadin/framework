@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -63,7 +62,7 @@ public abstract class AbstractContainer implements Container {
      */
     @Deprecated
     protected static class BasePropertySetChangeEvent extends EventObject
-            implements Container.PropertySetChangeEvent, Serializable {
+            implements Container.PropertySetChangeEvent {
 
         protected BasePropertySetChangeEvent(Container source) {
             super(source);
@@ -85,7 +84,7 @@ public abstract class AbstractContainer implements Container {
      */
     @Deprecated
     protected static class BaseItemSetChangeEvent extends EventObject
-            implements Container.ItemSetChangeEvent, Serializable {
+            implements Container.ItemSetChangeEvent {
 
         protected BaseItemSetChangeEvent(Container source) {
             super(source);
@@ -220,9 +219,8 @@ public abstract class AbstractContainer implements Container {
     protected void fireContainerPropertySetChange(
             Container.PropertySetChangeEvent event) {
         if (getPropertySetChangeListeners() != null) {
-            final Object[] l = getPropertySetChangeListeners().toArray();
-            for (int i = 0; i < l.length; i++) {
-                ((Container.PropertySetChangeListener) l[i])
+            for (Object l : getPropertySetChangeListeners().toArray()) {
+                ((Container.PropertySetChangeListener) l)
                         .containerPropertySetChange(event);
             }
         }
@@ -246,9 +244,8 @@ public abstract class AbstractContainer implements Container {
      */
     protected void fireItemSetChange(ItemSetChangeEvent event) {
         if (getItemSetChangeListeners() != null) {
-            final Object[] l = getItemSetChangeListeners().toArray();
-            for (int i = 0; i < l.length; i++) {
-                ((Container.ItemSetChangeListener) l[i])
+            for (Object l : getItemSetChangeListeners().toArray()) {
+                ((Container.ItemSetChangeListener) l)
                         .containerItemSetChange(event);
             }
         }

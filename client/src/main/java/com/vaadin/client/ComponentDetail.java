@@ -16,6 +16,7 @@
 package com.vaadin.client;
 
 import java.util.HashMap;
+import java.util.Map;
 
 class ComponentDetail {
 
@@ -28,7 +29,7 @@ class ComponentDetail {
     }
 
     /**
-     * Returns a TooltipInfo assosiated with Component. If element is given,
+     * Returns a TooltipInfo associated with Component. If element is given,
      * returns an additional TooltipInfo.
      *
      * @param key
@@ -54,7 +55,7 @@ class ComponentDetail {
         this.tooltipInfo = tooltipInfo;
     }
 
-    private HashMap<Object, TooltipInfo> additionalTooltips;
+    private Map<Object, TooltipInfo> additionalTooltips;
 
     public void putAdditionalTooltip(Object key, TooltipInfo tooltip) {
         if (tooltip == null && additionalTooltips != null) {

@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.server.component.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.v7.shared.ui.table.TableState;
@@ -31,7 +32,7 @@ public class TableStateTest {
     public void getState_tableHasCustomState() {
         TestTable table = new TestTable();
         TableState state = table.getState();
-        Assert.assertEquals("Unexpected state class", TableState.class,
+        assertEquals("Unexpected state class", TableState.class,
                 state.getClass());
     }
 
@@ -39,14 +40,14 @@ public class TableStateTest {
     public void getPrimaryStyleName_tableHasCustomPrimaryStyleName() {
         Table table = new Table();
         TableState state = new TableState();
-        Assert.assertEquals("Unexpected primary style name",
-                state.primaryStyleName, table.getPrimaryStyleName());
+        assertEquals("Unexpected primary style name", state.primaryStyleName,
+                table.getPrimaryStyleName());
     }
 
     @Test
     public void tableStateHasCustomPrimaryStyleName() {
         TableState state = new TableState();
-        Assert.assertEquals("Unexpected primary style name", "v-table",
+        assertEquals("Unexpected primary style name", "v-table",
                 state.primaryStyleName);
     }
 

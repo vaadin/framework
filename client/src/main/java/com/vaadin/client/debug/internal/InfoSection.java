@@ -33,7 +33,7 @@ import com.vaadin.shared.Version;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Information section of the debug window
+ * Information section of the debug window.
  *
  * @since 7.1
  * @author Vaadin Ltd
@@ -142,7 +142,7 @@ public class InfoSection implements Section {
         clear();
         List<ApplicationConnection> apps = ApplicationConfiguration
                 .getRunningApplications();
-        if (apps.size() == 0) {
+        if (apps.isEmpty()) {
             // try again in a while
             refresher.schedule(1000);
         } else {

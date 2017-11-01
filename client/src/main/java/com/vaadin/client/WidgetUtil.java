@@ -18,12 +18,12 @@ package com.vaadin.client;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -37,17 +37,17 @@ import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 
 /**
- * Utility methods which are related to client side code only
+ * Utility methods which are related to client side code only.
  */
 public class WidgetUtil {
 
@@ -59,13 +59,13 @@ public class WidgetUtil {
      */
     public static native void browserDebugger()
     /*-{
-        if($wnd.console)
+        if ($wnd.console)
             debugger;
     }-*/;
 
     /**
      * Redirects the browser to the given url or refreshes the page if url is
-     * null
+     * null.
      *
      * @since 7.6
      * @param url
@@ -111,7 +111,7 @@ public class WidgetUtil {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        if(el != null && el.nodeType == 3) {
+        if (el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
         return el;
@@ -130,7 +130,7 @@ public class WidgetUtil {
         }
     }
 
-    private static final Element escapeHtmlHelper = DOM.createDiv();
+    private static final Element ESCAPE_HTML_HELPER = DOM.createDiv();
 
     /**
      * Converts html entities to text.
@@ -139,8 +139,8 @@ public class WidgetUtil {
      * @return escaped string presentation of given html
      */
     public static String escapeHTML(String html) {
-        DOM.setInnerText(escapeHtmlHelper, html);
-        String escapedText = DOM.getInnerHTML(escapeHtmlHelper);
+        DOM.setInnerText(ESCAPE_HTML_HELPER, html);
+        String escapedText = DOM.getInnerHTML(ESCAPE_HTML_HELPER);
         return escapedText;
     }
 
@@ -280,7 +280,7 @@ public class WidgetUtil {
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
-        if (height.equals("")) {
+        if (height.isEmpty()) {
             setHeight(widget, "");
             return paddingBorderGuess;
         } else if (height.endsWith("px")) {
@@ -307,7 +307,7 @@ public class WidgetUtil {
 
     public static int setWidthExcludingPaddingAndBorder(Widget widget,
             String width, int paddingBorderGuess) {
-        if (width.equals("")) {
+        if (width.isEmpty()) {
             setWidth(widget, "");
             return paddingBorderGuess;
         } else if (width.endsWith("px")) {
@@ -417,21 +417,15 @@ public class WidgetUtil {
     }
 
     /**
-     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}
+     * Defers the execution of {@link #runWebkitOverflowAutoFix(Element)}.
      *
      * @since 7.2.6
      * @param elem
      *            with overflow auto
      */
     public static void runWebkitOverflowAutoFixDeferred(final Element elem) {
-        Scheduler.get().scheduleDeferred(new Command() {
-
-            @Override
-            public void execute() {
-                WidgetUtil.runWebkitOverflowAutoFix(elem);
-            }
-        });
-
+        Scheduler.get().scheduleDeferred(
+                () -> WidgetUtil.runWebkitOverflowAutoFix(elem));
     }
 
     /**
@@ -463,60 +457,54 @@ public class WidgetUtil {
             final int scrollleft = elem.getScrollLeft();
             elem.getStyle().setProperty("overflow", "hidden");
 
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    // Dough, Safari scroll auto means actually just a moped
-                    elem.getStyle().setProperty("overflow", originalOverflow);
-                    if (!originalOverflowX.isEmpty()) {
-                        elem.getStyle().setProperty("overflowX",
-                                originalOverflowX);
-                    }
-                    if (!originalOverflowY.isEmpty()) {
-                        elem.getStyle().setProperty("overflowY",
-                                originalOverflowY);
-                    }
+            Scheduler.get().scheduleDeferred(() -> {
+                // Dough, Safari scroll auto means actually just a moped
+                elem.getStyle().setProperty("overflow", originalOverflow);
+                if (!originalOverflowX.isEmpty()) {
+                    elem.getStyle().setProperty("overflowX", originalOverflowX);
+                }
+                if (!originalOverflowY.isEmpty()) {
+                    elem.getStyle().setProperty("overflowY", originalOverflowY);
+                }
 
-                    if (scrolltop > 0 || elem.getScrollTop() > 0) {
-                        int scrollvalue = scrolltop;
-                        if (scrollvalue == 0) {
-                            // mysterious are the ways of webkits scrollbar
-                            // handling. In some cases webkit reports bad (0)
-                            // scrolltop before hiding the element temporary,
-                            // sometimes after.
-                            scrollvalue = elem.getScrollTop();
-                        }
-                        // fix another bug where scrollbar remains in wrong
-                        // position
-                        elem.setScrollTop(scrollvalue - 1);
-                        elem.setScrollTop(scrollvalue);
+                if (scrolltop > 0 || elem.getScrollTop() > 0) {
+                    int scrollvalue = scrolltop;
+                    if (scrollvalue == 0) {
+                        // mysterious are the ways of webkits scrollbar
+                        // handling. In some cases webkit reports bad (0)
+                        // scrolltop before hiding the element temporary,
+                        // sometimes after.
+                        scrollvalue = elem.getScrollTop();
                     }
+                    // fix another bug where scrollbar remains in wrong
+                    // position
+                    elem.setScrollTop(scrollvalue - 1);
+                    elem.setScrollTop(scrollvalue);
+                }
 
-                    // fix for #6940 : Table horizontal scroll sometimes not
-                    // updated when collapsing/expanding columns
-                    // Also appeared in Safari 5.1 with webkit 534 (#7667)
-                    if ((BrowserInfo.get().isChrome() || (BrowserInfo.get()
-                            .isSafariOrIOS()
-                            && BrowserInfo.get().getWebkitVersion() >= 534))
-                            && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
-                        int scrollvalue = scrollleft;
+                // fix for #6940 : Table horizontal scroll sometimes not
+                // updated when collapsing/expanding columns
+                // Also appeared in Safari 5.1 with webkit 534 (#7667)
+                if ((BrowserInfo.get().isChrome()
+                        || (BrowserInfo.get().isSafariOrIOS()
+                                && BrowserInfo.get().getWebkitVersion() >= 534))
+                        && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
+                    int scrollvalue = scrollleft;
 
-                        if (scrollvalue == 0) {
-                            // mysterious are the ways of webkits scrollbar
-                            // handling. In some cases webkit may report a bad
-                            // (0) scrollleft before hiding the element
-                            // temporary, sometimes after.
-                            scrollvalue = elem.getScrollLeft();
-                        }
-                        // fix another bug where scrollbar remains in wrong
-                        // position
-                        elem.setScrollLeft(scrollvalue - 1);
-                        elem.setScrollLeft(scrollvalue);
+                    if (scrollvalue == 0) {
+                        // mysterious are the ways of webkits scrollbar
+                        // handling. In some cases webkit may report a bad
+                        // (0) scrollleft before hiding the element
+                        // temporary, sometimes after.
+                        scrollvalue = elem.getScrollLeft();
                     }
+                    // fix another bug where scrollbar remains in wrong
+                    // position
+                    elem.setScrollLeft(scrollvalue - 1);
+                    elem.setScrollLeft(scrollvalue);
                 }
             });
         }
-
     }
 
     public static void alert(String string) {
@@ -679,7 +667,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
-         if(heightPx == 'auto'){
+         if (heightPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -699,7 +687,7 @@ public class WidgetUtil {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
-         if(widthPx == 'auto'){
+         if (widthPx == 'auto') {
              // Fallback for inline elements
              return @com.vaadin.client.WidgetUtil::getRequiredWidthBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
@@ -769,11 +757,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element pe) {
         String overflow = getComputedStyle(pe, "overflow");
         if (overflow != null) {
-            if (overflow.equals("auto") || overflow.equals("scroll")) {
-                return true;
-            } else {
-                return false;
-            }
+            return overflow.equals("auto") || overflow.equals("scroll");
         } else {
             return false;
         }
@@ -794,7 +778,7 @@ public class WidgetUtil {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-    
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -809,7 +793,7 @@ public class WidgetUtil {
         } catch (e) {
             return "";
         }
-    
+
      }-*/;
 
     /**
@@ -823,7 +807,7 @@ public class WidgetUtil {
         try {
             el.focus();
         } catch (e) {
-    
+
         }
     }-*/;
 
@@ -832,10 +816,11 @@ public class WidgetUtil {
      * DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W} but returns {@code C}.
-     * This may also be the case with other Composite-like classes that hijack
-     * the event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W} but returns {@code C}. This may also be
+     * the case with other Composite-like classes that hijack the event handling
+     * of their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -851,11 +836,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      * <p>
      * Only accepts the exact class {@code class1} if not null.
      *
@@ -875,11 +861,12 @@ public class WidgetUtil {
      * traversing DOM upwards from given element.
      * <p>
      * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
-     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
-     * {@code C}, this method will not find {@code W}. It returns either
-     * {@code C} or null, depending on whether the class parameter matches. This
-     * may also be the case with other Composite-like classes that hijack the
-     * event handling of their child widget(s).
+     * , <em>and</em> {@code W} in turn is wrapped in a
+     * {@link com.google.gwt.user.client.ui.Composite Composite} {@code C}, this
+     * method will not find {@code W}. It returns either {@code C} or null,
+     * depending on whether the class parameter matches. This may also be the
+     * case with other Composite-like classes that hijack the event handling of
+     * their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
@@ -930,7 +917,7 @@ public class WidgetUtil {
     }
 
     /**
-     * Force webkit to redraw an element
+     * Force webkit to redraw an element.
      *
      * @param element
      *            The element that should be redrawn
@@ -938,7 +925,7 @@ public class WidgetUtil {
     public static void forceWebkitRedraw(Element element) {
         Style style = element.getStyle();
         String s = style.getProperty("webkitTransform");
-        if (s == null || s.length() == 0) {
+        if (s == null || s.isEmpty()) {
             style.setProperty("webkitTransform", "scale(1)");
         } else {
             style.setProperty("webkitTransform", "");
@@ -1151,19 +1138,14 @@ public class WidgetUtil {
             ((Focusable) targetWidget).focus();
         }
 
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                try {
-                    target.dispatchEvent(createMouseDownEvent);
-                    target.dispatchEvent(createMouseUpEvent);
-                    target.dispatchEvent(createMouseClickEvent);
-                } catch (Exception e) {
-                }
-
+        Scheduler.get().scheduleDeferred(() -> {
+            try {
+                target.dispatchEvent(createMouseDownEvent);
+                target.dispatchEvent(createMouseUpEvent);
+                target.dispatchEvent(createMouseClickEvent);
+            } catch (Exception e) {
             }
         });
-
     }
 
     /**
@@ -1171,17 +1153,17 @@ public class WidgetUtil {
      *
      * @return The active element or null if no active element could be found.
      */
-    public native static Element getFocusedElement()
+    public static native Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-    
+
        return null;
      }-*/;
 
     /**
-     * Gets currently focused element and checks if it's editable
+     * Gets currently focused element and checks if it's editable.
      *
      * @since 7.4
      *
@@ -1247,11 +1229,11 @@ public class WidgetUtil {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1260,12 +1242,12 @@ public class WidgetUtil {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-    
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }
@@ -1273,7 +1255,7 @@ public class WidgetUtil {
 
     /**
      * Checks if the given event is either a touch event or caused by the left
-     * mouse button
+     * mouse button.
      *
      * @param event
      * @return true if the event is a touch event or caused by the left mouse
@@ -1319,7 +1301,7 @@ public class WidgetUtil {
      *
      * @since 7.3
      */
-    public native static void setSelectionRange(Element elem, int pos,
+    public static native void setSelectionRange(Element elem, int pos,
             int length, String direction)
     /*-{
        try {
@@ -1336,10 +1318,10 @@ public class WidgetUtil {
      * @param e
      *            element for enabling or disabling text selection
      * @param enable
-     *            <code>true</code> if selection is enabled; </code>false</code>
+     *            <code>true</code> if selection is enabled; <code>false</code>
      *            if not
      */
-    public native static void setTextSelectionEnabled(Element e, boolean enable)
+    public static native void setTextSelectionEnabled(Element e, boolean enable)
     /*-{
         if (!enable) {
             e.ondrag = function () { return false; };
@@ -1357,7 +1339,7 @@ public class WidgetUtil {
      *
      * @since 7.6
      */
-    public native static void clearTextSelection()
+    public static native void clearTextSelection()
     /*-{
         if ($wnd.getSelection) {
             $wnd.getSelection().removeAllRanges();
@@ -1433,7 +1415,7 @@ public class WidgetUtil {
     /**
      * Wrap a css size value and its unit and translate back and forth to the
      * string representation.<br/>
-     * Eg. 50%, 123px, ...
+     * E.g. 50%, 123px, ...
      *
      * @since 7.2.6
      * @author Vaadin Ltd
@@ -1465,7 +1447,7 @@ public class WidgetUtil {
         /*
          * Regex to parse the size.
          */
-        private static final RegExp sizePattern = RegExp
+        private static final RegExp SIZE_PATTERN = RegExp
                 .compile(SharedUtil.SIZE_PATTERN);
 
         /**
@@ -1481,14 +1463,14 @@ public class WidgetUtil {
             }
 
             s = s.trim();
-            if ("".equals(s)) {
+            if (s.isEmpty()) {
                 return null;
             }
 
             float size = 0;
             Unit unit = null;
 
-            MatchResult matcher = sizePattern.exec(s);
+            MatchResult matcher = SIZE_PATTERN.exec(s);
             if (matcher.getGroupCount() > 1) {
 
                 size = Float.parseFloat(matcher.getGroup(1));
@@ -1503,7 +1485,7 @@ public class WidgetUtil {
             } else {
                 throw new IllegalArgumentException(
                         "Invalid size argument: \"" + s + "\" (should match "
-                                + sizePattern.getSource() + ")");
+                                + SIZE_PATTERN.getSource() + ")");
             }
             return new CssSize(size, unit);
         }
@@ -1567,6 +1549,15 @@ public class WidgetUtil {
             }
 
             return false;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (int) value;
+            result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+            return result;
         }
 
         /**
@@ -1705,7 +1696,7 @@ public class WidgetUtil {
             }
             var heightWithoutBorder = cloneElement.offsetHeight;
             parentElement.removeChild(cloneElement);
-    
+
             return heightWithBorder - heightWithoutBorder;
         }
     }-*/;
@@ -1860,5 +1851,62 @@ public class WidgetUtil {
     public static int getRelativeY(Element element, NativeEvent event) {
         int relativeTop = element.getAbsoluteTop() - Window.getScrollTop();
         return WidgetUtil.getTouchOrMouseClientY(event) - relativeTop;
+    }
+
+    /**
+     * Returns whether the given object is a string.
+     *
+     * @param obj
+     *            the object of which the type is examined
+     * @return {@code true} if the object is a string; {@code false} if not
+     * @since
+     */
+    public static native boolean isString(Object obj)
+    /*-{
+        return typeof obj === 'string' || obj instanceof String;
+    }-*/;
+
+    /**
+     * Utility methods for displaying error message on components.
+     *
+     * @since 8.2
+     */
+    public static class ErrorUtil {
+
+        /**
+         * Sets the error level style name for the given element and removes all
+         * previously applied error level style names. The style name has the
+         * {@code prefix-errorLevel} format.
+         *
+         * @param element
+         *            element to apply the style name to
+         * @param prefix
+         *            part of the style name before the error level string
+         * @param errorLevel
+         *            error level for which the style will be applied
+         */
+        public static void setErrorLevelStyle(Element element, String prefix,
+                ErrorLevel errorLevel) {
+            for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
+                String className = prefix + "-"
+                        + errorLevelValue.toString().toLowerCase(Locale.ROOT);
+                if (errorLevel == errorLevelValue) {
+                    element.addClassName(className);
+                } else {
+                    element.removeClassName(className);
+                }
+            }
+        }
+
+        /**
+         * Creates an element to use by widgets as an error indicator.
+         *
+         * @return the error indicator element
+         */
+        public static Element createErrorIndicatorElement() {
+            Element indicator = DOM.createSpan();
+            indicator.setClassName(StyleConstants.STYLE_NAME_ERROR_INDICATOR);
+            return indicator;
+        }
     }
 }

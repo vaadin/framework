@@ -41,7 +41,6 @@ public class MouseEventDetails implements Serializable {
      * Constants for mouse buttons.
      *
      * @author Vaadin Ltd
-     * @version @VERSION@
      * @since 7.0
      *
      */
@@ -55,7 +54,7 @@ public class MouseEventDetails implements Serializable {
         }
 
         /**
-         * Returns a human readable text representing the button
+         * Returns a human readable text representing the button.
          *
          * @return
          */

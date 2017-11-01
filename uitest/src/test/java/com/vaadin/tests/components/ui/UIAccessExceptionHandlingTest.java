@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -33,7 +34,6 @@ public class UIAccessExceptionHandlingTest extends MultiBrowserTest {
     }
 
     private void assertLogText(int index, String expected) {
-        Assert.assertEquals("Unexpected log contents,", expected,
-                getLogRow(index));
+        assertEquals("Unexpected log contents,", expected, getLogRow(index));
     }
 }

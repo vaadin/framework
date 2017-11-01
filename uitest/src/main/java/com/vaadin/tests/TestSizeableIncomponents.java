@@ -20,12 +20,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
@@ -35,7 +35,6 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Container;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.shared.ui.combobox.FilteringMode;
 import com.vaadin.v7.ui.AbstractSelect;
@@ -69,35 +68,29 @@ public class TestSizeableIncomponents extends LegacyApplication {
         select.setWidth("400px");
 
         prev = new Button("<<-|");
-        prev.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Object cur = select.getValue();
-                Testable prev = (Testable) cont.prevItemId(cur);
-                if (prev == null) {
-                    getMainWindow().showNotification("No more test cases");
-                } else {
-                    getMainWindow().showNotification(
-                            "Selected test:" + prev.getTestableName());
-                    select.setValue(prev);
-                    select.markAsDirty();
-                }
+        prev.addClickListener(event -> {
+            Object cur = select.getValue();
+            Testable prev = (Testable) cont.prevItemId(cur);
+            if (prev == null) {
+                getMainWindow().showNotification("No more test cases");
+            } else {
+                getMainWindow().showNotification(
+                        "Selected test:" + prev.getTestableName());
+                select.setValue(prev);
+                select.markAsDirty();
             }
         });
         next = new Button("|->>");
-        next.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Object cur = select.getValue();
-                Testable next = (Testable) cont.nextItemId(cur);
-                if (next == null) {
-                    getMainWindow().showNotification("No more test cases");
-                } else {
-                    getMainWindow().showNotification(
-                            "Selected test:" + next.getTestableName());
-                    select.setValue(next);
-                    select.markAsDirty();
-                }
+        next.addClickListener(event -> {
+            Object cur = select.getValue();
+            Testable next = (Testable) cont.nextItemId(cur);
+            if (next == null) {
+                getMainWindow().showNotification("No more test cases");
+            } else {
+                getMainWindow().showNotification(
+                        "Selected test:" + next.getTestableName());
+                select.setValue(next);
+                select.markAsDirty();
             }
         });
 
@@ -108,24 +101,17 @@ public class TestSizeableIncomponents extends LegacyApplication {
         main.addComponent(controllers);
 
         select.setContainerDataSource(cont);
-        select.addListener(new ComboBox.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Testable t = (Testable) select.getValue();
-                if (t != null) {
-                    testPanelLayout.removeAllComponents();
-                    try {
-                        Component c = t.getComponent();
-                        if (c != null) {
-                            testPanelLayout.addComponent(c);
-                        }
-                    } catch (InstantiationException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+        select.addValueChangeListener(event -> {
+            Testable t = (Testable) select.getValue();
+            if (t != null) {
+                testPanelLayout.removeAllComponents();
+                try {
+                    Component c = t.getComponent();
+                    if (c != null) {
+                        testPanelLayout.addComponent(c);
                     }
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -146,8 +132,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
         URL dir = cl.getResource("com/vaadin/ui");
 
         String[] list2 = (new File(dir.getFile())).list();
-        for (int i = 0; i < list2.length; i++) {
-            String f = list2[i];
+        for (String f : list2) {
             if (f.endsWith(".class") && (f.indexOf("CustomComponent") == -1)
                     && (f.indexOf("Window") == -1)) {
                 f = f.replaceAll(".class", "");
@@ -215,14 +200,8 @@ public class TestSizeableIncomponents extends LegacyApplication {
                         cont.addItem(t);
                     }
 
-                } catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                } catch (InstantiationException e) {
-                    // TODO Auto-generated catch block
-                    // e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
+                } catch (ClassNotFoundException | InstantiationException
+                        | IllegalAccessException e) {
                     // e.printStackTrace();
                 }
             }
@@ -233,7 +212,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
     class Testable {
 
         private Class<?> classToTest;
-        private ArrayList<Configuration> configurations = new ArrayList<>();
+        private List<Configuration> configurations = new ArrayList<>();
 
         Testable(Class<?> c) {
             classToTest = c;
@@ -244,17 +223,17 @@ public class TestSizeableIncomponents extends LegacyApplication {
         }
 
         public String getTestableName() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             sb.append(classToTest.getName().replaceAll("com.vaadin.ui.", ""));
-            sb.append("[");
+            sb.append('[');
             for (Iterator<Configuration> i = configurations.iterator(); i
                     .hasNext();) {
                 sb.append((i.next()).getDescription());
                 if (i.hasNext()) {
-                    sb.append(",");
+                    sb.append(',');
                 }
             }
-            sb.append("]");
+            sb.append(']');
 
             return sb.toString();
         }
@@ -303,9 +282,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
                 ((Label) c).setValue("Test label");
             }
 
-            for (Iterator<Configuration> i = configurations.iterator(); i
-                    .hasNext();) {
-                Configuration conf = i.next();
+            for (Configuration conf : configurations) {
                 conf.configure(c);
             }
             return c;

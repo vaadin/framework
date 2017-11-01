@@ -26,12 +26,10 @@ import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -96,7 +94,7 @@ public class ApplicationConfiguration implements EntryPoint {
          *
          * @param name
          *            name of the configuration parameter
-         * @return boolean value of the configuration paramter, or
+         * @return boolean value of the configuration parameter, or
          *         <code>null</code> if no value is defined
          */
         private native Boolean getConfigBoolean(String name)
@@ -117,7 +115,7 @@ public class ApplicationConfiguration implements EntryPoint {
          *
          * @param name
          *            name of the configuration parameter
-         * @return integer value of the configuration paramter, or
+         * @return integer value of the configuration parameter, or
          *         <code>null</code> if no value is defined
          */
         private native Integer getConfigInteger(String name)
@@ -204,7 +202,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Wraps a native javascript object containing fields for an error message
+     * Wraps a native javascript object containing fields for an error message.
      *
      * @since 7.0
      */
@@ -248,7 +246,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage sessionExpiredError;
     private int heartbeatInterval;
 
-    private HashMap<Integer, String> unknownComponents;
+    private Map<Integer, String> unknownComponents;
 
     private Map<Integer, Class<? extends ServerConnector>> classes = new HashMap<>();
 
@@ -256,11 +254,11 @@ public class ApplicationConfiguration implements EntryPoint {
     private static boolean moduleLoaded = false;
 
     static// TODO consider to make this hashmap per application
-    LinkedList<Command> callbacks = new LinkedList<>();
+    List<Command> callbacks = new LinkedList<>();
 
     private static int dependenciesLoading;
 
-    private static ArrayList<ApplicationConnection> runningApplications = new ArrayList<>();
+    private static List<ApplicationConnection> runningApplications = new ArrayList<>();
 
     private Map<Integer, Integer> componentInheritanceMap = new HashMap<>();
     private Map<Integer, String> tagToServerSideClassName = new HashMap<>();
@@ -311,7 +309,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Gets the URL to the context root of the web application
+     * Gets the URL to the context root of the web application.
      *
      * @return the URL to the server-side context root as a string
      *
@@ -416,7 +414,7 @@ public class ApplicationConfiguration implements EntryPoint {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
         serviceUrl = jsoConfiguration
                 .getConfigString(ApplicationConstants.SERVICE_URL);
-        if (serviceUrl == null || "".equals(serviceUrl)) {
+        if (serviceUrl == null || serviceUrl.isEmpty()) {
             /*
              * Use the current url without query parameters and fragment as the
              * default value.
@@ -465,21 +463,15 @@ public class ApplicationConfiguration implements EntryPoint {
      *            element into which the application should be rendered.
      */
     public static void startApplication(final String applicationId) {
-        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+        Scheduler.get().scheduleDeferred(() -> {
+            Profiler.enter("ApplicationConfiguration.startApplication");
+            ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
+            ApplicationConnection a = GWT.create(ApplicationConnection.class);
+            a.init(widgetSet, appConf);
+            runningApplications.add(a);
+            Profiler.leave("ApplicationConfiguration.startApplication");
 
-            @Override
-            public void execute() {
-                Profiler.enter("ApplicationConfiguration.startApplication");
-                ApplicationConfiguration appConf = getConfigFromDOM(
-                        applicationId);
-                ApplicationConnection a = GWT
-                        .create(ApplicationConnection.class);
-                a.init(widgetSet, appConf);
-                runningApplications.add(a);
-                Profiler.leave("ApplicationConfiguration.startApplication");
-
-                a.start();
-            }
+            a.start();
         });
     }
 
@@ -495,7 +487,7 @@ public class ApplicationConfiguration implements EntryPoint {
      *            the id of the application to get configuration data for
      * @return a native javascript object containing the configuration data
      */
-    private native static JsoConfiguration getJsoConfiguration(String appId)
+    private static native JsoConfiguration getJsoConfiguration(String appId)
     /*-{
         return $wnd.vaadin.getApp(appId);
      }-*/;
@@ -715,18 +707,16 @@ public class ApplicationConfiguration implements EntryPoint {
         PointerEventSupport.init();
 
         if (LogConfiguration.loggingIsEnabled()) {
-            GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            GWT.setUncaughtExceptionHandler(throwable -> {
 
-                @Override
-                public void onUncaughtException(Throwable e) {
-                    /*
-                     * If the debug window is not enabled (?debug), this will
-                     * not show anything to normal users. "a1 is not an object"
-                     * style errors helps nobody, especially end user. It does
-                     * not work tells just as much.
-                     */
-                    getLogger().log(Level.SEVERE, e.getMessage(), e);
-                }
+                /*
+                 * If the debug window is not enabled (?debug), this will not
+                 * show anything to normal users. "a1 is not an object" style
+                 * errors helps nobody, especially end user. It does not work
+                 * tells just as much.
+                 */
+                getLogger().log(Level.SEVERE, throwable.getMessage(),
+                        throwable);
             });
 
             if (isProductionMode()) {
@@ -833,12 +823,12 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Registers that callback that the bootstrap javascript uses to start
      * applications once the widgetset is loaded and all required information is
-     * available
+     * available.
      *
      * @param widgetsetName
      *            the name of this widgetset
      */
-    public native static void registerCallback(String widgetsetName)
+    public static native void registerCallback(String widgetsetName)
     /*-{
         var callbackHandler = $entry(@com.vaadin.client.ApplicationConfiguration::startApplication(Ljava/lang/String;));
         $wnd.vaadin.registerWidgetset(widgetsetName, callbackHandler);
@@ -872,17 +862,13 @@ public class ApplicationConfiguration implements EntryPoint {
         return !isDebugAvailable();
     }
 
-    private native static boolean isDebugAvailable()
+    private static native boolean isDebugAvailable()
     /*-{
-        if($wnd.vaadin.debug) {
-            return true;
-        } else {
-            return false;
-        }
+        return $wnd.vaadin.debug;
     }-*/;
 
     /**
-     * Checks whether debug logging should be quiet
+     * Checks whether debug logging should be quiet.
      *
      * @return <code>true</code> if debug logging should be quiet
      */

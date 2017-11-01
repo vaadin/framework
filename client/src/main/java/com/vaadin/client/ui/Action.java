@@ -34,13 +34,13 @@ public abstract class Action implements Command {
     }
 
     /**
-     * Executed when action fired
+     * Executed when action fired.
      */
     @Override
     public abstract void execute();
 
     public String getHTML() {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         sb.append("<div>");
         // Could store the icon in a field instead, but it doesn't really matter
         // right now because Actions are recreated every time they are needed

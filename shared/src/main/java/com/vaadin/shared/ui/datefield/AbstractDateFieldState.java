@@ -16,6 +16,8 @@
 package com.vaadin.shared.ui.datefield;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.annotations.NoLayout;
@@ -33,17 +35,75 @@ public class AbstractDateFieldState extends AbstractFieldState {
         primaryStyleName = "v-datefield";
     }
 
-    /*
+    /**
      * Start range that has been cleared, depending on the resolution of the
-     * date field
+     * date field.
      */
     @NoLayout
-    public Date rangeStart = null;
+    public Date rangeStart;
 
-    /*
+    /**
      * End range that has been cleared, depending on the resolution of the date
-     * field
+     * field.
      */
     @NoLayout
-    public Date rangeEnd = null;
+    public Date rangeEnd;
+
+    /**
+     * The JSON used to construct a TimeZone on the client side, can be
+     * {@code null}.
+     *
+     * @since 8.2
+     */
+    public String timeZoneJSON;
+
+    /**
+     * The used Locale, can be {@code null}.
+     *
+     * @since
+     */
+    public String locale;
+
+    /**
+     * Overridden date format string, can be {@code null} if default formatting
+     * of the components locale is used.
+     *
+     * @since
+     */
+    public String format;
+
+    /**
+     * Whether the date/time interpretation is lenient.
+     *
+     * @since
+     */
+    public boolean lenient;
+
+    /**
+     * The map of {@code Resolution}s which are currently used by the component.
+     *
+     * The key is the resolution name e.g. "HOUR", "MINUTE", with possibly
+     * prefixed by "default-".
+     *
+     * The value can be {@code null}
+     *
+     * @since
+     */
+    public Map<String, Integer> resolutions = new HashMap<>();
+
+    /**
+     * Determines if week numbers are shown in the date selector.
+     *
+     * @since
+     */
+    public boolean showISOWeekNumbers;
+
+    /**
+     * Was the last entered string parsable? If this flag is false, datefields
+     * internal validator does not pass.
+     *
+     * @since
+     */
+    public boolean parsable = true;
+
 }

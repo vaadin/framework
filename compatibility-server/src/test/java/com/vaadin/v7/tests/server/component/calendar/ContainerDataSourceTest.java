@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -389,20 +388,20 @@ public class ContainerDataSourceTest {
         calendar.setLocale(Locale.getDefault());
         calendar.beforeClientResponse(true); // simulate adding to UI
 
-        Assert.assertEquals(0, calendar.getFirstVisibleHourOfDay());
-        Assert.assertEquals(23, calendar.getLastVisibleHourOfDay());
+        assertEquals(0, calendar.getFirstVisibleHourOfDay());
+        assertEquals(23, calendar.getLastVisibleHourOfDay());
 
         calendar.autoScaleVisibleHoursOfDay();
-        Assert.assertEquals(8, calendar.getFirstVisibleHourOfDay());
-        Assert.assertEquals(18, calendar.getLastVisibleHourOfDay());
+        assertEquals(8, calendar.getFirstVisibleHourOfDay());
+        assertEquals(18, calendar.getLastVisibleHourOfDay());
 
         // reset visible timing to something else, so that the added event is
         // not filtered out
         calendar.resetVisibleHoursOfDay();
         calendar.beforeClientResponse(false); // simulate being attached
 
-        Assert.assertEquals(0, calendar.getFirstVisibleHourOfDay());
-        Assert.assertEquals(23, calendar.getLastVisibleHourOfDay());
+        assertEquals(0, calendar.getFirstVisibleHourOfDay());
+        assertEquals(23, calendar.getLastVisibleHourOfDay());
 
         start.set(java.util.Calendar.HOUR_OF_DAY, 5);
         end.set(java.util.Calendar.HOUR_OF_DAY, 21);
@@ -411,8 +410,8 @@ public class ContainerDataSourceTest {
 
         calendar.beforeClientResponse(false); // simulate being attached
         calendar.autoScaleVisibleHoursOfDay();
-        Assert.assertEquals(5, calendar.getFirstVisibleHourOfDay());
-        Assert.assertEquals(21, calendar.getLastVisibleHourOfDay());
+        assertEquals(5, calendar.getFirstVisibleHourOfDay());
+        assertEquals(21, calendar.getLastVisibleHourOfDay());
     }
 
     private static Indexed createTestBeanItemContainer() {

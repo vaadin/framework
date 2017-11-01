@@ -2,7 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -27,13 +26,7 @@ public class ExecuteJavaScript extends AbstractTestCase {
 
     private Button createScriptButton(final String script) {
         Button b = new Button(script);
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().executeJavaScript(script);
-            }
-        });
+        b.addClickListener(event -> getMainWindow().executeJavaScript(script));
 
         return b;
     }

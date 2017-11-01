@@ -59,12 +59,8 @@ public class SubWindowWithUndefinedHeight extends TestBase {
                 });
         layout.addComponent(tabsheet);
 
-        Button button = new Button("click me", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                getMainWindow().addWindow(subwindow);
-            }
-        });
+        Button button = new Button("click me",
+                event -> getMainWindow().addWindow(subwindow));
         getMainWindow().addComponent(button);
     }
 }

@@ -37,7 +37,7 @@ public class VTransferable {
     private final Map<String, Object> variables = new HashMap<>();
 
     /**
-     * Returns the component from which the transferable is created (eg. a tree
+     * Returns the component from which the transferable is created (e.g. a tree
      * which node is dragged).
      *
      * @return the component
@@ -48,7 +48,7 @@ public class VTransferable {
 
     /**
      * Sets the component currently being dragged or from which the transferable
-     * is created (eg. a tree which node is dragged).
+     * is created (e.g. a tree which node is dragged).
      * <p>
      * The server side counterpart of the component may implement
      * {@link DragSource} interface if it wants to translate or complement the

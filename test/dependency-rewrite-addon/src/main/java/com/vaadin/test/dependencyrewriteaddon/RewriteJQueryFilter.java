@@ -19,7 +19,7 @@ public class RewriteJQueryFilter
         List<Dependency> filtered = new ArrayList<>();
         for (Dependency dependency : dependencies) {
             if (dependency.getType() == Type.JAVASCRIPT && dependency.getUrl()
-                    .toLowerCase(Locale.ENGLISH).contains("jquery")) {
+                    .toLowerCase(Locale.ROOT).contains("jquery")) {
                 filtered.add(
                         new Dependency(Type.JAVASCRIPT, "vaadin://jquery.js"));
             } else {

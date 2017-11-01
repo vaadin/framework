@@ -15,6 +15,8 @@
  */
 package com.vaadin.tests.declarative;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,8 +34,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.ui.declarative.DesignContext;
 import com.vaadin.v7.data.Property.ReadOnlyException;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Property.ValueChangeNotifier;
 
 public class DeclarativeEditor extends UI {
@@ -95,23 +95,17 @@ public class DeclarativeEditor extends UI {
         try {
             Design.write(treeHolder.getComponent(0), o);
             disableEvents = true;
-            editor.setValue(o.toString("UTF-8"));
+            editor.setValue(o.toString(UTF_8.name()));
             disableEvents = false;
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-
     }
 
     private void addValueChangeListeners(Component component) {
         if (component instanceof ValueChangeNotifier) {
             ((ValueChangeNotifier) component)
-                    .addValueChangeListener(new ValueChangeListener() {
-                        @Override
-                        public void valueChange(ValueChangeEvent event) {
-                            updateCode();
-                        }
-                    });
+                    .addValueChangeListener(event -> updateCode());
         }
 
         if (component instanceof HasComponents) {
@@ -119,7 +113,6 @@ public class DeclarativeEditor extends UI {
                 addValueChangeListeners(c);
             }
         }
-
     }
 
 }

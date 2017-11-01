@@ -16,13 +16,9 @@
 package com.vaadin.client.debug.internal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -50,9 +46,8 @@ public class HierarchyPanel extends FlowPanel {
     public void update() {
         // Try to keep track of currently open nodes and reopen them
         FastStringSet openNodes = FastStringSet.create();
-        Iterator<Widget> it = iterator();
-        while (it.hasNext()) {
-            collectOpenNodes(it.next(), openNodes);
+        for (Widget widget : this) {
+            collectOpenNodes(widget, openNodes);
         }
 
         clear();
@@ -90,9 +85,8 @@ public class HierarchyPanel extends FlowPanel {
             }
         }
         if (widget instanceof HasWidgets) {
-            Iterator<Widget> it = ((HasWidgets) widget).iterator();
-            while (it.hasNext()) {
-                collectOpenNodes(it.next(), openNodes);
+            for (Widget child : (HasWidgets) widget) {
+                collectOpenNodes(child, openNodes);
             }
         }
     }
@@ -107,12 +101,9 @@ public class HierarchyPanel extends FlowPanel {
         if (children == null || children.isEmpty()) {
             // Leaf node, just add a label
             Label label = new Label(connectorString);
-            label.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    Highlight.showOnly(connector);
-                    showServerDebugInfo(connector);
-                }
+            label.addClickHandler(event -> {
+                Highlight.showOnly(connector);
+                showServerDebugInfo(connector);
             });
             widget = label;
         } else {
@@ -135,12 +126,7 @@ public class HierarchyPanel extends FlowPanel {
 
         if (widget instanceof HasDoubleClickHandlers) {
             HasDoubleClickHandlers has = (HasDoubleClickHandlers) widget;
-            has.addDoubleClickHandler(new DoubleClickHandler() {
-                @Override
-                public void onDoubleClick(DoubleClickEvent event) {
-                    fireSelectEvent(connector);
-                }
-            });
+            has.addDoubleClickHandler(event -> fireSelectEvent(connector));
         }
 
         return widget;

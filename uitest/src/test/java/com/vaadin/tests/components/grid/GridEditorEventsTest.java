@@ -17,7 +17,6 @@ package com.vaadin.tests.components.grid;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -41,18 +40,14 @@ public class GridEditorEventsTest extends MultiBrowserTest {
         GridEditorElement editor = updateField(index, grid, "foo");
         editor.save();
 
-        Assert.assertEquals((index * 4 + 1) + ". editor is opened",
-                getLogRow(1));
-        Assert.assertEquals((index * 4 + 2) + ". editor is saved",
-                getLogRow(0));
+        assertEquals((index * 4 + 1) + ". editor is opened", getLogRow(1));
+        assertEquals((index * 4 + 2) + ". editor is saved", getLogRow(0));
 
         editor = updateField(index, grid, "bar");
         editor.cancel();
 
-        Assert.assertEquals((index * 4 + 3) + ". editor is opened",
-                getLogRow(1));
-        Assert.assertEquals((index * 4 + 4) + ". editor is canceled",
-                getLogRow(0));
+        assertEquals((index * 4 + 3) + ". editor is opened", getLogRow(1));
+        assertEquals((index * 4 + 4) + ". editor is canceled", getLogRow(0));
     }
 
     private GridEditorElement updateField(int index, GridElement grid,

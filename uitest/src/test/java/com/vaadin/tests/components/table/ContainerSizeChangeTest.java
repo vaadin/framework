@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.table;
 
-import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
 
 import com.vaadin.testbench.By;
-import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.TableElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public class ContainerSizeChangeTest extends MultiBrowserTest {

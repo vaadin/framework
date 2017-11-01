@@ -58,6 +58,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ErrorLevel;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -239,7 +240,7 @@ public class Grid extends AbstractComponent
          *            <code>true</code> if the column was hidden,
          *            <code>false</code> if it became visible
          * @param isUserOriginated
-         *            <code>true</code> iff the event was triggered by an UI
+         *            <code>true</code> if the event was triggered by an UI
          *            interaction
          */
         public ColumnVisibilityChangeEvent(Grid source, Column column,
@@ -291,7 +292,7 @@ public class Grid extends AbstractComponent
     @Deprecated
     public interface DetailsGenerator extends Serializable {
 
-        /** A details generator that provides no details */
+        /** A details generator that provides no details. */
         public DetailsGenerator NULL = new DetailsGenerator() {
             @Override
             public Component getDetails(RowReference rowReference) {
@@ -327,7 +328,7 @@ public class Grid extends AbstractComponent
      * @since 7.6.1
      */
     @Deprecated
-    public final static class DetailComponentManager
+    public static final class DetailComponentManager
             extends AbstractGridExtension implements DataGenerator {
 
         /**
@@ -396,10 +397,10 @@ public class Grid extends AbstractComponent
             if (details != null) {
                 if (details.getParent() != null) {
                     String name = detailsGenerator.getClass().getName();
-                    throw new IllegalStateException(
-                            name + " generated a details component that already "
-                                    + "was attached. (itemId: " + itemId
-                                    + ", component: " + details + ")");
+                    throw new IllegalStateException(name
+                            + " generated a details component that already "
+                            + "was attached. (itemId: " + itemId
+                            + ", component: " + details + ")");
                 }
 
                 itemIdToDetailsComponent.put(itemId, details);
@@ -485,7 +486,8 @@ public class Grid extends AbstractComponent
                         .get(itemId);
                 rowData.put(GridState.JSONKEY_DETAILS_VISIBLE,
                         (detailsComponent != null
-                                ? detailsComponent.getConnectorId() : ""));
+                                ? detailsComponent.getConnectorId()
+                                : ""));
             }
         }
 
@@ -534,7 +536,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the id of the item for which to check details visibility
-         * @return <code>true</code> iff the details are visible
+         * @return <code>true</code> if the details are visible
          */
         public boolean isDetailsVisible(Object itemId) {
             return openDetails.contains(itemId);
@@ -616,7 +618,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Returns the singleton instance
+         * Returns the singleton instance.
          *
          * @return the singleton instance
          */
@@ -657,13 +659,13 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Error handler for the editor
+     * Error handler for the editor.
      */
     @Deprecated
     public interface EditorErrorHandler extends Serializable {
 
         /**
-         * Called when an exception occurs while the editor row is being saved
+         * Called when an exception occurs while the editor row is being saved.
          *
          * @param event
          *            An event providing more information about the error
@@ -740,7 +742,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * An event which is fired when saving the editor fails
+     * An event which is fired when saving the editor fails.
      */
     @Deprecated
     public static class CommitErrorEvent extends Component.Event {
@@ -758,7 +760,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Retrieves the cause of the failure
+         * Retrieves the cause of the failure.
          *
          * @return the cause of the failure
          */
@@ -772,7 +774,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Checks if validation exceptions caused this error
+         * Checks if validation exceptions caused this error.
          *
          * @return true if the problem was caused by a validation error
          */
@@ -939,7 +941,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Interface for an editor event listener
+     * Interface for an editor event listener.
      */
     @Deprecated
     public interface EditorListener extends Serializable {
@@ -953,7 +955,7 @@ public class Grid extends AbstractComponent
                         EditorCloseEvent.class);
 
         /**
-         * Called when an editor is opened
+         * Called when an editor is opened.
          *
          * @param e
          *            an editor open event object
@@ -961,7 +963,7 @@ public class Grid extends AbstractComponent
         public void editorOpened(EditorOpenEvent e);
 
         /**
-         * Called when an editor is reopened without closing it first
+         * Called when an editor is reopened without closing it first.
          *
          * @param e
          *            an editor move event object
@@ -969,7 +971,7 @@ public class Grid extends AbstractComponent
         public void editorMoved(EditorMoveEvent e);
 
         /**
-         * Called when an editor is closed
+         * Called when an editor is closed.
          *
          * @param e
          *            an editor close event object
@@ -979,10 +981,10 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Base class for editor related events
+     * Base class for editor related events.
      */
     @Deprecated
-    public static abstract class EditorEvent extends Component.Event {
+    public abstract static class EditorEvent extends Component.Event {
 
         private Object itemID;
 
@@ -992,7 +994,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Get the item (row) for which this editor was opened
+         * Get the item (row) for which this editor was opened.
          */
         public Object getItem() {
             return itemID;
@@ -1001,7 +1003,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * This event gets fired when an editor is opened
+     * This event gets fired when an editor is opened.
      */
     @Deprecated
     public static class EditorOpenEvent extends EditorEvent {
@@ -1036,7 +1038,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Default error handler for the editor
+     * Default error handler for the editor.
      *
      */
     @Deprecated
@@ -1080,18 +1082,6 @@ public class Grid extends AbstractComponent
                         new ConnectorErrorEvent(Grid.this, event.getCause()));
             }
         }
-
-        private Object getFirstPropertyId(FieldGroup fieldGroup,
-                Set<Field<?>> keySet) {
-            for (Column c : getColumns()) {
-                Object propertyId = c.getPropertyId();
-                Field<?> f = fieldGroup.getField(propertyId);
-                if (keySet.contains(f)) {
-                    return propertyId;
-                }
-            }
-            return null;
-        }
     }
 
     /**
@@ -1108,7 +1098,7 @@ public class Grid extends AbstractComponent
      */
     @Deprecated
     public enum SelectionMode {
-        /** A SelectionMode that maps to {@link SingleSelectionModel} */
+        /** A SelectionMode that maps to {@link SingleSelectionModel}. */
         SINGLE {
             @Override
             protected SelectionModel createModel() {
@@ -1117,7 +1107,7 @@ public class Grid extends AbstractComponent
 
         },
 
-        /** A SelectionMode that maps to {@link MultiSelectionModel} */
+        /** A SelectionMode that maps to {@link MultiSelectionModel}. */
         MULTI {
             @Override
             protected SelectionModel createModel() {
@@ -1125,7 +1115,7 @@ public class Grid extends AbstractComponent
             }
         },
 
-        /** A SelectionMode that maps to {@link NoSelectionModel} */
+        /** A SelectionMode that maps to {@link NoSelectionModel}. */
         NONE {
             @Override
             protected SelectionModel createModel() {
@@ -1141,7 +1131,7 @@ public class Grid extends AbstractComponent
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
     @Deprecated
-    public interface SelectionModel extends Serializable, Extension {
+    public interface SelectionModel extends Extension {
 
         /**
          * Interface implemented by selection models which support disabling
@@ -1177,7 +1167,7 @@ public class Grid extends AbstractComponent
          *
          * @param itemId
          *            the item id to check for
-         * @return <code>true</code> iff the item is selected
+         * @return <code>true</code> if the item is selected
          */
         boolean isSelected(Object itemId);
 
@@ -1292,18 +1282,18 @@ public class Grid extends AbstractComponent
                     throws IllegalArgumentException;
 
             /**
-             * Marks all the items in the current Container as selected
+             * Marks all the items in the current Container as selected.
              *
-             * @return <code>true</code> iff some items were previously not
+             * @return <code>true</code> if some items were previously not
              *         selected
              * @see #deselectAll()
              */
             boolean selectAll();
 
             /**
-             * Marks all the items in the current Container as deselected
+             * Marks all the items in the current Container as deselected.
              *
-             * @return <code>true</code> iff some items were previously selected
+             * @return <code>true</code> if some items were previously selected
              * @see #selectAll()
              */
             boolean deselectAll();
@@ -1437,7 +1427,7 @@ public class Grid extends AbstractComponent
      * reusable.
      */
     @Deprecated
-    public static abstract class AbstractSelectionModel extends
+    public abstract static class AbstractSelectionModel extends
             AbstractGridExtension implements SelectionModel, DataGenerator {
         protected final LinkedHashSet<Object> selection = new LinkedHashSet<Object>();
 
@@ -1532,7 +1522,9 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Single}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single
+     * SelectionModel.Single}.
      */
     @Deprecated
     public static class SingleSelectionModel extends AbstractSelectionModel
@@ -1658,7 +1650,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation for a {@link SelectionModel.None}
+     * A default implementation for a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.None SelectionModel.None}.
      */
     @Deprecated
     public static class NoSelectionModel extends AbstractSelectionModel
@@ -1686,7 +1679,8 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * A default implementation of a {@link SelectionModel.Multi}
+     * A default implementation of a
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi SelectionModel.Multi}.
      */
     @Deprecated
     public static class MultiSelectionModel extends AbstractSelectionModel
@@ -1798,10 +1792,11 @@ public class Grid extends AbstractComponent
                         selection);
                 if (selection.size() + itemIds.size() >= selectionLimit) {
                     // Add one at a time if there's a risk of overflow
-                    Iterator<?> iterator = itemIds.iterator();
-                    while (iterator.hasNext()
-                            && selection.size() < selectionLimit) {
-                        selection.add(iterator.next());
+                    for (Object id : itemIds) {
+                        if (selection.size() >= selectionLimit) {
+                            break;
+                        }
+                        selection.add(id);
                     }
                 } else {
                     selection.addAll(itemIds);
@@ -2080,7 +2075,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Sets the identifying information for this row
+         * Sets the identifying information for this row.
          *
          * @param itemId
          *            the item id of the row
@@ -2137,7 +2132,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Sets the identifying information for this cell
+         * Sets the identifying information for this cell.
          *
          * @param propertyId
          *            the property id of the column
@@ -2646,7 +2641,7 @@ public class Grid extends AbstractComponent
                 }
             }
 
-            abstract protected String getCellTagName();
+            protected abstract String getCellTagName();
 
             void detach() {
                 for (CELLTYPE cell : cells.values()) {
@@ -2851,7 +2846,7 @@ public class Grid extends AbstractComponent
             protected void readDesign(Element cellElement,
                     DesignContext designContext) {
                 if (!cellElement.hasAttr("plain-text")) {
-                    if (cellElement.children().size() > 0
+                    if (!cellElement.children().isEmpty()
                             && cellElement.child(0).tagName().contains("-")) {
                         setComponent(
                                 designContext.readDesign(cellElement.child(0)));
@@ -3129,7 +3124,7 @@ public class Grid extends AbstractComponent
          */
         protected void readDesign(Element tableSectionElement,
                 DesignContext designContext) throws DesignException {
-            while (rows.size() > 0) {
+            while (!rows.isEmpty()) {
                 removeRow(0);
             }
 
@@ -3264,10 +3259,6 @@ public class Grid extends AbstractComponent
 
         private void setDefaultRow(boolean value) {
             getRowState().defaultRow = value;
-        }
-
-        private boolean isDefaultRow() {
-            return getRowState().defaultRow;
         }
 
         @Override
@@ -3440,7 +3431,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Returns the property id for the backing property of this Column
+         * Returns the property id for the backing property of this Column.
          *
          * @return property id
          */
@@ -3607,7 +3598,7 @@ public class Grid extends AbstractComponent
 
         /**
          * Checks if column is attached and throws an
-         * {@link IllegalStateException} if it is not
+         * {@link IllegalStateException} if it is not.
          *
          * @throws IllegalStateException
          *             if the column is no longer attached to any grid
@@ -3727,9 +3718,7 @@ public class Grid extends AbstractComponent
                                     + getRenderer().getPresentationType()
                                     + " (in " + toString() + ")");
                 }
-            }
-
-            else {
+            } else {
                 /*
                  * Since the converter is null (i.e. will be removed), we need
                  * to know that the renderer and model are compatible. If not,
@@ -3848,10 +3837,10 @@ public class Grid extends AbstractComponent
                 } else if (!((Sortable) grid.datasource)
                         .getSortableContainerPropertyIds()
                         .contains(propertyId)) {
-                    throw new IllegalStateException(
-                            "Can't set column " + toString()
-                                    + " sortable. Container doesn't support sorting by property "
-                                    + propertyId);
+                    throw new IllegalStateException("Can't set column "
+                            + toString()
+                            + " sortable. Container doesn't support sorting by property "
+                            + propertyId);
                 }
             }
 
@@ -4139,8 +4128,8 @@ public class Grid extends AbstractComponent
          *
          * @since 7.5.0
          * @param hidable
-         *            <code>true</code> iff the column may be hidable by the
-         *            user via UI interaction
+         *            <code>true</code> if the column may be hidable by the user
+         *            via UI interaction
          * @return this column
          */
         public Column setHidable(boolean hidable) {
@@ -4318,7 +4307,7 @@ public class Grid extends AbstractComponent
      *            the type this renderer knows how to present
      */
     @Deprecated
-    public static abstract class AbstractRenderer<T>
+    public abstract static class AbstractRenderer<T>
             extends AbstractGridExtension implements Renderer<T> {
 
         private final Class<T> presentationType;
@@ -4370,7 +4359,7 @@ public class Grid extends AbstractComponent
         }
 
         /**
-         * Null representation for the renderer
+         * Null representation for the renderer.
          *
          * @return a textual representation of {@code null}
          */
@@ -4477,7 +4466,7 @@ public class Grid extends AbstractComponent
      * @since 7.5
      */
     @Deprecated
-    public static abstract class AbstractGridExtension
+    public abstract static class AbstractGridExtension
             extends AbstractExtension {
 
         /**
@@ -5077,7 +5066,7 @@ public class Grid extends AbstractComponent
      * reinitialized automatically if the container is changed, and if the same
      * properties are present after container change, the columns are reused.
      * Properties with same names, but different data types will lead to
-     * unpredictable behaviour.
+     * unpredictable behavior.
      *
      * @param container
      *            The container data source. Cannot be null.
@@ -5228,7 +5217,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Returns a column based on the property id
+     * Returns a column based on the property id.
      *
      * @param propertyId
      *            the property id of the column
@@ -5276,13 +5265,11 @@ public class Grid extends AbstractComponent
             addColumnProperty(propertyId, String.class, "");
         } else {
             if (columns.containsKey(propertyId)) {
-                throw new IllegalStateException(
-                        "A column for property id '" + propertyId.toString()
-                                + "' already exists in this grid");
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId + "' already exists in this grid");
             } else {
-                throw new IllegalStateException(
-                        "Property id '" + propertyId.toString()
-                                + "' does not exist in the container");
+                throw new IllegalStateException("Property id '" + propertyId
+                        + "' does not exist in the container");
             }
         }
 
@@ -5876,7 +5863,7 @@ public class Grid extends AbstractComponent
      *
      * @param itemId
      *            the item id to check for
-     * @return <code>true</code> iff the item is selected
+     * @return <code>true</code> if the item is selected
      */
     // keep this javadoc in sync with SelectionModel.isSelected
     public boolean isSelected(Object itemId) {
@@ -5901,7 +5888,8 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} is supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * is supported.
      *
      * @return the item id of the currently selected item, or <code>null</code>
      *         if nothing is selected
@@ -5938,8 +5926,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @param itemId
      *            the itemId to mark as selected
@@ -5984,8 +5973,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @param itemId
      *            the itemId to remove from being selected
@@ -6031,8 +6021,9 @@ public class Grid extends AbstractComponent
      * <p>
      * This method is a shorthand that delegates to the
      * {@link #getSelectionModel() selection model}. Only
-     * {@link SelectionModel.Single} and {@link SelectionModel.Multi} are
-     * supported.
+     * {@link com.vaadin.v7.ui.Grid.SelectionModel.Single SelectionModel.Single}
+     * and {@link com.vaadin.v7.ui.Grid.SelectionModel.Multi
+     * SelectionModel.Multi} are supported.
      *
      * @return <code>true</code> if the selection state changed,
      *         <code>false</code> if the itemId was already selected
@@ -6784,7 +6775,7 @@ public class Grid extends AbstractComponent
 
     /**
      * Returns the {@code RowDescriptionGenerator} instance used to generate
-     * descriptions (tooltips) for Grid rows
+     * descriptions (tooltips) for Grid rows.
      *
      * @return the description generator or {@code} null if no generator is set
      *
@@ -6795,7 +6786,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Sets the style generator that is used for generating styles for cells
+     * Sets the style generator that is used for generating styles for cells.
      *
      * @param cellStyleGenerator
      *            the cell style generator to set, or <code>null</code> to
@@ -6807,7 +6798,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Gets the style generator that is used for generating styles for cells
+     * Gets the style generator that is used for generating styles for cells.
      *
      * @return the cell style generator, or <code>null</code> if no generator is
      *         set
@@ -6817,7 +6808,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Sets the style generator that is used for generating styles for rows
+     * Sets the style generator that is used for generating styles for rows.
      *
      * @param rowStyleGenerator
      *            the row style generator to set, or <code>null</code> to remove
@@ -6829,7 +6820,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Gets the style generator that is used for generating styles for rows
+     * Gets the style generator that is used for generating styles for rows.
      *
      * @return the row style generator, or <code>null</code> if no generator is
      *         set
@@ -6967,7 +6958,7 @@ public class Grid extends AbstractComponent
     /**
      * Checks whether the item editor UI is enabled for this grid.
      *
-     * @return <code>true</code> iff the editor is enabled for this grid
+     * @return <code>true</code> if the editor is enabled for this grid
      *
      * @see #setEditorEnabled(boolean)
      * @see #getEditedItemId()
@@ -7016,7 +7007,7 @@ public class Grid extends AbstractComponent
     /**
      * Returns whether an item is currently being edited in the editor.
      *
-     * @return true iff the editor is open
+     * @return true if the editor is open
      */
     public boolean isEditorActive() {
         return editorActive;
@@ -7265,7 +7256,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Gets the error handler used for the editor
+     * Gets the error handler used for the editor.
      *
      * @see #setErrorHandler(com.vaadin.server.ErrorHandler)
      * @return the editor error handler, never null
@@ -7407,7 +7398,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Registers a new column visibility change listener
+     * Registers a new column visibility change listener.
      *
      * @since 7.5.0
      * @param listener
@@ -7420,7 +7411,7 @@ public class Grid extends AbstractComponent
     }
 
     /**
-     * Removes a previously registered column visibility change listener
+     * Removes a previously registered column visibility change listener.
      *
      * @since 7.5.0
      * @param listener
@@ -7484,7 +7475,7 @@ public class Grid extends AbstractComponent
      * @since 7.5.0
      * @param itemId
      *            the id of the item for which to check details visibility
-     * @return <code>true</code> iff the details are visible
+     * @return <code>true</code> if the details are visible
      */
     public boolean isDetailsVisible(Object itemId) {
         return detailComponentManager.isDetailsVisible(itemId);
@@ -7513,7 +7504,7 @@ public class Grid extends AbstractComponent
                     "selection-mode", attrs, SelectionMode.class));
         }
 
-        if (design.children().size() > 0) {
+        if (!design.children().isEmpty()) {
             if (design.children().size() > 1
                     || !design.child(0).tagName().equals("table")) {
                 throw new DesignException(
@@ -7633,8 +7624,10 @@ public class Grid extends AbstractComponent
                     Object value = datasource.getItem(itemId)
                             .getItemProperty(c.getPropertyId()).getValue();
                     tableRow.appendElement("td")
-                            .append((value != null ? DesignFormatter
-                                    .encodeForTextNode(value.toString()) : ""));
+                            .append((value != null
+                                    ? DesignFormatter
+                                            .encodeForTextNode(value.toString())
+                                    : ""));
                 }
             }
         }

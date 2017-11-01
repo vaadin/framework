@@ -26,29 +26,22 @@ public class SpacingLeak extends UI {
         final Button spacingButton = new Button("Add layout with spacing");
         spacingButton.setId("addbutton");
         root.addComponent(spacingButton);
-        spacingButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                spacingLayout = new HorizontalLayout();
-                spacingLayout.setSpacing(true);
-                spacingLayout.setWidth("100%");
+        spacingButton.addClickListener(event -> {
+            spacingLayout = new HorizontalLayout();
+            spacingLayout.setSpacing(true);
+            spacingLayout.setWidth("100%");
 
-                for (int i = 0; i < 100; ++i) {
-                    spacingLayout.addComponent(new Button("" + i));
-                }
-
-                root.addComponent(spacingLayout);
+            for (int i = 0; i < 100; ++i) {
+                spacingLayout.addComponent(new Button("" + i));
             }
+
+            root.addComponent(spacingLayout);
         });
 
         final Button removeButton = new Button("Remove layouts");
         removeButton.setId("removebutton");
         root.addComponent(removeButton);
-        removeButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                root.removeComponent(spacingLayout);
-            }
-        });
+        removeButton
+                .addClickListener(event -> root.removeComponent(spacingLayout));
     }
 }

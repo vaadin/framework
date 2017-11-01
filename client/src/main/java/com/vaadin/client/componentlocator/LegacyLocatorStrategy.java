@@ -16,7 +16,6 @@
 package com.vaadin.client.componentlocator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -75,7 +74,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     private final ApplicationConnection client;
 
-    private static final RegExp validSyntax = RegExp.compile(
+    private static final RegExp VALID_SYNTAX = RegExp.compile(
             "^((\\w+::)?((PID_S)?\\w[-$_a-zA-Z0-9.' ]*)?)?(/[-$_a-zA-Z0-9]+\\[\\d+\\])*/?(#.*)?$");
 
     public LegacyLocatorStrategy(ApplicationConnection clientConnection) {
@@ -84,7 +83,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     @Override
     public boolean validatePath(String path) {
-        return validSyntax.test(path);
+        return VALID_SYNTAX.test(path);
     }
 
     @Override
@@ -206,7 +205,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
          * Path is of type "targetWidgetPath#componentPart" or
          * "targetWidgetPath".
          */
-        String parts[] = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
+        String[] parts = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
 
         // Note that this only works if baseElement can be mapped to a
@@ -328,7 +327,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      *         if the element could not be found.
      */
     private Element getElementByDOMPath(Element baseElement, String path) {
-        String parts[] = path.split(PARENTCHILD_SEPARATOR);
+        String[] parts = path.split(PARENTCHILD_SEPARATOR);
         Element element = baseElement;
 
         for (int i = 0, l = parts.length; i < l; ++i) {
@@ -470,10 +469,8 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
             return null;
         }
 
-        Iterator<?> i = ((Iterable<?>) parent).iterator();
         int pos = 0;
-        while (i.hasNext()) {
-            Object child = i.next();
+        for (Object child : (Iterable<?>) parent) {
             if (child == w) {
                 return basePath + PARENTCHILD_SEPARATOR + simpleName + "[" + pos
                         + "]";
@@ -501,14 +498,14 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
     @SuppressWarnings("unchecked")
     private Widget getWidgetFromPath(String path, Widget baseWidget) {
         Widget w = baseWidget;
-        String parts[] = path.split(PARENTCHILD_SEPARATOR);
+        String[] parts = path.split(PARENTCHILD_SEPARATOR);
 
         for (int i = 0; i < parts.length; i++) {
             String part = parts[i];
 
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
-            } else if (part.equals("")) {
+            } else if (part.isEmpty()) {
                 if (w == null) {
                     w = client.getUIConnector().getWidget();
                 }
@@ -638,7 +635,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                 }
 
                 // Locate the child
-                Iterator<? extends Widget> iterator;
+                Iterable<? extends Widget> iterable;
 
                 /*
                  * VWindow and VContextMenu workarounds for backwards
@@ -652,19 +649,18 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                     for (WindowConnector wc : windows) {
                         windowWidgets.add(wc.getWidget());
                     }
-                    iterator = windowWidgets.iterator();
+                    iterable = windowWidgets;
                 } else if (widgetClassName.equals("VContextMenu")) {
                     return client.getContextMenu();
                 } else {
-                    iterator = (Iterator<? extends Widget>) parent.iterator();
+                    iterable = (Iterable<? extends Widget>) parent;
                 }
 
                 boolean ok = false;
 
                 // Find the widgetPosition:th child of type "widgetClassName"
-                while (iterator.hasNext()) {
+                for (Widget child : iterable) {
 
-                    Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
 
                     if (!widgetClassName.equals(simpleName2)

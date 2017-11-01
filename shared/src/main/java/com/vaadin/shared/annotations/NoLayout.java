@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation used to mark client RPC methods, state fields, or state setter
- * methods that should not trigger an layout phase after changes have been
+ * methods that should not trigger a layout phase after changes have been
  * processed. Whenever there's at least one change that is not marked with this
  * annotation, the framework will assume some sizes might have changed an will
  * therefore start a layout phase after applying the changes.

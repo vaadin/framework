@@ -102,7 +102,7 @@ public class ListSelectElement extends AbstractSelectElement {
     }
 
     /**
-     * Return value of the list select element
+     * Return value of the list select element.
      *
      * @return value of the list select element
      */

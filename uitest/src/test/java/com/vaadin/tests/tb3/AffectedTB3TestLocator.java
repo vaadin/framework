@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class AffectedTB3TestLocator extends TB3TestLocator {
@@ -65,7 +66,8 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
             String lastPart = packageParts[packageParts.length - 2];
 
             for (String f : affectedFiles) {
-                if (f.toLowerCase().contains(lastPart.toLowerCase())) {
+                if (f.toLowerCase(Locale.ROOT)
+                        .contains(lastPart.toLowerCase(Locale.ROOT))) {
                     affectedTestClasses.add(c);
 
                     // Break here not to accidentally add the same test class
@@ -82,7 +84,7 @@ public class AffectedTB3TestLocator extends TB3TestLocator {
         List<String> affectedFilePaths = new ArrayList<>();
 
         for (String path : changedTB3TestLocator.getChangedFilePaths()) {
-            if (!path.toLowerCase().contains("test")) {
+            if (!path.toLowerCase(Locale.ROOT).contains("test")) {
                 affectedFilePaths.add(path);
             }
         }

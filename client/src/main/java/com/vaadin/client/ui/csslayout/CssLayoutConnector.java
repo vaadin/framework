@@ -37,7 +37,7 @@ import com.vaadin.ui.CssLayout;
 
 /**
  * Connects the server side widget {@link CssLayout} with the client side
- * counterpart {@link VCssLayout}
+ * counterpart {@link VCssLayout}.
  */
 @Connect(CssLayout.class)
 public class CssLayoutConnector extends AbstractLayoutConnector {
@@ -93,7 +93,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             // as it is added directly to the child component?
             String[] cssRules = css.split(";");
             for (String cssRule : cssRules) {
-                String parts[] = cssRule.split(":", 2);
+                String[] parts = cssRule.split(":", 2);
                 if (parts.length == 2) {
                     style.setProperty(makeCamelCase(parts[0].trim()),
                             parts[1].trim());

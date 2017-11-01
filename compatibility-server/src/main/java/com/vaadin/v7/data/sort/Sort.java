@@ -128,7 +128,7 @@ public class Sort implements Serializable {
     }
 
     /**
-     * Build a sort order list, ready to be passed to Grid
+     * Build a sort order list, ready to be passed to Grid.
      *
      * @return a sort order list.
      */

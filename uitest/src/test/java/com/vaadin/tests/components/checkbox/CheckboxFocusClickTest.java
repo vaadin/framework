@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.checkbox;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -29,10 +30,10 @@ public class CheckboxFocusClickTest extends MultiBrowserTest {
     public void contextClickCheckboxAndText() {
         openTestURL();
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
-        Assert.assertEquals("checked", checkbox.getValue());
+        assertEquals("checked", checkbox.getValue());
         WebElement label = checkbox.findElement(By.xpath("label"));
 
         label.click();
-        Assert.assertEquals("1. checkbox focused", getLogRow(0));
+        assertEquals("1. checkbox focused", getLogRow(0));
     }
 }

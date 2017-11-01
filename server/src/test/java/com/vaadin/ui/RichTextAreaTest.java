@@ -18,8 +18,10 @@ package com.vaadin.ui;
 import static com.vaadin.ui.ComponentTest.isDirty;
 import static com.vaadin.ui.ComponentTest.syncToClient;
 import static com.vaadin.ui.ComponentTest.updateDiffState;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ClientConnector;
@@ -33,7 +35,7 @@ public class RichTextAreaTest {
     @Test
     public void initiallyEmpty() {
         RichTextArea tf = new RichTextArea();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
     @Test
@@ -41,7 +43,7 @@ public class RichTextAreaTest {
         RichTextArea tf = new RichTextArea();
         tf.setReadOnly(true);
         tf.setValue("foo");
-        Assert.assertEquals("foo", tf.getValue());
+        assertEquals("foo", tf.getValue());
     }
 
     @Test
@@ -64,8 +66,8 @@ public class RichTextAreaTest {
 
         // The real value will be sent back as long as the field is marked as
         // dirty and diffstate contains what the client has
-        Assert.assertEquals("foo", getDiffStateString(rta, "value"));
-        Assert.assertTrue("Component should be marked dirty", isDirty(rta));
+        assertEquals("foo", getDiffStateString(rta, "value"));
+        assertTrue("Component should be marked dirty", isDirty(rta));
     }
 
     @Test
@@ -78,7 +80,7 @@ public class RichTextAreaTest {
         updateDiffState(rta);
         ServerRpcManager.getRpcProxy(rta, RichTextAreaServerRpc.class)
                 .setText("foo");
-        Assert.assertEquals("foo", getDiffStateString(rta, "value"));
+        assertEquals("foo", getDiffStateString(rta, "value"));
     }
 
     private String getDiffStateString(ClientConnector connector, String key) {
@@ -92,7 +94,7 @@ public class RichTextAreaTest {
         tf.setValue("bar");
         tf.setReadOnly(true);
         tf.setValue("foo", true);
-        Assert.assertEquals("bar", tf.getValue());
+        assertEquals("bar", tf.getValue());
     }
 
     @Test(expected = NullPointerException.class)
@@ -105,9 +107,9 @@ public class RichTextAreaTest {
     public void emptyAfterClear() {
         RichTextArea tf = new RichTextArea();
         tf.setValue("foobar");
-        Assert.assertFalse(tf.isEmpty());
+        assertFalse(tf.isEmpty());
         tf.clear();
-        Assert.assertTrue(tf.isEmpty());
+        assertTrue(tf.isEmpty());
     }
 
 }

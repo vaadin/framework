@@ -15,15 +15,13 @@
  */
 package com.vaadin.tests.contextclick;
 
+import java.util.Collections;
+
 import com.vaadin.data.TreeData;
-import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeContextClickEvent;
-
-import java.util.Collections;
 
 public class TreeV8ContextClick extends
         AbstractContextClickUI<Tree<String>, TreeContextClickEvent<String>> {
@@ -58,13 +56,9 @@ public class TreeV8ContextClick extends
     protected HorizontalLayout createContextClickControls() {
         HorizontalLayout controls = super.createContextClickControls();
         controls.addComponent(
-                new Button("Remove all content", new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        testComponent.setItems(Collections.emptyList());
-                        testComponent.setHeight("200px");
-                    }
+                new Button("Remove all content", event -> {
+                    testComponent.setItems(Collections.emptyList());
+                    testComponent.setHeight("200px");
                 }));
         return controls;
     }

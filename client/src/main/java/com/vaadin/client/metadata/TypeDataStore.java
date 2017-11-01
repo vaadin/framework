@@ -17,6 +17,7 @@ package com.vaadin.client.metadata;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
@@ -260,7 +261,7 @@ public class TypeDataStore {
             throws NoDataException {
         JsArrayObject<Property> propertiesArray = getPropertiesAsArray(type);
         int size = propertiesArray.size();
-        ArrayList<Property> properties = new ArrayList<>(size);
+        List<Property> properties = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             properties.add(propertiesArray.get(i));
         }
@@ -347,7 +348,7 @@ public class TypeDataStore {
             String baseClassName, String superClassName)
     /*-{
         var parentType = typeData[superClassName];
-        if (parentType !== undefined ){
+        if (parentType !== undefined ) {
             var ctor = function () {};
             ctor.prototype = parentType;
             typeData[baseClassName] = new ctor;
@@ -405,7 +406,7 @@ public class TypeDataStore {
             JavaScriptObject typeData, String beanName)
     /*-{
         var names = [];
-        for(var name in typeData[beanName]) {
+        for (var name in typeData[beanName]) {
             names.push(name);
         }
         return names;

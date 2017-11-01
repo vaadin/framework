@@ -15,6 +15,8 @@
  */
 package com.vaadin.v7.data.util.filter;
 
+import java.util.Locale;
+
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.v7.data.Container.Filter;
@@ -37,9 +39,11 @@ import com.vaadin.v7.data.Property;
  *
  * @since 6.6
  *
- * @deprecated As of 8.0, the whole filtering feature is integrated into {@link DataProvider}.
- * For in-memory case ({@link ListDataProvider}), use predicates as filters. For back-end DataProviders,
- * filters are specific to the implementation.
+ * @deprecated As of 8.0, the whole filtering feature is integrated into
+ *             {@link DataProvider}. For in-memory case
+ *             ({@link ListDataProvider}), use predicates as filters. For
+ *             back-end DataProviders, filters are specific to the
+ *             implementation.
  */
 @Deprecated
 public final class SimpleStringFilter implements Filter {
@@ -52,7 +56,7 @@ public final class SimpleStringFilter implements Filter {
     public SimpleStringFilter(Object propertyId, String filterString,
             boolean ignoreCase, boolean onlyMatchPrefix) {
         this.propertyId = propertyId;
-        this.filterString = ignoreCase ? filterString.toLowerCase()
+        this.filterString = ignoreCase ? filterString.toLowerCase(Locale.ROOT)
                 : filterString;
         this.ignoreCase = ignoreCase;
         this.onlyMatchPrefix = onlyMatchPrefix;
@@ -68,7 +72,8 @@ public final class SimpleStringFilter implements Filter {
         if (propertyValue == null) {
             return false;
         }
-        final String value = ignoreCase ? propertyValue.toString().toLowerCase()
+        final String value = ignoreCase
+                ? propertyValue.toString().toLowerCase(Locale.ROOT)
                 : propertyValue.toString();
         if (onlyMatchPrefix) {
             if (!value.startsWith(filterString)) {

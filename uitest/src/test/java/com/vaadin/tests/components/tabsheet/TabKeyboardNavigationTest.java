@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.tabsheet;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -156,7 +157,7 @@ public class TabKeyboardNavigationTest extends MultiBrowserTest {
     /*
      * Delay for PhantomJS.
      */
-    private final static int DELAY = 10;
+    private static final int DELAY = 10;
 
     private void assertSheet(int index) {
         String labelCaption = "Tab " + index;
@@ -166,7 +167,7 @@ public class TabKeyboardNavigationTest extends MultiBrowserTest {
 
         waitForElementPresent(id);
 
-        Assert.assertEquals(labelCaption, labelCaption, labelElement.getText());
+        assertEquals(labelCaption, labelCaption, labelElement.getText());
     }
 
     /*
@@ -179,7 +180,7 @@ public class TabKeyboardNavigationTest extends MultiBrowserTest {
                 .findElements(by).get(index - 1);
 
         String expected = "Tab " + index;
-        Assert.assertEquals(expected,
+        assertEquals(expected,
                 element.getText().substring(0, expected.length()));
 
         return element;

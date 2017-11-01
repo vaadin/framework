@@ -39,7 +39,6 @@ import com.vaadin.ui.declarative.DesignException;
 import com.vaadin.v7.data.Collapsible;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Hierarchical;
-import com.vaadin.v7.data.Container.ItemSetChangeEvent;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.data.util.HierarchicalContainer;
 import com.vaadin.v7.data.util.HierarchicalContainerOrderedWrapper;
@@ -227,7 +226,7 @@ public class TreeTable extends Table implements Hierarchical {
 
         @Override
         public Object lastItemId() {
-            if (getPreOrder().size() > 0) {
+            if (!getPreOrder().isEmpty()) {
                 return getPreOrder().get(getPreOrder().size() - 1);
             } else {
                 return null;

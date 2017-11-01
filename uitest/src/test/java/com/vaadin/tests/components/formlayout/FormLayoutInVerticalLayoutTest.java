@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.formlayout;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -39,7 +40,7 @@ public class FormLayoutInVerticalLayoutTest extends MultiBrowserTest {
         String formLabelMargin = labels.get(0).getCssValue("margin-top");
         String verticalLayoutLabelMargin = labels.get(1)
                 .getCssValue("margin-top");
-        Assert.assertNotEquals(
+        assertNotEquals(
                 "'margin-top' values for header label in vertical layout "
                         + "and form layout are the same",
                 verticalLayoutLabelMargin, formLabelMargin);

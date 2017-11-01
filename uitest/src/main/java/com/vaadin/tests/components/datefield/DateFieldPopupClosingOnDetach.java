@@ -38,12 +38,7 @@ public class DateFieldPopupClosingOnDetach extends AbstractReindeerTestUI {
 
                 @Override
                 public void run() {
-                    getUI().access(new Runnable() {
-                        @Override
-                        public void run() {
-                            removeComponent(df);
-                        }
-                    });
+                    getUI().access(() -> removeComponent(df));
                 }
             };
             new Timer(true).schedule(removeTask, 1000);

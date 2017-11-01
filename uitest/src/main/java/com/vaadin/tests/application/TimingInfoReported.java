@@ -18,9 +18,6 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.JavaScriptFunction;
 
 import elemental.json.JsonArray;
 
@@ -33,39 +30,28 @@ public class TimingInfoReported extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         getPage().getJavaScript().addFunction("report",
-                new JavaScriptFunction() {
+                arguments -> {
+                    log("Got: " + arguments.toJson());
+                    JsonArray values = arguments.getArray(0);
 
-                    @Override
-                    public void call(JsonArray arguments) {
-                        log("Got: " + arguments.toJson());
-                        JsonArray values = arguments.getArray(0);
+                    if (values.length() != 5) {
+                        log("ERROR: expected 5 values, got " + values.length());
+                        return;
+                    }
 
-                        if (values.length() != 5) {
-                            log("ERROR: expected 5 values, got "
-                                    + values.length());
+                    for (int i = 0; i < values.length(); i++) {
+                        if (i < 0 || i > 10000) {
+                            log("ERROR: expected value " + i
+                                    + " to be between 0 and 10000, was "
+                                    + values.getNumber(i));
                             return;
                         }
-
-                        for (int i = 0; i < values.length(); i++) {
-                            if (i < 0 || i > 10000) {
-                                log("ERROR: expected value " + i
-                                        + " to be between 0 and 10000, was "
-                                        + values.getNumber(i));
-                                return;
-                            }
-                        }
-                        log("Timings ok");
                     }
+                    log("Timings ok");
                 });
         getPage().getJavaScript().execute(reportTimings);
-        Button b = new Button("test request", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().getJavaScript().execute(reportTimings);
-
-            }
-        });
+        Button b = new Button("test request",
+                event -> getPage().getJavaScript().execute(reportTimings));
         addComponent(b);
     }
 }

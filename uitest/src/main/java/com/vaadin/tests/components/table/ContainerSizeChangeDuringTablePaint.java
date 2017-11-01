@@ -23,7 +23,6 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
@@ -104,17 +103,13 @@ public class ContainerSizeChangeDuringTablePaint
         addComponent(table);
         Button button = new Button(
                 "Add an item and also trigger an ItemSetChangeEvent in Container during next Table paint",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
+                event -> {
+                    // we need this to simply trigger a table paint.
+                    addItem(container, "A", "New", "Row");
+                    container.sabotageNextPaint();
 
-                        // we need this to simply trigger a table paint.
-                        addItem(container, "A", "New", "Row");
-                        container.sabotageNextPaint();
-
-                        event.getButton()
-                                .setCaption("Event was fired successfully.");
-                    }
+                    event.getButton()
+                            .setCaption("Event was fired successfully.");
                 });
         button.setId("addRow");
         addComponent(button);

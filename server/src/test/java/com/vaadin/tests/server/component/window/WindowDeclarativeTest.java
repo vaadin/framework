@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.server.component.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -134,7 +135,7 @@ public class WindowDeclarativeTest extends DeclarativeTestBase<Window> {
     protected void assertInvalidPosition(String position) {
         try {
             read("<vaadin-window position='" + position + "'>");
-            Assert.fail("Invalid position '" + position + "' should throw");
+            fail("Invalid position '" + position + "' should throw");
         } catch (Exception e) {
             // expected
         }

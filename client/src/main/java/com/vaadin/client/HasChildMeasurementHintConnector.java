@@ -40,7 +40,8 @@ public interface HasChildMeasurementHintConnector
         MEASURE_ALWAYS,
 
         /**
-         * Measure child component only if child component is a {@link Layout}
+         * Measure child component only if child component is an
+         * {@link com.vaadin.client.ui.AbstractLayoutConnector AbstractLayoutConnector}
          * or implements either {@link ManagedLayout} or
          * {@link ElementResizeListener}.
          */

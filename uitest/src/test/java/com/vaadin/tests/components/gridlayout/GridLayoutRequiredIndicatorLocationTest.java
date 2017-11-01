@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.gridlayout;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -90,7 +91,7 @@ public class GridLayoutRequiredIndicatorLocationTest extends MultiBrowserTest {
                 + field.getSize().getWidth();
         int actualIndicatorPosition = caption.getLocation().getX();
 
-        Assert.assertEquals("Required indicator has wrong position",
+        assertEquals("Required indicator has wrong position",
                 desiredIndicatorPosition, actualIndicatorPosition, 1d);
     }
 

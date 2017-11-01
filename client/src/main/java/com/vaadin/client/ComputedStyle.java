@@ -41,15 +41,15 @@ public class ComputedStyle {
 
     private static native JavaScriptObject getComputedStyle(Element elem)
     /*-{
-      if(elem.nodeType != 1) {
+      if (elem.nodeType != 1) {
           return {};
       }
 
-      if($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
+      if ($wnd.document.defaultView && $wnd.document.defaultView.getComputedStyle) {
           return $wnd.document.defaultView.getComputedStyle(elem, null);
       }
 
-      if(elem.currentStyle) {
+      if (elem.currentStyle) {
           return elem.currentStyle;
       }
     }-*/;
@@ -70,20 +70,20 @@ public class ComputedStyle {
         // Border values need to be checked separately. The width might have a
         // meaningful value even if the border style is "none". In that case the
         // value should be 0.
-        if(name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
+        if (name.indexOf("border") > -1 && name.indexOf("Width") > -1) {
             var borderStyleProp = name.substring(0,name.length-5) + "Style";
-            if(cs.getPropertyValue)
+            if (cs.getPropertyValue)
                 var borderStyle = cs.getPropertyValue(borderStyleProp);
             else // IE
                 var borderStyle = cs[borderStyleProp];
-            if(borderStyle == "none")
+            if (borderStyle == "none")
                 return "0px";
         }
 
-        if(cs.getPropertyValue) {
+        if (cs.getPropertyValue) {
 
             // Convert name to dashed format
-            name = name.replace(/([A-Z])/g, "-$1").toLowerCase();
+            name = name.replace(/([A-Z])/g, "-$1").toLowerCase('en');
             var ret = cs.getPropertyValue(name);
 
         } else {
@@ -114,7 +114,7 @@ public class ComputedStyle {
 
         // Normalize margin values. This is not totally valid, but in most cases
         // it is what the user wants to know.
-        if(name.indexOf("margin") > -1 && ret == "auto") {
+        if (name.indexOf("margin") > -1 && ret == "auto") {
             return "0px";
         }
 
@@ -263,7 +263,7 @@ public class ComputedStyle {
      *
      * @param String
      *            a value starting with a number
-     * @return int the value from the string before any non-numeric characters.
+     * @return the value from the string before any non-numeric characters.
      *         If the value cannot be parsed to a number, returns 0.
      */
     private static native int parseIntNative(final String value)

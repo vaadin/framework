@@ -14,7 +14,7 @@ public class Vaadin6ImplicitDoubleConverter
         if (null == value) {
             return null;
         }
-        return new Double(value.toString());
+        return new Double(value);
     }
 
     @Override

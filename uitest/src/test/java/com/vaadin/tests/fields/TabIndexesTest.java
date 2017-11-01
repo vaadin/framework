@@ -1,9 +1,10 @@
 package com.vaadin.tests.fields;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -80,12 +81,12 @@ public class TabIndexesTest extends SingleBrowserTest {
     }
 
     private void assertLogText(String expected) {
-        Assert.assertEquals("Unexpected log contents,", expected, getLogRow(0));
+        assertEquals("Unexpected log contents,", expected, getLogRow(0));
     }
 
     private void assertTabIndex(String expected, WebElement element) {
         if (!expected.equals(element.getAttribute("tabIndex"))) {
-            Assert.assertEquals(
+            assertEquals(
                     "Unexpected tab index for element "
                             + element.getAttribute("outerHTML"),
                     expected, element.getAttribute("tabIndex"));
@@ -118,7 +119,7 @@ public class TabIndexesTest extends SingleBrowserTest {
         List<AbstractComponentElement> components = $(
                 VerticalLayoutElement.class).id(TabIndexes.FIELD_CONTAINER_ID)
                         .$(AbstractComponentElement.class).all();
-        Assert.assertEquals(components.size(), focusElements.size());
+        assertEquals(components.size(), focusElements.size());
         return focusElements;
     }
 

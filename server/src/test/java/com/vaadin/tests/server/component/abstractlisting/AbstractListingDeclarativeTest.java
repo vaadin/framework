@@ -170,7 +170,7 @@ public abstract class AbstractListingDeclarativeTest<T extends AbstractListing>
 
     private void testReadData(String design, T expected, T read,
             DesignContext context) {
-        Assert.assertEquals(
+        assertEquals(
                 read.getDataCommunicator().getDataProvider()
                         .size(new Query<>()),
                 expected.getDataCommunicator().getDataProvider()

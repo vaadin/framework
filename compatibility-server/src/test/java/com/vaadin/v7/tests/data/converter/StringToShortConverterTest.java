@@ -1,6 +1,8 @@
 package com.vaadin.v7.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import com.vaadin.v7.data.util.converter.Converter;
@@ -16,33 +18,32 @@ public class StringToShortConverterTest {
 
     @Test
     public void testNullConversion() {
-        Assert.assertEquals("Null value was converted incorrectly", null,
+        assertEquals("Null value was converted incorrectly", null,
                 converter.convertToModel(null, Short.class, null));
     }
 
     @Test
     public void testReverseNullConversion() {
-        Assert.assertEquals("Null value reversely was converted incorrectly",
-                null,
+        assertEquals("Null value reversely was converted incorrectly", null,
                 reverseConverter.convertToModel(null, String.class, null));
     }
 
     @Test
     public void testEmptyStringConversion() {
-        Assert.assertEquals("Empty value was converted incorrectly", null,
+        assertEquals("Empty value was converted incorrectly", null,
                 converter.convertToModel("", Short.class, null));
     }
 
     @Test
     public void testValueConversion() {
-        Assert.assertEquals("Short value was converted incorrectly",
+        assertEquals("Short value was converted incorrectly",
                 Short.valueOf((short) 10),
                 converter.convertToModel("10", Short.class, null));
     }
 
     @Test
     public void testReverseValueConversion() {
-        Assert.assertEquals("Short value reversely was converted incorrectly",
+        assertEquals("Short value reversely was converted incorrectly",
                 reverseConverter.convertToModel((short) 10, String.class, null),
                 "10");
     }
@@ -50,17 +51,16 @@ public class StringToShortConverterTest {
     @Test
     public void testExtremeShortValueConversion() {
         short b = converter.convertToModel("32767", Short.class, null);
-        Assert.assertEquals(Short.MAX_VALUE, b);
+        assertEquals(Short.MAX_VALUE, b);
         b = converter.convertToModel("-32768", Short.class, null);
-        Assert.assertEquals("Min short value was converted incorrectly",
+        assertEquals("Min short value was converted incorrectly",
                 Short.MIN_VALUE, b);
     }
 
     @Test
     public void testValueOutOfRange() {
-        Double[] values = new Double[] { Integer.MAX_VALUE * 2.0,
-                Integer.MIN_VALUE * 2.0, Long.MAX_VALUE * 2.0,
-                Long.MIN_VALUE * 2.0 };
+        Double[] values = { Integer.MAX_VALUE * 2.0, Integer.MIN_VALUE * 2.0,
+                Long.MAX_VALUE * 2.0, Long.MIN_VALUE * 2.0 };
 
         boolean accepted = false;
         for (Number value : values) {
@@ -71,6 +71,6 @@ public class StringToShortConverterTest {
             } catch (ConversionException expected) {
             }
         }
-        Assert.assertFalse("Accepted value outside range of int", accepted);
+        assertFalse("Accepted value outside range of int", accepted);
     }
 }

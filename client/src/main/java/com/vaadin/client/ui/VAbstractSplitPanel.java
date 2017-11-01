@@ -25,13 +25,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
-import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
-import com.google.gwt.event.dom.client.TouchEndHandler;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
-import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.DOM;
@@ -140,36 +136,24 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
         makeScrollable();
 
-        addDomHandler(new TouchCancelHandler() {
-            @Override
-            public void onTouchCancel(TouchCancelEvent event) {
-                // TODO When does this actually happen??
-                VConsole.log("TOUCH CANCEL");
-            }
+        addDomHandler(event -> {
+            // TODO When does this actually happen??
+            VConsole.log("TOUCH CANCEL");
         }, TouchCancelEvent.getType());
-        addDomHandler(new TouchStartHandler() {
-            @Override
-            public void onTouchStart(TouchStartEvent event) {
-                Node target = event.getTouches().get(0).getTarget().cast();
-                if (splitter.isOrHasChild(target)) {
-                    onMouseDown(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            Node target = event.getTouches().get(0).getTarget().cast();
+            if (splitter.isOrHasChild(target)) {
+                onMouseDown(Event.as(event.getNativeEvent()));
             }
         }, TouchStartEvent.getType());
-        addDomHandler(new TouchMoveHandler() {
-            @Override
-            public void onTouchMove(TouchMoveEvent event) {
-                if (resizing) {
-                    onMouseMove(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            if (resizing) {
+                onMouseMove(Event.as(event.getNativeEvent()));
             }
         }, TouchMoveEvent.getType());
-        addDomHandler(new TouchEndHandler() {
-            @Override
-            public void onTouchEnd(TouchEndEvent event) {
-                if (resizing) {
-                    onMouseUp(Event.as(event.getNativeEvent()));
-                }
+        addDomHandler(event -> {
+            if (resizing) {
+                onMouseUp(Event.as(event.getNativeEvent()));
             }
         }, TouchEndEvent.getType());
 
@@ -256,10 +240,11 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     private float convertToPixels(String pos) {
         float posAsFloat;
         if (pos.indexOf("%") > 0) {
-            posAsFloat = Math
-                    .round(Float.parseFloat(pos.substring(0, pos.length() - 1))
-                            / 100 * (orientation == Orientation.HORIZONTAL
-                                    ? getOffsetWidth() : getOffsetHeight()));
+            posAsFloat = Math.round(
+                    Float.parseFloat(pos.substring(0, pos.length() - 1)) / 100
+                            * (orientation == Orientation.HORIZONTAL
+                                    ? getOffsetWidth()
+                                    : getOffsetHeight()));
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
         }
@@ -278,7 +263,8 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
             float pixelPosition = Float
                     .parseFloat(pos.substring(0, pos.length() - 2));
             int offsetLength = orientation == Orientation.HORIZONTAL
-                    ? getOffsetWidth() : getOffsetHeight();
+                    ? getOffsetWidth()
+                    : getOffsetHeight();
 
             // Take splitter size into account at the edge
             if (pixelPosition + getSplitterSize() >= offsetLength) {
@@ -577,7 +563,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         if (WidgetUtil.isTouchEvent(event) || !resized) {
             super.onBrowserEvent(event);
         } else if (DOM.eventGetType(event) == Event.ONMOUSEUP) {
-            // Reset the resized flag after a mouseup has occured so the next
+            // Reset the resized flag after a mouseup has occurred so the next
             // mousedown/mouseup can be interpreted as a click.
             resized = false;
         }
@@ -602,21 +588,21 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Called when starting drag resize
+     * Called when starting drag resize.
      *
      * @since 7.5.1
      */
-    abstract protected void startResize();
+    protected abstract void startResize();
 
     /**
-     * Called when stopping drag resize
+     * Called when stopping drag resize.
      *
      * @since 7.5.1
      */
-    abstract protected void stopResize();
+    protected abstract void stopResize();
 
     /**
-     * Gets the first container
+     * Gets the first container.
      *
      * @since 7.5.1
      * @return the firstContainer
@@ -626,7 +612,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Gets the second container
+     * Gets the second container.
      *
      * @since 7.5.1
      * @return the secondContainer
@@ -850,7 +836,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
     }
 
     /**
-     * Ensures the panels are scrollable eg. after style name changes
+     * Ensures the panels are scrollable e.g. after style name changes
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */

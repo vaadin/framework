@@ -15,7 +15,10 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -39,7 +42,7 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
                 .findElement(By.className("v-datefield-textfield"));
         textField.click();
 
-        Assert.assertFalse(
+        assertFalse(
                 "Date input text field shoud be disabled for disabled DateField",
                 textField.isEnabled());
 
@@ -47,13 +50,12 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
                 .findElement(By.className("v-datefield-button"));
         dataFieldButton.click();
 
-        Assert.assertFalse(
-                "Disabled date popup is opened after click to its button",
+        assertFalse("Disabled date popup is opened after click to its button",
                 isElementPresent(By.className("v-datefield-popup")));
 
         button.click();
 
-        Assert.assertTrue(
+        assertTrue(
                 "Date input text field should be enabled for enabled DateField",
                 textField.isEnabled());
 
@@ -61,15 +63,17 @@ public class DisabledParentLayoutTest extends MultiBrowserTest {
         String text = "text";
         textField.sendKeys(text);
 
-        Assert.assertEquals("Unexpected text in date text field", text,
+        assertEquals("Unexpected text in date text field", text,
                 textField.getAttribute("value"));
 
         dataFieldButton.click();
-        dataFieldButton.click();//Requires two clicks because of error message. TODO fix
-        Assert.assertFalse("Unexpected disabled element found",
+        // Requires two clicks because of error message.
+        // TODO fix
+        dataFieldButton.click();
+        assertFalse("Unexpected disabled element found",
                 isElementPresent(By.className("v-disabled")));
 
-        Assert.assertTrue("Date popup is not opened after click to its button",
+        assertTrue("Date popup is not opened after click to its button",
                 isElementPresent(By.className("v-datefield-popup")));
     }
 

@@ -17,6 +17,8 @@ package com.vaadin.tests.components.grid;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.vaadin.server.VaadinRequest;
@@ -44,14 +46,15 @@ public class GridEditorUI extends AbstractReindeerTestUIWithLog {
 
     protected Collection<Person> createTestData(int size) {
         Random r = new Random(0);
-        ArrayList<Person> testData = new ArrayList<>();
+        List<Person> testData = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             Person person = new Person();
             person.setFirstName(TestDataGenerator.getFirstName(r));
             person.setLastName(TestDataGenerator.getLastName(r));
             person.getAddress().setCity(TestDataGenerator.getCity(r));
-            person.setEmail(person.getFirstName().toLowerCase() + "."
-                    + person.getLastName().toLowerCase() + "@vaadin.com");
+            person.setEmail(person.getFirstName().toLowerCase(Locale.ROOT) + "."
+                    + person.getLastName().toLowerCase(Locale.ROOT)
+                    + "@vaadin.com");
             person.setPhoneNumber(TestDataGenerator.getPhoneNumber(r));
 
             person.getAddress()

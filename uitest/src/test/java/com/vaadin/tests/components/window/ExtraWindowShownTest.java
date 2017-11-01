@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -31,7 +32,7 @@ public class ExtraWindowShownTest extends MultiBrowserTest {
     }
 
     private void assertNoWindow() {
-        Assert.assertFalse("Window found when there should be none.",
+        assertFalse("Window found when there should be none.",
                 $(WindowElement.class).exists());
     }
 }

@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.layouts;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -29,7 +30,7 @@ public class VerticalLayoutRemoveComponentTest
         openTestURL();
 
         String script = "document.mutationEventCount = 0;"
-                + "var observer = new MutationObserver(function(mutations){"
+                + "var observer = new MutationObserver(function(mutations) {"
                 + "mutations.forEach(function(mutation) { document.mutationEventCount += mutation.removedNodes.length; });"
                 + "});"
                 + "observer.observe(arguments[0], { childList: true });";
@@ -41,8 +42,7 @@ public class VerticalLayoutRemoveComponentTest
 
         Long mutationEvents = (Long) executeScript(
                 "return document.mutationEventCount;");
-        Assert.assertEquals(
-                "Parent should only have one mutation event (remove slot)", 1,
-                mutationEvents.intValue());
+        assertEquals("Parent should only have one mutation event (remove slot)",
+                1, mutationEvents.intValue());
     }
 }

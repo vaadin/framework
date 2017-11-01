@@ -18,8 +18,6 @@ package com.vaadin.tests.components.ui;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class RpcInvocationHandlerToString extends AbstractTestUIWithLog {
 
@@ -28,31 +26,13 @@ public class RpcInvocationHandlerToString extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         addButton("Exec toString() for an invocation proxy",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log("An invoation proxy: " + dummyProxy.toString());
-                    }
-                });
+                event -> log("An invoation proxy: " + dummyProxy));
         addButton("Exec hashCode() for an invocation proxy",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log("Invocation proxy.hashCode(): "
-                                + dummyProxy.hashCode());
-                    }
-                });
+                event -> log("Invocation proxy.hashCode(): "
+                        + dummyProxy.hashCode()));
         addButton("Exec equals(false) for an invocation proxy",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log("Invocation proxy.equals(false): "
-                                + dummyProxy.equals(false));
-                    }
-                });
+                event -> log("Invocation proxy.equals(false): "
+                        + dummyProxy.equals(false)));
     }
 
     @Override

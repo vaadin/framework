@@ -1,6 +1,8 @@
 package com.vaadin.test.cdi;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,8 +31,8 @@ public class VaadinCDISmokeIT extends TestBenchTestCase {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertTrue($(NotificationElement.class).exists());
-        Assert.assertEquals(ThankYouServiceImpl.THANK_YOU_TEXT,
+        assertTrue($(NotificationElement.class).exists());
+        assertEquals(ThankYouServiceImpl.THANK_YOU_TEXT,
                 $(NotificationElement.class).first().getText());
     }
 }

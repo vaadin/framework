@@ -6,8 +6,7 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-test-karaf</artifactId>
-        <version>8.1-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <version>8.2-SNAPSHOT</version>
     </parent>
     <artifactId>vaadin-karaf-bundle1</artifactId>
     <packaging>jar</packaging>
@@ -69,7 +68,6 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-client</artifactId>
-            <version>${vaadin.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -95,7 +93,6 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
-                <version>${vaadin.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>

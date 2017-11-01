@@ -32,7 +32,7 @@ public class SimpleLoginView extends CustomComponent
         user = new TextField("User:");
         user.setWidth("300px");
         user.setRequired(true);
-        user.setInputPrompt("Your username (eg. joe@email.com)");
+        user.setInputPrompt("Your username (e.g. joe@email.com)");
         user.addValidator(
                 new EmailValidator("Username must be an email address"));
         user.setInvalidAllowed(false);

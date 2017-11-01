@@ -15,22 +15,6 @@
  */
 package com.vaadin.tests.components.upload;
 
-import com.vaadin.testbench.elements.UploadElement;
-import com.vaadin.tests.tb3.MultiBrowserTest;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.internal.WrapsElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebElement;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-
 /**
  * Verifies that there's no client side errors when changing a tab containing
  * Upload right after uploading is succeeded (#8728)

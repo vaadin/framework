@@ -15,8 +15,6 @@
  */
 package com.vaadin.event;
 
-import java.util.logging.Logger;
-
 import com.vaadin.event.Action.Container;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VariableOwner;
@@ -75,10 +73,6 @@ public class ConnectorActionManager extends ActionManager {
         }
 
         super.handleAction(action, sender, target);
-    }
-
-    private static final Logger getLogger() {
-        return Logger.getLogger(ConnectorActionManager.class.getName());
     }
 
 }

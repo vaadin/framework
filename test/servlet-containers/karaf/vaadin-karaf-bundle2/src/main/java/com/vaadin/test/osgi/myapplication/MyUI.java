@@ -2,7 +2,6 @@ package com.vaadin.test.osgi.myapplication;
 
 import javax.servlet.annotation.WebServlet;
 
-import com.vaadin.annotations.Theme;
 import org.osgi.service.component.annotations.Component;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -24,9 +23,8 @@ public class MyUI extends UI {
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener(e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() + ", it works!"));
-        });
+        button.addClickListener(event -> layout.addComponent(
+                new Label("Thanks " + name.getValue() + ", it works!")));
 
         layout.addComponents(name, button);
 

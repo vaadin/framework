@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -73,7 +74,6 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
@@ -141,7 +141,7 @@ import com.vaadin.v7.shared.ui.table.TableConstants;
  * TODO implement unregistering for child components in Cells
  */
 public class VScrollTable extends FlowPanel
-        implements HasWidgets, ScrollHandler, VHasDropHandler, FocusHandler,
+        implements ScrollHandler, VHasDropHandler, FocusHandler,
         BlurHandler, Focusable, ActionOwner, SubPartAware, DeferredWorker {
 
     /**
@@ -313,11 +313,11 @@ public class VScrollTable extends FlowPanel
      * multiple of pagelength which component will cache when requesting more
      * rows
      */
-    private double cache_rate = CACHE_RATE_DEFAULT;
+    private double cacheRate = CACHE_RATE_DEFAULT;
     /**
      * fraction of pageLength which can be scrolled without making new request
      */
-    private double cache_react_rate = 0.75 * cache_rate;
+    private double cacheReactRate = 0.75 * cacheRate;
 
     public static final char ALIGN_CENTER = 'c';
     public static final char ALIGN_LEFT = 'b';
@@ -325,9 +325,11 @@ public class VScrollTable extends FlowPanel
     private static final int CHARCODE_SPACE = 32;
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
-    private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
-    private int firstvisibleOnLastPage = -1; // To detect if the first visible
-                                             // is on the last page
+    // to detect "serverside scroll"
+    private int lastRequestedFirstvisible = 0;
+    // To detect if the first visible
+    // is on the last page
+    private int firstvisibleOnLastPage = -1;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean showRowHeaders = false;
@@ -403,7 +405,7 @@ public class VScrollTable extends FlowPanel
 
     private boolean enableDebug = false;
 
-    private static final boolean hasNativeTouchScrolling = BrowserInfo.get()
+    private static final boolean HAS_NATIVE_TOUCH_SCROLLLING = BrowserInfo.get()
             .isTouchDevice()
             && !BrowserInfo.get().requiresTouchScrollDelegate();
 
@@ -473,7 +475,7 @@ public class VScrollTable extends FlowPanel
 
         public Collection<SelectionRange> split(VScrollTableRow row) {
             assert row.isAttached();
-            ArrayList<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
+            List<SelectionRange> ranges = new ArrayList<SelectionRange>(2);
 
             int endOfFirstRange = row.getIndex() - 1;
             if (endOfFirstRange >= startRow.getIndex()) {
@@ -677,7 +679,7 @@ public class VScrollTable extends FlowPanel
      * This map contains captions and icon urls for actions like: * "33_c" ->
      * "Edit" * "33_i" -> "http://dom.com/edit.png"
      */
-    private final HashMap<Object, String> actionMap = new HashMap<Object, String>();
+    private final Map<Object, String> actionMap = new HashMap<Object, String>();
     private String[] visibleColOrder;
     private boolean initialContentReceived = false;
     private Element scrollPositionElement;
@@ -1312,16 +1314,15 @@ public class VScrollTable extends FlowPanel
             // that is the same as the previous selection. This prevents
             // unwanted scrolling (#18247).
             boolean rowsUnSelected = removeUnselectedRowKeys(selectedKeys);
-            boolean updateFocus = rowsUnSelected || selectedRowKeys.size() == 0
+            boolean updateFocus = rowsUnSelected || selectedRowKeys.isEmpty()
                     || focusedRow == null;
             if (scrollBody != null) {
-                Iterator<Widget> iterator = scrollBody.iterator();
-                while (iterator.hasNext()) {
+                for (Widget w : scrollBody) {
                     /*
                      * Make the focus reflect to the server side state unless we
                      * are currently selecting multiple rows with keyboard.
                      */
-                    VScrollTableRow row = (VScrollTableRow) iterator.next();
+                    VScrollTableRow row = (VScrollTableRow) w;
                     boolean selected = selectedKeys.contains(row.getKey());
                     if (!selected && unSyncedselectionsBeforeRowFetch != null
                             && unSyncedselectionsBeforeRowFetch
@@ -1376,7 +1377,7 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void resizeSortedColumnForSortIndicator() {
         // Force recalculation of the captionContainer element inside the header
-        // cell to accomodate for the size of the sort arrow.
+        // cell to accommodate for the size of the sort arrow.
         HeaderCell sortedHeader = tHead.getHeaderCell(sortColumn);
         if (sortedHeader != null) {
             // Mark header as sorted now. Any earlier marking would lead to
@@ -1433,9 +1434,11 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible")
-                ? uidl.getIntVariable("firstvisible") : 0;
+                ? uidl.getIntVariable("firstvisible")
+                : 0;
         firstvisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage")
-                ? uidl.getIntVariable("firstvisibleonlastpage") : -1;
+                ? uidl.getIntVariable("firstvisibleonlastpage")
+                : -1;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
 
             // Update lastRequestedFirstvisible right away here
@@ -1477,7 +1480,8 @@ public class VScrollTable extends FlowPanel
                 : MULTISELECT_MODE_DEFAULT);
 
         nullSelectionAllowed = uidl.hasAttribute("nsa")
-                ? uidl.getBooleanAttribute("nsa") : true;
+                ? uidl.getBooleanAttribute("nsa")
+                : true;
 
         if (uidl.hasAttribute("selectmode")) {
             if (readOnly) {
@@ -1495,7 +1499,8 @@ public class VScrollTable extends FlowPanel
     /** For internal use only. May be removed or replaced in the future. */
     public void updateDragMode(UIDL uidl) {
         dragmode = uidl.hasAttribute("dragmode")
-                ? uidl.getIntAttribute("dragmode") : 0;
+                ? uidl.getIntAttribute("dragmode")
+                : 0;
         if (BrowserInfo.get().isIE()) {
             if (dragmode > 0) {
                 getElement().setPropertyJSO("onselectstart",
@@ -1645,9 +1650,9 @@ public class VScrollTable extends FlowPanel
     }
 
     private void setCacheRate(double d) {
-        if (cache_rate != d) {
-            cache_rate = d;
-            cache_react_rate = 0.75 * d;
+        if (cacheRate != d) {
+            cacheRate = d;
+            cacheReactRate = 0.75 * d;
         }
     }
 
@@ -1658,9 +1663,8 @@ public class VScrollTable extends FlowPanel
             return;
         }
 
-        final Iterator<?> it = actionsUidl.getChildIterator();
-        while (it.hasNext()) {
-            final UIDL action = (UIDL) it.next();
+        for (final Object child : actionsUidl) {
+            final UIDL action = (UIDL) child;
             final String key = action.getStringAttribute("key");
             final String caption = action.getStringAttribute("caption");
             actionMap.put(key + "_c", caption);
@@ -1700,9 +1704,7 @@ public class VScrollTable extends FlowPanel
             tHead.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
-        int i;
-        for (i = 0; i < strings.length; i++) {
-            final String cid = strings[i];
+        for (final String cid : strings) {
             visibleColOrder[colIndex] = cid;
             tHead.enableColumn(cid, colIndex);
             colIndex++;
@@ -1735,9 +1737,7 @@ public class VScrollTable extends FlowPanel
             tFoot.removeCell(ROW_HEADER_COLUMN_KEY);
         }
 
-        int i;
-        for (i = 0; i < strings.length; i++) {
-            final String cid = strings[i];
+        for (final String cid : strings) {
             tFoot.enableColumn(cid, colIndex);
             colIndex++;
         }
@@ -1798,9 +1798,9 @@ public class VScrollTable extends FlowPanel
      */
     protected void discardRowsOutsideCacheWindow() {
         int firstRowToKeep = (int) (firstRowInViewPort
-                - pageLength * cache_rate);
+                - pageLength * cacheRate);
         int lastRowToKeep = (int) (firstRowInViewPort + pageLength
-                + pageLength * cache_rate);
+                + pageLength * cacheRate);
         // sanity checks:
         if (firstRowToKeep < 0) {
             firstRowToKeep = 0;
@@ -2023,7 +2023,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Get a rendered row by its key
+     * Get a rendered row by its key.
      *
      * @param key
      *            The key to search with
@@ -2031,10 +2031,8 @@ public class VScrollTable extends FlowPanel
      */
     public VScrollTableRow getRenderedRowByKey(String key) {
         if (scrollBody != null) {
-            final Iterator<Widget> it = scrollBody.iterator();
-            VScrollTableRow r = null;
-            while (it.hasNext()) {
-                r = (VScrollTableRow) it.next();
+            for (Widget w : scrollBody) {
+                VScrollTableRow r = (VScrollTableRow) w;
                 if (r.getKey().equals(key)) {
                     return r;
                 }
@@ -2053,9 +2051,8 @@ public class VScrollTable extends FlowPanel
      */
     private VScrollTableRow getNextRow(VScrollTableRow row, int offset) {
         final Iterator<Widget> it = scrollBody.iterator();
-        VScrollTableRow r = null;
         while (it.hasNext()) {
-            r = (VScrollTableRow) it.next();
+            VScrollTableRow r = (VScrollTableRow) it.next();
             if (r == row) {
                 r = null;
                 while (offset >= 0 && it.hasNext()) {
@@ -2079,10 +2076,9 @@ public class VScrollTable extends FlowPanel
     private VScrollTableRow getPreviousRow(VScrollTableRow row, int offset) {
         final Iterator<Widget> it = scrollBody.iterator();
         final Iterator<Widget> offsetIt = scrollBody.iterator();
-        VScrollTableRow r = null;
         VScrollTableRow prev = null;
         while (it.hasNext()) {
-            r = (VScrollTableRow) it.next();
+            VScrollTableRow r = (VScrollTableRow) it.next();
             if (offset < 0) {
                 prev = (VScrollTableRow) offsetIt.next();
             }
@@ -2120,11 +2116,11 @@ public class VScrollTable extends FlowPanel
             newIndex--; // columnOrder don't have rowHeader
         }
         // add back hidden rows,
-        for (int i = 0; i < columnOrder.length; i++) {
-            if (columnOrder[i].equals(oldKeyOnNewIndex)) {
+        for (String order : columnOrder) {
+            if (order.equals(oldKeyOnNewIndex)) {
                 break; // break loop at target
             }
-            if (isCollapsedColumn(columnOrder[i])) {
+            if (isCollapsedColumn(order)) {
                 newIndex++;
             }
         }
@@ -2218,7 +2214,8 @@ public class VScrollTable extends FlowPanel
         tFoot.enableBrowserIntelligence();
 
         int hierarchyColumnIndent = scrollBody != null
-                ? scrollBody.getMaxIndent() : 0;
+                ? scrollBody.getMaxIndent()
+                : 0;
         HeaderCell hierarchyHeaderWithExpandRatio = null;
 
         // first loop: collect natural widths
@@ -2478,12 +2475,12 @@ public class VScrollTable extends FlowPanel
         if (enabled) {
             // Do we need cache rows
             if (scrollBody.getLastRendered() + 1 < firstRowInViewPort
-                    + pageLength + (int) cache_react_rate * pageLength) {
+                    + pageLength + (int) cacheReactRate * pageLength) {
                 if (totalRows - 1 > scrollBody.getLastRendered()) {
                     // fetch cache rows
                     int firstInNewSet = scrollBody.getLastRendered() + 1;
                     int lastInNewSet = (int) (firstRowInViewPort + pageLength
-                            + cache_rate * pageLength);
+                            + cacheRate * pageLength);
                     if (lastInNewSet > totalRows - 1) {
                         lastInNewSet = totalRows - 1;
                     }
@@ -2652,8 +2649,8 @@ public class VScrollTable extends FlowPanel
                  */
 
                 setReqFirstRow(
-                        (firstRowInViewPort - (int) (pageLength * cache_rate)));
-                int last = firstRowInViewPort + (int) (cache_rate * pageLength)
+                        (firstRowInViewPort - (int) (pageLength * cacheRate)));
+                int last = firstRowInViewPort + (int) (cacheRate * pageLength)
                         + pageLength - 1;
                 if (last >= totalRows) {
                     last = totalRows - 1;
@@ -2676,9 +2673,9 @@ public class VScrollTable extends FlowPanel
                 if (reqFirstRow < firstToBeRendered) {
                     firstToBeRendered = reqFirstRow;
                 } else if (firstRowInViewPort
-                        - (int) (cache_rate * pageLength) > firstToBeRendered) {
+                        - (int) (cacheRate * pageLength) > firstToBeRendered) {
                     firstToBeRendered = firstRowInViewPort
-                            - (int) (cache_rate * pageLength);
+                            - (int) (cacheRate * pageLength);
                     if (firstToBeRendered < 0) {
                         firstToBeRendered = 0;
                     }
@@ -2701,9 +2698,9 @@ public class VScrollTable extends FlowPanel
                 if (lastReqRow > lastToBeRendered) {
                     lastToBeRendered = lastReqRow;
                 } else if (firstRowInViewPort + pageLength
-                        + pageLength * cache_rate < lastToBeRendered) {
+                        + pageLength * cacheRate < lastToBeRendered) {
                     lastToBeRendered = (firstRowInViewPort + pageLength
-                            + (int) (pageLength * cache_rate));
+                            + (int) (pageLength * cacheRate));
                     if (lastToBeRendered >= totalRows) {
                         lastToBeRendered = totalRows - 1;
                     }
@@ -2771,8 +2768,8 @@ public class VScrollTable extends FlowPanel
          */
         public void refreshContent() {
             isRequestHandlerRunning = true;
-            int first = (int) (firstRowInViewPort - pageLength * cache_rate);
-            int reqRows = (int) (2 * pageLength * cache_rate + pageLength);
+            int first = (int) (firstRowInViewPort - pageLength * cacheRate);
+            int reqRows = (int) (2 * pageLength * cacheRate + pageLength);
             if (first < 0) {
                 reqRows = reqRows + first;
                 first = 0;
@@ -2910,18 +2907,18 @@ public class VScrollTable extends FlowPanel
                 addStyleName(primaryStyleName + "-header-sortable");
             }
 
-            final String ALIGN_PREFIX = primaryStyleName
+            final String alignPrefix = primaryStyleName
                     + "-caption-container-align-";
 
             switch (align) {
             case ALIGN_CENTER:
-                captionContainer.addClassName(ALIGN_PREFIX + "center");
+                captionContainer.addClassName(alignPrefix + "center");
                 break;
             case ALIGN_RIGHT:
-                captionContainer.addClassName(ALIGN_PREFIX + "right");
+                captionContainer.addClassName(alignPrefix + "right");
                 break;
             default:
-                captionContainer.addClassName(ALIGN_PREFIX + "left");
+                captionContainer.addClassName(alignPrefix + "left");
                 break;
             }
 
@@ -3122,7 +3119,7 @@ public class VScrollTable extends FlowPanel
                     if (s.equals(stylePrimaryName)) {
                         sb.append("-header-drag ");
                     } else {
-                        sb.append(" ");
+                        sb.append(' ');
                     }
                 }
             }
@@ -3185,8 +3182,9 @@ public class VScrollTable extends FlowPanel
                     colIndex = getColIndexByKey(cid);
                     DOM.setCapture(getElement());
                     headerX = tHead.getAbsoluteLeft();
-                    event.preventDefault(); // prevent selecting text &&
-                                            // generated touch events
+                    // prevent selecting text &&
+                    // generated touch events
+                    event.preventDefault();
                 }
                 break;
             case Event.ONMOUSEUP:
@@ -3240,12 +3238,14 @@ public class VScrollTable extends FlowPanel
                         firstvisible = 0;
                         rowRequestHandler.setReqFirstRow(0);
                         rowRequestHandler
-                                .setReqRows((int) (2 * pageLength * cache_rate
+                                .setReqRows((int) (2 * pageLength * cacheRate
                                         + pageLength));
-                        rowRequestHandler.deferRowFetch(); // some validation +
-                                                           // defer 250ms
-                        rowRequestHandler.cancel(); // instead of waiting
-                        rowRequestHandler.run(); // run immediately
+                        // some validation and defer 250ms
+                        // instead of waiting
+                        rowRequestHandler.deferRowFetch();
+                        rowRequestHandler.cancel();
+                        // run immediately
+                        rowRequestHandler.run();
                     }
                     fireHeaderClickedEvent(event);
                     if (WidgetUtil.isTouchEvent(event)) {
@@ -3448,11 +3448,11 @@ public class VScrollTable extends FlowPanel
                 }
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Iterator<Widget> it = tHead.iterator(); it
-                            .hasNext(); columnIndex++) {
-                        if (it.next() == this) {
+                    for (Widget w : tHead) {
+                        if (w == this) {
                             break;
                         }
+                        columnIndex++;
                     }
                 }
                 final int cw = scrollBody.getColWidth(columnIndex);
@@ -3472,7 +3472,8 @@ public class VScrollTable extends FlowPanel
          */
         public int getNaturalColumnWidth(int columnIndex) {
             final int iw = columnIndex == getHierarchyColumnIndex()
-                    ? scrollBody.getMaxIndent() : 0;
+                    ? scrollBody.getMaxIndent()
+                    : 0;
             saveNaturalColumnWidthIfNotSaved(columnIndex);
             if (isDefinedWidth()) {
                 if (iw > width) {
@@ -3535,9 +3536,9 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
+        List<Widget> visibleCells = new ArrayList<Widget>();
 
-        HashMap<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
+        Map<String, HeaderCell> availableCells = new HashMap<String, HeaderCell>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -3643,12 +3644,11 @@ public class VScrollTable extends FlowPanel
         }
 
         public void updateCellsFromUIDL(UIDL uidl) {
-            Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
             boolean refreshContentWidths = initializedAndAttached
                     && hadScrollBars != willHaveScrollbars();
-            while (it.hasNext()) {
-                final UIDL col = (UIDL) it.next();
+            for (Object child : uidl) {
+                final UIDL col = (UIDL) child;
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
 
@@ -3684,7 +3684,7 @@ public class VScrollTable extends FlowPanel
 
                 }
                 if (col.hasAttribute("width") && !c.isResizing) {
-                    // Make sure to accomodate for the sort indicator if
+                    // Make sure to accommodate for the sort indicator if
                     // necessary.
                     int width = col.getIntAttribute("width");
                     int widthWithoutAddedIndent = width;
@@ -3992,7 +3992,7 @@ public class VScrollTable extends FlowPanel
 
             @Override
             public String getHTML() {
-                final StringBuffer buf = new StringBuffer();
+                final StringBuilder buf = new StringBuilder();
                 buf.append("<span class=\"");
                 if (collapsed) {
                     buf.append("v-off");
@@ -4031,15 +4031,14 @@ public class VScrollTable extends FlowPanel
                 for (i = 0; i < visibleColOrder.length; i++) {
                     cols[i] = visibleColOrder[i];
                 }
-                for (final Iterator<String> it = collapsedColumns.iterator(); it
-                        .hasNext();) {
-                    cols[i++] = it.next();
+                for (final String column : collapsedColumns) {
+                    cols[i++] = column;
                 }
             }
             List<Action> actions = new ArrayList<Action>(cols.length);
 
-            for (int i = 0; i < cols.length; i++) {
-                final String cid = (String) cols[i];
+            for (Object col : cols) {
+                final String cid = (String) col;
                 boolean noncollapsible = noncollapsibleColumns.contains(cid);
 
                 if (noncollapsible
@@ -4073,14 +4072,13 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns column alignments for visible columns
+         * Returns column alignments for visible columns.
          */
         public char[] getColumnAlignments() {
-            final Iterator<Widget> it = visibleCells.iterator();
             final char[] aligns = new char[visibleCells.size()];
             int colIndex = 0;
-            while (it.hasNext()) {
-                aligns[colIndex++] = ((HeaderCell) it.next()).getAlign();
+            for (Widget w : visibleCells) {
+                aligns[colIndex++] = ((HeaderCell) w).getAlign();
             }
             return aligns;
         }
@@ -4095,7 +4093,7 @@ public class VScrollTable extends FlowPanel
             }
             // fire column resize events for all columns but the source of the
             // resize action, since an event will fire separately for this.
-            ArrayList<HeaderCell> columns = new ArrayList<HeaderCell>(
+            List<HeaderCell> columns = new ArrayList<HeaderCell>(
                     availableCells.values());
             columns.remove(source);
             sendColumnWidthUpdates(columns);
@@ -4104,7 +4102,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * A cell in the footer
+     * A cell in the footer.
      */
     public class FooterCell extends Widget {
         private final Element td = DOM.createTD();
@@ -4142,7 +4140,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the text of the footer
+         * Sets the text of the footer.
          *
          * @param footerText
          *            The text in the footer
@@ -4156,7 +4154,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Set alignment of the text in the cell
+         * Set alignment of the text in the cell.
          *
          * @param c
          *            The alignment which can be ALIGN_CENTER, ALIGN_LEFT,
@@ -4180,7 +4178,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Get the alignment of the text int the cell
+         * Get the alignment of the text int the cell.
          *
          * @return Returns either ALIGN_CENTER, ALIGN_LEFT or ALIGN_RIGHT
          */
@@ -4265,7 +4263,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the width to undefined
+         * Sets the width to undefined.
          */
         public void setUndefinedWidth() {
             definedWidth = false;
@@ -4292,7 +4290,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Sets the expand ratio of the cell
+         * Sets the expand ratio of the cell.
          *
          * @param floatAttribute
          *            The expand ratio
@@ -4302,7 +4300,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns the expand ratio of the cell
+         * Returns the expand ratio of the cell.
          *
          * @return The expand ratio
          */
@@ -4320,7 +4318,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Handle column clicking
+         * Handle column clicking.
          */
 
         @Override
@@ -4347,7 +4345,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Handles a event on the captions
+         * Handles a event on the captions.
          *
          * @param event
          *            The event to handle
@@ -4378,7 +4376,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Returns the column key of the column
+         * Returns the column key of the column.
          *
          * @return The column key
          */
@@ -4401,11 +4399,11 @@ public class VScrollTable extends FlowPanel
                         .getOffsetWidth() + getHeaderPadding();
                 if (columnIndex < 0) {
                     columnIndex = 0;
-                    for (Iterator<Widget> it = tHead.iterator(); it
-                            .hasNext(); columnIndex++) {
-                        if (it.next() == this) {
+                    for (Widget widget : tHead) {
+                        if (widget == this) {
                             break;
                         }
+                        columnIndex++;
                     }
                 }
                 final int cw = scrollBody.getColWidth(columnIndex);
@@ -4425,7 +4423,8 @@ public class VScrollTable extends FlowPanel
          */
         public int getNaturalColumnWidth(int columnIndex) {
             final int iw = columnIndex == getHierarchyColumnIndex()
-                    ? scrollBody.getMaxIndent() : 0;
+                    ? scrollBody.getMaxIndent()
+                    : 0;
             saveNaturalColumnWidthIfNotSaved(columnIndex);
             if (isDefinedWidth()) {
                 if (iw > width) {
@@ -4471,8 +4470,8 @@ public class VScrollTable extends FlowPanel
 
         private static final int WRAPPER_WIDTH = 900000;
 
-        ArrayList<Widget> visibleCells = new ArrayList<Widget>();
-        HashMap<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
+        List<Widget> visibleCells = new ArrayList<Widget>();
+        Map<String, FooterCell> availableCells = new HashMap<String, FooterCell>();
 
         Element div = DOM.createDiv();
         Element hTableWrapper = DOM.createDiv();
@@ -4547,7 +4546,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Gets a footer cell which represents the given columnId
+         * Gets a footer cell which represents the given columnId.
          *
          * @param cid
          *            The columnId
@@ -4559,7 +4558,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Gets a footer cell by using a column index
+         * Gets a footer cell by using a column index.
          *
          * @param index
          *            The index of the column
@@ -4574,21 +4573,21 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Updates the cells contents when updateUIDL request is received
+         * Updates the cells contents when updateUIDL request is received.
          *
          * @param uidl
          *            The UIDL
          */
         public void updateCellsFromUIDL(UIDL uidl) {
-            Iterator<?> columnIterator = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            while (columnIterator.hasNext()) {
-                final UIDL col = (UIDL) columnIterator.next();
+            for (Object child : uidl) {
+                final UIDL col = (UIDL) child;
                 final String cid = col.getStringAttribute("cid");
                 updated.add(cid);
 
                 String caption = col.hasAttribute("fcaption")
-                        ? col.getStringAttribute("fcaption") : "";
+                        ? col.getStringAttribute("fcaption")
+                        : "";
                 FooterCell c = getFooterCell(cid);
                 if (c == null) {
                     c = new FooterCell(cid, caption);
@@ -4645,7 +4644,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Set a footer cell for a specified column index
+         * Set a footer cell for a specified column index.
          *
          * @param index
          *            The index
@@ -4676,7 +4675,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Remove a cell by using the columnId
+         * Remove a cell by using the columnId.
          *
          * @param colKey
          *            The columnId to remove
@@ -4687,7 +4686,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Enable a column (Sets the footer cell)
+         * Enable a column (Sets the footer cell).
          *
          * @param cid
          *            The columnId
@@ -4705,14 +4704,14 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Disable browser measurement of the table width
+         * Disable browser measurement of the table width.
          */
         public void disableBrowserIntelligence() {
             hTableContainer.getStyle().setWidth(WRAPPER_WIDTH, Unit.PX);
         }
 
         /**
-         * Enable browser measurement of the table width
+         * Enable browser measurement of the table width.
          */
         public void enableBrowserIntelligence() {
             hTableContainer.getStyle().clearWidth();
@@ -4730,7 +4729,7 @@ public class VScrollTable extends FlowPanel
         }
 
         /**
-         * Swap cells when the column are dragged
+         * Swap cells when the column are dragged.
          *
          * @param oldIndex
          *            The old index of the cell
@@ -4863,10 +4862,9 @@ public class VScrollTable extends FlowPanel
         public void renderInitialRows(UIDL rowData, int firstIndex, int rows) {
             firstRendered = firstIndex;
             setLastRendered(firstIndex + rows - 1);
-            final Iterator<?> it = rowData.getChildIterator();
             aligns = tHead.getColumnAlignments();
-            while (it.hasNext()) {
-                final VScrollTableRow row = createRow((UIDL) it.next(), aligns);
+            for (final Object child : rowData) {
+                final VScrollTableRow row = createRow((UIDL) child, aligns);
                 addRow(row);
             }
             if (isAttached()) {
@@ -4877,7 +4875,7 @@ public class VScrollTable extends FlowPanel
         public void renderRows(UIDL rowData, int firstIndex, int rows) {
             // FIXME REVIEW
             aligns = tHead.getColumnAlignments();
-            final Iterator<?> it = rowData.getChildIterator();
+            final Iterator<?> it = rowData.iterator();
             if (firstIndex == lastRendered + 1) {
                 while (it.hasNext()) {
                     final VScrollTableRow row = prepareRow((UIDL) it.next());
@@ -4947,9 +4945,9 @@ public class VScrollTable extends FlowPanel
             }
 
             int reactFirstRow = (int) (firstRowInViewPort
-                    - pageLength * cache_react_rate);
+                    - pageLength * cacheReactRate);
             int reactLastRow = (int) (firstRowInViewPort + pageLength
-                    + pageLength * cache_react_rate);
+                    + pageLength * cacheReactRate);
             if (reactFirstRow < 0) {
                 reactFirstRow = 0;
             }
@@ -4998,7 +4996,7 @@ public class VScrollTable extends FlowPanel
         protected List<VScrollTableRow> insertRows(UIDL rowData, int firstIndex,
                 int rows) {
             aligns = tHead.getColumnAlignments();
-            final Iterator<?> it = rowData.getChildIterator();
+            final Iterator<?> it = rowData.iterator();
             List<VScrollTableRow> insertedRows = new ArrayList<VScrollTableRow>();
 
             if (firstIndex == lastRendered + 1) {
@@ -5352,7 +5350,9 @@ public class VScrollTable extends FlowPanel
          * of td.
          *
          * @param colIndex
+         *            The column Index
          * @param w
+         *            The content width
          */
         public void setColWidth(int colIndex, int w) {
             for (Widget row : renderedRows) {
@@ -5374,8 +5374,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Returns the maximum indent of the hierarcyColumn, if applicable.
          *
          * @see VScrollTable#getHierarchyColumnIndex()
@@ -5388,8 +5388,8 @@ public class VScrollTable extends FlowPanel
 
         /**
          * This method exists for the needs of {@link VTreeTable} only. May be
-         * removed or replaced in the future.</br>
-         * </br>
+         * removed or replaced in the future.<br>
+         * <br>
          * Calculates the maximum indent of the hierarcyColumn, if applicable.
          */
         protected void calculateMaxIndent() {
@@ -5416,7 +5416,8 @@ public class VScrollTable extends FlowPanel
                     noCells = true;
                     VScrollTableRow next = (VScrollTableRow) iterator().next();
                     boolean sorted = tHead.getHeaderCell(0) != null
-                            ? tHead.getHeaderCell(0).isSorted() : false;
+                            ? tHead.getHeaderCell(0).isSorted()
+                            : false;
                     next.addCell(null, "", ALIGN_LEFT, "", true, sorted);
                     firstTD = item.getCells().getItem(0);
                 }
@@ -5433,9 +5434,8 @@ public class VScrollTable extends FlowPanel
         public void moveCol(int oldIndex, int newIndex) {
 
             // loop all rows and move given index to its new place
-            final Iterator<?> rows = iterator();
-            while (rows.hasNext()) {
-                final VScrollTableRow row = (VScrollTableRow) rows.next();
+            for (Widget w : this) {
+                final VScrollTableRow row = (VScrollTableRow) w;
 
                 final Element td = DOM.getChild(row.getElement(), oldIndex);
                 if (td != null) {
@@ -5476,7 +5476,7 @@ public class VScrollTable extends FlowPanel
 
             private static final int TOUCHSCROLL_TIMEOUT = 100;
             private static final int DRAGMODE_MULTIROW = 2;
-            protected ArrayList<Widget> childWidgets = new ArrayList<Widget>();
+            protected List<Widget> childWidgets = new ArrayList<Widget>();
             private boolean selected = false;
             protected final int rowKey;
 
@@ -5618,9 +5618,7 @@ public class VScrollTable extends FlowPanel
 
             protected void addCellsFromUIDL(UIDL uidl, char[] aligns, int col,
                     int visibleColumnIndex) {
-                final Iterator<?> cells = uidl.getChildIterator();
-                while (cells.hasNext()) {
-                    final Object cell = cells.next();
+                for (final Object cell : uidl) {
                     visibleColumnIndex++;
 
                     String columnId = visibleColOrder[visibleColumnIndex];
@@ -5911,8 +5909,8 @@ public class VScrollTable extends FlowPanel
 
                 TooltipInfo info = null;
                 final Element targetTdOrTr = getTdOrTr(target);
-                if (targetTdOrTr != null && "td"
-                        .equals(targetTdOrTr.getTagName().toLowerCase())) {
+                if (targetTdOrTr != null && "td".equals(
+                        targetTdOrTr.getTagName().toLowerCase(Locale.ROOT))) {
                     TableCellElement td = (TableCellElement) targetTdOrTr
                             .cast();
                     info = cellToolTips.get(td);
@@ -5950,7 +5948,7 @@ public class VScrollTable extends FlowPanel
 
                 boolean touchEventHandled = false;
 
-                if (enabled && hasNativeTouchScrolling) {
+                if (enabled && HAS_NATIVE_TOUCH_SCROLLLING) {
                     touchContextProvider.handleTouchEvent(event);
 
                     final Element targetTdOrTr = getEventTargetTdOrTr(event);
@@ -6441,14 +6439,11 @@ public class VScrollTable extends FlowPanel
                     // Hide rows which are not selected
                     Element dragImage = ev.getDragImage();
                     int i = 0;
-                    for (Iterator<Widget> iterator = scrollBody
-                            .iterator(); iterator.hasNext();) {
-                        VScrollTableRow next = (VScrollTableRow) iterator
-                                .next();
-
+                    for (Widget next : scrollBody) {
                         Element child = (Element) dragImage.getChild(i++);
 
-                        if (!rowKeyIsSelected(next.rowKey)) {
+                        if (!rowKeyIsSelected(
+                                ((VScrollTableRow) next).rowKey)) {
                             child.getStyle().setVisibility(Visibility.HIDDEN);
                         }
                     }
@@ -6529,7 +6524,7 @@ public class VScrollTable extends FlowPanel
             }
 
             /**
-             * Toggle the selection of the row
+             * Toggle the selection of the row.
              */
             public void toggleSelection() {
                 selected = !selected;
@@ -6653,18 +6648,6 @@ public class VScrollTable extends FlowPanel
                 return paintableId;
             }
 
-            private int getColIndexOf(Widget child) {
-                com.google.gwt.dom.client.Element widgetCell = child
-                        .getElement().getParentElement().getParentElement();
-                NodeList<TableCellElement> cells = rowElement.getCells();
-                for (int i = 0; i < cells.getLength(); i++) {
-                    if (cells.getItem(i) == widgetCell) {
-                        return i;
-                    }
-                }
-                return -1;
-            }
-
             public Widget getWidgetForPaintable() {
                 return this;
             }
@@ -6723,11 +6706,10 @@ public class VScrollTable extends FlowPanel
                 htmlContentAllowed = uidl.getBooleanAttribute("gen_html");
                 spanColumns = uidl.getBooleanAttribute("gen_span");
 
-                final Iterator<?> cells = uidl.getChildIterator();
                 if (spanColumns) {
                     int colCount = uidl.getChildCount();
-                    if (cells.hasNext()) {
-                        final Object cell = cells.next();
+                    // add the first cell only
+                    for (final Object cell : uidl) {
                         if (cell instanceof String) {
                             addSpannedCell(uidl, cell.toString(), aligns[0], "",
                                     htmlContentAllowed, false, null, colCount);
@@ -6735,6 +6717,7 @@ public class VScrollTable extends FlowPanel
                             addSpannedCell(uidl, (Widget) cell, aligns[0], "",
                                     false, colCount);
                         }
+                        break;
                     }
                 } else {
                     super.addCellsFromUIDL(uidl, aligns, col,
@@ -6809,7 +6792,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Deselects all items
+     * Deselects all items.
      */
     public void deselectAll() {
         for (Widget w : scrollBody) {
@@ -6932,7 +6915,6 @@ public class VScrollTable extends FlowPanel
                 return;
             }
 
-            Iterator<Widget> headCells = tHead.iterator();
             int usedMinimumWidth = 0;
             int totalExplicitColumnsWidths = 0;
             float expandRatioDivider = 0;
@@ -6942,8 +6924,8 @@ public class VScrollTable extends FlowPanel
             int hierarchyColumnIndex = getHierarchyColumnIndex();
             HeaderCell hierarchyHeaderInNeedOfFurtherHandling = null;
 
-            while (headCells.hasNext()) {
-                final HeaderCell hCell = (HeaderCell) headCells.next();
+            for (Widget widget : tHead) {
+                final HeaderCell hCell = (HeaderCell) widget;
                 boolean hasIndent = hierarchyColumnIndent > 0
                         && hCell.isHierarchyColumn();
                 if (hCell.isDefinedWidth()) {
@@ -7060,12 +7042,10 @@ public class VScrollTable extends FlowPanel
             }
 
             // we have some space that can be divided optimally
-            HeaderCell hCell;
             colIndex = 0;
-            headCells = tHead.iterator();
             int checksum = 0;
-            while (headCells.hasNext()) {
-                hCell = (HeaderCell) headCells.next();
+            for (Widget widget : tHead) {
+                HeaderCell hCell = (HeaderCell) widget;
                 if (hCell.isResizing) {
                     continue;
                 }
@@ -7118,10 +7098,9 @@ public class VScrollTable extends FlowPanel
                  * extra space is divided so if there is one then we give the
                  * first undefined column 1 more pixel
                  */
-                headCells = tHead.iterator();
                 colIndex = 0;
-                while (headCells.hasNext()) {
-                    HeaderCell hc = (HeaderCell) headCells.next();
+                for (Widget widget : tHead) {
+                    HeaderCell hc = (HeaderCell) widget;
                     if (!hc.isResizing && !hc.isDefinedWidth()) {
                         setColWidth(colIndex,
                                 hc.getWidthWithIndent() + availW - checksum,
@@ -7261,8 +7240,8 @@ public class VScrollTable extends FlowPanel
 
     @Override
     public void setHeight(String height) {
-        if (height.length() == 0
-                && getElement().getStyle().getHeight().length() != 0) {
+        if (height.isEmpty()
+                && !getElement().getStyle().getHeight().isEmpty()) {
             /*
              * Changing from defined to undefined size -> should do a size init
              * to take page length into account again
@@ -7316,7 +7295,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Helper function to build html snippet for column or row headers
+     * Helper function to build html snippet for column or row headers.
      *
      * @param uidl
      *            possibly with values caption and icon
@@ -7324,7 +7303,8 @@ public class VScrollTable extends FlowPanel
      */
     protected String buildCaptionHtmlSnippet(UIDL uidl) {
         String s = uidl.hasAttribute("caption")
-                ? uidl.getStringAttribute("caption") : "";
+                ? uidl.getStringAttribute("caption")
+                : "";
         if (uidl.hasAttribute("icon")) {
             Icon icon = client.getIcon(uidl.getStringAttribute("icon"));
             icon.setAlternateText("icon");
@@ -7349,7 +7329,7 @@ public class VScrollTable extends FlowPanel
 
     /**
      * This method has logic which rows needs to be requested from server when
-     * user scrolls
+     * user scrolls.
      */
 
     @Override
@@ -7381,7 +7361,8 @@ public class VScrollTable extends FlowPanel
 
         rowRequestHandler.cancel();
 
-        if (BrowserInfo.get().isSafariOrIOS() && event != null && scrollTop == 0) {
+        if (BrowserInfo.get().isSafariOrIOS() && event != null
+                && scrollTop == 0) {
             // due to the webkitoverflowworkaround, top may sometimes report 0
             // for webkit, although it really is not. Expecting to have the
             // correct value available soon.
@@ -7413,12 +7394,12 @@ public class VScrollTable extends FlowPanel
         }
 
         int postLimit = (int) (firstRowInViewPort + (pageLength - 1)
-                + pageLength * cache_react_rate);
+                + pageLength * cacheReactRate);
         if (postLimit > totalRows - 1) {
             postLimit = totalRows - 1;
         }
         int preLimit = (int) (firstRowInViewPort
-                - pageLength * cache_react_rate);
+                - pageLength * cacheReactRate);
         if (preLimit < 0) {
             preLimit = 0;
         }
@@ -7438,8 +7419,8 @@ public class VScrollTable extends FlowPanel
         if (allRenderedRowsAreNew()) {
             // need a totally new set of rows
             rowRequestHandler.setReqFirstRow(
-                    (firstRowInViewPort - (int) (pageLength * cache_rate)));
-            int last = firstRowInViewPort + (int) (cache_rate * pageLength)
+                    (firstRowInViewPort - (int) (pageLength * cacheRate)));
+            int last = firstRowInViewPort + (int) (cacheRate * pageLength)
                     + pageLength - 1;
             if (last >= totalRows) {
                 last = totalRows - 1;
@@ -7454,7 +7435,7 @@ public class VScrollTable extends FlowPanel
             // need some rows to the beginning of the rendered area
 
             rowRequestHandler.setReqFirstRow(
-                    (int) (firstRowInViewPort - pageLength * cache_rate));
+                    (int) (firstRowInViewPort - pageLength * cacheRate));
             rowRequestHandler.setReqRows(
                     firstRendered - rowRequestHandler.getReqFirstRow());
             rowRequestHandler.deferRowFetch();
@@ -7464,7 +7445,7 @@ public class VScrollTable extends FlowPanel
         if (postLimit > lastRendered) {
             // need some rows to the end of the rendered area
             int reqRows = (int) ((firstRowInViewPort + pageLength
-                    + pageLength * cache_rate) - lastRendered);
+                    + pageLength * cacheRate) - lastRendered);
             rowRequestHandler.triggerRowFetch(lastRendered + 1, reqRows);
         }
     }
@@ -7473,9 +7454,9 @@ public class VScrollTable extends FlowPanel
         int firstRowInViewPort = calcFirstRowInViewPort();
         int firstRendered = scrollBody.getFirstRendered();
         int lastRendered = scrollBody.getLastRendered();
-        return (firstRowInViewPort - pageLength * cache_rate > lastRendered
+        return (firstRowInViewPort - pageLength * cacheRate > lastRendered
                 || firstRowInViewPort + pageLength
-                        + pageLength * cache_rate < firstRendered);
+                        + pageLength * cacheRate < firstRendered);
     }
 
     protected int calcFirstRowInViewPort() {
@@ -7504,10 +7485,17 @@ public class VScrollTable extends FlowPanel
             return false;
         }
 
-        //
-        // public int hashCode() {
-        // return overkey;
-        // }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result
+                    + ((dropLocation == null) ? 0 : dropLocation.hashCode());
+            result = prime * result + overkey;
+            result = prime * result
+                    + ((colkey == null) ? 0 : colkey.hashCode());
+            return result;
+        }
     }
 
     public class VScrollTableDropHandler extends VAbstractDropHandler {
@@ -7546,20 +7534,21 @@ public class VScrollTable extends FlowPanel
             }
 
             drag.getDropDetails().put("itemIdOver", dropDetails.overkey + "");
-            drag.getDropDetails().put("detail", dropDetails.dropLocation != null
-                    ? dropDetails.dropLocation.toString() : null);
+            drag.getDropDetails().put("detail",
+                    dropDetails.dropLocation != null
+                            ? dropDetails.dropLocation.toString()
+                            : null);
 
         }
 
         private Class<? extends Widget> getRowClass() {
             // get the row type this way to make dd work in derived
             // implementations
-            Iterator<Widget> iterator = scrollBody.iterator();
-            if (iterator.hasNext()) {
-                return iterator.next().getClass();
-            } else {
-                return null;
+            Iterator<Widget> it = scrollBody.iterator();
+            if (it.hasNext()) {
+                return it.next().getClass();
             }
+            return null;
         }
 
         @Override
@@ -7609,7 +7598,7 @@ public class VScrollTable extends FlowPanel
                         && row.rowKey == lastEmphasized.overkey) {
                     String stylename = ROWSTYLEBASE
                             + lastEmphasized.dropLocation.toString()
-                                    .toLowerCase();
+                                    .toLowerCase(Locale.ROOT);
                     VScrollTableRow.setStyleName(row.getElement(), stylename,
                             false);
                     lastEmphasized = null;
@@ -7630,8 +7619,8 @@ public class VScrollTable extends FlowPanel
             for (Widget w : scrollBody.renderedRows) {
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (details != null && details.overkey == row.rowKey) {
-                    String stylename = ROWSTYLEBASE
-                            + details.dropLocation.toString().toLowerCase();
+                    String stylename = ROWSTYLEBASE + details.dropLocation
+                            .toString().toLowerCase(Locale.ROOT);
                     VScrollTableRow.setStyleName(row.getElement(), stylename,
                             true);
                     lastEmphasized = details;
@@ -7662,7 +7651,7 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Moves the selection head to a specific row
+     * Moves the selection head to a specific row.
      *
      * @param row
      *            The row to where the selection head should move
@@ -7723,11 +7712,15 @@ public class VScrollTable extends FlowPanel
     }
 
     /**
-     * Handles the keyboard events handled by the table
+     * Handles the keyboard events handled by the table.
      *
-     * @param event
-     *            The keyboard event received
-     * @return true iff the navigation event was handled
+     * @param keycode
+     *            The key code received
+     * @param ctrl
+     *            Whether {@code CTRL} was pressed
+     * @param shift
+     *            Whether {@code SHIFT} was pressed
+     * @return true if the navigation event was handled
      */
     protected boolean handleNavigation(int keycode, boolean ctrl,
             boolean shift) {
@@ -7801,7 +7794,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageDownKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.
@@ -7855,7 +7848,7 @@ public class VScrollTable extends FlowPanel
         if (keycode == getNavigationPageUpKey()) {
             if (isSelectable()) {
                 /*
-                 * If selectable we plagiate MSW behaviour: first scroll to the
+                 * If selectable we plagiate MSW behavior: first scroll to the
                  * end of current view. If at the end, scroll down one page
                  * length and keep the selected row in the bottom part of
                  * visible area.
@@ -7879,8 +7872,9 @@ public class VScrollTable extends FlowPanel
                         VScrollTableRow toBeFocusedRow = scrollBody
                                 .getRowByRowIndex(indexOfToBeFocused);
 
-                        if (toBeFocusedRow != null) { // if the next focused row
-                                                      // is rendered
+                        if (toBeFocusedRow != null) {
+                            // if the next focused row is rendered
+
                             setRowFocus(toBeFocusedRow);
                             selectFocusedRow(ctrl, shift);
                             // TODO needs scrollintoview ?
@@ -8232,7 +8226,7 @@ public class VScrollTable extends FlowPanel
      */
     private static native JavaScriptObject getPreventTextSelectionIEHack()
     /*-{
-            return function(){ return false; };
+            return function() { return false; };
     }-*/;
 
     public void triggerLazyColumnAdjustment(boolean now) {

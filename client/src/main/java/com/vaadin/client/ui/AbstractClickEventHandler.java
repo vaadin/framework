@@ -29,7 +29,6 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.VConsole;
@@ -63,24 +62,20 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      * Previews events after a mousedown to detect where the following mouseup
      * hits.
      */
-    private final NativePreviewHandler mouseUpPreviewHandler = new NativePreviewHandler() {
+    private final NativePreviewHandler mouseUpPreviewHandler = event -> {
+        if (event.getTypeInt() == Event.ONMOUSEUP) {
+            mouseUpEventPreviewRegistration.removeHandler();
 
-        @Override
-        public void onPreviewNativeEvent(NativePreviewEvent event) {
-            if (event.getTypeInt() == Event.ONMOUSEUP) {
-                mouseUpEventPreviewRegistration.removeHandler();
-
-                // Event's reported target not always correct if event
-                // capture is in use
-                Element elementUnderMouse = WidgetUtil
-                        .getElementUnderMouse(event.getNativeEvent());
-                if (lastMouseDownTarget != null
-                        && elementUnderMouse == lastMouseDownTarget) {
-                    mouseUpPreviewMatched = true;
-                } else {
-                    VConsole.log("Ignoring mouseup from " + elementUnderMouse
-                            + " when mousedown was on " + lastMouseDownTarget);
-                }
+            // Event's reported target not always correct if event
+            // capture is in use
+            Element elementUnderMouse = WidgetUtil
+                    .getElementUnderMouse(event.getNativeEvent());
+            if (lastMouseDownTarget != null
+                    && elementUnderMouse == lastMouseDownTarget) {
+                mouseUpPreviewMatched = true;
+            } else {
+                VConsole.log("Ignoring mouseup from " + elementUnderMouse
+                        + " when mousedown was on " + lastMouseDownTarget);
             }
         }
     };
@@ -142,7 +137,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
     }
 
     /**
-     * Checks if there is a server side event listener registered for clicks
+     * Checks if there is a server side event listener registered for clicks.
      *
      * @return true if there is a server side event listener registered, false
      *         otherwise

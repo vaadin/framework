@@ -27,14 +27,11 @@ public class CustomUIConnector extends UIConnector {
     @Override
     protected void init() {
         super.init();
-        registerRpc(CustomUIConnectorRpc.class, new CustomUIConnectorRpc() {
-            @Override
-            public void test() {
-                SpanElement span = Document.get().createSpanElement();
-                span.setInnerText("This is the "
-                        + CustomUIConnector.this.getClass().getSimpleName());
-                Document.get().getBody().insertFirst(span);
-            }
+        registerRpc(CustomUIConnectorRpc.class, () -> {
+            SpanElement span = Document.get().createSpanElement();
+            span.setInnerText("This is the "
+                    + CustomUIConnector.this.getClass().getSimpleName());
+            Document.get().getBody().insertFirst(span);
         });
     }
 }

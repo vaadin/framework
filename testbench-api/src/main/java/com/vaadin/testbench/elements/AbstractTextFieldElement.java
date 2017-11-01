@@ -24,7 +24,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 public class AbstractTextFieldElement extends AbstractFieldElement {
 
     /**
-     * Return value of the field element
+     * Return value of the field element.
      *
      * @return value of the field element
      */
@@ -33,7 +33,7 @@ public class AbstractTextFieldElement extends AbstractFieldElement {
     }
 
     /**
-     * Set value of the field element
+     * Set value of the field element.
      *
      * @param chars
      *            new value of the field

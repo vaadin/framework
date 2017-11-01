@@ -5,8 +5,9 @@
     <parent>
         <groupId>com.vaadin</groupId>
         <artifactId>vaadin-root</artifactId>
-        <version>8.1-SNAPSHOT</version>
+        <version>8.2-SNAPSHOT</version>
     </parent>
+    <!-- Needed by a plugin in release build -->
     <groupId>com.vaadin</groupId>
     <artifactId>vaadin-buildhelpers</artifactId>
     <name>vaadin-buildhelpers</name>

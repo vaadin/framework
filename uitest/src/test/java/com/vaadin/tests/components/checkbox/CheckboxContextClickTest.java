@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.checkbox;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -37,17 +38,17 @@ public class CheckboxContextClickTest extends MultiBrowserTest {
     public void contextClickCheckboxAndText() {
         openTestURL();
         CheckBoxElement checkbox = $(CheckBoxElement.class).first();
-        Assert.assertEquals("checked", checkbox.getValue());
+        assertEquals("checked", checkbox.getValue());
         WebElement input = checkbox.findElement(By.xpath("input"));
         WebElement label = checkbox.findElement(By.xpath("label"));
 
         contextClickElement(input);
-        Assert.assertEquals("1. checkbox context clicked", getLogRow(0));
-        Assert.assertEquals("checked", checkbox.getValue());
+        assertEquals("1. checkbox context clicked", getLogRow(0));
+        assertEquals("checked", checkbox.getValue());
 
         contextClickElement(label);
-        Assert.assertEquals("2. checkbox context clicked", getLogRow(0));
-        Assert.assertEquals("checked", checkbox.getValue());
+        assertEquals("2. checkbox context clicked", getLogRow(0));
+        assertEquals("checked", checkbox.getValue());
     }
 
 }

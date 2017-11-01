@@ -4,7 +4,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -63,24 +62,19 @@ public class TestLayoutPerformance extends TestBase {
 
         Button b = new Button("Render component");
 
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                int components = Integer.parseInt(n.getValue());
-                Layout layout = getCurrentLayout();
-                for (int i = 0; i < components; i++) {
-                    Component component = newTestComponent();
-                    if (cb.getValue()) {
-                        component.setCaption("caption " + i);
-                    }
-                    layout.addComponent(component);
+        b.addClickListener(event -> {
+            int components = Integer.parseInt(n.getValue());
+            Layout layout = getCurrentLayout();
+            for (int i = 0; i < components; i++) {
+                Component component = newTestComponent();
+                if (cb.getValue()) {
+                    component.setCaption("caption " + i);
                 }
-
-                testarea.removeAllComponents();
-                testarea.addComponent(layout);
+                layout.addComponent(component);
             }
 
+            testarea.removeAllComponents();
+            testarea.addComponent(layout);
         });
 
         getLayout().addComponent(ns);
@@ -100,11 +94,7 @@ public class TestLayoutPerformance extends TestBase {
 
         try {
             return (Layout) value.newInstance();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
@@ -116,11 +106,7 @@ public class TestLayoutPerformance extends TestBase {
         AbstractComponent newInstance = null;
         try {
             newInstance = (AbstractComponent) componentClass.newInstance();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         if (componentClass == Label.class) {

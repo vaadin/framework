@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -49,7 +51,7 @@ public class DateTimeFieldTestTest extends MultiBrowserTest {
 
     private void assertNoErrorNotification() {
         if (isElementPresent(NotificationElement.class)) {
-            Assert.fail("Notification was present");
+            fail("Notification was present");
         }
     }
 
@@ -80,7 +82,7 @@ public class DateTimeFieldTestTest extends MultiBrowserTest {
         openPopup();
         closePopup();
         String actual = getInput().getAttribute("value");
-        Assert.assertEquals(inputtedValue, actual);
+        assertEquals(inputtedValue, actual);
         assertNoErrorNotification();
 
     }

@@ -1,10 +1,11 @@
 package com.vaadin.tests.elements.checkboxgroup;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,22 +28,20 @@ public class CheckBoxGroupSetSelectionTest extends MultiBrowserTest {
     @Test
     public void testSetSelection() {
         group.setValue(NEW_VALUE);
-        Assert.assertEquals(Collections.singletonList(NEW_VALUE),
-                group.getValue());
+        assertEquals(Collections.singletonList(NEW_VALUE), group.getValue());
     }
 
     @Test
     public void testSelectByText() {
         group.selectByText(NEW_VALUE);
-        Assert.assertEquals(Collections.singletonList(NEW_VALUE),
-                group.getValue());
+        assertEquals(Collections.singletonList(NEW_VALUE), group.getValue());
     }
 
     @Test
     public void testSelectAll() {
         List<String> value = Arrays.asList("item1", "item2", "item3");
         group.setValue(value);
-        Assert.assertEquals(value, group.getValue());
+        assertEquals(value, group.getValue());
     }
 
     @Test
@@ -50,7 +49,7 @@ public class CheckBoxGroupSetSelectionTest extends MultiBrowserTest {
         testSelectByText();
 
         group.setValue();
-        Assert.assertEquals(Collections.emptyList(), group.getValue());
+        assertEquals(Collections.emptyList(), group.getValue());
     }
 
     @Test

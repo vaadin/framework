@@ -17,7 +17,6 @@
 package com.vaadin.tests.tb3;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -480,16 +479,9 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         }
 
         final String errorBase = getScreenshotErrorBaseName();
-        File[] files = errorDirectory.listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                String thisFile = pathname.getAbsolutePath();
-                if (thisFile.startsWith(errorBase)) {
-                    return true;
-                }
-                return false;
-            }
+        File[] files = errorDirectory.listFiles(pathname -> {
+            String thisFile = pathname.getAbsolutePath();
+            return thisFile.startsWith(errorBase);
         });
         for (File f : files) {
             f.delete();

@@ -6,8 +6,6 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class IntegrationTestApplication extends LegacyApplication {
@@ -35,12 +33,8 @@ public class IntegrationTestApplication extends LegacyApplication {
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new Label();
-        table.addListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue(String.valueOf(table.getValue()));
-            }
-        });
+        table.addValueChangeListener(event -> selectedLabel
+                .setValue(String.valueOf(table.getValue())));
         window.addComponent(selectedLabel);
     }
 }

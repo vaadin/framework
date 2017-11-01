@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
@@ -94,13 +95,13 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     private int deltaScrollPos;
     private boolean transitionOn = false;
     private int finalScrollTop;
-    private ArrayList<Element> layers;
+    private List<Element> layers;
     private boolean moved;
     private ScrollHandler scrollHandler;
 
     private static TouchScrollDelegate activeScrollDelegate;
 
-    private static final boolean androidWithBrokenScrollTop = BrowserInfo.get()
+    private static final boolean ANDROID_WITH_BROKEN_SCROLL_TOP = BrowserInfo.get()
             .isAndroidWithBrokenScrollTop();
 
     /**
@@ -329,7 +330,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getScrollTop() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             if (scrolledElement.getPropertyJSO("_vScrollTop") != null) {
                 return scrolledElement.getPropertyInt("_vScrollTop");
             }
@@ -359,7 +360,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
         VConsole.log("Animate " + time + " " + from + " " + to);
         int translateTo = -to + origScrollTop;
         int fromY = -from + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -379,7 +380,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      * scrolltop, causing onscroll event.
      */
     private void moveTransformationToScrolloffset() {
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             scrolledElement.setPropertyInt("_vScrollTop", finalScrollTop);
             if (scrollHandler != null) {
                 scrollHandler.onScroll(null);
@@ -464,7 +465,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
     private void quickSetScrollPosition(int deltaX, int deltaY) {
         deltaScrollPos = deltaY;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             deltaY += origScrollTop;
             translateTo(-deltaY);
         } else {
@@ -569,7 +570,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
         int translateTo = -finalY + origScrollTop;
         int fromY = -currentY + origScrollTop;
-        if (androidWithBrokenScrollTop) {
+        if (ANDROID_WITH_BROKEN_SCROLL_TOP) {
             fromY -= origScrollTop;
             translateTo -= origScrollTop;
         }
@@ -651,7 +652,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     private int getMaxOverScroll() {
-        return androidWithBrokenScrollTop ? 0
+        return ANDROID_WITH_BROKEN_SCROLL_TOP ? 0
                 : scrolledElement.getClientHeight() / 3;
     }
 
@@ -711,7 +712,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
     }
 
     /**
-     * long calcucation are not very efficient in GWT, so this helper method
+     * Long calculation are not very efficient in GWT, so this helper method
      * returns timestamp in double.
      *
      * @return

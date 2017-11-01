@@ -23,7 +23,6 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 
 /**
@@ -33,8 +32,8 @@ import com.vaadin.ui.Component;
  * from the server.
  * <p>
  * UIDL is hierarchical, and there are a few methods to retrieve the children,
- * {@link #getChildCount()}, {@link #getChildIterator()}
- * {@link #getChildString(int)}, {@link #getChildUIDL(int)}.
+ * {@link #getChildCount()}, {@link #iterator()} {@link #getChildString(int)},
+ * {@link #getChildUIDL(int)}.
  * </p>
  * <p>
  * It can be helpful to keep in mind that UIDL was originally modeled in XML, so
@@ -43,7 +42,7 @@ import com.vaadin.ui.Component;
  * but will be skipped by the methods mentioned above.
  * </p>
  */
-public final class UIDL extends JavaScriptObject {
+public final class UIDL extends JavaScriptObject implements Iterable<Object> {
 
     protected UIDL() {
     }
@@ -63,7 +62,8 @@ public final class UIDL extends JavaScriptObject {
      * Gets the name of this UIDL section, as created with
      * {@link PaintTarget#startTag(String) PaintTarget.startTag()} in the
      * server-side {@link Component#paint(PaintTarget) Component.paint()} or
-     * (usually) {@link AbstractComponent#paintContent(PaintTarget)
+     * (usually)
+     * {@link com.vaadin.ui.AbstractComponent#paintContent(PaintTarget)
      * AbstractComponent.paintContent()}. Note that if the UIDL corresponds to a
      * Paintable, a component identifier will be returned instead - this is used
      * internally and is not needed within
@@ -288,8 +288,33 @@ public final class UIDL extends JavaScriptObject {
      * </p>
      *
      * @return an iterator for iterating over UIDL children
+     * @deprecated As of 8.2, please use {@link #iterator()} instead
      */
+    @Deprecated
     public Iterator<Object> getChildIterator() {
+        return iterator();
+    }
+
+    /**
+     * Gets an iterator that can be used to iterate trough the children of this
+     * UIDL.
+     * <p>
+     * The Object returned by <code>next()</code> will be appropriately typed -
+     * if it's UIDL, {@link #getTag()} can be used to check which section is in
+     * question.
+     * </p>
+     * <p>
+     * The basic use case is to iterate over the children of an UIDL update, and
+     * update the appropriate part of the widget for each child encountered, e.g
+     * if <code>getTag()</code> returns "color", one would update the widgets
+     * color to reflect the value of the "color" section.
+     * </p>
+     *
+     * @return an iterator for iterating over UIDL children
+     * @since
+     */
+    @Override
+    public Iterator<Object> iterator() {
 
         return new Iterator<Object>() {
 
@@ -337,13 +362,13 @@ public final class UIDL extends JavaScriptObject {
     private native int typeOfChild(int index)
     /*-{
         var t = typeof this[index + 2];
-        if(t == "object") {
-            if(typeof(t.length) == "number") {
+        if (t == "object") {
+            if (typeof(t.length) == "number") {
                 return 1;
-            } else {
-                return 2;
             }
-        } else if (t == "string") {
+            return 2;
+        }
+        if (t == "string") {
             return 0;
         }
         return -1;
@@ -476,7 +501,7 @@ public final class UIDL extends JavaScriptObject {
      * @deprecated should not be used anymore
      */
     @Deprecated
-    public final static class XML extends JavaScriptObject {
+    public static final class XML extends JavaScriptObject {
         protected XML() {
         }
 
@@ -484,7 +509,7 @@ public final class UIDL extends JavaScriptObject {
         /*-{
             var buf = new Array();
             var self = this;
-            for(j in self) {
+            for (j in self) {
                 buf.push("<");
                 buf.push(j);
                 buf.push(">");
@@ -546,9 +571,7 @@ public final class UIDL extends JavaScriptObject {
      * @return the child UIDL or null if child wit given name was not found
      */
     public UIDL getChildByTagName(String tagName) {
-        Iterator<Object> childIterator = getChildIterator();
-        while (childIterator.hasNext()) {
-            Object next = childIterator.next();
+        for (Object next : this) {
             if (next instanceof UIDL) {
                 UIDL childUIDL = (UIDL) next;
                 if (childUIDL.getTag().equals(tagName)) {

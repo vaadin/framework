@@ -40,7 +40,7 @@ import com.vaadin.shared.ui.splitpanel.HorizontalSplitPanelState;
  */
 public class HorizontalSplitPanel extends AbstractSplitPanel {
     /**
-     * Creates an empty horizontal split panel
+     * Creates an empty horizontal split panel.
      */
     public HorizontalSplitPanel() {
         super();
@@ -48,7 +48,7 @@ public class HorizontalSplitPanel extends AbstractSplitPanel {
     }
 
     /**
-     * Creates a horizontal split panel containing the given components
+     * Creates a horizontal split panel containing the given components.
      *
      * @param firstComponent
      *            The component to be placed to the left of the splitter

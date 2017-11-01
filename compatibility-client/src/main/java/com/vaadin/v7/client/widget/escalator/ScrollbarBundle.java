@@ -50,7 +50,7 @@ import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
  */
 public abstract class ScrollbarBundle implements DeferredWorker {
 
-    private static final boolean supportsRequestAnimationFrame = new AnimationSupportDetector()
+    private static final boolean SUPPORTS_REQUEST_ANIMATION_FRAME = new AnimationSupportDetector()
             .isNativelySupported();
 
     private class ScrollEventFirer {
@@ -97,7 +97,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
                  * We'll gather all the scroll events, and only fire once, once
                  * everything has calmed down.
                  */
-                if (supportsRequestAnimationFrame) {
+                if (SUPPORTS_REQUEST_ANIMATION_FRAME) {
                     // Chrome MUST use this as deferred commands will sometimes
                     // be run with a 300+ ms delay when scrolling.
                     AnimationScheduler.get().requestAnimationFrame(
@@ -169,7 +169,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
         }
 
         /**
-         * Checks whether the scroll handle is currently visible or not
+         * Checks whether the scroll handle is currently visible or not.
          *
          * @return <code>true</code> if the scroll handle is currently visible.
          *         <code>false</code> if not.
@@ -205,7 +205,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see VerticalScrollbarBundle#getElement()
      */
-    public final static class VerticalScrollbarBundle extends ScrollbarBundle {
+    public static final class VerticalScrollbarBundle extends ScrollbarBundle {
 
         @Override
         public void setStylePrimaryName(String primaryStyleName) {
@@ -275,7 +275,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      *
      * @see HorizontalScrollbarBundle#getElement()
      */
-    public final static class HorizontalScrollbarBundle
+    public static final class HorizontalScrollbarBundle
             extends ScrollbarBundle {
 
         @Override
@@ -373,7 +373,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract String internalGetScrollSize();
 
     /**
-     * Sets the primary style name
+     * Sets the primary style name.
      *
      * @param primaryStyleName
      *            The primary style name to use
@@ -496,7 +496,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     protected abstract void internalForceScrollbar(boolean enable);
 
     /**
-     * Gets the length of the scrollbar
+     * Gets the length of the scrollbar.
      *
      * @return the length of the scrollbar in pixels
      */
@@ -780,7 +780,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
      * In other words, this method checks whether the contents is larger than
      * can visually fit in the element.
      *
-     * @return <code>true</code> iff the scrollbar's handle is visible
+     * @return <code>true</code> if the scrollbar's handle is visible
      */
     public boolean showsScrollHandle() {
         return getScrollSize() - getOffsetSize() > WidgetUtil.PIXEL_EPSILON;
@@ -878,7 +878,7 @@ public abstract class ScrollbarBundle implements DeferredWorker {
     /**
      * Checks whether the scrollbar bundle is locked or not.
      *
-     * @return <code>true</code> iff the scrollbar bundle is locked
+     * @return <code>true</code> if the scrollbar bundle is locked
      */
     public boolean isLocked() {
         return isLocked;

@@ -15,10 +15,82 @@
  */
 package com.vaadin.shared.ui.embedded;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 
 public class EmbeddedState extends AbstractEmbeddedState {
     {
         primaryStyleName = "v-embedded";
     }
+
+    /**
+     * The object type.
+     *
+     * @since 8.2
+     */
+    public int type;
+
+    /**
+     * The MIME-type of the object.
+     *
+     * @since 8.2
+     */
+    public String mimeType;
+
+    /**
+     * Specifies the base path used to resolve relative URIs specified by the
+     * classid, data, and archive attributes.
+     *
+     * @since 8.2
+     */
+    public String codebase;
+
+    /**
+     * The MIME-Type of the code.
+     *
+     * @since 8.2
+     */
+    public String codetype;
+
+    /**
+     * May be used to specify the location of an object's implementation via a
+     * URI.
+     *
+     * @since 8.2
+     */
+    public String classId;
+
+    /**
+     * May be used to specify a space-separated list of URIs for archives
+     * containing resources relevant to the object.
+     *
+     * @since 8.2
+     */
+    public String archive;
+
+    /**
+     * The component's "alt-text".
+     *
+     * @since 8.2
+     */
+    public String altText;
+
+    /**
+     * Specifies a message that a user agent may render while loading the
+     * object's implementation and data.
+     *
+     * @since 8.2
+     */
+    public String standby;
+
+    /**
+     * Object parameters. Parameters are optional information, and they are
+     * passed to the instantiated object.
+     *
+     * @since 8.2
+     */
+    public final Map<String, String> parameters = new HashMap<>();
+
 }

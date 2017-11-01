@@ -15,7 +15,9 @@
  */
 package com.vaadin.tests.components.textfield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -35,12 +37,12 @@ public class RequiredTextFieldTest extends MultiBrowserTest {
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertTrue("Text field doesn't contain .v-required style",
+        assertTrue("Text field doesn't contain .v-required style",
                 getStyles().contains("v-required"));
 
         $(ButtonElement.class).first().click();
 
-        Assert.assertFalse(
+        assertFalse(
                 "Text field contains .v-required style for non-required field",
                 getStyles().contains("v-required"));
     }

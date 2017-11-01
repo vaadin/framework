@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import org.jsoup.nodes.Element;
@@ -63,7 +62,7 @@ import com.vaadin.ui.declarative.DesignContext;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public interface Component extends ClientConnector, Sizeable, Serializable {
+public interface Component extends ClientConnector, Sizeable {
 
     /**
      * Gets all user-defined CSS style names of a component. If the component
@@ -628,7 +627,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setId(String id);
 
     /**
-     * Gets currently set debug identifier
+     * Gets currently set debug identifier.
      *
      * @return current id, null if not set
      */

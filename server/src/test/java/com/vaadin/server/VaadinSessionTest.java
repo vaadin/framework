@@ -15,6 +15,12 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,7 +38,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 
 import org.easymock.EasyMock;
-import org.junit.Assert;
+import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -96,12 +102,22 @@ public class VaadinSessionTest implements Serializable {
             }
         };
 
+        IMocksControl control = EasyMock.createNiceControl();
+        DeploymentConfiguration dc = control
+                .createMock(DeploymentConfiguration.class);
+
         session = new VaadinSession(mockService);
+
         mockService.storeSession(session, mockWrappedSession);
 
         ui = new MockPageUI();
-        vaadinRequest = new VaadinServletRequest(
-                EasyMock.createMock(HttpServletRequest.class), mockService) {
+        HttpServletRequest request = control
+                .createMock(HttpServletRequest.class);
+        EasyMock.expect(request.getParameter("v-loc"))
+                .andReturn("http://localhost/");
+        control.replay();
+
+        vaadinRequest = new VaadinServletRequest(request, mockService) {
             @Override
             public String getParameter(String name) {
                 if ("theme".equals(name) || "restartApplication".equals(name)
@@ -113,6 +129,14 @@ public class VaadinSessionTest implements Serializable {
                     return "1";
                 }
                 return super.getParameter(name);
+            }
+
+            @Override
+            public Object getAttribute(String name) {
+                if (name.equals("com.vaadin.server.UI_ROOT_PATH")) {
+                    return "/";
+                }
+                return super.getAttribute(name);
             }
 
             @Override
@@ -128,9 +152,10 @@ public class VaadinSessionTest implements Serializable {
 
         };
 
+        session.setConfiguration(dc);
+        ui.setSession(session);
         ui.doInit(vaadinRequest, session.getNextUIid(), null);
 
-        ui.setSession(session);
         session.addUI(ui);
 
     }
@@ -176,22 +201,20 @@ public class VaadinSessionTest implements Serializable {
         final AtomicBoolean detachCalled = new AtomicBoolean(false);
         ui.addDetachListener((DetachEvent event) -> {
             detachCalled.set(true);
-            Assert.assertEquals(ui, UI.getCurrent());
-            Assert.assertEquals(ui.getPage(), Page.getCurrent());
-            Assert.assertEquals(session, VaadinSession.getCurrent());
-            Assert.assertEquals(mockService, VaadinService.getCurrent());
-            Assert.assertEquals(mockServlet, VaadinServlet.getCurrent());
+            assertEquals(ui, UI.getCurrent());
+            assertEquals(ui.getPage(), Page.getCurrent());
+            assertEquals(session, VaadinSession.getCurrent());
+            assertEquals(mockService, VaadinService.getCurrent());
+            assertEquals(mockServlet, VaadinServlet.getCurrent());
         });
 
         session.valueUnbound(
                 EasyMock.createMock(HttpSessionBindingEvent.class));
-        mockService.runPendingAccessTasks(session); // as soon as we changed
-                                                    // session.accessSynchronously
-                                                    // to session.access in
-                                                    // VaadinService.fireSessionDestroy,
-                                                    // we need to run the
-                                                    // pending task ourselves
-        Assert.assertTrue(detachCalled.get());
+        // as soon as we changed session.accessSynchronously
+        // to session.access in VaadinService.fireSessionDestroy,
+        // we need to run the pending task ourselves
+        mockService.runPendingAccessTasks(session);
+        assertTrue(detachCalled.get());
     }
 
     @Test
@@ -199,22 +222,20 @@ public class VaadinSessionTest implements Serializable {
         final AtomicBoolean detachCalled = new AtomicBoolean(false);
         ui.addDetachListener((DetachEvent event) -> {
             detachCalled.set(true);
-            Assert.assertEquals(ui, UI.getCurrent());
-            Assert.assertEquals(ui.getPage(), Page.getCurrent());
-            Assert.assertEquals(session, VaadinSession.getCurrent());
-            Assert.assertEquals(mockService, VaadinService.getCurrent());
-            Assert.assertEquals(mockServlet, VaadinServlet.getCurrent());
+            assertEquals(ui, UI.getCurrent());
+            assertEquals(ui.getPage(), Page.getCurrent());
+            assertEquals(session, VaadinSession.getCurrent());
+            assertEquals(mockService, VaadinService.getCurrent());
+            assertEquals(mockServlet, VaadinServlet.getCurrent());
         });
         CurrentInstance.clearAll();
         session.close();
         mockService.cleanupSession(session);
-        mockService.runPendingAccessTasks(session); // as soon as we changed
-                                                    // session.accessSynchronously
-                                                    // to session.access in
-                                                    // VaadinService.fireSessionDestroy,
-                                                    // we need to run the
-                                                    // pending task ourselves
-        Assert.assertTrue(detachCalled.get());
+        // as soon as we changed session.accessSynchronously
+        // to session.access in VaadinService.fireSessionDestroy,
+        // we need to run the pending task ourselves
+        mockService.runPendingAccessTasks(session);
+        assertTrue(detachCalled.get());
     }
 
     @Test
@@ -240,9 +261,6 @@ public class VaadinSessionTest implements Serializable {
     // VaadinSessionTest.this which isn't serializable
     private static class MockPageUI extends UI {
         Page page = new Page(this, getState(false).pageState) {
-            @Override
-            public void init(VaadinRequest request) {
-            }
         };
 
         @Override
@@ -270,8 +288,8 @@ public class VaadinSessionTest implements Serializable {
         VaadinSession.setCurrent(session);
         session.lock();
         SerializationTestLabel label = new SerializationTestLabel();
-        Assert.assertEquals("Session should be set when instance is created",
-                session, label.session);
+        assertEquals("Session should be set when instance is created", session,
+                label.session);
 
         ui.setContent(label);
         int uiId = ui.getUIId();
@@ -290,11 +308,10 @@ public class VaadinSessionTest implements Serializable {
 
         VaadinSession deserializedSession = (VaadinSession) in.readObject();
 
-        Assert.assertNull("Current session shouldn't leak from deserialisation",
+        assertNull("Current session shouldn't leak from deserialisation",
                 VaadinSession.getCurrent());
 
-        Assert.assertNotSame("Should get a new session", session,
-                deserializedSession);
+        assertNotSame("Should get a new session", session, deserializedSession);
 
         // Restore http session and service instance so the session can be
         // locked
@@ -305,7 +322,7 @@ public class VaadinSessionTest implements Serializable {
         SerializationTestLabel deserializedLabel = (SerializationTestLabel) deserializedUi
                 .getContent();
 
-        Assert.assertEquals(
+        assertEquals(
                 "Current session should be available in SerializationTestLabel.readObject",
                 deserializedSession, deserializedLabel.session);
         deserializedSession.unlock();
@@ -318,20 +335,20 @@ public class VaadinSessionTest implements Serializable {
         ui.setContent(new Label() {
             private void writeObject(ObjectOutputStream out)
                     throws IOException {
-                Assert.assertTrue(session.hasLock());
+                assertTrue(session.hasLock());
                 lockChecked.set(true);
                 out.defaultWriteObject();
             }
         });
 
         session.unlock();
-        Assert.assertFalse(session.hasLock());
+        assertFalse(session.hasLock());
 
         ObjectOutputStream out = new ObjectOutputStream(
                 new ByteArrayOutputStream());
         out.writeObject(session);
 
-        Assert.assertFalse(session.hasLock());
-        Assert.assertTrue(lockChecked.get());
+        assertFalse(session.hasLock());
+        assertTrue(lockChecked.get());
     }
 }

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -24,16 +23,11 @@ public class UpdateTableWhenUnfocused extends AbstractReindeerTestUI {
         addComponent(tabSheet);
 
         final Button button = new Button("Refresh table");
-        button.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                button.focus();
-                table.refreshRowCache();
-            }
+        button.addClickListener(event -> {
+            button.focus();
+            table.refreshRowCache();
         });
         addComponent(button);
-
     }
 
     private Table createTable() {

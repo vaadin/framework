@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements.table;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
@@ -23,7 +24,7 @@ public class TableElementContextMenuTest extends MultiBrowserTest {
         tableElement.contextClick();
         TableElement.ContextMenuElement contextMenu = tableElement
                 .getContextMenu();
-        Assert.assertNotNull(
+        assertNotNull(
                 "There is no context menu open by tableElement.contextClick()",
                 contextMenu);
     }

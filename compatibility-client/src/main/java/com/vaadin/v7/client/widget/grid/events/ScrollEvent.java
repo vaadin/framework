@@ -18,14 +18,14 @@ package com.vaadin.v7.client.widget.grid.events;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * An event that signifies that a scrollbar bundle has been scrolled
+ * An event that signifies that a scrollbar bundle has been scrolled.
  *
  * @author Vaadin Ltd
  * @since 7.4
  */
 public class ScrollEvent extends GwtEvent<ScrollHandler> {
 
-    /** The type of this event */
+    /** The type of this event. */
     public static final Type<ScrollHandler> TYPE = new Type<ScrollHandler>();
 
     @Override

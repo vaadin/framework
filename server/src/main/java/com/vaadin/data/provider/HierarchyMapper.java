@@ -48,7 +48,7 @@ import elemental.json.JsonObject;
  *
  * @author Vaadin Ltd
  * @since 8.1
- * 
+ *
  * @param <T>
  *            the data type
  * @param <F>
@@ -59,6 +59,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     // childMap is only used for finding parents of items and clean up on
     // removing children of expanded nodes.
     private Map<T, Set<T>> childMap = new HashMap<>();
+    private Map<Object, T> parentIdMap = new HashMap<>();
 
     private final HierarchicalDataProvider<T, F> provider;
     private F filter;
@@ -70,7 +71,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Constructs a new HierarchyMapper.
-     * 
+     *
      * @param provider
      *            the hierarchical data provider for this mapper
      */
@@ -80,7 +81,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Returns the size of the currently expanded hierarchy.
-     * 
+     *
      * @return the amount of available data
      */
     public int getTreeSize() {
@@ -89,21 +90,21 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Finds the index of the parent of the item in given target index.
-     * 
+     *
      * @param item
      *            the item to get the parent of
      * @return the parent index or a negative value if the parent is not found
-     * 
+     *
      */
     public Integer getParentIndex(T item) {
-        // TODO: This can be optimised.
+        // TODO: This can be optimized.
         List<T> flatHierarchy = getHierarchy(null).collect(Collectors.toList());
         return flatHierarchy.indexOf(getParentOfItem(item));
     }
 
     /**
      * Returns whether the given item is expanded.
-     * 
+     *
      * @param item
      *            the item to test
      * @return {@code true} if item is expanded; {@code false} if not
@@ -118,7 +119,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Expands the given item.
-     * 
+     *
      * @param item
      *            the item to expand
      * @param position
@@ -140,12 +141,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Collapses the given item.
-     * 
+     *
      * @param item
      *            the item to expand
      * @param position
      *            the index of item
-     * 
+     *
      * @return range of rows removed by collapsing the item
      */
     public Range doCollapse(T item, Optional<Integer> position) {
@@ -195,7 +196,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the current item collapse allowed provider.
-     * 
+     *
      * @return the item collapse allowed provider
      */
     public ItemCollapseAllowedProvider<T> getItemCollapseAllowedProvider() {
@@ -204,7 +205,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Sets the current item collapse allowed provider.
-     * 
+     *
      * @param itemCollapseAllowedProvider
      *            the item collapse allowed provider
      */
@@ -215,7 +216,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the current in-memory sorting.
-     * 
+     *
      * @return the in-memory sorting
      */
     public Comparator<T> getInMemorySorting() {
@@ -225,7 +226,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Sets the current in-memory sorting. This will cause the hierarchy to be
      * constructed again.
-     * 
+     *
      * @param inMemorySorting
      *            the in-memory sorting
      */
@@ -235,7 +236,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the current back-end sorting.
-     * 
+     *
      * @return the back-end sorting
      */
     public List<QuerySortOrder> getBackEndSorting() {
@@ -245,7 +246,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Sets the current back-end sorting. This will cause the hierarchy to be
      * constructed again.
-     * 
+     *
      * @param backEndSorting
      *            the back-end sorting
      */
@@ -255,7 +256,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the current filter.
-     * 
+     *
      * @return the filter
      */
     public F getFilter() {
@@ -265,7 +266,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Sets the current filter. This will cause the hierarchy to be constructed
      * again.
-     * 
+     *
      * @param filter
      *            the filter
      */
@@ -276,7 +277,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Gets the {@code HierarchicalDataProvider} for this
      * {@code HierarchyMapper}.
-     * 
+     *
      * @return the hierarchical data provider
      */
     public HierarchicalDataProvider<T, F> getDataProvider() {
@@ -285,7 +286,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Returns whether given item has children.
-     * 
+     *
      * @param item
      *            the node to test
      * @return {@code true} if node has children; {@code false} if not
@@ -299,7 +300,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Gets a stream of items in the form of a flattened hierarchy from the
      * back-end and filter the wanted results from the list.
-     * 
+     *
      * @param range
      *            the requested item range
      * @return the stream of items
@@ -311,7 +312,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Gets a stream of children for the given item in the form of a flattened
      * hierarchy from the back-end and filter the wanted results from the list.
-     * 
+     *
      * @param parent
      *            the parent item for the fetch
      * @param range
@@ -328,7 +329,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Generic method for finding direct children of a given parent, limited by
      * given range.
-     * 
+     *
      * @param parent
      *            the parent
      * @param range
@@ -353,21 +354,14 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     private T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
-        Object itemId = getDataProvider().getId(item);
-        for (Entry<T, Set<T>> entry : childMap.entrySet()) {
-            if (entry.getValue().stream().map(getDataProvider()::getId)
-                    .anyMatch(id -> id.equals(itemId))) {
-                return entry.getKey();
-            }
-        }
-        return null;
+        return parentIdMap.get(getDataProvider().getId(item));
     }
 
     /**
      * Removes all children of an item identified by a given id. Items removed
      * by this method as well as the original item are all marked to be
      * collapsed.
-     * 
+     *
      * @param id
      *            the item id
      */
@@ -384,14 +378,16 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             }
         }
         expandedItemIds.remove(id);
-        invalidatedChildren.stream().map(getDataProvider()::getId)
-                .forEach(this::removeChildren);
+        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
+            removeChildren(x);
+            parentIdMap.remove(x);
+        });
     }
 
     /**
      * Finds the current index of given object. This is based on a search in
      * flattened version of the hierarchy.
-     * 
+     *
      * @param target
      *            the target object to find
      * @return optional index of given object
@@ -409,7 +405,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the full hierarchy tree starting from given node.
-     * 
+     *
      * @param parent
      *            the parent node to start from
      * @return the flattened hierarchy as a stream
@@ -421,7 +417,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Getst hte full hierarchy tree starting from given node. The starting node
      * can be omitted.
-     * 
+     *
      * @param parent
      *            the parent node to start from
      * @param includeParent
@@ -435,7 +431,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Gets the stream of direct children for given node.
-     * 
+     *
      * @param parent
      *            the parent node
      * @return the stream of direct children
@@ -449,7 +445,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * The method to recursively fetch the children of given parent. Used with
      * {@link Stream#flatMap} to expand a stream of parent nodes into a
      * flattened hierarchy.
-     * 
+     *
      * @param parent
      *            the parent node
      * @return the stream of all children under the parent, includes the parent
@@ -462,7 +458,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * The method to recursively fetch the children of given parent. Used with
      * {@link Stream#flatMap} to expand a stream of parent nodes into a
      * flattened hierarchy.
-     * 
+     *
      * @param parent
      *            the parent node
      * @param includeParent
@@ -479,6 +475,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                         : getDataProvider().getId(parent));
             } else {
                 childMap.put(parent, new HashSet<>(childList));
+                childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
             }
         }
         return combineParentAndChildStreams(parent,
@@ -490,7 +487,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * Helper method for combining parent and a stream of children into one
      * stream. {@code null} item is never included, and parent can be skipped by
      * providing the correct value for {@code includeParent}.
-     * 
+     *
      * @param parent
      *            the parent node
      * @param children
@@ -511,5 +508,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     @Override
     public void destroyAllData() {
         childMap.clear();
+        parentIdMap.clear();
     }
 }

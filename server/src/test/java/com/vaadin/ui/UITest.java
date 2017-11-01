@@ -1,5 +1,9 @@
 package com.vaadin.ui;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.lang.ref.WeakReference;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -9,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.servlet.ServletConfig;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -84,41 +87,35 @@ public class UITest {
         final ConcurrentLinkedQueue<Exception> exceptions = new ConcurrentLinkedQueue<Exception>();
 
         // Simulates the websocket close thread
-        Runnable websocketClose = new Runnable() {
-            @Override
-            public void run() {
-                externalLock.lock();
-                // Wait for disconnect thread to lock VaadinSession
-                websocketReachedCheckpoint.countDown();
-                try {
-                    uiDisconnectReachedCheckpoint.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    exceptions.add(e);
-                    return;
-                }
-                uiSession.lock();
-                externalLock.unlock();
+        Runnable websocketClose = () -> {
+            externalLock.lock();
+            // Wait for disconnect thread to lock VaadinSession
+            websocketReachedCheckpoint.countDown();
+            try {
+                uiDisconnectReachedCheckpoint.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                exceptions.add(e);
+                return;
             }
+            uiSession.lock();
+            externalLock.unlock();
         };
 
-        Runnable disconnectPushFromUI = new Runnable() {
-            @Override
-            public void run() {
-                uiSession.lock();
-                // Wait for websocket thread to lock external lock
-                uiDisconnectReachedCheckpoint.countDown();
-                try {
-                    websocketReachedCheckpoint.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    exceptions.add(e);
-                    return;
-                }
-
-                ui.setSession(null);
-                uiSession.unlock();
+        Runnable disconnectPushFromUI = () -> {
+            uiSession.lock();
+            // Wait for websocket thread to lock external lock
+            uiDisconnectReachedCheckpoint.countDown();
+            try {
+                websocketReachedCheckpoint.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                exceptions.add(e);
+                return;
             }
+
+            ui.setSession(null);
+            uiSession.unlock();
         };
 
         Thread websocketThread = new Thread(websocketClose);
@@ -132,16 +129,16 @@ public class UITest {
         if (websocketThread.isAlive() || uiDisconnectThread.isAlive()) {
             websocketThread.interrupt();
             uiDisconnectThread.interrupt();
-            Assert.fail("Threads are still running");
+            fail("Threads are still running");
         }
         if (!exceptions.isEmpty()) {
             for (Exception e : exceptions) {
                 e.printStackTrace();
             }
-            Assert.fail("There were exceptions in the threads");
+            fail("There were exceptions in the threads");
         }
 
-        Assert.assertNull(ui.getSession());
+        assertNull(ui.getSession());
 
         // PushConnection is set to null in another thread. We need to wait for
         // that to happen
@@ -152,7 +149,7 @@ public class UITest {
 
             Thread.sleep(500);
         }
-        Assert.assertNull(ui.getPushConnection());
+        assertNull(ui.getPushConnection());
 
     }
 
@@ -195,7 +192,7 @@ public class UITest {
         CurrentInstanceTest.waitUntilGarbageCollected(contentOnlyOnServer);
         // Should not clean references for connectors available in the browser
         // until the session is unlocked and we know if it has been moved
-        Assert.assertNotNull(contentSentToClient.get());
+        assertNotNull(contentSentToClient.get());
         session.unlock();
         CurrentInstanceTest.waitUntilGarbageCollected(contentSentToClient);
     }

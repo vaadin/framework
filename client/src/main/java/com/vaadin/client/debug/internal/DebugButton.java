@@ -44,7 +44,7 @@ public class DebugButton extends Button {
     public DebugButton(String caption) {
         this(null, null, caption);
     }
-    
+
     public DebugButton(String caption, String title) {
         this(null, title, caption);
     }
@@ -98,7 +98,7 @@ public class DebugButton extends Button {
     }
 
     /**
-     * Indicates wheter the Button is currently in its active state or not
+     * Indicates wheter the Button is currently in its active state or not.
      *
      * @return true if the Button is active, false otherwise
      */

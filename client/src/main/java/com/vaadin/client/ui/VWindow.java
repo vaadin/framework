@@ -21,14 +21,12 @@ import static com.vaadin.client.WidgetUtil.isFocusedElementEditable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -46,10 +44,8 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -80,9 +76,9 @@ import com.vaadin.shared.ui.window.WindowRole;
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
-    private static ArrayList<VWindow> windowOrder = new ArrayList<>();
+    private static List<VWindow> windowOrder = new ArrayList<>();
 
-    private static HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
+    private static final HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
             VWindow.class);
 
     private static boolean orderingDefered;
@@ -203,13 +199,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public int bringToFrontSequence = -1;
 
     private VLazyExecutor delayedContentsSizeUpdater = new VLazyExecutor(200,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    updateContentsSize();
-                }
-            });
+            () -> updateContentsSize());
 
     public VWindow() {
         super(false, false); // no autohide, not modal
@@ -307,12 +297,12 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void doFireOrderEvent() {
-        ArrayList<VWindow> list = new ArrayList<>();
+        List<VWindow> list = new ArrayList<>();
         list.add(this);
         fireOrderEvent(list);
     }
 
-    private static void fireOrderEvent(ArrayList<VWindow> windows) {
+    private static void fireOrderEvent(List<VWindow> windows) {
         WINDOW_ORDER_HANDLER
                 .fireEvent(new WindowOrderEvent(new ArrayList<>(windows)));
     }
@@ -327,7 +317,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static VWindow getTopmostWindow() {
-        if (windowOrder.size() > 0) {
+        if (!windowOrder.isEmpty()) {
             return windowOrder.get(windowOrder.size() - 1);
         }
         return null;
@@ -441,35 +431,29 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         // Handlers to Prevent tab to leave the window
         // and backspace to cause browser navigation
-        topEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == topTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        topEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == topTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
 
-        bottomEventBlocker = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(NativePreviewEvent event) {
-                NativeEvent nativeEvent = event.getNativeEvent();
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
-                        && !nativeEvent.getShiftKey()) {
-                    nativeEvent.preventDefault();
-                }
-                if (nativeEvent.getEventTarget().cast() == bottomTabStop
-                        && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
-                    nativeEvent.preventDefault();
-                }
+        bottomEventBlocker = event -> {
+            NativeEvent nativeEvent = event.getNativeEvent();
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                    && !nativeEvent.getShiftKey()) {
+                nativeEvent.preventDefault();
+            }
+            if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                    && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
+                nativeEvent.preventDefault();
             }
         };
     }
@@ -536,13 +520,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     public static void deferOrdering() {
         if (!orderingDefered) {
             orderingDefered = true;
-            Scheduler.get().scheduleFinally(new Command() {
-
-                @Override
-                public void execute() {
-                    doServerSideOrdering();
-                    VNotification.bringNotificationsToFront();
-                }
+            Scheduler.get().scheduleFinally(() -> {
+                doServerSideOrdering();
+                VNotification.bringNotificationsToFront();
             });
         }
     }
@@ -550,29 +530,26 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private static void doServerSideOrdering() {
         orderingDefered = false;
         VWindow[] array = windowOrder.toArray(new VWindow[windowOrder.size()]);
-        Arrays.sort(array, new Comparator<VWindow>() {
+        Arrays.sort(array, (o1, o2) -> {
 
-            @Override
-            public int compare(VWindow o1, VWindow o2) {
-                /*
-                 * Order by modality, then by bringtofront sequence.
-                 */
-
-                if (o1.vaadinModality && !o2.vaadinModality) {
-                    return 1;
-                } else if (!o1.vaadinModality && o2.vaadinModality) {
-                    return -1;
-                } else if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
-                    return 1;
-                } else if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+            /*
+             * Order by modality, then by bringtofront sequence.
+             */
+            if (o1.vaadinModality && !o2.vaadinModality) {
+                return 1;
             }
+            if (!o1.vaadinModality && o2.vaadinModality) {
+                return -1;
+            }
+            if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
+                return 1;
+            }
+            if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
+                return -1;
+            }
+            return 0;
         });
-        for (int i = 0; i < array.length; i++) {
-            VWindow w = array[i];
+        for (VWindow w : array) {
             if (w.bringToFrontSequence != -1 || w.vaadinModality) {
                 w.bringToFront(false);
                 w.bringToFrontSequence = -1;
@@ -701,7 +678,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // hanging.
         windowOrder.remove(curIndex);
         // Update the z-indices of any remaining windows
-        ArrayList<VWindow> update = new ArrayList<>(
+        List<VWindow> update = new ArrayList<>(
                 windowOrder.size() - curIndex + 1);
         update.add(this);
         while (curIndex < windowOrder.size()) {
@@ -1204,7 +1181,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the width to the contents
         getElement().getStyle().setProperty("width", width);
         // Update v-has-width in case undefined window is resized
-        setStyleName("v-has-width", width != null && width.length() > 0);
+        setStyleName("v-has-width", width != null && !width.isEmpty());
     }
 
     @Override
@@ -1212,7 +1189,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the height to the contents
         getElement().getStyle().setProperty("height", height);
         // Update v-has-height in case undefined window is resized
-        setStyleName("v-has-height", height != null && height.length() > 0);
+        setStyleName("v-has-height", height != null && !height.isEmpty());
     }
 
     private void onDragEvent(Event event) {

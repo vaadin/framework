@@ -1,9 +1,10 @@
 package com.vaadin.tests.elements.combobox;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -19,6 +20,6 @@ public class ComboBoxGetSuggestionsTest extends MultiBrowserTest {
         for (int i = 1; i < 11; i++) {
             expectedSuggestions.add("item" + i);
         }
-        Assert.assertEquals(expectedSuggestions, suggestions);
+        assertEquals(expectedSuggestions, suggestions);
     }
 }

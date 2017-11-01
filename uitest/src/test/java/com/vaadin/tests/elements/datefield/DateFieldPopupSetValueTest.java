@@ -1,9 +1,10 @@
 package com.vaadin.tests.elements.datefield;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,7 @@ public class DateFieldPopupSetValueTest extends MultiBrowserTest {
     @Test
     public void testGetValue() {
         String value = df.getValue();
-        Assert.assertEquals("04/12/15", value);
+        assertEquals("04/12/15", value);
     }
 
     @Test
@@ -36,7 +37,7 @@ public class DateFieldPopupSetValueTest extends MultiBrowserTest {
         Date date = DateFieldPopupSetValue.changedDate;
         String value = (new SimpleDateFormat("MM/dd/yy")).format(date);
         df.setValue(value);
-        Assert.assertEquals("06/11/15", df.getValue());
+        assertEquals("06/11/15", df.getValue());
     }
 
     @Test
@@ -45,6 +46,6 @@ public class DateFieldPopupSetValueTest extends MultiBrowserTest {
         String value = (new SimpleDateFormat("MM/dd/yy")).format(date);
         df.setValue(value);
         counter.waitForVaadin();
-        Assert.assertEquals("1", counter.getText());
+        assertEquals("1", counter.getText());
     }
 }

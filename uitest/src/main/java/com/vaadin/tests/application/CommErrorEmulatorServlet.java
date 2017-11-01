@@ -110,18 +110,15 @@ public class CommErrorEmulatorServlet extends VaadinServlet {
                 "Responding with " + responseCode + " to UIDL requests for "
                         + ui + " for the next " + delay + "s");
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(delay * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Handing UIDL requests normally again");
-
-                uidlResponseCode.remove(ui);
+        new Thread(() -> {
+            try {
+                Thread.sleep(delay * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            System.out.println("Handing UIDL requests normally again");
+
+            uidlResponseCode.remove(ui);
         }).start();
     }
 
@@ -133,18 +130,14 @@ public class CommErrorEmulatorServlet extends VaadinServlet {
                 + " to heartbeat requests for " + ui + " for the next " + delay
                 + "s");
 
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(delay * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("Handing heartbeat requests normally again");
-                heartbeatResponseCode.remove(ui);
+        new Thread(() -> {
+            try {
+                Thread.sleep(delay * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            System.out.println("Handing heartbeat requests normally again");
+            heartbeatResponseCode.remove(ui);
         }).start();
     }
 

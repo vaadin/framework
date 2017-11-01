@@ -16,8 +16,11 @@
 package com.vaadin.tests.fieldgroup;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
+import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -25,9 +28,9 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.DateFieldElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridCellElement;
 import com.vaadin.testbench.elements.GridElement.GridEditorElement;
 import com.vaadin.testbench.parallel.TestCategory;
@@ -67,11 +70,10 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         input.sendKeys("Invalid", Keys.TAB);
         editor.save();
 
-        Assert.assertTrue("Editor wasn't displayed.", editor.isDisplayed());
-        Assert.assertTrue("DateField wasn't displayed.",
-                dateField.isDisplayed());
+        assertTrue("Editor wasn't displayed.", editor.isDisplayed());
+        assertTrue("DateField wasn't displayed.", dateField.isDisplayed());
 
-        Assert.assertTrue("DateField didn't have 'v-invalid' css class.",
+        assertTrue("DateField didn't have 'v-invalid' css class.",
                 hasCssClass(dateField, "v-datefield-error"));
     }
 
@@ -88,8 +90,7 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         // Check values
         String value = cb.getValue();
         cb.click(5, 5);
-        Assert.assertNotEquals("Checkbox value did not change", value,
-                cb.getValue());
+        assertNotEquals("Checkbox value did not change", value, cb.getValue());
     }
 
     @Test
@@ -106,7 +107,8 @@ public class BasicCrudGridEditorRowTest extends MultiBrowserTest {
         // Open editor row
         new Actions(getDriver()).doubleClick(cell).perform();
 
-        String attribute = grid.getEditor().getAttribute("style").toLowerCase();
+        String attribute = grid.getEditor().getAttribute("style")
+                .toLowerCase(Locale.ROOT);
         assertFalse("Style should not contain top.",
                 attribute.contains("top:"));
     }

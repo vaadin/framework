@@ -4,8 +4,6 @@ import java.util.Random;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Table;
 
@@ -34,30 +32,22 @@ public class HiddenColumnsExpandRatios extends TestBase {
             item.getItemProperty("dfgh").setValue(genValue());
         }
 
-        addComponent(new Button("All", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setVisibleColumns(
-                        table.getContainerPropertyIds().toArray());
-            }
-        }));
-        addComponent(new Button("Some", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setWidth("100px");
-                table.setWidth("800px");
-                table.setVisibleColumns(new Object[] { "foo", "bar", "baz" });
-            }
+        addComponent(new Button("All", event ->table.setVisibleColumns(
+                table.getContainerPropertyIds().toArray())));
+        addComponent(new Button("Some", event ->{
+            table.setWidth("100px");
+            table.setWidth("800px");
+            table.setVisibleColumns("foo", "bar", "baz");
         }));
     }
 
     private String genValue() {
         Random rnd = new Random();
-        StringBuffer str = new StringBuffer("");
-        String[] strings = new String[] { "foo", "bar", "baz" };
+        StringBuilder str = new StringBuilder();
+        String[] strings = { "foo", "bar", "baz" };
         for (int i = 0; i < 5; i++) {
             str.append(strings[Math.abs(rnd.nextInt() % strings.length)])
-                    .append(" ");
+                    .append(' ');
         }
         return str.toString();
     }

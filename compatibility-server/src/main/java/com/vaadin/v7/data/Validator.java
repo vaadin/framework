@@ -22,10 +22,10 @@ import com.vaadin.data.Binder;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractErrorMessage.ContentMode;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.ErrorMessage.ErrorLevel;
 import com.vaadin.server.ErrorMessageProducer;
 import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.ErrorLevel;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
@@ -52,8 +52,9 @@ import com.vaadin.server.VaadinServlet;
  *
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The validation is performed
- * outside components, see {@link Binder}.{@code withValidator(...)}
+ * @deprecated As of 8.0, replaced by {@link com.vaadin.data.Validator}. The
+ *             validation is performed outside components, see
+ *             {@link Binder}.{@code withValidator(...)}
  */
 @Deprecated
 public interface Validator extends Serializable {
@@ -136,12 +137,12 @@ public interface Validator extends Serializable {
          */
         public boolean isInvisible() {
             String msg = getMessage();
-            if (msg != null && msg.length() > 0) {
+            if (msg != null && !msg.isEmpty()) {
                 return false;
             }
             if (causes != null) {
-                for (int i = 0; i < causes.length; i++) {
-                    if (!causes[i].isInvisible()) {
+                for (InvalidValueException e : causes) {
+                    if (!e.isInvisible()) {
                         return false;
                     }
                 }

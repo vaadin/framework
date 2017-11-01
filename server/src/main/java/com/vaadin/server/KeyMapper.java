@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,18 +29,18 @@ import com.vaadin.data.provider.DataKeyMapper;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
+public class KeyMapper<V> implements DataKeyMapper<V> {
 
     private int lastKey = 0;
 
-    private final HashMap<Object, String> objectIdKeyMap = new HashMap<>();
+    private final Map<Object, String> objectIdKeyMap = new HashMap<>();
 
-    private final HashMap<String, V> keyObjectMap = new HashMap<>();
+    private final Map<String, V> keyObjectMap = new HashMap<>();
 
     private ValueProvider<V, Object> identifierGetter;
 
     /**
-     * Constructs a new mapper
+     * Constructs a new mapper.
      *
      * @param identifierGetter
      *            has to return a unique key for every bean, and the returned
@@ -55,7 +54,7 @@ public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
     }
 
     /**
-     * Constructs a new mapper with trivial {@code identifierGetter}
+     * Constructs a new mapper with trivial {@code identifierGetter}.
      */
     public KeyMapper() {
         this(v -> v);

@@ -24,7 +24,7 @@ public class TreeTableCssTest {
     }
 
     private HierarchicalContainer createHierarchicalContainer() {
-        String[] itemNames = new String[] { "Foo", "Baar" };
+        String[] itemNames = { "Foo", "Baar" };
 
         HierarchicalContainer hc = new HierarchicalContainer();
         hc.addContainerProperty("NAME", String.class, null);

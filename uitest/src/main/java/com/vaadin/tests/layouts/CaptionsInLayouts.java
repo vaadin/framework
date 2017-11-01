@@ -8,8 +8,6 @@ import com.vaadin.server.UserError;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -20,8 +18,6 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
@@ -60,13 +56,7 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
     private Component addCaptionText() {
         Button b = new Button("Add caption text");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                prependCaptions("a");
-            }
-        });
+        b.addClickListener(event -> prependCaptions("a"));
         return b;
     }
 
@@ -74,7 +64,6 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
         for (AbstractField<?> c : components) {
             c.setCaption(prepend + c.getCaption());
         }
-
     }
 
     private Component toggleRequired() {
@@ -233,19 +222,13 @@ public class CaptionsInLayouts extends AbstractReindeerTestUI {
 
         }
         layoutSelect.setImmediate(true);
-        layoutSelect.addListener(new ValueChangeListener() {
+        layoutSelect.addValueChangeListener(event -> {
+            Item i = layoutSelect.getItem(event.getProperty().getValue());
 
-            @Override
-            @SuppressWarnings("unchecked")
-            public void valueChange(ValueChangeEvent event) {
-                Item i = layoutSelect.getItem(event.getProperty().getValue());
-
-                setLayout(getLayout(
-                        (String) i.getItemProperty(CAPTION).getValue(),
-                        (Class<? extends Layout>) i.getItemProperty(CLASS)
-                                .getValue(),
-                        (String) i.getItemProperty(WIDTH).getValue()));
-            }
+            setLayout(getLayout((String) i.getItemProperty(CAPTION).getValue(),
+                    (Class<? extends Layout>) i.getItemProperty(CLASS)
+                            .getValue(),
+                    (String) i.getItemProperty(WIDTH).getValue()));
         });
 
         return layoutSelect;

@@ -5,12 +5,8 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.Table.ColumnCollapseEvent;
-import com.vaadin.v7.ui.Table.ColumnCollapseListener;
 
 public class ColumnCollapsingAndColumnExpansion
         extends AbstractReindeerTestUIWithLog {
@@ -30,7 +26,7 @@ public class ColumnCollapsingAndColumnExpansion
         table.addActionHandler(new Handler() {
 
             final Action H = new Action("Toggle Col2");
-            final Action[] actions = new Action[] { H };
+            final Action[] actions = { H };
 
             @Override
             public Action[] getActions(Object target, Object sender) {
@@ -53,34 +49,20 @@ public class ColumnCollapsingAndColumnExpansion
                     "cell " + 2 + "-" + y, "cell " + 3 + "-" + y, },
                     new Object());
         }
-        table.addColumnCollapseListener(new ColumnCollapseListener() {
-
-            @Override
-            public void columnCollapseStateChange(ColumnCollapseEvent event) {
+        table.addColumnCollapseListener(event ->
                 log("Collapse state for " + event.getPropertyId()
                         + " changed to "
-                        + table.isColumnCollapsed(event.getPropertyId()));
-
-            }
-        });
+                + table.isColumnCollapsed(event.getPropertyId())));
         addComponent(table);
 
         for (int i = 1; i <= 3; i++) {
             HorizontalLayout hl = new HorizontalLayout();
             final String id = "Col" + i;
-            Button hide = new Button("Collapse " + id, new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    table.setColumnCollapsed(id, true);
-                }
-            });
+            Button hide = new Button("Collapse " + id,
+                    event -> table.setColumnCollapsed(id, true));
 
-            Button show = new Button("Show " + id, new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    table.setColumnCollapsed(id, false);
-                }
-            });
+            Button show = new Button("Show " + id,
+                    event -> table.setColumnCollapsed(id, false));
 
             hl.addComponent(hide);
             hl.addComponent(show);

@@ -23,9 +23,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -59,7 +56,7 @@ public class VUpload extends SimplePanel {
             super.onBrowserEvent(event);
             if (event.getTypeInt() == Event.ONCHANGE) {
                 if (isImmediateMode() && fu.getFilename() != null
-                        && !"".equals(fu.getFilename())) {
+                        && !fu.getFilename().isEmpty()) {
                     submit();
                 }
             } else if (BrowserInfo.get().isIE()
@@ -143,15 +140,12 @@ public class VUpload extends SimplePanel {
         panel.add(maxfilesize);
         panel.add(fu);
         submitButton = new VButton();
-        submitButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (isImmediateMode()) {
-                    // fire click on upload (eg. focused button and hit space)
-                    fireNativeClick(fu.getElement());
-                } else {
-                    submit();
-                }
+        submitButton.addClickHandler(event -> {
+            if (isImmediateMode()) {
+                // fire click on upload (e.g. focused button and hit space)
+                fireNativeClick(fu.getElement());
+            } else {
+                submit();
             }
         });
         panel.add(submitButton);
@@ -258,72 +252,65 @@ public class VUpload extends SimplePanel {
      */
     private void onSubmitComplete() {
         /* Needs to be run dereferred to avoid various browser issues. */
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (submitted) {
-                    if (client != null) {
-                        if (t != null) {
-                            t.cancel();
-                        }
-                        VConsole.log("VUpload:Submit complete");
-                        if (isAttached()) {
-                            // no need to call poll() if component is already
-                            // detached #8728
-                            ((UploadConnector) ConnectorMap.get(client).getConnector(VUpload.this))
-                                .getRpcProxy(UploadServerRpc.class).poll();
-                        }
+        Scheduler.get().scheduleDeferred(() -> {
+            if (submitted) {
+                if (client != null) {
+                    if (t != null) {
+                        t.cancel();
                     }
-
-                    rebuildPanel();
-
-                    submitted = false;
-                    enableUpload();
-                    if (!isAttached()) {
-                        /*
-                         * Upload is complete when upload is already abandoned.
-                         */
-                        cleanTargetFrame();
+                    VConsole.log("VUpload:Submit complete");
+                    if (isAttached()) {
+                        // no need to call poll() if component is already
+                        // detached #8728
+                        ((UploadConnector) ConnectorMap.get(client)
+                                .getConnector(VUpload.this))
+                                        .getRpcProxy(UploadServerRpc.class)
+                                        .poll();
                     }
+                }
+
+                rebuildPanel();
+
+                submitted = false;
+                enableUpload();
+                if (!isAttached()) {
+                    /*
+                     * Upload is complete when upload is already abandoned.
+                     */
+                    cleanTargetFrame();
                 }
             }
         });
     }
 
-    ScheduledCommand startUploadCmd = new ScheduledCommand() {
+    ScheduledCommand startUploadCmd = () -> {
+        element.submit();
+        submitted = true;
 
-        @Override
-        public void execute() {
-            element.submit();
-            submitted = true;
+        disableUpload();
 
-            disableUpload();
-
-            /*
-             * Visit server a moment after upload has started to see possible
-             * changes from UploadStarted event. Will be cleared on complete.
-             *
-             * Must get the id here as the upload can finish before the timer
-             * expires and in that case nextUploadId has been updated and is
-             * wrong.
-             */
-            final int thisUploadId = nextUploadId;
-            t = new Timer() {
-                @Override
-                public void run() {
-                    // Only visit the server if the upload has not already
-                    // finished
-                    if (thisUploadId == nextUploadId) {
-                        VConsole.log(
-                                "Visiting server to see if upload started event changed UI.");
-                        client.updateVariable(paintableId, "pollForStart",
-                                thisUploadId, true);
-                    }
+        /*
+         * Visit server a moment after upload has started to see possible
+         * changes from UploadStarted event. Will be cleared on complete.
+         *
+         * Must get the id here as the upload can finish before the timer
+         * expires and in that case nextUploadId has been updated and is wrong.
+         */
+        final int thisUploadId = nextUploadId;
+        t = new Timer() {
+            @Override
+            public void run() {
+                // Only visit the server if the upload has not already
+                // finished
+                if (thisUploadId == nextUploadId) {
+                    VConsole.log(
+                            "Visiting server to see if upload started event changed UI.");
+                    client.updateVariable(paintableId, "pollForStart",
+                            thisUploadId, true);
                 }
-            };
-            t.schedule(800);
-        }
-
+            }
+        };
+        t.schedule(800);
     };
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -332,7 +319,7 @@ public class VUpload extends SimplePanel {
             VConsole.log("Submit cancelled (disabled or already submitted)");
             return;
         }
-        if (fu.getFilename().length() == 0) {
+        if (fu.getFilename().isEmpty()) {
             VConsole.log("Submitting empty selection (no file)");
         }
         // flush possibly pending variable changes, so they will be handled

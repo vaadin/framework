@@ -18,7 +18,6 @@ package com.vaadin.tests.components.abstractcomponent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.TextField;
 
@@ -43,19 +42,15 @@ public class PrimaryStyle extends AbstractReindeerTestUI {
         addComponent(tf);
 
         Button updateButton = new Button("Update styles",
-                new Button.ClickListener() {
+                event -> {
+                    label.setPrimaryStyleName("updated");
+                    label.setStyleName("correctly");
 
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        label.setPrimaryStyleName("updated");
-                        label.setStyleName("correctly");
+                    button.setPrimaryStyleName("updated");
+                    button.setStyleName("correctly");
 
-                        button.setPrimaryStyleName("updated");
-                        button.setStyleName("correctly");
-
-                        tf.setPrimaryStyleName("updated");
-                        tf.setStyleName("correctly");
-                    }
+                    tf.setPrimaryStyleName("updated");
+                    tf.setStyleName("correctly");
                 });
         updateButton.setId("update-button");
         addComponent(updateButton);

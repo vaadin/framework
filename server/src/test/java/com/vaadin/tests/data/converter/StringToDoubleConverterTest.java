@@ -1,6 +1,8 @@
 package com.vaadin.tests.data.converter;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.Result;
@@ -31,8 +33,8 @@ public class StringToDoubleConverterTest extends AbstractConverterTest {
     public void testErrorMessage() {
         Result<Double> result = getConverter().convertToModel("abc",
                 new ValueContext());
-        Assert.assertTrue(result.isError());
-        Assert.assertEquals("Failed", result.getMessage().get());
+        assertTrue(result.isError());
+        assertEquals("Failed", result.getMessage().get());
     }
 
     @Test
@@ -41,7 +43,7 @@ public class StringToDoubleConverterTest extends AbstractConverterTest {
                 getErrorMessage());
 
         assertValue(0.0, converter.convertToModel("", new ValueContext()));
-        Assert.assertEquals("0",
+        assertEquals("0",
                 converter.convertToPresentation(0.0, new ValueContext()));
     }
 

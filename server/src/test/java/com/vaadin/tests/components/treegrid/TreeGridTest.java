@@ -1,6 +1,9 @@
 package com.vaadin.tests.components.treegrid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.data.TreeData;
@@ -31,20 +34,20 @@ public class TreeGridTest {
         treeData.addItem("Foo", "Baz");
         treeGrid.setDataProvider(new TreeDataProvider<>(treeData));
 
-        treeGrid.addExpandListener(e -> expandEventFired = true);
-        treeGrid.addCollapseListener(e -> collapseEventFired = true);
+        treeGrid.addExpandListener(event -> expandEventFired = true);
+        treeGrid.addCollapseListener(event -> collapseEventFired = true);
 
         // Test expand event
-        Assert.assertFalse(expandEventFired);
+        assertFalse(expandEventFired);
         treeGrid.expand("Foo");
-        Assert.assertTrue("Item not expanded", treeGrid.isExpanded("Foo"));
-        Assert.assertTrue("Expand event not fired", expandEventFired);
+        assertTrue("Item not expanded", treeGrid.isExpanded("Foo"));
+        assertTrue("Expand event not fired", expandEventFired);
 
         // Test collapse event
-        Assert.assertFalse(collapseEventFired);
+        assertFalse(collapseEventFired);
         treeGrid.collapse("Foo");
-        Assert.assertFalse("Item not collapsed", treeGrid.isExpanded("Foo"));
-        Assert.assertTrue("Collapse event not fired", collapseEventFired);
+        assertFalse("Item not collapsed", treeGrid.isExpanded("Foo"));
+        assertTrue("Collapse event not fired", collapseEventFired);
     }
 
     @Test
@@ -52,8 +55,8 @@ public class TreeGridTest {
         Column<String, String> column = treeGrid.addColumn(Object::toString)
                 .setId("foo");
         treeGrid.setHierarchyColumn("foo");
-        Assert.assertEquals("Hierarchy column was not correctly returned",
-                column, treeGrid.getHierarchyColumn());
+        assertEquals("Hierarchy column was not correctly returned", column,
+                treeGrid.getHierarchyColumn());
     }
 
 }

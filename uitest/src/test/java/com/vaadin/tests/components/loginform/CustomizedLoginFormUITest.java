@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.loginform;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -12,9 +13,9 @@ public class CustomizedLoginFormUITest extends LoginFormUITest {
     @Test
     public void captionsCorrect() {
         openTestURL();
-        Assert.assertEquals("Identifiant", getUsernameCaption());
-        Assert.assertEquals("Mot de passe", getPasswordCaption());
-        Assert.assertEquals("Se connecter", getLoginCaption());
+        assertEquals("Identifiant", getUsernameCaption());
+        assertEquals("Mot de passe", getPasswordCaption());
+        assertEquals("Se connecter", getLoginCaption());
     }
 
     private String getLoginCaption() {

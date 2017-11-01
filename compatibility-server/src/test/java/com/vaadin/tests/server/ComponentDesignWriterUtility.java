@@ -1,5 +1,7 @@
 package com.vaadin.tests.server;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
@@ -11,7 +13,6 @@ import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.navigator.Navigator;
@@ -47,23 +48,23 @@ public class ComponentDesignWriterUtility {
         WHITE_LIST_FQNS.add(ColorPickerSelect.class.getName());
         WHITE_LIST_FQNS.add(ColorPickerHistory.class.getName());
 
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerGradient.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerGradient.class
                         .getName());
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerPopup.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerPopup.class
                         .getName());
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerPreview.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerPreview.class
                         .getName());
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerGrid.class
                         .getName());
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerSelect.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerSelect.class
                         .getName());
-        WHITE_LIST_FQNS
-                .add(com.vaadin.v7.ui.components.colorpicker.ColorPickerHistory.class
+        WHITE_LIST_FQNS.add(
+                com.vaadin.v7.ui.components.colorpicker.ColorPickerHistory.class
                         .getName());
 
         // ==================================================================
@@ -113,7 +114,7 @@ public class ComponentDesignWriterUtility {
     @Test
     public void vaadin8ComponentsElementStartsWithVaadinPrefix()
             throws URISyntaxException {
-        Assert.assertTrue(getVaadin8Components().stream()
+        assertTrue(getVaadin8Components().stream()
                 .map(ComponentDesignWriterUtility::getDeclarativeSyntax)
                 .allMatch(element -> element.startsWith("<vaadin-")));
     }
@@ -121,7 +122,7 @@ public class ComponentDesignWriterUtility {
     @Test
     public void vaadin7ComponentsElementStartsWithVaadinPrefix()
             throws URISyntaxException {
-        Assert.assertTrue(getVaadin7Components().stream()
+        assertTrue(getVaadin7Components().stream()
                 .map(ComponentDesignWriterUtility::getDeclarativeSyntax)
                 .allMatch(element -> element.startsWith("<vaadin7-")));
     }

@@ -85,9 +85,8 @@ public class StringToLongConverter
         return n.map(number -> {
             if (number == null) {
                 return null;
-            } else {
-                return number.longValue();
             }
+            return number.longValue();
         });
     }
 

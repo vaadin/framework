@@ -13,7 +13,7 @@ import com.vaadin.v7.ui.Table;
 
 public class TableToggleVisibility extends AbstractTestCase {
 
-    private static final int[] LENGTHS = new int[] { 20, 22, 10 };
+    private static final int[] LENGTHS = { 20, 22, 10 };
 
     @Override
     public void init() {
@@ -138,24 +138,17 @@ public class TableToggleVisibility extends AbstractTestCase {
 
             setCaption("- " + table.getCaption());
 
-            addClickListener(new ClickListener() {
+            addClickListener(event -> {
+                boolean wasVisible = ToggleButton.this.table.isVisible();
 
-                @Override
-                public void buttonClick(ClickEvent event) {
-
-                    boolean wasVisible = ToggleButton.this.table.isVisible();
-
-                    ToggleButton.this.table.setVisible(!wasVisible);
-                    setCaption((wasVisible ? "+ " : "- ")
-                            + ToggleButton.this.table.getCaption());
-                    setDescription(
-                            (wasVisible ? "Show " : "Hide ") + "the list with "
-                                    + ToggleButton.this.table.getCaption());
-
-                }
+                ToggleButton.this.table.setVisible(!wasVisible);
+                setCaption((wasVisible ? "+ " : "- ")
+                        + ToggleButton.this.table.getCaption());
+                setDescription(
+                        (wasVisible ? "Show " : "Hide ") + "the list with "
+                                + ToggleButton.this.table.getCaption());
             });
         }
-
     }
 
     @Override

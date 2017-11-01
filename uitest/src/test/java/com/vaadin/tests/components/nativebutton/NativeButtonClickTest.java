@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.nativebutton;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -42,11 +43,11 @@ public class NativeButtonClickTest extends MultiBrowserTest {
 
         clickFirstButton();
         String eventCoordinates = getFirstLabelValue();
-        Assert.assertNotEquals("0,0", eventCoordinates);
+        assertNotEquals("0,0", eventCoordinates);
 
         clickSecondButton();
         eventCoordinates = getSecondLabelValue();
-        Assert.assertNotEquals("0,0", eventCoordinates);
+        assertNotEquals("0,0", eventCoordinates);
     }
 
     private void clickFirstButton() {

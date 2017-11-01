@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -63,7 +64,7 @@ public class VaadinPortlet extends GenericPortlet
      * Base class for portlet requests that need access to HTTP servlet
      * requests.
      */
-    public static abstract class VaadinHttpAndPortletRequest
+    public abstract static class VaadinHttpAndPortletRequest
             extends VaadinPortletRequest {
 
         /**
@@ -561,7 +562,8 @@ public class VaadinPortlet extends GenericPortlet
      */
     protected VaadinPortletRequest createVaadinRequest(PortletRequest request) {
         PortalContext portalContext = request.getPortalContext();
-        String portalInfo = portalContext.getPortalInfo().toLowerCase().trim();
+        String portalInfo = portalContext.getPortalInfo()
+                .toLowerCase(Locale.ROOT).trim();
         VaadinPortletService service = getService();
 
         if (portalInfo.contains("gatein")) {

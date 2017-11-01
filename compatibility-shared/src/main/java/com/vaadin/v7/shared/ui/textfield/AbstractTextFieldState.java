@@ -42,7 +42,7 @@ public class AbstractTextFieldState extends AbstractFieldState {
     public String inputPrompt = null;
 
     /**
-     * The text in the field
+     * The text in the field.
      */
     @NoLayout
     public String text = null;

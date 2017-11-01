@@ -18,6 +18,7 @@ package com.vaadin.client.debug.internal;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
@@ -80,7 +81,7 @@ public class SelectorPath {
         String tmpPath = path;
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             tmpPath = tmpPath.substring(1, tmpPath.lastIndexOf(')'));
             if (tmpPath.contains("#")) {
                 // FIXME: SubParts should be handled.
@@ -168,7 +169,7 @@ public class SelectorPath {
     }
 
     /**
-     * Returns the name of the component described by given query fragment
+     * Returns the name of the component described by given query fragment.
      *
      * @param fragment
      *            Query fragment
@@ -199,7 +200,7 @@ public class SelectorPath {
         name = getNameWithCount(name);
 
         // Use direct path and elementX naming style.
-        return "WebElement " + name.substring(0, 1).toLowerCase()
+        return "WebElement " + name.substring(0, 1).toLowerCase(Locale.ROOT)
                 + name.substring(1) + " = getDriver().findElement(By.vaadin(\""
                 + path + "\"));";
     }
@@ -242,7 +243,8 @@ public class SelectorPath {
         name = name.replaceAll("\\W", "");
 
         // Lowercase the first character of name
-        return elementType + "Element " + name.substring(0, 1).toLowerCase()
+        return elementType + "Element "
+                + name.substring(0, 1).toLowerCase(Locale.ROOT)
                 + name.substring(1) + " = ";
     }
 

@@ -16,6 +16,7 @@
 package com.vaadin.shared;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Class that parses the user agent string from the browser and provides
@@ -69,7 +70,7 @@ public class VBrowserDetails implements Serializable {
      *            User agent as provided by the browser.
      */
     public VBrowserDetails(String userAgent) {
-        userAgent = userAgent.toLowerCase();
+        userAgent = userAgent.toLowerCase(Locale.ROOT);
 
         // browser engine name
         isGecko = userAgent.indexOf("gecko") != -1
@@ -358,7 +359,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Gecko engine
+     * Tests if the browser is using the Gecko engine.
      *
      * @return true if it is Gecko, false otherwise
      */
@@ -367,7 +368,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the WebKit engine
+     * Tests if the browser is using the WebKit engine.
      *
      * @return true if it is WebKit, false otherwise
      */
@@ -376,7 +377,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Presto engine
+     * Tests if the browser is using the Presto engine.
      *
      * @return true if it is Presto, false otherwise
      */
@@ -385,7 +386,7 @@ public class VBrowserDetails implements Serializable {
     }
 
     /**
-     * Tests if the browser is using the Trident engine
+     * Tests if the browser is using the Trident engine.
      *
      * @since 7.1.7
      * @return true if it is Trident, false otherwise

@@ -23,11 +23,10 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Validator;
+import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.validator.StringLengthValidator;
 import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Field;
 import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.PasswordField;
@@ -67,18 +66,13 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
         TwinColSelect twinColSelect = new TwinColSelect("TwinColSelect");
         twinColSelect.addItem("ok");
         twinColSelect.addItem("error");
-        twinColSelect.addValidator(new Validator() {
-
-            @Override
-            public void validate(Object value) throws InvalidValueException {
-                if (value instanceof Set && ((Set) value).size() == 1
-                        && ((Set) value).contains("ok")) {
-                    return;
-                }
-
-                throw new InvalidValueException("fail");
+        twinColSelect.addValidator(value -> {
+            if (value instanceof Set && ((Set) value).size() == 1
+                    && ((Set) value).contains("ok")) {
+                return;
             }
 
+            throw new InvalidValueException("fail");
         });
         twinColSelect.setValue("error");
 
@@ -89,7 +83,7 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
                 PasswordField.class };
         vl = new VerticalLayout();
         hl.addComponent(vl);
-        for (Class<? extends Field> fieldClass : textFields) {
+        for (Class<? extends AbstractField> fieldClass : textFields) {
             vl.addComponent(getField(fieldClass));
         }
 
@@ -100,10 +94,9 @@ public class FieldErrorIndication extends AbstractReindeerTestUI {
      * @param fieldClass
      * @return
      */
-    private Component getField(Class<? extends Field> fieldClass) {
-        AbstractField f;
+    private Component getField(Class<? extends AbstractField> fieldClass) {
         try {
-            f = (AbstractField) fieldClass.newInstance();
+            AbstractField<?> f = fieldClass.newInstance();
             f.setCaption(fieldClass.getSimpleName());
             f.setComponentError(new UserError("fail"));
             return f;

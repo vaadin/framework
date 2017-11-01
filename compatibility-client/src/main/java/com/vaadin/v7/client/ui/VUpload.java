@@ -146,7 +146,7 @@ public class VUpload extends SimplePanel {
             @Override
             public void onClick(ClickEvent event) {
                 if (immediate) {
-                    // fire click on upload (eg. focused button and hit space)
+                    // fire click on upload (e.g. focused button and hit space)
                     fireNativeClick(fu.getElement());
                 } else {
                     submit();
@@ -314,7 +314,7 @@ public class VUpload extends SimplePanel {
             VConsole.log("Submit cancelled (disabled or already submitted)");
             return;
         }
-        if (fu.getFilename().length() == 0) {
+        if (fu.getFilename().isEmpty()) {
             VConsole.log("Submitting empty selection (no file)");
         }
         // flush possibly pending variable changes, so they will be handled

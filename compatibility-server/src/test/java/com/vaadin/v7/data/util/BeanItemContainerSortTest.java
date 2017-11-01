@@ -1,5 +1,8 @@
 package com.vaadin.v7.data.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class BeanItemContainerSortTest {
@@ -45,11 +47,10 @@ public class BeanItemContainerSortTest {
         }
     }
 
-    String[] names = new String[] { "Antti", "Ville", "Sirkka", "Jaakko",
-            "Pekka", "John" };
-    int[] ages = new int[] { 10, 20, 50, 12, 64, 67 };
-    String[] sortedByAge = new String[] { names[0], names[3], names[1],
-            names[2], names[4], names[5] };
+    String[] names = { "Antti", "Ville", "Sirkka", "Jaakko", "Pekka", "John" };
+    int[] ages = { 10, 20, 50, 12, 64, 67 };
+    String[] sortedByAge = { names[0], names[3], names[1], names[2], names[4],
+            names[5] };
 
     public BeanItemContainer<Person> getContainer() {
         BeanItemContainer<Person> bc = new BeanItemContainer<Person>(
@@ -94,8 +95,8 @@ public class BeanItemContainerSortTest {
         int i = 0;
         for (String string : asList) {
             Person idByIndex = container.getIdByIndex(i++);
-            Assert.assertTrue(container.containsId(idByIndex));
-            Assert.assertEquals(string, idByIndex.getName());
+            assertTrue(container.containsId(idByIndex));
+            assertEquals(string, idByIndex.getName());
         }
     }
 
@@ -112,8 +113,8 @@ public class BeanItemContainerSortTest {
         int i = 0;
         for (String string : sortedByAge) {
             Person idByIndex = container.getIdByIndex(i++);
-            Assert.assertTrue(container.containsId(idByIndex));
-            Assert.assertEquals(string, idByIndex.getName());
+            assertTrue(container.containsId(idByIndex));
+            assertEquals(string, idByIndex.getName());
         }
     }
 
@@ -134,8 +135,8 @@ public class BeanItemContainerSortTest {
         int i = container.size() - 1;
         for (String string : sortedByAge) {
             Person idByIndex = container.getIdByIndex(i--);
-            Assert.assertTrue(container.containsId(idByIndex));
-            Assert.assertEquals(string, idByIndex.getName());
+            assertTrue(container.containsId(idByIndex));
+            assertEquals(string, idByIndex.getName());
         }
     }
 
@@ -145,22 +146,22 @@ public class BeanItemContainerSortTest {
 
         Collection<?> sortablePropertyIds = container
                 .getSortableContainerPropertyIds();
-        Assert.assertEquals(2, sortablePropertyIds.size());
-        Assert.assertTrue(sortablePropertyIds.contains("name"));
-        Assert.assertTrue(sortablePropertyIds.contains("age"));
+        assertEquals(2, sortablePropertyIds.size());
+        assertTrue(sortablePropertyIds.contains("name"));
+        assertTrue(sortablePropertyIds.contains("age"));
     }
 
     @Test
     public void testGetNonSortableProperties() {
         BeanItemContainer<Parent> container = getParentContainer();
 
-        Assert.assertEquals(3, container.getContainerPropertyIds().size());
+        assertEquals(3, container.getContainerPropertyIds().size());
 
         Collection<?> sortablePropertyIds = container
                 .getSortableContainerPropertyIds();
-        Assert.assertEquals(2, sortablePropertyIds.size());
-        Assert.assertTrue(sortablePropertyIds.contains("name"));
-        Assert.assertTrue(sortablePropertyIds.contains("age"));
+        assertEquals(2, sortablePropertyIds.size());
+        assertTrue(sortablePropertyIds.contains("name"));
+        assertTrue(sortablePropertyIds.contains("age"));
     }
 
 }

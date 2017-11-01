@@ -15,9 +15,12 @@
  */
 package com.vaadin.tests.server.component.grid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import java.util.Iterator;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,8 +51,8 @@ public class GridChildrenTest {
         Label label = new Label();
         merged.setComponent(label);
         Iterator<Component> i = grid.iterator();
-        Assert.assertEquals(label, i.next());
-        Assert.assertFalse(i.hasNext());
+        assertEquals(label, i.next());
+        assertFalse(i.hasNext());
     }
 
     @Test
@@ -58,9 +61,9 @@ public class GridChildrenTest {
                 "baz");
         Label label = new Label();
         merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
+        assertEquals(grid, label.getParent());
         merged.setText("foo");
-        Assert.assertNull(label.getParent());
+        assertNull(label.getParent());
     }
 
     @Test
@@ -69,9 +72,9 @@ public class GridChildrenTest {
                 "baz");
         Label label = new Label();
         merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
+        assertEquals(grid, label.getParent());
         grid.removeHeaderRow(0);
-        Assert.assertNull(label.getParent());
+        assertNull(label.getParent());
     }
 
     @Test
@@ -79,9 +82,9 @@ public class GridChildrenTest {
         FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
         Label label = new Label();
         merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
+        assertEquals(grid, label.getParent());
         merged.setText("foo");
-        Assert.assertNull(label.getParent());
+        assertNull(label.getParent());
     }
 
     @Test
@@ -89,9 +92,9 @@ public class GridChildrenTest {
         FooterCell merged = grid.addFooterRowAt(0).join("foo", "bar", "baz");
         Label label = new Label();
         merged.setComponent(label);
-        Assert.assertEquals(grid, label.getParent());
+        assertEquals(grid, label.getParent());
         grid.removeFooterRow(0);
-        Assert.assertNull(label.getParent());
+        assertNull(label.getParent());
     }
 
     @Test
@@ -100,8 +103,8 @@ public class GridChildrenTest {
         Label label = new Label();
         merged.setComponent(label);
         Iterator<Component> i = grid.iterator();
-        Assert.assertEquals(label, i.next());
-        Assert.assertFalse(i.hasNext());
-        Assert.assertEquals(grid, label.getParent());
+        assertEquals(label, i.next());
+        assertFalse(i.hasNext());
+        assertEquals(grid, label.getParent());
     }
 }

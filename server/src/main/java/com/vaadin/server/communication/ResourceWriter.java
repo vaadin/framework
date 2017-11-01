@@ -79,7 +79,7 @@ public class ResourceWriter implements Serializable {
 
                 writer.write((resourceIndex++ > 0 ? ", " : "") + "\"" + resource
                         + "\" : ");
-                final StringBuffer layout = new StringBuffer();
+                final StringBuilder layout = new StringBuilder();
 
                 try (InputStreamReader r = new InputStreamReader(is,
                         StandardCharsets.UTF_8)) {

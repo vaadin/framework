@@ -283,7 +283,7 @@ public class Escalator extends Widget
     // todo comments legend
     /*
      * [[optimize]]: There's an opportunity to rewrite the code in such a way
-     * that it _might_ perform better (rememeber to measure, implement,
+     * that it _might_ perform better (remember to measure, implement,
      * re-measure)
      */
     /*
@@ -324,7 +324,7 @@ public class Escalator extends Widget
              * {@link com.google.gwt.dom.client.NativeEvent NativeEvent} isn't
              * properly populated with the correct values.
              */
-            private final static class CustomTouchEvent
+            private static final class CustomTouchEvent
                     extends JavaScriptObject {
                 protected CustomTouchEvent() {
                 }
@@ -425,7 +425,7 @@ public class Escalator extends Widget
                         velocity = delta / ellapsed;
                         // if last speed was so low, reset speeds and start
                         // storing again
-                        if (speeds.size() > 0 && !validSpeed(speeds.get(0))) {
+                        if (!speeds.isEmpty() && !validSpeed(speeds.get(0))) {
                             speeds.clear();
                             run = true;
                         }
@@ -729,13 +729,13 @@ public class Escalator extends Widget
         /*-{
             var vScroll = esc.@com.vaadin.client.widgets.Escalator::verticalScrollbar;
             var vScrollElem = vScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             var hScroll = esc.@com.vaadin.client.widgets.Escalator::horizontalScrollbar;
             var hScrollElem = hScroll.@com.vaadin.client.widget.escalator.ScrollbarBundle::getElement()();
-        
+
             return $entry(function(e) {
                 var target = e.target;
-        
+
                 // in case the scroll event was native (i.e. scrollbars were dragged, or
                 // the scrollTop/Left was manually modified), the bundles have old cache
                 // values. We need to make sure that the caches are kept up to date.
@@ -756,29 +756,29 @@ public class Escalator extends Widget
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-        
+
                 // Delta mode 0 is in pixels; we don't need to do anything...
-        
+
                 // A delta mode of 1 means we're scrolling by lines instead of pixels
                 // We need to scale the number of lines by the default line height
-                if(e.deltaMode === 1) {
+                if (e.deltaMode === 1) {
                     var brc = esc.@com.vaadin.client.widgets.Escalator::body;
                     deltaY *= brc.@com.vaadin.client.widgets.Escalator.AbstractRowContainer::getDefaultRowHeight()();
                 }
-        
+
                 // Other delta modes aren't supported
-                if((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
+                if ((e.deltaMode !== undefined) && (e.deltaMode >= 2 || e.deltaMode < 0)) {
                     var msg = "Unsupported wheel delta mode \"" + e.deltaMode + "\"";
-        
+
                     // Print warning message
                     esc.@com.vaadin.client.widgets.Escalator::logWarning(*)(msg);
                 }
-        
+
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-        
+
                 @com.vaadin.client.widgets.Escalator.JsniUtil::moveScrollFromEvent(*)(esc, deltaX, deltaY, e);
             });
         }-*/;
@@ -1124,6 +1124,116 @@ public class Escalator extends Widget
         }
     }
 
+    /**
+     * Helper class that helps to implement the WAI-ARIA functionality for the
+     * Grid and TreeGrid component.
+     * <p>
+     * The following WAI-ARIA attributes are added through this class:
+     *
+     * <ul>
+     *     <li>aria-rowcount (since 8.2)</li>
+     *     <li>roles provided by {@link AriaGridRole} (since 8.2)</li>
+     * </ul>
+     *
+     * @since 8.2
+     */
+    public class AriaGridHelper {
+
+        /**
+         * This field contains the total number of rows from the grid including
+         * rows from thead, tbody and tfoot.
+         *
+         * @since 8.2
+         */
+        private int allRows;
+
+        /**
+         * Adds the given numberOfRows to allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows
+         *            number of rows that were added to the grid
+         *
+         * @since 8.2
+         */
+        public void addRows(int numberOfRows) {
+            allRows += numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Removes the given numberOfRows from allRows and calls
+         * {@link #updateAriaRowCount()}.
+         *
+         * @param numberOfRows
+         *            number of rows that were removed from the grid
+         *
+         * @since 8.2
+         */
+        public void removeRows(int numberOfRows) {
+            allRows -= numberOfRows;
+            updateAriaRowCount();
+        }
+
+        /**
+         * Sets the aria-rowcount attribute with the current value of
+         * {@link AriaGridHelper#allRows} if the grid is attached and
+         * {@link AriaGridHelper#allRows} > 0.
+         *
+         * @since 8.2
+         */
+        public void updateAriaRowCount() {
+            if (!isAttached() || 0 > allRows) {
+
+                return;
+            }
+
+            getTable().setAttribute("aria-rowcount", String.valueOf(allRows));
+        }
+
+        /**
+         * Sets the {@code role} attribute to the given element.
+         *
+         * @param element     element that should get the role attribute
+         * @param role        role to be added
+         *
+         * @since
+         */
+        public void updateRole(final Element element, AriaGridRole role) {
+            element.setAttribute("role", role.getName());
+        }
+    }
+
+    /**
+     * Holds the currently used aria roles within the grid for rows and cells.
+     *
+     * @since
+     */
+    public enum AriaGridRole {
+
+        ROW("row"),
+        ROWHEADER("rowheader"),
+        ROWGROUP("rowgroup"),
+        GRIDCELL("gridcell"),
+        COLUMNHEADER("columnheader");
+
+        private final String name;
+
+
+        AriaGridRole(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Return the name of the {@link AriaGridRole}.
+         *
+         * @return String name to be used as role attribute
+         */
+        public String getName() {
+            return name;
+        }
+    }
+
     public abstract class AbstractRowContainer implements RowContainer {
         private EscalatorUpdater updater = EscalatorUpdater.NULL;
 
@@ -1131,10 +1241,8 @@ public class Escalator extends Widget
 
         /**
          * The table section element ({@code <thead>}, {@code <tbody>} or
-         * {@code <tfoot>}) the rows (i.e. {@code
-         *
-        <tr>
-         * } tags) are contained in.
+         * {@code <tfoot>}) the rows (i.e. <code>&lt;tr&gt;</code> tags) are
+         * contained in.
          */
         protected final TableSectionElement root;
 
@@ -1153,6 +1261,7 @@ public class Escalator extends Widget
         public AbstractRowContainer(
                 final TableSectionElement rowContainerElement) {
             root = rowContainerElement;
+            ariaGridHelper.updateRole(root, AriaGridRole.ROWGROUP);
         }
 
         @Override
@@ -1172,6 +1281,34 @@ public class Escalator extends Widget
          * @see #createCellElement(double)
          */
         protected abstract String getCellElementTagName();
+
+        /**
+         * Gets the role attribute of an element to represent a cell in a row.
+         * <p>
+         * Usually {@link AriaGridRole#GRIDCELL} except for a cell in
+         * the header.
+         *
+         * @return the role attribute for the element to represent cells
+         *
+         * @since
+         */
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.GRIDCELL;
+        }
+
+        /**
+         * Gets the role attribute of an element to represent a row in a grid.
+         * <p>
+         * Usually {@link AriaGridRole#ROW} except for a row in
+         * the header.
+         *
+         * @return the role attribute for the element to represent rows
+         *
+         * @since
+         */
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROW;
+        }
 
         @Override
         public EscalatorUpdater getEscalatorUpdater() {
@@ -1216,6 +1353,7 @@ public class Escalator extends Widget
             assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
+            ariaGridHelper.removeRows(numberOfRows);
 
             if (!isAttached()) {
                 return;
@@ -1340,6 +1478,7 @@ public class Escalator extends Widget
             }
 
             rows += numberOfRows;
+            ariaGridHelper.addRows(numberOfRows);
             /*
              * only add items in the DOM if the widget itself is attached to the
              * DOM. We can't calculate sizes otherwise.
@@ -1381,7 +1520,6 @@ public class Escalator extends Widget
          *            the DOM index to add rows into
          * @param numberOfRows
          *            the number of rows to insert
-         * @return a list of the added row elements
          */
         protected abstract void paintInsertRows(final int visualIndex,
                 final int numberOfRows);
@@ -1410,15 +1548,14 @@ public class Escalator extends Widget
                 final TableRowElement tr = TableRowElement.as(DOM.createTR());
                 addedRows.add(tr);
                 tr.addClassName(getStylePrimaryName() + "-row");
+                ariaGridHelper.updateRole(tr, getRowElementRole());
 
                 for (int col = 0; col < columnConfiguration
                         .getColumnCount(); col++) {
                     final double colWidth = columnConfiguration
                             .getColumnWidthActual(col);
-                    final TableCellElement cellElem = createCellElement(
-                            colWidth);
+                    final TableCellElement cellElem = createCellElement(colWidth);
                     tr.appendChild(cellElem);
-
                     // Set stylename and position if new cell is frozen
                     if (col < columnConfiguration.frozenColumns) {
                         cellElem.addClassName("frozen");
@@ -1496,7 +1633,7 @@ public class Escalator extends Widget
             return elem;
         }
 
-        abstract protected void recalculateSectionHeight();
+        protected abstract void recalculateSectionHeight();
 
         /**
          * Returns the height of all rows in the row container.
@@ -1566,6 +1703,7 @@ public class Escalator extends Widget
                 cellElem.getStyle().setWidth(width, Unit.PX);
             }
             cellElem.addClassName(getStylePrimaryName() + "-cell");
+            ariaGridHelper.updateRole(cellElem, getCellElementRole());
             return cellElem;
         }
 
@@ -1575,7 +1713,7 @@ public class Escalator extends Widget
         }
 
         /**
-         * Gets the child element that is visually at a certain index
+         * Gets the child element that is visually at a certain index.
          *
          * @param index
          *            the index of the element to retrieve
@@ -1741,12 +1879,12 @@ public class Escalator extends Widget
          * @since 7.5.0
          *
          * @param tr
-         *            the row element to check for if it is or has elements that
-         *            can be frozen
-         * @return <code>true</code> iff this the given element, or any of its
+         *            the row element to check whether it, or any of its its
+         *            descendants can be frozen
+         * @return <code>true</code> if the given element, or any of its
          *         descendants, can be frozen
          */
-        abstract protected boolean rowCanBeFrozen(TableRowElement tr);
+        protected abstract boolean rowCanBeFrozen(TableRowElement tr);
 
         /**
          * Iterates through all the cells in a column and returns the width of
@@ -1960,13 +2098,10 @@ public class Escalator extends Widget
         }
 
         public void autodetectRowHeightLater() {
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    if (defaultRowHeightShouldBeAutodetected && isAttached()) {
-                        autodetectRowHeightNow();
-                        defaultRowHeightShouldBeAutodetected = false;
-                    }
+            Scheduler.get().scheduleFinally(() -> {
+                if (defaultRowHeightShouldBeAutodetected && isAttached()) {
+                    autodetectRowHeightNow();
+                    defaultRowHeightShouldBeAutodetected = false;
                 }
             });
         }
@@ -1974,12 +2109,9 @@ public class Escalator extends Widget
         private void fireRowHeightChangedEventFinally() {
             if (!rowHeightChangedEventFired) {
                 rowHeightChangedEventFired = true;
-                Scheduler.get().scheduleFinally(new ScheduledCommand() {
-                    @Override
-                    public void execute() {
-                        fireEvent(new RowHeightChangedEvent());
-                        rowHeightChangedEventFired = false;
-                    }
+                Scheduler.get().scheduleFinally(() -> {
+                    fireEvent(new RowHeightChangedEvent());
+                    rowHeightChangedEventFired = false;
                 });
             }
         }
@@ -2357,6 +2489,16 @@ public class Escalator extends Widget
         }
 
         @Override
+        protected AriaGridRole getRowElementRole() {
+            return AriaGridRole.ROWHEADER;
+        }
+
+        @Override
+        protected AriaGridRole getCellElementRole() {
+            return AriaGridRole.COLUMNHEADER;
+        }
+
+        @Override
         public void setStylePrimaryName(String primaryStyleName) {
             super.setStylePrimaryName(primaryStyleName);
             UIObject.setStylePrimaryName(root, primaryStyleName + "-header");
@@ -2582,9 +2724,7 @@ public class Escalator extends Widget
                 setTopRowLogicalIndex(logicalRowIndex);
 
                 rowsWereMoved = true;
-            }
-
-            else if (viewportOffset + nextRowBottomOffset <= 0) {
+            } else if (viewportOffset + nextRowBottomOffset <= 0) {
                 /*
                  * the viewport has been scrolled more than the topmost visual
                  * row.
@@ -2757,14 +2897,10 @@ public class Escalator extends Widget
                 final double yDelta = numberOfRows * getDefaultRowHeight();
                 moveViewportAndContent(yDelta);
                 updateTopRowLogicalIndex(numberOfRows);
-            }
-
-            else if (addedRowsBelowCurrentViewport) {
+            } else if (addedRowsBelowCurrentViewport) {
                 // NOOP, we already recalculated scrollbars.
-            }
-
-            else { // some rows were added inside the current viewport
-
+            } else {
+                // some rows were added inside the current viewport
                 final int unupdatedLogicalStart = index + addedRows.size();
                 final int visualOffset = getLogicalRowIndex(
                         visualRowOrder.getFirst());
@@ -2775,7 +2911,7 @@ public class Escalator extends Widget
                  *
                  * If more rows were added than the new escalator rows can
                  * account for, we need to start to spin the escalator to update
-                 * the remaining rows aswell.
+                 * the remaining rows as well.
                  */
                 final int rowsStillNeeded = numberOfRows - addedRows.size();
 
@@ -3182,9 +3318,7 @@ public class Escalator extends Widget
 
                     fireRowVisibilityChangeEvent();
                     return;
-                }
-
-                else {
+                } else {
                     // No escalator rows need to be removed.
 
                     /*
@@ -3216,9 +3350,7 @@ public class Escalator extends Widget
                          */
                         paintRemoveRowsAtMiddle(removedLogicalInside,
                                 removedVisualInside, 0);
-                    }
-
-                    else if (removedVisualInside.contains(0)
+                    } else if (removedVisualInside.contains(0)
                             && numberOfRows >= visualRowOrder.size()) {
                         /*
                          * We're removing so many rows that the viewport is
@@ -3258,9 +3390,7 @@ public class Escalator extends Widget
                          * TODO [[optimize]]: This might lead to a double body
                          * refresh. Needs investigation.
                          */
-                    }
-
-                    else if (contentBottom
+                    } else if (contentBottom
                             + (numberOfRows * getDefaultRowHeight())
                             - viewportBottom < getDefaultRowHeight()) {
                         /*
@@ -3278,9 +3408,7 @@ public class Escalator extends Widget
                                 removedVisualInside);
                         updateTopRowLogicalIndex(
                                 -removedLogicalInside.length());
-                    }
-
-                    else {
+                    } else {
                         /*
                          * We're in a combination, where we need to both scroll
                          * up AND show new rows at the bottom.
@@ -3716,9 +3844,7 @@ public class Escalator extends Widget
                     setScrollTop(oldScrollTop);
                     scroller.onScroll();
                 }
-            }
-
-            else if (neededEscalatorRowsDiff < 0) {
+            } else if (neededEscalatorRowsDiff < 0) {
                 // needs less
 
                 final ListIterator<TableRowElement> iter = visualRowOrder
@@ -3898,6 +4024,11 @@ public class Escalator extends Widget
                 if (tr == focusedRow) {
                     insertFirst = true;
                 } else if (insertFirst) {
+                    // remove row explicitly to work around an IE11 bug (#9850)
+                    if (BrowserInfo.get().isIE11()
+                            && tr.equals(root.getFirstChildElement())) {
+                        root.removeChild(tr);
+                    }
                     root.insertFirst(tr);
                 } else {
                     root.insertAfter(tr, focusedRow);
@@ -4565,11 +4696,11 @@ public class Escalator extends Widget
             }
 
             if (index < 0 || index + numberOfColumns > getColumnCount()) {
-                throw new IndexOutOfBoundsException(
-                        "The given " + "column range (" + index + ".."
-                                + (index + numberOfColumns)
-                                + ") was outside of the current number of columns ("
-                                + getColumnCount() + ")");
+                throw new IndexOutOfBoundsException("The given "
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
+                        + ") was outside of the current number of columns ("
+                        + getColumnCount() + ")");
             }
 
             header.refreshColumns(index, numberOfColumns);
@@ -5066,7 +5197,7 @@ public class Escalator extends Widget
         public Collection<SpacerImpl> getSpacersAfterPx(final double px,
                 final SpacerInclusionStrategy strategy) {
 
-            ArrayList<SpacerImpl> spacers = new ArrayList<>(
+            List<SpacerImpl> spacers = new ArrayList<>(
                     rowIndexToSpacer.values());
 
             for (int i = 0; i < spacers.size(); i++) {
@@ -5170,9 +5301,7 @@ public class Escalator extends Widget
                     continue;
                 } else if (topIsBelowRange) {
                     return heights;
-                }
-
-                else if (topIsAboveRange && bottomIsInRange) {
+                } else if (topIsAboveRange && bottomIsInRange) {
                     switch (topInclusion) {
                     case PARTIAL:
                         heights += bottom - rangeTop;
@@ -5183,9 +5312,7 @@ public class Escalator extends Widget
                     default:
                         break;
                     }
-                }
-
-                else if (topIsAboveRange && bottomIsBelowRange) {
+                } else if (topIsAboveRange && bottomIsBelowRange) {
 
                     /*
                      * Here we arbitrarily decide that the top inclusion will
@@ -5206,9 +5333,7 @@ public class Escalator extends Widget
 
                 } else if (topIsInRange && bottomIsInRange) {
                     heights += height;
-                }
-
-                else if (topIsInRange && bottomIsBelowRange) {
+                } else if (topIsInRange && bottomIsBelowRange) {
                     switch (bottomInclusion) {
                     case PARTIAL:
                         heights += rangeBottom - top;
@@ -5221,9 +5346,7 @@ public class Escalator extends Widget
                     }
 
                     return heights;
-                }
-
-                else {
+                } else {
                     assert false : "Unnaccounted-for situation";
                 }
             }
@@ -5614,6 +5737,8 @@ public class Escalator extends Widget
     private final VerticalScrollbarBundle verticalScrollbar = new VerticalScrollbarBundle();
     private final HorizontalScrollbarBundle horizontalScrollbar = new HorizontalScrollbarBundle();
 
+    private final AriaGridHelper ariaGridHelper = new AriaGridHelper();
+
     private final HeaderRowContainer header = new HeaderRowContainer(headElem);
     private final BodyRowContainerImpl body = new BodyRowContainerImpl(
             bodyElem);
@@ -5628,6 +5753,7 @@ public class Escalator extends Widget
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
     private final DivElement tableWrapper;
+    private final Element table;
 
     private final DivElement horizontalScrollbarDeco = DivElement
             .as(DOM.createDiv());
@@ -5654,12 +5780,9 @@ public class Escalator extends Widget
     private double delayToCancelTouchScroll = -1;
 
     private boolean layoutIsScheduled = false;
-    private ScheduledCommand layoutCommand = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            recalculateElementSizes();
-            layoutIsScheduled = false;
-        }
+    private ScheduledCommand layoutCommand = () -> {
+        recalculateElementSizes();
+        layoutIsScheduled = false;
     };
 
     private final ElementPositionBookkeeper positions = new ElementPositionBookkeeper();
@@ -5682,7 +5805,7 @@ public class Escalator extends Widget
 
         root.appendChild(tableWrapper);
 
-        final Element table = DOM.createTable();
+        table = DOM.createTable();
         tableWrapper.appendChild(table);
 
         table.appendChild(headElem);
@@ -5745,12 +5868,9 @@ public class Escalator extends Widget
 
     private void setupScrollbars(final Element root) {
 
-        ScrollHandler scrollHandler = new ScrollHandler() {
-            @Override
-            public void onScroll(ScrollEvent event) {
-                scroller.onScroll();
-                fireEvent(new ScrollEvent());
-            }
+        ScrollHandler scrollHandler = event -> {
+            scroller.onScroll();
+            fireEvent(new ScrollEvent());
         };
 
         int scrollbarThickness = WidgetUtil.getNativeScrollbarSize();
@@ -5786,13 +5906,9 @@ public class Escalator extends Widget
                          * We either lost or gained a scrollbar. In any case, we
                          * need to change the height, if it's defined by rows.
                          */
-                        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-
-                            @Override
-                            public void execute() {
-                                applyHeightByRows();
-                                queued = false;
-                            }
+                        Scheduler.get().scheduleFinally(() -> {
+                            applyHeightByRows();
+                            queued = false;
                         });
                     }
                 });
@@ -5931,7 +6047,7 @@ public class Escalator extends Widget
      * Check whether there are both columns and any row data (for either
      * headers, body or footer).
      *
-     * @return <code>true</code> iff header, body or footer has rows && there
+     * @return <code>true</code> if header, body or footer has rows and there
      *         are columns
      */
     private boolean hasColumnAndRowData() {
@@ -5943,7 +6059,7 @@ public class Escalator extends Widget
     /**
      * Check whether there are any cells in the DOM.
      *
-     * @return <code>true</code> iff header, body or footer has any child
+     * @return <code>true</code> if header, body or footer has any child
      *         elements
      */
     private boolean hasSomethingInDom() {
@@ -6186,13 +6302,10 @@ public class Escalator extends Widget
     public void scrollToRow(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IndexOutOfBoundsException, IllegalArgumentException {
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                validateScrollDestination(destination, padding);
-                verifyValidRowIndex(rowIndex);
-                scroller.scrollToRow(rowIndex, destination, padding);
-            }
+        Scheduler.get().scheduleFinally(() -> {
+            validateScrollDestination(destination, padding);
+            verifyValidRowIndex(rowIndex);
+            scroller.scrollToRow(rowIndex, destination, padding);
         });
     }
 
@@ -6257,59 +6370,53 @@ public class Escalator extends Widget
     public void scrollToRowAndSpacer(final int rowIndex,
             final ScrollDestination destination, final int padding)
             throws IllegalArgumentException {
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                validateScrollDestination(destination, padding);
-                if (rowIndex != -1) {
-                    verifyValidRowIndex(rowIndex);
-                }
-
-                // row range
-                final Range rowRange;
-                if (rowIndex != -1) {
-                    int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
-                    int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
-                    rowRange = Range.withLength(rowTop, rowHeight);
-                } else {
-                    rowRange = Range.withLength(0, 0);
-                }
-
-                // get spacer
-                final SpacerContainer.SpacerImpl spacer = body.spacerContainer
-                        .getSpacer(rowIndex);
-
-                if (rowIndex == -1 && spacer == null) {
-                    throw new IllegalArgumentException(
-                            "Cannot scroll to row index "
-                                    + "-1, as there is no spacer open at that index.");
-                }
-
-                // make into target range
-                final Range targetRange;
-                if (spacer != null) {
-                    final int spacerTop = (int) Math.floor(spacer.getTop());
-                    final int spacerHeight = (int) Math
-                            .ceil(spacer.getHeight());
-                    Range spacerRange = Range.withLength(spacerTop,
-                            spacerHeight);
-
-                    targetRange = rowRange.combineWith(spacerRange);
-                } else {
-                    targetRange = rowRange;
-                }
-
-                // get params
-                int targetStart = targetRange.getStart();
-                int targetEnd = targetRange.getEnd();
-                double viewportStart = getScrollTop();
-                double viewportEnd = viewportStart + body.getHeightOfSection();
-
-                double scrollPos = getScrollPos(destination, targetStart,
-                        targetEnd, viewportStart, viewportEnd, padding);
-
-                setScrollTop(scrollPos);
+        Scheduler.get().scheduleFinally(() -> {
+            validateScrollDestination(destination, padding);
+            if (rowIndex != -1) {
+                verifyValidRowIndex(rowIndex);
             }
+
+            // row range
+            final Range rowRange;
+            if (rowIndex != -1) {
+                int rowTop = (int) Math.floor(body.getRowTop(rowIndex));
+                int rowHeight = (int) Math.ceil(body.getDefaultRowHeight());
+                rowRange = Range.withLength(rowTop, rowHeight);
+            } else {
+                rowRange = Range.withLength(0, 0);
+            }
+
+            // get spacer
+            final SpacerContainer.SpacerImpl spacer = body.spacerContainer
+                    .getSpacer(rowIndex);
+
+            if (rowIndex == -1 && spacer == null) {
+                throw new IllegalArgumentException("Cannot scroll to row index "
+                        + "-1, as there is no spacer open at that index.");
+            }
+
+            // make into target range
+            final Range targetRange;
+            if (spacer != null) {
+                final int spacerTop = (int) Math.floor(spacer.getTop());
+                final int spacerHeight = (int) Math.ceil(spacer.getHeight());
+                Range spacerRange = Range.withLength(spacerTop, spacerHeight);
+
+                targetRange = rowRange.combineWith(spacerRange);
+            } else {
+                targetRange = rowRange;
+            }
+
+            // get params
+            int targetStart = targetRange.getStart();
+            int targetEnd = targetRange.getEnd();
+            double viewportStart = getScrollTop();
+            double viewportEnd = viewportStart + body.getHeightOfSection();
+
+            double scrollPos = getScrollPos(destination, targetStart, targetEnd,
+                    viewportStart, viewportEnd, padding);
+
+            setScrollTop(scrollPos);
         });
     }
 
@@ -6531,7 +6638,8 @@ public class Escalator extends Widget
         double footerHeight = footer.getHeightOfSection();
         double bodyHeight = body.getDefaultRowHeight() * heightByRows;
         double scrollbar = horizontalScrollbar.showsScrollHandle()
-                ? horizontalScrollbar.getScrollbarThickness() : 0;
+                ? horizontalScrollbar.getScrollbarThickness()
+                : 0;
         double spacerHeight = 0; // ignored if HeightMode.ROW
         if (heightMode == HeightMode.UNDEFINED) {
             spacerHeight = body.spacerContainer.getSpacerHeightsSum();
@@ -6653,7 +6761,7 @@ public class Escalator extends Widget
      *
      * @param direction
      *            the direction of the scroll of which to check the lock status
-     * @return <code>true</code> iff the direction is locked
+     * @return <code>true</code> if the direction is locked
      */
     public boolean isScrollLocked(ScrollbarBundle.Direction direction) {
         switch (direction) {
@@ -6668,7 +6776,7 @@ public class Escalator extends Widget
     }
 
     /**
-     * Adds a scroll handler to this escalator
+     * Adds a scroll handler to this escalator.
      *
      * @param handler
      *            the scroll handler to add
@@ -6809,6 +6917,16 @@ public class Escalator extends Widget
      */
     public Element getTableWrapper() {
         return tableWrapper;
+    }
+
+    /**
+     * Returns the <code>&lt;table&gt;</code> element of the grid.
+     *
+     * @return the table element
+     * @since 8.2
+     */
+    public Element getTable() {
+        return table;
     }
 
     private Element getSubPartElementTableStructure(SubPartArguments args) {

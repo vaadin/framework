@@ -15,10 +15,11 @@
  */
 package com.vaadin.server;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Properties;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.communication.PushMode;
@@ -35,8 +36,8 @@ public class AbstractDeploymentConfigurationTest {
         String ui = UUID.randomUUID().toString();
         DeploymentConfiguration config = getConfig(VaadinSession.UI_PARAMETER,
                 ui);
-        Assert.assertEquals("Unexpected UI class configuration option value",
-                ui, config.getUIClassName());
+        assertEquals("Unexpected UI class configuration option value", ui,
+                config.getUIClassName());
     }
 
     @Test
@@ -44,8 +45,7 @@ public class AbstractDeploymentConfigurationTest {
         String uiProvider = UUID.randomUUID().toString();
         DeploymentConfiguration config = getConfig(
                 Constants.SERVLET_PARAMETER_UI_PROVIDER, uiProvider);
-        Assert.assertEquals(
-                "Unexpected UI providerclass configuration option value",
+        assertEquals("Unexpected UI providerclass configuration option value",
                 uiProvider, config.getUIProviderClassName());
     }
 
@@ -54,7 +54,7 @@ public class AbstractDeploymentConfigurationTest {
         String widgetset = UUID.randomUUID().toString();
         DeploymentConfiguration config = getConfig(
                 Constants.PARAMETER_WIDGETSET, widgetset);
-        Assert.assertEquals("Unexpected widgetset configuration option value",
+        assertEquals("Unexpected widgetset configuration option value",
                 widgetset, config.getWidgetset(null));
     }
 
@@ -62,7 +62,7 @@ public class AbstractDeploymentConfigurationTest {
     public void getWidgetset_noWidgetsetPropertyValue_returnsProvidedDefaultValue() {
         DeploymentConfiguration config = getConfig(null, null);
         String widgetset = UUID.randomUUID().toString();
-        Assert.assertEquals("Unexpected widgetset configuration option value",
+        assertEquals("Unexpected widgetset configuration option value",
                 widgetset, config.getWidgetset(widgetset));
     }
 
@@ -71,8 +71,7 @@ public class AbstractDeploymentConfigurationTest {
         String resources = UUID.randomUUID().toString();
         DeploymentConfiguration config = getConfig(
                 Constants.PARAMETER_VAADIN_RESOURCES, resources);
-        Assert.assertEquals(
-                "Unexpected resources path configuration option value",
+        assertEquals("Unexpected resources path configuration option value",
                 resources, config.getResourcesPath());
     }
 
@@ -80,7 +79,7 @@ public class AbstractDeploymentConfigurationTest {
     public void getClassLoader_returnsClassloaderPropertyValue() {
         String classLoader = UUID.randomUUID().toString();
         DeploymentConfiguration config = getConfig("ClassLoader", classLoader);
-        Assert.assertEquals("Unexpected classLoader configuration option value",
+        assertEquals("Unexpected classLoader configuration option value",
                 classLoader, config.getClassLoaderName());
     }
 

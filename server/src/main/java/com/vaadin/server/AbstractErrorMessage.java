@@ -21,6 +21,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.shared.ui.ErrorLevel;
+
 /**
  * Base class for component error messages.
  *
@@ -119,7 +121,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             break;
         }
         // if no message, combine the messages of all children
-        if (null == result && null != getCauses() && getCauses().size() > 0) {
+        if (null == result && null != getCauses() && !getCauses().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (ErrorMessage cause : getCauses()) {
                 String childMessage = cause.getFormattedHtmlMessage();
@@ -129,7 +131,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
                     sb.append("</div>\n");
                 }
             }
-            if (sb.length() > 0) {
+            if (sb.length() != 0) {
                 result = sb.toString();
             }
         }

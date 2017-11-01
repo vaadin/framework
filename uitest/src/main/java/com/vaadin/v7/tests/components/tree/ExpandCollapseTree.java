@@ -36,7 +36,7 @@ public class ExpandCollapseTree extends TestBase {
                     @SuppressWarnings("unchecked")
                     // safe cast after instanceof check
                     Set<Object> itemIds = (Set<Object>) tree.getValue();
-                    if (itemIds.size() == 0) {
+                    if (itemIds.isEmpty()) {
                         valueLbl.setValue("No selection");
                     } else {
                         valueLbl.setValue(itemIds.toString());

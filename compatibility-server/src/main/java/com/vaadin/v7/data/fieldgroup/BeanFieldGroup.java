@@ -30,7 +30,8 @@ import com.vaadin.v7.ui.Field;
 
 /**
  *
- * @deprecated As of 8.0, replaced by {@link Binder} and {@link BeanValidationBinder}
+ * @deprecated As of 8.0, replaced by {@link Binder} and
+ *             {@link BeanValidationBinder}
  */
 @Deprecated
 public class BeanFieldGroup<T> extends FieldGroup {

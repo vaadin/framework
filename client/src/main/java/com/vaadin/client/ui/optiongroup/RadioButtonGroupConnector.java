@@ -57,7 +57,7 @@ public class RadioButtonGroupConnector
         super.init();
 
         selectionChangeRegistration = getWidget().addSelectionChangeHandler(
-                e -> selectionRpc.select(getRowKey(e)));
+                event -> selectionRpc.select(getRowKey(event)));
     }
 
     @Override
@@ -121,6 +121,7 @@ public class RadioButtonGroupConnector
             options.add(dataSource.getRow(i));
         }
         select.buildOptions(options);
+        getLayoutManager().setNeedsMeasure(this);
         updateSelectedItem();
     }
 

@@ -2,8 +2,6 @@ package com.vaadin.tests.minitutorials.v7a2;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.PushButton;
@@ -26,16 +24,12 @@ public class MyPickerWidget extends ComplexPanel {
         add(textBox, getElement());
         add(button, getElement());
 
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                Window.alert("Calendar picker not yet supported!");
-            }
-        });
+        button.addClickHandler(
+                event -> Window.alert("Calendar picker not yet supported!"));
     }
 
     public void setButtonText(String buttonText, boolean adjustSpace) {
-        if (buttonText == null || buttonText.length() == 0) {
+        if (buttonText == null || buttonText.isEmpty()) {
             buttonText = "...";
         }
         button.setText(buttonText);

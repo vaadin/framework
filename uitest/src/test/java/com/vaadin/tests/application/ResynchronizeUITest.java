@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.application;
 
+import static org.junit.Assert.fail;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -47,8 +48,7 @@ public class ResynchronizeUITest extends SingleBrowserTest {
         waitForThemeToChange("runo");
         try {
             button.click();
-            Assert.fail(
-                    "The old button element should have been removed by the click and replaced by a new one.");
+            fail("The old button element should have been removed by the click and replaced by a new one.");
         } catch (StaleElementReferenceException e) {
             // This is what should happen
         }

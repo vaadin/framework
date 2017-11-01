@@ -15,11 +15,12 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.GridElement.GridRowElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -51,7 +52,7 @@ public class GridSubPixelProblemWrappingTest extends MultiBrowserTest {
 
         int cell0Top = grid.getCell(rowIndex, 0).getLocation().y;
         int cell1Top = grid.getCell(rowIndex, 1).getLocation().y;
-        Assert.assertEquals(rowTop, cell0Top);
-        Assert.assertEquals(rowTop, cell1Top);
+        assertEquals(rowTop, cell0Top);
+        assertEquals(rowTop, cell1Top);
     }
 }

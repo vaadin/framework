@@ -17,7 +17,7 @@ package com.vaadin.shared.ui.grid;
 
 /**
  * Collection of modes used for resizing columns in the Grid.
- * 
+ *
  * @since 7.7.5
  */
 public enum ColumnResizeMode {

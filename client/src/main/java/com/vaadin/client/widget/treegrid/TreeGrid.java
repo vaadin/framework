@@ -21,7 +21,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.widget.escalator.EscalatorUpdater;
 import com.vaadin.client.widget.escalator.Row;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;
+import com.vaadin.client.widget.grid.events.BodyDoubleClickHandler;
 import com.vaadin.client.widget.treegrid.events.TreeGridClickEvent;
+import com.vaadin.client.widget.treegrid.events.TreeGridDoubleClickEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.data.HierarchicalDataCommunicatorConstants;
 
@@ -41,6 +43,13 @@ public class TreeGrid extends Grid<JsonObject> {
      * Style name prefix for the row's depth in the hierarchy
      */
     private String depthStyleNamePrefix;
+
+    /**
+     * Creates a new instance.
+     */
+    public TreeGrid() {
+        setAriaRole("treegrid");
+    }
 
     /**
      * Body updater that adds additional style to each row containing depth
@@ -89,24 +98,31 @@ public class TreeGrid extends Grid<JsonObject> {
 
     /**
      * Method for accessing the private {@link Grid#focusCell(int, int)} method
-     * from this package
+     * from this package.
      */
-    public native void focusCell(int rowIndex, int columnIndex)/*-{
+    public native void focusCell(int rowIndex, int columnIndex)
+    /*-{
         this.@com.vaadin.client.widgets.Grid::focusCell(II)(rowIndex, columnIndex);
     }-*/;
 
     /**
      * Method for accessing the private
-     * {@link Grid#isElementInChildWidget(Element)} method from this package
+     * {@link Grid#isElementInChildWidget(Element)} method from this package.
      */
-    public native boolean isElementInChildWidget(Element e)/*-{
+    public native boolean isElementInChildWidget(Element e)
+    /*-{
         return this.@com.vaadin.client.widgets.Grid::isElementInChildWidget(*)(e);
     }-*/;
-
 
     @Override
     public HandlerRegistration addBodyClickHandler(BodyClickHandler handler) {
         return addHandler(handler, TreeGridClickEvent.TYPE);
+    }
+
+    @Override
+    public HandlerRegistration addBodyDoubleClickHandler(
+            BodyDoubleClickHandler handler) {
+        return addHandler(handler, TreeGridDoubleClickEvent.TYPE);
     }
 
     @Override

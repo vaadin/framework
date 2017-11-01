@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Resolutions for DateFields
+ * Resolutions for DateFields.
  *
  * @author Vaadin Ltd.
  * @since 8.0

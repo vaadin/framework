@@ -32,7 +32,7 @@ public class GraphVizClassHierarchyCreator {
         }
 
         Set<Class> interfaces = new HashSet<>();
-        for (Object cls : classesAndParents.toArray()) {
+        for (Object cls : classesAndParents) {
             for (Class<?> c : ((Class) cls).getInterfaces()) {
                 addClassAndParentInterfaces(classesAndParents, c,
                         packageToInclude);
@@ -50,14 +50,14 @@ public class GraphVizClassHierarchyCreator {
         header.append("    node [shape = ellipse, style=\"dotted\"] ");
         for (Class c : classesAndParents) {
             if (!c.isInterface() && Modifier.isAbstract(c.getModifiers())) {
-                header.append(c.getSimpleName()).append(" ");
+                header.append(c.getSimpleName()).append(' ');
             }
         }
         if (includeInterfaces) {
             System.out.print("    node [shape = ellipse, style=\"solid\"] ");
             for (Class c : classesAndParents) {
                 if (c.isInterface()) {
-                    header.append(c.getSimpleName()).append(" ");
+                    header.append(c.getSimpleName()).append(' ');
                 }
             }
             header.append(";\n");
@@ -132,20 +132,6 @@ public class GraphVizClassHierarchyCreator {
         sb.append(c.getSimpleName()).append(" -> ")
                 .append(superClass.getSimpleName()).append("\n");
 
-    }
-
-    private static void addInterfaces(Set<Class> interfaces, Class<?> cls) {
-        if (interfaces.contains(cls)) {
-            return;
-        }
-
-        if (cls.isInterface()) {
-            interfaces.add(cls);
-        }
-
-        for (Class c : cls.getInterfaces()) {
-            addInterfaces(interfaces, c);
-        }
     }
 
 }

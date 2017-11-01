@@ -59,7 +59,7 @@ import elemental.json.JsonValue;
 public class LegacyCommunicationManager implements Serializable {
 
     // TODO Refactor (#11410)
-    private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<>();
+    private final Map<Integer, ClientCache> uiToClientCache = new HashMap<>();
 
     /**
      * The session this communication manager is used for
@@ -82,7 +82,7 @@ public class LegacyCommunicationManager implements Serializable {
         return session;
     }
 
-    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> referenceDiffStates = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<? extends SharedState>, JsonValue> REFERENCE_DIFF_STATES = new ConcurrentHashMap<>();
 
     /**
      * @deprecated As of 7.1. See #11411.
@@ -98,10 +98,10 @@ public class LegacyCommunicationManager implements Serializable {
         if (diffState == null) {
             // Use an empty state object as reference for full
             // repaints
-            diffState = referenceDiffStates.get(stateType);
+            diffState = REFERENCE_DIFF_STATES.get(stateType);
             if (diffState == null) {
                 diffState = createReferenceDiffStateState(stateType);
-                referenceDiffStates.put(stateType, diffState);
+                REFERENCE_DIFF_STATES.put(stateType, diffState);
             }
         }
         EncodeResult encodeResult = JsonCodec.encode(state, diffState,
@@ -323,7 +323,7 @@ public class LegacyCommunicationManager implements Serializable {
         }
     }
 
-    private final HashMap<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
+    private final Map<Class<? extends ClientConnector>, Integer> typeToKey = new HashMap<>();
     private int nextTypeKey = 0;
 
     /**
@@ -385,7 +385,7 @@ public class LegacyCommunicationManager implements Serializable {
          * We will use the same APP/* URI space as ApplicationResources but
          * prefix url with UPLOAD
          *
-         * eg. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
+         * e.g. APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY]
          *
          * SECKEY is created on each paint to make URL's unpredictable (to
          * prevent CSRF attacks).

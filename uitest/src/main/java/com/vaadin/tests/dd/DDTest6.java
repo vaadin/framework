@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.event.Action;
@@ -53,7 +54,7 @@ public class DDTest6 extends TestBase {
 
     java.util.Random r = new java.util.Random(1);
 
-    File[] files = new File[] { new Folder("Docs"), new Folder("Music"),
+    File[] files = { new Folder("Docs"), new Folder("Music"),
             new Folder("Images"), new File("document.doc"),
             new File("song.mp3"), new File("photo.jpg") };
 
@@ -130,7 +131,7 @@ public class DDTest6 extends TestBase {
 
         Handler actionHandler = new Handler() {
 
-            private Action[] actions = new Action[] { new Action("Remove") };
+            private Action[] actions = { new Action("Remove") };
 
             @Override
             public void handleAction(Action action, Object sender,
@@ -147,17 +148,14 @@ public class DDTest6 extends TestBase {
         };
         tree1.addActionHandler(actionHandler);
 
-        tree1.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                if (value != null && !(value instanceof Folder)) {
-                    value = tree1.getParent(value);
-                }
-                FolderView folderView = FolderView.get((Folder) value);
-                sp.setSecondComponent(folderView);
-                folderView.reload();
+        tree1.addValueChangeListener(event->{
+            Object value = event.getProperty().getValue();
+            if (value != null && !(value instanceof Folder)) {
+                value = tree1.getParent(value);
             }
+            FolderView folderView = FolderView.get((Folder) value);
+            sp.setSecondComponent(folderView);
+            folderView.reload();
         });
 
         l.addComponent(tree1);
@@ -175,9 +173,9 @@ public class DDTest6 extends TestBase {
 
     }
 
-    private final static ThemeResource FOLDER = new ThemeResource(
+    private static final ThemeResource FOLDER = new ThemeResource(
             "../runo/icons/64/folder.png");
-    private final static ThemeResource DOC = new ThemeResource(
+    private static final ThemeResource DOC = new ThemeResource(
             "../runo/icons/64/document.png");
 
     public static class File {
@@ -297,7 +295,7 @@ public class DDTest6 extends TestBase {
 
     static class FolderView extends DragAndDropWrapper implements DropHandler {
 
-        static final HashMap<Folder, FolderView> views = new HashMap<>();
+        static final Map<Folder, FolderView> views = new HashMap<>();
 
         public static FolderView get(Folder f) {
 
@@ -515,7 +513,7 @@ public class DDTest6 extends TestBase {
 
                 }
 
-                String[] knownTypes = new String[] { "image/png", "text/csv" };
+                String[] knownTypes = { "image/png", "text/csv" };
 
                 private boolean canDisplay(String type) {
                     if (type != null) {

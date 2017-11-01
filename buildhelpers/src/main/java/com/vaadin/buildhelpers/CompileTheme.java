@@ -91,7 +91,7 @@ public class CompileTheme {
     private static void processSassTheme(String themeFolder, String themeName,
             String variant, String version) throws Exception {
 
-        StringBuffer cssHeader = new StringBuffer();
+        StringBuilder cssHeader = new StringBuilder();
 
         String stylesCssDir = themeFolder + File.separator + themeName
                 + File.separator;
@@ -147,7 +147,7 @@ public class CompileTheme {
             return;
         }
 
-        String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
+        String[] parameters = { "--sprite-png-depth", "AUTO",
                 "--css-file-suffix", "-sprite", "--css-file-encoding", "UTF-8",
                 "--root-dir-path", themeFolder + File.separator + themeName,
                 "--log-level", "WARN" };

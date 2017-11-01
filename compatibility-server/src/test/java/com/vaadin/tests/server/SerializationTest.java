@@ -25,7 +25,6 @@ public class SerializationTest {
                 }
             });
         }
-
     }
 
     @Test
@@ -54,9 +53,4 @@ public class SerializationTest {
 
         return s2;
     }
-
-    private static String toString(Object o) {
-        return String.valueOf(o);
-    }
-
 }

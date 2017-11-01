@@ -63,7 +63,6 @@ public class GridColumnWidthsWithoutData extends AbstractTestUI {
             items.clear();
             provider.refreshAll();
         }));
-
     }
 
     private void replaceGrid(Grid<Person> newGrid) {

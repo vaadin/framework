@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.applicationservlet;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.LabelElement;
@@ -33,9 +34,8 @@ public class CustomDeploymentConfTest extends MultiBrowserTest {
         LabelElement customParamLabel = $$(VerticalLayoutElement.class)
                 .$$(VerticalLayoutElement.class).$$(LabelElement.class).get(1);
 
-        Assert.assertEquals("Resource cache time: 3599",
-                cacheTimeLabel.getText());
-        Assert.assertEquals("Custom config param: customValue",
+        assertEquals("Resource cache time: 3599", cacheTimeLabel.getText());
+        assertEquals("Custom config param: customValue",
                 customParamLabel.getText());
     }
 }

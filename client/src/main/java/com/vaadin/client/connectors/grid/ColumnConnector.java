@@ -37,7 +37,7 @@ import elemental.json.JsonValue;
 @Connect(com.vaadin.ui.Grid.Column.class)
 public class ColumnConnector extends AbstractExtensionConnector {
 
-    public static abstract class CustomColumn
+    public abstract static class CustomColumn
             extends Column<Object, JsonObject> {
 
         private final String connectorId;
@@ -96,6 +96,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("caption")
     void updateCaption() {
         column.setHeaderCaption(getState().caption);
+    }
+
+    @OnStateChange("assistiveCaption")
+    void updateAssistiveCaption() {
+        column.setAssistiveCaption(getState().assistiveCaption);
     }
 
     @OnStateChange("sortable")

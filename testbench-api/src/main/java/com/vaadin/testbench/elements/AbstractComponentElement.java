@@ -15,6 +15,8 @@
  */
 package com.vaadin.testbench.elements;
 
+import java.util.Locale;
+
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.By;
@@ -23,23 +25,24 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 @ServerClass("com.vaadin.ui.AbstractComponent")
 public class AbstractComponentElement extends AbstractElement {
+
     /**
-     * Returns the caption of the Component element
+     * Returns the caption of the Component element.
      *
      * @since 8.0
      * @return component caption
      */
     public String getCaption() {
-        final String GWT_ID_ATTRIBUTE = "aria-labelledby";
+        final String gwtIdAttribute = "aria-labelledby";
         WebElement captElem = null;
         String captionId = null;
-        captionId = getAttribute(GWT_ID_ATTRIBUTE);
+        captionId = getAttribute(gwtIdAttribute);
         // IE8 getAttribute returns empty string instead of null
         // when there is no attribute with specified name
-        if (captionId == null || captionId.equals("")) {
+        if (captionId == null || captionId.isEmpty()) {
             WebElement elem = findElement(
-                    By.xpath(".//*[@" + GWT_ID_ATTRIBUTE + "]"));
-            captionId = elem.getAttribute(GWT_ID_ATTRIBUTE);
+                    By.xpath(".//*[@" + gwtIdAttribute + "]"));
+            captionId = elem.getAttribute(gwtIdAttribute);
         }
         // element ids are unique, we can search the whole page
         captElem = getDriver().findElement(By.id(captionId));
@@ -51,12 +54,11 @@ public class AbstractComponentElement extends AbstractElement {
     }
 
     public boolean isReadOnly() {
-        final String READONLY_CSS_CLASS = "v-readonly";
         String readonlyClass = getAttribute("class");
-        // lookin for READONLY_CSS_CLASS string
+        // looking for READONLY_CSS_CLASS string
         String[] cssSelectors = readonlyClass.split("\\s");
         for (String selector : cssSelectors) {
-            if (selector.equals(READONLY_CSS_CLASS)) {
+            if (selector.equals("v-readonly")) {
                 return true;
             }
         }
@@ -69,7 +71,7 @@ public class AbstractComponentElement extends AbstractElement {
         String[] styles = style.split(";");
         for (String stylePart : styles) {
             // IE8 has uppercased styles
-            String lowercasePart = stylePart.toLowerCase();
+            String lowercasePart = stylePart.toLowerCase(Locale.ROOT);
             if (lowercasePart.startsWith(styleName + ":")) {
                 return lowercasePart.substring(styleName.length() + 1).trim();
             }

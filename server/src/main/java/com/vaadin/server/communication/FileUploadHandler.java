@@ -16,6 +16,8 @@
 
 package com.vaadin.server.communication;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -226,8 +228,6 @@ public class FileUploadHandler implements RequestHandler {
 
     private static final String CRLF = "\r\n";
 
-    private static final String UTF8 = "UTF-8";
-
     private static final String DASHDASH = "--";
 
     /*
@@ -256,8 +256,8 @@ public class FileUploadHandler implements RequestHandler {
                 .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)
                 + ServletPortletHelper.UPLOAD_URL_PREFIX.length();
         String uppUri = pathInfo.substring(startOfData);
-        String[] parts = uppUri.split("/", 4); // 0= UIid, 1 = cid, 2= name, 3
-                                               // = sec key
+        // 0= UIid, 1= cid, 2= name, 3= sec key
+        String[] parts = uppUri.split("/", 4);
         String uiId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
@@ -308,14 +308,14 @@ public class FileUploadHandler implements RequestHandler {
                         "The multipart stream ended unexpectedly");
             }
             bout.write(readByte);
-            if(bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
+            if (bout.size() > MULTIPART_BOUNDARY_LINE_LIMIT) {
                 throw new IOException(
                         "The multipart stream does not contain boundary");
             }
             readByte = stream.read();
         }
         byte[] bytes = bout.toByteArray();
-        return new String(bytes, 0, bytes.length - 1, UTF8);
+        return new String(bytes, 0, bytes.length - 1, UTF_8);
     }
 
     /**
@@ -368,7 +368,7 @@ public class FileUploadHandler implements RequestHandler {
          */
         while (!atStart) {
             String readLine = readLine(inputStream);
-            contentLength -= (readLine.getBytes(UTF8).length + CRLF.length());
+            contentLength -= (readLine.getBytes(UTF_8).length + CRLF.length());
             if (readLine.startsWith("Content-Disposition:")
                     && readLine.indexOf("filename=") > 0) {
                 rawfilename = readLine.replaceAll(".*filename=", "");
@@ -564,7 +564,7 @@ public class FileUploadHandler implements RequestHandler {
                 throw new NoInputStreamException();
             }
 
-            final byte buffer[] = new byte[MAX_UPLOAD_BUFFER_SIZE];
+            final byte[] buffer = new byte[MAX_UPLOAD_BUFFER_SIZE];
             long lastStreamingEvent = 0;
             int bytesReadToBuffer = 0;
             do {
@@ -674,7 +674,7 @@ public class FileUploadHandler implements RequestHandler {
     }
 
     /**
-     * TODO document
+     * Sends the upload response.
      *
      * @param request
      * @param response
@@ -686,7 +686,7 @@ public class FileUploadHandler implements RequestHandler {
                 ApplicationConstants.CONTENT_TYPE_TEXT_HTML_UTF_8);
         try (OutputStream out = response.getOutputStream()) {
             final PrintWriter outWriter = new PrintWriter(
-                    new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
+                    new BufferedWriter(new OutputStreamWriter(out, UTF_8)));
             outWriter.print("<html><body>download handled</body></html>");
             outWriter.flush();
         }
@@ -694,9 +694,7 @@ public class FileUploadHandler implements RequestHandler {
 
     private void cleanStreamVariable(VaadinSession session, final UI ui,
             final ClientConnector owner, final String variableName) {
-        session.accessSynchronously(() -> {
-            ui.getConnectorTracker().cleanStreamVariable(owner.getConnectorId(),
-                    variableName);
-        });
+        session.accessSynchronously(() -> ui.getConnectorTracker()
+                .cleanStreamVariable(owner.getConnectorId(), variableName));
     }
 }

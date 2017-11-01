@@ -109,14 +109,7 @@ public class ColorPickerHistory extends CustomField<Color> {
         ArrayBlockingQueue<Color> colorHistory = getColorHistory();
 
         // Check that the color does not already exist
-        boolean exists = false;
-        Iterator<Color> iter = colorHistory.iterator();
-        while (iter.hasNext()) {
-            if (color.equals(iter.next())) {
-                exists = true;
-                break;
-            }
-        }
+        boolean exists = colorHistory.contains(color);
 
         // If the color does not exist then add it
         if (!exists) {
@@ -136,7 +129,7 @@ public class ColorPickerHistory extends CustomField<Color> {
 
         // Create 2d color map
         Color[][] colors = new Color[ROWS][COLUMNS];
-        iter = colorList.iterator();
+        Iterator<Color> iter = colorList.iterator();
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {

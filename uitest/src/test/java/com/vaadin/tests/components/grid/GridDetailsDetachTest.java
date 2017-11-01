@@ -15,15 +15,16 @@
  */
 package com.vaadin.tests.components.grid;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.elements.ButtonElement;
+import com.vaadin.testbench.elements.GridElement;
 import com.vaadin.testbench.parallel.TestCategory;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -64,11 +65,11 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         assertNoErrorNotifications();
 
         List<WebElement> spacers = findElements(By.className("v-grid-spacer"));
-        Assert.assertEquals("Not enough spacers in DOM", 2, spacers.size());
-        Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 1", spacers.get(0).getText());
-        Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 3", spacers.get(1).getText());
+        assertEquals("Not enough spacers in DOM", 2, spacers.size());
+        assertEquals("Spacer content not visible", "Extra data for Bean 1",
+                spacers.get(0).getText());
+        assertEquals("Spacer content not visible", "Extra data for Bean 3",
+                spacers.get(1).getText());
     }
 
     @Test
@@ -87,11 +88,11 @@ public class GridDetailsDetachTest extends MultiBrowserTest {
         assertNoErrorNotifications();
 
         List<WebElement> spacers = findElements(By.className("v-grid-spacer"));
-        Assert.assertEquals("Not enough spacers in DOM", 2, spacers.size());
-        Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 1", spacers.get(0).getText());
-        Assert.assertEquals("Spacer content not visible",
-                "Extra data for Bean 3", spacers.get(1).getText());
+        assertEquals("Not enough spacers in DOM", 2, spacers.size());
+        assertEquals("Spacer content not visible", "Extra data for Bean 1",
+                spacers.get(0).getText());
+        assertEquals("Spacer content not visible", "Extra data for Bean 3",
+                spacers.get(1).getText());
     }
 
 }

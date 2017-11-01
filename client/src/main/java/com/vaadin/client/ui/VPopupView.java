@@ -21,13 +21,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -80,7 +76,7 @@ public class VPopupView extends HTML
     private boolean enabled = true;
 
     /**
-     * loading constructor
+     * Loading constructor.
      */
     public VPopupView() {
         super();
@@ -94,15 +90,12 @@ public class VPopupView extends HTML
         popup.setWidget(loading);
 
         // When we click to open the popup...
-        addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                if (isEnabled()) {
-                    preparePopup(popup);
-                    showPopup(popup);
-                    center();
-                    fireEvent(new VisibilityChangeEvent(true));
-                }
+        addClickHandler(event -> {
+            if (isEnabled()) {
+                preparePopup(popup);
+                showPopup(popup);
+                center();
+                fireEvent(new VisibilityChangeEvent(true));
             }
         });
 
@@ -193,7 +186,7 @@ public class VPopupView extends HTML
 
     private static native void nativeBlur(Element e)
     /*-{
-        if(e && e.blur) {
+        if (e && e.blur) {
             e.blur();
         }
     }-*/;
@@ -250,13 +243,11 @@ public class VPopupView extends HTML
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is
             // directly attached to the RootPanel.
-            addDomHandler(new KeyDownHandler() {
-                @Override
-                public void onKeyDown(KeyDownEvent event) {
-                    if (shortcutActionHandler != null) {
-                        shortcutActionHandler.handleKeyboardEvent(
-                                Event.as(event.getNativeEvent()));
-                    }
+            addDomHandler(event -> {
+                if (shortcutActionHandler != null) {
+                    shortcutActionHandler
+                            .handleKeyboardEvent(
+                                    Event.as(event.getNativeEvent()));
                 }
             }, KeyDownEvent.getType());
         }
@@ -326,16 +317,13 @@ public class VPopupView extends HTML
              * could be no shortcutActionHandler set yet. So let's postpone
              * search of shortcutActionHandler.
              */
-            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                @Override
-                public void execute() {
-                    try {
-                        if (shortcutActionHandler == null) {
-                            shortcutActionHandler = findShortcutActionHandler();
-                        }
-                    } finally {
-                        popupShowInProgress = false;
+            Scheduler.get().scheduleDeferred(() -> {
+                try {
+                    if (shortcutActionHandler == null) {
+                        shortcutActionHandler = findShortcutActionHandler();
                     }
+                } finally {
+                    popupShowInProgress = false;
                 }
             });
         }
@@ -416,7 +404,7 @@ public class VPopupView extends HTML
             }
             return handler;
         }
-    }// class CustomPopup
+    }
 
     public HandlerRegistration addVisibilityChangeHandler(
             final VisibilityChangeHandler visibilityChangeHandler) {
@@ -433,7 +421,7 @@ public class VPopupView extends HTML
      * Checks whether there are operations pending for this widget that must be
      * executed before reaching a steady state.
      *
-     * @returns <code>true</code> iff there are operations pending which must be
+     * @returns <code>true</code> if there are operations pending which must be
      *          executed before reaching a steady state
      * @since 7.3.4
      */
@@ -442,4 +430,4 @@ public class VPopupView extends HTML
         return popupShowInProgress;
     }
 
-}// class VPopupView
+}

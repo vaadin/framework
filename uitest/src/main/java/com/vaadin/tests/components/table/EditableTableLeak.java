@@ -5,13 +5,12 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -57,7 +56,7 @@ public class EditableTableLeak extends TestBase {
     }
 
     private static class CachingFieldFactory extends DefaultFieldFactory {
-        private final HashMap<Object, HashMap<Object, Field<?>>> cache = new HashMap<>();
+        private final Map<Object, Map<Object, Field<?>>> cache = new HashMap<>();
 
         @Override
         public Field<?> createField(Container container, Object itemId,
@@ -95,7 +94,7 @@ public class EditableTableLeak extends TestBase {
         table.setHeight("170px");
         table.setSelectable(true);
         table.setContainerDataSource(TestUtils.getISO3166Container());
-        table.setColumnHeaders(new String[] { "Country", "Code" });
+        table.setColumnHeaders("Country", "Code");
         table.setColumnAlignment(TestUtils.iso3166_PROPERTY_SHORT,
                 Table.ALIGN_CENTER);
         table.setColumnExpandRatio(TestUtils.iso3166_PROPERTY_NAME, 1);
@@ -103,21 +102,14 @@ public class EditableTableLeak extends TestBase {
 
         addComponent(sizeLabel);
 
-        addComponent(new Button("Show size of the table", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.markAsDirtyRecursive();
-                updateSize();
-            }
-
+        addComponent(new Button("Show size of the table", event -> {
+            table.markAsDirtyRecursive();
+            updateSize();
         }));
 
-        addComponent(new Button("Select the second row", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.select("AL");
-                updateSize();
-            }
+        addComponent(new Button("Select the second row", event -> {
+            table.select("AL");
+            updateSize();
         }));
     }
 

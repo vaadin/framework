@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.application;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.By;
@@ -45,7 +46,6 @@ public class ConnectorBundleStatusTest extends SingleBrowserTest {
 
     private void assertLoaded(String... expectedNames) {
         String bundleStatus = findElement(By.id("bundleStatus")).getText();
-        Assert.assertEquals(Arrays.asList(expectedNames).toString(),
-                bundleStatus);
+        assertEquals(Arrays.asList(expectedNames).toString(), bundleStatus);
     }
 }

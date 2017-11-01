@@ -40,28 +40,29 @@ public class LabelConnector extends AbstractLegacyComponentConnector {
         super.onStateChanged(stateChangeEvent);
         boolean sinkOnloads = false;
         Profiler.enter("LabelConnector.onStateChanged update content");
+        VLabel widget = getWidget();
         switch (getState().contentMode) {
         case PREFORMATTED:
             PreElement preElement = Document.get().createPreElement();
             preElement.setInnerText(getState().text);
             // clear existing content
-            getWidget().setHTML("");
+            widget.setHTML("");
             // add preformatted text to dom
-            getWidget().getElement().appendChild(preElement);
+            widget.getElement().appendChild(preElement);
             break;
 
         case TEXT:
-            getWidget().setText(getState().text);
+            widget.setText(getState().text);
             break;
 
         case HTML:
         case RAW:
             sinkOnloads = true;
         case XML:
-            getWidget().setHTML(getState().text);
+            widget.setHTML(getState().text);
             break;
         default:
-            getWidget().setText("");
+            widget.setText("");
             break;
 
         }
@@ -69,7 +70,7 @@ public class LabelConnector extends AbstractLegacyComponentConnector {
 
         if (sinkOnloads) {
             Profiler.enter("LabelConnector.onStateChanged sinkOnloads");
-            WidgetUtil.sinkOnloadForImages(getWidget().getElement());
+            WidgetUtil.sinkOnloadForImages(widget.getElement());
             Profiler.leave("LabelConnector.onStateChanged sinkOnloads");
         }
     }

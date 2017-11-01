@@ -77,7 +77,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
     private final Set<Object> removedProperties = new HashSet<Object>();
 
     /**
-     * Property implementation for generated properties
+     * Property implementation for generated properties.
      */
     @Deprecated
     protected static class GeneratedProperty<T> implements Property<T> {
@@ -208,7 +208,7 @@ public class GeneratedPropertyContainer extends AbstractContainer
         }
 
         /**
-         * Returns the wrapped Item that belongs to the wrapped container
+         * Returns the wrapped Item that belongs to the wrapped container.
          *
          * @return wrapped item.
          * @since 7.6.8

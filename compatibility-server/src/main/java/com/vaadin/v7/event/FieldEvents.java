@@ -124,7 +124,7 @@ public interface FieldEvents {
      * @since 6.5
      */
     @Deprecated
-    public static abstract class TextChangeEvent extends Component.Event {
+    public abstract static class TextChangeEvent extends Component.Event {
 
         public TextChangeEvent(Component source) {
             super(source);

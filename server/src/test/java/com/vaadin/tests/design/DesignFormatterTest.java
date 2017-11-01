@@ -16,16 +16,18 @@
 package com.vaadin.tests.design;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.TimeZone;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,15 +82,15 @@ public class DesignFormatterTest {
         assertEquals("", formatter.format(true));
         assertEquals("false", formatter.format(false));
 
-        Assert.assertTrue(formatter.parse("true", boolean.class));
-        Assert.assertTrue(formatter.parse("foobar", boolean.class));
-        Assert.assertTrue(formatter.parse("", boolean.class));
-        Assert.assertFalse(formatter.parse("false", boolean.class));
+        assertTrue(formatter.parse("true", boolean.class));
+        assertTrue(formatter.parse("foobar", boolean.class));
+        assertTrue(formatter.parse("", boolean.class));
+        assertFalse(formatter.parse("false", boolean.class));
 
-        Assert.assertTrue(formatter.parse("true", Boolean.class));
-        Assert.assertTrue(formatter.parse("foobar", Boolean.class));
-        Assert.assertTrue(formatter.parse("", Boolean.class));
-        Assert.assertFalse(formatter.parse("false", Boolean.class));
+        assertTrue(formatter.parse("true", Boolean.class));
+        assertTrue(formatter.parse("foobar", Boolean.class));
+        assertTrue(formatter.parse("", Boolean.class));
+        assertFalse(formatter.parse("false", Boolean.class));
     }
 
     @Test
@@ -236,7 +238,7 @@ public class DesignFormatterTest {
     protected void assertInvalidShortcut(String shortcut) {
         try {
             formatter.parse(shortcut, ShortcutAction.class);
-            Assert.fail("Invalid shortcut '" + shortcut + "' should throw");
+            fail("Invalid shortcut '" + shortcut + "' should throw");
         } catch (IllegalArgumentException e) {
             // expected
         }
@@ -289,9 +291,9 @@ public class DesignFormatterTest {
                 formatter.format(new ThemeResource(themePath)));
 
         assertEquals(fontAwesomeUrl, formatter.format(FontAwesome.AMBULANCE));
-        assertEquals(someOtherFontUrl.toLowerCase(),
+        assertEquals(someOtherFontUrl.toLowerCase(Locale.ROOT),
                 formatter.format(new GenericFontIcon("SomeOther", 0xf0f9))
-                        .toLowerCase());
+                        .toLowerCase(Locale.ROOT));
 
         assertEquals(fileSystemPath,
                 formatter.format(new FileResource(new File(fileSystemPath))));

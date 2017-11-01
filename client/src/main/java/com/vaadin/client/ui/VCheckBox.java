@@ -17,20 +17,20 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
-        implements Field, HandlesAriaInvalid, HandlesAriaRequired {
+        implements Field, HandlesAriaInvalid, HandlesAriaRequired,
+        HasErrorIndicatorElement {
 
     public static final String CLASSNAME = "v-checkbox";
 
@@ -41,7 +41,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
     public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public Element errorIndicatorElement;
+    private Element errorIndicatorElement;
 
     /** For internal use only. May be removed or replaced in the future. */
     public Icon icon;
@@ -58,12 +58,7 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
         if (BrowserInfo.get().isWebkit() || BrowserInfo.get().isFirefox()) {
             // Webkit and Firefox do not focus non-text input elements on click
             // (#3944)
-            addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    setFocus(true);
-                }
-            });
+            addClickHandler(event -> setFocus(true));
         }
     }
 
@@ -100,5 +95,25 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox
     @Override
     public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
+    }
+
+    @Override
+    public Element getErrorIndicatorElement() {
+        return errorIndicatorElement;
+    }
+
+    @Override
+    public void setErrorIndicatorElementVisible(boolean visible) {
+        if (visible) {
+            if (errorIndicatorElement == null) {
+                errorIndicatorElement = ErrorUtil.createErrorIndicatorElement();
+                getElement().appendChild(errorIndicatorElement);
+                DOM.sinkEvents(errorIndicatorElement,
+                        VTooltip.TOOLTIP_EVENTS | Event.ONCLICK);
+            }
+        } else if (errorIndicatorElement != null) {
+            getElement().removeChild(errorIndicatorElement);
+            errorIndicatorElement = null;
+        }
     }
 }

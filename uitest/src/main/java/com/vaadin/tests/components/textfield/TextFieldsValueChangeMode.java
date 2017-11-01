@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.textfield;
 
+import java.util.Locale;
+
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -29,7 +31,7 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
 
     private Component createFields(Class<?> fieldClass) {
         VerticalLayout vl = new VerticalLayout();
-        String id = fieldClass.getSimpleName().toLowerCase();
+        String id = fieldClass.getSimpleName().toLowerCase(Locale.ROOT);
         try {
             AbstractField<String> f = (AbstractField<String>) fieldClass
                     .newInstance();
@@ -100,9 +102,9 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
      *
      */
     private class VaadinDeveloperNameField extends TextField {
-        private String[] names = new String[] { "Matti Tahvonen",
-                "Marc Englund", "Joonas Lehtinen", "Jouni Koivuviita",
-                "Marko Grönroos", "Artur Signell" };
+        private String[] names = { "Matti Tahvonen", "Marc Englund",
+                "Joonas Lehtinen", "Jouni Koivuviita", "Marko Grönroos",
+                "Artur Signell" };
 
         public VaadinDeveloperNameField() {
             setCaption("Start typing 'old' Vaadin developers.");
@@ -138,10 +140,10 @@ public class TextFieldsValueChangeMode extends AbstractTestUIWithLog {
         }
 
         private String findMatch(String currentTextContent) {
-            if (currentTextContent.length() > 0) {
-                for (int i = 0; i < names.length; i++) {
-                    if (names[i].startsWith(currentTextContent)) {
-                        return names[i];
+            if (!currentTextContent.isEmpty()) {
+                for (String name : names) {
+                    if (name.startsWith(currentTextContent)) {
+                        return name;
                     }
                 }
             }

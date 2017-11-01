@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.accessibility;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -35,7 +36,7 @@ public class WindowWaiAriaRolesTest extends MultiBrowserTest {
 
         $(ButtonElement.class).caption("Regular").first().click();
         String role = getWindowRole();
-        Assert.assertTrue(
+        assertTrue(
                 "Dialog has incorrect role '" + role + "', expected 'dialog'",
                 "dialog".equals(role));
     }
@@ -45,7 +46,7 @@ public class WindowWaiAriaRolesTest extends MultiBrowserTest {
         openTestURL();
         $(ButtonElement.class).caption("Alert").first().click();
         String role = getWindowRole();
-        Assert.assertTrue(
+        assertTrue(
                 "Dialog has incorrect role '" + role
                         + "', expected 'alertdialog'",
                 "alertdialog".equals(role));

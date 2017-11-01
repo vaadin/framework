@@ -1,15 +1,16 @@
 package com.vaadin.tests.server.component.tabsheet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.tabsheet.TabsheetServerRpc;
@@ -35,7 +36,7 @@ public class TabSheetTest {
         Iterator<Component> iter = tabSheet.getComponentIterator();
 
         assertEquals(c, iter.next());
-        Assert.assertFalse(iter.hasNext());
+        assertFalse(iter.hasNext());
         assertNotNull(tabSheet.getTab(c));
     }
 
@@ -207,10 +208,10 @@ public class TabSheetTest {
         tabSheet.replaceComponent(lbl1, lbl2);
         assertSame(tab1, tabSheet.getTab(lbl1));
         assertSame(tab2, tabSheet.getTab(lbl2));
-        Assert.assertFalse(tab1.isClosable());
-        Assert.assertTrue(tab2.isClosable());
-        Assert.assertFalse(tab1.isEnabled());
-        Assert.assertTrue(tab2.isEnabled());
+        assertFalse(tab1.isClosable());
+        assertTrue(tab2.isClosable());
+        assertFalse(tab1.isEnabled());
+        assertTrue(tab2.isEnabled());
         assertEquals("description", tab1.getDescription());
         assertEquals(null, tab2.getDescription());
         assertEquals(3, tabSheet.getComponentCount());
@@ -226,7 +227,7 @@ public class TabSheetTest {
         assertNull(tabSheet.getTab(lbl1));
         assertNull(tab1.getComponent());
         assertNotNull(tabSheet.getTab(lbl3));
-        Assert.assertFalse(tabSheet.getTab(lbl3).isEnabled());
+        assertFalse(tabSheet.getTab(lbl3).isEnabled());
         assertEquals("description", tab1.getDescription());
         assertEquals(1, tabSheet.getTabPosition(tabSheet.getTab(lbl3)));
     }
@@ -316,24 +317,24 @@ public class TabSheetTest {
         Button b3 = new Button("b3");
         Button b4 = new Button("b4");
         TestTabsheet tabsheet = new TestTabsheet(b1, b2, b3, b4);
-        tabsheet.addSelectedTabChangeListener(e -> {
-            userOriginated.set(e.isUserOriginated());
-            selected.set(e.getTabSheet().getSelectedTab());
+        tabsheet.addSelectedTabChangeListener(event -> {
+            userOriginated.set(event.isUserOriginated());
+            selected.set(event.getTabSheet().getSelectedTab());
         });
 
         tabsheet.setSelectedTab(b2);
-        Assert.assertFalse(userOriginated.get());
-        Assert.assertEquals(b2, selected.get());
+        assertFalse(userOriginated.get());
+        assertEquals(b2, selected.get());
 
         TabsheetServerRpc rpc = ComponentTest.getRpcProxy(tabsheet,
                 TabsheetServerRpc.class);
         rpc.setSelected(tabsheet.getKey(b1));
-        Assert.assertTrue(userOriginated.get());
-        Assert.assertEquals(b1, selected.get());
+        assertTrue(userOriginated.get());
+        assertEquals(b1, selected.get());
 
         tabsheet.setSelectedTab(tabsheet.getTab(b4));
-        Assert.assertFalse(userOriginated.get());
-        Assert.assertEquals(b4, selected.get());
+        assertFalse(userOriginated.get());
+        assertEquals(b4, selected.get());
 
     }
 }

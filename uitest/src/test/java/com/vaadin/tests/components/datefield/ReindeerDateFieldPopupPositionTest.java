@@ -15,7 +15,8 @@
  */
 package com.vaadin.tests.components.datefield;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
+
 import org.openqa.selenium.WebElement;
 
 import com.vaadin.testbench.elements.DateFieldElement;
@@ -36,7 +37,7 @@ public class ReindeerDateFieldPopupPositionTest
         int right = field.getLocation().getX() + field.getSize().getWidth();
         WebElement popup = getPopup();
 
-        Assert.assertTrue(
+        assertTrue(
                 "Calendar popup has wrong X coordinate="
                         + popup.getLocation().getX()
                         + " , right side of the field is " + right,

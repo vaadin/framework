@@ -2,7 +2,6 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
@@ -25,12 +24,7 @@ public class GridLayoutRemoveFinalRow extends TestBase {
         addComponent(layout);
 
         Button removeRowBtn = new Button("Remove row",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        layout.removeRow(0);
-                    }
-                });
+                event -> layout.removeRow(0));
         addComponent(removeRowBtn);
     }
 

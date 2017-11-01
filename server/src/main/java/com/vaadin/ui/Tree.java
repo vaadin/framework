@@ -55,6 +55,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.shared.ui.grid.ScrollDestination;
 import com.vaadin.shared.ui.tree.TreeMultiSelectionModelState;
 import com.vaadin.shared.ui.tree.TreeRendererState;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -234,7 +235,7 @@ public class Tree<T> extends Composite
      *
      * @since 8.1
      */
-    public final static class TreeMultiSelectionModel<T>
+    public static final class TreeMultiSelectionModel<T>
             extends MultiSelectionModelImpl<T> {
 
         @Override
@@ -274,20 +275,21 @@ public class Tree<T> extends Composite
         treeGrid.setHeightUndefined();
         treeGrid.setHeightMode(HeightMode.UNDEFINED);
 
-        treeGrid.addExpandListener(e -> {
-            fireExpandEvent(e.getExpandedItem(), e.isUserOriginated());
+        treeGrid.addExpandListener(event -> {
+            fireExpandEvent(event.getExpandedItem(), event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addCollapseListener(e -> {
-            fireCollapseEvent(e.getCollapsedItem(), e.isUserOriginated());
+        treeGrid.addCollapseListener(event -> {
+            fireCollapseEvent(event.getCollapsedItem(),
+                    event.isUserOriginated());
             if (autoRecalculateWidth) {
                 treeGrid.recalculateColumnWidths();
             }
         });
-        treeGrid.addItemClickListener(e -> fireEvent(
-                new ItemClick<>(this, e.getItem(), e.getMouseEventDetails())));
+        treeGrid.addItemClickListener(event -> fireEvent(new ItemClick<>(this,
+                event.getItem(), event.getMouseEventDetails())));
     }
 
     /**
@@ -612,8 +614,8 @@ public class Tree<T> extends Composite
     /**
      * Sets the description generator that is used for generating tooltip
      * descriptions for items.
-     * 
-     * @since
+     *
+     * @since 8.2
      * @param descriptionGenerator
      *            the item description generator to set, or <code>null</code> to
      *            remove a previously set generator
@@ -666,7 +668,7 @@ public class Tree<T> extends Composite
     /**
      * Gets the item description generator.
      *
-     * @since
+     * @since 8.2
      * @return the item description generator
      */
     public DescriptionGenerator<T> getItemDescriptionGenerator() {
@@ -864,9 +866,9 @@ public class Tree<T> extends Composite
 
     /**
      * Returns the current state of automatic width recalculation.
-     * 
+     *
      * @return {@code true} if enabled; {@code false} if disabled
-     * 
+     *
      * @since 8.1.1
      */
     public boolean isAutoRecalculateWidth() {
@@ -876,11 +878,11 @@ public class Tree<T> extends Composite
     /**
      * Sets the automatic width recalculation on or off. This feature is on by
      * default.
-     * 
+     *
      * @param autoRecalculateWidth
      *            {@code true} to enable recalculation; {@code false} to turn it
      *            off
-     * 
+     *
      * @since 8.1.1
      */
     public void setAutoRecalculateWidth(boolean autoRecalculateWidth) {
@@ -1096,7 +1098,7 @@ public class Tree<T> extends Composite
      * ContextClickEvent for the Tree Component.
      * <p>
      * Usage:
-     * 
+     *
      * <pre>
      * tree.addContextClickListener(event -&gt; Notification.show(
      *         ((TreeContextClickEvent&lt;Person&gt;) event).getItem() + " Clicked"));
@@ -1142,4 +1144,58 @@ public class Tree<T> extends Composite
             return (Tree<T>) super.getComponent();
         }
     }
+
+    /**
+     * Scrolls to a certain item, using {@link ScrollDestination#ANY}.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row) throws IllegalArgumentException {
+        treeGrid.scrollTo(row, ScrollDestination.ANY);
+    }
+
+    /**
+     * Scrolls to a certain item, using user-specified scroll destination.
+     * <p>
+     * If the item has an open details row, its size will also be taken into
+     * account.
+     *
+     * @param row
+     *            zero based index of the item to scroll to in the current view.
+     * @param destination
+     *            value specifying desired position of scrolled-to row, not
+     *            {@code null}
+     * @throws IllegalArgumentException
+     *             if the provided row is outside the item range
+     * @since 8.2
+     */
+    public void scrollTo(int row, ScrollDestination destination) {
+        treeGrid.scrollTo(row, destination);
+    }
+
+    /**
+     * Scrolls to the beginning of the first data row.
+     *
+     * @since 8.2
+     */
+    public void scrollToStart() {
+        treeGrid.scrollToStart();
+    }
+
+    /**
+     * Scrolls to the end of the last data row.
+     *
+     * @since 8.2
+     */
+    public void scrollToEnd() {
+        treeGrid.scrollToEnd();
+    }
+
 }

@@ -15,9 +15,10 @@
  */
 package com.vaadin.tests.components.customlayout;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.logging.Level;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.ButtonElement;
@@ -29,10 +30,10 @@ public class CustomLayoutWithMissingSlotTest extends SingleBrowserTest {
     public void ensureRenderedWithoutErrors() {
         setDebug(true);
         openTestURL();
-        Assert.assertEquals("", getLogRow(0).trim());
+        assertEquals("", getLogRow(0).trim());
         $(ButtonElement.class).first().click();
         assertNoDebugMessage(Level.SEVERE);
-        Assert.assertEquals("1. Button clicked", getLogRow(0));
+        assertEquals("1. Button clicked", getLogRow(0));
     }
 
 }

@@ -15,7 +15,8 @@
  */
 package com.vaadin.v7.tests.components.grid;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import com.vaadin.testbench.elements.GridElement;
@@ -33,7 +34,7 @@ public class GridWithBrokenRendererTest extends SingleBrowserTest {
 
     private void assertRow(GridElement grid, int row, String... texts) {
         for (int column = 0; column < texts.length; column++) {
-            Assert.assertEquals("Cell " + row + "," + column, texts[column],
+            assertEquals("Cell " + row + "," + column, texts[column],
                     grid.getCell(row, column).getText());
         }
 

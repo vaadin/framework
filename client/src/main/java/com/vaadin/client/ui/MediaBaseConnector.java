@@ -78,7 +78,7 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
 
     private void setAltText(String altText) {
 
-        if (altText == null || "".equals(altText)) {
+        if (altText == null || altText.isEmpty()) {
             altText = getDefaultAltHtml();
         } else if (!getState().htmlContentAllowed) {
             altText = WidgetUtil.escapeHTML(altText);

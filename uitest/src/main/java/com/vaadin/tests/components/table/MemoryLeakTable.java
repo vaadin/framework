@@ -18,8 +18,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -56,18 +54,8 @@ public class MemoryLeakTable extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        btnAdd.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addRows();
-            }
-        });
-        btnRemove.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                removeRows();
-            }
-        });
+        btnAdd.addClickListener(event -> addRows());
+        btnRemove.addClickListener(event -> removeRows());
         addComponent(btnAdd);
         addComponent(btnRemove);
     }

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableRepaintWhenMadeVisibile extends TestBase {
@@ -15,21 +13,9 @@ public class TableRepaintWhenMadeVisibile extends TestBase {
         table.addItem(new Object[] { "something" }, 1);
         addComponent(table);
 
-        Button show = new Button("show", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setVisible(true);
-            }
-        });
+        Button show = new Button("show", event -> table.setVisible(true));
         addComponent(show);
-        Button hide = new Button("hide", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setVisible(false);
-            }
-        });
+        Button hide = new Button("hide", event -> table.setVisible(false));
         addComponent(hide);
     }
 

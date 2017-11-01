@@ -21,7 +21,6 @@ import java.util.Vector;
 
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -117,14 +116,8 @@ public class TestForTablesInitialColumnWidthLogicRendering
         t.setWidth("200px");
         main.addComponent(t);
 
-        final Button b = new Button("refresh view", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createNewView();
-            }
-        });
+        final Button b = new Button("refresh view", event -> createNewView());
         main.addComponent(b);
-
     }
 
     public static Table getTestTable(int cols, int rows) {
@@ -139,14 +132,8 @@ public class TestForTablesInitialColumnWidthLogicRendering
             for (int j = 0; j < cols; j++) {
                 content.add(rndString());
             }
-            Button button = new Button("b", new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    System.out.println("b click");
-
-                }
-            });
+            Button button = new Button("b",
+                    event -> System.out.println("b click"));
             button.setDescription("Yep yep");
             button.setComponentError(new UserError("Error"));
             content.add(button);
@@ -155,7 +142,7 @@ public class TestForTablesInitialColumnWidthLogicRendering
         return t;
     }
 
-    static String[] testString = new String[] { "Jacob", "Michael", "Joshua",
+    static String[] testString = { "Jacob", "Michael", "Joshua",
             "Matthew", "Ethan", "Andrew", "Daniel", "Anthony", "Christopher",
             "Joseph", "William", "Alexander", "Ryan", "David", "Nicholas",
             "Tyler", "James", "John", "Jonathan", "Nathan", "Samuel",

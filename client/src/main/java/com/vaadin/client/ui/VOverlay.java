@@ -129,14 +129,14 @@ public class VOverlay extends Overlay {
     public static com.google.gwt.user.client.Element getOverlayContainer(
             ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
-        id = id += "-overlays";
+        id += "-overlays";
         Element container = DOM.getElementById(id);
         if (container == null) {
             container = DOM.createDiv();
             container.setId(id);
             String styles = ac.getUIConnector().getWidget().getParent()
                     .getStyleName();
-            if (styles != null && !styles.equals("")) {
+            if (styles != null && !styles.isEmpty()) {
                 container.addClassName(styles);
             }
             container.addClassName(CLASSNAME_CONTAINER);
@@ -147,7 +147,7 @@ public class VOverlay extends Overlay {
 
     /**
      * Set the label of the container element, where tooltip, notification and
-     * dialgs are added to.
+     * dialogs are added to.
      *
      * @param applicationConnection
      *            the application connection for which to change the label

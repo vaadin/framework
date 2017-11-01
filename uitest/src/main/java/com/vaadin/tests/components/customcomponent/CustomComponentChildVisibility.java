@@ -32,16 +32,10 @@ public class CustomComponentChildVisibility extends AbstractReindeerTestUI {
                 new Panel("In CustomComponent", label));
 
         Button hideButton = new Button("Hide CustomComponent");
-        hideButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                cc.setVisible(false);
-            }
-        });
+        hideButton.addClickListener(event -> cc.setVisible(false));
 
         addComponent(cc);
         addComponent(hideButton);
-
     }
 
     @Override

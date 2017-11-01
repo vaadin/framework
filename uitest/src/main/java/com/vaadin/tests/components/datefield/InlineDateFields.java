@@ -13,8 +13,8 @@ import com.vaadin.ui.InlineDateField;
 @SuppressWarnings("serial")
 public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
-    private static final Locale[] LOCALES = new Locale[] { Locale.US,
-            Locale.TAIWAN, new Locale("fi", "FI") };
+    private static final Locale[] LOCALES = { Locale.US, Locale.TAIWAN,
+            new Locale("fi", "FI") };
 
     @Override
     protected Class<InlineDateField> getTestClass() {
@@ -32,22 +32,21 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
         InlineDateField pd = createInlineDateField("Undefined width", "-1",
                 locale);
-        pd.setId("Locale-" + locale.toString() + "-undefined-wide");
+        pd.setId("Locale-" + locale + "-undefined-wide");
         addTestComponent(pd);
         pd = createInlineDateField("300px width", "300px", locale);
-        pd.setId("Locale-" + locale.toString() + "-300px-wide");
+        pd.setId("Locale-" + locale + "-300px-wide");
         addTestComponent(pd);
         pd = createInlineDateField("Initially empty", "", locale);
         pd.setValue(null);
-        pd.setId("Locale-" + locale.toString() + "-initially-empty");
+        pd.setId("Locale-" + locale + "-initially-empty");
         addTestComponent(pd);
 
     }
 
     private InlineDateField createInlineDateField(String caption, String width,
             Locale locale) {
-        InlineDateField pd = new InlineDateField(
-                caption + "(" + locale.toString() + ")");
+        InlineDateField pd = new InlineDateField(caption + "(" + locale + ")");
         pd.setWidth(width);
         pd.setValue(LocalDate.of(1970, 05, 23));
         pd.setLocale(locale);

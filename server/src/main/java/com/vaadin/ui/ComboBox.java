@@ -69,7 +69,7 @@ import elemental.json.JsonObject;
  */
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
-        implements HasValue<T>, FieldEvents.BlurNotifier,
+        implements FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
 
     /**
@@ -155,7 +155,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         public void createNewItem(String itemValue) {
             // New option entered
             if (getNewItemHandler() != null && itemValue != null
-                    && itemValue.length() > 0) {
+                    && !itemValue.isEmpty()) {
                 getNewItemHandler().accept(itemValue);
             }
         }
@@ -678,10 +678,9 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
     @Override
     public Registration addValueChangeListener(
             HasValue.ValueChangeListener<T> listener) {
-        return addSelectionListener(event -> {
-            listener.valueChange(new ValueChangeEvent<>(event.getComponent(),
-                    this, event.getOldValue(), event.isUserOriginated()));
-        });
+        return addSelectionListener(event -> listener
+                .valueChange(new ValueChangeEvent<>(event.getComponent(), this,
+                        event.getOldValue(), event.isUserOriginated())));
     }
 
     @Override
@@ -704,7 +703,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemCaption() {
         String selectedCaption = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        T value = keyToItem(getSelectedKey());
         if (value != null) {
             selectedCaption = getItemCaptionGenerator().apply(value);
         }
@@ -713,7 +712,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
 
     private void updateSelectedItemIcon() {
         String selectedItemIcon = null;
-        T value = getDataCommunicator().getKeyMapper().get(getSelectedKey());
+        T value = keyToItem(getSelectedKey());
         if (value != null) {
             Resource icon = getItemIconGenerator().apply(value);
             if (icon != null) {
@@ -772,9 +771,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
                 ((DeclarativeStyleGenerator) styleGenerator).setStyle(item,
                         child.attr("style"));
             } else {
-                throw new IllegalStateException(String.format(
-                        "Don't know how "
-                                + "to set style using current style generator '%s'",
+                throw new IllegalStateException(String.format("Don't know how "
+                        + "to set style using current style generator '%s'",
                         styleGenerator.getClass().getName()));
             }
         }
@@ -813,7 +811,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * size callback.
      * <p>
      * This method is a shorthand for making a {@link CallbackDataProvider} that
-     * handles a partial {@link Query} object.
+     * handles a partial {@link com.vaadin.data.provider.Query Query} object.
      *
      * @param fetchItems
      *            a callback for fetching items
@@ -835,8 +833,8 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
      * Predicate to check {@link ComboBox} item captions against user typed
      * strings.
      *
-     * @see #setItems(CaptionFilter, Collection)
-     * @see #setItems(CaptionFilter, Object[])
+     * @see ComboBox#setItems(CaptionFilter, Collection)
+     * @see ComboBox#setItems(CaptionFilter, Object[])
      * @since 8.0
      */
     @FunctionalInterface

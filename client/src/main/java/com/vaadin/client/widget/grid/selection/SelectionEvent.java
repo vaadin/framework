@@ -32,7 +32,7 @@ import com.vaadin.client.widgets.Grid;
 @SuppressWarnings("rawtypes")
 public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
 
-    private static final Type<SelectionHandler> eventType = new Type<>();
+    private static final Type<SelectionHandler> EVENT_TYPE = new Type<>();
 
     private final Grid<T> grid;
     private final List<T> added;
@@ -142,12 +142,12 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
      * @return a {@link Type} identifier.
      */
     public static Type<SelectionHandler> getType() {
-        return eventType;
+        return EVENT_TYPE;
     }
 
     @Override
     public Type<SelectionHandler> getAssociatedType() {
-        return eventType;
+        return EVENT_TYPE;
     }
 
     @Override
@@ -160,7 +160,7 @@ public class SelectionEvent<T> extends GwtEvent<SelectionHandler> {
      * Checks if this selection change event is fired during a batched
      * selection/deselection operation.
      *
-     * @return <code>true</code> iff this event is fired during a batched
+     * @return <code>true</code> if this event is fired during a batched
      *         selection/deselection operation
      */
     public boolean isBatchedSelection() {

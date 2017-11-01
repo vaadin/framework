@@ -15,8 +15,10 @@
  */
 package com.vaadin.v7.tests.server.component.table;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Property.ValueChangeListener;
@@ -34,7 +36,7 @@ public class TableSelectableTest {
         Table table = new Table();
         table.setSelectable(true);
 
-        Assert.assertTrue(table.isSelectable());
+        assertTrue(table.isSelectable());
     }
 
     @Test
@@ -43,15 +45,15 @@ public class TableSelectableTest {
         table.addValueChangeListener(
                 EasyMock.createMock(ValueChangeListener.class));
 
-        Assert.assertTrue(table.isSelectable());
-        Assert.assertTrue(table.markAsDirtyCalled);
+        assertTrue(table.isSelectable());
+        assertTrue(table.markAsDirtyCalled);
     }
 
     @Test
     public void tableIsNotSelectableByDefult() {
         Table table = new Table();
 
-        Assert.assertFalse(table.isSelectable());
+        assertFalse(table.isSelectable());
     }
 
     @Test
@@ -61,7 +63,7 @@ public class TableSelectableTest {
         table.addValueChangeListener(
                 EasyMock.createMock(ValueChangeListener.class));
 
-        Assert.assertFalse(table.isSelectable());
+        assertFalse(table.isSelectable());
     }
 
     private static final class TestTable extends Table {

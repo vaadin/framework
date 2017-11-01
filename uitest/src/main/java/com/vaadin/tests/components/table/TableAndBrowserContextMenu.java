@@ -83,8 +83,8 @@ public class TableAndBrowserContextMenu extends TestBase
 
         // Calculate the average of the numeric column
         double avgAge = 0;
-        for (int i = 0; i < people.length; i++) {
-            avgAge += (Integer) people[i][1];
+        for (Object[] person : people) {
+            avgAge += (Integer) person[1];
         }
         avgAge /= people.length;
 
@@ -96,8 +96,7 @@ public class TableAndBrowserContextMenu extends TestBase
         // Adjust the table height a bit
         table.setPageLength(table.size() + 2);
 
-        for (int i = 0; i < people.length; i++) {
-            Object[] person = people[i];
+        for (Object[] person : people) {
             String name = (String) person[0];
             addComponent(new Link("Google for " + name, new ExternalResource(
                     "http://www.google.co.uk/search?q=" + name)));

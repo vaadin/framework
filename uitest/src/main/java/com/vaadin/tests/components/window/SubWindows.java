@@ -2,8 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
@@ -31,14 +29,9 @@ public class SubWindows extends TestBase {
 
     private Component createRemoveButton() {
         Button b = new Button("Remove");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Button b = event.getButton();
-                ComponentContainer cc = (ComponentContainer) b.getParent();
-                cc.removeComponent(b);
-            }
+        b.addClickListener(event -> {
+            ComponentContainer cc = (ComponentContainer) b.getParent();
+            cc.removeComponent(b);
         });
 
         return b;
@@ -51,15 +44,8 @@ public class SubWindows extends TestBase {
         hl.setSizeUndefined();
         hl.addComponent(new TextField("Field 1"));
         hl.addComponent(new TextField("Field 2"));
-        hl.addComponent(new Button("Add", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(createRemoveButton());
-
-            }
-
-        }));
+        hl.addComponent(new Button("Add",
+                event -> hl.addComponent(createRemoveButton())));
 
         getMainWindow().addWindow(autoWideWindow);
 

@@ -1,6 +1,7 @@
 package com.vaadin.tests.elements;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,8 +26,7 @@ public class TestBenchElementRightClickTest extends MultiBrowserTest {
         cell.contextClick();
         String actual = label.getText();
         String expected = "RightClick";
-        Assert.assertEquals("TestBenchElement right click fails", expected,
-                actual);
+        assertEquals("TestBenchElement right click fails", expected, actual);
 
     }
 
@@ -35,7 +35,6 @@ public class TestBenchElementRightClickTest extends MultiBrowserTest {
         cell.doubleClick();
         String actual = label.getText();
         String expected = "DoubleClick";
-        Assert.assertEquals("TestBenchElement double click fails", expected,
-                actual);
+        assertEquals("TestBenchElement double click fails", expected, actual);
     }
 }

@@ -175,7 +175,7 @@ public class DragAndDropWrapper extends CustomComponent
 
     public enum DragStartMode {
         /**
-         * {@link DragAndDropWrapper} does not start drag events at all
+         * {@link DragAndDropWrapper} does not start drag events at all.
          */
         NONE,
         /**
@@ -272,7 +272,7 @@ public class DragAndDropWrapper extends CustomComponent
         if (getDropHandler() != null) {
             getDropHandler().getAcceptCriterion().paint(target);
         }
-        if (receivers != null && receivers.size() > 0) {
+        if (receivers != null && !receivers.isEmpty()) {
             for (Iterator<Entry<String, ProxyReceiver>> it = receivers
                     .entrySet().iterator(); it.hasNext();) {
                 Entry<String, ProxyReceiver> entry = it.next();
@@ -459,10 +459,6 @@ public class DragAndDropWrapper extends CustomComponent
             @Override
             public long getContentLength() {
                 return file.getFileSize();
-            }
-
-            public StreamVariable getReceiver() {
-                return ProxyReceiver.this;
             }
 
             @Override

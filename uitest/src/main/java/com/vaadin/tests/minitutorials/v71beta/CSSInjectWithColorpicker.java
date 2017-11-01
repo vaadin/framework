@@ -170,7 +170,7 @@ public class CSSInjectWithColorpicker extends UI {
         select.setEmptySelectionAllowed(false);
         select.addValueChangeListener(event -> {
             // Get the new font family
-            String fontFamily = select.getValue().toString();
+            String fontFamily = select.getValue();
 
             // Get the stylesheet of the page
             Styles styles = Page.getCurrent().getStyles();

@@ -273,7 +273,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                 if ("thead".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as above first visible row
-                    if (visibleRowRange.length() == 0
+                    if (visibleRowRange.isEmpty()
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
@@ -283,7 +283,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
                 } else if ("tfoot".equalsIgnoreCase(parentTagName)) {
                     // for empty grid or ON_TOP mode, drop as last row,
                     // otherwise as below last visible row
-                    if (visibleRowRange.length() == 0
+                    if (visibleRowRange.isEmpty()
                             || getState().dropMode == DropMode.ON_TOP) {
                         return tableWrapper;
                     } else {
@@ -299,13 +299,13 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
         // the drag is on top of the tablewrapper
         // if no rows in grid, or if the drop mode is ON_TOP, then there is no
         // target row for the drop
-        if (visibleRowRange.length() == 0
+        if (visibleRowRange.isEmpty()
                 || getState().dropMode == DropMode.ON_TOP) {
             return tableWrapper;
-        } else { // if dragged under the last row to empty space, drop target
-                 // needs to be below the last row
-            return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
         }
+        // if dragged under the last row to empty space, drop target
+        // needs to be below the last row
+        return gridBody.getRowElement(visibleRowRange.getEnd() - 1);
     }
 
     @Override

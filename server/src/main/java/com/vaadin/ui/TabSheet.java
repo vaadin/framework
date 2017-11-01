@@ -110,7 +110,7 @@ public class TabSheet extends AbstractComponentContainer
     /**
      * Map containing information related to the tabs (caption, icon etc).
      */
-    private final HashMap<Component, Tab> tabs = new HashMap<>();
+    private final Map<Component, Tab> tabs = new HashMap<>();
 
     /**
      * Selected tab content component.
@@ -491,7 +491,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Sets whether the tab selection part should be shown in the UI
+     * Sets whether the tab selection part should be shown in the UI.
      *
      * @since 7.5
      * @param tabsVisible
@@ -502,7 +502,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Checks if the tab selection part should be shown in the UI
+     * Checks if the tab selection part should be shown in the UI.
      *
      * @return true if the tabs are shown in the UI, false otherwise
      * @since 7.5
@@ -785,9 +785,9 @@ public class TabSheet extends AbstractComponentContainer
             SELECTED_TAB_CHANGE_METHOD = SelectedTabChangeListener.class
                     .getDeclaredMethod("selectedTabChange",
                             SelectedTabChangeEvent.class);
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in TabSheet");
         }
     }
@@ -1117,7 +1117,7 @@ public class TabSheet extends AbstractComponentContainer
         public ErrorMessage getComponentError();
 
         /**
-         * Get the component related to the Tab
+         * Get the component related to the Tab.
          */
         public Component getComponent();
 
@@ -1167,7 +1167,7 @@ public class TabSheet extends AbstractComponentContainer
         public void setId(String id);
 
         /**
-         * Gets currently set debug identifier
+         * Gets currently set debug identifier.
          *
          * @return current id, null if not set
          */
@@ -1314,9 +1314,14 @@ public class TabSheet extends AbstractComponentContainer
         public void setComponentError(ErrorMessage componentError) {
             this.componentError = componentError;
 
-            String formattedHtmlMessage = componentError != null
-                    ? componentError.getFormattedHtmlMessage() : null;
-            tabState.componentError = formattedHtmlMessage;
+            if (componentError != null) {
+                tabState.componentError = componentError
+                        .getFormattedHtmlMessage();
+                tabState.componentErrorLevel = componentError.getErrorLevel();
+            } else {
+                tabState.componentError = null;
+                tabState.componentErrorLevel = null;
+            }
 
             markAsDirty();
         }
@@ -1424,7 +1429,7 @@ public class TabSheet extends AbstractComponentContainer
     }
 
     /**
-     * Gets the position of the tab
+     * Gets the position of the tab.
      *
      * @param tab
      *            The tab

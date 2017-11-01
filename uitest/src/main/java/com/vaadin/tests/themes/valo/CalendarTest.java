@@ -10,11 +10,8 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
@@ -26,8 +23,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.fieldgroup.FieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.v7.data.util.BeanItem;
@@ -40,7 +35,6 @@ import com.vaadin.v7.ui.DateField;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.v7.ui.TextField;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
@@ -336,62 +330,28 @@ public class CalendarTest extends GridLayout implements View {
     }
 
     private void initNavigationButtons() {
-        monthButton = new Button("Month", new ClickListener() {
+        monthButton = new Button("Month", event -> switchToMonthView());
 
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                switchToMonthView();
-            }
+        weekButton = new Button("Week", event -> {
+            // simulate week click
+            WeekClickHandler handler = (WeekClickHandler) calendarComponent
+                    .getHandler(WeekClick.EVENT_ID);
+            handler.weekClick(new WeekClick(calendarComponent,
+                    calendar.get(GregorianCalendar.WEEK_OF_YEAR),
+                    calendar.get(GregorianCalendar.YEAR)));
         });
 
-        weekButton = new Button("Week", new ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                // simulate week click
-                WeekClickHandler handler = (WeekClickHandler) calendarComponent
-                        .getHandler(WeekClick.EVENT_ID);
-                handler.weekClick(new WeekClick(calendarComponent,
-                        calendar.get(GregorianCalendar.WEEK_OF_YEAR),
-                        calendar.get(GregorianCalendar.YEAR)));
-            }
+        dayButton = new Button("Day", event -> {
+            // simulate day click
+            BasicDateClickHandler handler = (BasicDateClickHandler) calendarComponent
+                    .getHandler(DateClickEvent.EVENT_ID);
+            handler.dateClick(
+                    new DateClickEvent(calendarComponent, calendar.getTime()));
         });
 
-        dayButton = new Button("Day", new ClickListener() {
+        nextButton = new Button("Next", event -> handleNextButtonClick());
 
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                // simulate day click
-                BasicDateClickHandler handler = (BasicDateClickHandler) calendarComponent
-                        .getHandler(DateClickEvent.EVENT_ID);
-                handler.dateClick(new DateClickEvent(calendarComponent,
-                        calendar.getTime()));
-            }
-        });
-
-        nextButton = new Button("Next", new Button.ClickListener() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                handleNextButtonClick();
-            }
-        });
-
-        prevButton = new Button("Prev", new Button.ClickListener() {
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                handlePreviousButtonClick();
-            }
-        });
+        prevButton = new Button("Prev", event -> handlePreviousButtonClick());
     }
 
     private void initHideWeekEndButton() {
@@ -427,21 +387,15 @@ public class CalendarTest extends GridLayout implements View {
 
     public void initAddNewEventButton() {
         addNewEvent = new Button("Add new event");
-        addNewEvent.addClickListener(new Button.ClickListener() {
+        addNewEvent.addClickListener(event -> {
+            Date start = getToday();
+            start.setHours(0);
+            start.setMinutes(0);
+            start.setSeconds(0);
 
-            private static final long serialVersionUID = -8307244759142541067L;
+            Date end = getEndOfDay(calendar, start);
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Date start = getToday();
-                start.setHours(0);
-                start.setMinutes(0);
-                start.setSeconds(0);
-
-                Date end = getEndOfDay(calendar, start);
-
-                showEventPopup(createNewEvent(start, end), true);
-            }
+            showEventPopup(createNewEvent(start, end), true);
         });
     }
 
@@ -626,13 +580,9 @@ public class CalendarTest extends GridLayout implements View {
             }
         });
 
-        calendarComponent.setHandler(new EventClickHandler() {
-
-            @Override
-            public void eventClick(EventClick event) {
-                showEventPopup(event.getCalendarEvent(), false);
-            }
-        });
+        calendarComponent
+                .setHandler((EventClickHandler)
+        event -> showEventPopup(event.getCalendarEvent(), false));
 
         calendarComponent.setHandler(new BasicDateClickHandler() {
 
@@ -645,13 +595,9 @@ public class CalendarTest extends GridLayout implements View {
             }
         });
 
-        calendarComponent.setHandler(new RangeSelectHandler() {
-
-            @Override
-            public void rangeSelect(RangeSelectEvent event) {
-                handleRangeSelect(event);
-            }
-        });
+        calendarComponent
+                .setHandler(
+                        (RangeSelectHandler) event -> handleRangeSelect(event));
     }
 
     private ComboBox createTimeZoneSelect() {
@@ -676,16 +622,8 @@ public class CalendarTest extends GridLayout implements View {
             s.select(DEFAULT_ITEMID);
         }
         s.setImmediate(true);
-        s.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-
-                updateCalendarTimeZone(event.getProperty().getValue());
-            }
-        });
+        s.addValueChangeListener(event -> updateCalendarTimeZone(
+                event.getProperty().getValue()));
 
         return s;
     }
@@ -704,15 +642,8 @@ public class CalendarTest extends GridLayout implements View {
 
         s.select(DEFAULT_ITEMID);
         s.setImmediate(true);
-        s.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                updateCalendarFormat(event.getProperty().getValue());
-            }
-        });
+        s.addValueChangeListener(
+                event -> updateCalendarFormat(event.getProperty().getValue()));
 
         return s;
     }
@@ -732,15 +663,8 @@ public class CalendarTest extends GridLayout implements View {
 
         s.select(getLocale());
         s.setImmediate(true);
-        s.addValueChangeListener(new ValueChangeListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                updateCalendarLocale((Locale) event.getProperty().getValue());
-            }
-        });
+        s.addValueChangeListener(event -> updateCalendarLocale(
+                (Locale) event.getProperty().getValue()));
 
         return s;
     }
@@ -892,48 +816,19 @@ public class CalendarTest extends GridLayout implements View {
         scheduleEventFieldLayout.setMargin(false);
         layout.addComponent(scheduleEventFieldLayout);
 
-        applyEventButton = new Button("Apply", new ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    commitCalendarEvent();
-                } catch (CommitException | ValidationException e) {
-                    e.printStackTrace();
-                }
+        applyEventButton = new Button("Apply", event -> {
+            try {
+                commitCalendarEvent();
+            } catch (CommitException | ValidationException e) {
+                e.printStackTrace();
             }
         });
         applyEventButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        Button cancel = new Button("Cancel", new ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                discardCalendarEvent();
-            }
-        });
-        deleteEventButton = new Button("Delete", new ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                deleteCalendarEvent();
-            }
-        });
+        Button cancel = new Button("Cancel", event -> discardCalendarEvent());
+        deleteEventButton = new Button("Delete",
+                event -> deleteCalendarEvent());
         deleteEventButton.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-        scheduleEventPopup.addCloseListener(new Window.CloseListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void windowClose(Window.CloseEvent e) {
-                discardCalendarEvent();
-            }
-        });
+        scheduleEventPopup.addCloseListener(event -> discardCalendarEvent());
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.addStyleName(ValoTheme.WINDOW_BOTTOM_TOOLBAR);
@@ -1195,23 +1090,4 @@ public class CalendarTest extends GridLayout implements View {
         return calendarClone.getTime();
     }
 
-    private static Date getStartOfDay(java.util.Calendar calendar, Date date) {
-        java.util.Calendar calendarClone = (java.util.Calendar) calendar
-                .clone();
-
-        calendarClone.setTime(date);
-        calendarClone.set(java.util.Calendar.MILLISECOND, 0);
-        calendarClone.set(java.util.Calendar.SECOND, 0);
-        calendarClone.set(java.util.Calendar.MINUTE, 0);
-        calendarClone.set(java.util.Calendar.HOUR, 0);
-        calendarClone.set(java.util.Calendar.HOUR_OF_DAY, 0);
-
-        return calendarClone.getTime();
-    }
-
-    @Override
-    public void enter(ViewChangeEvent event) {
-        // TODO Auto-generated method stub
-
-    }
 }

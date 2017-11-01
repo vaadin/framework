@@ -15,7 +15,7 @@
  */
 package com.vaadin.v7.ui.components.colorpicker;
 
-import java.awt.Point;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +34,24 @@ import com.vaadin.v7.shared.ui.colorpicker.ColorPickerGridState;
 public class ColorPickerGrid extends AbstractComponent
         implements ColorSelector {
 
+    private static class Point implements Serializable {
+        private int x;
+        private int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+    }
+
     private static final String STYLENAME = "v-colorpicker-grid";
 
     private static final Method COLOR_CHANGE_METHOD;
@@ -41,9 +59,9 @@ public class ColorPickerGrid extends AbstractComponent
         try {
             COLOR_CHANGE_METHOD = ColorChangeListener.class.getDeclaredMethod(
                     "colorChanged", new Class[] { ColorChangeEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             // This should never happen
-            throw new java.lang.RuntimeException(
+            throw new RuntimeException(
                     "Internal error finding methods in ColorPicker");
         }
     }
@@ -138,8 +156,8 @@ public class ColorPickerGrid extends AbstractComponent
     private void sendChangedColors() {
         if (!changedColors.isEmpty()) {
             String[] colors = new String[changedColors.size()];
-            String[] XCoords = new String[changedColors.size()];
-            String[] YCoords = new String[changedColors.size()];
+            String[] xCoords = new String[changedColors.size()];
+            String[] yCoords = new String[changedColors.size()];
             int counter = 0;
             for (Point p : changedColors.keySet()) {
                 Color c = changedColors.get(p);
@@ -150,13 +168,13 @@ public class ColorPickerGrid extends AbstractComponent
                 String color = c.getCSS();
 
                 colors[counter] = color;
-                XCoords[counter] = String.valueOf((int) p.getX());
-                YCoords[counter] = String.valueOf((int) p.getY());
+                xCoords[counter] = String.valueOf(p.getX());
+                yCoords[counter] = String.valueOf(p.getY());
                 counter++;
             }
             getState().changedColor = colors;
-            getState().changedX = XCoords;
-            getState().changedY = YCoords;
+            getState().changedX = xCoords;
+            getState().changedY = yCoords;
 
             changedColors.clear();
         }
@@ -184,7 +202,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Adds a color change listener
+     * Adds a color change listener.
      *
      * @param listener
      *            The color change listener
@@ -200,7 +218,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Removes a color change listener
+     * Removes a color change listener.
      *
      * @param listener
      *            The listener
@@ -243,7 +261,7 @@ public class ColorPickerGrid extends AbstractComponent
     }
 
     /**
-     * Notifies the listeners that a color change has occurred
+     * Notifies the listeners that a color change has occurred.
      *
      * @param color
      *            The color which it changed to

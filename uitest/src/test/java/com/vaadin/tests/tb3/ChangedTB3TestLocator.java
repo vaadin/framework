@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.jgit.api.DiffCommand;
 import org.eclipse.jgit.api.Git;
@@ -83,13 +84,7 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
 
             return diffsInWorkingTree;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoWorkTreeException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            // TODO Auto-generated catch block
+        } catch (IOException | NoWorkTreeException | GitAPIException e) {
             e.printStackTrace();
         }
         return null;
@@ -159,8 +154,8 @@ public class ChangedTB3TestLocator extends TB3TestLocator {
         List<String> changedTestFilePaths = new ArrayList<>();
 
         for (String filePath : getChangedFilePaths()) {
-            if (filePath.toLowerCase().startsWith("uitest")
-                    && filePath.toLowerCase().endsWith(".java")) {
+            if (filePath.toLowerCase(Locale.ROOT).startsWith("uitest")
+                    && filePath.toLowerCase(Locale.ROOT).endsWith(".java")) {
                 changedTestFilePaths.add(filePath);
             }
         }

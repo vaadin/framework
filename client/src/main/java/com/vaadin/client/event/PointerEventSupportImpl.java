@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.event;
 
+import java.util.Locale;
+
 import com.vaadin.client.event.PointerEvent.EventType;
 
 /**
@@ -38,11 +40,11 @@ public class PointerEventSupportImpl {
      * @return the native event name of the given event
      */
     public String getNativeEventName(EventType eventName) {
-        return eventName.toString().toLowerCase();
+        return eventName.toString().toLowerCase(Locale.ROOT);
     }
 
     /**
-     * Initializes event support
+     * Initializes event support.
      */
     protected void init() {
 

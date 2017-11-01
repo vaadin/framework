@@ -21,7 +21,7 @@ import com.vaadin.shared.annotations.NoLayout;
 import com.vaadin.shared.communication.SharedState;
 
 /**
- * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}
+ * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}.
  *
  * @since 7.1
  * @author Vaadin Ltd

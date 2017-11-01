@@ -10,12 +10,9 @@ import com.vaadin.v7.ui.themes.Runo;
 
 public class TabSheetsCssTest {
 
-    private TestSampler parent;
     private int debugIdCounter = 0;
 
     public TabSheetsCssTest(TestSampler parent) {
-        this.parent = parent;
-
         TabSheet basic = createTabSheetWith("Basic TabSheet", null);
         parent.addComponent(basic);
 
@@ -59,7 +56,7 @@ public class TabSheetsCssTest {
         ts.getTab(content2).setClosable(true);
 
         Label content3 = new Label("Third Component");
-        ts.addTab(content3, "Third", new ThemeResource(parent.ICON_URL));
+        ts.addTab(content3, "Third", new ThemeResource(TestSampler.ICON_URL));
         ts.getTab(content3).setEnabled(false);
 
         if (styleName != null) {

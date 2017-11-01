@@ -21,7 +21,6 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.ui.TextField;
 
@@ -58,14 +57,11 @@ public class InputPromptGetText extends AbstractReindeerTestUI {
 
         Button button = new Button("Click Me");
         button.setId(BUTTON);
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String input = tf.getValue();
-                Label label = new Label("Your input was: " + input);
-                label.setId(LABEL2);
-                getLayout().addComponent(label);
-            }
+        button.addClickListener(event -> {
+            String input = tf.getValue();
+            Label label = new Label("Your input was: " + input);
+            label.setId(LABEL2);
+            getLayout().addComponent(label);
         });
         tf.addShortcutListener(
                 new ShortcutListener("Shortcut", KeyCode.ENTER, null) {

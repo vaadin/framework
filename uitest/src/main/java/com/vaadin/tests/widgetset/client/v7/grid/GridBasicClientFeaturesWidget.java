@@ -27,7 +27,6 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
@@ -79,8 +78,6 @@ import com.vaadin.v7.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyDownHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyPressHandler;
 import com.vaadin.v7.client.widget.grid.events.HeaderKeyUpHandler;
-import com.vaadin.v7.client.widget.grid.events.ScrollEvent;
-import com.vaadin.v7.client.widget.grid.events.ScrollHandler;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel;
 import com.vaadin.v7.client.widget.grid.selection.SelectionModel.None;
 import com.vaadin.v7.client.widgets.Grid;
@@ -142,9 +139,8 @@ public class GridBasicClientFeaturesWidget
         @Override
         public void save(EditorRequest<List<Data>> request) {
             if (secondEditorError) {
-                request.failure(
-                        "Syntethic fail of editor in column 2. "
-                                + "This message is so long that it doesn't fit into its box",
+                request.failure("Syntethic fail of editor in column 2. "
+                        + "This message is so long that it doesn't fit into its box",
                         Collections.<Column<?, List<Data>>> singleton(
                                 grid.getColumn(2)));
                 return;
@@ -211,7 +207,7 @@ public class GridBasicClientFeaturesWidget
     /**
      * Our basic data object
      */
-    public final static class Data {
+    public static final class Data {
         Object value;
     }
 
@@ -241,8 +237,8 @@ public class GridBasicClientFeaturesWidget
 
             d = datarow.get(col++);
             d.value = new Date(timestamp);
-            timestamp += 91250000; // a bit over a day, just to get
-                                   // variation
+            // a bit over a day, just to get variation
+            timestamp += 91250000;
 
             d = datarow.get(col++);
             d.value = "<b>" + row + "</b>";
@@ -451,14 +447,10 @@ public class GridBasicClientFeaturesWidget
                 if (scrollHandler != null) {
                     return;
                 }
-                scrollHandler = grid.addScrollHandler(new ScrollHandler() {
-                    @Override
-                    public void onScroll(ScrollEvent event) {
-                        @SuppressWarnings("hiding")
-                        final Grid<?> grid = (Grid<?>) event.getSource();
-                        label.setText("scrollTop: " + grid.getScrollTop()
-                                + ", scrollLeft: " + grid.getScrollLeft());
-                    }
+                scrollHandler = grid.addScrollHandler(event -> {
+                    final Grid<?> grid = (Grid<?>) event.getSource();
+                    label.setText("scrollTop: " + grid.getScrollTop()
+                            + ", scrollLeft: " + grid.getScrollLeft());
                 });
             }
         }, listenersPath);
@@ -527,26 +519,22 @@ public class GridBasicClientFeaturesWidget
         addMenuCommand("Add context menu listener", new ScheduledCommand() {
 
             HandlerRegistration handler = null;
-            ContextMenuHandler contextMenuHandler = new ContextMenuHandler() {
-
-                @Override
-                public void onContextMenu(ContextMenuEvent event) {
-                    event.preventDefault();
-                    final String location;
-                    EventCellReference<?> cellRef = grid.getEventCell();
-                    if (cellRef.isHeader()) {
-                        location = "header";
-                    } else if (cellRef.isBody()) {
-                        location = "body";
-                    } else if (cellRef.isFooter()) {
-                        location = "footer";
-                    } else {
-                        location = "somewhere";
-                    }
-
-                    getLogger().info("Prevented opening a context menu in grid "
-                            + location);
+            ContextMenuHandler contextMenuHandler = event -> {
+                event.preventDefault();
+                final String location;
+                EventCellReference<?> cellRef = grid.getEventCell();
+                if (cellRef.isHeader()) {
+                    location = "header";
+                } else if (cellRef.isBody()) {
+                    location = "body";
+                } else if (cellRef.isFooter()) {
+                    location = "footer";
+                } else {
+                    location = "somewhere";
                 }
+
+                getLogger().info(
+                        "Prevented opening a context menu in grid " + location);
             };
 
             @Override
@@ -821,8 +809,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createScrollToRowMenu() {
-        String[] menupath = new String[] { "Component", "State", "Scroll to...",
-                null };
+        String[] menupath = { "Component", "State", "Scroll to...", null };
 
         for (int i = 0; i < ROWS; i += 100) {
             menupath[3] = "Row " + i + "...";
@@ -915,13 +902,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Header");
-                    button.addClickHandler(new ClickHandler() {
-
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            button.setText("Clicked");
-                        }
-                    });
+                    button.addClickHandler(event -> button.setText("Clicked"));
                     grid.getHeaderRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Header Type");
@@ -944,13 +925,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     final Button button = new Button("Button Footer");
-                    button.addClickHandler(new ClickHandler() {
-
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            button.setText("Clicked");
-                        }
-                    });
+                    button.addClickHandler(event -> button.setText("Clicked"));
                     grid.getFooterRow(0).getCell(column).setWidget(button);
                 }
             }, "Component", "Columns", "Column " + i, "Footer Type");
@@ -980,7 +955,7 @@ public class GridBasicClientFeaturesWidget
                 @Override
                 public void execute() {
                     List<Column<?, List<Data>>> cols = grid.getColumns();
-                    ArrayList<Column> reordered = new ArrayList<>(cols);
+                    List<Column> reordered = new ArrayList<>(cols);
                     final int index = cols.indexOf(column);
                     if (index == 0) {
                         Column<?, List<Data>> col = reordered.remove(0);
@@ -1450,7 +1425,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createDetailsMenu() {
-        String[] menupath = new String[] { "Component", "Row details" };
+        String[] menupath = { "Component", "Row details" };
         addMenuCommand("Set generator", new ScheduledCommand() {
             @Override
             public void execute() {
@@ -1461,12 +1436,8 @@ public class GridBasicClientFeaturesWidget
 
                         final Label label = new Label("Row: " + rowIndex + ".");
                         Button button = new Button("Button",
-                                new ClickHandler() {
-                                    @Override
-                                    public void onClick(ClickEvent event) {
-                                        label.setText("clicked");
-                                    }
-                                });
+                                (ClickHandler) event -> label
+                                        .setText("clicked"));
 
                         panel.add(label);
                         panel.add(button);
@@ -1509,7 +1480,7 @@ public class GridBasicClientFeaturesWidget
             }
         }, menupath);
 
-        String[] togglemenupath = new String[] { menupath[0], menupath[1],
+        String[] togglemenupath = { menupath[0], menupath[1],
                 "Toggle details for..." };
         for (int i : new int[] { 0, 1, 100, 200, 300, 400, 500, 600, 700, 800,
                 900, 999 }) {
@@ -1532,7 +1503,7 @@ public class GridBasicClientFeaturesWidget
     }
 
     private void createSidebarMenu() {
-        String[] menupath = new String[] { "Component", "Sidebar" };
+        String[] menupath = { "Component", "Sidebar" };
 
         final List<MenuItem> customMenuItems = new ArrayList<>();
         final List<MenuItemSeparator> separators = new ArrayList<>();
