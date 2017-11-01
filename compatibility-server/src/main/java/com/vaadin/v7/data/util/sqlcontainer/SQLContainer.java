@@ -53,7 +53,7 @@ import com.vaadin.v7.data.util.sqlcontainer.query.generator.OracleGenerator;
  * @deprecated As of 8.0, no replacement available, see {@link DataProvider}.
  */
 @Deprecated
-public class SQLContainer implements Container, Container.Filterable,
+public class SQLContainer implements Container.Filterable,
         Container.Indexed, Container.Sortable, Container.ItemSetChangeNotifier {
 
     /** Query delegate */

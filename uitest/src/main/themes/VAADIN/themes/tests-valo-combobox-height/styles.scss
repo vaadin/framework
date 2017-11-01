@@ -1,0 +1,13 @@
+@import "variables";
+@import "../tests-valo/valotest";
+
+.tests-valo-combobox-height {
+   @include valotest;
+
+   .v-filterselect-suggestpopup {
+      margin-top: 10px !important;
+      margin-bottom: 10px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+   }
+}

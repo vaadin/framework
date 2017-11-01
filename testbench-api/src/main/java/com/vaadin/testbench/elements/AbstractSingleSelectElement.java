@@ -19,7 +19,7 @@ import com.vaadin.testbench.elementsbase.ServerClass;
 
 /**
  * A common base element class for all single select components.
- * 
+ *
  * @since 8.1.1
  */
 @ServerClass("com.vaadin.ui.AbstractSingleSelect")
@@ -29,7 +29,7 @@ public abstract class AbstractSingleSelectElement
     /**
      * Selects the first option in this single select component that matches the
      * given text.
-     * 
+     *
      * @param text
      *            the text to select by
      */

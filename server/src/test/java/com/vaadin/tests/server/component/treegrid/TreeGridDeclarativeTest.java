@@ -78,7 +78,7 @@ public class TreeGridDeclarativeTest
                 .size(new HierarchicalQuery<>(null, person6.toString())));
         testWrite(design, grid, true);
     }
-    
+
 
     @Override
     public void valueSerialization() throws InstantiationException,

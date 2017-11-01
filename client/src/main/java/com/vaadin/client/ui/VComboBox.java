@@ -862,10 +862,18 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     menuHeight -= up.getOffsetHeight() + down.getOffsetHeight()
                             + status.getOffsetHeight();
                 } else {
-                    final ComputedStyle s = new ComputedStyle(
+                    final ComputedStyle menuStyle = new ComputedStyle(
                             menu.getElement());
-                    menuHeight -= s.getIntProperty("marginBottom")
-                            + s.getIntProperty("marginTop");
+                    final ComputedStyle popupStyle = new ComputedStyle(
+                            suggestionPopup.getElement());
+                    menuHeight -= menuStyle.getIntProperty("marginBottom")
+                            + menuStyle.getIntProperty("marginTop")
+                            + menuStyle.getIntProperty("paddingBottom")
+                            + menuStyle.getIntProperty("paddingTop")
+                            + popupStyle.getIntProperty("marginBottom")
+                            + popupStyle.getIntProperty("marginTop")
+                            + popupStyle.getIntProperty("paddingBottom")
+                            + popupStyle.getIntProperty("paddingTop");
                 }
 
                 // If the available page height is really tiny then this will be
@@ -2044,12 +2052,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     ClickEvent.getType());
             selectedItemIcon.addDomHandler(VComboBox.this,
                     MouseDownEvent.getType());
-            selectedItemIcon.addDomHandler(new LoadHandler() {
-                @Override
-                public void onLoad(LoadEvent event) {
-                    afterSelectedItemIconChange();
-                }
-            }, LoadEvent.getType());
+            selectedItemIcon.addDomHandler(
+                    event -> afterSelectedItemIconChange(),
+                    LoadEvent.getType());
             panel.insert(selectedItemIcon, 0);
             afterSelectedItemIconChange();
         }

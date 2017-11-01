@@ -38,7 +38,7 @@ import com.vaadin.v7.data.Property;
  */
 @SuppressWarnings("serial")
 @Deprecated
-public class ItemClickEvent extends ClickEvent implements Serializable {
+public class ItemClickEvent extends ClickEvent {
     private Item item;
     private Object itemId;
     private Object propertyId;

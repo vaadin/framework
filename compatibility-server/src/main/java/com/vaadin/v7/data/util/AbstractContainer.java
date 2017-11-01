@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.data.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -63,7 +62,7 @@ public abstract class AbstractContainer implements Container {
      */
     @Deprecated
     protected static class BasePropertySetChangeEvent extends EventObject
-            implements Container.PropertySetChangeEvent, Serializable {
+            implements Container.PropertySetChangeEvent {
 
         protected BasePropertySetChangeEvent(Container source) {
             super(source);
@@ -85,7 +84,7 @@ public abstract class AbstractContainer implements Container {
      */
     @Deprecated
     protected static class BaseItemSetChangeEvent extends EventObject
-            implements Container.ItemSetChangeEvent, Serializable {
+            implements Container.ItemSetChangeEvent {
 
         protected BaseItemSetChangeEvent(Container source) {
             super(source);

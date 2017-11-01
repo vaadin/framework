@@ -80,6 +80,13 @@ public class GridTest {
     }
 
     @Test
+    public void testGridAssistiveCaption() {
+        assertEquals(null, fooColumn.getAssistiveCaption());
+        fooColumn.setAssistiveCaption("Press Enter to sort.");
+        assertEquals("Press Enter to sort.", fooColumn.getAssistiveCaption());
+    }
+
+    @Test
     public void testCreateGridWithDataCommunicator() {
         DataCommunicator<String> specificDataCommunicator = new DataCommunicator<>();
 

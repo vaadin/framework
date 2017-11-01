@@ -38,8 +38,7 @@ import com.vaadin.v7.shared.ui.progressindicator.ProgressBarState;
  *             the new data binding API
  */
 @Deprecated
-public class ProgressBar extends AbstractField<Float>
-        implements Property.Viewer, Property.ValueChangeListener {
+public class ProgressBar extends AbstractField<Float> {
 
     private static final float DEFAULT_VALUE = 0f;
 

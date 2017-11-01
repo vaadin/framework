@@ -16,7 +16,6 @@
 
 package com.vaadin.v7.ui;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1183,7 +1182,7 @@ public abstract class AbstractField<T> extends AbstractLegacyComponent
      */
     @Deprecated
     public static class ReadOnlyStatusChangeEvent extends Component.Event
-            implements Property.ReadOnlyStatusChangeEvent, Serializable {
+            implements Property.ReadOnlyStatusChangeEvent {
 
         /**
          * New instance of text change event.

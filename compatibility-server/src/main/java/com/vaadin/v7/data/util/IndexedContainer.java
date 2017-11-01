@@ -435,7 +435,7 @@ public class IndexedContainer
      * @since 3.0
      */
     private static class PropertyValueChangeEvent extends EventObject
-            implements Property.ValueChangeEvent, Serializable {
+            implements Property.ValueChangeEvent {
 
         private PropertyValueChangeEvent(Property source) {
             super(source);

@@ -21,7 +21,7 @@ public class GridAddColumn extends AbstractTestUI {
         grid.setItems("a", "aa", "aaa");
         addComponent(grid);
 
-        addComponent(new Button("Replace columns", e -> {
+        addComponent(new Button("Replace columns", event -> {
             grid.removeAllColumns();
             createColumns(grid);
             Notification.show("Columns replaced.");
