@@ -59,19 +59,16 @@ public class NavigateWithOngoingXHR extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(new ProgressIndicator() {
             {
-                registerRpc(new ProgressIndicatorServerRpc() {
-                    @Override
-                    public void poll() {
-                        // System.out.println("Pausing poll request");
-                        try {
-                            // Make the XHR request last longer to make it
-                            // easier to click the link at the right moment.
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        // System.out.println("Continuing poll request");
+                registerRpc((ProgressIndicatorServerRpc) () -> {
+                    // System.out.println("Pausing poll request");
+                    try {
+                        // Make the XHR request last longer to make it
+                        // easier to click the link at the right moment.
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+                    // System.out.println("Continuing poll request");
                 });
                 setPollingInterval(3000);
             }

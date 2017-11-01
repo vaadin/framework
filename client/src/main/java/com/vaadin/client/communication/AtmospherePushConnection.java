@@ -156,10 +156,7 @@ public class AtmospherePushConnection implements PushConnection {
                         return;
                     }
 
-                    disconnect(new Command() {
-                        @Override
-                        public void execute() {
-                        }
+                    disconnect(() -> {
                     });
                 });
         config = createConfig();
@@ -182,17 +179,8 @@ public class AtmospherePushConnection implements PushConnection {
             url = ApplicationConstants.APP_PROTOCOL_PREFIX
                     + ApplicationConstants.PUSH_PATH;
         }
-        runWhenAtmosphereLoaded(new Command() {
-            @Override
-            public void execute() {
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        connect();
-                    }
-                });
-            }
-        });
+        runWhenAtmosphereLoaded(
+                () -> Scheduler.get().scheduleDeferred(() -> connect()));
     }
 
     private void connect() {

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -25,12 +24,8 @@ public class RelativeChildrenWithoutExpand extends AbstractReindeerTestUI {
 
         HorizontalLayout verticalExpand = new HorizontalLayout();
         verticalExpand.addComponent(
-                new Button("Add relative child", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        horizontalExpand.addComponent(new Label(loremIpsum), 0);
-                    }
-                }));
+                new Button("Add relative child", event -> horizontalExpand
+                        .addComponent(new Label(loremIpsum), 0)));
         vl.addComponent(verticalExpand);
         vl.setExpandRatio(verticalExpand, 1);
 

@@ -2,7 +2,6 @@ package com.vaadin.tests;
 
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.v7.ui.AbstractSelect;
@@ -53,12 +52,7 @@ public class FocusingComponents extends CustomComponent {
         }
 
         Button focus = new Button("focus");
-        focus.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                f.focus();
-            }
-        });
+        focus.addClickListener(event -> f.focus());
         lo.addComponent(focus);
 
     }

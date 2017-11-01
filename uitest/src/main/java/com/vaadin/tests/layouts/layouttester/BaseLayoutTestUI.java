@@ -26,8 +26,6 @@ import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -116,23 +114,16 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
             SetSizeButton(final String size) {
                 super();
                 setCaption("Set size " + size);
-                addClickListener(new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        if (compType == "layout") {
-                            l2.setHeight(size);
-                            l2.setWidth(size);
-                        } else if (compType == "component") {
-                            c2.setHeight(size);
-                            c2.setWidth(size);
-                        } else {
-                        }
-
+                addClickListener(event -> {
+                    if (compType == "layout") {
+                        l2.setHeight(size);
+                        l2.setWidth(size);
+                    } else if (compType == "component") {
+                        c2.setHeight(size);
+                        c2.setWidth(size);
                     }
                 });
             }
-
         }
         Button btn1 = new SetSizeButton("350px");
         Button btn2 = new SetSizeButton("-1px");
@@ -154,15 +145,10 @@ public abstract class BaseLayoutTestUI extends AbstractReindeerTestUI {
         l2.setExpandRatio(c1, 0.5f);
         l2.setExpandRatio(c2, 0.5f);
 
-        btn2.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Label newLabel = new Label("--- NEW LABEL ---");
-                newLabel.setSizeUndefined();
-                l2.addComponent(newLabel);
-
-            }
+        btn2.addClickListener(event -> {
+            Label newLabel = new Label("--- NEW LABEL ---");
+            newLabel.setSizeUndefined();
+            l2.addComponent(newLabel);
         });
     }
 

@@ -38,12 +38,7 @@ public class RefreshCloseConnection extends AbstractTestUIWithLog {
         new Thread() {
             @Override
             public void run() {
-                accessSynchronously(new Runnable() {
-                    @Override
-                    public void run() {
-                        log("Push");
-                    }
-                });
+                accessSynchronously(() -> log("Push"));
             }
         }.start();
     }

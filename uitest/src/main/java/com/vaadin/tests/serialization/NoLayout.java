@@ -21,7 +21,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.LayoutDetector;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.JavaScript;
 
@@ -44,42 +43,22 @@ public class NoLayout extends AbstractReindeerTestUI {
         addComponent(uiPolling);
 
         addComponent(
-                new Button("Change regular state", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        event.getButton().setCaption(
-                                String.valueOf(System.currentTimeMillis()));
-                    }
-                }));
+                new Button("Change regular state",
+                        event -> event.getButton().setCaption(
+                                String.valueOf(System.currentTimeMillis()))));
         addComponent(new Button("Change @NoLayout state",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        event.getButton().setDescription(
-                                String.valueOf(System.currentTimeMillis()));
-                    }
-                }));
-        addComponent(new Button("Do regular RPC", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                JavaScript.eval("");
-            }
-        }));
+                event -> event.getButton().setDescription(
+                        String.valueOf(System.currentTimeMillis()))));
+        addComponent(
+                new Button("Do regular RPC", event -> JavaScript.eval("")));
 
-        addComponent(new Button("Do @NoLayout RPC", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layoutDetector.doNoLayoutRpc();
-            }
-        }));
+        addComponent(new Button("Do @NoLayout RPC",
+                event -> layoutDetector.doNoLayoutRpc()));
 
         addComponent(new Button("Update LegacyComponent",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // Assumes UI is a LegacyComponent
-                        markAsDirty();
-                    }
+                event -> {
+                    // Assumes UI is a LegacyComponent
+                    markAsDirty();
                 }));
     }
 

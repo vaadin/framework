@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -31,12 +30,9 @@ public class TabSheetDiscardsMovedComponents extends TestBase {
 
     private void addTestComponent(final Component component) {
         grid.addComponent(component);
-        grid.addComponent(new Button("Move to tab", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tabSheet.addTab(component);
-                grid.removeComponent(event.getButton());
-            }
+        grid.addComponent(new Button("Move to tab", event -> {
+            tabSheet.addTab(component);
+            grid.removeComponent(event.getButton());
         }));
     }
 

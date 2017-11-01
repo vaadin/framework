@@ -2,10 +2,7 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.ui.Table;
 
 public class ProgrammaticUnselectInRange extends TestBase {
@@ -28,21 +25,12 @@ public class ProgrammaticUnselectInRange extends TestBase {
             int value = i + 1;
             table.addItem(new Object[] { value }, value);
         }
-        table.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                updateSelectionLabel();
-            }
-        });
+        table.addValueChangeListener(event -> updateSelectionLabel());
 
         addComponent(table);
         addComponent(selectionLabel);
-        addComponent(new Button("Deselect item 2", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.unselect(2);
-            }
-        }));
+        addComponent(new Button("Deselect item 2",
+                event -> table.unselect(2)));
 
         updateSelectionLabel();
     }

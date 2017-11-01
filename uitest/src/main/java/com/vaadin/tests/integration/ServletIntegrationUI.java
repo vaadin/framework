@@ -9,8 +9,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.declarative.Design;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class ServletIntegrationUI extends UI {
@@ -39,12 +37,8 @@ public class ServletIntegrationUI extends UI {
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new LabelFromDesign();
-        table.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue(String.valueOf(table.getValue()));
-            }
-        });
+        table.addValueChangeListener(event -> selectedLabel
+                .setValue(String.valueOf(table.getValue())));
         layout.addComponent(selectedLabel);
     }
 

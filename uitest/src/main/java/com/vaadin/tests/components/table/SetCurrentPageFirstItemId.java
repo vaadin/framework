@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -29,12 +27,9 @@ public class SetCurrentPageFirstItemId extends TestBase {
         }
 
         Button addrowButton = new Button("Add row");
-        addrowButton.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent pEvent) {
-                Object id = addRow();
-                table.setCurrentPageFirstItemId(id);
-            }
+        addrowButton.addClickListener(event -> {
+            Object id = addRow();
+            table.setCurrentPageFirstItemId(id);
         });
 
         mainLayout.addComponent(addrowButton);

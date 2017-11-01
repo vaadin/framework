@@ -1,7 +1,6 @@
 package com.vaadin.tests.layouts;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
 import com.vaadin.ui.AbsoluteLayout;
@@ -45,23 +44,10 @@ public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
                 "top: 120px; left: 20px; width: 100px;");
 
         al.addComponent(new Button("A button with its own click listener",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(
-                            com.vaadin.ui.Button.ClickEvent event) {
-                        log("Button " + event.getButton().getCaption()
-                                + " was clicked");
-
-                    }
-                }));
-        al.addLayoutClickListener(new LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("AbsoluteLayout", event);
-            }
-        });
+                event -> log("Button " + event.getButton().getCaption()
+                        + " was clicked")));
+        al.addLayoutClickListener(
+                event -> logLayoutClick("AbsoluteLayout", event));
 
         return al;
 
@@ -79,30 +65,14 @@ public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
                 "This is another textfield"));
 
         cl.addComponent(new Button("A button with its own click listener",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(
-                            com.vaadin.ui.Button.ClickEvent event) {
-                        log("Button " + event.getButton().getCaption()
-                                + " was clicked");
-
-                    }
-                }));
-        cl.addLayoutClickListener(new LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("CSSLayout", event);
-            }
-        });
+                event -> log("Button " + event.getButton().getCaption()
+                        + " was clicked")));
+        cl.addLayoutClickListener(event -> logLayoutClick("CSSLayout", event));
 
         return cl;
-
     }
 
     private Layout createClickableGridLayout() {
-
         GridLayout gl = new GridLayout(4, 4);
         gl.setHeight("400px");
         gl.setWidth("564px");
@@ -115,13 +85,7 @@ public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
         largeTextarea.setHeight("99%");
         gl.addComponent(largeTextarea, 0, 3, 3, 3);
 
-        gl.addLayoutClickListener(new LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("GridLayout", event);
-            }
-        });
+        gl.addLayoutClickListener(event -> logLayoutClick("GridLayout", event));
         gl.setRowExpandRatio(3, 1);
         return wrap(gl, "GridLayout");
     }
@@ -148,14 +112,8 @@ public class TestLayoutClickListeners extends AbstractReindeerTestUIWithLog {
         VerticalLayout gl = new VerticalLayout();
         addContent(gl, 5);
 
-        gl.addLayoutClickListener(new LayoutClickListener() {
-
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
-                logLayoutClick("VerticalLayout", event);
-
-            }
-        });
+        gl.addLayoutClickListener(
+                event -> logLayoutClick("VerticalLayout", event));
 
         return wrap(gl, "Clickable VerticalLayout");
     }

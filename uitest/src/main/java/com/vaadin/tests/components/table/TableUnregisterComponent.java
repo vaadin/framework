@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -76,21 +74,12 @@ public class TableUnregisterComponent extends TestBase {
         addComponent(log);
         addComponent(table);
 
-        addComponent(new Button("Switch column collapse", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnCollapsed(COL_A,
-                        !table.isColumnCollapsed(COL_A));
-            }
-        }));
+        addComponent(new Button("Switch column collapse",
+                event -> table.setColumnCollapsed(COL_A,
+                        !table.isColumnCollapsed(COL_A))));
 
-        addComponent(new Button("Switch editable", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setEditable(!table.isEditable());
-            }
-        }));
-
+        addComponent(new Button("Switch editable",
+                event -> table.setEditable(!table.isEditable())));
     }
 
     @Override

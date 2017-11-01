@@ -18,8 +18,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.v7.ui.ListSelect;
@@ -56,12 +54,9 @@ public class ModalWindowInitialLocation extends AbstractReindeerTestUI {
         w.setContent(layout);
 
         Button b = new Button("Open window");
-        b.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                w.setModal(true);
-                getUI().addWindow(w);
-            }
+        b.addClickListener(event -> {
+            w.setModal(true);
+            getUI().addWindow(w);
         });
         addComponent(b);
     }

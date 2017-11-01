@@ -2,8 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -61,21 +59,11 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         window.setPositionY(200);
 
         layout.addComponent(
-                new Button("Scroll mainwin to X9", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getMainWindow().scrollIntoView(x9);
-
-                    }
-                }));
+                new Button("Scroll mainwin to X9",
+                        event -> getMainWindow().scrollIntoView(x9)));
         layout.addComponent(
-                new Button("Scroll mainwin to Y9", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        getMainWindow().scrollIntoView(y9);
-
-                    }
-                }));
+                new Button("Scroll mainwin to Y9",
+                        event -> getMainWindow().scrollIntoView(y9)));
 
         VerticalLayout panelLayout = new VerticalLayout();
         panelLayout.setMargin(true);
@@ -105,25 +93,18 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         final Component y29 = l;
 
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
-                new Button("Scroll win to X9", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        throw new RuntimeException("Currently not implemented");
-                        // window.scrollIntoView(x29);
-                    }
+                new Button("Scroll win to X9", event -> {
+                    throw new RuntimeException("Currently not implemented");
+                    // window.scrollIntoView(x29);
                 }), 0);
         ((VerticalLayout) getMainWindow().getContent()).addComponent(
-                new Button("Scroll win to Y9", new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        throw new RuntimeException("Currently not implemented");
-                        // window.scrollIntoView(y29);
-                    }
+                new Button("Scroll win to Y9", event -> {
+                    throw new RuntimeException("Currently not implemented");
+                    // window.scrollIntoView(y29);
                 }), 0);
 
         layout.addComponent(panel);
         getMainWindow().addWindow(window);
-
     }
 
     private Component l(String string) {

@@ -2,8 +2,6 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.TreeTable;
 
@@ -23,33 +21,20 @@ public class RowHeightWithoutRows extends TestBase {
 
         Button refresh = new Button("Add two elements");
         addComponent(refresh);
-        refresh.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addTwoElements();
-            }
-        });
+        refresh.addClickListener(event -> addTwoElements());
 
         Button reset = new Button("Reset");
         addComponent(reset);
-        reset.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.removeAllItems();
-            }
-        });
+        reset.addClickListener(event -> container.removeAllItems());
 
         Button refresh5 = new Button("Add five elements");
         addComponent(refresh5);
-        refresh5.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                container.addBean(new User("John", "Doe"));
-                container.addBean(new User("Mark", "Twain"));
-                container.addBean(new User("M", "T"));
-                container.addBean(new User("J", "D"));
-                container.addBean(new User("J", "T"));
-            }
+        refresh5.addClickListener(event -> {
+            container.addBean(new User("John", "Doe"));
+            container.addBean(new User("Mark", "Twain"));
+            container.addBean(new User("M", "T"));
+            container.addBean(new User("J", "D"));
+            container.addBean(new User("J", "T"));
         });
         addTwoElements();
     }

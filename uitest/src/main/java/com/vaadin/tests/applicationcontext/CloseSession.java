@@ -100,24 +100,17 @@ public class CloseSession extends AbstractReindeerTestUI {
                     final HttpSession session = ((WrappedHttpSession) VaadinService
                             .getCurrentRequest().getWrappedSession())
                                     .getHttpSession();
-                    Thread t = new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            System.out
-                                    .println("Invalidating session from thread "
-                                            + session.getId());
-                            session.invalidate();
-                            System.out
-                                    .println("Invalidated session from thread "
-                                            + session.getId());
-
+                    Thread t = new Thread(() -> {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
+                        System.out.println("Invalidating session from thread "
+                                + session.getId());
+                        session.invalidate();
+                        System.out.println("Invalidated session from thread "
+                                + session.getId());
                     });
                     t.start();
                 }));

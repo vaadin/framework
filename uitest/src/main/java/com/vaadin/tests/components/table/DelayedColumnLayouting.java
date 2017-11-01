@@ -17,8 +17,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
@@ -43,12 +41,7 @@ public class DelayedColumnLayouting extends UI {
 
         Button reset = new Button("Recreate layout with contained table");
         verticalLayout.addComponent(reset);
-        reset.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                fillLayout(layout);
-            }
-        });
+        reset.addClickListener(event -> fillLayout(layout));
 
         fillLayout(layout);
 

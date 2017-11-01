@@ -20,8 +20,6 @@ import java.util.Random;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
@@ -45,13 +43,8 @@ public class TableSortingIndicator extends AbstractReindeerTestUI {
         final Table table = new Table("Test table", buildContainer());
         table.setSizeFull();
         addComponent(table);
-        Button sortButton = new Button("Sort", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.sort(new Object[] { "val1" }, new boolean[] { false });
-            }
-        });
+        Button sortButton = new Button("Sort", event -> table
+                .sort(new Object[] { "val1" }, new boolean[] { false }));
         addComponent(sortButton);
     }
 

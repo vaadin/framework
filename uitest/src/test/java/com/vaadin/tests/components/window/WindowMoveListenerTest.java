@@ -5,11 +5,9 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -46,12 +44,7 @@ public class WindowMoveListenerTest extends MultiBrowserTest {
 
     private void waitUntilWindowHasReseted(final WebElement window,
             final Point winPos) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return winPos.x == window.getLocation().x
-                        && winPos.y == window.getLocation().y;
-            }
-        }, 5);
+        waitUntil(input -> winPos.x == window.getLocation().x
+                && winPos.y == window.getLocation().y, 5);
     }
 }

@@ -3,7 +3,6 @@ package com.vaadin.tests.components.tabsheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -30,12 +29,7 @@ public class MoveComponentBetweenTabsheets extends AbstractReindeerTestUI {
 
         // TODO Auto-generated method stub
         Button button = new Button("Move L1 to the right tabsheet");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                doTestOperation();
-            }
-        });
+        button.addClickListener(event -> doTestOperation());
 
         getLayout().addComponent(button);
 

@@ -1,9 +1,6 @@
 package com.vaadin.tests.components.treetable;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.v7.ui.Tree;
-import com.vaadin.v7.ui.Tree.CollapseEvent;
-import com.vaadin.v7.ui.Tree.ExpandEvent;
 import com.vaadin.v7.ui.TreeTable;
 
 public class AddNodesOnExpand extends TestBase {
@@ -17,26 +14,19 @@ public class AddNodesOnExpand extends TestBase {
         treetable.setHeight(null);
         treetable.setPageLength(0);
         treetable.addContainerProperty("foo", String.class, "");
-        treetable.addListener(new Tree.ExpandListener() {
-            @Override
-            public void nodeExpand(ExpandEvent event) {
-                Object openedItemId = event.getItemId();
-                if (!treetable.hasChildren(openedItemId)) {
-                    for (int j = 0; j < 3; j++) {
-                        treetable.addItem(new String[] { "Subitem " + j },
-                                openedItemId + "-" + j);
-                        treetable.setParent(openedItemId + "-" + j,
-                                openedItemId);
-                    }
+        treetable.addExpandListener(event -> {
+            Object openedItemId = event.getItemId();
+            if (!treetable.hasChildren(openedItemId)) {
+                for (int j = 0; j < 3; j++) {
+                    treetable.addItem(new String[] { "Subitem " + j },
+                            openedItemId + "-" + j);
+                    treetable.setParent(openedItemId + "-" + j, openedItemId);
                 }
             }
         });
-        treetable.addListener(new Tree.CollapseListener() {
-            @Override
-            public void nodeCollapse(CollapseEvent event) {
-                /* Uncomment this to "fix" the TreeTable */
-                // orgTree.refreshRowCache();
-            }
+        treetable.addCollapseListener(event -> {
+            /* Uncomment this to "fix" the TreeTable */
+            // orgTree.refreshRowCache();
         });
 
         for (int i = 0; i < 3; i++) {

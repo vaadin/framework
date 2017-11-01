@@ -1,8 +1,6 @@
 package com.vaadin.tests.components.nativebutton;
 
 import com.vaadin.tests.components.TestBase;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.NativeButton;
 
 public class NativeButtonHtml extends TestBase {
@@ -18,13 +16,8 @@ public class NativeButtonHtml extends TestBase {
         addComponent(b);
 
         final NativeButton swapButton = new NativeButton("<i>Swap button<i>");
-        swapButton.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                swapButton.setCaptionAsHtml(!swapButton.isCaptionAsHtml());
-            }
-        });
+        swapButton.addClickListener(event -> swapButton
+                .setCaptionAsHtml(!swapButton.isCaptionAsHtml()));
         addComponent(swapButton);
     }
 

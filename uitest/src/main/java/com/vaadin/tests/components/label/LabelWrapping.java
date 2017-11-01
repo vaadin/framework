@@ -2,7 +2,6 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
@@ -27,14 +26,11 @@ public class LabelWrapping extends TestBase {
         final Label longLabel = new Label(longString);
 
         Button changeLength = new Button("Change length");
-        changeLength.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (longLabel.getValue().equals(longString)) {
-                    longLabel.setValue("");
-                } else {
-                    longLabel.setValue(longString);
-                }
+        changeLength.addClickListener(event -> {
+            if (longLabel.getValue().equals(longString)) {
+                longLabel.setValue("");
+            } else {
+                longLabel.setValue(longString);
             }
         });
 

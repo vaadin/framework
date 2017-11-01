@@ -20,7 +20,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -34,14 +33,11 @@ public class ExpandChangeReattach extends AbstractReindeerTestUI {
         Table table = new Table("Table", TestUtils.getISO3166Container());
         verticalLayout.addComponent(table);
         verticalLayout.addComponent(
-                new Button("Toggle expand logic", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        if (verticalLayout.getHeight() == -1) {
-                            verticalLayout.setHeight("900px");
-                        } else {
-                            verticalLayout.setHeight(null);
-                        }
+                new Button("Toggle expand logic", event -> {
+                    if (verticalLayout.getHeight() == -1) {
+                        verticalLayout.setHeight("900px");
+                    } else {
+                        verticalLayout.setHeight(null);
                     }
                 }));
 

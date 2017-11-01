@@ -6,7 +6,6 @@ import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.SourceIs;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
@@ -56,18 +55,14 @@ public class NotPaintedAcceptSource extends TestBase {
 
         addComponent(horizontalLayout);
 
-        addComponent(new Button("Swap sources", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (source1.getParent() != null) {
-                    horizontalLayout.replaceComponent(source1, source2);
-                } else {
-                    horizontalLayout.replaceComponent(source2, source1);
-                }
-                target.markAsDirty();
+        addComponent(new Button("Swap sources", event -> {
+            if (source1.getParent() != null) {
+                horizontalLayout.replaceComponent(source1, source2);
+            } else {
+                horizontalLayout.replaceComponent(source2, source1);
             }
+            target.markAsDirty();
         }));
-
     }
 
     private Table createTable(String caption) {

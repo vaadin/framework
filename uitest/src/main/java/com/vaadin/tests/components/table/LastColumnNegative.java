@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
@@ -14,30 +13,11 @@ public class LastColumnNegative extends TestBase {
     @Override
     public void setup() {
         Button addButton = new Button("Add a table",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        wrapper.addComponent(table);
-                    }
-
-                });
+                event -> wrapper.addComponent(table));
         Button removeButton = new Button("Remove a table",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        wrapper.removeComponent(table);
-                    }
-                });
+                event -> wrapper.removeComponent(table));
         Button shrinkWrapper = new Button("Shrink wrapper",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        wrapper.setWidth("400px");
-                    }
-                });
+                event -> wrapper.setWidth("400px"));
 
         addComponent(addButton);
         addComponent(removeButton);

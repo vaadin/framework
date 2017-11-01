@@ -18,7 +18,6 @@ package com.vaadin.tests.components.nativebutton;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
@@ -44,21 +43,11 @@ public class NativeButtonClick extends AbstractReindeerTestUI {
         final Label label2 = new Label("0,0");
 
         Button button1 = new NativeButton("Button1",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        label1.setValue(
-                                event.getClientX() + "," + event.getClientY());
-                    }
-                });
+                event -> label1.setValue(
+                        event.getClientX() + "," + event.getClientY()));
         Button button2 = new NativeButton("Button2",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        label2.setValue(
-                                event.getClientX() + "," + event.getClientY());
-                    }
-                });
+                event -> label2.setValue(
+                        event.getClientX() + "," + event.getClientY()));
 
         HorizontalLayout layout = new HorizontalLayout();
         layout.addComponents(button1, button2, label1, label2);

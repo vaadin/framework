@@ -2,7 +2,6 @@ package com.vaadin.tests.components.tabsheet;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
@@ -24,13 +23,9 @@ public class TabsheetShouldUpdateHeight extends TestBase {
         tabsOuter.addTab(getLayoutWithComponents(10, "tab1"), "Tab 1");
 
         final Button btnSwitch = new Button("switch to Tab2",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(final ClickEvent inEvent) {
-                        tabsOuter.setSelectedTab(tabsInner);
-                        tabsInner.setSelectedTab(tab2);
-                    }
+                event -> {
+                    tabsOuter.setSelectedTab(tabsInner);
+                    tabsInner.setSelectedTab(tab2);
                 });
 
         addComponent(tabsOuter);

@@ -18,7 +18,6 @@ package com.vaadin.tests.smoke;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.Grid.SelectionMode;
 
@@ -37,13 +36,8 @@ public class GridSmoke extends AbstractReindeerTestUI {
 
         addComponent(grid);
 
-        addComponent(new Button("Add new row", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                grid.addRow("Dolor", 3);
-            }
-        }));
-
+        addComponent(new Button("Add new row",
+                event -> grid.addRow("Dolor", 3)));
     }
 
 }

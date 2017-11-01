@@ -16,7 +16,6 @@
 package com.vaadin.tests.widgetset.client.v7.grid;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -222,13 +221,8 @@ public class GridClientColumnRendererConnector
                         // Make sorter sort the numbers in natural order
                         sorter.setComparator(
                                 (Grid.Column<String, String>) grid.getColumn(0),
-                                new Comparator<String>() {
-                                    @Override
-                                    public int compare(String o1, String o2) {
-                                        return Integer.parseInt(o1)
-                                                - Integer.parseInt(o2);
-                                    }
-                                });
+                                (o1, o2) -> Integer.parseInt(o1)
+                                        - Integer.parseInt(o2));
 
                         // Sort along column 0 in ascending order
                         grid.sort(grid.getColumn(0));
@@ -246,13 +240,8 @@ public class GridClientColumnRendererConnector
                         // Make shuffler return random order
                         shuffler.setComparator(
                                 (Grid.Column<String, String>) grid.getColumn(0),
-                                new Comparator<String>() {
-                                    @Override
-                                    public int compare(String o1, String o2) {
-                                        return com.google.gwt.user.client.Random
-                                                .nextInt(3) - 1;
-                                    }
-                                });
+                                (o1, o2) -> com.google.gwt.user.client.Random
+                                        .nextInt(3) - 1);
 
                         // "Sort" (actually shuffle) along column 0
                         grid.sort(grid.getColumn(0));

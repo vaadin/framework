@@ -22,7 +22,6 @@ import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 public class TimeoutRedirectResetsOnActivity extends AbstractReindeerTestUI {
@@ -45,13 +44,8 @@ public class TimeoutRedirectResetsOnActivity extends AbstractReindeerTestUI {
         final Label expiresLabel = new Label();
         expiresLabel.setId("actualExpireTime");
 
-        Button button = new Button("Reset", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                expiresLabel.setValue(String.valueOf(getExpireTime()));
-            }
-
-        });
+        Button button = new Button("Reset", event -> expiresLabel
+                .setValue(String.valueOf(getExpireTime())));
         button.setId("reset");
 
         addComponent(button);

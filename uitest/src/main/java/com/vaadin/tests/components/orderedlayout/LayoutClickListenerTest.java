@@ -2,8 +2,6 @@ package com.vaadin.tests.components.orderedlayout;
 
 import java.util.Arrays;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -58,27 +56,22 @@ public class LayoutClickListenerTest extends TestBase {
         layout.addComponent(nestedLayout);
 
         // Listen for layout click events
-        layout.addLayoutClickListener(new LayoutClickListener() {
-            @Override
-            public void layoutClick(LayoutClickEvent event) {
+        layout.addLayoutClickListener(event -> {
+            // Get the deepest nested component which was clicked
+            Component clickedComponent = event.getClickedComponent();
 
-                // Get the deepest nested component which was clicked
-                Component clickedComponent = event.getClickedComponent();
-
-                if (clickedComponent == null) {
-                    // Not over any child component
-                    LayoutClickListenerTest.this.addComponent(
-                            new Label("The click was not over any component."));
-                } else {
-                    // Over a child component
-                    String message = "The click was over a "
-                            + clickedComponent.getClass().getCanonicalName()
-                            + " in an immediate child component of type "
-                            + event.getChildComponent().getClass()
-                                    .getCanonicalName();
-                    LayoutClickListenerTest.this
-                            .addComponent(new Label(message));
-                }
+            if (clickedComponent == null) {
+                // Not over any child component
+                LayoutClickListenerTest.this.addComponent(
+                        new Label("The click was not over any component."));
+            } else {
+                // Over a child component
+                String message = "The click was over a "
+                        + clickedComponent.getClass().getCanonicalName()
+                        + " in an immediate child component of type "
+                        + event.getChildComponent().getClass()
+                                .getCanonicalName();
+                LayoutClickListenerTest.this.addComponent(new Label(message));
             }
         });
 

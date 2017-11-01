@@ -25,8 +25,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.popupview.ReopenPopupView;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -99,11 +97,7 @@ public class BrowserPopupExtensionTest extends AbstractReindeerTestUI {
                 new BrowserWindowOpener(URL).extend(c);
 
                 if (c instanceof Button) {
-                    ((Button) c).addClickListener(new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                        }
+                    ((Button) c).addClickListener(event -> {
                     });
                 }
             } catch (Exception e) {

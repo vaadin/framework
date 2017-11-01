@@ -17,7 +17,6 @@ package com.vaadin.screenshotbrowser;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -357,12 +356,8 @@ public class ScreenshotBrowser extends UI {
     private void refreshTableContainer() {
         File errorsDir = new File(screenshotDir, "errors");
 
-        File[] failures = errorsDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".html");
-            }
-        });
+        File[] failures = errorsDir
+                .listFiles((dir, name) -> name.endsWith(".html"));
 
         BeanItemContainer<ComparisonFailure> container = new BeanItemContainer<>(
                 ComparisonFailure.class);

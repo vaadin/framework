@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -136,15 +135,12 @@ public class ShortcutActionHandler {
          */
         client.flushActiveConnector();
 
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                if (finalTarget != null) {
-                    client.updateVariable(paintableId, "actiontarget",
-                            finalTarget, false);
-                }
-                client.updateVariable(paintableId, "action", a.getKey(), true);
+        Scheduler.get().scheduleDeferred(() -> {
+            if (finalTarget != null) {
+                client.updateVariable(paintableId, "actiontarget", finalTarget,
+                        false);
             }
+            client.updateVariable(paintableId, "action", a.getKey(), true);
         });
     }
 

@@ -43,12 +43,7 @@ public class PushFromInit extends AbstractTestUIWithLog {
     class RunBeforeInitEnds implements Runnable {
         @Override
         public void run() {
-            access(new Runnable() {
-                @Override
-                public void run() {
-                    log(LOG_DURING_INIT);
-                }
-            });
+            access(() -> log(LOG_DURING_INIT));
         }
     }
 
@@ -60,12 +55,7 @@ public class PushFromInit extends AbstractTestUIWithLog {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            access(new Runnable() {
-                @Override
-                public void run() {
-                    log(LOG_AFTER_INIT);
-                }
-            });
+            access(() -> log(LOG_AFTER_INIT));
         }
     }
 

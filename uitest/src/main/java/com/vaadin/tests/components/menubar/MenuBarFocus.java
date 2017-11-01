@@ -18,8 +18,6 @@ package com.vaadin.tests.components.menubar;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
@@ -71,15 +69,8 @@ public class MenuBarFocus extends AbstractReindeerTestUI {
     }
 
     private Button buildButton(final MenuBar bar) {
-        ClickListener buttonClickListener = new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                bar.focus();
-            }
-        };
-
         Button focusButton = new Button("Click me to focus the menubar",
-                buttonClickListener);
+                event -> bar.focus());
         focusButton.setTabIndex(1);
         return focusButton;
     }

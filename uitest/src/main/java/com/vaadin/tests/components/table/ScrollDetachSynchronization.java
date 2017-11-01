@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
@@ -45,24 +44,16 @@ public class ScrollDetachSynchronization extends TestBase {
         mainLayout.addComponent(firstLayout);
         mainLayout.setExpandRatio(firstLayout, 1);
 
-        first.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (mainLayout.getComponent(1).equals(secondLayout)) {
-                    mainLayout.replaceComponent(secondLayout, firstLayout);
-                    mainLayout.setExpandRatio(firstLayout, 1);
-                }
+        first.addClickListener(event -> {
+            if (mainLayout.getComponent(1).equals(secondLayout)) {
+                mainLayout.replaceComponent(secondLayout, firstLayout);
+                mainLayout.setExpandRatio(firstLayout, 1);
             }
         });
-        second.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (mainLayout.getComponent(1).equals(firstLayout)) {
-                    mainLayout.replaceComponent(firstLayout, secondLayout);
-                    mainLayout.setExpandRatio(secondLayout, 1);
-                }
+        second.addClickListener(event -> {
+            if (mainLayout.getComponent(1).equals(firstLayout)) {
+                mainLayout.replaceComponent(firstLayout, secondLayout);
+                mainLayout.setExpandRatio(secondLayout, 1);
             }
         });
         return mainLayout;

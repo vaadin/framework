@@ -7,7 +7,6 @@ import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.v7.ui.AbstractSelect.VerticalLocationIs;
 import com.vaadin.v7.ui.Table;
@@ -45,15 +44,11 @@ public class ScrolledDropTarget extends TestBase {
         });
 
         addComponent(table);
-        addComponent(new Button("Scroll body", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getMainWindow().executeJavaScript(
+        addComponent(new Button("Scroll body",
+                event -> getMainWindow().executeJavaScript(
                         "document.body.style.overflow = 'auto';"
                                 + "document.body.style.height = '200%';"
-                                + "window.scrollTo(0,18)");
-            }
-        }));
+                                + "window.scrollTo(0,18)")));
         addComponent(log);
     }
 

@@ -28,7 +28,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
@@ -46,7 +45,6 @@ import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
-import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VDropHandler;
@@ -223,30 +221,23 @@ public class VDragAndDropWrapper extends VCustomComponent
 
     /** For internal use only. May be removed or replaced in the future. */
     public void startNextUpload() {
-        Scheduler.get().scheduleDeferred(new Command() {
+        Scheduler.get().scheduleDeferred(() -> {
+            if (!uploading) {
+                if (!fileIds.isEmpty()) {
 
-            @Override
-            public void execute() {
-                if (!uploading) {
-                    if (!fileIds.isEmpty()) {
-
-                        uploading = true;
-                        final Integer fileId = fileIds.remove(0);
-                        VHtml5File file = files.remove(0);
-                        final String receiverUrl = client.translateVaadinUri(
-                                fileIdToReceiver.remove(fileId.toString()));
-                        ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
-                                .create();
-                        extendedXHR
-                                .setOnReadyStateChange(readyStateChangeHandler);
-                        extendedXHR.open("POST", receiverUrl);
-                        extendedXHR.postFile(file);
-                    }
+                    uploading = true;
+                    final Integer fileId = fileIds.remove(0);
+                    VHtml5File file = files.remove(0);
+                    final String receiverUrl = client.translateVaadinUri(
+                            fileIdToReceiver.remove(fileId.toString()));
+                    ExtendedXHR extendedXHR = (ExtendedXHR) ExtendedXHR
+                            .create();
+                    extendedXHR.setOnReadyStateChange(readyStateChangeHandler);
+                    extendedXHR.open("POST", receiverUrl);
+                    extendedXHR.postFile(file);
                 }
-
             }
         });
-
     }
 
     public boolean html5DragStart(VHtml5DragEvent event) {
@@ -511,13 +502,7 @@ public class VDragAndDropWrapper extends VCustomComponent
             boolean detailsChanged = updateDropDetails(drag);
             if (detailsChanged) {
                 currentlyValid = false;
-                validate(new VAcceptCallback() {
-
-                    @Override
-                    public void accepted(VDragEvent event) {
-                        dragAccepted(drag);
-                    }
-                }, drag);
+                validate(event -> dragAccepted(drag), drag);
             }
         }
 

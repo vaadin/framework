@@ -31,7 +31,6 @@ import java.lang.management.MemoryMXBean;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
@@ -40,12 +39,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FinishedEvent;
-import com.vaadin.ui.Upload.StartedEvent;
-import com.vaadin.ui.Upload.StartedListener;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.ui.AbstractField;
 import com.vaadin.v7.ui.ProgressIndicator;
 import com.vaadin.v7.ui.Select;
 import com.vaadin.v7.ui.TextField;
@@ -106,129 +100,87 @@ public class TestForUpload extends CustomComponent
 
         up = new Upload("Upload", buffer);
         up.setImmediateMode(true);
-        up.addListener(new Listener() {
-            private static final long serialVersionUID = -8319074730512324303L;
-
-            @Override
-            public void componentEvent(Event event) {
-                // print out all events fired by upload for debug purposes
-                System.out.println("Upload fired event | " + event);
-            }
-        });
-
-        up.addStartedListener(new StartedListener() {
-            private static final long serialVersionUID = 5508883803861085154L;
-
-            @Override
-            public void uploadStarted(StartedEvent event) {
-                pi.setVisible(true);
-                pi2.setVisible(true);
-                l.setValue("Started uploading file " + event.getFilename());
-                textFieldValue
-                        .setValue(" TestFields value at the upload start is:"
-                                + textField.getValue());
-            }
-        });
-
-        up.addFinishedListener(new Upload.FinishedListener() {
-            private static final long serialVersionUID = -3773034195991947371L;
-
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                pi.setVisible(false);
-                pi2.setVisible(false);
-                if (event instanceof Upload.FailedEvent) {
-                    Exception reason = ((Upload.FailedEvent) event).getReason();
-                    l.setValue(
-                            "Finished with failure ( " + reason + "  ), idle");
-                } else if (event instanceof Upload.SucceededEvent) {
-                    l.setValue("Finished with succes, idle");
-                } else {
-                    l.setValue("Finished with unknow event");
-                }
-
-                statusLayout.removeAllComponents();
-                final InputStream stream = buffer.getStream();
-                if (stream == null) {
-                    statusLayout.addComponent(new Label(
-                            "Upload finished, but output buffer is null"));
-                } else {
-                    statusLayout.addComponent(
-                            new Label("<b>Name:</b> " + event.getFilename(),
-                                    ContentMode.HTML));
-                    statusLayout.addComponent(
-                            new Label("<b>Mimetype:</b> " + event.getMIMEType(),
-                                    ContentMode.HTML));
-                    statusLayout.addComponent(new Label(
-                            "<b>Size:</b> " + event.getLength() + " bytes.",
-                            ContentMode.HTML));
-
-                    statusLayout.addComponent(new Link(
-                            "Download " + buffer.getFileName(),
-                            new StreamResource(buffer, buffer.getFileName())));
-
-                    statusLayout.setVisible(true);
-                }
-
-                setBuffer();
-            }
-        });
-
-        up.addProgressListener(new Upload.ProgressListener() {
-
-            @Override
-            public void updateProgress(long readBytes, long contentLenght) {
-                pi2.setValue(new Float(readBytes / (float) contentLenght));
-
-                refreshMemUsage();
-            }
-
-        });
 
         final Button b = new Button("Reed state from upload",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        readState();
-                    }
-                });
+                event -> readState());
 
-        final Button c = new Button("Force GC", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                gc();
-            }
-        });
+        final Button c = new Button("Force GC", event -> gc());
 
         main.addComponent(b);
         main.addComponent(c);
         main.addComponent(beSluggish);
         main.addComponent(throwExecption);
         main.addComponent(interrupt);
-        interrupt.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                up.interruptUpload();
-            }
-        });
+        interrupt.addClickListener(event -> up.interruptUpload());
 
         uploadBufferSelector = new Select("StreamVariable type");
         uploadBufferSelector.setImmediate(true);
         uploadBufferSelector.addItem("memory");
         uploadBufferSelector.setValue("memory");
         uploadBufferSelector.addItem("tempfile");
-        uploadBufferSelector
-                .addListener(new AbstractField.ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        setBuffer();
-                    }
-                });
+        uploadBufferSelector.addValueChangeListener(event -> setBuffer());
         main.addComponent(uploadBufferSelector);
 
         main.addComponent(up);
         l = new Label("Idle");
         main.addComponent(l);
+
+        up.addListener((Listener) event -> {
+            // print out all events fired by upload for debug purposes
+            System.out.println("Upload fired event | " + event);
+        });
+
+        up.addStartedListener(event -> {
+            pi.setVisible(true);
+            pi2.setVisible(true);
+            l.setValue("Started uploading file " + event.getFilename());
+            textFieldValue.setValue(" TestFields value at the upload start is:"
+                    + textField.getValue());
+        });
+
+        up.addFinishedListener(event -> {
+            pi.setVisible(false);
+            pi2.setVisible(false);
+            if (event instanceof Upload.FailedEvent) {
+                Exception reason = ((Upload.FailedEvent) event).getReason();
+                l.setValue("Finished with failure ( " + reason + "  ), idle");
+            } else if (event instanceof Upload.SucceededEvent) {
+                l.setValue("Finished with succes, idle");
+            } else {
+                l.setValue("Finished with unknow event");
+            }
+
+            statusLayout.removeAllComponents();
+            final InputStream stream = buffer.getStream();
+            if (stream == null) {
+                statusLayout.addComponent(new Label(
+                        "Upload finished, but output buffer is null"));
+            } else {
+                statusLayout.addComponent(
+                        new Label("<b>Name:</b> " + event.getFilename(),
+                                ContentMode.HTML));
+                statusLayout.addComponent(
+                        new Label("<b>Mimetype:</b> " + event.getMIMEType(),
+                                ContentMode.HTML));
+                statusLayout.addComponent(new Label(
+                        "<b>Size:</b> " + event.getLength() + " bytes.",
+                        ContentMode.HTML));
+
+                statusLayout.addComponent(new Link(
+                        "Download " + buffer.getFileName(),
+                        new StreamResource(buffer, buffer.getFileName())));
+
+                statusLayout.setVisible(true);
+            }
+
+            setBuffer();
+        });
+
+        up.addProgressListener((readBytes, contentLength) -> {
+            pi2.setValue(new Float(readBytes / (float) contentLength));
+
+            refreshMemUsage();
+        });
 
         pi.setVisible(false);
         pi.setPollingInterval(1000);
@@ -246,13 +198,9 @@ public class TestForUpload extends CustomComponent
         main.addComponent(status);
 
         final Button restart = new Button("R");
-        restart.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                LegacyWindow window = (LegacyWindow) event.getButton().getUI();
-                window.getApplication().close();
-            }
+        restart.addClickListener(event -> {
+            LegacyWindow window = (LegacyWindow) event.getButton().getUI();
+            window.getApplication().close();
         });
         main.addComponent(restart);
 

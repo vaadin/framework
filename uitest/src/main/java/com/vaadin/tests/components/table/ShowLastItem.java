@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 
 public class ShowLastItem extends AbstractReindeerTestUI {
@@ -26,18 +25,13 @@ public class ShowLastItem extends AbstractReindeerTestUI {
                     .setValue("row " + i);
         }
 
-        Button addItemBtn = new Button("Add item", new Button.ClickListener() {
+        Button addItemBtn = new Button("Add item", event -> {
+            Object itemId = "row " + table.getItemIds().size();
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Object itemId = "row " + table.getItemIds().size();
+            table.addItem(itemId).getItemProperty("Col")
+                    .setValue(String.valueOf(itemId));
 
-                table.addItem(itemId).getItemProperty("Col")
-                        .setValue(String.valueOf(itemId));
-
-                table.setCurrentPageFirstItemIndex(
-                        table.getItemIds().size() - 1);
-            }
+            table.setCurrentPageFirstItemIndex(table.getItemIds().size() - 1);
         });
 
         addComponent(table);

@@ -22,7 +22,6 @@ import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.v7.data.Item;
@@ -99,13 +98,9 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         table.setPageLength(20);
 
         Button refreshTableCache = new Button("Refresh table cache",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.markAsDirty();
-                        table.refreshRowCache();
-                    }
+                event -> {
+                    table.markAsDirty();
+                    table.refreshRowCache();
                 });
         addComponent(refreshTableCache);
         addComponent(brokenContainer);

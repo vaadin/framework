@@ -3,11 +3,8 @@ package com.vaadin.tests.components.table;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class ValueAfterClearingContainer extends TestBase {
@@ -24,13 +21,8 @@ public class ValueAfterClearingContainer extends TestBase {
         table.setSelectable(true);
         table.addContainerProperty(PROPERTY_ID, Integer.class, null);
         table.setImmediate(true);
-        table.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log.log("Value changed to " + event.getProperty().getValue());
-            }
-        });
+        table.addValueChangeListener(event -> log
+                .log("Value changed to " + event.getProperty().getValue()));
         addComponent(log);
 
         addComponent(table);
@@ -42,95 +34,63 @@ public class ValueAfterClearingContainer extends TestBase {
         });
         addComponent(multiselect);
         Button addItemsButton = new Button("Add table items",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        if (!table.getItemIds().isEmpty()) {
-                            Notification.show(
-                                    "Only possible when the table is empty");
-                            return;
-                        } else {
-                            for (int i = 0; i < 5; i++) {
-                                table.addItem(
-                                        new Object[] { i },
-                                        i);
-                            }
-                        }
+                event -> {
+                    if (!table.getItemIds().isEmpty()) {
+                        Notification
+                                .show("Only possible when the table is empty");
+                        return;
+                    }
+                    for (int i = 0; i < 5; i++) {
+                        table.addItem(new Object[] { i }, i);
                     }
                 });
         addItemsButton.setId("addItemsButton");
         addComponent(addItemsButton);
 
         Button showValueButton = new Button("Show value",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        log.log("Table selection: " + table.getValue());
-                    }
-                });
+                event -> log.log("Table selection: " + table.getValue()));
         showValueButton.setId("showValueButton");
         addComponent(showValueButton);
 
         Button removeItemsFromTableButton = new Button(
-                "Remove items from table", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.removeAllItems();
-                    }
-                });
+                "Remove items from table", event -> table.removeAllItems());
         removeItemsFromTableButton.setId("removeItemsFromTableButton");
         addComponent(removeItemsFromTableButton);
 
         Button removeItemsFromContainerButton = new Button(
-                "Remove items from container", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.getContainerDataSource().removeAllItems();
-                    }
-                });
+                "Remove items from container",
+                event -> table.getContainerDataSource().removeAllItems());
         removeItemsFromContainerButton.setId("removeItemsFromContainerButton");
         addComponent(removeItemsFromContainerButton);
         Button removeItemsFromContainerAndSanitizeButton = new Button(
                 "Remove items from container and sanitize",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        table.getContainerDataSource().removeAllItems();
-                        table.sanitizeSelection();
-                    }
+                event -> {
+                    table.getContainerDataSource().removeAllItems();
+                    table.sanitizeSelection();
                 });
         removeItemsFromContainerAndSanitizeButton
                 .setId("removeItemsFromContainerAndSanitizeButton");
         addComponent(removeItemsFromContainerAndSanitizeButton);
         Button removeSelectedFromTableButton = new Button(
-                "Remove selected item from table", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Object selection = table.getValue();
-                        if (selection == null) {
-                            Notification.show("There is no selection");
-                            return;
-                        } else {
-                            table.removeItem(selection);
-                        }
+                "Remove selected item from table", event -> {
+                    Object selection = table.getValue();
+                    if (selection == null) {
+                        Notification.show("There is no selection");
+                        return;
                     }
+                    table.removeItem(selection);
                 });
         removeSelectedFromTableButton.setId("removeSelectedFromTableButton");
         addComponent(removeSelectedFromTableButton);
         Button removeSelectedFromContainer = new Button(
                 "Remove selected item from container",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Object selection = table.getValue();
-                        if (selection == null) {
-                            Notification.show("There is no selection");
-                            return;
-                        } else {
-                            table.getContainerDataSource()
-                                    .removeItem(selection);
-                        }
+                event -> {
+                    Object selection = table.getValue();
+                    if (selection == null) {
+                        Notification.show("There is no selection");
+                        return;
                     }
+                    table.getContainerDataSource().removeItem(selection);
                 });
         removeSelectedFromContainer.setId("removeSelectedFromContainer");
         addComponent(removeSelectedFromContainer);

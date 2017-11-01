@@ -19,7 +19,6 @@ package com.vaadin.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -538,12 +537,8 @@ public class Profiler {
         rootNode.sumUpTotals(totals);
 
         List<Node> totalList = new ArrayList<>(totals.values());
-        Collections.sort(totalList, new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                return (int) (o2.getTimeSpent() - o1.getTimeSpent());
-            }
-        });
+        Collections.sort(totalList,
+                (o1, o2) -> (int) (o2.getTimeSpent() - o1.getTimeSpent()));
 
         if (getConsumer() != null) {
             getConsumer().addProfilerData(stack.getFirst(), totalList);

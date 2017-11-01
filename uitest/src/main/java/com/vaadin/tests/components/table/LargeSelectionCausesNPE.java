@@ -11,7 +11,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
@@ -102,17 +101,14 @@ public class LargeSelectionCausesNPE extends TestBase {
             button.addClickListener(clickListener);
         }
 
-        Table.ValueChangeListener valueChangeListener = new Table.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                // in multiselect mode, a Set of itemIds is returned,
-                // in singleselect mode the itemId is returned directly
-                Set<?> value = (Set<?>) event.getProperty().getValue();
-                if (null == value || value.isEmpty()) {
-                    selected.setValue("No selection");
-                } else {
-                    selected.setValue("Selected: " + table.getValue());
-                }
+        Table.ValueChangeListener valueChangeListener = event -> {
+            // in multiselect mode, a Set of itemIds is returned,
+            // in singleselect mode the itemId is returned directly
+            Set<?> value = (Set<?>) event.getProperty().getValue();
+            if (null == value || value.isEmpty()) {
+                selected.setValue("No selection");
+            } else {
+                selected.setValue("Selected: " + table.getValue());
             }
         };
 
