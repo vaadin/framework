@@ -207,9 +207,11 @@ public class GridConnector extends AbstractListingConnector
 
         updateWidgetStyleNames();
 
+        Grid<JsonObject> grid = getWidget();
+
         // Remove default headers when initializing Grid widget
-        while (getWidget().getHeaderRowCount() > 0) {
-            getWidget().removeHeaderRow(0);
+        while (grid.getHeaderRowCount() > 0) {
+            grid.removeHeaderRow(0);
         }
 
         registerRpc(GridClientRpc.class, new GridClientRpc() {
@@ -217,12 +219,12 @@ public class GridConnector extends AbstractListingConnector
             @Override
             public void scrollToRow(int row, ScrollDestination destination) {
                 Scheduler.get().scheduleFinally(
-                        () -> getWidget().scrollToRow(row, destination));
+                        () -> grid.scrollToRow(row, destination));
                 // Add details refresh listener and handle possible detail for
                 // scrolled row.
                 addDetailsRefreshCallback(() -> {
                     if (rowHasDetails(row)) {
-                        getWidget().scrollToRow(row, destination);
+                        grid.scrollToRow(row, destination);
                     }
                 });
             }
@@ -230,34 +232,34 @@ public class GridConnector extends AbstractListingConnector
             @Override
             public void scrollToStart() {
                 Scheduler.get()
-                        .scheduleFinally(() -> getWidget().scrollToStart());
+                        .scheduleFinally(() -> grid.scrollToStart());
             }
 
             @Override
             public void scrollToEnd() {
                 Scheduler.get()
-                        .scheduleFinally(() -> getWidget().scrollToEnd());
+                        .scheduleFinally(() -> grid.scrollToEnd());
                 addDetailsRefreshCallback(() -> {
-                    if (rowHasDetails(getWidget().getDataSource().size() - 1)) {
-                        getWidget().scrollToEnd();
+                    if (rowHasDetails(grid.getDataSource().size() - 1)) {
+                        grid.scrollToEnd();
                     }
                 });
             }
 
             @Override
             public void recalculateColumnWidths() {
-                getWidget().recalculateColumnWidths();
+                grid.recalculateColumnWidths();
             }
         });
 
-        getWidget().addSortHandler(this::handleSortEvent);
-        getWidget().setRowStyleGenerator(rowRef -> {
+        grid.addSortHandler(this::handleSortEvent);
+        grid.setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
                     ? json.getString(GridState.JSONKEY_ROWSTYLE)
                     : null;
         });
-        getWidget().setCellStyleGenerator(cellRef -> {
+        grid.setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
             if (!row.hasKey(GridState.JSONKEY_CELLSTYLES)) {
                 return null;
@@ -276,13 +278,13 @@ public class GridConnector extends AbstractListingConnector
             return null;
         });
 
-        getWidget().addColumnVisibilityChangeHandler(event -> {
+        grid.addColumnVisibilityChangeHandler(event -> {
             if (event.isUserOriginated()) {
                 getRpcProxy(GridServerRpc.class).columnVisibilityChanged(
                         getColumnId(event.getColumn()), event.isHidden());
             }
         });
-        getWidget().addColumnReorderHandler(event -> {
+        grid.addColumnReorderHandler(event -> {
             if (event.isUserOriginated()) {
                 List<String> newColumnOrder = mapColumnsToIds(
                         event.getNewColumnOrder());
@@ -292,21 +294,21 @@ public class GridConnector extends AbstractListingConnector
                         .columnsReordered(newColumnOrder, oldColumnOrder);
             }
         });
-        getWidget().addColumnResizeHandler(event -> {
+        grid.addColumnResizeHandler(event -> {
             Column<?, JsonObject> column = event.getColumn();
             getRpcProxy(GridServerRpc.class).columnResized(getColumnId(column),
                     column.getWidthActual());
         });
 
         // Handling row height changes
-        getWidget().addRowHeightChangedHandler(event -> {
+        grid.addRowHeightChangedHandler(event -> {
             getLayoutManager().setNeedsMeasureRecursively(GridConnector.this);
             getLayoutManager().layoutNow();
         });
 
         /* Item click events */
-        getWidget().addBodyClickHandler(itemClickHandler);
-        getWidget().addBodyDoubleClickHandler(itemClickHandler);
+        grid.addBodyClickHandler(itemClickHandler);
+        grid.addBodyDoubleClickHandler(itemClickHandler);
 
         layout();
     }
@@ -358,14 +360,15 @@ public class GridConnector extends AbstractListingConnector
 
         Scheduler.get().scheduleFinally(() -> {
             GridState state = getState();
-            if (getWidget().isAttached() && rowHeightNeedsReset()) {
-                getWidget().resetSizesFromDom();
+            Grid<JsonObject> grid = getWidget();
+            if (grid.isAttached() && rowHeightNeedsReset()) {
+                grid.resetSizesFromDom();
             }
-            updateContainerRowHeigth(getWidget().getEscalator().getBody(),
+            updateContainerRowHeigth(grid.getEscalator().getBody(),
                     state.bodyRowHeight);
-            updateContainerRowHeigth(getWidget().getEscalator().getHeader(),
+            updateContainerRowHeigth(grid.getEscalator().getHeader(),
                     state.headerRowHeight);
-            updateContainerRowHeigth(getWidget().getEscalator().getFooter(),
+            updateContainerRowHeigth(grid.getEscalator().getFooter(),
                     state.footerRowHeight);
             rowHeightScheduled = false;
         });
@@ -641,9 +644,8 @@ public class GridConnector extends AbstractListingConnector
 
         if (super.hasTooltip()) {
             return super.getTooltipInfo(element);
-        } else {
-            return null;
         }
+        return null;
     }
 
     @Override

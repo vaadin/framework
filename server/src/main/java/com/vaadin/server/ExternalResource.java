@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.net.URL;
 
 import com.vaadin.util.FileTypeResolver;
@@ -30,7 +29,7 @@ import com.vaadin.util.FileTypeResolver;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class ExternalResource implements Resource, Serializable {
+public class ExternalResource implements Resource {
 
     /**
      * Url of the download.

@@ -74,8 +74,8 @@ public class GridResizeHiddenColumnTest extends MultiBrowserTest {
                 By.className("v-grid-sidebar-popup"));
         WebElement visibilityToggle = findElementByText("Last Name",
                 sidebarPopup.findElements(By.className("gwt-MenuItem")));
-        action.click(visibilityToggle).perform(); // Click on "Last Name"
-                                                  // menu item
+        // Click on "Last Name" menu item
+        action.click(visibilityToggle).perform();
 
         // Check if column "Last Name" is visible
         headerCells = grid.getHeaderCells(0);

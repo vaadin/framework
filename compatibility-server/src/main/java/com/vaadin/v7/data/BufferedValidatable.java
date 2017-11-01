@@ -18,8 +18,6 @@ package com.vaadin.v7.data;
 
 import com.vaadin.data.Binder;
 
-import java.io.Serializable;
-
 /**
  * <p>
  * This interface defines the combination of <code>Validatable</code> and
@@ -33,7 +31,7 @@ import java.io.Serializable;
  */
 @Deprecated
 public interface BufferedValidatable
-        extends Buffered, Validatable, Serializable {
+        extends Buffered, Validatable {
 
     /**
      * Tests if the invalid data is committed to datasource. The default is
