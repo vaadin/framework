@@ -177,15 +177,15 @@ public class LocaleService implements Serializable {
 
         localeData.dateFormat = datePattern.trim();
 
-        final boolean twelve_hour_clock = timePattern.indexOf("a") > -1;
+        final boolean twelveHourClock = timePattern.indexOf("a") > -1;
         // TODO there are other possibilities as well, like 'h' in french
         // (ignore them, too complicated)
-        final String hour_min_delimiter = timePattern.indexOf(".") > -1 ? "."
+        final String hourMinDelimiter = timePattern.indexOf(".") > -1 ? "."
                 : ":";
 
-        localeData.twelveHourClock = twelve_hour_clock;
-        localeData.hourMinuteDelimiter = hour_min_delimiter;
-        if (twelve_hour_clock) {
+        localeData.twelveHourClock = twelveHourClock;
+        localeData.hourMinuteDelimiter = hourMinDelimiter;
+        if (twelveHourClock) {
             final String[] ampm = dfs.getAmPmStrings();
             localeData.am = ampm[0];
             localeData.pm = ampm[1];

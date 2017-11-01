@@ -22,8 +22,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.components.TestDateField;
 import com.vaadin.ui.AbstractDateField;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 
@@ -44,23 +42,12 @@ public class LayoutAfterHidingError extends AbstractReindeerTestUI {
         gl.addComponent(df);
 
         Button err = new Button("Set error");
-        err.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                df.setComponentError(new UserError("foo"));
-            }
-        });
+        err.addClickListener(
+                event -> df.setComponentError(new UserError("foo")));
         gl.addComponent(err);
 
         err = new Button("Clear error");
-        err.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                df.setComponentError(null);
-            }
-        });
+        err.addClickListener(event -> df.setComponentError(null));
         gl.addComponent(err);
     }
 

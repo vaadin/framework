@@ -75,7 +75,7 @@ public class GridSingleSelectionModelTest {
 
         selectionChanges = new ArrayList<>();
         selectionModel.addSingleSelectionListener(
-                e -> selectionChanges.add(e.getValue()));
+                event -> selectionChanges.add(event.getValue()));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -99,9 +99,9 @@ public class GridSingleSelectionModelTest {
         List<String> selectionChanges = new ArrayList<>();
         List<String> oldSelectionValues = new ArrayList<>();
         ((SingleSelectionModelImpl<String>) customGrid.getSelectionModel())
-                .addSingleSelectionListener(e -> {
-                    selectionChanges.add(e.getValue());
-                    oldSelectionValues.add(e.getOldValue());
+                .addSingleSelectionListener(event -> {
+                    selectionChanges.add(event.getValue());
+                    oldSelectionValues.add(event.getOldValue());
                 });
 
         customGrid.getSelectionModel().select("Foo");
@@ -155,11 +155,9 @@ public class GridSingleSelectionModelTest {
         // since the selection model has been removed, it is no longer a data
         // generator for the data communicator, would need to verify somehow
         // that row is not marked as selected anymore ? (done in UI tests)
-        assertTrue(customModel.generatedData.isEmpty()); // at least
-                                                         // removed
-                                                         // selection
-                                                         // model is not
-                                                         // triggered
+
+        // at least removed selection model is not triggered
+        assertTrue(customModel.generatedData.isEmpty());
     }
 
     @Test

@@ -116,9 +116,7 @@ public class DesignResourceConverter implements Converter<String, Resource> {
                     return CODE_POINTS.get(codepoint);
                 }
 
-                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left
-                                                                        // for
-                                                                        // compatibility
+                if (FontAwesome.FONT_FAMILY.equals(familyAndCode[0])) { // Left for compatibility
                     return FontAwesome.fromCodepoint(codepoint);
                 }
                 // all vaadin icons should have a codepoint
@@ -185,22 +183,22 @@ public class DesignResourceConverter implements Converter<String, Resource> {
             return ((ExternalResource) value).getURL();
         }
 
-        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> typeToConverter = new HashMap<>();
+        private static final Map<Class<? extends Resource>, ResourceConverterByProtocol> TYPE_TO_CONVERTER = new HashMap<>();
 
         static {
-            typeToConverter.put(ExternalResource.class, HTTP);
+            TYPE_TO_CONVERTER.put(ExternalResource.class, HTTP);
             // ^ any of non-specialized would actually work
-            typeToConverter.put(ThemeResource.class, THEME);
-            typeToConverter.put(FontIcon.class, FONTICON);
-            typeToConverter.put(FileResource.class, FILE);
+            TYPE_TO_CONVERTER.put(ThemeResource.class, THEME);
+            TYPE_TO_CONVERTER.put(FontIcon.class, FONTICON);
+            TYPE_TO_CONVERTER.put(FileResource.class, FILE);
 
         }
 
         public static ResourceConverterByProtocol byType(
                 Class<? extends Resource> resourceType) {
-            for (Class<?> type : typeToConverter.keySet()) {
+            for (Class<?> type : TYPE_TO_CONVERTER.keySet()) {
                 if (type.isAssignableFrom(resourceType)) {
-                    return typeToConverter.get(type);
+                    return TYPE_TO_CONVERTER.get(type);
                 }
             }
             return null;

@@ -540,7 +540,7 @@ public class WeekGrid extends SimplePanel {
 
     public static class Timebar extends HTML {
 
-        private static final int[] timesFor12h = { 12, 1, 2, 3, 4, 5, 6, 7, 8,
+        private static final int[] TIMES_FOR_12H = { 12, 1, 2, 3, 4, 5, 6, 7, 8,
                 9, 10, 11 };
 
         private int height;
@@ -601,7 +601,7 @@ public class WeekGrid extends SimplePanel {
                     for (int i = firstHour + 1; i <= amStop; i++) {
                         e = DOM.createDiv();
                         setStyleName(e, "v-calendar-time");
-                        e.setInnerHTML("<span>" + timesFor12h[i] + "</span>"
+                        e.setInnerHTML("<span>" + TIMES_FOR_12H[i] + "</span>"
                                 + " " + ampm[0]);
                         getElement().appendChild(e);
                     }
@@ -611,7 +611,7 @@ public class WeekGrid extends SimplePanel {
                     for (int i = pmStart; i < lastHour - 11; i++) {
                         e = DOM.createDiv();
                         setStyleName(e, "v-calendar-time");
-                        e.setInnerHTML("<span>" + timesFor12h[i] + "</span>"
+                        e.setInnerHTML("<span>" + TIMES_FOR_12H[i] + "</span>"
                                 + " " + ampm[1]);
                         getElement().appendChild(e);
                     }

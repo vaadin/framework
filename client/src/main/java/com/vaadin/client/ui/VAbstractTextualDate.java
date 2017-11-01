@@ -52,7 +52,8 @@ import com.vaadin.shared.EventId;
  * @since 8.0
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
-        extends VDateField<R> implements Field, ChangeHandler, Focusable,
+        extends VDateField<R>
+        implements ChangeHandler, Focusable,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, KeyDownHandler {
 

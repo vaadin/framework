@@ -18,7 +18,6 @@ package com.vaadin.tests.application;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.JavaScript;
 
 public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
@@ -31,13 +30,7 @@ public class ConfirmBrowserTabClose extends AbstractTestUIWithLog {
         // 3. Choose to stay on the page after all
         // 4. Click the button
         // There should be no error
-        Button b = new Button("Say hello", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("Hello");
-            }
-        });
+        Button b = new Button("Say hello", event -> log("Hello"));
         addComponent(b);
         JavaScript
                 .eval("window.addEventListener('beforeunload', function (e) {"

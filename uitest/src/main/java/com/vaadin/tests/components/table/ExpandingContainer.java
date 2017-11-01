@@ -17,7 +17,7 @@ import com.vaadin.v7.data.util.BeanItem;
 
 @SuppressWarnings("serial")
 public class ExpandingContainer extends AbstractContainer implements
-        Container.Ordered, Container.Indexed, Container.ItemSetChangeNotifier {
+        Container.Indexed, Container.ItemSetChangeNotifier {
 
     public static final List<String> PROPERTY_IDS = Arrays.asList("id",
             "column1", "column2");

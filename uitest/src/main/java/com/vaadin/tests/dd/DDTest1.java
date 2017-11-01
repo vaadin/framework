@@ -182,7 +182,6 @@ public class DDTest1 extends TestBase {
                         copyChildren(source, target, childId);
                     }
                 }
-
             }
 
             @Override

@@ -145,7 +145,7 @@ public interface CalendarComponentEvents extends Serializable {
      */
     @Deprecated
     public interface RangeSelectNotifier
-            extends Serializable, CalendarEventNotifier {
+            extends CalendarEventNotifier {
 
         /**
          * Set the RangeSelectHandler that listens for drag-marking.

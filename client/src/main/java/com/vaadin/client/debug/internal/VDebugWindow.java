@@ -111,8 +111,8 @@ public final class VDebugWindow extends VOverlay {
     protected int fontSize = 1; // 0-2
 
     // Timers since application start, and last timer reset
-    private static final Duration start = new Duration();
-    private static Duration lastReset = start;
+    private static final Duration START = new Duration();
+    private static Duration lastReset = START;
 
     // outer panel
     protected FlowPanel window = new FlowPanel();
@@ -197,28 +197,15 @@ public final class VDebugWindow extends VOverlay {
 
         // add controls TODO move these
         controls.add(menu);
-        menu.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                menuPopup.showRelativeTo(menu);
-            }
-        });
+        menu.addClickHandler(event -> menuPopup.showRelativeTo(menu));
 
         controls.add(minimize);
-        minimize.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleMinimized();
-                writeStoredState();
-            }
+        minimize.addClickHandler(event -> {
+            toggleMinimized();
+            writeStoredState();
         });
         controls.add(close);
-        close.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                close();
-            }
-        });
+        close.addClickHandler(event -> close());
 
         Style s = content.getElement().getStyle();
         s.setOverflow(Overflow.AUTO);
@@ -637,7 +624,7 @@ public final class VDebugWindow extends VOverlay {
      * @return
      */
     static int getMillisSinceStart() {
-        return start.elapsedMillis();
+        return START.elapsedMillis();
     }
 
     /**
