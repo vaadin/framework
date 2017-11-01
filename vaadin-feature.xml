@@ -1,0 +1,21 @@
+<features name="vaadin-osgi" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+    <feature name="vaadin-osgi-deps" version="8.2.0">
+        <bundle>mvn:org.jsoup/jsoup/1.8.3</bundle>
+        <bundle>mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</bundle>
+    </feature>
+    <feature name="vaadin-osgi-core" version="8.2.0">
+        <feature>http-whiteboard</feature>
+        <feature>vaadin-osgi-deps</feature>
+        <bundle>mvn:com.vaadin/vaadin-shared/8.2-SNAPSHOT</bundle>
+        <bundle>mvn:com.vaadin/vaadin-server/8.2-SNAPSHOT</bundle>
+        <bundle>mvn:com.vaadin/vaadin-osgi-integration/8.2-SNAPSHOT</bundle>
+        <bundle>mvn:com.vaadin/vaadin-client-compiled/8.2-SNAPSHOT</bundle>
+        <bundle>mvn:com.vaadin/vaadin-themes/8.2-SNAPSHOT</bundle>
+    </feature>
+    <feature name="vaadin-osgi-push" version="8.2.0">
+        <feature>vaadin-osgi-core</feature>
+        <bundle>mvn:com.vaadin/vaadin-push/8.2-SNAPSHOT</bundle>
+        <bundle>mvn:com.vaadin.external.atmosphere/atmosphere-runtime/2.4.11.vaadin2</bundle>
+        <bundle>mvn:com.vaadin.external.slf4j/vaadin-slf4j-jdk14/1.6.1</bundle>
+    </feature>
+</features>
