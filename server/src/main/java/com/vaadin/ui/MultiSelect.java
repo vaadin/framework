@@ -15,7 +15,6 @@
  */
 package com.vaadin.ui;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -38,7 +37,7 @@ import com.vaadin.shared.Registration;
  * @since 8.0
  *
  */
-public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
+public interface MultiSelect<T> extends HasValue<Set<T>> {
 
     /**
      * Adds the given items to the set of currently selected items.
@@ -143,6 +142,7 @@ public interface MultiSelect<T> extends HasValue<Set<T>>, Serializable {
      *
      * @return An empty set, not {@code null}
      */
+    @Override
     public default Set<T> getEmptyValue() {
         return Collections.emptySet();
     }

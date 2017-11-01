@@ -67,7 +67,7 @@ import com.vaadin.shared.ui.notification.NotificationState;
  * </p>
  *
  */
-public class Notification extends AbstractExtension implements Serializable {
+public class Notification extends AbstractExtension {
 
     /**
      * The server RPC.

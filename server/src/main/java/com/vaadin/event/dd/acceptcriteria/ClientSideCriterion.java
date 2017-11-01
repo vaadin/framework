@@ -15,8 +15,6 @@
  */
 package com.vaadin.event.dd.acceptcriteria;
 
-import java.io.Serializable;
-
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 
@@ -33,7 +31,7 @@ import com.vaadin.server.PaintTarget;
  * @since 6.3
  */
 public abstract class ClientSideCriterion
-        implements Serializable, AcceptCriterion {
+        implements AcceptCriterion {
 
     /*
      * All criteria that extend this must be completely validatable on client

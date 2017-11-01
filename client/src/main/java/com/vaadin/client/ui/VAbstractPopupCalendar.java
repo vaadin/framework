@@ -61,7 +61,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
-        implements Field, ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
+        implements ClickHandler, CloseHandler<PopupPanel> {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();

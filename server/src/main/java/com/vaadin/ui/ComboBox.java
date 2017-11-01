@@ -71,7 +71,7 @@ import elemental.json.JsonObject;
  */
 @SuppressWarnings("serial")
 public class ComboBox<T> extends AbstractSingleSelect<T>
-        implements HasValue<T>, FieldEvents.BlurNotifier,
+        implements FieldEvents.BlurNotifier,
         FieldEvents.FocusNotifier, HasFilterableDataProvider<T, String> {
 
     /**

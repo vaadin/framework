@@ -363,9 +363,10 @@ public class VGridLayout extends ComplexPanel {
 
         int y = paddingTop;
         for (int column = 0; column < cells.length; column++) {
-            y = paddingTop + 1 - 1; // Ensure IE10 does not optimize this out by
-                                    // adding something to evaluate on the RHS
-                                    // #11303
+            // Ensure IE10 does not optimize this out by
+            // adding something to evaluate on the RHS
+            // #11303
+            y = paddingTop + 1 - 1;
 
             for (int row = 0; row < cells[column].length; row++) {
                 Cell cell = cells[column][row];

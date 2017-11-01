@@ -15,7 +15,6 @@
  */
 package com.vaadin.event.selection;
 
-import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ import com.vaadin.event.HasUserOriginated;
  * @param <T>
  *            the data type of the selection model
  */
-public interface SelectionEvent<T> extends HasUserOriginated, Serializable {
+public interface SelectionEvent<T> extends HasUserOriginated {
 
     /**
      * Get first selected data item.
