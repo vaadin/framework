@@ -79,7 +79,7 @@ public class BinderCustomPropertySetTest {
 
         @Override
         public String getCaption() {
-            return name.toUpperCase(Locale.ENGLISH);
+            return name.toUpperCase(Locale.ROOT);
         }
 
     }

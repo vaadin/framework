@@ -1,8 +1,6 @@
 package com.vaadin.tests.server.component.datefield;
 
-import java.io.Serializable;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAdjuster;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -13,43 +11,50 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.shared.ui.datefield.DateTimeResolution;
 import com.vaadin.tests.server.component.AbstractListenerMethodsTestBase;
 import com.vaadin.ui.AbstractDateField;
 
 public class DateFieldListenersTest extends AbstractListenerMethodsTestBase {
 
-    public static class TestDateField<T extends Temporal & TemporalAdjuster & Serializable & Comparable<? super T>, R extends Enum<R>>
-            extends AbstractDateField<T, R> {
+    public static class TestDateField
+            extends AbstractDateField<LocalDateTime, DateTimeResolution> {
 
         public TestDateField() {
-            super(null);
+            super(DateTimeResolution.DAY);
         }
 
         @Override
-        protected int getDatePart(T date, R resolution) {
+        protected int getDatePart(LocalDateTime date,
+                DateTimeResolution resolution) {
             return 0;
         }
 
         @Override
-        protected T buildDate(Map<R, Integer> resolutionValues) {
+        protected LocalDateTime buildDate(
+                Map<DateTimeResolution, Integer> resolutionValues) {
             return null;
         }
 
         @Override
-        protected RangeValidator<T> getRangeValidator() {
+        protected RangeValidator<LocalDateTime> getRangeValidator() {
             return null;
         }
 
         @Override
-        protected T convertFromDate(Date date) {
+        protected LocalDateTime convertFromDate(Date date) {
             return null;
         }
 
         @Override
-        protected Date convertToDate(T date) {
+        protected Date convertToDate(LocalDateTime date) {
             return null;
         }
 
+        @Override
+        protected String formatDate(LocalDateTime value) {
+            return null;
+        }
     }
 
     @Test

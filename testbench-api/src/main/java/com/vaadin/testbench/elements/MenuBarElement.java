@@ -94,7 +94,7 @@ public class MenuBarElement extends AbstractComponentElement {
     private WebElement getSelectedTopLevelItem() {
         List<WebElement> selectedItems = findElements(
                 By.className("v-menubar-menuitem-selected"));
-        if (selectedItems.size() == 0) {
+        if (selectedItems.isEmpty()) {
             return null;
         }
         return selectedItems.get(0);

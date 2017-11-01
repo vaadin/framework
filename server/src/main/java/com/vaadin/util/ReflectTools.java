@@ -82,9 +82,9 @@ public class ReflectTools implements Serializable {
      * @throws IllegalArgumentException
      *             If the value could not be retrieved
      */
-    public static Object getJavaFieldValue(Object object,
-            Field field) throws IllegalArgumentException,
-            IllegalAccessException, InvocationTargetException {
+    public static Object getJavaFieldValue(Object object, Field field)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -126,10 +126,9 @@ public class ReflectTools implements Serializable {
      * @throws IllegalArgumentException
      *             If the value could not be retrieved
      */
-    public static Object getJavaFieldValue(Object object,
-            Field field, Class<?> propertyType)
-            throws IllegalArgumentException, IllegalAccessException,
-            InvocationTargetException {
+    public static Object getJavaFieldValue(Object object, Field field,
+            Class<?> propertyType) throws IllegalArgumentException,
+            IllegalAccessException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -173,10 +172,9 @@ public class ReflectTools implements Serializable {
      * @throws InvocationTargetException
      *             If the value could not be assigned to the field
      */
-    public static void setJavaFieldValue(Object object,
-            Field field, Object value)
-            throws IllegalAccessException, IllegalArgumentException,
-            InvocationTargetException {
+    public static void setJavaFieldValue(Object object, Field field,
+            Object value) throws IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
         PropertyDescriptor pd;
         try {
             pd = new PropertyDescriptor(field.getName(), object.getClass());
@@ -322,4 +320,28 @@ public class ReflectTools implements Serializable {
         }
     }
 
+    /**
+     * Returns the first non-synthetic method of the specified
+     * {@code listenerClass}, which must have single method in the source-code.
+     *
+     * This is needed, to remove the synthetic methods added if the class is
+     * instrumented.
+     *
+     * @param listenerClass
+     *            The {@link Class} of the listener, which has a single method
+     *            in the source code
+     * @return the first non-synthetic method
+     * @throws IllegalStateException
+     *             if the specified class does not have found method
+     * @since
+     */
+    public static Method getMethod(Class<?> listenerClass) {
+        for (Method m : listenerClass.getDeclaredMethods()) {
+            if (!m.isSynthetic()) {
+                return m;
+            }
+        }
+        throw new IllegalStateException("Class " + listenerClass.getName()
+                + " does not have a method.");
+    }
 }

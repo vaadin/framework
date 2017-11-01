@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.v7.tests.components.grid.basicfeatures.GridBasicClientFeaturesTest;
@@ -25,14 +23,8 @@ public class GridDisabledSideBarTest extends GridBasicClientFeaturesTest {
 
     private void toggleSideBarMenuAndDisable() {
         selectMenuPath("Component", "Sidebar", "Open sidebar and disable grid");
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return !findElement(By.className("v-grid-sidebar-button"))
-                        .isEnabled();
-            }
-        });
+        waitUntil(input -> !findElement(By.className("v-grid-sidebar-button"))
+                .isEnabled());
     }
 
     private void clickSideBarButton() {

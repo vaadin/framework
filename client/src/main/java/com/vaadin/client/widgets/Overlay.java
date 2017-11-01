@@ -357,10 +357,10 @@ public class Overlay extends PopupPanel {
         try {
             var b = $wnd.document.body;
             var cstyle = b.currentStyle ? b.currentStyle : getComputedStyle(b);
-            if(cstyle && cstyle.position == 'relative') {
+            if (cstyle && cstyle.position == 'relative') {
                 return b.getBoundingClientRect()[axis];
             }
-        } catch(e){}
+        } catch(e) {}
         return 0;
     }-*/;
 

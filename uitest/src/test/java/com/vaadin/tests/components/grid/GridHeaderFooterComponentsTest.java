@@ -68,7 +68,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
             int col) {
         GridCellElement cell = grid.getHeaderCell(row, col);
         List<TextFieldElement> all = cell.$(TextFieldElement.class).all();
-        if (all.size() == 0) {
+        if (all.isEmpty()) {
             return null;
         } else if (all.size() == 1) {
             return all.get(0);
@@ -106,7 +106,7 @@ public class GridHeaderFooterComponentsTest extends SingleBrowserTest {
             int col) {
         GridCellElement cell = grid.getFooterCell(row, col);
         List<TextFieldElement> all = cell.$(TextFieldElement.class).all();
-        if (all.size() == 0) {
+        if (all.isEmpty()) {
             return null;
         } else if (all.size() == 1) {
             return all.get(0);

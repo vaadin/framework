@@ -36,10 +36,10 @@ public class GridResizeHiddenColumn extends GridEditorUI {
 
         addComponent(grid);
 
-        grid.addColumnResizeListener(event -> {
-            log(String.format("Column resized: id=%s, width=%s",
-                    event.getColumn().getId(), event.getColumn().getWidth()));
-        });
+        grid.addColumnResizeListener(
+                event -> log(String.format("Column resized: id=%s, width=%s",
+                        event.getColumn().getId(),
+                        event.getColumn().getWidth())));
     }
 
     @Override

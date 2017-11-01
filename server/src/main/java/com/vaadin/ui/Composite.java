@@ -122,7 +122,7 @@ public class Composite extends AbstractComponent implements HasComponents {
         if (getCompositionRoot() != null) {
             return Collections.singletonList(getCompositionRoot()).iterator();
         } else {
-            return Collections.<Component>emptyList().iterator();
+            return Collections.<Component> emptyList().iterator();
         }
     }
 
@@ -173,7 +173,8 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public String getPrimaryStyleName() {
-        return getRootAbstractComponentPropertyOrNull(AbstractComponent::getPrimaryStyleName);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getPrimaryStyleName);
     }
 
     @Override
@@ -183,24 +184,30 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     private Component getRootOrThrow() {
         Component root = getCompositionRoot();
-        if (root == null) throw new IllegalStateException("Composition root has not been set");
+        if (root == null) {
+            throw new IllegalStateException(
+                    "Composition root has not been set");
+        }
         return root;
     }
 
     private AbstractComponent getRootAbstractComponentOrThrow() {
         Component root = getRootOrThrow();
         if (!(root instanceof AbstractComponent)) {
-            throw new IllegalStateException("Composition root is not AbstractComponent");
+            throw new IllegalStateException(
+                    "Composition root is not AbstractComponent");
         }
         return (AbstractComponent) root;
     }
 
-    private <T> T getRootPropertyOrNull(SerializableFunction<Component, T> getter) {
+    private <T> T getRootPropertyOrNull(
+            SerializableFunction<Component, T> getter) {
         Component root = getCompositionRoot();
         return root == null ? null : getter.apply(root);
     }
 
-    private <T> T getRootAbstractComponentPropertyOrNull(SerializableFunction<AbstractComponent, T> getter) {
+    private <T> T getRootAbstractComponentPropertyOrNull(
+            SerializableFunction<AbstractComponent, T> getter) {
         Component root = getCompositionRoot();
         if (root instanceof AbstractComponent) {
             return getter.apply((AbstractComponent) root);
@@ -285,7 +292,8 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public String getDebugId() {
-        return getRootAbstractComponentPropertyOrNull(AbstractComponent::getDebugId);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getDebugId);
     }
 
     @Override
@@ -305,7 +313,8 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public boolean isCaptionAsHtml() {
-        return getRootAbstractComponentPropertyOrNull(AbstractComponent::isCaptionAsHtml);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::isCaptionAsHtml);
     }
 
     @Override
@@ -335,12 +344,14 @@ public class Composite extends AbstractComponent implements HasComponents {
 
     @Override
     public ErrorMessage getErrorMessage() {
-        return getRootAbstractComponentPropertyOrNull(AbstractComponent::getErrorMessage);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getErrorMessage);
     }
 
     @Override
     public ErrorMessage getComponentError() {
-        return getRootAbstractComponentPropertyOrNull(AbstractComponent::getComponentError);
+        return getRootAbstractComponentPropertyOrNull(
+                AbstractComponent::getComponentError);
     }
 
     @Override

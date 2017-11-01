@@ -1667,7 +1667,7 @@ public class Calendar extends AbstractLegacyComponent
     }
 
     /**
-     * Adds an action handler to the calender that handles event produced by the
+     * Adds an action handler to the calendar that handles event produced by the
      * context menu.
      *
      * <p>
@@ -1958,8 +1958,8 @@ public class Calendar extends AbstractLegacyComponent
 
         Attributes attr = design.attributes();
         if (design.hasAttr("time-format")) {
-            setTimeFormat(TimeFormat.valueOf(
-                    "Format" + design.attr("time-format").toUpperCase()));
+            setTimeFormat(TimeFormat.valueOf("Format"
+                    + design.attr("time-format").toUpperCase(Locale.ROOT)));
         }
 
         if (design.hasAttr("start-date")) {

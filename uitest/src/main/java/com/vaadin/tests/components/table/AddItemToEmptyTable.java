@@ -44,8 +44,8 @@ public class AddItemToEmptyTable extends TestBase {
 
         rightTable.setSelectable(true);
         rightTable.setMultiSelect(true);
-        rightTable.setImmediate(true); // react at once when something is
-                                       // selected
+        // react at once when something is selected
+        rightTable.setImmediate(true);
 
         rightTable.addContainerProperty("name", String.class, null);
         // rightTable.setColumnWidth("name", 150);

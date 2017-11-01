@@ -118,7 +118,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             path.add(pathFragment);
         }
 
-        if (path.size() == 0) {
+        if (path.isEmpty()) {
             // If we didn't find a single element, return null..
             return null;
         }
@@ -185,7 +185,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         List<String> paths = new ArrayList<>();
         int compIdx = 0;
         String basePath = components.get(compIdx).replace("com.vaadin.ui.", "");
-        // Add a basic search for the first element (eg. //Button)
+        // Add a basic search for the first element (e.g. //Button)
         paths.add((components.size() == 1 ? "/" : "//") + basePath);
         while (++compIdx < components.size()) {
             // Loop through the remaining components
@@ -277,7 +277,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
     public List<Element> getElementsByPath(String path) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
@@ -347,7 +347,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             Element root) {
         List<SelectorPredicate> postFilters = SelectorPredicate
                 .extractPostFilterPredicates(path);
-        if (postFilters.size() > 0) {
+        if (!postFilters.isEmpty()) {
             path = path.substring(1, path.lastIndexOf(')'));
         }
 
@@ -617,7 +617,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         List<Integer> widgetTags = new ArrayList<>();
         widgetTags.addAll(getTags(widgetName));
 
-        if (widgetTags.size() == 0) {
+        if (widgetTags.isEmpty()) {
             widgetTags.addAll(getTags("com.vaadin.ui." + widgetName));
         }
 
@@ -631,7 +631,7 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
             final String simpleName = getSimpleClassName(name);
             final String fullName = getFullClassName(name);
 
-            if (widgetTags.size() > 0) {
+            if (!widgetTags.isEmpty()) {
                 Integer[] foundTags = client.getConfiguration()
                         .getTagsForServerSideClassName(fullName);
                 for (int tag : foundTags) {

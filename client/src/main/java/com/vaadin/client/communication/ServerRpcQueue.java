@@ -191,16 +191,13 @@ public class ServerRpcQueue {
         Scheduler.get().scheduleFinally(scheduledFlushCommand);
     }
 
-    private final ScheduledCommand scheduledFlushCommand = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            flushScheduled = false;
-            if (!isFlushPending()) {
-                // Somebody else cleared the queue before we had the chance
-                return;
-            }
-            connection.getMessageSender().sendInvocationsToServer();
+    private final ScheduledCommand scheduledFlushCommand = () -> {
+        flushScheduled = false;
+        if (!isFlushPending()) {
+            // Somebody else cleared the queue before we had the chance
+            return;
         }
+        connection.getMessageSender().sendInvocationsToServer();
     };
 
     /**
@@ -251,7 +248,7 @@ public class ServerRpcQueue {
             String connectorId = invocation.getConnectorId();
             if (!connectorExists(connectorId)) {
                 getLogger().info("Ignoring RPC for removed connector: "
-                        + connectorId + ": " + invocation.toString());
+                        + connectorId + ": " + invocation);
                 continue;
             }
 
@@ -269,8 +266,8 @@ public class ServerRpcQueue {
                     Method method = type.getMethod(invocation.getMethodName());
                     parameterTypes = method.getParameterTypes();
                 } catch (NoDataException e) {
-                    throw new RuntimeException(
-                            "No type data for " + invocation.toString(), e);
+                    throw new RuntimeException("No type data for " + invocation,
+                            e);
                 }
             }
 

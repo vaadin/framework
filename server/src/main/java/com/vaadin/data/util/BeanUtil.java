@@ -87,7 +87,7 @@ public final class BeanUtil implements Serializable {
 
     /**
      * Returns the type of the property with the given name and declaring class.
-     * The property name may refer to a nested property, eg.
+     * The property name may refer to a nested property, e.g.
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).
@@ -113,7 +113,7 @@ public final class BeanUtil implements Serializable {
 
     /**
      * Returns the property descriptor for the property of the given name and
-     * declaring class. The property name may refer to a nested property, eg.
+     * declaring class. The property name may refer to a nested property, e.g.
      * "property.subProperty" or "property.subProperty1.subProperty2". The
      * property must have a public read method (or a chain of read methods in
      * case of a nested property).

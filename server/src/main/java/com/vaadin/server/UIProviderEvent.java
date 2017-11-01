@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.util.EventObject;
 
 /**
@@ -27,7 +26,7 @@ import java.util.EventObject;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class UIProviderEvent extends EventObject implements Serializable {
+public class UIProviderEvent extends EventObject {
 
     private final VaadinRequest request;
 

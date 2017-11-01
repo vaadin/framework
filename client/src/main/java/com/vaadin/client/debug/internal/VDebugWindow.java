@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -112,8 +111,8 @@ public final class VDebugWindow extends VOverlay {
     protected int fontSize = 1; // 0-2
 
     // Timers since application start, and last timer reset
-    private static final Duration start = new Duration();
-    private static Duration lastReset = start;
+    private static final Duration START = new Duration();
+    private static Duration lastReset = START;
 
     // outer panel
     protected FlowPanel window = new FlowPanel();
@@ -198,28 +197,15 @@ public final class VDebugWindow extends VOverlay {
 
         // add controls TODO move these
         controls.add(menu);
-        menu.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                menuPopup.showRelativeTo(menu);
-            }
-        });
+        menu.addClickHandler(event -> menuPopup.showRelativeTo(menu));
 
         controls.add(minimize);
-        minimize.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleMinimized();
-                writeStoredState();
-            }
+        minimize.addClickHandler(event -> {
+            toggleMinimized();
+            writeStoredState();
         });
         controls.add(close);
-        close.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                close();
-            }
-        });
+        close.addClickHandler(event -> close());
 
         Style s = content.getElement().getStyle();
         s.setOverflow(Overflow.AUTO);
@@ -638,7 +624,7 @@ public final class VDebugWindow extends VOverlay {
      * @return
      */
     static int getMillisSinceStart() {
-        return start.elapsedMillis();
+        return START.elapsedMillis();
     }
 
     /**
@@ -706,29 +692,26 @@ public final class VDebugWindow extends VOverlay {
          * Finalize initialization when all entry points have had the chance to
          * e.g. register new sections.
          */
-        Scheduler.get().scheduleFinally(new ScheduledCommand() {
-            @Override
-            public void execute() {
-                readStoredState();
+        Scheduler.get().scheduleFinally(() -> {
+            readStoredState();
 
-                Window.addResizeHandler(
-                        new com.google.gwt.event.logical.shared.ResizeHandler() {
+            Window.addResizeHandler(
+                    new com.google.gwt.event.logical.shared.ResizeHandler() {
 
-                            Timer t = new Timer() {
-                                @Override
-                                public void run() {
-                                    applyPositionAndSize();
-                                }
-                            };
-
+                        Timer t = new Timer() {
                             @Override
-                            public void onResize(ResizeEvent event) {
-                                t.cancel();
-                                // TODO less
-                                t.schedule(1000);
+                            public void run() {
+                                applyPositionAndSize();
                             }
-                        });
-            }
+                        };
+
+                        @Override
+                        public void onResize(ResizeEvent event) {
+                            t.cancel();
+                            // TODO less
+                            t.schedule(1000);
+                        }
+                    });
         });
     }
 

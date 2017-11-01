@@ -17,7 +17,6 @@ package com.vaadin.tests.application;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
@@ -26,12 +25,8 @@ public class TerminalErrorNotification extends TestBase {
     @Override
     protected void setup() {
         Button button = new Button("Throw exception",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        throw new RuntimeException("You asked for it");
-                    }
+                event -> {
+                    throw new RuntimeException("You asked for it");
                 });
 
         addComponent(button);

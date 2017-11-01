@@ -265,7 +265,7 @@ public class ColorPickerPopup extends Window
         rgbLayout.setStyleName("rgbtab");
 
         // Add the RGB color gradient
-        rgbGradient = new ColorPickerGradient("rgb-gradient", RGBConverter);
+        rgbGradient = new ColorPickerGradient("rgb-gradient", rgbConverter);
         rgbGradient.setColor(color);
         rgbGradient.addColorChangeListener(this);
         rgbLayout.addComponent(rgbGradient);
@@ -346,7 +346,7 @@ public class ColorPickerPopup extends Window
         hsvLayout.setStyleName("hsvtab");
 
         // Add the hsv gradient
-        hsvGradient = new ColorPickerGradient("hsv-gradient", HSVConverter);
+        hsvGradient = new ColorPickerGradient("hsv-gradient", hsvConverter);
         hsvGradient.setColor(color);
         hsvGradient.addColorChangeListener(this);
         hsvLayout.addComponent(hsvGradient);
@@ -696,7 +696,7 @@ public class ColorPickerPopup extends Window
     }
 
     /** RGB color converter */
-    private Coordinates2Color RGBConverter = new Coordinates2Color() {
+    private Coordinates2Color rgbConverter = new Coordinates2Color() {
 
         @Override
         public Color calculate(int x, int y) {
@@ -733,7 +733,7 @@ public class ColorPickerPopup extends Window
     };
 
     /** HSV color converter */
-    Coordinates2Color HSVConverter = new Coordinates2Color() {
+    Coordinates2Color hsvConverter = new Coordinates2Color() {
         @Override
         public int[] calculate(Color color) {
 

@@ -49,9 +49,8 @@ public class ComboBoxUI extends AbstractTestUI {
         comboBox.setItemIconGenerator(item -> {
             if (item.equals("EUR")) {
                 return new ThemeResource("shared/img/spinner.gif");
-            } else {
-                return new ThemeResource("notfound.png");
             }
+            return new ThemeResource("notfound.png");
         });
         addComponent(comboBox);
     }

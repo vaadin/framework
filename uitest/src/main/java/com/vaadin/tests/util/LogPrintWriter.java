@@ -9,7 +9,7 @@ import java.io.Writer;
  */
 public class LogPrintWriter extends PrintWriter {
 
-    private final StringBuffer result = new StringBuffer(256);
+    private final StringBuilder result = new StringBuilder(256);
 
     public LogPrintWriter(Writer out) {
         super(out);

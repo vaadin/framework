@@ -113,10 +113,10 @@ public class CalendarEntry {
                         + "." + start.getDate() + " ";
             }
             int i = start.getHours();
-            s += (i < 10 ? "0" : "") + i;
+            s += asTwoDigits(i);
             s += ":";
             i = start.getMinutes();
-            s += (i < 10 ? "0" : "") + i;
+            s += asTwoDigits(i);
             if (!start.equals(end)) {
                 s += " - ";
                 if (!DateTimeService.isSameDay(start, end)) {
@@ -124,10 +124,10 @@ public class CalendarEntry {
                             + "." + end.getDate() + " ";
                 }
                 i = end.getHours();
-                s += (i < 10 ? "0" : "") + i;
+                s += asTwoDigits(i);
                 s += ":";
                 i = end.getMinutes();
-                s += (i < 10 ? "0" : "") + i;
+                s += asTwoDigits(i);
             }
             s += " ";
         }
@@ -135,6 +135,10 @@ public class CalendarEntry {
             s += title;
         }
         return s;
+    }
+
+    private static String asTwoDigits(int i) {
+        return (i < 10 ? "0" : "") + i;
     }
 
 }

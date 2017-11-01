@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import com.vaadin.server.ExternalResource;
@@ -175,13 +176,14 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                                 }
                             }
 
-                            // just partly mach lowercase
+                            // just partly match lowercase
                             for (Object next : menu.getItemIds()) {
                                 if (next instanceof Class) {
                                     Class<?> c = (Class<?>) next;
                                     String string = c.getSimpleName();
-                                    if (string.toLowerCase()
-                                            .contains(fragment.toLowerCase())) {
+                                    if (string.toLowerCase(Locale.ROOT)
+                                            .contains(fragment.toLowerCase(
+                                                    Locale.ROOT))) {
                                         menu.setValue(c);
                                         mainLayout.setSplitPosition(0);
                                         return;
@@ -226,8 +228,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication
                 e1.printStackTrace();
                 VerticalLayout lo = new VerticalLayout();
                 lo.addComponent(new Label(
-                        "Cannot create application / custom component: "
-                                + e1.toString()));
+                        "Cannot create application / custom component: " + e1));
 
                 Link l = new Link("Try opening via app runner",
                         new ExternalResource("../run/" + c.getName()));

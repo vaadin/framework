@@ -206,12 +206,9 @@ public abstract class AbstractRemoteDataSource<T> implements DataSource<T> {
 
     private CacheStrategy cacheStrategy = new CacheStrategy.DefaultCacheStrategy();
 
-    private final ScheduledCommand coverageChecker = new ScheduledCommand() {
-        @Override
-        public void execute() {
-            coverageCheckPending = false;
-            checkCacheCoverage();
-        }
+    private final ScheduledCommand coverageChecker = () -> {
+        coverageCheckPending = false;
+        checkCacheCoverage();
     };
 
     private Map<Object, Integer> pinnedCounts = new HashMap<>();

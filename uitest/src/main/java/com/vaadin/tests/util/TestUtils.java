@@ -117,11 +117,11 @@ public class TestUtils {
 
     public static void installPerformanceReporting(TextArea targetTextArea) {
         targetTextArea.setId("performanceTestTarget");
-        JavaScript
-                .eval("window.reportVaadinPerformance = function(topic, serverLimit, clientLimit, bootstrapTime) {"
+        JavaScript.eval(
+                "window.reportVaadinPerformance = function(topic, serverLimit, clientLimit, bootstrapTime) {"
                         + "var element = document.getElementById('performanceTestTarget');"
                         + "var text = topic + ': \\n';"
-                        + "for(var k in window.vaadin.clients) {"
+                        + "for (var k in window.vaadin.clients) {"
                         + "var p = window.vaadin.clients[k].getProfilingData();"
                         + "text += ' Server time: ' + (p[3] > serverLimit?'FAIL':'OK') + ' (' + p[3] +')\\n';"
                         + "text += ' Client time: ' + (p[0] > clientLimit?'FAIL':'OK') + ' (' + p[0] +')\\n';"

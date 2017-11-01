@@ -15,7 +15,6 @@
  */
 package com.vaadin.data.provider;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +92,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * {@link DataGenerator#destroyData(Object)} will be called for them.
      */
     protected class ActiveDataHandler
-            implements Serializable, DataGenerator<T> {
+            implements DataGenerator<T> {
 
         /**
          * Set of key strings for currently active data objects
@@ -337,7 +336,7 @@ public class DataCommunicator<T> extends AbstractExtension {
 
             List<T> rowsToPush = fetchItemsWithRange(offset, limit);
 
-            if (!initial && !reset && rowsToPush.size() == 0) {
+            if (!initial && !reset && rowsToPush.isEmpty()) {
                 triggerReset = true;
             }
 
@@ -370,7 +369,7 @@ public class DataCommunicator<T> extends AbstractExtension {
      * @since 8.1
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected List<T> fetchItemsWithRange(int offset, int limit) {
+    public List<T> fetchItemsWithRange(int offset, int limit) {
         return (List<T>) getDataProvider().fetch(new Query(offset, limit,
                 backEndSorting, inMemorySorting, filter))
                 .collect(Collectors.toList());
@@ -769,9 +768,6 @@ public class DataCommunicator<T> extends AbstractExtension {
     }
 
     private void hardReset() {
-        if (reset) {
-            return;
-        }
         reset = true;
         markAsDirty();
     }

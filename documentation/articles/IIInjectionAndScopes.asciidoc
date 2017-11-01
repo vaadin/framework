@@ -147,7 +147,7 @@ public class UserInfo implements Serializable {
 ....
 
 We'll inject that to the UI and assign the user some name during
-initalization (for now)
+initialization (for now)
 
 [source,java]
 ....

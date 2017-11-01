@@ -35,7 +35,7 @@ import com.vaadin.client.ui.FocusableFlowPanel;
 
 /**
  * Focusable flow panel which fires focus/blur events if it or any of its child
- * is focused/blured, but doesn't fire events if it happens between its content
+ * is focused/blurred, but doesn't fire events if it happens between its content
  * (child) elements.
  *
  * @author Vaadin Ltd
@@ -46,33 +46,33 @@ public class ChildFocusAwareFlowPanel extends FocusableFlowPanel
 
     private class FocusBlurHandler implements BlurHandler, FocusHandler {
 
-        private boolean blurOccured;
+        private boolean blurOccurred;
 
         @Override
         public void onBlur(BlurEvent event) {
-            blurOccured = true;
+            blurOccurred = true;
             Scheduler.get().scheduleDeferred(() -> fireBlurEvent(event));
         }
 
         @Override
         public void onFocus(FocusEvent event) {
-            if (!blurOccured) {
-                // no blur occured before this focus event
+            if (!blurOccurred) {
+                // no blur occurred before this focus event
                 eventBus.fireEvent(event);
             } else {
-                // blur occured before this focus event
+                // blur occurred before this focus event
                 // another component inside the panel was
-                // blurred => do not fire the focus and set blurOccured to
+                // blurred => do not fire the focus and set blurOccurred to
                 // false, so
                 // blur will not be fired, too
-                blurOccured = false;
+                blurOccurred = false;
             }
         }
 
         private void fireBlurEvent(BlurEvent event) {
-            if (blurOccured) {
+            if (blurOccurred) {
                 eventBus.fireEvent(event);
-                blurOccured = false;
+                blurOccurred = false;
             }
         }
     }

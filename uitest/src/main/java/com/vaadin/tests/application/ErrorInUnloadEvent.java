@@ -3,8 +3,6 @@ package com.vaadin.tests.application;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -50,15 +48,12 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         formLayout.addComponent(login);
         mainWindow.setContent(formLayout);
 
-        login.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                String username = userField.getValue();
-                String password = passwordField.getValue();
+        login.addClickListener(event -> {
+            String username = userField.getValue();
+            String password = passwordField.getValue();
 
-                user = username;
-                showMainWindow();
-            }
+            user = username;
+            showMainWindow();
         });
     }
 
@@ -82,13 +77,9 @@ public class ErrorInUnloadEvent extends AbstractTestCase {
         title.addStyleName("header-title");
         header.addComponent(title);
         Button logout = new Button("Logout");
-        logout.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(final ClickEvent event) {
-                user = null;
-                showLoginWindow();
-            }
-
+        logout.addClickListener(event -> {
+            user = null;
+            showLoginWindow();
         });
         header.addComponent(logout);
         return header;

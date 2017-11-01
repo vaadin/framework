@@ -185,7 +185,7 @@ public class VTabsheet extends VTabsheetBase
 
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
             if (!enabled) {
-                focusImpl.setTabIndex(td, -1);
+                FOCUS_IMPL.setTabIndex(td, -1);
             }
         }
 
@@ -297,11 +297,11 @@ public class VTabsheet extends VTabsheetBase
 
         public void focus() {
             getTabsheet().scrollIntoView(this);
-            focusImpl.focus(td);
+            FOCUS_IMPL.focus(td);
         }
 
         public void blur() {
-            focusImpl.blur(td);
+            FOCUS_IMPL.blur(td);
         }
 
         public boolean hasTooltip() {
@@ -563,13 +563,8 @@ public class VTabsheet extends VTabsheetBase
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
 
             // Scroll the tab into view if it is not already, after layout
-            Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    getTabsheet()
-                            .scrollIntoView(getTab(tabsheet.activeTabIndex));
-                }
-            });
+            Scheduler.get().scheduleFinally(() -> getTabsheet()
+                    .scrollIntoView(getTab(tabsheet.activeTabIndex)));
         }
 
         public Tab navigateTab(int fromIndex, int toIndex) {
@@ -744,6 +739,9 @@ public class VTabsheet extends VTabsheetBase
     public static final String TABS_CLASSNAME = CLASSNAME + "-tabcontainer";
     public static final String SCROLLER_CLASSNAME = CLASSNAME + "-scroller";
 
+    private static final FocusImpl FOCUS_IMPL = FocusImpl
+            .getFocusImplForPanel();
+
     /** For internal use only. May be removed or replaced in the future. */
     // tabbar and 'scroller' container
     public final Element tabs;
@@ -753,8 +751,6 @@ public class VTabsheet extends VTabsheetBase
      * this to avoid confusion with activeTabIndex.
      */
     int tabulatorIndex = 0;
-
-    private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 
     // tab-scroller element
     private final Element scroller;
@@ -828,7 +824,7 @@ public class VTabsheet extends VTabsheetBase
             getCurrentlyDisplayedWidget().getElement().getParentElement()
                     .getStyle().setVisibility(Visibility.HIDDEN);
 
-            getRpcProxy().setSelected(tabKeys.get(tabIndex).toString());
+            getRpcProxy().setSelected(tabKeys.get(tabIndex));
 
             waitingForResponse = true;
 

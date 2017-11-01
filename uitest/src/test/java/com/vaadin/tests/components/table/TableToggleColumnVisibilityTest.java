@@ -16,6 +16,7 @@
 package com.vaadin.tests.components.table;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -54,10 +55,9 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
                 findElements(By.className("v-table-header-cell")).size(), 2);
         checkHeaderAttributes(1);
 
-        changeOrderButton.click(); // change column order, column #1 now becomes
-                                   // column #0
+        // change column order, column #1 now becomes column #0
+        changeOrderButton.click();
         checkHeaderAttributes(0);
-
     }
 
     /*
@@ -70,12 +70,12 @@ public class TableToggleColumnVisibilityTest extends MultiBrowserTest {
         assertTrue("Column header text should be custom",
                 headerCell.getText().equalsIgnoreCase("Hello World"));
 
-        assertTrue("Column should have an icon",
-                headerCell.findElements(By.className("v-icon")).size() > 0);
+        assertFalse("Column should have an icon",
+                headerCell.findElements(By.className("v-icon")).isEmpty());
 
-        assertTrue("Column should have alignment to the right", headerCell
+        assertFalse("Column should have alignment to the right", headerCell
                 .findElements(
                         By.className("v-table-caption-container-align-right"))
-                .size() > 0);
+                .isEmpty());
     }
 }

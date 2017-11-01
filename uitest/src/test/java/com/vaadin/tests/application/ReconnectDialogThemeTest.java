@@ -52,14 +52,7 @@ public class ReconnectDialogThemeTest extends MultiBrowserThemeTestWithProxy {
         disconnectProxy();
         helloButton.click();
         testBench().disableWaitForVaadin();
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                boolean present = isElementPresent(reconnectDialogBy);
-                return present;
-            }
-        });
+        waitUntil(driver -> isElementPresent(reconnectDialogBy));
 
         WebElement dialog = findElement(reconnectDialogBy);
         WebElement spinner = dialog.findElement(By.className("spinner"));

@@ -23,10 +23,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.By;
 import com.vaadin.tests.tb3.MultiBrowserTest;
@@ -73,13 +71,10 @@ public class ComboBoxSlowTest extends MultiBrowserTest {
         assertTrue(isPagingActive());
         goToNextPage();
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                List<WebElement> filteredItems = getFilteredItems(popup);
-                return filteredItems.size() == 1
-                        && "Item 129".equals(filteredItems.get(0).getText());
-            }
+        waitUntil(input -> {
+            List<WebElement> items = getFilteredItems(popup);
+            return items.size() == 1
+                    && "Item 129".equals(items.get(0).getText());
         });
     }
 

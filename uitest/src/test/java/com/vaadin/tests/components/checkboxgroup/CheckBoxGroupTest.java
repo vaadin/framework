@@ -24,9 +24,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -170,7 +170,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         assertItemSuffices(20);
         List<WebElement> icons = getSelect()
                 .findElements(By.cssSelector(".v-select-optiongroup .v-icon"));
-        assertTrue(icons.size() > 0);
+        assertFalse(icons.isEmpty());
         for (int i = 0; i < icons.size(); i++) {
             assertEquals(VaadinIcons.values()[i + 1].getCodepoint(),
                     icons.get(i).getText().charAt(0));
@@ -219,8 +219,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     }
 
     private void assertSelected(String... expectedSelection) {
-        assertEquals(Arrays.asList(expectedSelection),
-                getSelect().getValue());
+        assertEquals(Arrays.asList(expectedSelection), getSelect().getValue());
     }
 
     @Override
@@ -257,16 +256,16 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
     @Test
     public void testDisabled() {
         List<String> optionsCssClasses = getSelect().getOptionElements()
-                .stream().map(e -> e.getAttribute("class"))
+                .stream().map(element -> element.getAttribute("class"))
                 .collect(Collectors.toList());
         for (int i = 0; i < optionsCssClasses.size(); i++) {
             String cssClassList = optionsCssClasses.get(i);
             if (i == 10) {
-                assertTrue("10th item should be disabled",
-                        cssClassList.toLowerCase().contains("disabled"));
+                assertTrue("10th item should be disabled", cssClassList
+                        .toLowerCase(Locale.ROOT).contains("disabled"));
             } else {
-                assertFalse("Only 10th item should be disabled",
-                        cssClassList.toLowerCase().contains("disabled"));
+                assertFalse("Only 10th item should be disabled", cssClassList
+                        .toLowerCase(Locale.ROOT).contains("disabled"));
             }
         }
     }
@@ -276,7 +275,7 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         List<String> optionsIcons = new ArrayList<>();
         for (WebElement option : getSelect().getOptionElements()) {
             List<WebElement> images = option.findElements(By.tagName("img"));
-            if (images.size() > 0) {
+            if (!images.isEmpty()) {
                 optionsIcons.add(images.get(0).getAttribute("src"));
             } else {
                 optionsIcons.add(null);

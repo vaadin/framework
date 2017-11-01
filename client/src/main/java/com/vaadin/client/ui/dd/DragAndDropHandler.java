@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.Locale;
+
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -102,49 +104,44 @@ public class DragAndDropHandler {
         }
     };
 
-    private final NativePreviewHandler dragPreviewHandler = new NativePreviewHandler() {
-
-        @Override
-        public void onPreviewNativeEvent(NativePreviewEvent event) {
-            if (dragging) {
-                final int typeInt = event.getTypeInt();
-                switch (typeInt) {
-                case Event.ONMOUSEMOVE:
-                case Event.ONTOUCHMOVE:
-                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
-                    break;
-                case Event.ONKEYDOWN:
-                    // End drag if ESC is pressed
-                    int keyCode = event.getNativeEvent().getKeyCode();
-                    if (keyCode == KeyCodes.KEY_ESCAPE) {
-                        cancelDrag(event);
-                    }
-                    break;
-                case Event.ONTOUCHCANCEL:
+    private final NativePreviewHandler dragPreviewHandler = event -> {
+        if (dragging) {
+            final int typeInt = event.getTypeInt();
+            switch (typeInt) {
+            case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
+                callback.onDragUpdate(Event.as(event.getNativeEvent()));
+                break;
+            case Event.ONKEYDOWN:
+                // End drag if ESC is pressed
+                int keyCode = event.getNativeEvent().getKeyCode();
+                if (keyCode == KeyCodes.KEY_ESCAPE) {
                     cancelDrag(event);
-                    break;
-                case Event.ONTOUCHEND:
-                case Event.ONMOUSEUP:
-                    callback.onDragUpdate(Event.as(event.getNativeEvent()));
-                    callback.onDrop();
-                    stopDrag();
-                    break;
-                case Event.ONCLICK:
-                    break;
-                default:
-                    break;
                 }
-            } else {
+                break;
+            case Event.ONTOUCHCANCEL:
+                cancelDrag(event);
+                break;
+            case Event.ONTOUCHEND:
+            case Event.ONMOUSEUP:
+                callback.onDragUpdate(Event.as(event.getNativeEvent()));
+                callback.onDrop();
                 stopDrag();
+                break;
+            case Event.ONCLICK:
+                break;
+            default:
+                break;
             }
-
-            // Kill events - as long as this thing is active, we don't want to
-            // let any event through.
-            event.getNativeEvent().stopPropagation();
-            event.getNativeEvent().preventDefault();
-            event.cancel();
+        } else {
+            stopDrag();
         }
 
+        // Kill events - as long as this thing is active, we don't want to
+        // let any event through.
+        event.getNativeEvent().stopPropagation();
+        event.getNativeEvent().preventDefault();
+        event.cancel();
     };
 
     /**
@@ -174,7 +171,7 @@ public class DragAndDropHandler {
                     public void onPreviewNativeEvent(NativePreviewEvent event) {
                         final int typeInt = event.getTypeInt();
                         if (typeInt == -1 && event.getNativeEvent().getType()
-                                .toLowerCase().contains("pointer")) {
+                                .toLowerCase(Locale.ROOT).contains("pointer")) {
                             /*
                              * Ignore PointerEvents since IE10 and IE11 send
                              * also MouseEvents for backwards compatibility.

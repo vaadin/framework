@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -267,7 +266,7 @@ public class GridSelectionTest extends GridBasicsTest {
         assertFalse(
                 "Unexpected NullPointerException when removing selected rows",
                 logContainsText(
-                        "Exception occured, java.lang.NullPointerException: null"));
+                        "Exception occurred, java.lang.NullPointerException: null"));
     }
 
     @Test

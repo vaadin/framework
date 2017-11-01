@@ -471,8 +471,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 } else {
                     getLogger().warning(
                             "Visibility changed for a unknown column type in Grid: "
-                                    + column.toString() + ", type "
-                                    + column.getClass());
+                                    + column + ", type " + column.getClass());
                 }
             }
         }
@@ -773,6 +772,7 @@ public class GridConnector extends AbstractHasComponentsConnector
     protected void init() {
         super.init();
 
+        Grid<JsonObject> grid = getWidget();
         // All scroll RPC calls are executed finally to avoid issues on init
         registerRpc(GridClientRpc.class, new GridClientRpc() {
             @Override
@@ -784,7 +784,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        getWidget().scrollToStart();
+                        grid.scrollToStart();
                     }
                 });
             }
@@ -794,7 +794,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        getWidget().scrollToEnd();
+                        grid.scrollToEnd();
                         // Scrolls further if details opens.
                         lazyDetailsScroller.scrollToRow(dataSource.size() - 1,
                                 ScrollDestination.END);
@@ -808,7 +808,7 @@ public class GridConnector extends AbstractHasComponentsConnector
                 Scheduler.get().scheduleFinally(new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        getWidget().scrollToRow(row, destination);
+                        grid.scrollToRow(row, destination);
                         // Scrolls a bit further if details opens.
                         lazyDetailsScroller.scrollToRow(row, destination);
                     }
@@ -817,19 +817,19 @@ public class GridConnector extends AbstractHasComponentsConnector
 
             @Override
             public void recalculateColumnWidths() {
-                getWidget().recalculateColumnWidths();
+                grid.recalculateColumnWidths();
             }
         });
 
         /* Item click events */
-        getWidget().addBodyClickHandler(itemClickHandler);
-        getWidget().addBodyDoubleClickHandler(itemClickHandler);
+        grid.addBodyClickHandler(itemClickHandler);
+        grid.addBodyDoubleClickHandler(itemClickHandler);
 
         /* Style Generators */
-        getWidget().setCellStyleGenerator(styleGenerator);
-        getWidget().setRowStyleGenerator(styleGenerator);
+        grid.setCellStyleGenerator(styleGenerator);
+        grid.setRowStyleGenerator(styleGenerator);
 
-        getWidget().addSortHandler(new SortHandler<JsonObject>() {
+        grid.addSortHandler(new SortHandler<JsonObject>() {
             @Override
             public void sort(SortEvent<JsonObject> event) {
                 List<SortOrder> order = event.getOrder();
@@ -853,19 +853,19 @@ public class GridConnector extends AbstractHasComponentsConnector
             }
         });
 
-        getWidget().setEditorHandler(editorHandler);
-        getWidget().addColumnReorderHandler(columnReorderHandler);
-        getWidget().addColumnVisibilityChangeHandler(
+        grid.setEditorHandler(editorHandler);
+        grid.addColumnReorderHandler(columnReorderHandler);
+        grid.addColumnVisibilityChangeHandler(
                 columnVisibilityChangeHandler);
-        getWidget().addColumnResizeHandler(columnResizeHandler);
+        grid.addColumnResizeHandler(columnResizeHandler);
 
         ConnectorFocusAndBlurHandler.addHandlers(this);
 
-        getWidget().setDetailsGenerator(customDetailsGenerator);
-        getLayoutManager().registerDependency(this, getWidget().getElement());
+        grid.setDetailsGenerator(customDetailsGenerator);
+        getLayoutManager().registerDependency(this, grid.getElement());
 
         // Handling row height changes
-        getWidget().addRowHeightChangedHandler(new RowHeightChangedHandler() {
+        grid.addRowHeightChangedHandler(new RowHeightChangedHandler() {
             @Override
             public void onRowHeightChanged(RowHeightChangedEvent event) {
                 getLayoutManager()
@@ -971,17 +971,18 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     private void updateHeaderFromState(GridStaticSectionState state) {
-        getWidget().setHeaderVisible(state.visible);
+        Grid<JsonObject> grid = getWidget();
+        grid.setHeaderVisible(state.visible);
 
-        while (getWidget().getHeaderRowCount() > 0) {
-            getWidget().removeHeaderRow(0);
+        while (grid.getHeaderRowCount() > 0) {
+            grid.removeHeaderRow(0);
         }
 
         for (RowState rowState : state.rows) {
-            HeaderRow row = getWidget().appendHeaderRow();
+            HeaderRow row = grid.appendHeaderRow();
 
             if (rowState.defaultRow) {
-                getWidget().setDefaultHeaderRow(row);
+                grid.setDefaultHeaderRow(row);
             }
 
             for (CellState cellState : rowState.cells) {
@@ -1036,14 +1037,15 @@ public class GridConnector extends AbstractHasComponentsConnector
     }
 
     private void updateFooterFromState(GridStaticSectionState state) {
-        getWidget().setFooterVisible(state.visible);
+        Grid<JsonObject> grid = getWidget();
+        grid.setFooterVisible(state.visible);
 
-        while (getWidget().getFooterRowCount() > 0) {
-            getWidget().removeFooterRow(0);
+        while (grid.getFooterRowCount() > 0) {
+            grid.removeFooterRow(0);
         }
 
         for (RowState rowState : state.rows) {
-            FooterRow row = getWidget().appendFooterRow();
+            FooterRow row = grid.appendFooterRow();
 
             for (CellState cellState : rowState.cells) {
                 CustomGridColumn column = columnIdToColumn

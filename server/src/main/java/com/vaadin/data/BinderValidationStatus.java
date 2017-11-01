@@ -137,10 +137,8 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * @return a list of all validation errors
      */
     public List<ValidationResult> getValidationErrors() {
-        List<ValidationResult> errors =
-                getFieldValidationErrors().stream()
-                        .map(s -> s.getResult().get())
-                        .collect(Collectors.toList());
+        List<ValidationResult> errors = getFieldValidationErrors().stream()
+                .map(s -> s.getResult().get()).collect(Collectors.toList());
         errors.addAll(getBeanValidationErrors());
         return errors;
     }
@@ -191,9 +189,9 @@ public class BinderValidationStatus<BEAN> implements Serializable {
 
     /**
      * Notifies all validation status handlers in bindings.
-     * 
+     *
      * @see #notifyBindingValidationStatusHandlers(SerializablePredicate)
-     * 
+     *
      * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers() {
@@ -205,12 +203,12 @@ public class BinderValidationStatus<BEAN> implements Serializable {
      * The filter should return {@code true} for each
      * {@link BindingValidationStatus} that should be delegated to the status
      * handler in the binding.
-     * 
+     *
      * @see #notifyBindingValidationStatusHandlers()
-     * 
+     *
      * @param filter
      *            the filter to select bindings to run status handling for
-     * 
+     *
      * @since 8.2
      */
     public void notifyBindingValidationStatusHandlers(

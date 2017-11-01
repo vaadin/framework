@@ -129,7 +129,7 @@ public class VOverlay extends Overlay {
     public static com.google.gwt.user.client.Element getOverlayContainer(
             ApplicationConnection ac) {
         String id = ac.getConfiguration().getRootPanelId();
-        id = id += "-overlays";
+        id += "-overlays";
         Element container = DOM.getElementById(id);
         if (container == null) {
             container = DOM.createDiv();

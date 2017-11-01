@@ -241,7 +241,6 @@
         <module name="DesignForExtension">
             <property name="severity" value="ignore" />
         </module>
-        <module name="FinalClass" />
         <module name="HideUtilityClassConstructor" />
         <module name="InterfaceIsType" />
         <module name="VisibilityModifier">
@@ -270,6 +269,10 @@
             <property name="format" value="System\.err\.println" />
         </module>
         
+    </module>
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml" />
     </module>
 
 </module>

@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.components;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public abstract class HasValueRequiredIndicatorTest extends MultiBrowserTest {
     public void requiredIndicatorVisible() {
         openTestURL();
         List<WebElement> layouts = findElements(By.className("vaadin-layout"));
-        assertTrue(layouts.size() > 0);
+        assertFalse(layouts.isEmpty());
         layouts.stream().forEach(this::checkRequiredIndicator);
     }
 

@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -168,8 +169,8 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
             public void sendChar(char value, Character boxedValue,
                     char[] array) {
                 rpc.sendChar(Character.toUpperCase(boxedValue.charValue()),
-                        Character.valueOf(value),
-                        new String(array).toLowerCase().toCharArray());
+                        Character.valueOf(value), new String(array)
+                                .toLowerCase(Locale.ROOT).toCharArray());
             }
 
             @Override

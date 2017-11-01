@@ -253,6 +253,9 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             Object object = instance;
             for (int i = 0; i < getMethods.size() - 1; i++) {
                 object = getMethods.get(i).invoke(object);
+                if (object == null) {
+                    return;
+                }
             }
             setMethod.invoke(object, new Object[] { value });
         } catch (final InvocationTargetException e) {

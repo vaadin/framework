@@ -44,8 +44,8 @@ public class TablePropertyValueConverterTest {
     @Test
     public void testRemovePropertyId() {
         Collection<Object> converters = table.getCurrentConverters();
-        assertTrue("Set of converters was empty at the start.",
-                converters.size() > 0);
+        assertFalse("Set of converters was empty at the start.",
+                converters.isEmpty());
 
         Object firstId = converters.iterator().next();
 
@@ -215,7 +215,7 @@ public class TablePropertyValueConverterTest {
             }
         });
         Set<Object> converters = customTable.getCurrentConverters();
-        assertTrue("Converter was not set.", converters.size() > 0);
+        assertFalse("Converter was not set.", converters.isEmpty());
     }
 
     @Test

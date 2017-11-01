@@ -69,12 +69,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
         /**
          * Called when calendar user triggers a submitting operation in calendar
-         * panel. Eg. clicking on day or hitting enter.
+         * panel. E.g. clicking on day or hitting enter.
          */
         void onSubmit();
 
         /**
-         * On eg. ESC key.
+         * On e.g. ESC key.
          */
         void onCancel();
     }
@@ -238,7 +238,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            one of the days currently visible.
      */
     private void focusDay(Date date) {
-        // Only used when calender body is present
+        // Only used when calendar body is present
         if (resolution.getCalendarField() > Resolution.MONTH
                 .getCalendarField()) {
             if (focusedDay != null) {
@@ -1632,7 +1632,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     }
 
     /**
-     * TimeSelector is a widget consisting of list boxes that modifie the Date
+     * TimeSelector is a widget consisting of list boxes that modify the Date
      * object that is given for.
      *
      */
@@ -1955,7 +1955,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     /**
      * The submit listener is called when the user selects a value from the
-     * calender either by clicking the day or selects it by keyboard.
+     * calendar either by clicking the day or selects it by keyboard.
      *
      * @param submitListener
      *            The listener to trigger

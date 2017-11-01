@@ -30,7 +30,7 @@ properly.
 The communication that Vaadin's "thin client" in browser does with the
 server side has couple of checks that it does to improve robustness and
 security. One can simulate these with Gatling as well, by e.g.
-https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala#L84[reading the XSRF preventation key into a variable] and passing the value
+https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala#L84[reading the XSRF prevention key into a variable] and passing the value
 https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala#L95[in
 each response]. However, these setting can be disabled during load
 testing to make it easier to write and maintain your application. The
@@ -43,7 +43,7 @@ separate maven profile and inject different parameters with it.
 Disabling XSRF presentation key
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The XSRF preventation can be disabled with following servlet parameter
+The XSRF prevention can be disabled with following servlet parameter
 (or similar servlet 3 style parameter). NOTE, do not leave this for
 public apps in production.
 
@@ -117,7 +117,7 @@ communication channel, WebSockets, you can do that with Gatling as well.
 Using the recorder in this case doesn't work, but handcrafting the test
 case isn't that hard once you get started. The example app has a branch
 with WebSocket test case. With WebSocket communication it might also be
-handy to disable xsrf preventation and the so called "syncid".
+handy to disable xsrf prevention and the so called "syncid".
 
 First two request are just normal http requests. The first gets the
 "host page" and also the initial state request is done with normal XHR.
@@ -161,7 +161,7 @@ message that the server sends when you connect to it. 
 
 Check out this script for
 https://github.com/mstahv/v-quiz/blob/master/src/test/scala/loadtest/WebSocketVaadinSimulation.scala[an
-example using WebSocket] communication. It also saves XSRF preventation
+example using WebSocket] communication. It also saves XSRF prevention
 key to variable, so it don't need it to be disabled from the server.
 
 [[configuring-gatling-to-the-web-app-build]]

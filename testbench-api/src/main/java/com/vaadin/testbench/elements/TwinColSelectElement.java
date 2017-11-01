@@ -62,7 +62,7 @@ public class TwinColSelectElement extends AbstractSelectElement {
             }
             deselButton.click();
         }
-        while (selectedOptions.getOptions().size() > 0) {
+        while (!selectedOptions.getOptions().isEmpty()) {
             selectedOptions.selectByIndex(0);
             deselButton.click();
         }

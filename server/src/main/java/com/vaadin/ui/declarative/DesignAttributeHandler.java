@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -58,7 +59,7 @@ public class DesignAttributeHandler implements Serializable {
         return Logger.getLogger(DesignAttributeHandler.class.getName());
     }
 
-    private static final Map<Class<?>, AttributeCacheEntry> cache = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, AttributeCacheEntry> CACHE = new ConcurrentHashMap<>();
 
     // translates string <-> object
     private static final DesignFormatter FORMATTER = new DesignFormatter();
@@ -144,7 +145,7 @@ public class DesignAttributeHandler implements Serializable {
      */
     public static Collection<String> getSupportedAttributes(Class<?> clazz) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getAttributes();
+        return CACHE.get(clazz).getAttributes();
     }
 
     /**
@@ -159,7 +160,7 @@ public class DesignAttributeHandler implements Serializable {
         if (clazz == null) {
             throw new IllegalArgumentException("The clazz can not be null");
         }
-        if (cache.containsKey(clazz)) {
+        if (CACHE.containsKey(clazz)) {
             // NO-OP
             return;
         }
@@ -183,7 +184,7 @@ public class DesignAttributeHandler implements Serializable {
                 entry.addAttribute(attribute, getter, setter);
             }
         }
-        cache.put(clazz, entry);
+        CACHE.put(clazz, entry);
     }
 
     /**
@@ -330,7 +331,7 @@ public class DesignAttributeHandler implements Serializable {
             if (builder.length() != 0) {
                 builder.append('-');
             }
-            builder.append(word.toLowerCase());
+            builder.append(word.toLowerCase(Locale.ROOT));
         }
         return builder.toString();
     }
@@ -356,13 +357,13 @@ public class DesignAttributeHandler implements Serializable {
             // written in lower case
             if (matcher.group(1).isEmpty()) {
                 matcher.appendReplacement(result,
-                        matched.toLowerCase() + matcher.group(3));
+                        matched.toLowerCase(Locale.ROOT) + matcher.group(3));
                 // otherwise the first character of the group stays uppercase,
                 // while the others are lower case
             } else {
                 matcher.appendReplacement(result,
                         matcher.group(1) + matched.substring(0, 1)
-                                + matched.substring(1).toLowerCase()
+                                + matched.substring(1).toLowerCase(Locale.ROOT)
                                 + matcher.group(3));
             }
             // in both cases the uppercase letter of the next word (or string's
@@ -412,7 +413,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findSetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getSetter(attribute);
+        return CACHE.get(clazz).getSetter(attribute);
     }
 
     /**
@@ -428,7 +429,7 @@ public class DesignAttributeHandler implements Serializable {
     private static Method findGetterForAttribute(Class<?> clazz,
             String attribute) {
         resolveSupportedAttributes(clazz);
-        return cache.get(clazz).getGetter(attribute);
+        return CACHE.get(clazz).getGetter(attribute);
     }
 
     /**

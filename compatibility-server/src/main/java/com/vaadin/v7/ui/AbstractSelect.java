@@ -490,8 +490,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                     }
                 }
 
-                if (!isNullSelectionAllowed()
-                        && acceptedSelections.size() < 1) {
+                if (!isNullSelectionAllowed() && acceptedSelections.isEmpty()) {
                     // empty selection not allowed, keep old value
                     markAsDirty();
                     return;
@@ -1747,7 +1746,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of item set change event.
      */
     private static class ItemSetChangeEvent extends EventObject
-            implements Serializable, Container.ItemSetChangeEvent {
+            implements Container.ItemSetChangeEvent {
 
         private ItemSetChangeEvent(Container source) {
             super(source);
@@ -1769,7 +1768,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * Implementation of property set change event.
      */
     private static class PropertySetChangeEvent extends EventObject
-            implements Container.PropertySetChangeEvent, Serializable {
+            implements Container.PropertySetChangeEvent {
 
         private PropertySetChangeEvent(Container source) {
             super(source);
@@ -1939,8 +1938,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 if (pids != null) {
                     for (Object id : pids) {
                         Property<?> p = i.getItemProperty(id);
-                        if (p != null
-                                && p instanceof Property.ValueChangeNotifier) {
+                        if (p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
                                     .addValueChangeListener(
                                             getCaptionChangeListener());
@@ -1953,7 +1951,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             case PROPERTY:
                 final Property<?> p = getContainerProperty(itemId,
                         getItemCaptionPropertyId());
-                if (p != null && p instanceof Property.ValueChangeNotifier) {
+                if (p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
                             .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
@@ -1964,7 +1962,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             if (getItemIconPropertyId() != null) {
                 final Property p = getContainerProperty(itemId,
                         getItemIconPropertyId());
-                if (p != null && p instanceof Property.ValueChangeNotifier) {
+                if (p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
                             .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);

@@ -30,7 +30,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.HasChildMeasurementHintConnector;
-import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
@@ -52,7 +51,7 @@ import com.vaadin.v7.shared.ui.table.TableState;
 
 @Connect(com.vaadin.v7.ui.Table.class)
 public class TableConnector extends AbstractFieldConnector
-        implements HasComponentsConnector, ConnectorHierarchyChangeHandler,
+        implements ConnectorHierarchyChangeHandler,
         Paintable, DirectionalManagedLayout, PostLayoutListener,
         HasChildMeasurementHintConnector {
 
@@ -334,7 +333,7 @@ public class TableConnector extends AbstractFieldConnector
                     // in selection and exists with same index
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().focusedRow.getKey()));
-                } else if (getWidget().selectedRowKeys.size() > 0) {
+                } else if (!getWidget().selectedRowKeys.isEmpty()) {
                     // try to focus any row in selection
                     getWidget().setRowFocus(getWidget().getRenderedRowByKey(
                             getWidget().selectedRowKeys.iterator().next()));

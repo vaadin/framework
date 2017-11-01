@@ -30,9 +30,6 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.ServerRpcQueue;
-import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -71,12 +68,7 @@ public class JavaScriptConnectorHelper {
     private int processedResponseId = -1;
 
     public void init() {
-        connector.addStateChangeHandler(new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                processStateChanges();
-            }
-        });
+        connector.addStateChangeHandler(event -> processStateChanges());
     }
 
     /**
@@ -261,13 +253,8 @@ public class JavaScriptConnectorHelper {
         if (listener == null) {
             LayoutManager layoutManager = LayoutManager
                     .get(connector.getConnection());
-            listener = new ElementResizeListener() {
-                @Override
-                public void onElementResize(ElementResizeEvent e) {
-                    invokeElementResizeCallback(e.getElement(),
-                            callbackFunction);
-                }
-            };
+            listener = event -> invokeElementResizeCallback(event.getElement(),
+                    callbackFunction);
             layoutManager.addElementResizeListener(element, listener);
             elementListeners.put(callbackFunction, listener);
         }
@@ -396,7 +383,7 @@ public class JavaScriptConnectorHelper {
             JavaScriptObject input)
     /*-{
         // Copy all fields to existing state object
-        for(var key in input) {
+        for (var key in input) {
             if (input.hasOwnProperty(key)) {
                 state[key] = input[key];
             }
@@ -438,7 +425,7 @@ public class JavaScriptConnectorHelper {
         if (!targets) {
             return;
         }
-        for(var i = 0; i < targets.length; i++) {
+        for (var i = 0; i < targets.length; i++) {
             var target = targets[i];
             target[methodName].apply(target, parameters);
         }

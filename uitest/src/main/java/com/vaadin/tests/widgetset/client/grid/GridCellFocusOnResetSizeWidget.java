@@ -18,8 +18,6 @@ package com.vaadin.tests.widgetset.client.grid;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
@@ -110,13 +108,7 @@ public class GridCellFocusOnResetSizeWidget
         final MyDataSource dataSource = new MyDataSource();
         grid.setDataSource(dataSource);
         Button widget = new Button("Change Container Size");
-        widget.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                dataSource.changeSize();
-            }
-        });
+        widget.addClickHandler(event -> dataSource.changeSize());
         addNorth(grid, 400);
         addNorth(widget, 50);
     }

@@ -84,8 +84,7 @@ public class RadioButtonGroupTestUI
         LinkedHashMap<String, ItemCaptionGenerator<Object>> options = new LinkedHashMap<>();
         options.put("Null Caption Generator", item -> null);
         options.put("Default Caption Generator", item -> item.toString());
-        options.put("Custom Caption Generator",
-                item -> item.toString() + " Caption");
+        options.put("Custom Caption Generator", item -> item + " Caption");
 
         createSelectAction("Item Caption Generator", "Item Caption Generator",
                 options, "None", (radioButtonGroup, captionGenerator, data) -> {
@@ -99,7 +98,7 @@ public class RadioButtonGroupTestUI
         options.put("Null Description Generator", item -> null);
         options.put("Default Description Generator", item -> item.toString());
         options.put("Custom Description Generator",
-                item -> item.toString() + " Description");
+                item -> item + " Description");
 
         createSelectAction("Item Description Generator",
                 "Item Description Generator", options, "None",
@@ -120,7 +119,7 @@ public class RadioButtonGroupTestUI
     protected void createListenerMenu() {
         createListenerAction("Selection listener", "Listeners",
                 c -> c.addSelectionListener(
-                        e -> log("Selected: " + e.getSelectedItem())));
+                        event -> log("Selected: " + event.getSelectedItem())));
     }
 
     private int getIndex(Object item) {

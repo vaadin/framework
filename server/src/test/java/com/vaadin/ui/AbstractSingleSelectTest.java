@@ -84,8 +84,10 @@ public class AbstractSingleSelectTest {
 
         selectionChanges = new ArrayList<>();
         oldSelections = new ArrayList<>();
-        listing.addSelectionListener(e -> selectionChanges.add(e.getValue()));
-        listing.addSelectionListener(e -> oldSelections.add(e.getOldValue()));
+        listing.addSelectionListener(
+                event -> selectionChanges.add(event.getValue()));
+        listing.addSelectionListener(
+                event -> oldSelections.add(event.getOldValue()));
     }
 
     public static final Person PERSON_C = new Person("c", 3);
@@ -297,7 +299,7 @@ public class AbstractSingleSelectTest {
     }
 
     private void verifyValueChanges() {
-        if (oldSelections.size() > 0) {
+        if (!oldSelections.isEmpty()) {
             assertEquals(null, oldSelections.get(0));
             assertEquals(selectionChanges.size(), oldSelections.size());
             for (int i = 0; i < oldSelections.size() - 1; i++) {

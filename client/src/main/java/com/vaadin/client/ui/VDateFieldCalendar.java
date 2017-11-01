@@ -15,6 +15,10 @@
  */
 package com.vaadin.client.ui;
 
+import static com.vaadin.shared.ui.datefield.DateResolution.DAY;
+import static com.vaadin.shared.ui.datefield.DateResolution.MONTH;
+import static com.vaadin.shared.ui.datefield.DateResolution.YEAR;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -31,7 +35,7 @@ public class VDateFieldCalendar
         extends VAbstractDateFieldCalendar<VDateCalendarPanel, DateResolution> {
 
     public VDateFieldCalendar() {
-        super(GWT.create(VDateCalendarPanel.class), DateResolution.YEAR);
+        super(GWT.create(VDateCalendarPanel.class), YEAR);
     }
 
     /**
@@ -50,32 +54,26 @@ public class VDateFieldCalendar
 
         Date date2 = calendarPanel.getDate();
         Date currentDate = getCurrentDate();
+        DateResolution resolution = getCurrentResolution();
         if (currentDate == null || date2.getTime() != currentDate.getTime()) {
             setCurrentDate((Date) date2.clone());
-            getClient().updateVariable(getId(),
-                    getResolutionVariable(DateResolution.YEAR),
+            bufferedResolutions.put(YEAR,
                     // Java Date uses the year aligned to 1900 (no to zero).
                     // So we should add 1900 to get a correct year aligned to 0.
-                    date2.getYear() + 1900, false);
-            if (getCurrentResolution().compareTo(DateResolution.YEAR) < 0) {
-                getClient().updateVariable(getId(),
-                        getResolutionVariable(DateResolution.MONTH),
-                        date2.getMonth() + 1, false);
-                if (getCurrentResolution()
-                        .compareTo(DateResolution.MONTH) < 0) {
-                    getClient().updateVariable(getId(),
-                            getResolutionVariable(DateResolution.DAY),
-                            date2.getDate(), false);
+                    date2.getYear() + 1900);
+            if (resolution.compareTo(YEAR) < 0) {
+                bufferedResolutions.put(MONTH, date2.getMonth() + 1);
+                if (resolution.compareTo(MONTH) < 0) {
+                    bufferedResolutions.put(DAY, date2.getDate());
                 }
             }
-            getClient().sendPendingVariableChanges();
+            sendBufferedValues();
         }
     }
 
     @Override
     public void setCurrentResolution(DateResolution resolution) {
-        super.setCurrentResolution(
-                resolution == null ? DateResolution.YEAR : resolution);
+        super.setCurrentResolution(resolution == null ? YEAR : resolution);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class VDateFieldCalendar
 
     @Override
     public boolean isYear(DateResolution resolution) {
-        return DateResolution.YEAR.equals(resolution);
+        return YEAR.equals(resolution);
     }
 
     @Override

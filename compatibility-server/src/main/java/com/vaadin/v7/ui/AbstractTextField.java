@@ -73,7 +73,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
 
     private TextChangeEventMode textChangeEventMode = TextChangeEventMode.LAZY;
 
-    private final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
+    private static final int DEFAULT_TEXTCHANGE_TIMEOUT = 400;
 
     private int textChangeEventTimeout = DEFAULT_TEXTCHANGE_TIMEOUT;
 
@@ -442,9 +442,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
                 lastKnownTextContent = getNullRepresentation();
                 textChangeEventPending = true;
             } else if (newValue != null
-                    && !newValue.toString().equals(lastKnownTextContent)) {
+                    && !newValue.equals(lastKnownTextContent)) {
                 // Value was changed to something else than null representation
-                lastKnownTextContent = newValue.toString();
+                lastKnownTextContent = newValue;
                 textChangeEventPending = true;
             }
             firePendingTextChangeEvent();
@@ -652,7 +652,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * @since 6.4
      */
     public void selectAll() {
-        String text = getValue() == null ? "" : getValue().toString();
+        String text = getValue() == null ? "" : getValue();
         setSelectionRange(0, text.length());
     }
 
@@ -787,8 +787,9 @@ public abstract class AbstractTextField extends AbstractField<String> implements
     protected Collection<String> getCustomAttributes() {
         Collection<String> customAttributes = super.getCustomAttributes();
         customAttributes.add("maxlength");
-        customAttributes.add("max-length"); // to prevent this appearing in
-                                            // output
+
+        // prevent this from appearing in output
+        customAttributes.add("max-length");
         customAttributes.add("cursor-position");
         return customAttributes;
     }

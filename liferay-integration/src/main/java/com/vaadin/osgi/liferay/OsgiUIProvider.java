@@ -72,15 +72,11 @@ public class OsgiUIProvider extends UIProvider {
     public UI createInstance(UICreateEvent event) {
         if (prototype) {
             UI ui = serviceObjects.getService();
-            ui.addDetachListener(e -> {
-                serviceObjects.ungetService(ui);
-            });
+            ui.addDetachListener(event2 -> serviceObjects.ungetService(ui));
             return ui;
         }
-        logService.ifPresent(log -> {
-            log.log(LogService.LOG_WARNING,
-                    "UI services should have a prototype scope! Creating UI instance using the default constructor!");
-        });
+        logService.ifPresent(log -> log.log(LogService.LOG_WARNING,
+                "UI services should have a prototype scope! Creating UI instance using the default constructor!"));
         return super.createInstance(event);
     }
 

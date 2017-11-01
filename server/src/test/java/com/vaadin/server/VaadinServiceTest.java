@@ -158,9 +158,8 @@ public class VaadinServiceTest {
 
         MockVaadinSession session = new MockVaadinSession(service);
         session.lock();
-        service.accessSession(session, () -> {
-            CurrentInstance.set(String.class, "Set in task");
-        });
+        service.accessSession(session,
+                () -> CurrentInstance.set(String.class, "Set in task"));
 
         CurrentInstance.set(String.class, "Original value");
         service.runPendingAccessTasks(session);

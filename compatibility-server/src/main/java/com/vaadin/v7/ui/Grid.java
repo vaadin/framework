@@ -1131,7 +1131,7 @@ public class Grid extends AbstractComponent
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
     @Deprecated
-    public interface SelectionModel extends Serializable, Extension {
+    public interface SelectionModel extends Extension {
 
         /**
          * Interface implemented by selection models which support disabling
@@ -2846,7 +2846,7 @@ public class Grid extends AbstractComponent
             protected void readDesign(Element cellElement,
                     DesignContext designContext) {
                 if (!cellElement.hasAttr("plain-text")) {
-                    if (cellElement.children().size() > 0
+                    if (!cellElement.children().isEmpty()
                             && cellElement.child(0).tagName().contains("-")) {
                         setComponent(
                                 designContext.readDesign(cellElement.child(0)));
@@ -3124,7 +3124,7 @@ public class Grid extends AbstractComponent
          */
         protected void readDesign(Element tableSectionElement,
                 DesignContext designContext) throws DesignException {
-            while (rows.size() > 0) {
+            while (!rows.isEmpty()) {
                 removeRow(0);
             }
 
@@ -5265,13 +5265,11 @@ public class Grid extends AbstractComponent
             addColumnProperty(propertyId, String.class, "");
         } else {
             if (columns.containsKey(propertyId)) {
-                throw new IllegalStateException(
-                        "A column for property id '" + propertyId.toString()
-                                + "' already exists in this grid");
+                throw new IllegalStateException("A column for property id '"
+                        + propertyId + "' already exists in this grid");
             } else {
-                throw new IllegalStateException(
-                        "Property id '" + propertyId.toString()
-                                + "' does not exist in the container");
+                throw new IllegalStateException("Property id '" + propertyId
+                        + "' does not exist in the container");
             }
         }
 
@@ -7506,7 +7504,7 @@ public class Grid extends AbstractComponent
                     "selection-mode", attrs, SelectionMode.class));
         }
 
-        if (design.children().size() > 0) {
+        if (!design.children().isEmpty()) {
             if (design.children().size() > 1
                     || !design.child(0).tagName().equals("table")) {
                 throw new DesignException(

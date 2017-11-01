@@ -24,7 +24,7 @@ public class TreeGridDragAndDrop extends AbstractTestUIWithLog {
                 .setId("string");
         grid.addColumn(HierarchicalTestBean::getDepth).setCaption("Depth")
                 .setId("depth").setDescriptionGenerator(
-                t -> "Hierarchy depth: " + t.getDepth());
+                        t -> "Hierarchy depth: " + t.getDepth());
         grid.addColumn(HierarchicalTestBean::getIndex)
                 .setCaption("Index on this depth").setId("index");
         grid.setHierarchyColumn("string");
@@ -37,11 +37,9 @@ public class TreeGridDragAndDrop extends AbstractTestUIWithLog {
         TreeGridDropTarget<HierarchicalTestBean> dropTarget = new TreeGridDropTarget<>(
                 grid, DropMode.ON_TOP_OR_BETWEEN);
 
-        dropTarget.addTreeGridDropListener(event -> {
-            log("depth=" + event.getDropTargetRowDepth().orElse(null)
-                    + ", collapsed=" + event.isDropTargetRowCollapsed()
-                    .orElse(null));
-        });
+        dropTarget.addTreeGridDropListener(event -> log("depth="
+                + event.getDropTargetRowDepth().orElse(null) + ", collapsed="
+                + event.isDropTargetRowCollapsed().orElse(null)));
 
         addComponent(grid);
     }

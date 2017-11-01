@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Queue;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
@@ -107,13 +106,7 @@ public class VMenuBar extends SimpleFocusablePanel
     public boolean enabled = true;
 
     private VLazyExecutor iconLoadedExecutioner = new VLazyExecutor(100,
-            new ScheduledCommand() {
-
-                @Override
-                public void execute() {
-                    iLayout(true);
-                }
-            });
+            () -> iLayout(true));
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean openRootOnHover;
@@ -220,7 +213,7 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public String buildItemHTML(UIDL item) {
         // Construct html from the text and the optional icon
-        StringBuffer itemHTML = new StringBuffer();
+        StringBuilder itemHTML = new StringBuilder();
         if (item.hasAttribute("separator")) {
             itemHTML.append("<span>---</span>");
         } else {
@@ -512,7 +505,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * root menus on mouse hover.
      */
     private static class LazyCloser extends Timer {
-        static LazyCloser INSTANCE;
+        static LazyCloser instance;
         private VMenuBar activeRoot;
 
         @Override
@@ -524,27 +517,27 @@ public class VMenuBar extends SimpleFocusablePanel
         }
 
         public static void cancelClosing() {
-            if (INSTANCE != null) {
-                INSTANCE.cancel();
+            if (instance != null) {
+                instance.cancel();
             }
         }
 
         public static void prepare(VMenuBar vMenuBar) {
-            if (INSTANCE == null) {
-                INSTANCE = new LazyCloser();
+            if (instance == null) {
+                instance = new LazyCloser();
             }
-            if (INSTANCE.activeRoot == vMenuBar) {
-                INSTANCE.cancel();
-            } else if (INSTANCE.activeRoot != null) {
-                INSTANCE.cancel();
-                INSTANCE.run();
+            if (instance.activeRoot == vMenuBar) {
+                instance.cancel();
+            } else if (instance.activeRoot != null) {
+                instance.cancel();
+                instance.run();
             }
-            INSTANCE.activeRoot = vMenuBar;
+            instance.activeRoot = vMenuBar;
         }
 
         public static void schedule() {
-            if (INSTANCE != null && INSTANCE.activeRoot != null) {
-                INSTANCE.schedule(750);
+            if (instance != null && instance.activeRoot != null) {
+                instance.schedule(750);
             }
         }
 
@@ -697,8 +690,7 @@ public class VMenuBar extends SimpleFocusablePanel
      * @param item
      */
     public void hideChildMenu(CustomMenuItem item) {
-        if (visibleChildMenu != null
-                && !(visibleChildMenu == item.getSubMenu())) {
+        if (visibleChildMenu != null && visibleChildMenu != item.getSubMenu()) {
             popup.hide();
         }
     }
@@ -1116,7 +1108,7 @@ public class VMenuBar extends SimpleFocusablePanel
         // Only collapse if there is more than one item in the root menu and the
         // menu has an explicit size
         if ((getItems().size() > 1 || (collapsedRootItems != null
-                && collapsedRootItems.getItems().size() > 0))
+                && !collapsedRootItems.getItems().isEmpty()))
                 && getElement().getStyle().getProperty("width") != null
                 && moreItem != null) {
 
@@ -1144,7 +1136,7 @@ public class VMenuBar extends SimpleFocusablePanel
                 }
                 int widthReduced = 0;
 
-                while (widthReduced < widthNeeded && getItems().size() > 0) {
+                while (widthReduced < widthNeeded && !getItems().isEmpty()) {
                     // Move last root menu item to collapsed menu
                     CustomMenuItem collapse = getItems()
                             .get(getItems().size() - 1);
@@ -1152,21 +1144,21 @@ public class VMenuBar extends SimpleFocusablePanel
                     removeItem(collapse);
                     collapsedRootItems.addItem(collapse, 0);
                 }
-            } else if (collapsedRootItems.getItems().size() > 0) {
+            } else if (!collapsedRootItems.getItems().isEmpty()) {
                 // Space available for items: expand first items from collapsed
                 // menu
                 int widthAvailable = diff + moreItemWidth;
                 int widthGrowth = 0;
 
                 while (widthAvailable > widthGrowth
-                        && collapsedRootItems.getItems().size() > 0) {
+                        && !collapsedRootItems.getItems().isEmpty()) {
                     // Move first item from collapsed menu to the root menu
                     CustomMenuItem expand = collapsedRootItems.getItems()
                             .get(0);
                     collapsedRootItems.removeItem(expand);
                     addItem(expand);
                     widthGrowth += expand.getOffsetWidth();
-                    if (collapsedRootItems.getItems().size() > 0) {
+                    if (!collapsedRootItems.getItems().isEmpty()) {
                         widthAvailable -= moreItemWidth;
                     }
                     if (widthGrowth > widthAvailable) {
@@ -1177,7 +1169,7 @@ public class VMenuBar extends SimpleFocusablePanel
                     }
                 }
             }
-            if (collapsedRootItems.getItems().size() > 0) {
+            if (!collapsedRootItems.getItems().isEmpty()) {
                 addItem(moreItem);
             }
         }
@@ -1595,7 +1587,7 @@ public class VMenuBar extends SimpleFocusablePanel
 
     }
 
-    private final String SUBPART_PREFIX = "item";
+    private static final String SUBPART_PREFIX = "item";
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
@@ -1650,12 +1642,10 @@ public class VMenuBar extends SimpleFocusablePanel
     private native String getText(Element element)
     /*-{
         var n = element.childNodes.length;
-        if(n > 0){
+        if (n > 0) {
             return element.childNodes[n - 1].nodeValue;
         }
-        else{
-            return "";
-        }
+        return "";
     }-*/;
 
     private Element getLastChildElement(CustomMenuItem item) {

@@ -534,7 +534,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @since 7.7.5
      */
     @Override

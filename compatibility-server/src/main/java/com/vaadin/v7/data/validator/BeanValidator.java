@@ -45,7 +45,8 @@ import com.vaadin.v7.data.Validator;
  * @author Petri Hakala
  * @author Henri Sara
  *
- * @deprecated See {@link BeanValidationBinder} and {@link com.vaadin.data.validator.BeanValidator}
+ * @deprecated See {@link BeanValidationBinder} and
+ *             {@link com.vaadin.data.validator.BeanValidator}
  */
 @Deprecated
 public class BeanValidator implements Validator {
@@ -117,7 +118,7 @@ public class BeanValidator implements Validator {
     public void validate(final Object value) throws InvalidValueException {
         Set<?> violations = getJavaxBeanValidator().validateValue(beanClass,
                 propertyName, value);
-        if (violations.size() > 0) {
+        if (!violations.isEmpty()) {
             InvalidValueException[] causes = new InvalidValueException[violations
                     .size()];
             int i = 0;

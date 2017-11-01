@@ -145,7 +145,7 @@ public abstract class AbstractFieldTest<T extends AbstractField<V>, V>
                         Locale.ENGLISH);
                 value = format.format(date);
             } else {
-                value = "'" + o.toString() + "'";
+                value = "'" + o + "'";
             }
         }
 

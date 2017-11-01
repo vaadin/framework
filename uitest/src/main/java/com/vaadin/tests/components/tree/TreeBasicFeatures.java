@@ -54,11 +54,12 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         tree.setDataProvider(inMemoryDataProvider);
 
         tree.addSelectionListener(
-                e -> log("SelectionEvent: " + e.getAllSelectedItems()));
+                event -> log("SelectionEvent: " + event.getAllSelectedItems()));
 
-        tree.addExpandListener(e -> log("ExpandEvent: " + e.getExpandedItem()));
+        tree.addExpandListener(
+                event -> log("ExpandEvent: " + event.getExpandedItem()));
         tree.addCollapseListener(
-                e -> log("ExpandEvent: " + e.getCollapsedItem()));
+                event -> log("ExpandEvent: " + event.getCollapsedItem()));
 
         layout.addComponents(createMenu(), tree);
 
@@ -67,7 +68,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
     private Component createMenu() {
         MenuBar menu = new MenuBar();
-        menu.setErrorHandler(error -> log("Exception occured, "
+        menu.setErrorHandler(error -> log("Exception occurred, "
                 + error.getThrowable().getClass().getName() + ": "
                 + error.getThrowable().getMessage()));
         MenuItem componentMenu = menu.addItem("Component", null);
@@ -87,7 +88,7 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
 
                 if (selectedItem.isChecked()) {
                     registration = tree.addItemClickListener(
-                            e -> log("ItemClick: " + e.getItem()));
+                            event -> log("ItemClick: " + event.getItem()));
                 }
             }
 
@@ -111,7 +112,8 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
         componentMenu
                 .addItem("Style Generator",
                         menuItem -> tree.setStyleGenerator(menuItem.isChecked()
-                                ? t -> "level" + t.getDepth() : t -> null))
+                                ? t -> "level" + t.getDepth()
+                                : t -> null))
                 .setCheckable(true);
 
         return menu;
@@ -148,12 +150,10 @@ public class TreeBasicFeatures extends AbstractTestUIWithLog {
     }
 
     private void createDescriptionMenu(MenuItem descriptionMenu) {
-        descriptionMenu.addItem("No Description", menu -> {
-            tree.setItemDescriptionGenerator(t -> null);
-        });
-        descriptionMenu.addItem("String.valueOf", menu -> {
-            tree.setItemDescriptionGenerator(String::valueOf);
-        });
+        descriptionMenu.addItem("No Description",
+                menu -> tree.setItemDescriptionGenerator(t -> null));
+        descriptionMenu.addItem("String.valueOf",
+                menu -> tree.setItemDescriptionGenerator(String::valueOf));
     }
 
     private void createContentModeMenu(MenuItem contentModeMenu) {

@@ -32,10 +32,8 @@ public class FrontendLaterLoadedResourceUI extends AbstractTestUIWithLog {
     @Override
     protected void setup(VaadinRequest request) {
         Button b = new MyButton();
-        b.addClickListener(e -> {
-            getPage().getJavaScript()
-                    .execute("document.body.innerHTML=window.jsFile;\n");
-        });
+        b.addClickListener(event -> getPage().getJavaScript()
+                .execute("document.body.innerHTML=window.jsFile;\n"));
         addComponent(b);
     }
 

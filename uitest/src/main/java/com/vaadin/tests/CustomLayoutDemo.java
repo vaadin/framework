@@ -126,7 +126,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
     public void loginClicked() {
         username.setVisible(false);
         loginPwd.setVisible(false);
-        if (username.getValue().toString().length() < 1) {
+        if (username.getValue().length() < 1) {
             username.setValue("Anonymous");
         }
         mainLayout.replaceComponent(loginButton,
@@ -153,7 +153,7 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
      */
     @Override
     public void componentEvent(Event event) {
-        // Check if event occured at fsTree component
+        // Check if event occurred at fsTree component
         if (event.getSource() == menu) {
             // Check if event is about changing value
             if (event.getClass() == Field.ValueChangeEvent.class) {

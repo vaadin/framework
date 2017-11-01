@@ -1,16 +1,15 @@
 package com.vaadin.tests.util;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import com.vaadin.v7.data.util.BeanItemContainer;
 
 @SuppressWarnings("serial")
-public class PersonContainer extends BeanItemContainer<Person>
-        implements Serializable {
+public class PersonContainer extends BeanItemContainer<Person> {
 
     /**
      * Natural property order for Person bean. Used in tables and forms.
@@ -56,8 +55,8 @@ public class PersonContainer extends BeanItemContainer<Person>
             p.setFirstName(TestDataGenerator.getFirstName(r));
             p.setLastName(TestDataGenerator.getLastName(r));
             p.getAddress().setCity(TestDataGenerator.getCity(r));
-            p.setEmail(p.getFirstName().toLowerCase() + "."
-                    + p.getLastName().toLowerCase() + "@vaadin.com");
+            p.setEmail(p.getFirstName().toLowerCase(Locale.ROOT) + "."
+                    + p.getLastName().toLowerCase(Locale.ROOT) + "@vaadin.com");
             p.setPhoneNumber(TestDataGenerator.getPhoneNumber(r));
 
             p.getAddress().setPostalCode(TestDataGenerator.getPostalCode(r));

@@ -622,7 +622,7 @@ public class HierarchicalContainer extends IndexedContainer
                 }
             }
         }
-        // remove the root of subtree if children where succesfully removed
+        // remove the root of subtree if children where successfully removed
         if (success) {
             success = container.removeItem(itemId);
         }

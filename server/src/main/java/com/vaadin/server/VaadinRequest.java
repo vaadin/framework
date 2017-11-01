@@ -52,7 +52,7 @@ public interface VaadinRequest extends Serializable {
      *
      * @param parameter
      *            the name of the parameter
-     * @return The paramter value, or <code>null</code> if no parameter with the
+     * @return The parameter value, or {@code null} if no parameter with the
      *         given name is present
      */
     public String getParameter(String parameter);

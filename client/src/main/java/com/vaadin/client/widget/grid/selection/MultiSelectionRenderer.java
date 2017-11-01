@@ -487,30 +487,27 @@ public class MultiSelectionRenderer<T>
         /** The registration info for {@link #scrollPreviewHandler} */
         private HandlerRegistration handlerRegistration;
 
-        private final NativePreviewHandler scrollPreviewHandler = new NativePreviewHandler() {
-            @Override
-            public void onPreviewNativeEvent(final NativePreviewEvent event) {
-                if (autoScroller == null) {
-                    stop();
-                    return;
-                }
+        private final NativePreviewHandler scrollPreviewHandler = event -> {
+            if (autoScroller == null) {
+                stop();
+                return;
+            }
 
-                final NativeEvent nativeEvent = event.getNativeEvent();
-                int pageY = 0;
-                int pageX = 0;
-                switch (event.getTypeInt()) {
-                case Event.ONMOUSEMOVE:
-                case Event.ONTOUCHMOVE:
-                    pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
-                    pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
-                    autoScroller.updatePointerCoords(pageX, pageY);
-                    break;
-                case Event.ONMOUSEUP:
-                case Event.ONTOUCHEND:
-                case Event.ONTOUCHCANCEL:
-                    stop();
-                    break;
-                }
+            final NativeEvent nativeEvent = event.getNativeEvent();
+            int pageY = 0;
+            int pageX = 0;
+            switch (event.getTypeInt()) {
+            case Event.ONMOUSEMOVE:
+            case Event.ONTOUCHMOVE:
+                pageY = WidgetUtil.getTouchOrMouseClientY(nativeEvent);
+                pageX = WidgetUtil.getTouchOrMouseClientX(nativeEvent);
+                autoScroller.updatePointerCoords(pageX, pageY);
+                break;
+            case Event.ONMOUSEUP:
+            case Event.ONTOUCHEND:
+            case Event.ONTOUCHCANCEL:
+                stop();
+                break;
             }
         };
 
@@ -604,6 +601,9 @@ public class MultiSelectionRenderer<T>
 
         CheckBoxEventHandler handler = new CheckBoxEventHandler(checkBox);
 
+        // label of checkbox should only be visible for assistive devices
+        checkBox.addStyleName("v-assistive-device-only-label");
+
         // Sink events
         checkBox.sinkBitlessEvent(BrowserEvents.MOUSEDOWN);
         checkBox.sinkBitlessEvent(BrowserEvents.TOUCHSTART);
@@ -623,7 +623,16 @@ public class MultiSelectionRenderer<T>
     public void render(final RendererCellReference cell, final Boolean data,
             CheckBox checkBox) {
         checkBox.setValue(data, false);
+        // this should be a temp fix.
+        checkBox.setText("Selects row number " + getDOMRowIndex(cell) + ".");
         checkBox.setEnabled(grid.isEnabled() && !grid.isEditorActive());
+    }
+
+    private int getDOMRowIndex(RendererCellReference cell){
+        // getRowIndex starts with zero, that's why we add an additional 1.
+        // getDOMRowIndex should include getHeaderRows as well, this number
+        // should be equals to aria-rowindex.
+        return cell.getGrid().getHeaderRowCount() + cell.getRowIndex() + 1;
     }
 
     @Override

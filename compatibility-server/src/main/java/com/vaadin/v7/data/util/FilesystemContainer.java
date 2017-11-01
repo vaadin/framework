@@ -676,7 +676,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          */
         @Override
         public boolean equals(Object obj) {
-            if (obj == null || !(obj instanceof FileItem)) {
+            if (!(obj instanceof FileItem)) {
                 return false;
             }
             final FileItem fi = (FileItem) obj;

@@ -64,7 +64,7 @@ public class ScrollCursor extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                position = textArea.getValue().toString().length();
+                position = textArea.getValue().length();
             }
         });
 

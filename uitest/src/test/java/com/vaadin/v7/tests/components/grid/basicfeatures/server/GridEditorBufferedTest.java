@@ -174,7 +174,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
     private void makeInvalidEdition() {
         selectMenuPath(EDIT_ITEM_5);
         assertFalse(logContainsText(
-                "Exception occured, java.lang.IllegalStateException"));
+                "Exception occurred, java.lang.IllegalStateException"));
 
         GridEditorElement editor = getGridElement().getEditor();
 
@@ -316,7 +316,7 @@ public class GridEditorBufferedTest extends GridEditorTest {
 
         selectMenuPath(EDIT_ITEM_100);
         boolean thrown = logContainsText(
-                "Exception occured, java.lang.IllegalStateException");
+                "Exception occurred, java.lang.IllegalStateException");
         assertTrue("IllegalStateException thrown", thrown);
 
         assertEditorOpen();

@@ -48,7 +48,8 @@ public abstract class AbstractLocalDateField
     /**
      * Constructs an empty <code>AbstractLocalDateField</code> with caption.
      *
-     * @param caption the caption of the datefield.
+     * @param caption
+     *            the caption of the datefield.
      */
     public AbstractLocalDateField(String caption) {
         super(caption, DateResolution.DAY);
@@ -58,8 +59,10 @@ public abstract class AbstractLocalDateField
      * Constructs a new <code>AbstractLocalDateField</code> with the given
      * caption and initial text contents.
      *
-     * @param caption the caption <code>String</code> for the editor.
-     * @param value   the LocalDate value.
+     * @param caption
+     *            the caption <code>String</code> for the editor.
+     * @param value
+     *            the LocalDate value.
      */
     public AbstractLocalDateField(String caption, LocalDate value) {
         super(caption, value, DateResolution.DAY);
@@ -72,15 +75,15 @@ public abstract class AbstractLocalDateField
             value = LocalDate.of(1, 1, 1);
         }
         switch (resolution) {
-            case DAY:
-                return value.getDayOfMonth();
-            case MONTH:
-                return value.getMonthValue();
-            case YEAR:
-                return value.getYear();
-            default:
-                assert false : "Unexpected resolution argument " + resolution;
-                return -1;
+        case DAY:
+            return value.getDayOfMonth();
+        case MONTH:
+            return value.getMonthValue();
+        case YEAR:
+            return value.getYear();
+        default:
+            assert false : "Unexpected resolution argument " + resolution;
+            return -1;
         }
     }
 
@@ -141,8 +144,11 @@ public abstract class AbstractLocalDateField
 
     @Override
     protected String formatDate(LocalDate value) {
-        if (value == null) return "";
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+        if (value == null) {
+            return "";
+        }
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.SHORT);
         Locale locale = getLocale();
         if (locale != null) {
             dateTimeFormatter = dateTimeFormatter.withLocale(locale);

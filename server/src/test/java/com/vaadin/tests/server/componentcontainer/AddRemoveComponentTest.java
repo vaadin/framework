@@ -1,7 +1,7 @@
 package com.vaadin.tests.server.componentcontainer;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -25,7 +25,7 @@ public class AddRemoveComponentTest {
         List<Class<? extends ComponentContainer>> containerClasses = VaadinClasses
                 .getComponentContainersSupportingAddRemoveComponent();
 
-        assertTrue(containerClasses.size() > 0);
+        assertFalse(containerClasses.isEmpty());
 
         // No default constructor, special case
         containerClasses.remove(CustomLayout.class);
