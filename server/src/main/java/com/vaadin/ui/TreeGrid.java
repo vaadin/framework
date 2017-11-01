@@ -398,6 +398,30 @@ public class TreeGrid<T> extends Grid<T>
         });
     }
 
+    public void collapseRecursively(Collection<T> items, int depth) {
+        collapseRecursively(items.stream(), depth);
+    }
+
+    public void collapseRecursively(Stream<T> items, int depth) {
+        if (depth < 0) {
+            return;
+        }
+
+        HierarchicalDataCommunicator<T> communicator = getDataCommunicator();
+        items.forEach(item -> {
+            if (communicator.hasChildren(item)) {
+                collapseRecursively(
+                        getDataProvider().fetchChildren(
+                                new HierarchicalQuery<>(null, item)),
+                        depth - 1);
+
+                if (communicator.isExpanded(item)) {
+                    communicator.collapse(item);
+                }
+            }
+        });
+    }
+
     /**
      * Returns whether a given item is expanded or collapsed.
      *
