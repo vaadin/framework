@@ -80,6 +80,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.AbstractGridExtensionState;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.ColumnState;
@@ -1206,8 +1207,8 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * Sets the header aria-label for this column.
          *
          * @param caption
-         *            the header aria-label, null removes
-         *            the aria-label from this column
+         *            the header aria-label, null removes the aria-label from
+         *            this column
          *
          * @return this column
          *
@@ -1383,16 +1384,43 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets the description generator that is used for generating
-         * descriptions for cells in this column.
+         * descriptions for cells in this column. This method uses the
+         * {@link ContentMode#PREFORMATTED} content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
          *
          * @param cellDescriptionGenerator
-         *            the cell description generator to set, or
-         *            <code>null</code> to remove a previously set generator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
          * @return this column
          */
         public Column<T, V> setDescriptionGenerator(
                 DescriptionGenerator<T> cellDescriptionGenerator) {
+            return setDescriptionGenerator(cellDescriptionGenerator,
+                    ContentMode.PREFORMATTED);
+        }
+
+        /**
+         * Sets the description generator that is used for generating
+         * descriptions for cells in this column. This method uses the given
+         * content mode.
+         *
+         * @see #setDescriptionGenerator(DescriptionGenerator)
+         *
+         * @param cellDescriptionGenerator
+         *            the cell description generator to set, or {@code null} to
+         *            remove a previously set generator
+         * @param contentMode
+         *            the content mode for tooltips
+         * @return this column
+         *
+         * @since 8.2
+         */
+        public Column<T, V> setDescriptionGenerator(
+                DescriptionGenerator<T> cellDescriptionGenerator,
+                ContentMode contentMode) {
             this.descriptionGenerator = cellDescriptionGenerator;
+            getState().contentMode = contentMode;
             getGrid().getDataCommunicator().reset();
             return this;
         }
@@ -3200,7 +3228,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
     /**
      * Sets the description generator that is used for generating descriptions
-     * for rows.
+     * for rows. This method uses the {@link ContentMode#PREFORMATTED} content
+     * mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator, ContentMode)
      *
      * @param descriptionGenerator
      *            the row description generator to set, or <code>null</code> to
@@ -3208,7 +3239,29 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
      */
     public void setDescriptionGenerator(
             DescriptionGenerator<T> descriptionGenerator) {
+        setDescriptionGenerator(descriptionGenerator, ContentMode.PREFORMATTED);
+    }
+
+    /**
+     * Sets the description generator that is used for generating descriptions
+     * for rows. This method uses the given content mode.
+     *
+     * @see #setDescriptionGenerator(DescriptionGenerator)
+     *
+     * @param descriptionGenerator
+     *            the row description generator to set, or {@code null} to
+     *            remove a previously set generator
+     * @param contentMode
+     *            the content mode for row tooltips
+     *
+     * @since 8.2
+     */
+    public void setDescriptionGenerator(
+            DescriptionGenerator<T> descriptionGenerator,
+            ContentMode contentMode) {
+        Objects.requireNonNull(contentMode, "contentMode cannot be null");
         this.descriptionGenerator = descriptionGenerator;
+        getState().rowDescriptionContentMode = contentMode;
         getDataCommunicator().reset();
     }
 
@@ -4623,8 +4676,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * as both original comparators are also serializable
          */
         BinaryOperator<SerializableComparator<T>> operator = (comparator1,
-                comparator2) ->
-        comparator1.thenComparing(comparator2)::compare;
+                comparator2) -> comparator1.thenComparing(comparator2)::compare;
         return sortOrder.stream().map(
                 order -> order.getSorted().getComparator(order.getDirection()))
                 .reduce((x, y) -> 0, operator);

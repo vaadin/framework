@@ -16,6 +16,7 @@
 package com.vaadin.shared.ui.grid;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ContentMode;
 
 /**
  * Shared state for a Grid column.
@@ -73,5 +74,12 @@ public class ColumnState extends AbstractGridExtensionState {
      * @since 8.1
      */
     public boolean minimumWidthFromContent = true;
+
+    /**
+     * The content mode for tooltips.
+     *
+     * @since 8.2
+     */
+    public ContentMode contentMode;
 
 }
