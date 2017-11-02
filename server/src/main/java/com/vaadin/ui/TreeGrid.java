@@ -364,6 +364,7 @@ public class TreeGrid<T> extends Grid<T>
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
+     * @since
      */
     public void expandRecursively(Collection<T> items, int depth) {
         expandRecursively(items.stream(), depth);
@@ -382,6 +383,7 @@ public class TreeGrid<T> extends Grid<T>
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
+     * @since
      */
     public void expandRecursively(Stream<T> items, int depth) {
         if (depth < 0) {
@@ -446,6 +448,7 @@ public class TreeGrid<T> extends Grid<T>
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
+     * @since
      */
     public void collapseRecursively(Collection<T> items, int depth) {
         collapseRecursively(items.stream(), depth);
@@ -464,6 +467,7 @@ public class TreeGrid<T> extends Grid<T>
      *            the items to expand recursively
      * @param depth
      *            the maximum depth of recursion
+     * @since
      */
     public void collapseRecursively(Stream<T> items, int depth) {
         if (depth < 0) {

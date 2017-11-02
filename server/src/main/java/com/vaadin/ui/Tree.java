@@ -433,6 +433,25 @@ public class Tree<T> extends Composite
     }
 
     /**
+     * Expands the given items and its descendants recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code expandRecursively(items, 0)} expands only
+     * the given items while {@code expandRecursively(items, 2)} expands the
+     * given items as well as their children and grandchildren.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void expandRecursively(Collection<T> items, int depth) {
+        treeGrid.expandRecursively(items, depth);
+    }
+
+    /**
      * Collapse the given items.
      * <p>
      * For items that are already collapsed, does nothing.
@@ -454,6 +473,25 @@ public class Tree<T> extends Composite
      */
     public void collapse(Collection<T> items) {
         treeGrid.collapse(items);
+    }
+
+    /**
+     * Collapse the given items and its descendants recursively until the given
+     * depth.
+     * <p>
+     * {@code depth} describes the maximum distance between a given item and its
+     * descendant, meaning that {@code collapseRecursively(items, 0)} collapses
+     * only the given items while {@code collapseRecursively(items, 2)}
+     * collapses the given items as well as their children and grandchildren.
+     *
+     * @param items
+     *            the items to expand recursively
+     * @param depth
+     *            the maximum depth of recursion
+     * @since
+     */
+    public void collapseRecursively(Collection<T> items, int depth) {
+        treeGrid.collapseRecursively(items, depth);
     }
 
     /**
