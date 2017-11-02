@@ -438,7 +438,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     }
 
-    private static final ConcurrentMap<InstanceKey, BeanPropertySet<?>> instances = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<InstanceKey, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
 
     private final Class<T> beanType;
 
@@ -535,7 +535,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
         InstanceKey key = new InstanceKey(beanType, false, 0, null);
         // Cache the reflection results
-        return (PropertySet<T>) instances.computeIfAbsent(key,
+        return (PropertySet<T>) INSTANCES.computeIfAbsent(key,
                 ignored -> new BeanPropertySet<>(beanType));
     }
 
@@ -559,7 +559,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         InstanceKey key = new InstanceKey(beanType, false,
                 filterDefinition.getMaxNestingDepth(),
                 filterDefinition.getIgnorePackageNamesStartingWith());
-        return (PropertySet<T>) instances.computeIfAbsent(key,
+        return (PropertySet<T>) INSTANCES.computeIfAbsent(key,
                 k -> new BeanPropertySet<>(beanType, checkNestedDefinitions,
                         filterDefinition));
     }
