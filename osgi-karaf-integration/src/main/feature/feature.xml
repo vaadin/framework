@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="vaadin-osgi" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+    <feature name="vaadin-osgi-deps" version="${osgi.bundle.version}">
+        <bundle>mvn:org.jsoup/jsoup/${jsoup.version}</bundle>
+        <bundle>mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</bundle>
+    </feature>
+    <feature name="vaadin-osgi-core" version="${osgi.bundle.version}">
+        <feature>http-whiteboard</feature>
+        <feature>vaadin-osgi-deps</feature>
+        <bundle>mvn:com.vaadin/vaadin-shared/${project.version}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-server/${project.version}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-osgi-integration/${project.version}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-client-compiled/${project.version}</bundle>
+        <bundle>mvn:com.vaadin/vaadin-themes/${project.version}</bundle>
+    </feature>
+    <feature name="vaadin-osgi-push" version="${osgi.bundle.version}">
+        <feature>vaadin-osgi-core</feature>
+        <bundle>mvn:com.vaadin/vaadin-push/${project.version}</bundle>
+        <bundle>mvn:com.vaadin.external.atmosphere/atmosphere-runtime/${atmosphere.runtime.version}</bundle>
+        <bundle>mvn:com.vaadin.external.slf4j/vaadin-slf4j-jdk14/1.6.1</bundle>
+    </feature>
+</features>

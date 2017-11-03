@@ -1,4 +1,5 @@
-<features name="vaadin-osgi" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+<!--TODO remove-->
+<aaafeatures name="vaadin-osgi" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
     <feature name="vaadin-osgi-deps" version="8.2.0">
         <bundle>mvn:org.jsoup/jsoup/1.8.3</bundle>
         <bundle>mvn:com.vaadin.external/gentyref/1.2.0.vaadin1</bundle>
@@ -18,4 +19,4 @@
         <bundle>mvn:com.vaadin.external.atmosphere/atmosphere-runtime/2.4.11.vaadin2</bundle>
         <bundle>mvn:com.vaadin.external.slf4j/vaadin-slf4j-jdk14/1.6.1</bundle>
     </feature>
-</features>
+</aaafeatures>

@@ -626,6 +626,7 @@
                 <module>liferay</module>
                 <module>liferay-integration</module>
                 <module>osgi-integration</module>
+                <module>osgi-karaf-integration</module>
                 <module>all</module>
                 <module>compatibility-server</module>
                 <module>compatibility-server-gae</module>
