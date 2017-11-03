@@ -249,7 +249,16 @@ public class Tree<T> extends Composite
         }
     }
 
-    private TreeGrid<T> treeGrid = new TreeGrid<>();
+    private TreeGrid<T> treeGrid = createTreeGrid();
+
+    /**
+     * Create inner {@link TreeGrid} object. May be overriden in subclasses.
+     * @return new {@link TreeGrid}
+     */
+    protected TreeGrid<T> createTreeGrid() {
+        return new TreeGrid<>();
+    }
+
     private ItemCaptionGenerator<T> captionGenerator = String::valueOf;
     private IconGenerator<T> iconProvider = t -> null;
     private final TreeRenderer renderer;
