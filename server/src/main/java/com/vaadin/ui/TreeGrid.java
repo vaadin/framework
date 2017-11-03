@@ -345,7 +345,7 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Expands the given items and its descendants recursively until the given
+     * Expands the given items and their children recursively until the given
      * depth.
      * <p>
      * {@code depth} describes the maximum distance between a given item and its
@@ -364,7 +364,7 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Expands the given items and its descendants recursively until the given
+     * Expands the given items and their children recursively until the given
      * depth.
      * <p>
      * {@code depth} describes the maximum distance between a given item and its
@@ -429,7 +429,7 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Collapse the given items and its descendants recursively until the given
+     * Collapse the given items and their children recursively until the given
      * depth.
      * <p>
      * {@code depth} describes the maximum distance between a given item and its
@@ -448,7 +448,7 @@ public class TreeGrid<T> extends Grid<T>
     }
 
     /**
-     * Collapse the given items and its descendants recursively until the given
+     * Collapse the given items and their children recursively until the given
      * depth.
      * <p>
      * {@code depth} describes the maximum distance between a given item and its
