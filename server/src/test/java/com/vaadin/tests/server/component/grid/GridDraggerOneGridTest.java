@@ -1,9 +1,9 @@
 package com.vaadin.tests.server.component.grid;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -33,14 +33,14 @@ public class GridDraggerOneGridTest {
         }
 
         @Override
-        public Set<String> getDraggedItems() {
+        public List<String> getDraggedItems() {
             return draggedItems;
         }
     }
 
     private Grid<String> source;
     private TestGridDragger dragger;
-    private Set<String> draggedItems;
+    private List<String> draggedItems;
 
     @Before
     public void setupListCase() {
@@ -50,7 +50,7 @@ public class GridDraggerOneGridTest {
 
     private void drop(String dropIndex, DropLocation dropLocation,
             String... items) {
-        draggedItems = new TreeSet<>(Arrays.asList(items));
+        draggedItems = new ArrayList<>(Arrays.asList(items));
         dragger.handleDrop(new GridDropEvent<>(source, null, null, null,
                 dropIndex, dropLocation, null));
     }

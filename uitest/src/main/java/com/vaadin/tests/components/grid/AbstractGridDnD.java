@@ -73,14 +73,6 @@ public abstract class AbstractGridDnD extends AbstractTestUIWithLog {
 
         RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
                 "Frozen columns", Arrays.asList(new Integer[] { -1, 0, 1 }));
-        frozenColumnSelect.setValue(left.getFrozenColumnCount());
-        frozenColumnSelect.addValueChangeListener(event -> {
-            left.setFrozenColumnCount(event.getValue());
-            right.setFrozenColumnCount(event.getValue());
-        });
-
-        RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
-                "Frozen columns", Arrays.asList(new Integer[] { -1, 0, 1 }));
         frozenColumnSelect.setValue(source.getFrozenColumnCount());
         frozenColumnSelect.addValueChangeListener(event -> {
             source.setFrozenColumnCount(event.getValue());

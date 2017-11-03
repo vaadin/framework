@@ -16,7 +16,6 @@
 package com.vaadin.tests.components.grid;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vaadin.annotations.Theme;
@@ -36,7 +35,7 @@ import com.vaadin.ui.components.grid.GridDropTarget;
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class GridDragAndDrop extends AbstractGridDnD {
 
-    private Set<Person> draggedItems;
+    private List<Person> draggedItems;
 
     @Override
     protected void setup(VaadinRequest request) {

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -35,7 +33,7 @@ public class GridDraggerTwoGridsTest {
         }
 
         @Override
-        public Set<String> getDraggedItems() {
+        public List<String> getDraggedItems() {
             return draggedItems;
         }
     }
@@ -43,7 +41,7 @@ public class GridDraggerTwoGridsTest {
     private Grid<String> source;
     private Grid<String> target;
     private TestGridDragger dragger;
-    private Set<String> draggedItems;
+    private List<String> draggedItems;
 
     @Before
     public void setupListCase() {
@@ -56,7 +54,7 @@ public class GridDraggerTwoGridsTest {
 
     private void drop(String dropIndex, DropLocation dropLocation,
             String... items) {
-        draggedItems = new TreeSet<>(Arrays.asList(items));
+        draggedItems = new ArrayList<>(Arrays.asList(items));
         dragger.handleDrop(new GridDropEvent<>(target, null, null, null,
                 dropIndex, dropLocation, null));
     }
@@ -195,30 +193,30 @@ public class GridDraggerTwoGridsTest {
         verifyTargetDataProvider("1", "2", "0");
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void customSourceDataProvider_noCustomSourceUpdater_illegalStateExceptionThrown() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void customSourceDataProvider_noCustomSourceUpdater_unsupportedOperationExceptionThrown() {
         setCustomDataProvider(source);
 
         drop(null, DropLocation.BELOW, "0");
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void customTargetDataProvider_noCustomCalculatorAndNoCustomTargetUpdater_illegalStateExceptionThrown() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void customTargetDataProvider_noCustomCalculatorAndNoCustomTargetUpdater_unsupportedOperationExceptionThrown() {
         setCustomDataProvider(target);
 
         drop(null, DropLocation.BELOW, "0");
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void customTargetDataProvider_customCalculatorAndNoCustomTargetUpdater_illegalStateExceptionThrown() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void customTargetDataProvider_customCalculatorAndNoCustomTargetUpdater_unsupportedOperationExceptionThrown() {
         setCustomDataProvider(target);
         dragger.setDropIndexCalculator(event -> 0);
 
         drop(null, DropLocation.BELOW, "0");
     }
 
-    @Test
-    public void customTargetDataProvider_noCustomCalculatorAndCustomTargetUpdater_noException() {
+    @Test(expected = UnsupportedOperationException.class)
+    public void customTargetDataProvider_noCustomCalculatorAndCustomTargetUpdater_unsupportedOperationExceptionThrown() {
         source.setItems("0");
 
         setCustomDataProvider(target);
@@ -226,22 +224,6 @@ public class GridDraggerTwoGridsTest {
         });
 
         drop(null, DropLocation.BELOW, "0");
-    }
-
-    @Test
-    public void customTargetDataProvider_noCustomCalculatorAndCustomTargetUpdater_triggeredWithMaxIndex() {
-        source.setItems("0");
-        setCustomDataProvider(target, "1", "2");
-
-        AtomicInteger trigger = new AtomicInteger(-1);
-        dragger.setTargetDataProviderUpdater(
-                (event, dp, index, items) -> trigger.set(index));
-
-        drop("1", DropLocation.ABOVE, "2");
-
-        // without custom calculator, dropping to end it used
-        Assert.assertEquals("given drop index to target updater is wrong",
-                Integer.MAX_VALUE, trigger.get());
     }
 
     @Test
