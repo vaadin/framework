@@ -37,4 +37,13 @@ public class GridDropTargetState extends DropTargetState {
      * @see DropMode#ON_TOP_OR_BETWEEN
      */
     public int dropThreshold = 5;
+
+    /**
+     * Can the user drop on grid rows if the grid is sorted.
+     * <p>
+     * Default value is {@code} true for backwards compatibility with 8.1.
+     *
+     * @since
+     */
+    public boolean dropAllowedOnSortedGridRows = true;
 }

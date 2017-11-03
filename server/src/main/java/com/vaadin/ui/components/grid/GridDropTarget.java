@@ -67,6 +67,13 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * grid, any drop after the last row in the grid will get the last row as
      * the {@link GridDropEvent#getDropTargetRow()}. If there are no rows in the
      * grid, then it will return an empty optional.
+     * <p>
+     * If using {@link DropMode#ON_GRID}, then the drop will not happen on any
+     * row, but instead just "on the grid". The target row will not be present
+     * in this case. <em>NOTE: this drop mode is used when the grid has been
+     * sorted by the user and {@link #setDropAllowedOnSortedGridRows(boolean)}
+     * is {@code true} - since the drop location would not necessarily match the
+     * correct row because of the sorting.</em>
      *
      * @param dropMode
      *            Drop mode that describes the allowed drop locations within the
@@ -89,6 +96,42 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      */
     public DropMode getDropMode() {
         return getState(false).dropMode;
+    }
+
+    /**
+     * Sets whether the grid accepts drop on rows as target when the grid has
+     * been sorted by the user.
+     * <p>
+     * Default value is {@code true} for backwards compatibility with 8.1. When
+     * {@code true} is used, the mode used in {@link #setDropMode(DropMode)} is
+     * always used. {@code false} value means that when the grid has been sorted
+     * by the user, the drop mode is always {@link DropMode#ON_GRID}, regardless
+     * of what has been put to {@link #setDropMode(DropMode)}. If the grid has
+     * not been sorted, {@link #setDropMode(DropMode)} is used.
+     *
+     * @param dropAllowedOnSortedGridRows
+     *            {@code true} for allowing, {@code false} for not allowing
+     *            drops on sorted grid rows
+     * @since
+     */
+    public void setDropAllowedOnSortedGridRows(
+            boolean dropAllowedOnSortedGridRows) {
+        if (getState(
+                false).dropAllowedOnSortedGridRows != dropAllowedOnSortedGridRows) {
+            getState().dropAllowedOnSortedGridRows = dropAllowedOnSortedGridRows;
+        }
+    }
+
+    /**
+     * Gets whether drops are allowed on rows as target, when the user has
+     * sorted the grid.
+     *
+     * @return whether drop are allowed for the grid's rows when user has sorted
+     *         the grid
+     * @since
+     */
+    public boolean isDropAllowedOnSortedGridRows() {
+        return getState(false).dropAllowedOnSortedGridRows;
     }
 
     /**
