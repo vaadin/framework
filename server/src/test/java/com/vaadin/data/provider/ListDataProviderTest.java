@@ -4,11 +4,13 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.SerializableComparator;
@@ -20,6 +22,20 @@ public class ListDataProviderTest
     @Override
     protected ListDataProvider<StrBean> createDataProvider() {
         return DataProvider.ofCollection(data);
+    }
+
+    @Test
+    public void dataProvider_ofItems_shouldCreateAnEditableDataProvider() {
+        ListDataProvider<String> dataProvider = DataProvider.ofItems("0", "1");
+
+        Assert.assertTrue(
+                "DataProvider.ofItems should create a list data provider backed an ArrayList allowing edits",
+                dataProvider.getItems() instanceof ArrayList);
+
+        List<String> list = (List<String>) dataProvider.getItems();
+        // previously the following would explode since Arrays.ArrayList does
+        // not support it
+        list.add(0, "2");
     }
 
     @Test
