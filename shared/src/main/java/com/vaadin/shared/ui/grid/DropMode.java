@@ -47,5 +47,15 @@ public enum DropMode {
      * above conditions.</li>
      * </ul>
      */
-    ON_TOP_OR_BETWEEN
+    ON_TOP_OR_BETWEEN,
+    /**
+     * The drop event will not happen on any specific row, it will show the drop
+     * target outline around the whole grid. For this drop target, the drop
+     * event will not contain any target row information. This is the drop
+     * target used when the grid is completely empty. It can also be configured
+     * to be used automatically when the user has sorted the grid.
+     *
+     * @since
+     */
+    ON_GRID;
 }

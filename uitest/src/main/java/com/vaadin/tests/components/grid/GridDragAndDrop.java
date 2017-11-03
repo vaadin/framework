@@ -91,6 +91,16 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
             }
         });
 
+        CheckBox dropOnSortedGridRows = new CheckBox("Drop on Sorted Grid Rows",
+                dropTarget.isDropAllowedOnSortedGridRows());
+        transitionCheckBox.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                grids.addStyleName("transitioned");
+            } else {
+                grids.removeStyleName("transitioned");
+            }
+        });
+
         RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
                 "Frozen columns", Arrays.asList(new Integer[] { -1, 0, 1 }));
         frozenColumnSelect.setValue(left.getFrozenColumnCount());

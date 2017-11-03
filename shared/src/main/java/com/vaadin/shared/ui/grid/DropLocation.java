@@ -39,8 +39,9 @@ public enum DropLocation {
     BELOW,
 
     /**
-     * Dropping into an empty grid, or to the empty area below the grid rows
-     * when {@link DropMode#ON_TOP} is used.
+     * Dropping into an empty grid, to a sorted grid, when
+     * {@link DropMode#ON_GRID} is used, or to the empty area below the grid
+     * rows when {@link DropMode#ON_TOP} is used.
      */
     EMPTY;
 }
