@@ -16,6 +16,7 @@
 package com.vaadin.data.provider;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -266,7 +267,7 @@ public interface DataProvider<T, F> extends Serializable {
      */
     @SafeVarargs
     public static <T> ListDataProvider<T> ofItems(T... items) {
-        return new ListDataProvider<>(Arrays.asList(items));
+        return new ListDataProvider<>(new ArrayList<>(Arrays.asList(items)));
     }
 
     /**
