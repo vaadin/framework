@@ -710,7 +710,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
 
     /**
      * @deprecated As of 7.0, replaced by {@link #addPropertySetChangeListener}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.PropertySetChangeListener listener) {
@@ -726,7 +726,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE>
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.PropertySetChangeListener listener) {

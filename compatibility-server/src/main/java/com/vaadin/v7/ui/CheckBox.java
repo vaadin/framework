@@ -152,7 +152,7 @@ public class CheckBox extends AbstractField<Boolean> {
 
     /**
      * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -165,7 +165,7 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
@@ -179,7 +179,7 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -192,7 +192,7 @@ public class CheckBox extends AbstractField<Boolean> {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
