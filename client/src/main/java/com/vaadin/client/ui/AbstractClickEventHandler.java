@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -31,7 +33,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 
 public abstract class AbstractClickEventHandler implements MouseDownHandler,
@@ -74,7 +75,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
                     && elementUnderMouse == lastMouseDownTarget) {
                 mouseUpPreviewMatched = true;
             } else {
-                VConsole.log("Ignoring mouseup from " + elementUnderMouse
+                getLogger().info("Ignoring mouseup from " + elementUnderMouse
                         + " when mousedown was on " + lastMouseDownTarget);
             }
         }
@@ -236,6 +237,10 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
      */
     protected com.google.gwt.user.client.Element getRelativeToElement() {
         return connector.getWidget().getElement();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractClickEventHandler.class.getName());
     }
 
 }

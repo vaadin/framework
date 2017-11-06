@@ -17,6 +17,7 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -47,7 +48,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.v7.client.ui.VCalendarPanel.FocusOutListener;
@@ -406,7 +406,7 @@ public class VPopupCalendar extends VTextualDate
             popup.setHeight("");
             popup.setPopupPositionAndShow(new PopupPositionCallback());
         } else {
-            VConsole.error("Cannot reopen popup, it is already open!");
+            getLogger().severe("Cannot reopen popup, it is already open!");
         }
     }
 
@@ -715,4 +715,7 @@ public class VPopupCalendar extends VTextualDate
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VPopupCalendar.class.getName());
+    }
 }

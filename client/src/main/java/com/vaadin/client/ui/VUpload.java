@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -35,7 +37,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.upload.UploadConnector;
 import com.vaadin.client.ui.upload.UploadIFrameOnloadStrategy;
 import com.vaadin.shared.ui.upload.UploadServerRpc;
@@ -258,7 +259,7 @@ public class VUpload extends SimplePanel {
                     if (t != null) {
                         t.cancel();
                     }
-                    VConsole.log("VUpload:Submit complete");
+                    getLogger().info("VUpload:Submit complete");
                     if (isAttached()) {
                         // no need to call poll() if component is already
                         // detached #8728
@@ -303,7 +304,7 @@ public class VUpload extends SimplePanel {
                 // Only visit the server if the upload has not already
                 // finished
                 if (thisUploadId == nextUploadId) {
-                    VConsole.log(
+                    getLogger().info(
                             "Visiting server to see if upload started event changed UI.");
                     client.updateVariable(paintableId, "pollForStart",
                             thisUploadId, true);
@@ -316,11 +317,11 @@ public class VUpload extends SimplePanel {
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (submitted || !enabled) {
-            VConsole.log("Submit cancelled (disabled or already submitted)");
+            getLogger().info("Submit cancelled (disabled or already submitted)");
             return;
         }
         if (fu.getFilename().isEmpty()) {
-            VConsole.log("Submitting empty selection (no file)");
+            getLogger().info("Submitting empty selection (no file)");
         }
         // flush possibly pending variable changes, so they will be handled
         // before upload
@@ -399,4 +400,7 @@ public class VUpload extends SimplePanel {
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VUpload.class.getName());
+    }
 }

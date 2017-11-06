@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
@@ -40,7 +41,6 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.VCaptionWrapper;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
@@ -292,7 +292,7 @@ public class VPopupView extends HTML
 
         @Override
         public void hide(boolean autoClosed) {
-            VConsole.log("Hiding popupview");
+            getLogger().info("Hiding popupview");
             syncChildren();
             clearPopupComponentConnector();
             hasHadMouseOver = false;
@@ -430,4 +430,7 @@ public class VPopupView extends HTML
         return popupShowInProgress;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VPopupView.class.getName());
+    }
 }
