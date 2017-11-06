@@ -47,7 +47,7 @@ public class HasItemsTest {
 
             Assert.assertTrue(
                     hasItemsType.getSimpleName()
-                            + "setItems method with varargs parameters of does not create a list data provider",
+                            + " setItems method with varargs parameters of does not create a list data provider",
                     dataProvider instanceof ListDataProvider);
 
             ListDataProvider listDataProvider = (ListDataProvider) dataProvider;
