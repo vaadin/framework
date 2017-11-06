@@ -252,7 +252,7 @@ public class Tree<T> extends Composite
     private TreeGrid<T> treeGrid = createTreeGrid();
 
     /**
-     * Create inner {@link TreeGrid} object. May be overriden in subclasses.
+     * Create inner {@link TreeGrid} object. May be overridden in subclasses.
      * @return new {@link TreeGrid}
      */
     protected TreeGrid<T> createTreeGrid() {

@@ -117,7 +117,7 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
 
     /**
      * Create new {@code HierarchyMapper} for the given data provider.
-     * May be overriden in subclasses.
+     * May be overridden in subclasses.
      *
      * @param dataProvider the data provider
      * @param <F> Query type
