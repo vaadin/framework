@@ -429,14 +429,18 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
                 Id.of(headerText));
 
-        // Handlers to Prevent tab to leave the window
+        // Handlers to Prevent tab to leave the window (by circulating focus)
         // and backspace to cause browser navigation
         topEventBlocker = event -> {
+            if (!getElement().isOrHasChild(WidgetUtil.getFocusedElement())) {
+                return;
+            }
             NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
+                FocusUtil.focusOnLastFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == topTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
@@ -445,11 +449,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         };
 
         bottomEventBlocker = event -> {
+            if (!getElement().isOrHasChild(WidgetUtil.getFocusedElement())) {
+                return;
+            }
             NativeEvent nativeEvent = event.getNativeEvent();
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                     && !nativeEvent.getShiftKey()) {
                 nativeEvent.preventDefault();
+                FocusUtil.focusOnFirstFocusableElement(this.getElement());
             }
             if (nativeEvent.getEventTarget().cast() == bottomTabStop
                     && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
