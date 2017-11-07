@@ -96,7 +96,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         // Save details
         widget.client = getConnection();
-        widget.paintableId = getConnectorId();
+        widget.connector = this;
 
         widget.setReadonly(isReadOnly());
         widget.setEnabled(isEnabled());

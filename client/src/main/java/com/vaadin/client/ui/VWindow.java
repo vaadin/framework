@@ -59,6 +59,7 @@ import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.client.ui.window.WindowMoveEvent;
 import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.client.ui.window.WindowOrderEvent;
@@ -129,6 +130,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public WindowConnector connector;
 
     /** For internal use only. May be removed or replaced in the future. */
     public String id;
@@ -1351,14 +1355,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void onBlur(BlurEvent event) {
-        if (client.hasEventListeners(this, EventId.BLUR)) {
+        if (connector.hasEventListener(EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
         }
     }
 
     @Override
     public void onFocus(FocusEvent event) {
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
+        if (connector.hasEventListener(EventId.FOCUS)) {
             client.updateVariable(id, EventId.FOCUS, "", true);
         }
     }
