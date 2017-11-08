@@ -17,7 +17,9 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -190,6 +192,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         selectFocused();
         onSubmit();
     };
+
+    private Map<Date, String> dateStyles = new HashMap<Date, String>();
 
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
@@ -443,6 +447,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             // Dynamic updates to the stylename needs to render the calendar to
             // update the inner element stylenames
             renderCalendar();
+        }
+    }
+
+    public void setDateStyles(Map<Date, String> dateStyles) {
+        this.dateStyles.clear();
+        if (dateStyles != null) {
+            this.dateStyles.putAll(dateStyles);
         }
     }
 
@@ -832,6 +843,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 }
                 if (curr.getMonth() != displayedMonth.getMonth()) {
                     day.addStyleDependentName(CN_OFFMONTH);
+                }
+                if (dateStyles.containsKey(dayDate)) {
+                    day.addStyleName(dateStyles.get(dayDate));
                 }
 
                 days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,

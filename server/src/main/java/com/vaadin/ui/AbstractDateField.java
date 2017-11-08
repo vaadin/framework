@@ -802,4 +802,81 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             }
         };
     }
+
+    /**
+     * <p>
+     * Sets a custom style name for the given date's calendar cell. The date is
+     * converted to use midnight values for the styling logic. Setting the style
+     * name will override any previous style names that have been set for that
+     * date, but can contain several actual style names separated by space.
+     * </p>
+     * <p>
+     * This logic is entirely separate from {@link #setStyleName(String)}
+     * </p>
+     * <p>
+     * Usage examples: <br>
+     * {@code setDateStyle(new Date(), "teststyle");} <br>
+     * {@code setDateStyle(new Date(), "teststyle1 teststyle2");}
+     * </p>
+     *
+     * @param date
+     *            determines which date cell to style
+     * @param styleName
+     *            determines which style name to give the date cell
+     */
+    @SuppressWarnings("deprecation")
+    public void setDateStyle(Date date, String styleName) {
+        if (date != null) {
+            getState().dateStyles.put(
+                    new Date(date.getYear(), date.getMonth(), date.getDate()),
+                    styleName);
+        }
+    }
+
+    /**
+     * Removes the custom style name that corresponds with the given date's
+     * calendar cell. The date is converted to use midnight values for the
+     * styling logic.
+     *
+     * @param date
+     *            determines which date cell's custom style name to remove
+     *
+     * @see {@link #setDateStyle(Date, String)}
+     */
+    @SuppressWarnings("deprecation")
+    public void removeDateStyle(Date date) {
+        if (date != null) {
+            getState().dateStyles.remove(
+                    new Date(date.getYear(), date.getMonth(), date.getDate()));
+        }
+    }
+
+    /**
+     * Returns the custom style name that corresponds with the given date's
+     * calendar cell. The date is converted to use midnight values for the
+     * styling logic.
+     *
+     * @param date
+     *            determines which date cell's custom style name to return
+     * @return the corresponding style name, if any, {@code null} otherwise
+     *
+     * @see {@link #setDateStyle(Date, String)}
+     */
+    @SuppressWarnings("deprecation")
+    public String getDateStyle(Date date) {
+        return getState().dateStyles
+                .get(new Date(date.getYear(), date.getMonth(), date.getDate()));
+    }
+
+    /**
+     * Returns a map from dates to custom style names in each date's calendar
+     * cell. All dates use midnight values for the styling logic.
+     *
+     * @return map from dates to custom style names in each date's calendar cell
+     *
+     * @see {@link #setDateStyle(Date, String)}
+     */
+    public Map<Date, String> getDateStyles() {
+        return new HashMap<>(getState().dateStyles);
+    }
 }

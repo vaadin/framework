@@ -1,11 +1,14 @@
 package com.vaadin.tests.components.datefield;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Locale;
 
+import com.ibm.icu.util.Calendar;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.InlineDateField;
 
@@ -16,8 +19,14 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
     public static final LocalDate ANOTHER_TEST_DATE_TIME = DateTimeFieldElementUI.ANOTHER_TEST_DATE_TIME
             .toLocalDate();
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void setup(VaadinRequest request) {
+        getPage().getStyles()
+                .add(".v-inline-datefield .teststyle { background: yellow; }");
+        getPage().getStyles()
+                .add(".v-datefield-popup .teststyle { background: yellow; }");
+
         log.setNumberLogRows(false);
         DateField df = new DateField();
         df.addValueChangeListener(event -> log(
@@ -42,6 +51,14 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
         usDatefield.addValueChangeListener(
                 event -> log("US date field value set to " + event.getValue()));
         addComponent(usDatefield);
+
+        addComponent(new Button("Add date styles", e -> {
+            inlineDateField.setDateStyle(new Date(), "teststyle");
+            finnishDatefield.setDateStyle(
+                    new Date(2017 - 1900, Calendar.DECEMBER, 1), "teststyle");
+            usDatefield.setDateStyle(
+                    new Date(2017 - 1900, Calendar.DECEMBER, 1), "teststyle");
+        }));
     }
 
     @Override

@@ -106,4 +106,10 @@ public class AbstractDateFieldState extends AbstractFieldState {
      */
     public boolean parsable = true;
 
+    /**
+     * Map of custom style names that correspond with given dates. Each date
+     * must be set to midnight for the handling logic to work correctly.
+     */
+    public Map<Date, String> dateStyles = new HashMap<Date, String>();
+
 }

@@ -4,11 +4,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.By;
+import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.DateTimeFieldElement;
 import com.vaadin.testbench.elements.InlineDateTimeFieldElement;
 import com.vaadin.tests.tb3.SingleBrowserTest;
@@ -53,6 +58,40 @@ public class DateTimeFieldElementTest extends SingleBrowserTest {
                 us.getDateTime());
         assertServerValue("US date field",
                 DateTimeFieldElementUI.ANOTHER_TEST_DATE_TIME);
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testDateStyles() {
+        openTestURL();
+        assertTrue(findElements(By.className("teststyle")).isEmpty());
+
+        // add styles
+        $(ButtonElement.class).first().click();
+
+        WebElement styledDateCell = $(InlineDateTimeFieldElement.class).first()
+                .findElement(By.className("teststyle"));
+        assertEquals(String.valueOf(new Date().getDate()),
+                styledDateCell.getText());
+
+        DateTimeFieldElement fi = $(DateTimeFieldElement.class).id("fi");
+        fi.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+        WebElement popup = findElement(
+                com.vaadin.testbench.By.className("v-datefield-popup"));
+        styledDateCell = popup.findElement(By.className("teststyle"));
+        assertEquals("1", styledDateCell.getText());
+
+        styledDateCell.click(); // close popup
+        waitForElementNotPresent(By.className("v-datefield-popup"));
+
+        DateTimeFieldElement us = $(DateTimeFieldElement.class).id("us");
+        us.openPopup();
+        waitForElementPresent(By.className("v-datefield-popup"));
+        popup = findElement(
+                com.vaadin.testbench.By.className("v-datefield-popup"));
+        styledDateCell = popup.findElement(By.className("teststyle"));
+        assertEquals("1", styledDateCell.getText());
     }
 
     private void assertServerValue(String id, LocalDateTime testDateTime) {
