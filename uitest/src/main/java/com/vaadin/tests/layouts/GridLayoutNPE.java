@@ -2,7 +2,6 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -29,34 +28,21 @@ public class GridLayoutNPE extends TestBase {
         lo.addComponent(b);
         lo.addComponent(b2);
 
-        b.addClickListener(new Button.ClickListener() {
+        b.addClickListener(event -> {
+            gl.removeComponent(toRemove);
 
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                gl.removeComponent(toRemove);
+            // move another component to where the first was removed
+            // before rendering to the client
+            gl.removeComponent(toEdit);
+            // this could also be the result of removeAllComponents()
+            // followed by a loop of addComponent(c)
+            gl.addComponent(toEdit, 0, 0);
 
-                // move another component to where the first was removed
-                // before rendering to the client
-                gl.removeComponent(toEdit);
-                // this could also be the result of removeAllComponents()
-                // followed by a loop of addComponent(c)
-                gl.addComponent(toEdit, 0, 0);
-
-                b.setVisible(false);
-                b2.setVisible(true);
-
-            }
-
+            b.setVisible(false);
+            b2.setVisible(true);
         });
 
-        b2.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                toEdit.setValue("Second (edited)");
-            }
-
-        });
+        b2.addClickListener(event -> toEdit.setValue("Second (edited)"));
 
         addComponent(lo);
     }

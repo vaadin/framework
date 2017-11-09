@@ -223,7 +223,7 @@ public class PropertysetItem
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Item.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Item.PropertySetChangeListener listener) {
@@ -247,7 +247,7 @@ public class PropertysetItem
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Item.PropertySetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Item.PropertySetChangeListener listener) {

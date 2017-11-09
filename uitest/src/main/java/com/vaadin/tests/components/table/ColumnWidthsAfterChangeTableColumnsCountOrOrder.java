@@ -37,23 +37,16 @@ public class ColumnWidthsAfterChangeTableColumnsCountOrOrder
         layout.addComponent(table);
 
         Button buttonChangeOrderAndWidth = new Button("Change order and width",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns("name", "descr", "id");
-                        table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
-                    }
+                event -> {
+                    table.setVisibleColumns("name", "descr", "id");
+                    table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                 });
         buttonChangeOrderAndWidth.setId(BUTTON_CHANGE_ORDER_AND_WIDTH_ID);
 
         Button buttonChangeColumnCountAndWidth = new Button(
-                "Change columns count and width", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent clickEvent) {
-                        table.setVisibleColumns(
-                                new Object[] { "name", "descr" });
-                        table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
-                    }
+                "Change columns count and width", event -> {
+                    table.setVisibleColumns(new Object[] { "name", "descr" });
+                    table.setColumnWidth("descr", NEW_COLUMN_WIDTH);
                 });
         buttonChangeColumnCountAndWidth
                 .setId(BUTTON_CHANGE_COLUMN_COUNT_AND_WIDTH);

@@ -47,12 +47,13 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
      * customizing only listeners logic.
      */
     protected void updateListeners() {
+        VAbstractDateFieldCalendar<PANEL, R> widget = getWidget();
         if (isResolutionMonthOrHigher()) {
-            getWidget().calendarPanel
+            widget.calendarPanel
                     .setFocusChangeListener(date -> {
                         Date date2 = new Date();
-                        if (getWidget().calendarPanel.getDate() != null) {
-                            date2.setTime(getWidget().calendarPanel.getDate()
+                        if (widget.calendarPanel.getDate() != null) {
+                            date2.setTime(widget.calendarPanel.getDate()
                                     .getTime());
                         }
                         /*
@@ -60,41 +61,40 @@ public abstract class AbstractInlineDateFieldConnector<PANEL extends VAbstractCa
                          */
                         date2.setYear(date.getYear());
                         date2.setMonth(date.getMonth());
-                        getWidget().calendarPanel.setDate(date2);
+                        widget.calendarPanel.setDate(date2);
                         /*
                          * Then update the value from panel to server
                          */
-                        getWidget().updateValueFromPanel();
+                        widget.updateValueFromPanel();
                     });
         } else {
-            getWidget().calendarPanel.setFocusChangeListener(null);
+            widget.calendarPanel.setFocusChangeListener(null);
         }
     }
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setTabIndex(getState().tabIndex);
-        getWidget().calendarPanel.setRangeStart(getState().rangeStart);
-        getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
+        VAbstractDateFieldCalendar<PANEL, R> widget = getWidget();
+        widget.setTabIndex(getState().tabIndex);
+        widget.calendarPanel.setRangeStart(getState().rangeStart);
+        widget.calendarPanel.setRangeEnd(getState().rangeEnd);
 
-        getWidget().calendarPanel
-                .setShowISOWeekNumbers(getWidget().isShowISOWeekNumbers());
-        getWidget().calendarPanel
-                .setDateTimeService(getWidget().getDateTimeService());
-        getWidget().calendarPanel
-                .setResolution(getWidget().getCurrentResolution());
-        Date currentDate = getWidget().getCurrentDate();
+        widget.calendarPanel
+                .setShowISOWeekNumbers(widget.isShowISOWeekNumbers());
+        widget.calendarPanel.setDateTimeService(widget.getDateTimeService());
+        widget.calendarPanel.setResolution(widget.getCurrentResolution());
+        Date currentDate = widget.getCurrentDate();
         if (currentDate != null) {
-            getWidget().calendarPanel.setDate(new Date(currentDate.getTime()));
+            widget.calendarPanel.setDate(new Date(currentDate.getTime()));
         } else {
-            getWidget().calendarPanel.setDate(null);
+            widget.calendarPanel.setDate(null);
         }
 
         updateListeners();
 
         // Update possible changes
-        getWidget().calendarPanel.renderCalendar();
+        widget.calendarPanel.renderCalendar();
     }
 
     @Override

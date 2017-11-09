@@ -20,8 +20,6 @@ import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
 @Push(transport = Transport.STREAMING)
@@ -35,13 +33,8 @@ public class BarInUIDL extends AbstractReindeerTestUI {
      */
     @Override
     protected void setup(VaadinRequest request) {
-        addButton("Click Me", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                addComponent(new Label("Thank you for clicking | bar"));
-            }
-        });
-
+        addButton("Click Me", event -> addComponent(
+                new Label("Thank you for clicking | bar")));
     }
 
     /*

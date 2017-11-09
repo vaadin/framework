@@ -49,8 +49,8 @@ public class ComponentAlignmentsTest extends MultiBrowserTest {
                 rightSpaceSize > 0);
 
         int diff = Math.abs(rightSpaceSize - leftSpaceSize);
-        assertTrue("Element is not in the center, diff:" + diff, diff <= 2); // IE11
-                                                                             // 2pixels
+        // IE11 2pixels
+        assertTrue("Element is not in the center, diff:" + diff, diff <= 2);
     }
 
     @Test

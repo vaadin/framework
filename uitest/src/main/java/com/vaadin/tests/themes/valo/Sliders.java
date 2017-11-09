@@ -173,16 +173,13 @@ public class Sliders extends VerticalLayout implements View {
             while (true) {
                 try {
                     Thread.sleep(1000);
-                    getUI().access(new Runnable() {
-                        @Override
-                        public void run() {
-                            pb.setValue(progress);
-                            pb2.setValue(progress);
-                            if (progress > 1) {
-                                progress = 0;
-                            } else {
-                                progress += 0.2 * Math.random();
-                            }
+                    getUI().access(() -> {
+                        pb.setValue(progress);
+                        pb2.setValue(progress);
+                        if (progress > 1) {
+                            progress = 0;
+                        } else {
+                            progress += 0.2 * Math.random();
                         }
                     });
                 } catch (InterruptedException e) {

@@ -2,31 +2,14 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 public class UITabIndex extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addButton("Set tabIndex to -1", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setTabIndex(-1);
-            }
-        });
-        addButton("Set tabIndex to 0", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setTabIndex(0);
-            }
-        });
-        addButton("Set tabIndex to 1", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setTabIndex(1);
-            }
-        });
+        addButton("Set tabIndex to -1", event -> setTabIndex(-1));
+        addButton("Set tabIndex to 0", event -> setTabIndex(0));
+        addButton("Set tabIndex to 1", event -> setTabIndex(1));
     }
 
     @Override

@@ -148,17 +148,14 @@ public class DDTest6 extends TestBase {
         };
         tree1.addActionHandler(actionHandler);
 
-        tree1.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                if (value != null && !(value instanceof Folder)) {
-                    value = tree1.getParent(value);
-                }
-                FolderView folderView = FolderView.get((Folder) value);
-                sp.setSecondComponent(folderView);
-                folderView.reload();
+        tree1.addValueChangeListener(event->{
+            Object value = event.getProperty().getValue();
+            if (value != null && !(value instanceof Folder)) {
+                value = tree1.getParent(value);
             }
+            FolderView folderView = FolderView.get((Folder) value);
+            sp.setSecondComponent(folderView);
+            folderView.reload();
         });
 
         l.addComponent(tree1);

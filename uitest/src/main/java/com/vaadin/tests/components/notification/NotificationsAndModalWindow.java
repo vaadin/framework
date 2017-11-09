@@ -2,7 +2,6 @@ package com.vaadin.tests.components.notification;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Window;
 
@@ -16,13 +15,10 @@ public class NotificationsAndModalWindow extends TestBase {
                 Notification.TYPE_WARNING_MESSAGE);
 
         Button b = new Button("Button");
-        b.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Window w = new Window("This is a window");
-                w.setModal(true);
-                getMainWindow().addWindow(w);
-            }
+        b.addClickListener(event -> {
+            Window w = new Window("This is a window");
+            w.setModal(true);
+            getMainWindow().addWindow(w);
         });
         addComponent(b);
     }

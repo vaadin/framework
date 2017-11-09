@@ -24,11 +24,12 @@ import static com.vaadin.shared.ui.datefield.DateTimeResolution.YEAR;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
-import com.vaadin.client.VConsole;
 import com.vaadin.shared.ui.datefield.DateTimeResolution;
 
 /**
@@ -180,7 +181,8 @@ public class VPopupTimeCalendar extends
         } catch (LocaleNotLoadedException e) {
             // TODO should die instead? Can the component survive
             // without format string?
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
             return null;
         }
     }
@@ -202,4 +204,7 @@ public class VPopupTimeCalendar extends
         return true;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VPopupTimeCalendar.class.getName());
+    }
 }

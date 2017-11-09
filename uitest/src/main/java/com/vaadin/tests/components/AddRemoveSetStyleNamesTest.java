@@ -1,7 +1,6 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.PopupDateField;
 
 public class AddRemoveSetStyleNamesTest extends TestBase {
@@ -24,15 +23,11 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
         popupDateField.setRequiredError("abcd");
         addComponent(popupDateField);
 
-        listener = new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String style = (String) event.getButton().getData();
-                setComponentsStyle(style,
-                        !popupDateField.getStyleName().contains(style),
-                        event.getButton());
-            }
+        listener = event -> {
+            String style = (String) event.getButton().getData();
+            setComponentsStyle(style,
+                    !popupDateField.getStyleName().contains(style),
+                    event.getButton());
         };
 
         button1 = new Button("Add style1", listener);
@@ -43,19 +38,15 @@ public class AddRemoveSetStyleNamesTest extends TestBase {
         button2.setData(style2);
         addComponent(button2);
 
-        button3 = new Button("Set thestyle", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (popupDateField.getStyleName().contains(thestyle)) {
-                    popupDateField.removeStyleName(thestyle);
-                    button3.setCaption("Set thestyle");
-                } else {
-                    popupDateField.setStyleName(thestyle);
-                    button1.setCaption("Add style1");
-                    button2.setCaption("Add style2");
-                    button3.setCaption("Remove thestyle");
-                }
+        button3 = new Button("Set thestyle", event -> {
+            if (popupDateField.getStyleName().contains(thestyle)) {
+                popupDateField.removeStyleName(thestyle);
+                button3.setCaption("Set thestyle");
+            } else {
+                popupDateField.setStyleName(thestyle);
+                button1.setCaption("Add style1");
+                button2.setCaption("Add style2");
+                button3.setCaption("Remove thestyle");
             }
         });
         addComponent(button3);

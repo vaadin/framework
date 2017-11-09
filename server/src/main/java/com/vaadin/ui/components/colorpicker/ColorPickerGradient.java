@@ -30,19 +30,14 @@ import com.vaadin.ui.AbstractField;
  */
 public class ColorPickerGradient extends AbstractField<Color> {
 
-    private ColorPickerGradientServerRpc rpc = new ColorPickerGradientServerRpc() {
-
-        @Override
-        public void select(int cursorX, int cursorY) {
-            setValue(converter.calculate(cursorX, cursorY), true);
-        }
-    };
-
     /** The converter. */
     private Coordinates2Color converter;
 
     /** The foreground color. */
     private Color color;
+
+    private ColorPickerGradientServerRpc rpc = (cursorX,
+            cursorY) -> setValue(converter.calculate(cursorX, cursorY), true);
 
     private ColorPickerGradient() {
         registerRpc(rpc);

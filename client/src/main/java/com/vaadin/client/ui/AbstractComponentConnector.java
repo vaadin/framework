@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
@@ -31,7 +33,6 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.MouseEventDetailsBuilder;
@@ -41,7 +42,6 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
@@ -63,7 +63,7 @@ import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.shared.ui.ui.UIState;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-        implements ComponentConnector, HasErrorIndicator {
+        implements HasErrorIndicator {
 
     private HandlerRegistration contextHandler = null;
 
@@ -171,13 +171,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * @since 7.6
      */
     protected void registerTouchHandlers() {
-        touchStartHandler = getWidget().addDomHandler(event -> {
+        Widget widget = getWidget();
+        touchStartHandler = widget.addDomHandler(event -> {
             if (longTouchTimer != null && longTouchTimer.isRunning()) {
                 return;
             }
 
             // Prevent selection for the element while pending long tap.
-            WidgetUtil.setTextSelectionEnabled(getWidget().getElement(),
+            WidgetUtil.setTextSelectionEnabled(widget.getElement(),
                     false);
 
             if (BrowserInfo.get().isAndroid()) {
@@ -193,7 +194,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
             final MouseEventDetails mouseEventDetails = MouseEventDetailsBuilder
                     .buildMouseEventDetails(event.getNativeEvent(),
-                            getWidget().getElement());
+                            widget.getElement());
 
             final EventTarget eventTarget = event.getNativeEvent()
                     .getEventTarget();
@@ -222,7 +223,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             longTouchTimer.schedule(TOUCH_CONTEXT_MENU_TIMEOUT);
         }, TouchStartEvent.getType());
 
-        touchMoveHandler = getWidget().addDomHandler(new TouchMoveHandler() {
+        touchMoveHandler = widget.addDomHandler(new TouchMoveHandler() {
 
             @Override
             public void onTouchMove(TouchMoveEvent event) {
@@ -231,7 +232,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                     // expired, so let the browser handle the event.
                     cancelTouchTimer();
                 }
-
             }
 
             // mostly copy-pasted code from VScrollTable
@@ -260,7 +260,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
         }, TouchMoveEvent.getType());
 
-        touchEndHandler = getWidget().addDomHandler(event -> {
+        touchEndHandler = widget.addDomHandler(event -> {
             // cancel the timer so the event doesn't fire
             cancelTouchTimer();
 
@@ -421,7 +421,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                  * TODO Enable this error when all widgets have been fixed to
                  * properly support tabIndex, i.e. implement Focusable
                  */
-                // VConsole.error("Tab index received for "
+                // getLogger().severe("Tab index received for "
                 // + Util.getSimpleName(getWidget())
                 // + " which does not implement Focusable");
             }
@@ -476,21 +476,22 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @OnStateChange({ "errorMessage", "errorLevel" })
     private void setErrorLevel() {
+        Widget widget = getWidget();
         // Add or remove the widget's error level style name
-        ErrorUtil.setErrorLevelStyle(getWidget().getElement(),
-                getWidget().getStylePrimaryName() + StyleConstants.ERROR_EXT,
+        ErrorUtil.setErrorLevelStyle(widget.getElement(),
+                widget.getStylePrimaryName() + StyleConstants.ERROR_EXT,
                 getState().errorLevel);
 
         // Add or remove error indicator element
-        if (getWidget() instanceof HasErrorIndicatorElement) {
-            HasErrorIndicatorElement widget = (HasErrorIndicatorElement) getWidget();
+        if (widget instanceof HasErrorIndicatorElement) {
+            HasErrorIndicatorElement hasErrorIndicatorElement = (HasErrorIndicatorElement) widget;
             if (getState().errorMessage != null) {
-                widget.setErrorIndicatorElementVisible(true);
-                ErrorUtil.setErrorLevelStyle(widget.getErrorIndicatorElement(),
+                hasErrorIndicatorElement.setErrorIndicatorElementVisible(true);
+                ErrorUtil.setErrorLevelStyle(hasErrorIndicatorElement.getErrorIndicatorElement(),
                         StyleConstants.STYLE_NAME_ERROR_INDICATOR,
                         getState().errorLevel);
             } else {
-                widget.setErrorIndicatorElementVisible(false);
+                hasErrorIndicatorElement.setErrorIndicatorElementVisible(false);
             }
         }
     }
@@ -511,7 +512,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             if (parent instanceof HasComponentsConnector) {
                 ((HasComponentsConnector) parent).updateCaption(this);
             } else if (parent == null && !(this instanceof UIConnector)) {
-                VConsole.error("Parent of connector "
+                getLogger().severe("Parent of connector "
                         + Util.getConnectorString(this)
                         + " is null. This is typically an indication of a broken component hierarchy");
             }
@@ -760,7 +761,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
             getWidget().removeFromParent();
-            VConsole.error(
+            getLogger().severe(
                     "Widget is still attached to the DOM after the connector ("
                             + Util.getConnectorString(this)
                             + ") has been unregistered. Widget was removed.");
@@ -878,5 +879,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public void onDropTargetDetached() {
 
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractComponentConnector.class.getName());
     }
 }

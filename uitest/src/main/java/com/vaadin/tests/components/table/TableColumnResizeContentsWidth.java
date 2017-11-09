@@ -3,7 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.ColumnGenerator;
 import com.vaadin.v7.ui.TextField;
@@ -31,19 +30,13 @@ public class TableColumnResizeContentsWidth extends AbstractReindeerTestUI {
         table.setColumnWidth(COL1, 100);
 
         addComponent(table);
-        addComponent(new Button("Increase width", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnWidth(COL1, table.getColumnWidth(COL1) + 20);
-                table.markAsDirty();
-            }
+        addComponent(new Button("Increase width", event -> {
+            table.setColumnWidth(COL1, table.getColumnWidth(COL1) + 20);
+            table.markAsDirty();
         }));
-        addComponent(new Button("Decrease width", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnWidth(COL1, table.getColumnWidth(COL1) - 40);
-                table.markAsDirty();
-            }
+        addComponent(new Button("Decrease width", event -> {
+            table.setColumnWidth(COL1, table.getColumnWidth(COL1) - 40);
+            table.markAsDirty();
         }));
     }
 

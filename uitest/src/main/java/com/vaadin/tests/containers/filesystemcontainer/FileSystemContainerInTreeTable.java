@@ -8,16 +8,11 @@ import java.util.List;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Ordered;
 import com.vaadin.v7.data.util.FilesystemContainer;
 import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.Tree.CollapseEvent;
-import com.vaadin.v7.ui.Tree.CollapseListener;
-import com.vaadin.v7.ui.Tree.ExpandEvent;
-import com.vaadin.v7.ui.Tree.ExpandListener;
 import com.vaadin.v7.ui.TreeTable;
 
 public class FileSystemContainerInTreeTable extends TestBase {
@@ -50,22 +45,10 @@ public class FileSystemContainerInTreeTable extends TestBase {
             treeTable.setItemIconPropertyId(FilesystemContainer.PROPERTY_ICON);
             treeTable.setVisibleColumns("Name");
             treeTable.setColumnWidth("Name", 400);
-            treeTable.addListener(new ExpandListener() {
-
-                @Override
-                public void nodeExpand(ExpandEvent event) {
-                    logExpandCollapse(event.getItemId(), "expanded");
-
-                }
-            });
-            treeTable.addListener(new CollapseListener() {
-
-                @Override
-                public void nodeCollapse(CollapseEvent event) {
-                    logExpandCollapse(event.getItemId(), "collapsed");
-
-                }
-            });
+            treeTable.addExpandListener(
+                    event -> logExpandCollapse(event.getItemId(), "expanded"));
+            treeTable.addCollapseListener(
+                    event -> logExpandCollapse(event.getItemId(), "collapsed"));
 
             addComponent(log);
             addComponent(treeTable);
@@ -73,29 +56,18 @@ public class FileSystemContainerInTreeTable extends TestBase {
             HorizontalLayout buttonLayout = new HorizontalLayout();
             buttonLayout.setSpacing(true);
             buttonLayout.addComponent(
-                    new Button("Create dir11", new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            new File(folder, "dir11").mkdir();
-                            log.log("Row dir11 created");
-                        }
+                    new Button("Create dir11", event -> {
+                        new File(folder, "dir11").mkdir();
+                        log.log("Row dir11 created");
                     }));
             buttonLayout.addComponent(
-                    new Button("Delete dir11", new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            new File(folder, "dir11").delete();
-                            log.log("Row dir11 deleted");
-                        }
+                    new Button("Delete dir11", event -> {
+                        new File(folder, "dir11").delete();
+                        log.log("Row dir11 deleted");
                     }));
             // to clean up explicitly before ending an automated test
             buttonLayout.addComponent(
-                    new Button("Clean all files", new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            folder.delete();
-                        }
-                    }));
+                    new Button("Clean all files", event -> folder.delete()));
             addComponent(buttonLayout);
         } catch (IOException e) {
             e.printStackTrace();

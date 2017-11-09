@@ -8,8 +8,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -42,13 +40,8 @@ public class NavigatorViewBlocksBackButtonAction
             addComponent(label);
 
             Button buttonNavToAnotherView = new Button(
-                    "Navigate to another view", new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            navigator.navigateTo(ViewWithPromptedLeave.NAME);
-                        }
-                    });
+                    "Navigate to another view",
+                    event -> navigator.navigateTo(ViewWithPromptedLeave.NAME));
             addComponent(buttonNavToAnotherView);
         }
 
@@ -95,16 +88,11 @@ public class NavigatorViewBlocksBackButtonAction
                 confirmationWindowLayout
                         .addComponent(new Label("Really exit this view?"));
                 confirmationWindowLayout.addComponent(
-                        new Button("Yeah, sure!", new Button.ClickListener() {
-
-                            @Override
-                            public void buttonClick(ClickEvent buttonEvent) {
-                                okToLeave = true;
-                                getUI().removeWindow(confirmationWindow);
-                                event.getNavigator()
-                                        .navigateTo(event.getViewName() + "/"
-                                                + event.getParameters());
-                            }
+                        new Button("Yeah, sure!", clickEvent -> {
+                            okToLeave = true;
+                            getUI().removeWindow(confirmationWindow);
+                            event.getNavigator().navigateTo(event.getViewName()
+                                    + "/" + event.getParameters());
                         }));
                 getUI().addWindow(confirmationWindow);
                 return false;

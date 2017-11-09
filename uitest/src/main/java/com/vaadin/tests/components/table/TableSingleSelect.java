@@ -4,8 +4,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.Table;
 
 public class TableSingleSelect extends TestBase {
@@ -20,13 +18,8 @@ public class TableSingleSelect extends TestBase {
         t.setSelectable(true);
         t.setNullSelectionAllowed(true);
         t.setImmediate(true);
-        t.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log.log("Selected value: " + event.getProperty().getValue());
-            }
-        });
+        t.addValueChangeListener(event -> log
+                .log("Selected value: " + event.getProperty().getValue()));
 
         t.addContainerProperty("string", String.class, null);
         t.addContainerProperty("button", Component.class, null);

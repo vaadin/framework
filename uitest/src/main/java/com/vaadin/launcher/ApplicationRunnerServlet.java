@@ -47,7 +47,6 @@ import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SystemMessages;
-import com.vaadin.server.SystemMessagesInfo;
 import com.vaadin.server.SystemMessagesProvider;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UICreateEvent;
@@ -452,22 +451,16 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 deploymentConfiguration);
         final SystemMessagesProvider provider = service
                 .getSystemMessagesProvider();
-        service.setSystemMessagesProvider(new SystemMessagesProvider() {
-
-            @Override
-            public SystemMessages getSystemMessages(
-                    SystemMessagesInfo systemMessagesInfo) {
-                if (systemMessagesInfo.getRequest() == null) {
-                    return provider.getSystemMessages(systemMessagesInfo);
-                }
-                Object messages = systemMessagesInfo.getRequest()
-                        .getAttribute(CUSTOM_SYSTEM_MESSAGES_PROPERTY);
-                if (messages instanceof SystemMessages) {
-                    return (SystemMessages) messages;
-                }
+        service.setSystemMessagesProvider(systemMessagesInfo -> {
+            if (systemMessagesInfo.getRequest() == null) {
                 return provider.getSystemMessages(systemMessagesInfo);
             }
-
+            Object messages = systemMessagesInfo.getRequest()
+                    .getAttribute(CUSTOM_SYSTEM_MESSAGES_PROPERTY);
+            if (messages instanceof SystemMessages) {
+                return (SystemMessages) messages;
+            }
+            return provider.getSystemMessages(systemMessagesInfo);
         });
         return service;
     }

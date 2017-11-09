@@ -16,18 +16,19 @@
 
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.VConsole;
 
 public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
     private AnchorElement anchor = null;
 
     @Override
     protected com.google.gwt.user.client.Element getDragStartElement() {
-        VConsole.log("IE get drag start element...");
+        getLogger().info("IE get drag start element...");
         Element div = getElement();
         if (dragStartMode == HTML5) {
             if (anchor == null) {
@@ -36,7 +37,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
                 anchor.setClassName("drag-start");
                 div.appendChild(anchor);
             }
-            VConsole.log("IE get drag start element...");
+            getLogger().info("IE get drag start element...");
             return anchor.cast();
         } else {
             if (anchor != null) {
@@ -92,4 +93,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         hookHtml5Events(DOM.asOld(el));
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VDragAndDropWrapperIE.class.getName());
+    }
 }

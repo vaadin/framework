@@ -2,7 +2,6 @@ package com.vaadin.tests.components.menubar;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 
@@ -28,13 +27,7 @@ public class MenuBarPrimaryStylenames extends TestBase {
         addComponent(mainMenu);
 
         addComponent(new Button("Change primary stylename",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        mainMenu.setPrimaryStyleName("my-other-menu");
-                    }
-                }));
-
+                event -> mainMenu.setPrimaryStyleName("my-other-menu")));
     }
 
     @Override

@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -39,7 +40,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
@@ -138,7 +138,7 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
 
         addDomHandler(event -> {
             // TODO When does this actually happen??
-            VConsole.log("TOUCH CANCEL");
+            getLogger().info("TOUCH CANCEL");
         }, TouchCancelEvent.getType());
         addDomHandler(event -> {
             Node target = event.getTouches().get(0).getTarget().cast();
@@ -846,5 +846,9 @@ public abstract class VAbstractSplitPanel extends ComplexPanel {
         }
         touchScrollHandler.addElement(firstContainer);
         touchScrollHandler.addElement(secondContainer);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractSplitPanel.class.getName());
     }
 }

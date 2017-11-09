@@ -3,8 +3,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -28,21 +26,9 @@ public class RepaintWindowContents extends AbstractReindeerTestUI {
 
         window.setContent(layout1);
 
-        button1.addClickListener(new ClickListener() {
+        button1.addClickListener(event -> window.setContent(layout2));
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.setContent(layout2);
-            }
-        });
-
-        button2.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.setContent(layout1);
-            }
-        });
+        button2.addClickListener(event -> window.setContent(layout1));
     }
 
     @Override

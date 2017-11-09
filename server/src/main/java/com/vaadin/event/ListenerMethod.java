@@ -609,13 +609,11 @@ public class ListenerMethod implements EventListener, Serializable {
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class MethodException extends RuntimeException
-            implements Serializable {
+    public class MethodException extends RuntimeException {
 
         private MethodException(String message, Throwable cause) {
             super(message, cause);
         }
-
     }
 
     /**

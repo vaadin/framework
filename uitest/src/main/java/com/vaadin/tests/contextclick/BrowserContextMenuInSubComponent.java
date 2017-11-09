@@ -16,15 +16,12 @@
 package com.vaadin.tests.contextclick;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.event.ContextClickEvent;
-import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
@@ -42,26 +39,15 @@ public class BrowserContextMenuInSubComponent extends AbstractReindeerTestUI {
         // Make TextArea show regular context menu instead of firing the
         // server-side event.
         BrowserContextMenuExtension.extend(textArea);
-        final Button button = new Button("Submit", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show(textArea.getValue());
-            }
-        });
+        final Button button = new Button("Submit",
+                event -> Notification.show(textArea.getValue()));
 
         layout.addComponent(textArea);
         layout.addComponent(button);
 
         panel.setContent(layout);
 
-        panel.addContextClickListener(new ContextClickListener() {
-
-            @Override
-            public void contextClick(ContextClickEvent event) {
-                button.click();
-            }
-        });
+        panel.addContextClickListener(event -> button.click());
 
         addComponent(panel);
     }

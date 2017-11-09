@@ -247,12 +247,7 @@ public class MessageHandler {
                 .getApplicationState() == ApplicationState.INITIALIZING) {
             // Application is starting up for the first time
             connection.setApplicationRunning(true);
-            connection.executeWhenCSSLoaded(new Command() {
-                @Override
-                public void execute() {
-                    handleJSON(json);
-                }
-            });
+            connection.executeWhenCSSLoaded(() -> handleJSON(json));
         } else {
             getLogger().warning(
                     "Ignored received message because application has already been stopped");

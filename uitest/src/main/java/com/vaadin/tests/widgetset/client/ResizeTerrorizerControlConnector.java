@@ -21,8 +21,6 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
@@ -122,13 +120,7 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
                 // Then add history change listener
                 historyHandlerRegistration = History.addValueChangeHandler(
-                        new ValueChangeHandler<String>() {
-                            @Override
-                            public void onValueChange(
-                                    ValueChangeEvent<String> event) {
-                                updateFromHistoryToken(event.getValue());
-                            }
-                        });
+                        event -> updateFromHistoryToken(event.getValue()));
             } else if (!useUriFragments && historyHandlerRegistration != null) {
                 historyHandlerRegistration.removeHandler();
                 historyHandlerRegistration = null;
@@ -244,17 +236,18 @@ public class ResizeTerrorizerControlConnector extends AbstractComponentConnector
 
     @Override
     public void postLayout() {
-        if (getWidget().startWidth.getValue() == null) {
+        ResizeTerrorizerControlPanel panel = getWidget();
+        if (panel.startWidth.getValue() == null) {
             int width = getTarget().getWidget().getElement().getOffsetWidth();
-            getWidget().startWidth.setValue(width);
-            getWidget().endWidth
+            panel.startWidth.setValue(width);
+            panel.endWidth
                     .setValue(width + getState().defaultWidthOffset);
         }
 
-        if (getWidget().startHeight.getValue() == null) {
+        if (panel.startHeight.getValue() == null) {
             int height = getTarget().getWidget().getElement().getOffsetHeight();
-            getWidget().startHeight.setValue(height);
-            getWidget().endHeight
+            panel.startHeight.setValue(height);
+            panel.endHeight
                     .setValue(height + getState().defaultHeightOffset);
         }
     }

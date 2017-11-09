@@ -31,7 +31,6 @@ import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.shared.AbstractComponentState;
 
@@ -722,10 +721,10 @@ public class LayoutDependencyTree {
     }
 
     public void logDependencyStatus(ComponentConnector connector) {
-        VConsole.log("====");
+        getLogger().info("====");
         String connectorId = connector.getConnectorId();
-        VConsole.log(getDependency(connectorId, HORIZONTAL).toString());
-        VConsole.log(getDependency(connectorId, VERTICAL).toString());
+        getLogger().info(getDependency(connectorId, HORIZONTAL).toString());
+        getLogger().info(getDependency(connectorId, VERTICAL).toString());
     }
 
     public boolean noMoreChangesExpected(ComponentConnector connector) {

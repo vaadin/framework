@@ -18,8 +18,6 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -31,23 +29,14 @@ public class InsertComponentInHorizontalLayout extends AbstractReindeerTestUI {
 
     private Component getTestLayout() {
         ComboBox a = new ComboBox("initial");
-        Button b = new Button("x", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.markAsDirty();
-            }
-        });
+        Button b = new Button("x", event -> layout.markAsDirty());
         final HorizontalLayout hl = new HorizontalLayout(a, b);
         hl.setSpacing(true);
         Button add = new Button(
                 "Insert 2 comboboxes between combobox(es) and button 'x'");
-        add.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                hl.addComponent(new ComboBox("Added " + added++), 1);
-                hl.addComponent(new ComboBox("Added " + added++), 2);
-            }
+        add.addClickListener(event -> {
+            hl.addComponent(new ComboBox("Added " + added++), 1);
+            hl.addComponent(new ComboBox("Added " + added++), 2);
         });
         layout = new VerticalLayout(hl, add);
         return layout;

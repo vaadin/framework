@@ -16,7 +16,6 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 
 /**
@@ -24,7 +23,7 @@ import com.google.gwt.user.client.ui.HTML;
  *
  * @since 7.0.0
  */
-public class VColorPicker extends VButton implements ClickHandler {
+public class VColorPicker extends VButton {
 
     private String color = null;
 

@@ -17,7 +17,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.VerticalLayout;
@@ -60,44 +59,19 @@ public class TableScrollAfterAddRow extends AbstractReindeerTestUI {
         layout.addComponent(label);
 
         NativeButton addRowButton = new NativeButton("Add row",
-                new NativeButton.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        addRow(datasource);
-                    }
-                });
+                event -> addRow(datasource));
 
         NativeButton jumpToLastRowButton = new NativeButton("Jump to last row",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToLastRow(table);
-                    }
-                });
+                event -> jumpToLastRow(table));
         NativeButton jumpTo15thRowButton = new NativeButton("Jump to 15th row",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToFifteenthRow(table);
-                    }
-                });
+                event -> jumpToFifteenthRow(table));
         NativeButton jumpToFirstRowButton = new NativeButton(
-                "Jump to first row", new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        jumpToFirstRow(table);
-                    }
-                });
+                "Jump to first row", event -> jumpToFirstRow(table));
 
         NativeButton updateLabelButton = new NativeButton("UpdateLabel",
-                new NativeButton.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
+                event ->
                         label.setValue(Integer.toString(
-                                table.getCurrentPageFirstItemIndex()));
-                    }
-                });
+                        table.getCurrentPageFirstItemIndex())));
         layout.addComponent(addRowButton);
         layout.addComponent(jumpToLastRowButton);
         layout.addComponent(jumpTo15thRowButton);

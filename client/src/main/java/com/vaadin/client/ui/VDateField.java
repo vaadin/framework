@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
+import com.vaadin.client.ui.datefield.AbstractDateFieldConnector;
 import com.vaadin.shared.ui.datefield.AbstractDateFieldServerRpc;
 
 /**
@@ -43,10 +44,10 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     public static final String CLASSNAME = "v-datefield";
 
     /** For internal use only. May be removed or replaced in the future. */
-    public String paintableId;
+    public ApplicationConnection client;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public ApplicationConnection client;
+    public AbstractDateFieldConnector<R> connector;
 
     private R currentResolution;
 
@@ -200,7 +201,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     }
 
     public String getId() {
-        return paintableId;
+        return connector.getConnectorId();
     }
 
     public ApplicationConnection getClient() {

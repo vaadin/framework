@@ -54,12 +54,9 @@ public class BaseLayoutExpand extends BaseLayoutTestUI {
                 expandComp1 = e1;
                 expandComp2 = e2;
                 setCaption("Expand ratio: " + e1 * 100 + " /" + e2 * 100);
-                addClickListener(new ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        l2.setExpandRatio(c1, expandComp1);
-                        l2.setExpandRatio(c2, expandComp2);
-                    }
+                addClickListener(event -> {
+                    l2.setExpandRatio(c1, expandComp1);
+                    l2.setExpandRatio(c2, expandComp2);
                 });
             }
         }

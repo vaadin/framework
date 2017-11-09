@@ -14,8 +14,6 @@ import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.WindowModeChangeEvent;
-import com.vaadin.ui.Window.WindowModeChangeListener;
 
 public class WindowMaximizeRestoreTest extends AbstractReindeerTestUI {
     @Override
@@ -68,18 +66,14 @@ public class WindowMaximizeRestoreTest extends AbstractReindeerTestUI {
         });
         ((ComponentContainer) w.getContent()).addComponent(maximize);
 
-        w.addWindowModeChangeListener(new WindowModeChangeListener() {
-
-            @Override
-            public void windowModeChanged(WindowModeChangeEvent event) {
-                WindowMode state = (event.getWindow().getWindowMode());
-                if (state == WindowMode.NORMAL) {
-                    w.setCaption("Window " + w.getData() + " Normal");
-                    maximize.setCaption("Maximize");
-                } else if (state == WindowMode.MAXIMIZED) {
-                    w.setCaption("Window " + w.getData() + " Maximized");
-                    maximize.setCaption("Restore");
-                }
+        w.addWindowModeChangeListener(event -> {
+            WindowMode state = (event.getWindow().getWindowMode());
+            if (state == WindowMode.NORMAL) {
+                w.setCaption("Window " + w.getData() + " Normal");
+                maximize.setCaption("Maximize");
+            } else if (state == WindowMode.MAXIMIZED) {
+                w.setCaption("Window " + w.getData() + " Maximized");
+                maximize.setCaption("Restore");
             }
         });
         final CheckBox resizeable = new CheckBox("Resizeable");

@@ -304,8 +304,8 @@ public class GridBasicFeatures extends AbstractComponentTest<Grid> {
                         .setValue(Integer.valueOf(row));
                 item.getItemProperty(getColumnProperty(col++))
                         .setValue(new Date(timestamp));
-                timestamp += 91250000; // a bit over a day, just to get
-                                       // variation
+                // a bit over a day, just to get variation
+                timestamp += 91250000;
                 item.getItemProperty(getColumnProperty(col++))
                         .setValue("<b>" + row + "</b>");
 

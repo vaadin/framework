@@ -96,12 +96,7 @@ public abstract class VAbstractDropHandler implements VDropHandler {
      */
     @Override
     public void dragEnter(final VDragEvent drag) {
-        validate(new VAcceptCallback() {
-            @Override
-            public void accepted(VDragEvent event) {
-                dragAccepted(drag);
-            }
-        }, drag);
+        validate(event -> dragAccepted(drag), drag);
     }
 
     /**
@@ -116,12 +111,8 @@ public abstract class VAbstractDropHandler implements VDropHandler {
     protected abstract void dragAccepted(VDragEvent drag);
 
     protected void validate(final VAcceptCallback cb, final VDragEvent event) {
-        Command checkCriteria = new Command() {
-            @Override
-            public void execute() {
-                acceptCriteria.accept(event, criterioUIDL, cb);
-            }
-        };
+        Command checkCriteria = () -> acceptCriteria.accept(event, criterioUIDL,
+                cb);
 
         VDragAndDropManager.get().executeWhenReady(checkCriteria);
     }
@@ -139,15 +130,10 @@ public abstract class VAbstractDropHandler implements VDropHandler {
             return true;
         } else {
             validated = false;
-            acceptCriteria.accept(drag, criterioUIDL, new VAcceptCallback() {
-                @Override
-                public void accepted(VDragEvent event) {
-                    validated = true;
-                }
-            });
+            acceptCriteria.accept(drag, criterioUIDL,
+                    event -> validated = true);
             return validated;
         }
-
     }
 
     /**

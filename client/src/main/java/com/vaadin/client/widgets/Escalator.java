@@ -5868,12 +5868,9 @@ public class Escalator extends Widget
 
     private void setupScrollbars(final Element root) {
 
-        ScrollHandler scrollHandler = new ScrollHandler() {
-            @Override
-            public void onScroll(ScrollEvent event) {
-                scroller.onScroll();
-                fireEvent(new ScrollEvent());
-            }
+        ScrollHandler scrollHandler = event -> {
+            scroller.onScroll();
+            fireEvent(new ScrollEvent());
         };
 
         int scrollbarThickness = WidgetUtil.getNativeScrollbarSize();

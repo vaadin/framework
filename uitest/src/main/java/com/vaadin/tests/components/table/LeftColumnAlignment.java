@@ -18,8 +18,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.Align;
@@ -51,13 +49,8 @@ public class LeftColumnAlignment extends AbstractReindeerTestUI {
 
         addComponent(table);
 
-        addButton("Align to Left", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setColumnAlignment("name", Align.LEFT);
-            }
-        });
+        addButton("Align to Left",
+                event -> table.setColumnAlignment("name", Align.LEFT));
     }
 
     @Override

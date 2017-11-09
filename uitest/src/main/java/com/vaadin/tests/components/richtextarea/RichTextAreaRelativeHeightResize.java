@@ -18,7 +18,6 @@ package com.vaadin.tests.components.richtextarea;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.VerticalLayout;
 
@@ -35,12 +34,8 @@ public class RichTextAreaRelativeHeightResize extends AbstractReindeerTestUI {
         layout.addComponent(richTextArea);
 
         addComponent(layout);
-        addComponent(new Button("Increase height", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                layout.setHeight("400px");
-            }
-        }));
+        addComponent(new Button("Increase height",
+                event -> layout.setHeight("400px")));
 
     }
 

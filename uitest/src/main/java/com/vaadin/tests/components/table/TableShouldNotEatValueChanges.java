@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Notification;
-import com.vaadin.v7.event.ItemClickEvent;
 import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.TableDragMode;
@@ -25,14 +24,9 @@ public class TableShouldNotEatValueChanges extends TestBase {
 
         final TextField tf = new TextField();
         tf.setTabIndex(1);
-        ItemClickListener l = new ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
+        ItemClickListener l = event ->
                 Notification.show("TF Value on the server:" + tf.getValue(),
-                        Notification.TYPE_WARNING_MESSAGE);
-            }
-        };
+                Notification.TYPE_WARNING_MESSAGE);
         t.addListener(l);
         addComponent(tf);
         addComponent(t);

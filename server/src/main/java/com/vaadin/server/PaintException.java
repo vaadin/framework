@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * <code>PaintExcepection</code> is thrown if painting of a component fails.
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class PaintException extends IOException implements Serializable {
+public class PaintException extends IOException {
 
     /**
      * Constructs an instance of <code>PaintExeception</code> with the specified

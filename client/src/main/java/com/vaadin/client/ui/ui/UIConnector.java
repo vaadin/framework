@@ -39,7 +39,6 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -172,23 +171,20 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getWidget().getElement().setScrollLeft(scrollLeft);
             }
         });
-        registerRpc(UIClientRpc.class, new UIClientRpc() {
-            @Override
-            public void uiClosed(final boolean sessionExpired) {
-                Scheduler.get().scheduleDeferred(() -> {
-                    // Only notify user if we're still running and not e.g.
-                    // navigating away (#12298)
-                    if (getConnection().isApplicationRunning()) {
-                        if (sessionExpired) {
-                            getConnection().showSessionExpiredError(null);
-                        } else {
-                            getState().enabled = false;
-                            updateEnabledState(getState().enabled);
-                        }
-                        getConnection().setApplicationRunning(false);
+        registerRpc(UIClientRpc.class, sessionExpired -> {
+            Scheduler.get().scheduleDeferred(() -> {
+                // Only notify user if we're still running and not e.g.
+                // navigating away (#12298)
+                if (getConnection().isApplicationRunning()) {
+                    if (sessionExpired) {
+                        getConnection().showSessionExpiredError(null);
+                    } else {
+                        getState().enabled = false;
+                        updateEnabledState(getState().enabled);
                     }
-                });
-            }
+                    getConnection().setApplicationRunning(false);
+                }
+            });
         });
         registerRpc(DebugWindowClientRpc.class, new DebugWindowClientRpc() {
 
@@ -259,25 +255,26 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
-        getWidget().id = getConnectorId();
-        boolean firstPaint = getWidget().connection == null;
-        getWidget().connection = client;
+        VUI ui = getWidget();
+        ui.id = getConnectorId();
+        boolean firstPaint = ui.connection == null;
+        ui.connection = client;
 
-        getWidget().resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
+        ui.resizeLazy = uidl.hasAttribute(UIConstants.RESIZE_LAZY);
         // this also implicitly removes old styles
         String styles = "";
-        styles += getWidget().getStylePrimaryName() + " ";
+        styles += ui.getStylePrimaryName() + " ";
         if (ComponentStateUtil.hasStyles(getState())) {
             for (String style : getState().styles) {
                 styles += style + " ";
             }
         }
         if (!client.getConfiguration().isStandalone()) {
-            styles += getWidget().getStylePrimaryName() + "-embedded";
+            styles += ui.getStylePrimaryName() + "-embedded";
         }
-        getWidget().setStyleName(styles.trim());
+        ui.setStyleName(styles.trim());
 
-        getWidget().makeScrollable();
+        ui.makeScrollable();
 
         clickEventHandler.handleEventHandlerRegistration();
 
@@ -296,12 +293,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 // source will be opened to this browser window, but we may have
                 // to finish rendering this window in case this is a download
                 // (and window stays open).
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        VUI.goTo(url);
-                    }
-                });
+                Scheduler.get().scheduleDeferred(() -> VUI.goTo(url));
             } else if ("_self".equals(target)) {
                 // This window is closing (for sure). Only other opens are
                 // relevant in this change. See #3558, #2144
@@ -353,11 +345,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         while ((childUidl = uidl.getChildUIDL(childIndex++)) != null) {
             String tag = childUidl.getTag().intern();
             if (tag == "actions") {
-                if (getWidget().actionHandler == null) {
-                    getWidget().actionHandler = new ShortcutActionHandler(
-                            getWidget().id, client);
+                if (ui.actionHandler == null) {
+                    ui.actionHandler = new ShortcutActionHandler(ui.id, client);
                 }
-                getWidget().actionHandler.updateActionMap(childUidl);
+                ui.actionHandler.updateActionMap(childUidl);
             } else if (tag == "css-injections") {
                 injectCSS(childUidl);
             }
@@ -365,38 +356,34 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (uidl.hasAttribute("focused")) {
             // set focused component when render phase is finished
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    ComponentConnector connector = (ComponentConnector) uidl
-                            .getPaintableAttribute("focused", getConnection());
+            Scheduler.get().scheduleDeferred(() -> {
+                ComponentConnector connector = (ComponentConnector) uidl
+                        .getPaintableAttribute("focused", getConnection());
 
-                    if (connector == null) {
-                        // Do not try to focus invisible components which not
-                        // present in UIDL
-                        return;
-                    }
+                if (connector == null) {
+                    // Do not try to focus invisible components which not
+                    // present in UIDL
+                    return;
+                }
 
-                    final Widget toBeFocused = connector.getWidget();
-                    /*
-                     * Two types of Widgets can be focused, either implementing
-                     * GWT Focusable of a thinner Vaadin specific Focusable
-                     * interface.
-                     */
-                    if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
-                        final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
-                        toBeFocusedWidget.setFocus(true);
-                    } else if (toBeFocused instanceof Focusable) {
-                        ((Focusable) toBeFocused).focus();
-                    } else {
-                        getLogger().severe(
-                                "Server is trying to set focus to the widget of connector "
-                                        + Util.getConnectorString(connector)
-                                        + " but it is not focusable. The widget should implement either "
-                                        + com.google.gwt.user.client.ui.Focusable.class
-                                                .getName()
-                                        + " or " + Focusable.class.getName());
-                    }
+                final Widget toBeFocused = connector.getWidget();
+                /*
+                 * Two types of Widgets can be focused, either implementing GWT
+                 * Focusable of a thinner Vaadin specific Focusable interface.
+                 */
+                if (toBeFocused instanceof com.google.gwt.user.client.ui.Focusable) {
+                    final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) toBeFocused;
+                    toBeFocusedWidget.setFocus(true);
+                } else if (toBeFocused instanceof Focusable) {
+                    ((Focusable) toBeFocused).focus();
+                } else {
+                    getLogger().severe(
+                            "Server is trying to set focus to the widget of connector "
+                                    + Util.getConnectorString(connector)
+                                    + " but it is not focusable. The widget should implement either "
+                                    + com.google.gwt.user.client.ui.Focusable.class
+                                            .getName()
+                                    + " or " + Focusable.class.getName());
                 }
             });
         }
@@ -404,8 +391,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // Add window listeners on first paint, to prevent premature
         // variablechanges
         if (firstPaint) {
-            Window.addWindowClosingHandler(getWidget());
-            Window.addResizeHandler(getWidget());
+            Window.addWindowClosingHandler(ui);
+            Window.addResizeHandler(ui);
         }
 
         if (uidl.hasAttribute("scrollTo")) {
@@ -429,7 +416,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             // Queue the initial window size to be sent with the following
             // request.
             Scheduler.get()
-                    .scheduleDeferred(() -> getWidget().sendClientResized());
+                    .scheduleDeferred(() -> ui.sendClientResized());
         }
     }
 
@@ -505,7 +492,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
-        Widget shortcutContextWidget = getWidget();
+        VUI ui = getWidget();
+        Widget shortcutContextWidget = ui;
         if (applicationConnection.getConfiguration().isStandalone()) {
             // Listen to body for standalone apps (#19392)
             shortcutContextWidget = RootPanel.get(); // document body
@@ -515,19 +503,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             if (VWindow.isModalWindowOpen()) {
                 return;
             }
-            if (getWidget().actionHandler != null) {
+            if (ui.actionHandler != null) {
                 Element target = Element
                         .as(event.getNativeEvent().getEventTarget());
                 if (target == Document.get().getBody()
-                        || getWidget().getElement().isOrHasChild(target)) {
+                        || ui.getElement().isOrHasChild(target)) {
                     // Only react to body and elements inside the UI
-                    getWidget().actionHandler.handleKeyboardEvent(
+                    ui.actionHandler.handleKeyboardEvent(
                             (Event) event.getNativeEvent().cast());
                 }
             }
         }, KeyDownEvent.getType());
 
-        DOM.sinkEvents(getWidget().getElement(), Event.ONSCROLL);
+        DOM.sinkEvents(ui.getElement(), Event.ONSCROLL);
 
         RootPanel root = RootPanel.get(rootPanelId);
 
@@ -541,18 +529,18 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         activeTheme = applicationConnection.getConfiguration().getThemeName();
         root.addStyleName(activeTheme);
 
-        root.add(getWidget());
+        root.add(ui);
 
         // Set default tab index before focus call. State change handler
         // will update this later if needed.
-        getWidget().setTabIndex(1);
+        ui.setTabIndex(1);
 
         if (applicationConnection.getConfiguration().isStandalone()) {
             // set focus to iview element by default to listen possible keyboard
             // shortcuts. For embedded applications this is unacceptable as we
             // don't want to steal focus from the main page nor we don't want
             // side-effects from focusing (scrollIntoView).
-            getWidget().getElement().focus();
+            ui.getElement().focus();
         }
 
         applicationConnection.addHandler(
@@ -600,9 +588,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         // but it's never a content widget
         if (connector instanceof WindowConnector) {
             return null;
-        } else {
-            return connector;
         }
+        return connector;
     }
 
     protected void onChildSizeChange() {
@@ -722,7 +709,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     window.setVisible(false);
                     window.show();
                 }
-
             }
         }
 
@@ -758,12 +744,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             return;
         }
 
-        Scheduler.get().scheduleDeferred(new Command() {
-            @Override
-            public void execute() {
-                componentConnector.getWidget().getElement().scrollIntoView();
-            }
-        });
+        Scheduler.get().scheduleDeferred(() -> componentConnector.getWidget()
+                .getElement().scrollIntoView());
     }
 
     @Override
