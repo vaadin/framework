@@ -864,7 +864,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      */
     @SuppressWarnings("deprecation")
     public String getDateStyle(Date date) {
-        return getState().dateStyles
+        return getState(false).dateStyles
                 .get(new Date(date.getYear(), date.getMonth(), date.getDate()));
     }
 
@@ -877,6 +877,6 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * @see {@link #setDateStyle(Date, String)}
      */
     public Map<Date, String> getDateStyles() {
-        return new HashMap<>(getState().dateStyles);
+        return new HashMap<>(getState(false).dateStyles);
     }
 }
