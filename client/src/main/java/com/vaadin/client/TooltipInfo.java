@@ -32,6 +32,7 @@ public class TooltipInfo {
     private Object identifier;
 
     public TooltipInfo() {
+        this("", ContentMode.PREFORMATTED);
     }
 
     public TooltipInfo(String tooltip) {
