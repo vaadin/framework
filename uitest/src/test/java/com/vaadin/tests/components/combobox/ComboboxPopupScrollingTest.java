@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -65,8 +65,8 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
         // make sure animation frame is handled
         try {
             sleep(500);
-        } catch (InterruptedException ignored) {
-            
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         Point newComboLocation = cb.getLocation();

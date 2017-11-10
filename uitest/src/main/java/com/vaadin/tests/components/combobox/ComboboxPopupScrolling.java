@@ -36,7 +36,7 @@ public class ComboboxPopupScrolling extends AbstractTestUIWithLog {
         HorizontalLayout hl = new HorizontalLayout(combobox, combobox2,
                 combobox3, combobox4);
         addComponent(hl);
-        
+
         Label spacer = new Label();
         spacer.setHeight("800px");
         addComponent(spacer);

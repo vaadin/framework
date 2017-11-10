@@ -241,12 +241,12 @@ public class VFilterSelect extends Composite
             return $entry(function(e) {
                 var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
                 var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
-
+        
                 // IE8 has only delta y
                 if (isNaN(deltaY)) {
                     deltaY = -0.5*e.wheelDelta;
                 }
-
+        
                 @com.vaadin.client.ui.VFilterSelect.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
@@ -342,7 +342,6 @@ public class VFilterSelect extends Composite
         private int leftPosition;
 
         private final MouseWheeler mouseWheeler = new MouseWheeler();
-        
         private boolean scrollPending = false;
 
         /**
@@ -486,7 +485,7 @@ public class VFilterSelect extends Composite
         /*-{
             return val | 0;
         }-*/;
-        
+
         private int getDesiredTopPosition() {
             return toInt32(WidgetUtil.getBoundingClientRect(tb.getElement())
                     .getBottom()) + Window.getScrollTop();
@@ -497,7 +496,7 @@ public class VFilterSelect extends Composite
                     .getBoundingClientRect(VFilterSelect.this.getElement())
                     .getLeft());
         }
-        
+
         /**
          * Should the next page button be visible to the user?
          *
@@ -717,27 +716,28 @@ public class VFilterSelect extends Composite
 
             super.onPreviewNativeEvent(event);
         }
-        
+
         /**
          * Make the popup follow the position of the ComboBox when the page is
          * scrolled.
          */
         private void updatePopupPositionOnScroll() {
             if (!scrollPending) {
-                AnimationScheduler.get().requestAnimationFrame(new AnimationCallback() {                    
-                    public void execute(double timestamp) {
-                        if (isShowing()) {
-                            leftPosition = getDesiredLeftPosition();
-                            topPosition = getDesiredTopPosition();
-                            setPopupPosition(leftPosition, topPosition);
-                        }
-                        scrollPending = false;
-                    }
-                });
+                AnimationScheduler.get()
+                        .requestAnimationFrame(new AnimationCallback() {
+                            public void execute(double timestamp) {
+                                if (isShowing()) {
+                                    leftPosition = getDesiredLeftPosition();
+                                    topPosition = getDesiredTopPosition();
+                                    setPopupPosition(leftPosition, topPosition);
+                                }
+                                scrollPending = false;
+                            }
+                        });
                 scrollPending = true;
             }
         }
-        
+
         /**
          * Should paging be enabled. If paging is enabled then only a certain
          * amount of items are visible at a time and a scrollbar or buttons are
@@ -1358,7 +1358,8 @@ public class VFilterSelect extends Composite
         int getItemOffsetHeight() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetHeight() : 0;
+                    ? items.get(0).getOffsetHeight()
+                    : 0;
         }
 
         /*
@@ -1367,7 +1368,8 @@ public class VFilterSelect extends Composite
         int getItemOffsetWidth() {
             List<MenuItem> items = getItems();
             return items != null && items.size() > 0
-                    ? items.get(0).getOffsetWidth() : 0;
+                    ? items.get(0).getOffsetWidth()
+                    : 0;
         }
 
         /**
