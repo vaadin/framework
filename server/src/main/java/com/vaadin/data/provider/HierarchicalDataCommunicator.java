@@ -322,4 +322,12 @@ public class HierarchicalDataCommunicator<T> extends DataCommunicator<T> {
         super.setFilter(filter);
     }
 
+    /**
+     * Returns active {@code HierarchyMapper}
+     *
+     * @return the mapper
+     */
+    protected HierarchyMapper<T, ?> getMapper() {
+        return mapper;
+    }
 }
