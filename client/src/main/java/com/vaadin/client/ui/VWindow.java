@@ -1380,7 +1380,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             if (!DOM.isOrHasChild(getTopmostWindow().getElement(), target)) {
                 // not within the modal window, but let's see if it's in the
                 // debug window
-                Widget w = WidgetUtil.findWidget(target, null);
+                Widget w = WidgetUtil.findWidget(target);
                 while (w != null) {
                     if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks

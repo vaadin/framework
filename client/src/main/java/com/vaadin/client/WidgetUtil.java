@@ -694,7 +694,7 @@ public class WidgetUtil {
              return @com.vaadin.client.WidgetUtil::getRequiredHeightBoundingClientRectDouble(Lcom/google/gwt/dom/client/Element;)(element);
          }
          var height = parseFloat(heightPx); // Will automatically skip "px" suffix
-         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix 
+         var border = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth); // Will automatically skip "px" suffix
          var padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom); // Will automatically skip "px" suffix
          return height+border+padding;
      }-*/;
@@ -838,6 +838,25 @@ public class WidgetUtil {
     }-*/;
 
     /**
+     * Helper method to find first instance of any Widget found by traversing
+     * DOM upwards from given element.
+     * <p>
+     * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite}
+     * {@code C}, this method will not find {@code W} but returns {@code C}.
+     * This may also be the case with other Composite-like classes that hijack
+     * the event handling of their child widget(s).
+     *
+     * @param element
+     *            the element where to start seeking of Widget
+     * @since 7.7.11
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T findWidget(Element element) {
+        return findWidget(element, null);
+    }
+
+    /**
      * Helper method to find first instance of given Widget type found by
      * traversing DOM upwards from given element.
      * <p>
@@ -847,15 +866,43 @@ public class WidgetUtil {
      * {@code C} or null, depending on whether the class parameter matches. This
      * may also be the case with other Composite-like classes that hijack the
      * event handling of their child widget(s).
+     * <p>
+     * Only accepts the exact class {@code class1} if not null.
+     *
+     * @param element
+     *            the element where to start seeking of Widget
+     * @param class1
+     *            the Widget type to seek for, null for any
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T findWidget(Element element,
+            Class<? extends Widget> class1) {
+        return findWidget(element, class1, true);
+    }
+
+    /**
+     * Helper method to find first instance of given Widget type found by
+     * traversing DOM upwards from given element.
+     * <p>
+     * <strong>Note:</strong> If {@code element} is inside some widget {@code W}
+     * , <em>and</em> {@code W} in turn is wrapped in a {@link Composite} {@code
+     * C}, this method will not find {@code W}. It returns either {@code C} or
+     * null, depending on whether the class parameter matches. This may also be
+     * the case with other Composite-like classes that hijack the event handling
+     * of their child widget(s).
      *
      * @param element
      *            the element where to start seeking of Widget
      * @param class1
      *            the Widget type to seek for
+     * @param exactMatch
+     *            true to only accept class1, false to also accept its
+     *            superclasses
+     * @since 7.7.11
      */
     @SuppressWarnings("unchecked")
     public static <T> T findWidget(Element element,
-            Class<? extends Widget> class1) {
+            Class<? extends Widget> class1, boolean exactMatch) {
         if (element != null) {
             /* First seek for the first EventListener (~Widget) from dom */
             EventListener eventListener = null;
@@ -871,9 +918,19 @@ public class WidgetUtil {
                  * hierarchy
                  */
                 Widget w = (Widget) eventListener;
+                if (class1 == null && w != null) {
+                    return (T) w;
+                }
                 while (w != null) {
-                    if (class1 == null || w.getClass() == class1) {
-                        return (T) w;
+                    Class<?> widgetClass = w.getClass();
+                    while (widgetClass != null) {
+                        if (widgetClass == class1) {
+                            return (T) w;
+                        }
+                        // terminate after first check if looking for exact
+                        // match
+                        widgetClass = exactMatch ? null
+                                : widgetClass.getSuperclass();
                     }
                     w = w.getParent();
                 }
@@ -1110,7 +1167,7 @@ public class WidgetUtil {
          * Fixes infocusable form fields in Safari of iOS 5.x and some Android
          * browsers.
          */
-        Widget targetWidget = findWidget(target, null);
+        Widget targetWidget = findWidget(target);
         if (targetWidget instanceof com.google.gwt.user.client.ui.Focusable) {
             final com.google.gwt.user.client.ui.Focusable toBeFocusedWidget = (com.google.gwt.user.client.ui.Focusable) targetWidget;
             toBeFocusedWidget.setFocus(true);
@@ -1826,6 +1883,8 @@ public class WidgetUtil {
 
     /**
      * Utility methods for displaying error message on components.
+     *
+     * @since 7.7.11
      */
     public static class ErrorUtil {
 
@@ -1835,17 +1894,17 @@ public class WidgetUtil {
          * {@code prefix-errorLevel} format.
          *
          * @param element
-         *         element to apply the style name to
+         *            element to apply the style name to
          * @param prefix
-         *         part of the style name before the error level string
+         *            part of the style name before the error level string
          * @param errorLevel
-         *         error level for which the style will be applied
+         *            error level for which the style will be applied
          */
         public static void setErrorLevelStyle(Element element, String prefix,
                 ErrorLevel errorLevel) {
             for (ErrorLevel errorLevelValue : ErrorLevel.values()) {
-                String className =
-                        prefix + "-" + errorLevelValue.toString().toLowerCase();
+                String className = prefix + "-"
+                        + errorLevelValue.toString().toLowerCase();
                 if (errorLevel == errorLevelValue) {
                     element.addClassName(className);
                 } else {
