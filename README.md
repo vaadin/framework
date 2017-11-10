@@ -23,7 +23,7 @@ If using Windows, you might want to add these Git settings: `core.autocrlf=false
 Note that the first compilation takes a while to finish as maven downloads dependencies used in the projects.
 1. Start Eclipse with the workspace you would like to use. It is usually a good idea to use the parent folder of the Git repository as the workspace folder.
 1. Import the project into Eclipse as a maven project. Use *File* -> *Import* -> *Maven* -> *Existing Maven Projects*.
-1. Select the *vaadin* folder (where you cloned the project)
+1. Select the *framework* folder (where you cloned the project)
 1. Click “Finish” to complete the import of Vaadin Framework
 
 Now the project should compile without further configuration.
