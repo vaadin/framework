@@ -6,6 +6,7 @@ import java.util.List;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,12 +16,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.InlineDateField;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Slider;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TreeGrid;
@@ -56,6 +59,12 @@ public class TabIndexes extends AbstractTestUIWithLog {
         menubar.addItem("foo", item -> {
         });
         fields.add(menubar);
+        TabSheet tabSheet = new TabSheet();
+        tabSheet.addTab(new Label("Tab content"), "Tab 1");
+        fields.add(tabSheet);
+        Accordion accordion = new Accordion();
+        accordion.addTab(new Label("Tab content"), "Tab 1");
+        fields.add(accordion);
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
         addComponent(buttonLayout);

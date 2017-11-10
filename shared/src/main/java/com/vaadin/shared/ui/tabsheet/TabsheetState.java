@@ -34,6 +34,7 @@ public class TabsheetState extends AbstractComponentContainerState {
      * tabs.
      */
     @NoLayout
+    @DelegateToWidget
     public int tabIndex;
 
     public List<TabState> tabs = new ArrayList<>();
