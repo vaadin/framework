@@ -1578,7 +1578,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     /**
      * Adds a Handler for window order change event.
      *
-     * @since 8.0
+     * @since 7.7.12
      *
      * @return registration object to deregister the handler
      */
