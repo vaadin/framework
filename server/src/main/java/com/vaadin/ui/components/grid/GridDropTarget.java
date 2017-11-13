@@ -38,6 +38,10 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  */
 public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
+    private Registration sortListenerRegistration;
+    private DropMode cachedDropMode;
+    private boolean dropAllowedOnSortedGridRows = true;
+
     /**
      * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
      *
@@ -103,11 +107,14 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * been sorted by the user.
      * <p>
      * Default value is {@code true} for backwards compatibility with 8.1. When
-     * {@code true} is used, the mode used in {@link #setDropMode(DropMode)} is
-     * always used. {@code false} value means that when the grid has been sorted
-     * by the user, the drop mode is always {@link DropMode#ON_GRID}, regardless
-     * of what has been put to {@link #setDropMode(DropMode)}. If the grid has
-     * not been sorted, {@link #setDropMode(DropMode)} is used.
+     * {@code true} is used or the grid is not sorted, the mode used in
+     * {@link #setDropMode(DropMode)} is always used.
+     * <p>
+     * {@code false} value means that when the grid has been sorted, the drop
+     * mode is always {@link DropMode#ON_GRID}, regardless of what was set with
+     * {@link #setDropMode(DropMode)}. Once the grid is not sorted anymore, the
+     * sort mode is reverted back to what was set with
+     * {@link #setDropMode(DropMode)}.
      *
      * @param dropAllowedOnSortedGridRows
      *            {@code true} for allowing, {@code false} for not allowing
@@ -116,9 +123,40 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      */
     public void setDropAllowedOnSortedGridRows(
             boolean dropAllowedOnSortedGridRows) {
-        if (getState(
-                false).dropAllowedOnSortedGridRows != dropAllowedOnSortedGridRows) {
-            getState().dropAllowedOnSortedGridRows = dropAllowedOnSortedGridRows;
+        if (this.dropAllowedOnSortedGridRows != dropAllowedOnSortedGridRows) {
+            this.dropAllowedOnSortedGridRows = dropAllowedOnSortedGridRows;
+
+            if (!dropAllowedOnSortedGridRows) {
+
+                sortListenerRegistration = getParent()
+                        .addSortListener(event -> {
+                            updateDropModeForSortedGrid(
+                                    !event.getSortOrder().isEmpty());
+                        });
+
+                updateDropModeForSortedGrid(
+                        !getParent().getSortOrder().isEmpty());
+
+            } else {
+                // if the grid has been sorted, but now dropping on sorted grid
+                // is allowed, switch back to the previously allowed drop mode
+                if (cachedDropMode != null) {
+                    setDropMode(cachedDropMode);
+                }
+                sortListenerRegistration.remove();
+                sortListenerRegistration = null;
+                cachedDropMode = null;
+            }
+        }
+    }
+
+    private void updateDropModeForSortedGrid(boolean sorted) {
+        if (sorted && cachedDropMode == null) {
+            cachedDropMode = getDropMode();
+            setDropMode(DropMode.ON_GRID);
+        } else if (!sorted && cachedDropMode != null) {
+            setDropMode(cachedDropMode);
+            cachedDropMode = null;
         }
     }
 
@@ -131,7 +169,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * @since
      */
     public boolean isDropAllowedOnSortedGridRows() {
-        return getState(false).dropAllowedOnSortedGridRows;
+        return dropAllowedOnSortedGridRows;
     }
 
     /**
@@ -216,5 +254,17 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     @Override
     protected GridDropTargetState getState(boolean markAsDirty) {
         return (GridDropTargetState) super.getState(markAsDirty);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+
+        // this handler can be removed from the grid and cannot be added to
+        // another grid, thus enough to just remove the listener
+        if (sortListenerRegistration != null) {
+            sortListenerRegistration.remove();
+            sortListenerRegistration = null;
+        }
     }
 }

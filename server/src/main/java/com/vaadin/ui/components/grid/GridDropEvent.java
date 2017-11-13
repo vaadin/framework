@@ -78,25 +78,32 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
     /**
      * Get the row the drop happened on.
      * <p>
-     * If the drop was not on top of a row (see {@link #getDropLocation()}),
-     * then returns an empty optional.
+     * If the drop was not on top of a row (see {@link #getDropLocation()}) or
+     * {@link DropMode#ON_GRID} is used, then returns an empty optional.
      *
-     * @return The row the drop happened on, or an empty optional if dropped on
-     *         the in grid but not on top of any row, like to an empty grid
+     * @return The row the drop happened on, or an empty optional if drop was
+     *         not on a row
      */
     public Optional<T> getDropTargetRow() {
         return Optional.ofNullable(dropTargetRow);
     }
 
     /**
-     * Get the location of the drop within the row.
+     * Get the location of the drop within the row-
      * <p>
-     * <em>NOTE: when dropped on an empty grid, or when {@link DropMode#ON_TOP}
-     * is used and the drop happened on empty space after last row or on top of
-     * the header / footer, the location will be
-     * {@link DropLocation#EMPTY}.</em>
+     * <em>NOTE: the location will be {@link DropLocation#EMPTY} if:
+     * <ul>
+     * <li>dropped on an empty grid</li>
+     * <li>dropping on rows was not possible because of
+     * {@link DropMode#ON_GRID } was used</li>
+     * <li>{@link DropMode#ON_TOP} is used and the drop happened on empty space
+     * after last row or on top of the header / footer</li>
+     * </ul>
+     * </em>
      *
-     * @return Location of the drop within the row.
+     * @return location of the drop in relative to the
+     *         {@link #getDropTargetRow()} or {@link DropLocation#EMPTY} if no
+     *         target row present
      * @see GridDropTarget#setDropMode(DropMode)
      */
     public DropLocation getDropLocation() {
