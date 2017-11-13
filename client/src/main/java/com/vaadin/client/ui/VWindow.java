@@ -46,6 +46,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -66,6 +67,8 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.window.WindowMoveEvent;
 import com.vaadin.client.ui.window.WindowMoveHandler;
+import com.vaadin.client.ui.window.WindowOrderEvent;
+import com.vaadin.client.ui.window.WindowOrderHandler;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -79,7 +82,10 @@ import com.vaadin.shared.ui.window.WindowRole;
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
 
-    private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
+    private static List<VWindow> windowOrder = new ArrayList<VWindow>();
+
+    private static final HandlerManager WINDOW_ORDER_HANDLER = new HandlerManager(
+            VWindow.class);
 
     private static boolean orderingDefered;
 
@@ -301,14 +307,37 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     public void bringToFront() {
-        int curIndex = windowOrder.indexOf(this);
+        bringToFront(true);
+    }
+
+    private void bringToFront(boolean notifyListeners) {
+        int curIndex = getWindowOrder();
         if (curIndex + 1 < windowOrder.size()) {
             windowOrder.remove(this);
             windowOrder.add(this);
             for (; curIndex < windowOrder.size(); curIndex++) {
-                windowOrder.get(curIndex).setWindowOrder(curIndex);
+                VWindow window = windowOrder.get(curIndex);
+                window.setWindowOrder(curIndex);
             }
         }
+        if (notifyListeners) {
+            fireOrderEvent();
+        }
+    }
+
+    static void fireOrderEvent() {
+        fireOrderEvent(windowOrder);
+    }
+
+    private void doFireOrderEvent() {
+        List<VWindow> list = new ArrayList<VWindow>();
+        list.add(this);
+        fireOrderEvent(list);
+    }
+
+    private static void fireOrderEvent(List<VWindow> windows) {
+        WINDOW_ORDER_HANDLER.fireEvent(
+                new WindowOrderEvent(new ArrayList<VWindow>(windows)));
     }
 
     /**
@@ -321,7 +350,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private static VWindow getTopmostWindow() {
-        if (windowOrder.size() > 0) {
+        if (!windowOrder.isEmpty()) {
             return windowOrder.get(windowOrder.size() - 1);
         }
         return null;
@@ -340,11 +369,20 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         windowOrder.add(this);
         setPopupPosition(order * STACKING_OFFSET_PIXELS,
                 order * STACKING_OFFSET_PIXELS);
-
+        doFireOrderEvent();
     }
 
     private void setWindowOrder(int order) {
         setZIndex(order + Z_INDEX);
+    }
+
+    /**
+     * Returns window position in list of opened and shown windows.
+     *
+     * @since 7.7.12
+     */
+    public final int getWindowOrder() {
+        return windowOrder.indexOf(this);
     }
 
     @Override
@@ -424,16 +462,22 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
                 Id.of(headerText));
 
-        // Handlers to Prevent tab to leave the window
+        // Handlers to Prevent tab to leave the window (by circulating focus)
         // and backspace to cause browser navigation
         topEventBlocker = new NativePreviewHandler() {
             @Override
             public void onPreviewNativeEvent(NativePreviewEvent event) {
+                if (!getElement()
+                        .isOrHasChild(WidgetUtil.getFocusedElement())) {
+                    return;
+                }
                 NativeEvent nativeEvent = event.getNativeEvent();
                 if (nativeEvent.getEventTarget().cast() == topTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                         && nativeEvent.getShiftKey()) {
                     nativeEvent.preventDefault();
+                    FocusUtil.focusOnLastFocusableElement(
+                            VWindow.this.getElement());
                 }
                 if (nativeEvent.getEventTarget().cast() == topTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
@@ -445,11 +489,17 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         bottomEventBlocker = new NativePreviewHandler() {
             @Override
             public void onPreviewNativeEvent(NativePreviewEvent event) {
+                if (!getElement()
+                        .isOrHasChild(WidgetUtil.getFocusedElement())) {
+                    return;
+                }
                 NativeEvent nativeEvent = event.getNativeEvent();
                 if (nativeEvent.getEventTarget().cast() == bottomTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
                         && !nativeEvent.getShiftKey()) {
                     nativeEvent.preventDefault();
+                    FocusUtil.focusOnFirstFocusableElement(
+                            VWindow.this.getElement());
                 }
                 if (nativeEvent.getEventTarget().cast() == bottomTabStop
                         && nativeEvent.getKeyCode() == KeyCodes.KEY_BACKSPACE) {
@@ -539,27 +589,28 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
             @Override
             public int compare(VWindow o1, VWindow o2) {
-                /*
-                 * Order by modality, then by bringtofront sequence.
-                 */
 
+            /*
+             * Order by modality, then by bringtofront sequence.
+             */
                 if (o1.vaadinModality && !o2.vaadinModality) {
                     return 1;
-                } else if (!o1.vaadinModality && o2.vaadinModality) {
-                    return -1;
-                } else if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
-                    return 1;
-                } else if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
-                    return -1;
-                } else {
-                    return 0;
                 }
+                if (!o1.vaadinModality && o2.vaadinModality) {
+                    return -1;
+                }
+                if (o1.bringToFrontSequence > o2.bringToFrontSequence) {
+                    return 1;
+                }
+                if (o1.bringToFrontSequence < o2.bringToFrontSequence) {
+                    return -1;
+                }
+                return 0;
             }
         });
-        for (int i = 0; i < array.length; i++) {
-            VWindow w = array[i];
+        for (VWindow w : array) {
             if (w.bringToFrontSequence != -1 || w.vaadinModality) {
-                w.bringToFront();
+                w.bringToFront(false);
                 w.bringToFrontSequence = -1;
             }
         }
@@ -568,9 +619,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private static void focusTopmostModalWindow() {
         VWindow topmost = getTopmostWindow();
-        if ((topmost != null) && (topmost.vaadinModality)) {
+        if (topmost != null && topmost.vaadinModality) {
             topmost.focus();
         }
+        fireOrderEvent();
     }
 
     @Override
@@ -697,15 +749,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
         super.hide();
 
-        int curIndex = windowOrder.indexOf(this);
+        int curIndex = getWindowOrder();
         // Remove window from windowOrder to avoid references being left
         // hanging.
         windowOrder.remove(curIndex);
         // Update the z-indices of any remaining windows
+        List<VWindow> update = new ArrayList<VWindow>(
+                windowOrder.size() - curIndex + 1);
+        update.add(this);
         while (curIndex < windowOrder.size()) {
-            windowOrder.get(curIndex).setWindowOrder(curIndex++);
+            VWindow window = windowOrder.get(curIndex);
+            window.setWindowOrder(curIndex++);
+            update.add(window);
         }
         focusTopmostModalWindow();
+        fireOrderEvent(update);
     }
 
     private void fixIE8FocusCaptureIssue() {
@@ -744,8 +802,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void showModalityCurtain() {
-        getModalityCurtain().getStyle()
-                .setZIndex(windowOrder.indexOf(this) + Z_INDEX);
+        getModalityCurtain().getStyle().setZIndex(getWindowOrder() + Z_INDEX);
 
         if (isShowing()) {
             getOverlayContainer().insertBefore(getModalityCurtain(),
@@ -1213,7 +1270,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the width to the contents
         getElement().getStyle().setProperty("width", width);
         // Update v-has-width in case undefined window is resized
-        setStyleName("v-has-width", width != null && width.length() > 0);
+        setStyleName("v-has-width", width != null && !width.isEmpty());
     }
 
     @Override
@@ -1221,7 +1278,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Override PopupPanel which sets the height to the contents
         getElement().getStyle().setProperty("height", height);
         // Update v-has-height in case undefined window is resized
-        setStyleName("v-has-height", height != null && height.length() > 0);
+        setStyleName("v-has-height", height != null && !height.isEmpty());
     }
 
     private void onDragEvent(Event event) {
@@ -1519,8 +1576,21 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     /**
+     * Adds a Handler for window order change event.
+     *
+     * @since 7.7.12
+     *
+     * @return registration object to deregister the handler
+     */
+    public static HandlerRegistration addWindowOrderHandler(
+            WindowOrderHandler handler) {
+        return WINDOW_ORDER_HANDLER.addHandler(WindowOrderEvent.getType(),
+                handler);
+    }
+
+    /**
      * Checks if a modal window is currently open.
-     * 
+     *
      * @return <code>true</code> if a modal window is open, <code>false</code>
      *         otherwise.
      */
@@ -1528,5 +1598,4 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         return Document.get().getBody()
                 .hasClassName(MODAL_WINDOW_OPEN_CLASSNAME);
     }
-
 }
