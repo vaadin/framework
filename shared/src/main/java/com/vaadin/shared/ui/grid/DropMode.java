@@ -48,6 +48,7 @@ public enum DropMode {
      * </ul>
      */
     ON_TOP_OR_BETWEEN,
+
     /**
      * The drop event will not happen on any specific row, it will show the drop
      * target outline around the whole grid. For this drop target, the drop

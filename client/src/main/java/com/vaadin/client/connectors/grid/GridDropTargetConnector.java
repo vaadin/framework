@@ -80,7 +80,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
     /**
      * Class name to apply when dragged over an empty grid, or when dropping on
-     * rows it not possible (see {@link #isDroppingOnRowsPossible()}).
+     * rows is not possible (see {@link #isDroppingOnRowsPossible()}).
      */
     private String styleDragEmpty;
 
@@ -103,18 +103,15 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     /**
      * Inspects whether the current drop would happen on the whole grid instead
      * of specific row as the drop target. This is based on used drop mode,
-     * whether dropping on sorted grid rows is allowed and whether the grid is
+     * whether dropping on sorted grid rows is allowed (determined on server
+     * side and automatically updated to drop mode) and whether the grid is
      * empty.
      *
-     * @return {@code} true when the drop target is the whole grid, or
-     *         {@code false} when it is the one of the rows
+     * @return {@code true} when the drop target is the whole grid, or
+     *         {@code false} when it is one of the rows
      */
     protected boolean isDroppingOnRowsPossible() {
         if (getState().dropMode == DropMode.ON_GRID) {
-            return false;
-        }
-
-        if (isGridSortedByUser() && !getState().dropAllowedOnSortedGridRows) {
             return false;
         }
 
@@ -129,7 +126,6 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
     protected void sendDropEventToServer(List<String> types,
             Map<String, String> data, String dropEffect,
             NativeEvent dropEvent) {
-        // the next on is always either the table wrapper or a row element
         Element targetElement = getTargetElement(
                 (Element) dropEvent.getEventTarget().cast());
 
@@ -139,6 +135,7 @@ public class GridDropTargetConnector extends DropTargetExtensionConnector {
 
         String rowKey = null;
 
+        // the target is either on a row element or the table wrapper
         if (TableRowElement.is(targetElement)) {
             rowKey = getRowData(targetElement.cast())
                     .getString(GridState.JSONKEY_ROWKEY);
