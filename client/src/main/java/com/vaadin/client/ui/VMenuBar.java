@@ -180,24 +180,7 @@ public class VMenuBar extends FocusableFlowPanel
 
         // Reset the style name for all the items
         for (CustomMenuItem item : items) {
-            if (item.isSeparator) {
-                item.setStyleName(primaryStyleName + "-separator");
-                item.getElement().setAttribute("role", "separator");
-            } else {
-                item.setStyleName(primaryStyleName + "-menuitem");
-                if (item.isCheckable()) {
-                    item.getElement().setAttribute("role", "menuitemcheckbox");
-                    item.getElement().setAttribute("aria-checked",
-                            String.valueOf(item.isChecked()));
-                } else {
-                    item.getElement().setAttribute("role", "menuitem");
-                }
-                if (item.isEnabled()) {
-                    item.getElement().removeAttribute("aria-disabled");
-                } else {
-                    item.getElement().setAttribute("aria-disabled", "true");
-                }
-            }
+            item.refreshPrimaryStyleNameAndAriaAttributes(primaryStyleName);
         }
 
         if (subMenu
@@ -975,24 +958,7 @@ public class VMenuBar extends FocusableFlowPanel
                 }
             }
 
-            if (isSeparator) {
-                super.setStyleName(primaryStyleName + "-separator");
-                getElement().setAttribute("role", "separator");
-            } else {
-                super.setStyleName(primaryStyleName + "-menuitem");
-                if (isCheckable()) {
-                    getElement().setAttribute("role", "menuitemcheckbox");
-                    getElement().setAttribute("aria-checked",
-                            String.valueOf(isChecked()));
-                } else {
-                    getElement().setAttribute("role", "menuitem");
-                }
-                if (isEnabled()) {
-                    getElement().removeAttribute("aria-disabled");
-                } else {
-                    getElement().setAttribute("aria-disabled", "true");
-                }
-            }
+            refreshPrimaryStyleNameAndAriaAttributes(primaryStyleName);
 
             for (String customStyle : customStyles) {
                 super.addStyleName(customStyle);
@@ -1037,6 +1003,28 @@ public class VMenuBar extends FocusableFlowPanel
                 } else {
                     addStyleDependentName("unchecked");
                     removeStyleDependentName("checked");
+                }
+            }
+        }
+
+        private void refreshPrimaryStyleNameAndAriaAttributes(
+                String primaryStyleName) {
+            if (isSeparator) {
+                super.setStyleName(primaryStyleName + "-separator");
+                getElement().setAttribute("role", "separator");
+            } else {
+                super.setStyleName(primaryStyleName + "-menuitem");
+                if (isCheckable()) {
+                    getElement().setAttribute("role", "menuitemcheckbox");
+                    getElement().setAttribute("aria-checked",
+                            String.valueOf(isChecked()));
+                } else {
+                    getElement().setAttribute("role", "menuitem");
+                }
+                if (isEnabled()) {
+                    getElement().removeAttribute("aria-disabled");
+                } else {
+                    getElement().setAttribute("aria-disabled", "true");
                 }
             }
         }
