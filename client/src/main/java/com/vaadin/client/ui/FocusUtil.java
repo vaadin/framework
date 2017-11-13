@@ -99,7 +99,9 @@ public class FocusUtil {
 
     /**
      * Get all the child elements of a parent that are focusable.
-     * @param parent The parent element whose children to search.
+     * 
+     * @param parent
+     *            The parent element whose children to search.
      * @return Array of child Elements that are focusable.
      * @since 7.7.12
      */
@@ -111,11 +113,12 @@ public class FocusUtil {
 
     /**
      * Focus on the first focusable child Element of a parent Element.
-     * @param parent The parent element to scan for a focusable child.
+     * 
+     * @param parent
+     *            The parent element to scan for a focusable child.
      * @since 7.7.12
      */
-    public static void focusOnFirstFocusableElement(Element parent)
-    {
+    public static void focusOnFirstFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[0].focus();
@@ -124,11 +127,12 @@ public class FocusUtil {
 
     /**
      * Focus on the last focusable child Element of a parent Element.
-     * @param parent The parent element to scan for a focusable child.
+     * 
+     * @param parent
+     *            The parent element to scan for a focusable child.
      * @since 7.7.12
      */
-    public static void focusOnLastFocusableElement(Element parent)
-    {
+    public static void focusOnLastFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[focusableChildren.length - 1].focus();
