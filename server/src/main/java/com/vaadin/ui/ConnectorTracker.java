@@ -443,7 +443,7 @@ public class ConnectorTracker implements Serializable {
      *
      * @return <code>true</code> if the hierarchy is consistent,
      *         <code>false</code> otherwise
-     * @since
+     * @since 7.7.11
      */
     private boolean isHierarchyComplete() {
         boolean noErrors = true;
