@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright 2000-2014 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,11 +15,17 @@
  */
 package com.vaadin.tests.components.combobox;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.elements.UIElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
+import com.vaadin.tests.tb3.newelements.ComboBoxElement;
 
 public class ComboboxPopupScrollingTest extends MultiBrowserTest {
 
@@ -43,6 +49,35 @@ public class ComboboxPopupScrollingTest extends MultiBrowserTest {
         testNoScrollbars("reindeer");
     }
 
+    @Test
+    public void testComboBoxTracksScrolledPage() {
+        openTestURL("theme=valo");
+
+        ComboBoxElement cb = $(ComboBoxElement.class).first();
+        cb.openPopup();
+        WebElement popup = cb.getSuggestionPopup();
+        Point comboLocation = cb.getLocation();
+        Point popupLocation = popup.getLocation();
+
+        // scroll page
+        $(UIElement.class).first().scroll(100);
+
+        // make sure animation frame is handled
+        try {
+            sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Point newComboLocation = cb.getLocation();
+        Point newPopupLocation = popup.getLocation();
+        assertNotEquals("ComboBox didn't move on the page", 0,
+                newComboLocation.y - comboLocation.y);
+        assertEquals("Popup didn't move with the combo box",
+                newComboLocation.y - comboLocation.y,
+                newPopupLocation.y - popupLocation.y);
+    }
+    
     private void testNoScrollbars(String theme) {
         openTestURL("theme=" + theme);
 
