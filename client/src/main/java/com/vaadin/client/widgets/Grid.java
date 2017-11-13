@@ -9120,7 +9120,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
     /**
      * Update details row height.
      *
-     * @since
+     * @since 7.7.11
      * @param rowIndex
      *            the index of the row for which to update details height
      * @param height
