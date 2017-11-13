@@ -165,6 +165,16 @@ public class Binder<BEAN> implements Serializable {
          * @since 8.2
          */
         public void unbind();
+
+        /**
+         * Reads the value from given item and stores it to the bound field.
+         *
+         * @param bean
+         *            the bean to read from
+         *
+         * @since 8.2
+         */
+        public void read(BEAN bean);
     }
 
     /**
@@ -516,9 +526,11 @@ public class Binder<BEAN> implements Serializable {
                 TARGET nullRepresentation) {
             return withConverter(
                     fieldValue -> Objects.equals(fieldValue, nullRepresentation)
-                            ? null : fieldValue,
+                            ? null
+                            : fieldValue,
                     modelValue -> Objects.isNull(modelValue)
-                            ? nullRepresentation : modelValue);
+                            ? nullRepresentation
+                            : modelValue);
         }
 
         /**
@@ -1098,6 +1110,12 @@ public class Binder<BEAN> implements Serializable {
         @Override
         public BindingValidationStatusHandler getValidationStatusHandler() {
             return statusHandler;
+        }
+
+        @Override
+        public void read(BEAN bean) {
+            field.setValue(converterValidatorChain.convertToPresentation(
+                    getter.apply(bean), createValueContext()));
         }
     }
 
@@ -2299,7 +2317,8 @@ public class Binder<BEAN> implements Serializable {
         Converter<FIELDVALUE, FIELDVALUE> nullRepresentationConverter = Converter
                 .from(fieldValue -> fieldValue,
                         modelValue -> Objects.isNull(modelValue)
-                                ? field.getEmptyValue() : modelValue,
+                                ? field.getEmptyValue()
+                                : modelValue,
                         exception -> exception.getMessage());
         ConverterDelegate<FIELDVALUE> converter = new ConverterDelegate<>(
                 nullRepresentationConverter);
