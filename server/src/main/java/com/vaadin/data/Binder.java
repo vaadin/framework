@@ -168,9 +168,11 @@ public class Binder<BEAN> implements Serializable {
 
         /**
          * Reads the value from given item and stores it to the bound field.
-         * 
+         *
          * @param bean
          *            the bean to read from
+         *
+         * @since 8.2
          */
         public void read(BEAN bean);
     }
