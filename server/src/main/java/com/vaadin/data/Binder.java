@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
@@ -1064,8 +1065,10 @@ public class Binder<BEAN> implements Serializable {
         }
 
         private FIELDVALUE convertDataToFieldType(BEAN bean) {
-            return converterValidatorChain.convertToPresentation(
-                    getter.apply(bean), createValueContext());
+            TARGET target = getter.apply(bean);
+            ValueContext valueContext = createValueContext();
+            return converterValidatorChain.convertToPresentation(target,
+                    valueContext);
         }
 
         /**
@@ -1264,6 +1267,21 @@ public class Binder<BEAN> implements Serializable {
      */
     public Binder(Class<BEAN> beanType) {
         this(BeanPropertySet.get(beanType));
+    }
+
+    /**
+     * Creates a new binder that uses reflection based on the provided bean type
+     * to resolve bean properties.
+     *
+     * @param beanType
+     *            the bean type to use, not {@code null}
+     * @param scanNestedDefinitions
+     *            if {@code true}, scan for nested property definitions as well
+     * @since
+     */
+    public Binder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
+        this(BeanPropertySet.get(beanType, scanNestedDefinitions,
+                PropertyFilterDefinition.getDefaultFilter()));
     }
 
     /**
@@ -2612,7 +2630,6 @@ public class Binder<BEAN> implements Serializable {
     private Optional<PropertyDefinition<BEAN, ?>> getPropertyDescriptor(
             Field field) {
         PropertyId propertyIdAnnotation = field.getAnnotation(PropertyId.class);
-
         String propertyId;
         if (propertyIdAnnotation != null) {
             // @PropertyId(propertyId) always overrides property id
@@ -2620,9 +2637,7 @@ public class Binder<BEAN> implements Serializable {
         } else {
             propertyId = field.getName();
         }
-
         String minifiedFieldName = minifyFieldName(propertyId);
-
         return propertySet.getProperties().map(PropertyDefinition::getName)
                 .filter(name -> minifyFieldName(name).equals(minifiedFieldName))
                 .findFirst().flatMap(propertySet::getProperty);

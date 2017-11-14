@@ -20,12 +20,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.annotations.PropertyId;
+import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractTextField;
@@ -46,6 +50,34 @@ public class BinderInstanceFieldTest {
 
         @PropertyId("birthDate")
         private DateField birthDateField;
+    }
+
+    public static class BindNestedFieldsUsingAnnotation extends FormLayout {
+        @PropertyId("address.streetAddress")
+        private TextField streetAddressField;
+    }
+
+    public static class BindDeepNestedFieldsUsingAnnotation extends FormLayout {
+        @PropertyId("first.address.streetAddress")
+        private TextField firstStreetField;
+
+        @PropertyId("second.address.streetAddress")
+        private TextField secondStreetField;
+    }
+
+    public static class BindDeepNestingFieldsWithCircularStructure
+            extends FormLayout {
+        @PropertyId("child.name")
+        private TextField childName;
+
+        @PropertyId("child.child.name")
+        private TextField grandchildName;
+
+        @PropertyId("child.child.child.child.child.child.child.child.name")
+        private TextField eighthLevelGrandchildName;
+
+        @PropertyId("child.child.child.child.child.child.child.child.child.child.child.child.child.name")
+        private TextField distantGreatGrandchildName;
     }
 
     public static class BindOnlyOneField extends FormLayout {
@@ -136,6 +168,48 @@ public class BinderInstanceFieldTest {
             this.value = value;
         }
 
+    }
+
+    final static class Couple {
+        Person first;
+        Person second;
+
+        public Person getFirst() {
+            return first;
+        }
+
+        public Person getSecond() {
+            return second;
+        }
+
+        public void setFirst(Person first) {
+            this.first = first;
+        }
+
+        public void setSecond(Person second) {
+            this.second = second;
+        }
+    }
+
+    final class NestingStructure {
+        NestingStructure child;
+        String name;
+
+        public NestingStructure getChild() {
+            return child;
+        }
+
+        public void setChild(NestingStructure child) {
+            this.child = child;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     @Test
@@ -315,6 +389,130 @@ public class BinderInstanceFieldTest {
 
         assertEquals(form.nameField.getValue(), person.getFirstName());
         assertEquals(form.birthDateField.getValue(), person.getBirthDate());
+    }
+
+    @Test
+    public void bindInstanceFields_bindNestedFieldUsingAnnotation() {
+        BindNestedFieldsUsingAnnotation form = new BindNestedFieldsUsingAnnotation();
+        Binder<Person> binder = new Binder<>(Person.class, true);
+        binder.bindInstanceFields(form);
+
+        Person person = new Person();
+        Address address = new Address();
+        address.setStreetAddress("Foo st.");
+        person.setAddress(address);
+
+        binder.setBean(person);
+
+        Assert.assertEquals("Reading nested properties bound using annotation",
+                person.getAddress().getStreetAddress(),
+                form.streetAddressField.getValue());
+
+        form.streetAddressField.setValue("Bar ave.");
+        Assert.assertEquals("Changing nested properties bound using annotation",
+                form.streetAddressField.getValue(),
+                person.getAddress().getStreetAddress());
+    }
+
+    @Test
+    public void bindInstanceFields_bindDeepNestedFieldsUsingAnnotation() {
+        BindDeepNestedFieldsUsingAnnotation form = new BindDeepNestedFieldsUsingAnnotation();
+        Binder<Couple> binder = new Binder<>(Couple.class, true);
+        binder.bindInstanceFields(form);
+        Person first = new Person();
+        Person second = new Person();
+        Address firstAddress = new Address();
+        firstAddress.setStreetAddress("Foo st.");
+        first.setAddress(firstAddress);
+        Address secondAddress = new Address();
+        second.setAddress(secondAddress);
+        secondAddress.setStreetAddress("Bar ave.");
+        Couple couple = new Couple();
+        couple.setFirst(first);
+        couple.setSecond(second);
+
+        binder.setBean(couple);
+
+        Assert.assertEquals("Binding deep nested properties using annotation",
+                couple.first.getAddress().getStreetAddress(),
+                form.firstStreetField.getValue());
+        Assert.assertEquals(
+                "Binding parallel deep nested properties using annotation",
+                couple.second.getAddress().getStreetAddress(),
+                form.secondStreetField.getValue());
+
+        form.firstStreetField.setValue(second.getAddress().getStreetAddress());
+        Assert.assertEquals("Updating value in deep nested properties",
+                form.firstStreetField.getValue(),
+                first.getAddress().getStreetAddress());
+    }
+
+    @Test
+    public void bindInstanceFields_circular() {
+        BindDeepNestingFieldsWithCircularStructure form = new BindDeepNestingFieldsWithCircularStructure();
+        Binder<NestingStructure> binder = new Binder<>(NestingStructure.class,
+                true);
+        binder.bindInstanceFields(form);
+        NestingStructure parent = new NestingStructure();
+        parent.setName("parent");
+        NestingStructure child = new NestingStructure();
+        child.setName("child");
+        parent.setChild(child);
+        NestingStructure grandchild = new NestingStructure();
+        grandchild.setName("grandchild");
+        child.setChild(grandchild);
+        NestingStructure root = grandchild;
+        for (int i = 1; i < 15; i++) {
+            NestingStructure ns = new NestingStructure();
+            ns.setName("great " + root.getName());
+            root.setChild(ns);
+            root = ns;
+        }
+        binder.setBean(parent);
+        Assert.assertEquals(child.getName(), form.childName.getValue());
+        Assert.assertEquals(grandchild.getName(),
+                form.grandchildName.getValue());
+        Assert.assertNotNull(
+                "Reading nested properties within default supported nested depth (max 10 levels)",
+                form.eighthLevelGrandchildName);
+        // only 10 levels of nesting properties are scanned by default
+        Assert.assertNull(
+                "By default, only 10 levels of nesting properties are scanned.",
+                form.distantGreatGrandchildName);
+    }
+
+    @Test
+    public void bindInstanceFields_customNestingLevel() {
+        BindDeepNestingFieldsWithCircularStructure form = new BindDeepNestingFieldsWithCircularStructure();
+        int customScanningDepth = 5;
+        PropertyFilterDefinition shallowFilter = new PropertyFilterDefinition(
+                customScanningDepth, Arrays.asList("java.lang"));
+        Binder<NestingStructure> binder = new Binder<>(BeanPropertySet
+                .get(NestingStructure.class, true, shallowFilter));
+        binder.bindInstanceFields(form);
+        NestingStructure parent = new NestingStructure();
+        parent.setName("parent");
+        NestingStructure child = new NestingStructure();
+        child.setName("child");
+        parent.setChild(child);
+        NestingStructure grandchild = new NestingStructure();
+        grandchild.setName("grandchild");
+        child.setChild(grandchild);
+        NestingStructure root = grandchild;
+        for (int i = 1; i < 15; i++) {
+            NestingStructure ns = new NestingStructure();
+            ns.setName("great " + root.getName());
+            root.setChild(ns);
+            root = ns;
+        }
+        binder.setBean(parent);
+        Assert.assertEquals(child.getName(), form.childName.getValue());
+        Assert.assertEquals(
+                "Reading 3rd level nesting works when custom scanning depth is 5",
+                grandchild.getName(), form.grandchildName.getValue());
+        Assert.assertNull(
+                "Reading eighth level nesting doesn't work when custom scanning depth is 5",
+                form.eighthLevelGrandchildName);
     }
 
     @Test
