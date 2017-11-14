@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.TreeGrid;
 import com.vaadin.ui.renderers.TextRenderer;
@@ -56,4 +57,9 @@ public class TreeGridTest {
                 column, treeGrid.getHierarchyColumn());
     }
 
+    @Test
+    public void testBeanTypeConstructor() {
+        TreeGrid<Person> treeGrid = new TreeGrid<>(Person.class);
+        assertEquals(Person.class, treeGrid.getBeanType());
+    }
 }
