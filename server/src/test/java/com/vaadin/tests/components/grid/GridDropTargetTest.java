@@ -113,6 +113,40 @@ public class GridDropTargetTest {
         target.setDropAllowedOnSortedGridRows(true);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
+    }
 
+    @Test
+    public void dropAllowedOnSortedGridRows_changingDropModeWhileSorted_replacesPreviouslyCachedButDoesntOverride() {
+        Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
+
+        target.setDropAllowedOnSortedGridRows(false);
+
+        Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
+
+        grid.sort("1");
+
+        Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
+
+        target.setDropMode(DropMode.ON_TOP);
+
+        Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
+        Assert.assertFalse("Changing drop mode should not have any effect here",
+                target.isDropAllowedOnSortedGridRows());
+
+        grid.clearSortOrder();
+
+        Assert.assertEquals(DropMode.ON_TOP, target.getDropMode());
+
+        grid.sort("1");
+
+        Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
+
+        target.setDropMode(DropMode.ON_TOP_OR_BETWEEN);
+
+        Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
+
+        target.setDropAllowedOnSortedGridRows(true);
+
+        Assert.assertEquals(DropMode.ON_TOP_OR_BETWEEN, target.getDropMode());
     }
 }

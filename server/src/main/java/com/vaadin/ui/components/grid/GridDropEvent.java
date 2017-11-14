@@ -57,7 +57,7 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
      *            event.
      * @param dropTargetRow
      *            Target row that received the drop, or {@code null} if dropped
-     *            on empty grid
+     *            on empty grid or {@link DropMode#ON_GRID} is used
      * @param dropLocation
      *            Location of the drop within the target row.
      * @param mouseEventDetails
@@ -89,7 +89,7 @@ public class GridDropEvent<T> extends DropEvent<Grid<T>> {
     }
 
     /**
-     * Get the location of the drop within the row-
+     * Get the location of the drop within the row.
      * <p>
      * <em>NOTE: the location will be {@link DropLocation#EMPTY} if:
      * <ul>

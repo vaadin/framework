@@ -61,10 +61,10 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     /**
      * Sets the drop mode of this drop target.
      * <p>
-     * Note that when using {@link DropMode#ON_TOP}, and the grid is either
-     * empty or has empty space after the last row, the drop can still happen on
-     * the empty space, and the {@link GridDropEvent#getDropTargetRow()} will
-     * return an empty optional.
+     * When using {@link DropMode#ON_TOP}, and the grid is either empty or has
+     * empty space after the last row, the drop can still happen on the empty
+     * space, and the {@link GridDropEvent#getDropTargetRow()} will return an
+     * empty optional.
      * <p>
      * When using {@link DropMode#BETWEEN} or
      * {@link DropMode#ON_TOP_OR_BETWEEN}, and there is at least one row in the
@@ -74,21 +74,36 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * <p>
      * If using {@link DropMode#ON_GRID}, then the drop will not happen on any
      * row, but instead just "on the grid". The target row will not be present
-     * in this case. <em>NOTE: this drop mode is used when the grid has been
-     * sorted by the user and {@link #setDropAllowedOnSortedGridRows(boolean)}
-     * is {@code true} - since the drop location would not necessarily match the
-     * correct row because of the sorting.</em>
+     * in this case.
+     * <p>
+     * <em>NOTE: {@link DropMode#ON_GRID} is used automatically when the grid
+     * has been sorted and {@link #setDropAllowedOnSortedGridRows(boolean)} is
+     * {@code false} - since the drop location would not necessarily match the
+     * correct row because of the sorting. During the sorting, any calls to this
+     * method don't have any effect until the sorting has been removed, or
+     * {@link #setDropAllowedOnSortedGridRows(boolean)} is set back to
+     * {@code true}.</em>
      *
      * @param dropMode
      *            Drop mode that describes the allowed drop locations within the
      *            Grid's row.
      * @see GridDropEvent#getDropLocation()
+     * @see #setDropAllowedOnSortedGridRows(boolean)
      */
     public void setDropMode(DropMode dropMode) {
         if (dropMode == null) {
             throw new IllegalArgumentException("Drop mode cannot be null");
         }
 
+        if (cachedDropMode != null) {
+            cachedDropMode = dropMode;
+        } else {
+            internalSetDropMode(dropMode);
+        }
+
+    }
+
+    private void internalSetDropMode(DropMode dropMode) {
         getState().dropMode = dropMode;
     }
 
@@ -141,7 +156,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
                 // if the grid has been sorted, but now dropping on sorted grid
                 // is allowed, switch back to the previously allowed drop mode
                 if (cachedDropMode != null) {
-                    setDropMode(cachedDropMode);
+                    internalSetDropMode(cachedDropMode);
                 }
                 sortListenerRegistration.remove();
                 sortListenerRegistration = null;
@@ -153,9 +168,9 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
     private void updateDropModeForSortedGrid(boolean sorted) {
         if (sorted && cachedDropMode == null) {
             cachedDropMode = getDropMode();
-            setDropMode(DropMode.ON_GRID);
+            internalSetDropMode(DropMode.ON_GRID);
         } else if (!sorted && cachedDropMode != null) {
-            setDropMode(cachedDropMode);
+            internalSetDropMode(cachedDropMode);
             cachedDropMode = null;
         }
     }
