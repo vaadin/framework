@@ -13,7 +13,7 @@
     <properties>
         <jetty.skip>true</jetty.skip>
         <wildfly.version>11.0.0.Final</wildfly.version>
-        <server.name>wildfly10</server.name>
+        <server.name>wildfly11</server.name>
     </properties>
 
     <dependencies>
