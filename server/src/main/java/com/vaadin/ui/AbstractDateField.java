@@ -809,6 +809,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * converted to use midnight values for the styling logic. Setting the style
      * name will override any previous style names that have been set for that
      * date, but can contain several actual style names separated by space.
+     * Setting the custom style name {@code null} will only remove the previous
+     * custom style name.
      * </p>
      * <p>
      * This logic is entirely separate from {@link #setStyleName(String)}
@@ -820,34 +822,21 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * </p>
      *
      * @param date
-     *            determines which date cell to style
+     *            determines which date cell to modify
      * @param styleName
-     *            determines which style name to give the date cell
+     *            determines which custom style name to set to the date cell, if
+     *            any ({@code null} removes)
      */
     @SuppressWarnings("deprecation")
     public void setDateStyle(Date date, String styleName) {
         if (date != null) {
-            getState().dateStyles.put(
-                    new Date(date.getYear(), date.getMonth(), date.getDate()),
-                    styleName);
-        }
-    }
-
-    /**
-     * Removes the custom style name that corresponds with the given date's
-     * calendar cell. The date is converted to use midnight values for the
-     * styling logic.
-     *
-     * @param date
-     *            determines which date cell's custom style name to remove
-     *
-     * @see {@link #setDateStyle(Date, String)}
-     */
-    @SuppressWarnings("deprecation")
-    public void removeDateStyle(Date date) {
-        if (date != null) {
-            getState().dateStyles.remove(
-                    new Date(date.getYear(), date.getMonth(), date.getDate()));
+            Date midnightDate = new Date(date.getYear(), date.getMonth(),
+                    date.getDate());
+            if (styleName != null) {
+                getState().dateStyles.put(midnightDate, styleName);
+            } else {
+                getState().dateStyles.remove(midnightDate);
+            }
         }
     }
 
