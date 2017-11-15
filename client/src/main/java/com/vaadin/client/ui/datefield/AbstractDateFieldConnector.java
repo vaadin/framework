@@ -65,7 +65,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      * from Resolution to the corresponding value.
      *
      * @return default date component map
-     * @since
+     * @since 8.2
      */
     protected Map<R, Integer> getDefaultValues() {
         VDateField<R> widget = getWidget();

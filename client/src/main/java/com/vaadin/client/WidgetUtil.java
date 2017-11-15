@@ -1859,7 +1859,7 @@ public class WidgetUtil {
      * @param obj
      *            the object of which the type is examined
      * @return {@code true} if the object is a string; {@code false} if not
-     * @since
+     * @since 8.2
      */
     public static native boolean isString(Object obj)
     /*-{

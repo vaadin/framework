@@ -62,7 +62,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * Gets the grid this extension has been attached to.
      *
      * @return the grid for this extension
-     * @since
+     * @since 8.2
      */
     public Grid<T> getGrid() {
         return getParent();
@@ -144,7 +144,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * @param dropAllowedOnSortedGridRows
      *            {@code true} for allowing, {@code false} for not allowing
      *            drops on sorted grid rows
-     * @since
+     * @since 8.2
      */
     public void setDropAllowedOnSortedGridRows(
             boolean dropAllowedOnSortedGridRows) {
@@ -191,7 +191,7 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      *
      * @return whether drop are allowed for the grid's rows when user has sorted
      *         the grid
-     * @since
+     * @since 8.2
      */
     public boolean isDropAllowedOnSortedGridRows() {
         return dropAllowedOnSortedGridRows;

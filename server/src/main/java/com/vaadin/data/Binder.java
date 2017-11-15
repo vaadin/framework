@@ -1277,7 +1277,7 @@ public class Binder<BEAN> implements Serializable {
      *            the bean type to use, not {@code null}
      * @param scanNestedDefinitions
      *            if {@code true}, scan for nested property definitions as well
-     * @since
+     * @since 8.2
      */
     public Binder(Class<BEAN> beanType, boolean scanNestedDefinitions) {
         this(BeanPropertySet.get(beanType, scanNestedDefinitions,

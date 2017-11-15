@@ -1212,7 +1212,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return this column
          *
-         * @since
+         * @since 8.2
          */
         public Column<T, V> setAssistiveCaption(String caption) {
             if (Objects.equals(caption, getAssistiveCaption())) {
@@ -1227,7 +1227,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          *
          * @return header caption
          *
-         * @since
+         * @since 8.2
          */
         public String getAssistiveCaption() {
             return getState(false).assistiveCaption;

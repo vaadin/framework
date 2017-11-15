@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.dnd.DropEffect;
  * drop.
  *
  * @author Vaadin Ltd
- * @since
+ * @since 8.2
  *
  * @param <T>
  *            the bean type
