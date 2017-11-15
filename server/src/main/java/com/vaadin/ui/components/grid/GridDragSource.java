@@ -18,7 +18,6 @@ package com.vaadin.ui.components.grid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.vaadin.data.provider.DataGenerator;
@@ -97,6 +96,16 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
                 defaultGridGenerator);
     }
 
+    /**
+     * Gets the grid this extension has been attached to.
+     *
+     * @return the grid for this extension
+     * @since
+     */
+    public Grid<T> getGrid() {
+        return getParent();
+    }
+
     @Override
     protected void registerDragSourceRpc() {
         registerRpc(new GridDragSourceRpc() {
@@ -126,7 +135,8 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
     /**
      * Collects the dragged items of a Grid given the list of item keys.
      */
-    private Set<T> getDraggedItems(Grid<T> grid, List<String> draggedItemKeys) {
+    private List<T> getDraggedItems(Grid<T> grid,
+            List<String> draggedItemKeys) {
         if (draggedItemKeys == null || draggedItemKeys.isEmpty()) {
             throw new IllegalStateException(
                     "The drag event does not contain dragged items");
@@ -134,7 +144,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 
         return draggedItemKeys.stream()
                 .map(key -> grid.getDataCommunicator().getKeyMapper().get(key))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     /**
