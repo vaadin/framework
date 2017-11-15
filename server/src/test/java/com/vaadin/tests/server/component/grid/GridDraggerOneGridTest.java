@@ -45,6 +45,7 @@ public class GridDraggerOneGridTest {
     @Before
     public void setupListCase() {
         source = new Grid<>();
+        source.addColumn(s -> s).setId("1");
         dragger = new TestGridDragger(source);
     }
 
@@ -201,6 +202,25 @@ public class GridDraggerOneGridTest {
         drop("2", DropLocation.BELOW, "0", "2", "4");
 
         verifyDataProvider("1", "0", "2", "4", "3");
+    }
+
+    @Test
+    public void dropOnSortedGrid_byDefault_dropsToTheEnd() {
+        Assert.assertFalse(
+                "Default drops on sorted grid rows should not be allowed",
+                dragger.getGridDropTarget().isDropAllowedOnSortedGridRows());
+
+        source.setItems("0", "1", "2", "3", "4");
+
+        drop("3", DropLocation.BELOW, "1");
+
+        verifyDataProvider("0", "2", "3", "1", "4");
+
+        source.sort("1");
+
+        drop(null, DropLocation.EMPTY, "0");
+
+        verifyDataProvider("2", "3", "1", "4", "0");
     }
 
 }
