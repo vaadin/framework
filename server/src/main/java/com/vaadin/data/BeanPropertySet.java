@@ -105,7 +105,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     private abstract static class AbstractBeanPropertyDefinition<T, V>
             implements PropertyDefinition<T, V> {
-        protected final PropertyDescriptor descriptor;
+        private final PropertyDescriptor descriptor;
         private final BeanPropertySet<T> propertySet;
         private final Class<?> propertyHolderType;
 
@@ -252,12 +252,12 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         @Override
         public String getName() {
-            return parent.getName() + "." + descriptor.getName();
+            return parent.getName() + "." + super.getName();
         }
         
         @Override
         public String getTopLevelName() {
-            return descriptor.getName();
+            return super.getName();
         }
         
         private Object writeReplace() {
