@@ -35,6 +35,7 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  *            Type of the Grid bean.
  * @author Vaadin Ltd
  * @since 8.1
+ * @see GridDragger
  */
 public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
