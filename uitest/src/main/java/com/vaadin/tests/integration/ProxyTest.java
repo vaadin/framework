@@ -64,15 +64,12 @@ public class ProxyTest extends AbstractReindeerTestUI {
         stopButton.setEnabled(false);
         startButton.setDisableOnClick(true);
 
-        addDetachListener(new DetachListener() {
-            @Override
-            public void detach(DetachEvent event) {
-                if (server != null && server.isRunning()) {
-                    try {
-                        server.stop();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+        addDetachListener(event -> {
+            if (server != null && server.isRunning()) {
+                try {
+                    server.stop();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         });

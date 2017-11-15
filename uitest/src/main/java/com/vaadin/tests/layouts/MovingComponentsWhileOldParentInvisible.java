@@ -9,7 +9,6 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -27,8 +26,9 @@ import com.vaadin.ui.VerticalSplitPanel;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
-    private HasComponents cc = new AbsoluteLayout(); // initial dummy
-                                                     // contents
+    // initial dummy contents
+    private HasComponents cc = new AbsoluteLayout();
+
     private Label lab;
 
     @Override
@@ -55,20 +55,16 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         componentContainerSelect.setValue(componentContainerSelect
                 .getDataProvider().fetch(new Query<>()).iterator().next());
         Button but1 = new Button("Move in and out of component container",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        cc.setVisible(!cc.isVisible());
-                        if (!cc.isVisible()) {
-                            getLayout().addComponent(lab);
-                            lab.setValue(lab.getValue().replace("inside",
-                                    "outside"));
-                        } else {
-                            addToCC(lab);
-                            lab.setValue(lab.getValue().replace("outside",
-                                    "inside"));
-                        }
+                event -> {
+                    cc.setVisible(!cc.isVisible());
+                    if (!cc.isVisible()) {
+                        getLayout().addComponent(lab);
+                        lab.setValue(
+                                lab.getValue().replace("inside", "outside"));
+                    } else {
+                        addToCC(lab);
+                        lab.setValue(
+                                lab.getValue().replace("outside", "inside"));
                     }
                 });
 

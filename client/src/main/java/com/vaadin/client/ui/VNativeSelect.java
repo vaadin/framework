@@ -17,7 +17,6 @@ package com.vaadin.client.ui;
 
 import java.util.Objects;
 
-import com.google.gwt.event.dom.client.HasAllFocusHandlers;
 import com.google.gwt.user.client.ui.ListBox;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.ui.nativeselect.NativeSelectState;
@@ -27,8 +26,7 @@ import com.vaadin.shared.ui.nativeselect.NativeSelectState;
  *
  * @author Vaadin Ltd.
  */
-public class VNativeSelect extends FocusableFlowPanelComposite
-        implements HasAllFocusHandlers {
+public class VNativeSelect extends FocusableFlowPanelComposite {
 
     private final ListBox listBox = new ListBox();
 

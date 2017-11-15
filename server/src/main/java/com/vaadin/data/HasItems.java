@@ -15,7 +15,7 @@
  */
 package com.vaadin.data;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ import com.vaadin.ui.Component;
  * @param <T>
  *            the type of the displayed item
  */
-public interface HasItems<T> extends Component, Serializable {
+public interface HasItems<T> extends Component {
 
     /**
      * Returns the source of data items used by this listing.
@@ -101,7 +101,7 @@ public interface HasItems<T> extends Component, Serializable {
      *            the data items to display
      */
     public default void setItems(@SuppressWarnings("unchecked") T... items) {
-        setItems(Arrays.asList(items));
+        setItems(new ArrayList<>(Arrays.asList(items)));
     }
 
     /**

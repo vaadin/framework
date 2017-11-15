@@ -19,7 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -178,12 +177,7 @@ public class ListDataSourceTest {
 
         // TODO Should be simplified to sort(). No point in providing these
         // trivial comparators.
-        ds.sort(new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1.compareTo(o2);
-            }
-        });
+        ds.sort((o1, o2) -> o1.compareTo(o2));
 
         assertTrue(Arrays.equals(ds.asList().toArray(),
                 new Integer[] { 1, 2, 3, 3, 4 }));

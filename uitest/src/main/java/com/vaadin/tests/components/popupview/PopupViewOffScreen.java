@@ -7,8 +7,6 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -40,13 +38,9 @@ public class PopupViewOffScreen extends TestBase {
         gl.setColumnExpandRatio(1, 1);
         gl.setRowExpandRatio(1, 1);
 
-        Button showall = new Button("Popup all", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                for (PopupView pv : popupViews) {
-                    pv.setPopupVisible(true);
-                }
+        Button showall = new Button("Popup all", event -> {
+            for (PopupView pv : popupViews) {
+                pv.setPopupVisible(true);
             }
         });
         gl.addComponent(showall, 1, 0);

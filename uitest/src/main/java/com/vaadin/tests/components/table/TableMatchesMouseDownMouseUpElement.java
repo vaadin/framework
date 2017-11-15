@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.Item;
@@ -63,13 +61,7 @@ public class TableMatchesMouseDownMouseUpElement
 
         Button clear = new Button("Clear");
         clear.setId(CLEAR_BUTTON_ID);
-        clear.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.setValue(null);
-            }
-        });
+        clear.addClickListener(event -> table.setValue(null));
         addComponent(table);
         addComponent(clear);
     }

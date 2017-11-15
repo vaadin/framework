@@ -25,7 +25,6 @@ import com.google.gwt.user.client.Window.Location;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
-import com.vaadin.client.ApplicationConnection.ApplicationStoppedHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -151,23 +150,14 @@ public class AtmospherePushConnection implements PushConnection {
         this.connection = connection;
 
         connection.addHandler(ApplicationStoppedEvent.TYPE,
-                new ApplicationStoppedHandler() {
-
-                    @Override
-                    public void onApplicationStopped(
-                            ApplicationStoppedEvent event) {
-                        if (state == State.DISCONNECT_PENDING
-                                || state == State.DISCONNECTED) {
-                            return;
-                        }
-
-                        disconnect(new Command() {
-                            @Override
-                            public void execute() {
-                            }
-                        });
-
+                event -> {
+                    if (state == State.DISCONNECT_PENDING
+                            || state == State.DISCONNECTED) {
+                        return;
                     }
+
+                    disconnect(() -> {
+                    });
                 });
         config = createConfig();
         String debugParameter = Location.getParameter("debug");
@@ -189,17 +179,8 @@ public class AtmospherePushConnection implements PushConnection {
             url = ApplicationConstants.APP_PROTOCOL_PREFIX
                     + ApplicationConstants.PUSH_PATH;
         }
-        runWhenAtmosphereLoaded(new Command() {
-            @Override
-            public void execute() {
-                Scheduler.get().scheduleDeferred(new Command() {
-                    @Override
-                    public void execute() {
-                        connect();
-                    }
-                });
-            }
-        });
+        runWhenAtmosphereLoaded(
+                () -> Scheduler.get().scheduleDeferred(() -> connect()));
     }
 
     private void connect() {

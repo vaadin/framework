@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.select;
 
-import com.vaadin.event.FieldEvents;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.v7.ui.ComboBox;
 
@@ -13,12 +12,7 @@ public class FocusListenerBreaksDropdownMenu extends TestBase {
             comboBox.addItem("Item " + i);
         }
 
-        comboBox.addFocusListener(new FieldEvents.FocusListener() {
-            @Override
-            public void focus(FieldEvents.FocusEvent event) {
-                comboBox.addItem();
-            }
-        });
+        comboBox.addFocusListener(event -> comboBox.addItem());
 
         comboBox.setImmediate(true);
         addComponent(comboBox);

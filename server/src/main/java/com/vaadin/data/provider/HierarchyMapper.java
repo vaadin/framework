@@ -352,7 +352,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         return depth;
     }
 
-    private T getParentOfItem(T item) {
+    /**
+     * Find parent for the given item among open folders.
+     * @param item the item
+     * @return parent item or {@code null} for root items or if the parent is closed
+     */
+    protected T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
         return parentIdMap.get(getDataProvider().getId(item));
     }
@@ -361,11 +366,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * Removes all children of an item identified by a given id. Items removed
      * by this method as well as the original item are all marked to be
      * collapsed.
+     * May be overridden in subclasses for removing obsolete data to avoid memory leaks.
      *
      * @param id
      *            the item id
      */
-    private void removeChildren(Object id) {
+    protected void removeChildren(Object id) {
         // Clean up removed nodes from child map
         Iterator<Entry<T, Set<T>>> iterator = childMap.entrySet().iterator();
         Set<T> invalidatedChildren = new HashSet<>();
@@ -474,13 +480,24 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 removeChildren(parent == null ? null
                         : getDataProvider().getId(parent));
             } else {
-                childMap.put(parent, new HashSet<>(childList));
-                childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
+                registerChildren(parent, childList);
             }
         }
         return combineParentAndChildStreams(parent,
                 childList.stream().flatMap(this::getChildrenStream),
                 includeParent);
+    }
+
+    /**
+     * Register parent and children items into inner structures.
+     * May be overridden in subclasses.
+     *
+     * @param parent the parent item
+     * @param childList list of parents children to be registered.
+     */
+    protected void registerChildren(T parent, List<T> childList) {
+        childMap.put(parent, new HashSet<>(childList));
+        childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
     }
 
     /**

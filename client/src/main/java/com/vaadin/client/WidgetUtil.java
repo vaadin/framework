@@ -37,7 +37,6 @@ import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyEvent;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
@@ -425,14 +424,8 @@ public class WidgetUtil {
      *            with overflow auto
      */
     public static void runWebkitOverflowAutoFixDeferred(final Element elem) {
-        Scheduler.get().scheduleDeferred(new Command() {
-
-            @Override
-            public void execute() {
-                WidgetUtil.runWebkitOverflowAutoFix(elem);
-            }
-        });
-
+        Scheduler.get().scheduleDeferred(
+                () -> WidgetUtil.runWebkitOverflowAutoFix(elem));
     }
 
     /**
@@ -464,60 +457,54 @@ public class WidgetUtil {
             final int scrollleft = elem.getScrollLeft();
             elem.getStyle().setProperty("overflow", "hidden");
 
-            Scheduler.get().scheduleDeferred(new Command() {
-                @Override
-                public void execute() {
-                    // Dough, Safari scroll auto means actually just a moped
-                    elem.getStyle().setProperty("overflow", originalOverflow);
-                    if (!originalOverflowX.isEmpty()) {
-                        elem.getStyle().setProperty("overflowX",
-                                originalOverflowX);
-                    }
-                    if (!originalOverflowY.isEmpty()) {
-                        elem.getStyle().setProperty("overflowY",
-                                originalOverflowY);
-                    }
+            Scheduler.get().scheduleDeferred(() -> {
+                // Dough, Safari scroll auto means actually just a moped
+                elem.getStyle().setProperty("overflow", originalOverflow);
+                if (!originalOverflowX.isEmpty()) {
+                    elem.getStyle().setProperty("overflowX", originalOverflowX);
+                }
+                if (!originalOverflowY.isEmpty()) {
+                    elem.getStyle().setProperty("overflowY", originalOverflowY);
+                }
 
-                    if (scrolltop > 0 || elem.getScrollTop() > 0) {
-                        int scrollvalue = scrolltop;
-                        if (scrollvalue == 0) {
-                            // mysterious are the ways of webkits scrollbar
-                            // handling. In some cases webkit reports bad (0)
-                            // scrolltop before hiding the element temporary,
-                            // sometimes after.
-                            scrollvalue = elem.getScrollTop();
-                        }
-                        // fix another bug where scrollbar remains in wrong
-                        // position
-                        elem.setScrollTop(scrollvalue - 1);
-                        elem.setScrollTop(scrollvalue);
+                if (scrolltop > 0 || elem.getScrollTop() > 0) {
+                    int scrollvalue = scrolltop;
+                    if (scrollvalue == 0) {
+                        // mysterious are the ways of webkits scrollbar
+                        // handling. In some cases webkit reports bad (0)
+                        // scrolltop before hiding the element temporary,
+                        // sometimes after.
+                        scrollvalue = elem.getScrollTop();
                     }
+                    // fix another bug where scrollbar remains in wrong
+                    // position
+                    elem.setScrollTop(scrollvalue - 1);
+                    elem.setScrollTop(scrollvalue);
+                }
 
-                    // fix for #6940 : Table horizontal scroll sometimes not
-                    // updated when collapsing/expanding columns
-                    // Also appeared in Safari 5.1 with webkit 534 (#7667)
-                    if ((BrowserInfo.get().isChrome() || (BrowserInfo.get()
-                            .isSafariOrIOS()
-                            && BrowserInfo.get().getWebkitVersion() >= 534))
-                            && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
-                        int scrollvalue = scrollleft;
+                // fix for #6940 : Table horizontal scroll sometimes not
+                // updated when collapsing/expanding columns
+                // Also appeared in Safari 5.1 with webkit 534 (#7667)
+                if ((BrowserInfo.get().isChrome()
+                        || (BrowserInfo.get().isSafariOrIOS()
+                                && BrowserInfo.get().getWebkitVersion() >= 534))
+                        && (scrollleft > 0 || elem.getScrollLeft() > 0)) {
+                    int scrollvalue = scrollleft;
 
-                        if (scrollvalue == 0) {
-                            // mysterious are the ways of webkits scrollbar
-                            // handling. In some cases webkit may report a bad
-                            // (0) scrollleft before hiding the element
-                            // temporary, sometimes after.
-                            scrollvalue = elem.getScrollLeft();
-                        }
-                        // fix another bug where scrollbar remains in wrong
-                        // position
-                        elem.setScrollLeft(scrollvalue - 1);
-                        elem.setScrollLeft(scrollvalue);
+                    if (scrollvalue == 0) {
+                        // mysterious are the ways of webkits scrollbar
+                        // handling. In some cases webkit may report a bad
+                        // (0) scrollleft before hiding the element
+                        // temporary, sometimes after.
+                        scrollvalue = elem.getScrollLeft();
                     }
+                    // fix another bug where scrollbar remains in wrong
+                    // position
+                    elem.setScrollLeft(scrollvalue - 1);
+                    elem.setScrollLeft(scrollvalue);
                 }
             });
         }
-
     }
 
     public static void alert(String string) {
@@ -1872,7 +1859,7 @@ public class WidgetUtil {
      * @param obj
      *            the object of which the type is examined
      * @return {@code true} if the object is a string; {@code false} if not
-     * @since
+     * @since 8.2
      */
     public static native boolean isString(Object obj)
     /*-{

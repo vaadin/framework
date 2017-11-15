@@ -27,7 +27,6 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Overflow;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -197,28 +196,15 @@ public final class VDebugWindow extends VOverlay {
 
         // add controls TODO move these
         controls.add(menu);
-        menu.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                menuPopup.showRelativeTo(menu);
-            }
-        });
+        menu.addClickHandler(event -> menuPopup.showRelativeTo(menu));
 
         controls.add(minimize);
-        minimize.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                toggleMinimized();
-                writeStoredState();
-            }
+        minimize.addClickHandler(event -> {
+            toggleMinimized();
+            writeStoredState();
         });
         controls.add(close);
-        close.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                close();
-            }
-        });
+        close.addClickHandler(event -> close());
 
         Style s = content.getElement().getStyle();
         s.setOverflow(Overflow.AUTO);
@@ -533,12 +519,9 @@ public final class VDebugWindow extends VOverlay {
      */
     public void addSection(final Section section) {
         Button b = section.getTabButton();
-        b.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                activateSection(section);
-                writeStoredState();
-            }
+        b.addClickHandler(event -> {
+            activateSection(section);
+            writeStoredState();
         });
         b.setStylePrimaryName(STYLENAME_TAB);
         tabs.add(b);
@@ -805,17 +788,14 @@ public final class VDebugWindow extends VOverlay {
             FlowPanel size = new FlowPanel();
             content.add(size);
 
-            final ClickHandler sizeHandler = new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    for (int i = 0; i < sizes.length; i++) {
-                        Button b = sizes[i];
-                        if (b == event.getSource()) {
-                            setSize(i);
-                        }
+            final ClickHandler sizeHandler = event -> {
+                for (int i = 0; i < sizes.length; i++) {
+                    Button b = sizes[i];
+                    if (b == event.getSource()) {
+                        setSize(i);
                     }
-                    hide();
                 }
+                hide();
             };
             for (int i = 0; i < sizes.length; i++) {
                 Button b = sizes[i];
@@ -826,17 +806,14 @@ public final class VDebugWindow extends VOverlay {
 
             FlowPanel mode = new FlowPanel();
             content.add(mode);
-            final ClickHandler modeHandler = new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    for (int i = 0; i < modes.length; i++) {
-                        Button b = modes[i];
-                        if (b == event.getSource()) {
-                            setDevMode(i);
-                        }
+            final ClickHandler modeHandler = event -> {
+                for (int i = 0; i < modes.length; i++) {
+                    Button b = modes[i];
+                    if (b == event.getSource()) {
+                        setDevMode(i);
                     }
-                    hide();
                 }
+                hide();
             };
             modes[getDevMode()].setActive(true);
             for (Button b : modes) {
@@ -846,13 +823,10 @@ public final class VDebugWindow extends VOverlay {
 
             Button reset = new DebugButton(Icon.RESET, "Restore defaults.",
                     " Reset");
-            reset.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    resetStoredState();
-                    readStoredState();
-                    hide();
-                }
+            reset.addClickHandler(event -> {
+                resetStoredState();
+                readStoredState();
+                hide();
             });
             content.add(reset);
         }

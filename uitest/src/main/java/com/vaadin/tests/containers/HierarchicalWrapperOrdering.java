@@ -2,8 +2,6 @@ package com.vaadin.tests.containers;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Layout;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
@@ -91,23 +89,17 @@ public class HierarchicalWrapperOrdering extends TestBase {
 
         // This contains a bug, changes not reflected back to client
         Button modify = new Button("Modify and sort (has a bug)",
-                new ClickListener() {
-                    private static final long serialVersionUID = 1L;
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        // Get first item
-                        Object itemId = indexedContainer.getIdByIndex(0);
-                        Item item = indexedContainer.getItem(itemId);
-                        Property<String> property = item
-                                .getItemProperty("name");
-                        // Prepend with Z so item should get sorted later
-                        property.setValue("Z " + property.getValue());
-                        // this does not work alone, requires extraneous
-                        // setContainerDataSource for server-side changes to be
-                        // reflected back to client-side
-                        sort(indexedContainer);
-                    }
+                event -> {
+                    // Get first item
+                    Object itemId = indexedContainer.getIdByIndex(0);
+                    Item item = indexedContainer.getItem(itemId);
+                    Property<String> property = item.getItemProperty("name");
+                    // Prepend with Z so item should get sorted later
+                    property.setValue("Z " + property.getValue());
+                    // this does not work alone, requires extraneous
+                    // setContainerDataSource for server-side changes to be
+                    // reflected back to client-side
+                    sort(indexedContainer);
                 });
         l.addComponent(modify);
 

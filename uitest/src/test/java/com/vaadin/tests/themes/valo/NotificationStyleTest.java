@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -79,12 +78,6 @@ public class NotificationStyleTest extends MultiBrowserTest {
     }
 
     private ExpectedCondition<Boolean> notificationPresentCondition() {
-        return new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return isElementPresent(By.className("v-Notification"));
-            }
-        };
+        return input -> isElementPresent(By.className("v-Notification"));
     }
 }

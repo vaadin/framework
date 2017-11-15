@@ -67,27 +67,19 @@ public class ButtonUI extends AbstractTestUI {
     private Button addButtonWithDelay() {
         Button btn = new Button();
         btn.setId(NORMAL_BUTTON_ID);
-        btn.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-                testedField.setValue("Clicked");
-                testedLabel.setValue("Clicked");
+        btn.addClickListener(event -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
             }
+            testedField.setValue("Clicked");
+            testedLabel.setValue("Clicked");
         });
         return btn;
     }
 
     private void addListener(Button button, final String clickEventText) {
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                testedField.setValue(clickEventText);
-            }
-        });
+        button.addClickListener(event -> testedField.setValue(clickEventText));
     }
 
     @Override

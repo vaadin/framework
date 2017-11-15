@@ -21,9 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.jcraft.jsch.JSchException;
 import com.vaadin.testbench.elements.ButtonElement;
@@ -67,14 +65,8 @@ public class ReconnectDialogUITest extends MultiBrowserTestWithProxy {
         waitForReconnectDialogPresent();
         final WebElement reconnectDialog = findElement(
                 ReconnectDialogThemeTest.reconnectDialogBy);
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return reconnectDialog.findElement(By.className("text"))
-                        .getText().equals(text);
-            }
-        }, 10);
-
+        waitUntil(input -> reconnectDialog.findElement(By.className("text"))
+                .getText().equals(text), 10);
     }
 
     private void waitForReconnectDialogToDisappear() {

@@ -21,7 +21,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CssLayout;
 
@@ -42,12 +41,7 @@ public class JavaScriptResizeListener extends AbstractReindeerTestUI {
     protected void setup(VaadinRequest request) {
 
         addComponent(
-                new Button("Change holder size", new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        updateHolderSize();
-                    }
-                }));
+                new Button("Change holder size", event -> updateHolderSize()));
         addComponent(new CheckBox("Listener active") {
             {
                 addValueChangeListener(event -> resizeJsComponent

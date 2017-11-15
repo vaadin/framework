@@ -37,46 +37,37 @@ public class ComplexGLColumnExpansionWithColSpan extends AbstractTestCase {
         // textfield spreads across all cols
         final TextField textfield = new TextField();
         textfield.setWidth(100, Sizeable.UNITS_PERCENTAGE);
-        Button b1 = new Button("new button");
-        Button b2 = new Button("nothing");
+        Button button1 = new Button("new button");
+        Button button2 = new Button("nothing");
         gl.addComponent(textfield, 0, 0);
-        gl.addComponent(b1, 0, 1);
-        gl.addComponent(b2, 0, 2);
-        b1.setWidth(270, Sizeable.UNITS_PIXELS);
-        b2.setWidth(270, Sizeable.UNITS_PIXELS);
-        b1.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                cols++;
-                gl.setColumns(cols);
-                Button b1 = new Button("new button" + cols);
-                Button b2 = new Button("nothing" + cols);
-                gl.addComponent(b1, cols - 1, 1);
-                gl.addComponent(b2, cols - 1, 2);
-                b1.setWidth(270, Sizeable.UNITS_PIXELS);
-                b2.setWidth(270, Sizeable.UNITS_PIXELS);
-                // adjust expand ratios...
-                if (cols > 0) {
-                    // next to last colum 0, last column 100
-                    gl.setColumnExpandRatio(cols - 2, 0);
-                    gl.setColumnExpandRatio(cols - 1, 100);
-                }
-                gl.removeComponent(textfield);
-                gl.addComponent(textfield, 0, 0, cols - 1, 0);
+        gl.addComponent(button1, 0, 1);
+        gl.addComponent(button2, 0, 2);
+        button1.setWidth(270, Sizeable.UNITS_PIXELS);
+        button2.setWidth(270, Sizeable.UNITS_PIXELS);
+        button1.addClickListener(event -> {
+            cols++;
+            gl.setColumns(cols);
+            Button b1 = new Button("new button" + cols);
+            Button b2 = new Button("nothing" + cols);
+            gl.addComponent(b1, cols - 1, 1);
+            gl.addComponent(b2, cols - 1, 2);
+            b1.setWidth(270, Sizeable.UNITS_PIXELS);
+            b2.setWidth(270, Sizeable.UNITS_PIXELS);
+            // adjust expand ratios...
+            if (cols > 0) {
+                // next to last colum 0, last column 100
+                gl.setColumnExpandRatio(cols - 2, 0);
+                gl.setColumnExpandRatio(cols - 1, 100);
             }
+            gl.removeComponent(textfield);
+            gl.addComponent(textfield, 0, 0, cols - 1, 0);
         });
         gl.setSizeFull();
         mainLayout.addComponent(gl);
         mainLayout.setExpandRatio(gl, 100);
         Button restart = new Button("restart");
         mainLayout.addComponent(restart);
-        restart.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                close();
-            }
-        });
-
+        restart.addClickListener(event -> close());
     }
 
 }

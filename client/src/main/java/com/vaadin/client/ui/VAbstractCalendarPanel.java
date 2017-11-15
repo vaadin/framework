@@ -19,6 +19,7 @@ package com.vaadin.client.ui;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,7 +29,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -52,7 +52,6 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.util.SharedUtil;
 
@@ -125,43 +124,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
     private static final String CN_OUTSIDE_RANGE = "outside-range";
 
-    /**
-     * Represents a click handler for when a user selects a value by using the
-     * mouse
-     */
-    private ClickHandler dayClickHandler = new ClickHandler() {
-        /*
-         * (non-Javadoc)
-         *
-         * @see
-         * com.google.gwt.event.dom.client.ClickHandler#onClick(com.google.gwt
-         * .event.dom.client.ClickEvent)
-         */
-        @Override
-        public void onClick(ClickEvent event) {
-            if (!isEnabled() || isReadonly()) {
-                return;
-            }
-
-            Date newDate = ((Day) event.getSource()).getDate();
-            if (!isDateInsideRange(newDate,
-                    getResolution(VAbstractCalendarPanel.this::isDay))) {
-                return;
-            }
-            if (newDate.getMonth() != displayedMonth.getMonth()
-                    || newDate.getYear() != displayedMonth.getYear()) {
-                // If an off-month date was clicked, we must change the
-                // displayed month and re-render the calendar (#8931)
-                displayedMonth.setMonth(newDate.getMonth());
-                displayedMonth.setYear(newDate.getYear());
-                renderCalendar();
-            }
-            focusDay(newDate);
-            selectFocused();
-            onSubmit();
-        }
-    };
-
     private VEventButton prevYear;
 
     private VEventButton nextYear;
@@ -201,6 +163,33 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
     private VDateField<R> parent;
 
     private boolean initialRenderDone = false;
+
+    /**
+     * Represents a click handler for when a user selects a value by using the
+     * mouse
+     */
+    private ClickHandler dayClickHandler = event -> {
+        if (!isEnabled() || isReadonly()) {
+            return;
+        }
+
+        Date newDate = ((Day) event.getSource()).getDate();
+        if (!isDateInsideRange(newDate,
+                getResolution(VAbstractCalendarPanel.this::isDay))) {
+            return;
+        }
+        if (newDate.getMonth() != displayedMonth.getMonth()
+                || newDate.getYear() != displayedMonth.getYear()) {
+            // If an off-month date was clicked, we must change the
+            // displayed month and re-render the calendar (#8931)
+            displayedMonth.setMonth(newDate.getMonth());
+            displayedMonth.setYear(newDate.getYear());
+            renderCalendar();
+        }
+        focusDay(newDate);
+        selectFocused();
+        onSubmit();
+    };
 
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
@@ -403,7 +392,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
 
             selectDate(focusedDate);
         } else {
-            VConsole.log("Trying to select a the focused date which is NULL!");
+            getLogger().info("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -2027,5 +2016,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 renderCalendar();
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractCalendarPanel.class.getName());
     }
 }

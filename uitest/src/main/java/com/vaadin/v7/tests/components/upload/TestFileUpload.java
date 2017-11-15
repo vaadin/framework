@@ -22,14 +22,7 @@ public class TestFileUpload extends TestBase implements Receiver {
 
     @Override
     protected void setup() {
-        Upload u = new Upload("Upload", new Upload.Receiver() {
-
-            @Override
-            public OutputStream receiveUpload(String filename,
-                    String mimeType) {
-                return baos;
-            }
-        });
+        Upload u = new Upload("Upload", (filename, mimeType) -> baos);
         u.setId("UPL");
         u.addFailedListener(new FailedListener() {
 

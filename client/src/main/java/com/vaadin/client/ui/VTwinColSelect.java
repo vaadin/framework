@@ -31,7 +31,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -112,8 +111,7 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
     /**
      * A multiselect ListBox which catches double clicks.
      */
-    public class DoubleClickListBox extends ListBox
-            implements HasDoubleClickHandlers {
+    public class DoubleClickListBox extends ListBox {
         /**
          * Constructs a new DoubleClickListBox.
          */
@@ -362,14 +360,16 @@ public class VTwinColSelect extends Composite implements MultiSelectWidget,
         Set<String> movedItems = moveSelectedItems(optionsListBox,
                 selectionsListBox);
         selectionChangeListeners
-                .forEach(e -> e.accept(movedItems, Collections.emptySet()));
+                .forEach(listener -> listener.accept(movedItems,
+                        Collections.emptySet()));
     }
 
     private void moveSelectedItemsRightToLeft() {
         Set<String> movedItems = moveSelectedItems(selectionsListBox,
                 optionsListBox);
         selectionChangeListeners
-                .forEach(e -> e.accept(Collections.emptySet(), movedItems));
+                .forEach(listener -> listener.accept(Collections.emptySet(),
+                        movedItems));
     }
 
     private static Set<String> moveSelectedItems(ListBox source,

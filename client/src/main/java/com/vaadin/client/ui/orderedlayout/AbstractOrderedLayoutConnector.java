@@ -73,25 +73,22 @@ public abstract class AbstractOrderedLayoutConnector
         }
     };
 
-    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
-        @Override
-        public void onStateChanged(StateChangeEvent stateChangeEvent) {
-            // Child state has changed, update stuff it hasn't already been done
-            updateInternalState();
+    private StateChangeHandler childStateChangeHandler = event -> {
+        // Child state has changed, update stuff it hasn't already been done
+        updateInternalState();
 
-            /*
-             * Some changes must always be done after each child's own state
-             * change handler has been run because it might have changed some
-             * styles that are overridden here.
-             */
-            ServerConnector child = stateChangeEvent.getConnector();
-            if (child instanceof ComponentConnector) {
-                ComponentConnector component = (ComponentConnector) child;
-                Slot slot = getWidget().getSlot(component.getWidget());
+        /*
+         * Some changes must always be done after each child's own state change
+         * handler has been run because it might have changed some styles that
+         * are overridden here.
+         */
+        ServerConnector child = event.getConnector();
+        if (child instanceof ComponentConnector) {
+            ComponentConnector component = (ComponentConnector) child;
+            Slot slot = getWidget().getSlot(component.getWidget());
 
-                slot.setRelativeWidth(component.isRelativeWidth());
-                slot.setRelativeHeight(component.isRelativeHeight());
-            }
+            slot.setRelativeWidth(component.isRelativeWidth());
+            slot.setRelativeHeight(component.isRelativeHeight());
         }
     };
 
@@ -99,10 +96,11 @@ public abstract class AbstractOrderedLayoutConnector
 
         // Get all needed element references
         Element captionElement = event.getElement();
+        VAbstractOrderedLayout widget = getWidget();
 
         // Caption position determines if the widget element is the first or
         // last child inside the caption wrap
-        CaptionPosition pos = getWidget().getCaptionPositionFromElement(
+        CaptionPosition pos = widget.getCaptionPositionFromElement(
                 captionElement.getParentElement());
 
         // The default is the last child
@@ -118,7 +116,7 @@ public abstract class AbstractOrderedLayoutConnector
 
         if (captionElement == widgetElement) {
             // Caption element already detached
-            Slot slot = getWidget().getSlot(widgetElement);
+            Slot slot = widget.getSlot(widgetElement);
             if (slot != null) {
                 slot.setCaptionResizeListener(null);
             }
@@ -130,16 +128,16 @@ public abstract class AbstractOrderedLayoutConnector
 
         if (widgetHeight.endsWith("%") && (pos == CaptionPosition.TOP
                 || pos == CaptionPosition.BOTTOM)) {
-            getWidget().updateCaptionOffset(captionElement);
+            widget.updateCaptionOffset(captionElement);
         } else if (widgetWidth.endsWith("%") && (pos == CaptionPosition.LEFT
                 || pos == CaptionPosition.RIGHT)) {
-            getWidget().updateCaptionOffset(captionElement);
+            widget.updateCaptionOffset(captionElement);
         }
 
         updateLayoutHeight();
 
         if (needsExpand()) {
-            getWidget().updateExpandCompensation();
+            widget.updateExpandCompensation();
         }
     };
 
@@ -283,7 +281,6 @@ public abstract class AbstractOrderedLayoutConnector
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
             }
         }
-
     }
 
     /*
@@ -432,7 +429,8 @@ public abstract class AbstractOrderedLayoutConnector
 
         hasChildrenWithMiddleAlignment = false;
 
-        needsExpand = getWidget().vertical ? !isUndefinedHeight()
+        VAbstractOrderedLayout widget = getWidget();
+        needsExpand = widget.vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
 
         boolean onlyZeroExpands = true;
@@ -449,7 +447,7 @@ public abstract class AbstractOrderedLayoutConnector
 
         // First update bookkeeping for all children
         for (ComponentConnector child : getChildComponents()) {
-            Slot slot = getWidget().getSlot(child.getWidget());
+            Slot slot = widget.getSlot(child.getWidget());
 
             slot.setRelativeWidth(child.isRelativeWidth());
             slot.setRelativeHeight(child.isRelativeHeight());
@@ -461,10 +459,10 @@ public abstract class AbstractOrderedLayoutConnector
             // Update slot style names
             List<String> childStyles = child.getState().styles;
             if (childStyles == null) {
-                getWidget().setSlotStyleNames(child.getWidget(),
+                widget.setSlotStyleNames(child.getWidget(),
                         (String[]) null);
             } else {
-                getWidget().setSlotStyleNames(child.getWidget(),
+                widget.setSlotStyleNames(child.getWidget(),
                         childStyles.toArray(new String[childStyles.size()]));
             }
 
@@ -492,10 +490,10 @@ public abstract class AbstractOrderedLayoutConnector
         if (needsFixedHeight()) {
             // Add resize listener to ensure the widget itself is measured
             getLayoutManager().addElementResizeListener(
-                    getWidget().getElement(), childComponentResizeListener);
+                    widget.getElement(), childComponentResizeListener);
         } else {
             getLayoutManager().removeElementResizeListener(
-                    getWidget().getElement(), childComponentResizeListener);
+                    widget.getElement(), childComponentResizeListener);
         }
 
         // Then update listeners based on bookkeeping
@@ -505,14 +503,14 @@ public abstract class AbstractOrderedLayoutConnector
         // element resize events
         updateLayoutHeight();
         if (needsExpand()) {
-            getWidget().updateExpandedSizes();
+            widget.updateExpandedSizes();
             // updateExpandedSizes causes fixed size components to temporarily
             // lose their size. updateExpandCompensation must be delayed until
             // the browser has a chance to measure them.
             Scheduler.get().scheduleFinally(
-                    () -> getWidget().updateExpandCompensation());
+                    () -> widget.updateExpandCompensation());
         } else {
-            getWidget().clearExpand();
+            widget.clearExpand();
         }
 
         Profiler.leave("AOLC.updateInternalState");

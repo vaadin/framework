@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +29,7 @@ import com.vaadin.data.provider.DataKeyMapper;
  * @author Vaadin Ltd.
  * @since 3.0
  */
-public class KeyMapper<V> implements DataKeyMapper<V>, Serializable {
+public class KeyMapper<V> implements DataKeyMapper<V> {
 
     private int lastKey = 0;
 

@@ -23,6 +23,7 @@ import com.vaadin.client.widgets.Grid.Column;
 import com.vaadin.client.widgets.Grid.HeaderCell;
 import com.vaadin.shared.data.DataCommunicatorConstants;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnState;
 
 import elemental.json.JsonObject;
@@ -41,6 +42,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             extends Column<Object, JsonObject> {
 
         private final String connectorId;
+        private ContentMode contentMode;
 
         CustomColumn(String connectorId) {
             this.connectorId = connectorId;
@@ -53,6 +55,29 @@ public class ColumnConnector extends AbstractExtensionConnector {
         @Override
         protected void setDefaultHeaderContent(HeaderCell cell) {
             // NO-OP, Server takes care of header contents.
+        }
+
+        /**
+         * Gets the content mode for tooltips in this column.
+         *
+         * @return the content mode.
+         *
+         * @since 8.2
+         */
+        public ContentMode getContentMode() {
+            return contentMode;
+        }
+
+        /**
+         * Sets the content mode for tooltips in this column.
+         *
+         * @param contentMode
+         *            the content mode for tooltips
+         *
+         * @since 8.2
+         */
+        public void setContentMode(ContentMode contentMode) {
+            this.contentMode = contentMode;
         }
     }
 
@@ -96,6 +121,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
     @OnStateChange("caption")
     void updateCaption() {
         column.setHeaderCaption(getState().caption);
+    }
+
+    @OnStateChange("assistiveCaption")
+    void updateAssistiveCaption() {
+        column.setAssistiveCaption(getState().assistiveCaption);
     }
 
     @OnStateChange("sortable")
@@ -159,6 +189,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setEditable(getState().editable);
     }
 
+    @OnStateChange("contentMode")
+    void updateContentMode() {
+        column.setContentMode(getState().contentMode);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();
@@ -181,5 +216,4 @@ public class ColumnConnector extends AbstractExtensionConnector {
     public ColumnState getState() {
         return (ColumnState) super.getState();
     }
-
 }

@@ -34,21 +34,18 @@ public class TabsheetConnector extends TabsheetBaseConnector
         implements SimpleManagedLayout, MayScrollChildren {
 
     public TabsheetConnector() {
-        registerRpc(TabsheetClientRpc.class, new TabsheetClientRpc() {
-            @Override
-            public void revertToSharedStateSelection() {
-                for (int i = 0; i < getState().tabs.size(); ++i) {
-                    final String key = getState().tabs.get(i).key;
-                    final boolean selected = key.equals(getState().selected);
-                    if (selected) {
-                        getWidget().waitingForResponse = false;
-                        getWidget().setActiveTabIndex(i);
-                        getWidget().selectTab(i);
-                        break;
-                    }
+        registerRpc(TabsheetClientRpc.class, () -> {
+            for (int i = 0; i < getState().tabs.size(); ++i) {
+                final String key = getState().tabs.get(i).key;
+                final boolean selected = key.equals(getState().selected);
+                if (selected) {
+                    getWidget().waitingForResponse = false;
+                    getWidget().setActiveTabIndex(i);
+                    getWidget().selectTab(i);
+                    break;
                 }
-                renderContent();
             }
+            renderContent();
         });
     }
 

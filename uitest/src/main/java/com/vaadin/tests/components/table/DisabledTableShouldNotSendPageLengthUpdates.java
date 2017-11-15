@@ -2,7 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.v7.ui.Table;
 
@@ -15,13 +14,10 @@ public class DisabledTableShouldNotSendPageLengthUpdates extends TestBase {
     protected void setup() {
         HorizontalSplitPanel split = new HorizontalSplitPanel();
         table.addContainerProperty("name", Integer.class, 0);
-        Button button = new Button("Add items", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                for (int i = 0; i < 5; i++) {
-                    Object id = table.addItem();
-                    table.getItem(id).getItemProperty("name").setValue(i);
-                }
+        Button button = new Button("Add items", event -> {
+            for (int i = 0; i < 5; i++) {
+                Object id = table.addItem();
+                table.getItem(id).getItemProperty("name").setValue(i);
             }
         });
         table.setEnabled(false);

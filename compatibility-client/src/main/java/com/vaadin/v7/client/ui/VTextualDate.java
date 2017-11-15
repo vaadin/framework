@@ -17,6 +17,8 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -33,8 +35,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
-import com.vaadin.client.VConsole;
-import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
@@ -43,7 +43,8 @@ import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
 import com.vaadin.v7.shared.ui.datefield.Resolution;
 
-public class VTextualDate extends VDateField implements Field, ChangeHandler,
+public class VTextualDate extends VDateField
+        implements ChangeHandler,
         Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, KeyDownHandler {
 
@@ -163,7 +164,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 } catch (LocaleNotLoadedException e) {
                     // TODO should die instead? Can the component survive
                     // without format string?
-                    VConsole.error(e);
+                    getLogger().log(Level.SEVERE,
+                            e.getMessage() == null ? "" : e.getMessage(), e);
                 }
             }
         }
@@ -261,7 +263,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 // remove possibly added invalid value indication
                 removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                VConsole.log(e);
+                getLogger().log(Level.INFO,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 // this is a hack that may eventually be removed
@@ -406,5 +409,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             // input so we handle it using a key listener instead
             onChange(null);
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VTextualDate.class.getName());
     }
 }

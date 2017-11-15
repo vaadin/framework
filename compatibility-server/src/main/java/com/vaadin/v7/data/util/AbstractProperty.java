@@ -128,7 +128,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
@@ -152,7 +152,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(Property.ReadOnlyStatusChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
@@ -214,7 +214,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(ValueChangeListener listener) {
@@ -232,7 +232,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(Property.ValueChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(ValueChangeListener listener) {

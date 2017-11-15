@@ -236,7 +236,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            defined in the specified {@code resolutions}
      *
      * @return the date object built from the specified resolutions
-     * @since
+     * @since 8.2
      */
     protected T reconstructDateFromFields(Map<String, Integer> resolutions,
             T oldDate) {
@@ -695,9 +695,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
             value = getEmptyValue();
         }
         dateString = formatDate(value);
-        RangeValidator<T> validator = getRangeValidator();// TODO move range
-                                                          // check to internal
-                                                          // validator?
+        // TODO move range check to internal validator?
+        RangeValidator<T> validator = getRangeValidator();
         ValidationResult result = validator.apply(value,
                 new ValueContext(this, this));
 

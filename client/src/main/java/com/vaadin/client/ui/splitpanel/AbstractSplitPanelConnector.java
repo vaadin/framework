@@ -35,7 +35,6 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VAbstractSplitPanel;
-import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler;
 import com.vaadin.client.ui.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -52,27 +51,21 @@ public abstract class AbstractSplitPanelConnector extends
         // TODO Remove
         getWidget().client = getConnection();
 
-        getWidget().addHandler(new SplitterMoveHandler() {
-
-            @Override
-            public void splitterMoved(SplitterMoveEvent event) {
-                String position = getWidget().getSplitterPosition();
-                float pos = 0;
-                if (position.indexOf("%") > 0) {
-                    // Send % values as a fraction to avoid that the splitter
-                    // "jumps" when server responds with the integer pct value
-                    // (e.g. dragged 16.6% -> should not jump to 17%)
-                    pos = Float.valueOf(
-                            position.substring(0, position.length() - 1));
-                } else {
-                    pos = Integer.parseInt(
-                            position.substring(0, position.length() - 2));
-                }
-
-                getRpcProxy(AbstractSplitPanelRpc.class)
-                        .setSplitterPosition(pos);
+        getWidget().addHandler(event -> {
+            String position = getWidget().getSplitterPosition();
+            float pos = 0;
+            if (position.indexOf("%") > 0) {
+                // Send % values as a fraction to avoid that the splitter
+                // "jumps" when server responds with the integer pct value
+                // (e.g. dragged 16.6% -> should not jump to 17%)
+                pos = Float
+                        .valueOf(position.substring(0, position.length() - 1));
+            } else {
+                pos = Integer
+                        .parseInt(position.substring(0, position.length() - 2));
             }
 
+            getRpcProxy(AbstractSplitPanelRpc.class).setSplitterPosition(pos);
         }, SplitterMoveEvent.TYPE);
     }
 
@@ -124,41 +117,42 @@ public abstract class AbstractSplitPanelConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        getWidget().setEnabled(isEnabled());
+        VAbstractSplitPanel panel = getWidget();
+        panel.setEnabled(isEnabled());
 
         clickEventHandler.handleEventHandlerRegistration();
 
         if (ComponentStateUtil.hasStyles(getState())) {
-            getWidget().componentStyleNames = getState().styles;
+            panel.componentStyleNames = getState().styles;
         } else {
-            getWidget().componentStyleNames = new LinkedList<>();
+            panel.componentStyleNames = new LinkedList<>();
         }
 
         // Splitter updates
         SplitterState splitterState = getState().splitterState;
 
-        getWidget().setStylenames();
+        panel.setStylenames();
 
-        getWidget().minimumPosition = splitterState.minPosition
+        panel.minimumPosition = splitterState.minPosition
                 + splitterState.minPositionUnit;
 
-        getWidget().maximumPosition = splitterState.maxPosition
+        panel.maximumPosition = splitterState.maxPosition
                 + splitterState.maxPositionUnit;
 
-        getWidget().position = splitterState.position
+        panel.position = splitterState.position
                 + splitterState.positionUnit;
 
-        getWidget().setPositionReversed(splitterState.positionReversed);
+        panel.setPositionReversed(splitterState.positionReversed);
 
-        getWidget().setLocked(splitterState.locked);
+        panel.setLocked(splitterState.locked);
 
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
-        getConnection().runDescendentsLayout(getWidget());
+        getConnection().runDescendentsLayout(panel);
 
         getLayoutManager().setNeedsLayout(this);
 
-        getWidget().makeScrollable();
+        panel.makeScrollable();
 
         handleSingleComponentMove();
     }
@@ -187,7 +181,6 @@ public abstract class AbstractSplitPanelConnector extends
                 handleHierarchyChange();
             }
         }
-
     }
 
     @Override

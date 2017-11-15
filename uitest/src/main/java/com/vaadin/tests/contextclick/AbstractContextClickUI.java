@@ -50,25 +50,16 @@ public abstract class AbstractContextClickUI<T extends AbstractComponent, E exte
     }
 
     protected T testComponent;
-    private ContextClickListener defaultListener = new ContextClickListener() {
-
-        @Override
-        public void contextClick(ContextClickEvent event) {
-            log("ContextClickEvent: (" + event.getClientX() + ", "
+    private ContextClickListener defaultListener = event -> log(
+            "ContextClickEvent: (" + event.getClientX() + ", "
                     + event.getClientY() + ")");
-        }
-    };
 
-    private ContextClickListener typedListener = new ContextClickListener() {
-
-        @Override
-        public void contextClick(ContextClickEvent event) {
-            try {
-                E typedEvent = (E) event;
-                handleContextClickEvent(typedEvent);
-            } catch (Exception e) {
-                log("UNEXPECTED EVENT TYPE!");
-            }
+    private ContextClickListener typedListener = event -> {
+        try {
+            E typedEvent = (E) event;
+            handleContextClickEvent(typedEvent);
+        } catch (Exception e) {
+            log("UNEXPECTED EVENT TYPE!");
         }
     };
 

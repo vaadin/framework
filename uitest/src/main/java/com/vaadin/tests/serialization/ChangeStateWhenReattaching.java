@@ -19,21 +19,17 @@ package com.vaadin.tests.serialization;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class ChangeStateWhenReattaching extends AbstractReindeerTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
         Button button = new Button("Reattach and remove caption",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        Button button = event.getButton();
-                        removeComponent(button);
-                        addComponent(button);
-                        button.setCaption(null);
-                    }
+                event -> {
+                    Button b = event.getButton();
+                    removeComponent(b);
+                    addComponent(b);
+                    b.setCaption(null);
                 });
         addComponent(button);
     }

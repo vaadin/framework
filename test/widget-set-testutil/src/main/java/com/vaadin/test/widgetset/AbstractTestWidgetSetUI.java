@@ -19,8 +19,8 @@ public abstract class AbstractTestWidgetSetUI extends UI {
 
         Button button = new Button("Click Me");
         button.addClickListener(
-                event -> new Label(
-                        "Thanks " + name.getValue() + ", it works!"));
+                event -> layout.addComponent(new Label(
+                        "Thanks " + name.getValue() + ", it works!")));
 
         getPage().getJavaScript().execute(
                 "widgetsetinfo.innerText=document.querySelector('iframe').id;");

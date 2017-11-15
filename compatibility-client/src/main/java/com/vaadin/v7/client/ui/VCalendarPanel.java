@@ -17,6 +17,7 @@
 package com.vaadin.v7.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
@@ -53,7 +54,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.DateTimeService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.FocusableFlexTable;
 import com.vaadin.client.ui.SubPartAware;
@@ -331,7 +331,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
             selectDate(focusedDate);
         } else {
-            VConsole.log("Trying to select a the focused date which is NULL!");
+            getLogger().info("Trying to select a the focused date which is NULL!");
         }
     }
 
@@ -2246,5 +2246,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 renderCalendar();
             }
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VCalendarPanel.class.getName());
     }
 }

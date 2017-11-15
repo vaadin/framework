@@ -43,9 +43,9 @@ import com.vaadin.v7.data.Property;
  *             extend {@link AbstractField} instead.
  */
 @Deprecated
-public interface Field<T> extends Component, BufferedValidatable, Property<T>,
+public interface Field<T> extends Focusable, BufferedValidatable, Property<T>,
         Property.ValueChangeNotifier, Property.ValueChangeListener,
-        Property.Editor, Focusable {
+        Property.Editor {
     /**
      * Is this field required.
      *

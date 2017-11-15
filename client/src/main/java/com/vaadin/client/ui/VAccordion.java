@@ -51,6 +51,8 @@ public class VAccordion extends VTabsheetBase {
 
     private final TouchScrollHandler touchScrollHandler;
 
+    private int tabulatorIndex;
+
     public VAccordion() {
         super(CLASSNAME);
 
@@ -107,6 +109,20 @@ public class VAccordion extends VTabsheetBase {
                 StackItem item = (StackItem) w;
                 item.updateStyleNames(primaryStyleName);
             }
+        }
+    }
+
+    /**
+     * For internal use only. May be renamed or removed in a future release.
+     *
+     * @param tabIndex
+     *            tabulator index for the open stack item
+     */
+    public void setTabIndex(int tabIndex) {
+        tabulatorIndex = tabIndex;
+        StackItem openStackItem = getOpenStackItem();
+        if (openStackItem != null) {
+            openStackItem.getElement().setTabIndex(tabIndex);
         }
     }
 
@@ -308,6 +324,7 @@ public class VAccordion extends VTabsheetBase {
             content.getStyle().setLeft(0, Unit.PX);
             content.getStyle().clearVisibility();
             addStyleDependentName("open");
+            getElement().setTabIndex(tabulatorIndex);
         }
 
         public void hide() {
@@ -325,6 +342,7 @@ public class VAccordion extends VTabsheetBase {
             setHeight(-1);
             setWidth("");
             open = false;
+            getElement().setTabIndex(-1);
         }
 
         public boolean isOpen() {

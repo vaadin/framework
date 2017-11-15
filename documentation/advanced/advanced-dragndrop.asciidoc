@@ -302,6 +302,13 @@ Additionally, the style name `v-grid-row-dragged` is applied to all the dragged 
 
 To make a Grid component's rows accept a drop event, apply the [classname]#GridDropTarget# extension to the component. When creating the extension, you need to specify where the transferred data can be dropped on.
 
+[NOTE]
+====
+Since 8.2, there is an option to make the grid not accept drops on rows if the grid has been sorted by the user. This is because the drop location might not be in the place that is shown to the users due to the sorting – and this can cause bad user experience. This is controlled with the method `setDropAllowedOnSortedGridRows` and is by default set to `true` to not change behavior in comparison to Framework version 8.1. When this is set to `false` and the user has sorted the grid, there will not be a target drop row for drops for the grid, and the indicator is always the same as with `DropMode.ON_GRID`. 
+
+When the grid has been sorted, you should put the dropped data to the correct location (according to the sorting), and then scroll to the row where the dropped data ended up into and possibly also selecting it.
+====
+
 [source,java]
 ----
 Grid<Person> grid = new Grid<>();
@@ -310,7 +317,7 @@ GridDropTarget<Person> dropTarget = new GridDropTarget<>(grid, DropMode.BETWEEN)
 dropTarget.setDropEffect(DropEffect.MOVE);
 ----
 
-The _drop mode_ specifies the behaviour of the row when an element is dragged over or dropped onto it. Use `DropMode.ON_TOP` when you want to drop elements on top of a row and `DropMode.BETWEEN` when you want to drop elements between rows. `DropMode_ON_TOP_OR_BETWEEN` allows to drop on between or top rows.
+The _drop mode_ specifies the behaviour of the row when an element is dragged over or dropped onto it. Use `DropMode.ON_TOP` when you want to drop elements on top of a row and `DropMode.BETWEEN` when you want to drop elements between rows. `DropMode_ON_TOP_OR_BETWEEN` allows to drop on between or top rows. `DropMode.ON_GRID` (since version 8.2) does not allow dropping on the grid rows, but just into the grid, without a specific target row.
 
 The [classname]#GridDropEvent# is fired when data is dropped onto one of the Grid's rows. The following example shows how you can insert items into the Grid at the drop position. If the drag source is another Grid, you can access the generated drag data with the event's [methodname]#getDataTransferText()# method.
 If the drag source Grid uses a custom generator for a different type than `"text"`, you can access it's generated data using the [methodname]#getDataTransferData(type)# method. You can also check all the received data transfer data by fetching the type-to-data map with the [methodname]#getDataTransferData()# method.
@@ -346,7 +353,7 @@ dropTarget.addGridDropListener(event -> {
 
 The _drop location_ property in the [classname]#GridDropEvent# specifies the dropped location in relative to grid row the drop happened on and depends on the used [classname]#DropMode#. When the drop happened on top of a row, the possible options for the location are `ON_TOP`, `ABOVE` and `BELOW`.
 
-If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened `BELOW` the last visible row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional.
+If the grid is empty or if the drop was on empty space after the last row in grid, and the [classname]#DropMode.ON_TOP# was used, then the drop location `EMPTY` will be used. If the drop modes [classname]#DropMode.BETWEEN# or [classname]#DropMode.ON_TOP_OR_BETWEEN# are used, then the location can be `EMPTY` only when the grid was empty; otherwise the drop happened `BELOW` the last visible row. When the drop location is `EMPTY`, the [methodname]#getDropTargetRow# method will also return an empty optional. If the grid has been sorted by the user and `setDropAllowedOnSortedGridRows` has been set to `false`, the location will be `EMPTY` and there will not be a target row for the drops.
 
 When dropping on top of the grid's header or footer, the drop location will be `EMPTY` if there are no rows in the grid or if [classname]#DropMode.ON_TOP# was used. If there are rows in the grid, dropping on top of the header will set the drop location to `ABOVE` and the dropped row will be the first currently visible row in grid. Similarly, if dropping on top of the footer, the drop location will be `BELOW` and the dropped row will be the last visible row in the grid.
 

@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
 
 public class TestUploadFilename extends TestBase {
@@ -22,14 +21,9 @@ public class TestUploadFilename extends TestBase {
         addComponent(upload);
         addComponent(result);
 
-        upload.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                result.setValue("Got file (should not contain path): "
-                        + receiver.getFilename());
-            }
-        });
-
+        upload.addFinishedListener(
+                event -> result.setValue("Got file (should not contain path): "
+                        + receiver.getFilename()));
     }
 
     public static class UploadReceiver implements Receiver {

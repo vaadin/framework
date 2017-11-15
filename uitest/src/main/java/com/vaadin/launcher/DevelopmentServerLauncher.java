@@ -17,7 +17,6 @@
 package com.vaadin.launcher;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -257,12 +256,8 @@ public class DevelopmentServerLauncher {
                     server.start();
                 });
                 scanner.setReportExistingFilesOnStartup(false);
-                scanner.setFilenameFilter(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File folder, String name) {
-                        return name.endsWith(".class");
-                    }
-                });
+                scanner.setFilenameFilter(
+                        (folder, name) -> name.endsWith(".class"));
 
                 scanner.setScanDirs(classFolders);
                 scanner.start();

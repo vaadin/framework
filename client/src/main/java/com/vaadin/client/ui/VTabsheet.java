@@ -787,6 +787,20 @@ public class VTabsheet extends VTabsheetBase
     private String currentStyle;
 
     /**
+     * For internal use only. May be renamed or removed in a future release.
+     *
+     * @param tabIndex
+     *            tabulator index for the active tab of the tab sheet
+     */
+    public void setTabIndex(int tabIndex) {
+        tabulatorIndex = tabIndex;
+        Tab activeTab = getActiveTab();
+        if (activeTab != null) {
+            activeTab.setTabulatorIndex(tabIndex);
+        }
+    }
+
+    /**
      * @return Whether the tab could be selected or not.
      */
     private boolean canSelectTab(final int tabIndex) {
@@ -1347,15 +1361,9 @@ public class VTabsheet extends VTabsheetBase
              */
             final Style style = scroller.getStyle();
             style.setProperty("whiteSpace", "normal");
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    style.setProperty("whiteSpace", "");
-                }
-            });
+            Scheduler.get().scheduleDeferred(
+                    () -> style.setProperty("whiteSpace", ""));
         }
-
     }
 
     /** For internal use only. May be removed or replaced in the future. */

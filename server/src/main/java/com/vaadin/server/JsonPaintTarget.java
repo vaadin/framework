@@ -867,7 +867,7 @@ public class JsonPaintTarget implements PaintTarget {
         public abstract String getJsonPresentation();
     }
 
-    class BooleanVariable extends Variable implements Serializable {
+    class BooleanVariable extends Variable {
         boolean value;
 
         public BooleanVariable(VariableOwner owner, String name, boolean v) {
@@ -882,7 +882,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    class StringVariable extends Variable implements Serializable {
+    class StringVariable extends Variable {
         String value;
 
         public StringVariable(VariableOwner owner, String name, String v) {
@@ -897,7 +897,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     }
 
-    class IntVariable extends Variable implements Serializable {
+    class IntVariable extends Variable {
         int value;
 
         public IntVariable(VariableOwner owner, String name, int v) {
@@ -911,7 +911,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class LongVariable extends Variable implements Serializable {
+    class LongVariable extends Variable {
         long value;
 
         public LongVariable(VariableOwner owner, String name, long v) {
@@ -925,7 +925,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class FloatVariable extends Variable implements Serializable {
+    class FloatVariable extends Variable {
         float value;
 
         public FloatVariable(VariableOwner owner, String name, float v) {
@@ -939,7 +939,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class DoubleVariable extends Variable implements Serializable {
+    class DoubleVariable extends Variable {
         double value;
 
         public DoubleVariable(VariableOwner owner, String name, double v) {
@@ -953,7 +953,7 @@ public class JsonPaintTarget implements PaintTarget {
         }
     }
 
-    class ArrayVariable extends Variable implements Serializable {
+    class ArrayVariable extends Variable {
         String[] value;
 
         public ArrayVariable(VariableOwner owner, String name, String[] v) {

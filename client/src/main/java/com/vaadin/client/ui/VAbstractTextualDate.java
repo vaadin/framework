@@ -17,6 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -33,7 +35,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
@@ -52,7 +53,8 @@ import com.vaadin.shared.EventId;
  * @since 8.0
  */
 public abstract class VAbstractTextualDate<R extends Enum<R>>
-        extends VDateField<R> implements Field, ChangeHandler, Focusable,
+        extends VDateField<R>
+        implements ChangeHandler, Focusable,
         SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
         HandlesAriaRequired, KeyDownHandler {
 
@@ -128,7 +130,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         } catch (LocaleNotLoadedException e) {
             // TODO should die instead? Can the component survive
             // without format string?
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
             return null;
         }
     }
@@ -239,7 +242,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 // remove possibly added invalid value indication
                 removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                VConsole.log(e);
+                getLogger().log(Level.INFO,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 setDate(null);
@@ -259,7 +263,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
-     * @since
+     * @since 8.2
      */
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
@@ -278,7 +282,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Note that this method should not send the buffered values, but use
      * {@link #updateAndSendBufferedValues()} instead
      *
-     * @since
+     * @since 8.2
      */
     protected void updateBufferedResolutions() {
         Date currentDate = getDate();
@@ -398,8 +402,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         } else {
             text.removeStyleName(styleName);
         }
-        if (getClient() != null && getClient()
-                .hasEventListeners(VAbstractTextualDate.this, eventId)) {
+        if (getClient() != null && connector.hasEventListener(eventId)) {
             // may excessively send events if if focus went to another
             // sub-component
             if (EventId.FOCUS.equals(eventId)) {
@@ -471,5 +474,9 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
         }
         return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractTextualDate.class.getName());
     }
 }

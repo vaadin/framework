@@ -1131,7 +1131,7 @@ public class Grid extends AbstractComponent
      * SelectionModel should extend {@link AbstractGridExtension}.
      */
     @Deprecated
-    public interface SelectionModel extends Serializable, Extension {
+    public interface SelectionModel extends Extension {
 
         /**
          * Interface implemented by selection models which support disabling
@@ -4453,7 +4453,6 @@ public class Grid extends AbstractComponent
         private static Logger getLogger() {
             return Logger.getLogger(AbstractRenderer.class.getName());
         }
-
     }
 
     /**

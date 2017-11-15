@@ -50,13 +50,9 @@ public class SelectAllRows extends AbstractReindeerTestUI {
         label.setCaption("Selected count:");
         addComponent(label);
 
-        button.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Set selected = (Set) table.getValue();
-                label.setValue(String.valueOf(selected.size()));
-            }
+        button.addClickListener(event -> {
+            Set selected = (Set) table.getValue();
+            label.setValue(String.valueOf(selected.size()));
         });
 
         for (int i = 0; i < TOTAL_NUMBER_OF_ROWS; i++) {

@@ -37,4 +37,5 @@ public class GridDropTargetState extends DropTargetState {
      * @see DropMode#ON_TOP_OR_BETWEEN
      */
     public int dropThreshold = 5;
+
 }

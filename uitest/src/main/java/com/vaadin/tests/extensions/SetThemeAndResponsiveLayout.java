@@ -19,7 +19,6 @@ import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 
@@ -35,12 +34,7 @@ public class SetThemeAndResponsiveLayout extends AbstractReindeerTestUI {
         responsiveLayout.addComponent(new Label(
                 "First set the theme using the button and then resize the browser window in both dimensions to see the background color change."));
         Button setThemeButton = new Button("Set theme");
-        setThemeButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                setTheme("tests-responsive");
-            }
-        });
+        setThemeButton.addClickListener(event -> setTheme("tests-responsive"));
         responsiveLayout.addComponent(setThemeButton);
         Responsive.makeResponsive(responsiveLayout);
     }

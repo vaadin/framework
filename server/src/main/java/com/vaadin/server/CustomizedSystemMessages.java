@@ -16,8 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.Serializable;
-
 /**
  * Contains the system messages used to notify the user about various critical
  * situations that can occur.
@@ -52,8 +50,7 @@ import java.io.Serializable;
  * </p>
  */
 
-public class CustomizedSystemMessages extends SystemMessages
-        implements Serializable {
+public class CustomizedSystemMessages extends SystemMessages {
 
     /**
      * Sets the URL to go to when the session has expired.

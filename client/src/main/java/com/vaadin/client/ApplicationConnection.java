@@ -460,12 +460,8 @@ public class ApplicationConnection implements HasHandlers {
         // correct place in the DOM
         if (!tooltipInitialized) {
             tooltipInitialized = true;
-            ApplicationConfiguration.runWhenDependenciesLoaded(new Command() {
-                @Override
-                public void execute() {
-                    getVTooltip().initializeAssistiveTooltips();
-                }
-            });
+            ApplicationConfiguration.runWhenDependenciesLoaded(
+                    () -> getVTooltip().initializeAssistiveTooltips());
         }
     }
 
