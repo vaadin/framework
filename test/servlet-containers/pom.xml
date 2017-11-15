@@ -237,6 +237,7 @@
             <modules>
                 <module>jsp-integration</module>
                 <module>karaf</module>
+                <module>wildfly11</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
@@ -265,6 +266,7 @@
         <profile>
             <id>wildfly</id>
             <modules>
+                <module>wildfly11</module>
                 <module>wildfly10</module>
                 <module>wildfly9</module>
                 <module>wildfly8</module>
