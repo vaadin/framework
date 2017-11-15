@@ -219,14 +219,14 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         /**
          * Default maximum depth for scanning nested properties.
          *
-         * @since
+         * @since 8.2
          */
         protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
 
         /**
          * Class containing the constraints for filtering nested properties.
          *
-         * @since
+         * @since 8.2
          *
          */
         protected static class PropertyFilterDefinition
@@ -304,7 +304,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          *            use format grandparent.parent.property for name if
          *            {@code true}, needed when creating nested definitions
          *            recursively like in findNestedDefinitions
-         * @since
+         * @since 8.2
          */
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent, PropertyDescriptor descriptor,
@@ -373,7 +373,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     /**
      * Key for identifying cached BeanPropertySet instances.
      *
-     * @since
+     * @since 8.2
      */
     private static class InstanceKey implements Serializable {
         private Class<?> type;
@@ -549,7 +549,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
      * @param filterDefinition
      *            filtering conditions for nested properties
      * @return the bean property set, not <code>null</code>
-     * @since
+     * @since 8.2
      */
     @SuppressWarnings("unchecked")
     public static <T> PropertySet<T> get(Class<? extends T> beanType,

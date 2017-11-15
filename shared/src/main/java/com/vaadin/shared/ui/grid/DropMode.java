@@ -56,7 +56,7 @@ public enum DropMode {
      * target used when the grid is completely empty. It can also be configured
      * to be used automatically when the user has sorted the grid.
      *
-     * @since
+     * @since 8.2
      */
     ON_GRID;
 }

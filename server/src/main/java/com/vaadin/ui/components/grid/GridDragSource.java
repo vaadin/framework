@@ -100,7 +100,7 @@ public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
      * Gets the grid this extension has been attached to.
      *
      * @return the grid for this extension
-     * @since
+     * @since 8.2
      */
     public Grid<T> getGrid() {
         return getParent();
