@@ -25,7 +25,6 @@ import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.v7.ui.Table;
 
@@ -205,12 +204,7 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
 
     @Override
     protected void setup(VaadinRequest request) {
-        button = new Button("Blink a table", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                blinkTable();
-            }
-        });
+        button = new Button("Blink a table", event -> blinkTable());
         button.setId(BUTTON_ID);
         addComponent(button);
     }
@@ -242,13 +236,10 @@ public class TableRemovedQuicklySendsInvalidRpcCalls
                 getSession().lock();
                 try {
                     Thread.sleep(500);
-                    access(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println("removing component");
-                            removeComponent(table);
-                            button.setCaption(SUCCESS_CAPTION);
-                        }
+                    access(() -> {
+                        System.out.println("removing component");
+                        removeComponent(table);
+                        button.setCaption(SUCCESS_CAPTION);
                     });
                 } catch (InterruptedException e) {
                     e.printStackTrace();

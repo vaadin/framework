@@ -20,8 +20,6 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.TextArea;
@@ -43,46 +41,21 @@ public class TextAreaEventPropagation extends AbstractTestUIWithLog {
 
         Button enterButton = new Button("Enter");
         enterButton.setClickShortcut(KeyCode.ENTER);
-        enterButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-
-                log("Enter button pressed");
-            }
-        });
+        enterButton.addClickListener(event -> log("Enter button pressed"));
 
         Button shiftEnterButton = new Button("Shift-Enter");
         shiftEnterButton.setClickShortcut(KeyCode.ENTER, ModifierKey.SHIFT);
-        shiftEnterButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-
-                log("Shift-Enter button pressed");
-            }
-        });
+        shiftEnterButton
+                .addClickListener(event -> log("Shift-Enter button pressed"));
 
         Button ctrlEnterButton = new Button("Ctrl-Enter");
         ctrlEnterButton.setClickShortcut(KeyCode.ENTER, ModifierKey.CTRL);
-        ctrlEnterButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-
-                log("Ctrl-Enter button pressed");
-            }
-        });
+        ctrlEnterButton
+                .addClickListener(event -> log("Ctrl-Enter button pressed"));
 
         Button escapeButton = new Button("Escape");
         escapeButton.setClickShortcut(KeyCode.ESCAPE);
-        escapeButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log("Escape button pressed");
-            }
-        });
+        escapeButton.addClickListener(event -> log("Escape button pressed"));
 
         form.addComponent(textArea);
         form.addComponent(textField);

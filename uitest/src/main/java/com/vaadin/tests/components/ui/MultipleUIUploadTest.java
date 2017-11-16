@@ -9,8 +9,6 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
@@ -47,15 +45,9 @@ public class MultipleUIUploadTest extends AbstractReindeerTestUI {
 
         Button button = new Button("show notification");
         button.setId("notify");
-        button.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Notification.show("uploaded: " + buffer.getFileName());
-            }
-        });
+        button.addClickListener(event -> Notification
+                .show("uploaded: " + buffer.getFileName()));
         layout.addComponent(button);
-
     }
 
     public class MemoryBuffer

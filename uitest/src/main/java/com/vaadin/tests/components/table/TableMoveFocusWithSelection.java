@@ -19,13 +19,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.vaadin.event.LayoutEvents.LayoutClickEvent;
-import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.Table;
 
@@ -53,17 +49,14 @@ public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
             l.setId("row-" + i);
             l.setHeight(20, Unit.PIXELS);
             l.setData(i);
-            l.addLayoutClickListener(new LayoutClickListener() {
-                @Override
-                public void layoutClick(LayoutClickEvent event) {
-                    if (t.isMultiSelect()) {
-                        Set<Object> values = new HashSet<>(
-                                (Set<Object>) t.getValue());
-                        values.add(l.getData());
-                        t.setValue(values);
-                    } else {
-                        t.setValue(l.getData());
-                    }
+            l.addLayoutClickListener(event -> {
+                if (t.isMultiSelect()) {
+                    Set<Object> values = new HashSet<>(
+                            (Set<Object>) t.getValue());
+                    values.add(l.getData());
+                    t.setValue(values);
+                } else {
+                    t.setValue(l.getData());
                 }
             });
             t.getContainerProperty(i, "layout").setValue(l);
@@ -75,28 +68,18 @@ public class TableMoveFocusWithSelection extends AbstractReindeerTestUI {
         Button toggleSelectMode = new Button(t.isMultiSelect()
                 ? "Press to use single select" : "Press to use multi select");
         toggleSelectMode.setId("toggle-mode");
-        toggleSelectMode.addClickListener(new ClickListener() {
+        toggleSelectMode.addClickListener(event -> {
+            t.setMultiSelect(!t.isMultiSelect());
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                t.setMultiSelect(!t.isMultiSelect());
-
-                event.getButton().setCaption(
-                        t.isMultiSelect() ? "Press to use single select"
-                                : "Press to use multi select");
-            }
+            event.getButton()
+                    .setCaption(t.isMultiSelect() ? "Press to use single select"
+                            : "Press to use multi select");
         });
 
         addComponent(toggleSelectMode);
 
         Button select5210 = new Button("Select row 5-10",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        t.setValue(Arrays.asList(5, 6, 7, 8, 9, 10));
-                    }
-                });
+                event -> t.setValue(Arrays.asList(5, 6, 7, 8, 9, 10)));
         select5210.setId("select-510");
         addComponent(select5210);
     }

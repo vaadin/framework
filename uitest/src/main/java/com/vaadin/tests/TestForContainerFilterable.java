@@ -17,7 +17,6 @@
 package com.vaadin.tests;
 
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -72,30 +71,21 @@ public class TestForContainerFilterable extends CustomComponent {
         t.setContainerDataSource(ic);
 
         // Handler
-        filterButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ic.removeAllContainerFilters();
-                if (!fooFilter.getValue().isEmpty()) {
-                    ic.addContainerFilter("foo", fooFilter.getValue(), false,
-                            false);
-                }
-                if (!barFilter.getValue().isEmpty()) {
-                    ic.addContainerFilter("bar", barFilter.getValue(), true,
-                            true);
-                }
-                count.setValue("Rows in table: " + ic.size());
+        filterButton.addClickListener(event -> {
+            ic.removeAllContainerFilters();
+            if (!fooFilter.getValue().isEmpty()) {
+                ic.addContainerFilter("foo", fooFilter.getValue(), false,
+                        false);
             }
+            if (!barFilter.getValue().isEmpty()) {
+                ic.addContainerFilter("bar", barFilter.getValue(), true, true);
+            }
+            count.setValue("Rows in table: " + ic.size());
         });
 
         // Resetbutton
         lo.addComponent(new Button("Rebind table datasource",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        t.setContainerDataSource(ic);
-                    }
-                }));
+                event -> t.setContainerDataSource(ic)));
     }
 
     private String randomWord() {

@@ -36,17 +36,12 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         headerClickListenerCheckbox.addValueChangeListener(
                 new HasValue.ValueChangeListener<Boolean>() {
 
-                    private HeaderClickListener headerClickListener = new HeaderClickListener() {
-
-                        @Override
-                        public void headerClick(HeaderClickEvent event) {
-                            String type = event.isDoubleClick() ? "Double click"
-                                    : "Click";
-                            log(type + " on header "
-                                    + event.getPropertyId().toString()
-                                    + " using " + event.getButtonName());
-                        }
-
+                    private HeaderClickListener headerClickListener = event -> {
+                        String type = event.isDoubleClick() ? "Double click"
+                                : "Click";
+                        log(type + " on header "
+                                + event.getPropertyId().toString() + " using "
+                                + event.getButtonName());
                     };
 
                     @Override
@@ -67,16 +62,12 @@ public class HeaderFooterClickLeftRightMiddle extends AbstractTestUIWithLog {
         footerClickListenerCheckbox.addValueChangeListener(
                 new HasValue.ValueChangeListener<Boolean>() {
 
-                    private FooterClickListener footerClickListener = new FooterClickListener() {
-
-                        @Override
-                        public void footerClick(FooterClickEvent event) {
-                            String type = event.isDoubleClick() ? "Double click"
-                                    : "Click";
-                            log(type + " on footer "
-                                    + event.getPropertyId().toString()
-                                    + " using " + event.getButtonName());
-                        }
+                    private FooterClickListener footerClickListener = event -> {
+                        String type = event.isDoubleClick() ? "Double click"
+                                : "Click";
+                        log(type + " on footer "
+                                + event.getPropertyId().toString() + " using "
+                                + event.getButtonName());
                     };
 
                     @Override

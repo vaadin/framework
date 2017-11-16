@@ -127,7 +127,12 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+            <scope>test</scope>
+        </dependency>
         <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
         <!-- <dependency><groupId>postgresql</groupId><artifactId>postgresql</artifactId><version>9.1-901.jdbc3</version></dependency> -->
     </dependencies>

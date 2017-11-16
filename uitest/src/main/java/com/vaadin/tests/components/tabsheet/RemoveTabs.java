@@ -6,7 +6,6 @@ import java.util.List;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractComponentContainer;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -47,56 +46,25 @@ public class RemoveTabs extends TestBase {
         getLayout().addComponent(tabsheet);
 
         closeCurrent = new Button("Close current tab");
-        closeCurrent.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeCurrentTab();
-
-            }
-        });
+        closeCurrent.addClickListener(event -> closeCurrentTab());
 
         closeCurrentWithTab = new Button("Close current tab with Tab");
-        closeCurrentWithTab.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeCurrentTabWithTab();
-
-            }
-        });
+        closeCurrentWithTab.addClickListener(event -> closeCurrentTabWithTab());
 
         closeFirst = new Button("close first tab");
-        closeFirst.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeFirstTab();
-
-            }
-        });
+        closeFirst.addClickListener(event -> closeFirstTab());
 
         closeLast = new Button("close last tab");
-        closeLast.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                closeLastTab();
-
-            }
-        });
+        closeLast.addClickListener(event -> closeLastTab());
 
         reorderTabs = new Button("reorder");
-        reorderTabs.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                reorder();
-
-            }
-        });
+        reorderTabs.addClickListener(event -> reorder());
 
         getLayout().addComponent(closeFirst);
         getLayout().addComponent(closeLast);
         getLayout().addComponent(closeCurrent);
         getLayout().addComponent(closeCurrentWithTab);
         getLayout().addComponent(reorderTabs);
-
     }
 
     private void closeCurrentTab() {

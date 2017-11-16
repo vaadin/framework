@@ -6,8 +6,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.Table;
@@ -54,16 +52,9 @@ public class LabelEmbeddedClickThroughForTable extends AbstractReindeerTestUI {
         item.getItemProperty("Column 4").setValue(new Embedded("",
                 new ThemeResource("../runo/icons/32/cancel.png")));
 
-        table.addItemClickListener(new ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                System.out.println("Clickevent on item " + event.getItemId()
-                        + ", column: " + event.getPropertyId());
-
-            }
-
-        });
+        table.addItemClickListener(event -> System.out
+                .println("Clickevent on item " + event.getItemId()
+                        + ", column: " + event.getPropertyId()));
         addComponent(table);
     }
 

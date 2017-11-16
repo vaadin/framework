@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
@@ -40,7 +42,6 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.WidgetUtil.ErrorUtil;
 import com.vaadin.client.annotations.OnStateChange;
@@ -420,7 +421,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                  * TODO Enable this error when all widgets have been fixed to
                  * properly support tabIndex, i.e. implement Focusable
                  */
-                // VConsole.error("Tab index received for "
+                // getLogger().severe("Tab index received for "
                 // + Util.getSimpleName(getWidget())
                 // + " which does not implement Focusable");
             }
@@ -511,7 +512,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             if (parent instanceof HasComponentsConnector) {
                 ((HasComponentsConnector) parent).updateCaption(this);
             } else if (parent == null && !(this instanceof UIConnector)) {
-                VConsole.error("Parent of connector "
+                getLogger().severe("Parent of connector "
                         + Util.getConnectorString(this)
                         + " is null. This is typically an indication of a broken component hierarchy");
             }
@@ -760,7 +761,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // at this point.
         if (getWidget() != null && getWidget().isAttached()) {
             getWidget().removeFromParent();
-            VConsole.error(
+            getLogger().severe(
                     "Widget is still attached to the DOM after the connector ("
                             + Util.getConnectorString(this)
                             + ") has been unregistered. Widget was removed.");
@@ -878,5 +879,9 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      */
     public void onDropTargetDetached() {
 
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractComponentConnector.class.getName());
     }
 }

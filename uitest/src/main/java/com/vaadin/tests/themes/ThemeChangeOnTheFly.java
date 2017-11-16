@@ -21,8 +21,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -36,15 +34,8 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
 
     @Override
     protected void setup(VaadinRequest request) {
-        addButton("Inject blue background", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().getStyles()
-                        .add(".v-app { background: blue !important;}");
-
-            }
-        });
+        addButton("Inject blue background", event -> getPage().getStyles()
+                .add(".v-app { background: blue !important;}"));
 
         GridLayout gl = new GridLayout(2, 4);
         gl.setCaption("Change theme by clicking a button");
@@ -52,13 +43,7 @@ public class ThemeChangeOnTheFly extends AbstractTestUIWithLog {
                 "chameleon", "base", null }) {
             Button b = new Button(theme);
             b.setId(theme + "");
-            b.addClickListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    getUI().setTheme(theme);
-                }
-            });
+            b.addClickListener(event -> getUI().setTheme(theme));
             gl.addComponent(b);
         }
 

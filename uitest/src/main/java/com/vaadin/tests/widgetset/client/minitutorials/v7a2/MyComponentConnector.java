@@ -23,12 +23,8 @@ public class MyComponentConnector extends AbstractComponentConnector {
 
             rpc.clicked(mouseDetails);
         });
-        registerRpc(MyComponentClientRpc.class, new MyComponentClientRpc() {
-            @Override
-            public void alert(String message) {
-                Window.alert(message);
-            }
-        });
+        registerRpc(MyComponentClientRpc.class,
+                message -> Window.alert(message));
     }
 
     @Override

@@ -21,9 +21,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.GridLayoutElement;
@@ -52,12 +50,7 @@ public abstract class GridLayoutBaseTest extends MultiBrowserTest {
 
     private void waitUntilColumnAndRowAreHidden(
             final List<WebElement> slots4x4) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                return getSlots(0).size() == slots4x4.size();
-            }
-        }, 5);
+        waitUntil(input -> getSlots(0).size() == slots4x4.size(), 5);
     }
 
     private List<WebElement> getSlots(int index) {

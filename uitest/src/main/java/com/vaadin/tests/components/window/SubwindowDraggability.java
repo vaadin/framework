@@ -2,7 +2,6 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window;
 
 public class SubwindowDraggability extends TestBase {
@@ -19,19 +18,13 @@ public class SubwindowDraggability extends TestBase {
         getMainWindow().addWindow(draggableSubWindow);
         getMainWindow().addWindow(fixedSubWindow);
 
-        Button b = new Button("Swap", new Button.ClickListener() {
+        Button button = new Button("Swap", event -> {
+            boolean draggable = draggableSubWindow.isDraggable();
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                boolean b = draggableSubWindow.isDraggable();
-
-                draggableSubWindow.setDraggable(!b);
-                fixedSubWindow.setDraggable(b);
-
-            }
-
+            draggableSubWindow.setDraggable(!draggable);
+            fixedSubWindow.setDraggable(draggable);
         });
-        addComponent(b);
+        addComponent(button);
     }
 
     @Override

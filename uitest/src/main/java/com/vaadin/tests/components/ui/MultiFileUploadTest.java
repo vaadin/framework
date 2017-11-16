@@ -21,30 +21,17 @@ import java.io.OutputStream;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.ChangeEvent;
 import com.vaadin.ui.Upload.ChangeListener;
-import com.vaadin.ui.Upload.FailedEvent;
-import com.vaadin.ui.Upload.FailedListener;
-import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.SucceededEvent;
-import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 
 public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
-    private ChangeListener changeListener = new ChangeListener() {
-
-        @Override
-        public void filenameChanged(ChangeEvent event) {
-            if (event.getFilename().isEmpty()) {
-                removeUpload(event.getSource());
-            } else {
-                addUpload();
-            }
-
+    private ChangeListener changeListener = event -> {
+        if (event.getFilename().isEmpty()) {
+            removeUpload(event.getSource());
+        } else {
+            addUpload();
         }
     };
     private VerticalLayout uploadsLayout = new VerticalLayout();
@@ -55,13 +42,9 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
                 .add(".v-upload-hidden-button .v-button {display:none};");
         addUpload();
         addComponent(uploadsLayout);
-        addComponent(new Button("Upload files", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                for (Upload u : getUploads()) {
-                    u.submitUpload();
-                }
+        addComponent(new Button("Upload files", event -> {
+            for (Upload u : getUploads()) {
+                u.submitUpload();
             }
         }));
     }
@@ -77,33 +60,21 @@ public class MultiFileUploadTest extends AbstractTestUIWithLog {
 
     protected void addUpload() {
         Upload upload = createUpload();
-        upload.addSucceededListener(new SucceededListener() {
-
-            @Override
-            public void uploadSucceeded(SucceededEvent event) {
-                log("Upload of " + event.getFilename() + " complete");
-                uploadsLayout.removeComponent(event.getUpload());
-            }
+        upload.addSucceededListener(event -> {
+            log("Upload of " + event.getFilename() + " complete");
+            uploadsLayout.removeComponent(event.getUpload());
         });
 
-        upload.addFailedListener(new FailedListener() {
-            @Override
-            public void uploadFailed(FailedEvent event) {
-                log("Upload of " + event.getFilename() + " FAILED");
-            }
-        });
+        upload.addFailedListener(
+                event -> log("Upload of " + event.getFilename() + " FAILED"));
 
-        upload.setReceiver(new Receiver() {
-            @Override
-            public OutputStream receiveUpload(String filename,
-                    String mimeType) {
-                return new OutputStream() {
-                    @Override
-                    public void write(int arg0) throws IOException {
+        upload.setReceiver((filename, mimeType) -> {
+            return new OutputStream() {
+                @Override
+                public void write(int arg0) throws IOException {
 
-                    }
-                };
-            }
+                }
+            };
         });
         upload.setStyleName("hidden-button");
         uploadsLayout.addComponent(upload);

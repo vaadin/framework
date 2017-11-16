@@ -5,13 +5,8 @@ import java.io.OutputStream;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FailedEvent;
-import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.Receiver;
-import com.vaadin.ui.Upload.StartedEvent;
 import com.vaadin.v7.ui.TextField;
 
 public class ForceSubmit extends TestBase implements Receiver {
@@ -40,42 +35,24 @@ public class ForceSubmit extends TestBase implements Receiver {
 
         addComponent(u);
 
-        u.addFinishedListener(new Upload.FinishedListener() {
-            @Override
-            public void uploadFinished(FinishedEvent event) {
-                String filename = event.getFilename();
-                long length = event.getLength();
-                getMainWindow().showNotification(
-                        "Done. Filename : " + filename + " Lenght: " + length);
-            }
+        u.addFinishedListener(event -> {
+            String filename = event.getFilename();
+            long length = event.getLength();
+            getMainWindow().showNotification(
+                    "Done. Filename : " + filename + " Lenght: " + length);
         });
 
-        u.addFailedListener(new Upload.FailedListener() {
-            @Override
-            public void uploadFailed(FailedEvent event) {
-                getMainWindow().showNotification("Failed. No file selected?");
-            }
-        });
+        u.addFailedListener(event -> getMainWindow()
+                .showNotification("Failed. No file selected?"));
 
-        u.addStartedListener(new Upload.StartedListener() {
-            @Override
-            public void uploadStarted(StartedEvent event) {
-                getMainWindow().showNotification(
-                        "Started upload. TF value :" + textField.getValue());
-            }
-        });
+        u.addStartedListener(event -> getMainWindow().showNotification(
+                "Started upload. TF value :" + textField.getValue()));
 
         Button button = new Button(
                 "I'm an external button (not the uploads builtin), hit me to start upload.");
-        button.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                u.submitUpload();
-            }
-        });
+        button.addClickListener(event -> u.submitUpload());
 
         addComponent(button);
-
     }
 
     @Override

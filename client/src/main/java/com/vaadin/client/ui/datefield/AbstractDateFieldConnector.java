@@ -18,11 +18,12 @@ package com.vaadin.client.ui.datefield;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.vaadin.client.LocaleNotLoadedException;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VDateField;
@@ -64,7 +65,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
      * from Resolution to the corresponding value.
      *
      * @return default date component map
-     * @since
+     * @since 8.2
      */
     protected Map<R, Integer> getDefaultValues() {
         VDateField<R> widget = getWidget();
@@ -95,7 +96,7 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         // Save details
         widget.client = getConnection();
-        widget.paintableId = getConnectorId();
+        widget.connector = this;
 
         widget.setReadonly(isReadOnly());
         widget.setEnabled(isEnabled());
@@ -106,10 +107,11 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
             widget.setCurrentLocale(locale);
         } catch (final LocaleNotLoadedException e) {
             widget.setCurrentLocale(widget.dts.getLocale());
-            VConsole.error("Tried to use an unloaded locale \"" + locale
+            getLogger().severe("Tried to use an unloaded locale \"" + locale
                     + "\". Using default locale (" + widget.getCurrentLocale()
                     + ").");
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
         }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
@@ -129,5 +131,9 @@ public abstract class AbstractDateFieldConnector<R extends Enum<R>>
 
         widget.setCurrentDate(getTimeValues());
         widget.setDefaultDate(getDefaultValues());
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractDateFieldConnector.class.getName());
     }
 }

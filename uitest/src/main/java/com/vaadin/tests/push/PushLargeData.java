@@ -26,8 +26,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.ui.TextField;
@@ -77,20 +75,15 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
 
         Button b = new Button("Start pushing");
         b.setId("startButton");
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Integer pushSize = (Integer) dataSize.getConvertedValue();
-                Integer pushInterval = (Integer) interval.getConvertedValue();
-                Integer pushDuration = (Integer) duration.getConvertedValue();
-                PushRunnable r = new PushRunnable(getUI(), pushSize,
-                        pushInterval, pushDuration);
-                executor.execute(r);
-                log.log("Starting push, size: " + pushSize + ", interval: "
-                        + pushInterval + "ms, duration: " + pushDuration
-                        + "ms");
-            }
+        b.addClickListener(event -> {
+            Integer pushSize = (Integer) dataSize.getConvertedValue();
+            Integer pushInterval = (Integer) interval.getConvertedValue();
+            Integer pushDuration = (Integer) duration.getConvertedValue();
+            PushRunnable r = new PushRunnable(getUI(), pushSize, pushInterval,
+                    pushDuration);
+            executor.execute(r);
+            log.log("Starting push, size: " + pushSize + ", interval: "
+                    + pushInterval + "ms, duration: " + pushDuration + "ms");
         });
         addComponent(b);
         addComponent(dataLabel);
@@ -132,16 +125,13 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
             int packageIndex = 1;
             while (System.currentTimeMillis() < endTime) {
                 final int idx = packageIndex++;
-                ui.access(new Runnable() {
-                    @Override
-                    public void run() {
-                        PushLargeData pushUi = (PushLargeData) ui;
-                        // Using description as it is not rendered to the DOM
-                        // immediately
-                        pushUi.getDataLabel().setDescription(
-                                System.currentTimeMillis() + ": " + data);
-                        pushUi.log("Package " + idx + " pushed");
-                    }
+                ui.access(() -> {
+                    PushLargeData pushUi = (PushLargeData) ui;
+                    // Using description as it is not rendered to the DOM
+                    // immediately
+                    pushUi.getDataLabel().setDescription(
+                            System.currentTimeMillis() + ": " + data);
+                    pushUi.log("Package " + idx + " pushed");
                 });
                 try {
                     Thread.sleep(interval);
@@ -149,12 +139,9 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                     return;
                 }
             }
-            ui.access(new Runnable() {
-                @Override
-                public void run() {
-                    PushLargeData pushUi = (PushLargeData) ui;
-                    pushUi.log("Push complete");
-                }
+            ui.access(() -> {
+                PushLargeData pushUi = (PushLargeData) ui;
+                pushUi.log("Push complete");
             });
 
         }

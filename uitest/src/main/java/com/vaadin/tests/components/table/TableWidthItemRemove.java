@@ -17,8 +17,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.Table;
 
 /**
@@ -45,20 +43,11 @@ public class TableWidthItemRemove extends AbstractReindeerTestUI {
         table.setColumnWidth("lastName", 100);
         table.setColumnWidth("year", 50);
 
-        addButton("Clean", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                table.removeAllItems();
-            }
-        });
+        addButton("Clean", event -> table.removeAllItems());
 
-        addButton("Populate", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
+        addButton("Populate", event ->
                 table.addItem(new Object[] { "John", "Doe", new Integer(1980) },
-                        Math.random() * 1000);
-            }
-        });
+                Math.random() * 1000));
 
         addComponent(table);
     }

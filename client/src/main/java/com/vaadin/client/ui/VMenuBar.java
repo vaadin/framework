@@ -259,7 +259,7 @@ public class VMenuBar extends SimpleFocusablePanel
         }
     }
 
-    /** Widget methods **/
+    /* Widget methods */
 
     /**
      * Returns a list of items in this menu.

@@ -25,8 +25,6 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -35,8 +33,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.ValoTheme;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.Validator.InvalidValueException;
 import com.vaadin.v7.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.v7.data.fieldgroup.FieldGroup.CommitException;
@@ -86,17 +82,13 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
                 "Auto generated form (TextFields)");
         formType.setItemCaption(iterator.next(),
                 "Auto generated form (Any fields)");
-        formType.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                AbstractForm oldForm = form;
-                form = (AbstractForm) formType.getValue();
-                replaceComponent(oldForm, form);
-            }
+        formType.addValueChangeListener(event -> {
+            AbstractForm oldForm = form;
+            form = (AbstractForm) formType.getValue();
+            replaceComponent(oldForm, form);
         });
 
         addComponent(formType);
-
     }
 
     public class CustomForm extends AbstractForm {
@@ -215,24 +207,18 @@ public abstract class AbstractBasicCrud extends AbstractTestUIWithLog {
             super(5, 1);
             setSpacing(true);
             setId("form");
-            save.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    try {
-                        fieldGroup.commit();
-                        log("Saved " + fieldGroup.getItemDataSource());
-                    } catch (CommitException e) {
-                        handleCommitException(e);
-                        log("Commit failed: " + e.getMessage());
-                    }
+            save.addClickListener(event -> {
+                try {
+                    fieldGroup.commit();
+                    log("Saved " + fieldGroup.getItemDataSource());
+                } catch (CommitException e) {
+                    handleCommitException(e);
+                    log("Commit failed: " + e.getMessage());
                 }
             });
-            cancel.addClickListener(new ClickListener() {
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    log("Discarded " + fieldGroup.getItemDataSource());
-                    discard();
-                }
+            cancel.addClickListener(event -> {
+                log("Discarded " + fieldGroup.getItemDataSource());
+                discard();
             });
         }
 

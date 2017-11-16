@@ -6,8 +6,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
@@ -89,14 +87,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
                 log(this);
             }
         };
-        okButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                log.log("Button clicked");
-
-            }
-        });
+        okButton.addClickListener(event -> log.log("Button clicked"));
         okButton.setClickShortcut(KeyCode.ENTER);
         layout.addComponent(okButton);
         w.center();

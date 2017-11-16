@@ -7,8 +7,6 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -57,20 +55,14 @@ public class NavigatorListenerModifiesListeners extends AbstractReindeerTestUI {
             addComponent(label);
 
             Button buttonNavToAnotherView = new Button(
-                    "Navigate to another view", new ClickListener() {
-
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            navigator.navigateTo(AnotherView.NAME);
-                        }
-                    });
+                    "Navigate to another view",
+                    event -> navigator.navigateTo(AnotherView.NAME));
             addComponent(buttonNavToAnotherView);
         }
 
         @Override
         public void enter(ViewChangeEvent event) {
         }
-
     }
 
     class AnotherView extends VerticalLayout implements View {

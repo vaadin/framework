@@ -15,6 +15,7 @@
  */
 package com.vaadin.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -100,7 +101,7 @@ public interface HasItems<T> extends Component {
      *            the data items to display
      */
     public default void setItems(@SuppressWarnings("unchecked") T... items) {
-        setItems(Arrays.asList(items));
+        setItems(new ArrayList<>(Arrays.asList(items)));
     }
 
     /**

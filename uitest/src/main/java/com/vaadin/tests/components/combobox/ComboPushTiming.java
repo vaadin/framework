@@ -64,20 +64,17 @@ public class ComboPushTiming extends TestBase {
     }
 
     private void changeValue(final ComboBox cb) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                VaadinSession.getCurrent().lock();
-                try {
-                    cb.setEnabled(true);
-                    cb.setValue("B");
-                    cb.setEnabled(true);
+        executor.execute(() -> {
+            VaadinSession.getCurrent().lock();
+            try {
+                cb.setEnabled(true);
+                cb.setValue("B");
+                cb.setEnabled(true);
 
-                    // If this isn't sent by push or poll in the background, the
-                    // problem will go away
-                } finally {
-                    VaadinSession.getCurrent().unlock();
-                }
+                // If this isn't sent by push or poll in the background, the
+                // problem will go away
+            } finally {
+                VaadinSession.getCurrent().unlock();
             }
         });
     }

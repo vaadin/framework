@@ -1433,7 +1433,7 @@ public class SQLContainer implements Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -1451,7 +1451,7 @@ public class SQLContainer implements Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
@@ -1506,7 +1506,7 @@ public class SQLContainer implements Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addRowIdChangeListener(RowIdChangeListener)}
-     **/
+     */
     @Deprecated
     public void addListener(RowIdChangeListener listener) {
         addRowIdChangeListener(listener);
@@ -1527,7 +1527,7 @@ public class SQLContainer implements Container.Filterable,
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
-     **/
+     */
     @Deprecated
     public void removeListener(RowIdChangeListener listener) {
         removeRowIdChangeListener(listener);

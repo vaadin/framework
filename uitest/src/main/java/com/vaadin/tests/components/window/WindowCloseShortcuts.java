@@ -32,8 +32,6 @@ import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
@@ -64,54 +62,35 @@ public class WindowCloseShortcuts extends AbstractTestUI {
         buttonLayout.setSizeFull();
         buttonPanel.setCaption("Demo controls");
 
-        addButton(new Button("Open window", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                UI.getCurrent().addWindow(window);
-                window.center();
-                updateDesign();
-            }
+        addButton(new Button("Open window", event -> {
+            UI.getCurrent().addWindow(window);
+            window.center();
+            updateDesign();
         }));
 
-        addButton(new Button("Add ENTER close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.addCloseShortcut(KeyCode.ENTER);
-                updateDesign();
-            }
+        addButton(new Button("Add ENTER close shortcut", event -> {
+            window.addCloseShortcut(KeyCode.ENTER);
+            updateDesign();
         }));
 
-        addButton(new Button("Add TAB close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.addCloseShortcut(KeyCode.TAB);
-                updateDesign();
-            }
+        addButton(new Button("Add TAB close shortcut", event -> {
+            window.addCloseShortcut(KeyCode.TAB);
+            updateDesign();
         }));
 
-        addButton(new Button("Remove ESC close shortcut", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.removeCloseShortcut(KeyCode.ESCAPE);
-                updateDesign();
-            }
+        addButton(new Button("Remove ESC close shortcut", event -> {
+            window.removeCloseShortcut(KeyCode.ESCAPE);
+            updateDesign();
         }));
 
-        addButton(new Button("Clear all close shortcuts", new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                window.removeAllCloseShortcuts();
-                updateDesign();
-            }
+        addButton(new Button("Clear all close shortcuts", event -> {
+            window.removeAllCloseShortcuts();
+            updateDesign();
         }));
 
-        addButton(new Button("Reset to default state", new ClickListener() {
-            @Override
-            @SuppressWarnings("deprecation")
-            public void buttonClick(ClickEvent event) {
-                window.removeCloseShortcut();
-                updateDesign();
-            }
+        addButton(new Button("Reset to default state", event -> {
+            window.removeCloseShortcut();
+            updateDesign();
         }));
 
         buttonPanel.setContent(buttonLayout);

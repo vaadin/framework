@@ -203,13 +203,7 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitForDebugMessage(final String expectedMessage,
             int timeout) {
-        waitUntil(new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver input) {
-                return hasDebugMessage(expectedMessage);
-            }
-        }, timeout);
+        waitUntil(input -> hasDebugMessage(expectedMessage), timeout);
     }
 
     protected void clearDebugMessages() {
@@ -220,14 +214,11 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void waitUntilRowIsVisible(final TableElement table,
             final int row) {
-        waitUntil(new ExpectedCondition<Object>() {
-            @Override
-            public Object apply(WebDriver input) {
-                try {
-                    return table.getCell(row, 0) != null;
-                } catch (NoSuchElementException e) {
-                    return false;
-                }
+        waitUntil(input -> {
+            try {
+                return table.getCell(row, 0) != null;
+            } catch (NoSuchElementException e) {
+                return false;
             }
         });
     }
@@ -836,12 +827,9 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
     protected void openDebugLogTab() {
 
-        waitUntil(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver input) {
-                WebElement element = getDebugLogButton();
-                return element != null;
-            }
+        waitUntil(input -> {
+            WebElement element = getDebugLogButton();
+            return element != null;
         }, 15);
         getDebugLogButton().click();
     }
@@ -1263,14 +1251,10 @@ public abstract class AbstractTB3Test extends ParallelTest {
 
         final WebElement rootDiv = findElement(
                 By.xpath("//div[contains(@class,'v-app')]"));
-        waitUntil(new ExpectedCondition<Boolean>() {
+        waitUntil(input -> {
+            String rootClass = rootDiv.getAttribute("class").trim();
 
-            @Override
-            public Boolean apply(WebDriver input) {
-                String rootClass = rootDiv.getAttribute("class").trim();
-
-                return rootClass.contains(theme);
-            }
+            return rootClass.contains(theme);
         }, 30);
     }
 

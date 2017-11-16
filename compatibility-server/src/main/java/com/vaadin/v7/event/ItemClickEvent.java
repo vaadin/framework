@@ -129,7 +129,7 @@ public class ItemClickEvent extends ClickEvent {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addItemClickListener(ItemClickListener)}
-         **/
+         */
         @Deprecated
         public void addListener(ItemClickListener listener);
 
@@ -144,7 +144,7 @@ public class ItemClickEvent extends ClickEvent {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeItemClickListener(ItemClickListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(ItemClickListener listener);
     }

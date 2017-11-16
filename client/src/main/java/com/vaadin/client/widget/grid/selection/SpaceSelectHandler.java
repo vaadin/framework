@@ -17,12 +17,8 @@ package com.vaadin.client.widget.grid.selection;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.widget.grid.DataAvailableEvent;
-import com.vaadin.client.widget.grid.DataAvailableHandler;
 import com.vaadin.client.widget.grid.events.BodyKeyDownHandler;
-import com.vaadin.client.widget.grid.events.BodyKeyUpHandler;
 import com.vaadin.client.widget.grid.events.GridKeyDownEvent;
-import com.vaadin.client.widget.grid.events.GridKeyUpEvent;
 import com.vaadin.client.widgets.Grid;
 import com.vaadin.shared.ui.grid.ScrollDestination;
 
@@ -60,17 +56,12 @@ public class SpaceSelectHandler<T> {
             }
 
             scrollHandler = grid
-                    .addDataAvailableHandler(new DataAvailableHandler() {
-
-                        @Override
-                        public void onDataAvailable(
-                                DataAvailableEvent dataAvailableEvent) {
-                            if (dataAvailableEvent.getAvailableRows()
-                                    .contains(rowIndex)) {
-                                setSelected(grid, rowIndex);
-                                scrollHandler.removeHandler();
-                                scrollHandler = null;
-                            }
+                    .addDataAvailableHandler(dataAvailableEvent -> {
+                        if (dataAvailableEvent.getAvailableRows()
+                                .contains(rowIndex)) {
+                            setSelected(grid, rowIndex);
+                            scrollHandler.removeHandler();
+                            scrollHandler = null;
                         }
                     });
             grid.scrollToRow(rowIndex, ScrollDestination.ANY);
@@ -104,13 +95,9 @@ public class SpaceSelectHandler<T> {
         this.grid = grid;
         spaceDownHandler = grid
                 .addBodyKeyDownHandler(new SpaceKeyDownHandler());
-        spaceUpHandler = grid.addBodyKeyUpHandler(new BodyKeyUpHandler() {
-
-            @Override
-            public void onKeyUp(GridKeyUpEvent event) {
-                if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
-                    spaceDown = false;
-                }
+        spaceUpHandler = grid.addBodyKeyUpHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_SPACE) {
+                spaceDown = false;
             }
         });
     }

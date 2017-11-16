@@ -280,41 +280,17 @@ public class SplitPanelWithMinimumAndMaximum extends AbstractReindeerTestUI {
         buttonLayout.setSpacing(false);
 
         Button disableMinimum = new Button("Disable min limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMinSplitPosition(0,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMinSplitPosition(0,
+                        Sizeable.UNITS_PERCENTAGE));
         Button enableMinimum = new Button("Enable min limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMinSplitPosition(10,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMinSplitPosition(10,
+                        Sizeable.UNITS_PERCENTAGE));
         Button disableMaximum = new Button("Disable max limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMaxSplitPosition(100,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMaxSplitPosition(100,
+                        Sizeable.UNITS_PERCENTAGE));
         Button enableMaximum = new Button("Enable max limit",
-                new Button.ClickListener() {
-                    @Override
-                    public void buttonClick(Button.ClickEvent event) {
-                        togglableSplitPanel.setMaxSplitPosition(80,
-                                Sizeable.UNITS_PERCENTAGE);
-
-                    }
-                });
+                event -> togglableSplitPanel.setMaxSplitPosition(80,
+                        Sizeable.UNITS_PERCENTAGE));
         buttonLayout.addComponent(disableMinimum);
         buttonLayout.addComponent(enableMinimum);
         buttonLayout.addComponent(disableMaximum);

@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.vaadin.server.DefaultDeploymentConfiguration;
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.MockServletConfig;
 import com.vaadin.server.UIClassSelectionEvent;
@@ -121,12 +119,7 @@ public class ServletUIInitHandlerTest {
             }
         };
 
-        ui.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void error(ErrorEvent event) {
-                errorHandlerCalls.incrementAndGet();
-            }
-        });
+        ui.setErrorHandler(event -> errorHandlerCalls.incrementAndGet());
 
         CommunicationMock mock = new CommunicationMock(ui);
         VaadinRequest initRequest = mock.createInitRequest();

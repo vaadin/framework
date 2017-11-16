@@ -3,8 +3,6 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
@@ -30,17 +28,12 @@ public class WindowMoveListener extends AbstractReindeerTestUI {
         Button b = new Button();
         b.setId("testbutton");
         addComponent(b);
-        b.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                for (Window window : getWindows()) {
-                    window.setPositionX(100);
-                    window.setPositionY(100);
-                }
+        b.addClickListener(event -> {
+            for (Window window : getWindows()) {
+                window.setPositionX(100);
+                window.setPositionY(100);
             }
         });
-
     }
 
     /*

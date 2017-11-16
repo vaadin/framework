@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.v7.data.Item;
-import com.vaadin.v7.event.ItemClickEvent;
-import com.vaadin.v7.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.v7.ui.Table;
 import com.vaadin.v7.ui.Table.CellStyleGenerator;
 
@@ -53,14 +51,11 @@ public class ViewPortCalculation extends TestBase {
             }
         });
 
-        table.addItemClickListener(new ItemClickListener() {
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                if (event.isDoubleClick()) {
-                    lastDoubleClickedItemId = event.getItemId();
-                    table.refreshRowCache();
-                    table.select(event.getItemId());
-                }
+        table.addItemClickListener(event -> {
+            if (event.isDoubleClick()) {
+                lastDoubleClickedItemId = event.getItemId();
+                table.refreshRowCache();
+                table.select(event.getItemId());
             }
         });
         return table;
