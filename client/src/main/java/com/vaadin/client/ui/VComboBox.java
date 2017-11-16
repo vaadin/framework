@@ -158,7 +158,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Get a string that represents this item. This is used in the text box.
          */
-
         @Override
         public String getReplacementString() {
             return caption;
@@ -199,7 +198,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         /**
          * Executes a selection of this item.
          */
-
         @Override
         public void execute() {
             onSuggestionSelected(this);
@@ -267,7 +265,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 @com.vaadin.client.ui.VComboBox.JsniUtil::moveScrollFromEvent(*)(widget, deltaX, deltaY, e, e.deltaMode);
             });
         }-*/;
-
     }
 
     /**
@@ -424,7 +421,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("VComboBox.SP: showSuggestions(" + currentPage + ", "
                     + getTotalSuggestions() + ")");
 
-            final SuggestionPopup popup = this;
             // Add TT anchor point
             getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
@@ -462,7 +458,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             menu.setWidth("");
             menu.getElement().getFirstChildElement().getStyle().clearWidth();
 
-            setPopupPositionAndShow(popup);
+            setPopupPositionAndShow(this);
         }
 
         private int getDesiredTopPosition() {
@@ -520,7 +516,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 up.setClassName(
                         VComboBox.this.getStylePrimaryName() + "-prevpage-off");
             }
-
         }
 
         /**
@@ -551,10 +546,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else if (index == -1) {
                 selectPrevPage();
 
-            } else {
-                if (!menu.getItems().isEmpty()) {
-                    selectLastItem();
-                }
+            } else if (!menu.getItems().isEmpty()) {
+                selectLastItem();
             }
         }
 
@@ -591,7 +584,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             // Set the text.
             setText(suggestion.getReplacementString());
-
         }
 
         /*
@@ -655,7 +647,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             debug("VComboBox.SP: scroll() scrollActive: " + scrollActive);
 
             if (!scrollActive) {
-                if (deltaY > 0d) {
+                if (deltaY > 0) {
                     lazyPageScroller.scrollDown();
                 } else {
                     lazyPageScroller.scrollUp();
@@ -674,7 +666,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 } else if (target == down || target == DOM.getChild(down, 0)) {
                     lazyPageScroller.scrollDown();
                 }
-
             }
 
             /*
@@ -905,7 +896,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 if (left < 0) {
                     left = 0;
                     menu.setWidth(Window.getClientWidth() + "px");
-
                 }
             }
 
@@ -1074,9 +1064,8 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 final int pixels = getPreferredHeight()
                         / currentSuggestions.size() * pageItemsCount;
                 return pixels + "px";
-            } else {
-                return "";
             }
+            return "";
         }
 
         /**
@@ -1235,7 +1224,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // Handle icon onload events to ensure shadow is resized
             // correctly
             delayedImageLoadExecutioner.trigger();
-
         }
 
         /**
@@ -1397,7 +1385,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                 super.setSelectionRange(0, 0);
             }
         }
-
     }
 
     /**
@@ -1443,6 +1430,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             suggestionPopup.menu.setSuggestions(currentSuggestions);
             if (!waitingForFilteringResponse && suggestionPopup.isAttached()) {
                 showPopup = true;
+            }
+            if (getTotalSuggestions() == 0) {
+                showPopup = false;
             }
             if (showPopup) {
                 suggestionPopup.showSuggestions(currentPage);
@@ -1622,7 +1612,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
             setSelectedItemIcon(selectedIconUri);
         }
-
     }
 
     // TODO decide whether this should change - affects themes and v7
@@ -1773,7 +1762,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     private static double getMarginBorderPaddingWidth(Element element) {
         final ComputedStyle s = new ComputedStyle(element);
         return s.getMarginWidth() + s.getBorderWidth() + s.getPaddingWidth();
-
     }
 
     /*
@@ -1923,12 +1911,10 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                     true);
         }
 
-        if (textInputEnabled == textInputAllowed) {
-            return;
+        if (textInputEnabled != textInputAllowed) {
+            textInputEnabled = textInputAllowed;
+            updateReadOnly();
         }
-
-        textInputEnabled = textInputAllowed;
-        updateReadOnly();
     }
 
     /**
@@ -2244,7 +2230,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             event.stopPropagation();
             break;
         }
-
     }
 
     /**
@@ -2300,7 +2285,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             event.stopPropagation();
             break;
         }
-
     }
 
     /*
@@ -2630,7 +2614,6 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
                  * the combobox. Subtract the width of the icon and the
                  * popupopener
                  */
-
                 tb.setWidth(suggestionPopupMinWidth - iconWidth - buttonWidth
                         + "px");
             }
@@ -2725,15 +2708,19 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
     public com.google.gwt.user.client.Element getSubPartElement(
             String subPart) {
         String[] parts = subPart.split("/");
-        if ("textbox".equals(parts[0])) {
+        switch (parts[0]) {
+        case "textbox":
             return tb.getElement();
-        } else if ("button".equals(parts[0])) {
+        case "button":
             return popupOpener.getElement();
-        } else if ("popup".equals(parts[0]) && suggestionPopup.isAttached()) {
-            if (parts.length == 2) {
-                return suggestionPopup.menu.getSubPartElement(parts[1]);
+        case "popup":
+            if (suggestionPopup.isAttached()) {
+                if (parts.length == 2) {
+                    return suggestionPopup.menu.getSubPartElement(parts[1]);
+                }
+                return suggestionPopup.getElement();
             }
-            return suggestionPopup.getElement();
+        default:
         }
         return null;
     }
@@ -2743,9 +2730,11 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             com.google.gwt.user.client.Element subElement) {
         if (tb.getElement().isOrHasChild(subElement)) {
             return "textbox";
-        } else if (popupOpener.getElement().isOrHasChild(subElement)) {
+        }
+        if (popupOpener.getElement().isOrHasChild(subElement)) {
             return "button";
-        } else if (suggestionPopup.getElement().isOrHasChild(subElement)) {
+        }
+        if (suggestionPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }
         return null;

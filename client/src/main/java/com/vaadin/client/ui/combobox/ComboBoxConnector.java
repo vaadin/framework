@@ -23,6 +23,7 @@ import com.vaadin.client.Profiler;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.AbstractListingConnector;
+import com.vaadin.client.data.AbstractRemoteDataSource;
 import com.vaadin.client.data.DataChangeHandler;
 import com.vaadin.client.data.DataSource;
 import com.vaadin.client.ui.SimpleManagedLayout;
@@ -198,6 +199,13 @@ public class ComboBoxConnector extends AbstractListingConnector
     public void requestPage(int page, String filter) {
         setFilter(filter);
 
+        if (!Objects.equals(filter, getWidget().lastFilter)) {
+            DataSource<JsonObject> ds = getDataSource();
+            if (ds instanceof AbstractRemoteDataSource) {
+                ((AbstractRemoteDataSource<JsonObject>) ds).clearCache();
+            }
+        }
+
         if (page < 0) {
             if (getState().scrollToSelectedItem) {
                 // TODO this should be optimized not to try to fetch everything
@@ -292,13 +300,14 @@ public class ComboBoxConnector extends AbstractListingConnector
     private void refreshData() {
         updateCurrentPage();
 
-        int start = getWidget().currentPage * getWidget().pageLength;
-        int end = getWidget().pageLength > 0 ? start + getWidget().pageLength
+        VComboBox widget = getWidget();
+        int start = widget.currentPage * widget.pageLength;
+        int end = widget.pageLength > 0 ? start + widget.pageLength
                 : getDataSource().size();
 
-        getWidget().currentSuggestions.clear();
+        widget.currentSuggestions.clear();
 
-        if (getWidget().getNullSelectionItemShouldBeVisible()) {
+        if (widget.getNullSelectionItemShouldBeVisible()) {
             // add special null selection item...
             if (isFirstPage()) {
                 addEmptySelectionItem();
@@ -314,7 +323,7 @@ public class ComboBoxConnector extends AbstractListingConnector
         }
 
         updateSuggestions(start, end);
-        getWidget().setTotalSuggestions(getDataSource().size());
+        widget.setTotalSuggestions(getDataSource().size());
 
         getDataReceivedHandler().dataReceived();
     }
@@ -351,29 +360,29 @@ public class ComboBoxConnector extends AbstractListingConnector
     }
 
     private void updateCurrentPage() {
+        VComboBox widget = getWidget();
         // try to find selected item if requested
         if (getState().scrollToSelectedItem && getState().pageLength > 0
-                && getWidget().currentPage < 0
-                && getWidget().selectedOptionKey != null) {
+                && widget.currentPage < 0 && widget.selectedOptionKey != null) {
             // search for the item with the selected key
-            getWidget().currentPage = 0;
+            widget.currentPage = 0;
             for (int i = 0; i < getDataSource().size(); ++i) {
                 JsonObject row = getDataSource().getRow(i);
                 if (row != null) {
                     String key = getRowKey(row);
-                    if (getWidget().selectedOptionKey.equals(key)) {
-                        if (getWidget().nullSelectionAllowed) {
-                            getWidget().currentPage = (i + 1)
+                    if (widget.selectedOptionKey.equals(key)) {
+                        if (widget.nullSelectionAllowed) {
+                            widget.currentPage = (i + 1)
                                     / getState().pageLength;
                         } else {
-                            getWidget().currentPage = i / getState().pageLength;
+                            widget.currentPage = i / getState().pageLength;
                         }
                         break;
                     }
                 }
             }
-        } else if (getWidget().currentPage < 0) {
-            getWidget().currentPage = 0;
+        } else if (widget.currentPage < 0) {
+            widget.currentPage = 0;
         }
     }
 

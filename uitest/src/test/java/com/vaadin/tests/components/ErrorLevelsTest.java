@@ -124,7 +124,7 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private boolean containsCorrectErrorLevelClassNameOnly(WebElement element,
             String prefix, ErrorLevel errorLevel) {
-        List<String> classNames = new ArrayList<String>(
+        List<String> classNames = new ArrayList<>(
                 Arrays.asList(element.getAttribute("class").split(" ")));
         classNames.retainAll(getErrorLevelClassNames(prefix,
                 Arrays.asList(ErrorLevel.values())));
@@ -148,16 +148,14 @@ public class ErrorLevelsTest extends SingleBrowserTest {
 
     private void selectErrorLevel(ErrorLevel errorLevel) {
         errorLevelSelector.clear();
-        errorLevelSelector
-                .sendKeys(errorLevel.toString().toLowerCase(Locale.ROOT));
+        errorLevelSelector.sendKeys(errorLevel.name());
         errorLevelSelector.sendKeys(getReturn());
     }
 
     private Keys getReturn() {
         if (BrowserUtil.isPhantomJS(getDesiredCapabilities())) {
             return Keys.ENTER;
-        } else {
-            return Keys.RETURN;
         }
+        return Keys.RETURN;
     }
 }

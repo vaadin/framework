@@ -43,7 +43,7 @@ public class ErrorLevels extends AbstractTestUI {
     private TextField formLayoutTextField;
     private Panel panel;
     private DateField dateField;
-    private TwinColSelect twinColSelect;
+    private TwinColSelect<?> twinColSelect;
 
     private com.vaadin.v7.ui.ComboBox comboBoxCompat;
     private com.vaadin.v7.ui.TextField textFieldCompat;
@@ -133,7 +133,7 @@ public class ErrorLevels extends AbstractTestUI {
         addComponent(panel);
 
         // TwinColSelect
-        twinColSelect = new TwinColSelect("Twin col select");
+        twinColSelect = new TwinColSelect<>("Twin col select");
         addComponent(twinColSelect);
 
         Label subtitleCompat = new Label("Compatibility components");
