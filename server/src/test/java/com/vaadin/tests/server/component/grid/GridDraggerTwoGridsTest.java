@@ -47,6 +47,7 @@ public class GridDraggerTwoGridsTest {
     public void setupListCase() {
         source = new Grid<>();
         target = new Grid<>();
+        target.addColumn(s -> s).setId("1");
         dragger = new TestGridDragger(source, target);
 
         target.setItems(); // setup to use list data provider
@@ -248,5 +249,22 @@ public class GridDraggerTwoGridsTest {
         // getting value from custom calculator
         Assert.assertEquals("given drop index to target updater is wrong", 2,
                 updaterTrigger.get());
+    }
+
+    @Test
+    public void dropOnSortedGrid_byDefault_dropsToTheEnd() {
+        Assert.assertFalse(
+                "Default drops on sorted grid rows should not be allowed",
+                dragger.getGridDropTarget().isDropAllowedOnSortedGridRows());
+
+        source.setItems("0", "1", "2");
+        target.setItems("4", "5");
+
+        target.sort("1");
+
+        drop(null, DropLocation.EMPTY, "0");
+
+        verifySourceDataProvider("1", "2");
+        verifyTargetDataProvider("4", "5", "0");
     }
 }

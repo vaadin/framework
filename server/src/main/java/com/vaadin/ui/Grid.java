@@ -1182,6 +1182,10 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
 
         /**
          * Sets whether the user can sort this column or not.
+         * <p>
+         * By default, a grid using a in-memory data provider has its columns
+         * sortable by default. For a backend data provider, the columns are not
+         * sortable by default.
          *
          * @param sortable
          *            {@code true} if the column can be sorted by the user;
