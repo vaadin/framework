@@ -70,7 +70,11 @@ public class StreamResourceTest {
         resource.setCacheTime(200);
 
         DownloadStream downloadStream = resource.getStream();
-        assertEquals(resource.getBufferSize(), downloadStream.getBufferSize());
-        assertEquals(resource.getCacheTime(), downloadStream.getCacheTime());
+        assertEquals(
+                "DownloadStream buffer size must be same as resource buffer size",
+                resource.getBufferSize(), downloadStream.getBufferSize());
+        assertEquals(
+                "DownloadStream cache time must be same as resource cache time",
+                resource.getCacheTime(), downloadStream.getCacheTime());
     }
 }
