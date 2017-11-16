@@ -28,9 +28,7 @@ import org.openqa.selenium.WebElement;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.RadioButtonGroupElement;
-import com.vaadin.testbench.parallel.Browser;
 import com.vaadin.tests.components.radiobutton.RadioButtonGroupTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -40,7 +38,6 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
  * @author Vaadin Ltd
  * @since 8.0
  */
-@RunLocally(Browser.PHANTOMJS)
 public class RadioButtonGroupTest extends MultiBrowserTest {
 
     @Before
