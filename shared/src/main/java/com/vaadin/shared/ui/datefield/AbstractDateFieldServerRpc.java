@@ -22,7 +22,7 @@ import com.vaadin.shared.communication.ServerRpc;
 /**
  * RPC interface for calls from client to server.
  *
- * @since
+ * @since 8.2
  */
 public interface AbstractDateFieldServerRpc extends ServerRpc {
 

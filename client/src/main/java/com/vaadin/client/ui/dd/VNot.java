@@ -15,8 +15,9 @@
  */
 package com.vaadin.client.ui.dd;
 
+import java.util.logging.Logger;
+
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.event.dd.acceptcriteria.Not;
 import com.vaadin.shared.ui.dd.AcceptCriterion;
 import com.vaadin.ui.dnd.DropTargetExtension;
@@ -39,7 +40,7 @@ public final class VNot extends VAcceptCriterion {
         if (crit1 == null) {
             crit1 = getCriteria(drag, configuration, 0);
             if (crit1 == null) {
-                VConsole.log("Not criteria didn't found a child criteria");
+                getLogger().info("Not criteria didn't found a child criteria");
                 return;
             }
         }
@@ -68,5 +69,9 @@ public final class VNot extends VAcceptCriterion {
     @Override
     protected boolean accept(VDragEvent drag, UIDL configuration) {
         return false; // not used
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VNot.class.getName());
     }
 }

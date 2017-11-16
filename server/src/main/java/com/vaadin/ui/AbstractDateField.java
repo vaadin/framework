@@ -236,7 +236,7 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            defined in the specified {@code resolutions}
      *
      * @return the date object built from the specified resolutions
-     * @since
+     * @since 8.2
      */
     protected T reconstructDateFromFields(Map<String, Integer> resolutions,
             T oldDate) {

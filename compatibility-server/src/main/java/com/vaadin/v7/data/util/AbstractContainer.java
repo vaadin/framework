@@ -117,7 +117,7 @@ public abstract class AbstractContainer implements Container {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     protected void addListener(Container.PropertySetChangeListener listener) {
         addPropertySetChangeListener(listener);
@@ -141,7 +141,7 @@ public abstract class AbstractContainer implements Container {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(Container.PropertySetChangeListener)}
-     **/
+     */
     @Deprecated
     protected void removeListener(
             Container.PropertySetChangeListener listener) {
@@ -169,7 +169,7 @@ public abstract class AbstractContainer implements Container {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     protected void addListener(Container.ItemSetChangeListener listener) {
         addItemSetChangeListener(listener);
@@ -192,7 +192,7 @@ public abstract class AbstractContainer implements Container {
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     protected void removeListener(Container.ItemSetChangeListener listener) {
         removeItemSetChangeListener(listener);

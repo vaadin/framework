@@ -8,7 +8,9 @@ import java.util.List;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.testbench.By;
 import com.vaadin.testbench.elements.AbstractComponentElement;
+import com.vaadin.testbench.elements.AccordionElement;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.CheckBoxElement;
 import com.vaadin.testbench.elements.ComboBoxElement;
@@ -20,6 +22,7 @@ import com.vaadin.testbench.elements.NativeSelectElement;
 import com.vaadin.testbench.elements.PasswordFieldElement;
 import com.vaadin.testbench.elements.RichTextAreaElement;
 import com.vaadin.testbench.elements.SliderElement;
+import com.vaadin.testbench.elements.TabSheetElement;
 import com.vaadin.testbench.elements.TextAreaElement;
 import com.vaadin.testbench.elements.TextFieldElement;
 import com.vaadin.testbench.elements.TreeGridElement;
@@ -85,12 +88,10 @@ public class TabIndexesTest extends SingleBrowserTest {
     }
 
     private void assertTabIndex(String expected, WebElement element) {
-        if (!expected.equals(element.getAttribute("tabIndex"))) {
-            assertEquals(
-                    "Unexpected tab index for element "
-                            + element.getAttribute("outerHTML"),
-                    expected, element.getAttribute("tabIndex"));
-        }
+        assertEquals(
+                "Unexpected tab index for element "
+                        + element.getAttribute("outerHTML"),
+                expected, element.getAttribute("tabIndex"));
     }
 
     private List<WebElement> getFocusElements() {
@@ -115,11 +116,19 @@ public class TabIndexesTest extends SingleBrowserTest {
         focusElements.add($(CheckBoxElement.class).first().getInputElement());
         focusElements.add($(SliderElement.class).first());
         focusElements.add($(MenuBarElement.class).first());
+        TabSheetElement tabsheet = $(TabSheetElement.class).first();
+        focusElements.add(tabsheet
+                .findElement(By.className("v-tabsheet-tabitemcell-selected")));
+        AccordionElement accordion = $(AccordionElement.class).first();
+        focusElements.add(
+                accordion.findElement(By.className("v-accordion-item-open")));
 
         List<AbstractComponentElement> components = $(
                 VerticalLayoutElement.class).id(TabIndexes.FIELD_CONTAINER_ID)
                         .$(AbstractComponentElement.class).all();
-        assertEquals(components.size(), focusElements.size());
+        // the Labels within the TabSheet and Accordion are left out of the
+        // index handling
+        assertEquals(components.size(), focusElements.size() + 2);
         return focusElements;
     }
 

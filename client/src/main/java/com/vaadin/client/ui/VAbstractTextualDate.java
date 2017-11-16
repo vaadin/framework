@@ -17,6 +17,8 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
@@ -34,7 +36,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
@@ -135,7 +136,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
         } catch (LocaleNotLoadedException e) {
             // TODO should die instead? Can the component survive
             // without format string?
-            VConsole.error(e);
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
             return null;
         }
     }
@@ -246,7 +248,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
                 // remove possibly added invalid value indication
                 removeStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
             } catch (final Exception e) {
-                VConsole.log(e);
+                getLogger().log(Level.INFO,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
 
                 addStyleName(getStylePrimaryName() + PARSE_ERROR_CLASSNAME);
                 setDate(null);
@@ -266,7 +269,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
-     * @since
+     * @since 8.2
      */
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
@@ -285,7 +288,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Note that this method should not send the buffered values, but use
      * {@link #updateAndSendBufferedValues()} instead
      *
-     * @since
+     * @since 8.2
      */
     protected void updateBufferedResolutions() {
         Date currentDate = getDate();
@@ -425,7 +428,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     protected void checkGroupFocus(boolean textFocus) {
         boolean newGroupFocus = textFocus | hasChildFocus();
         if (getClient() != null
-                && getClient().hasEventListeners(VAbstractTextualDate.this,
+                && connector.hasEventListener(
                         textFocus ? EventId.FOCUS : EventId.BLUR)
                 && groupFocus != newGroupFocus) {
 
@@ -507,6 +510,10 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             return DateTimeFormat.getFormat(ISO_DATE_TIME_PATTERN);
         }
         return DateTimeFormat.getFormat(ISO_DATE_PATTERN);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractTextualDate.class.getName());
     }
 
 }

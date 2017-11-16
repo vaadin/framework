@@ -15,12 +15,14 @@
  */
 package com.vaadin.tests.components.window;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
+@Widgetset("com.vaadin.DefaultWidgetSet")
 public class ModalWindowFocus extends AbstractReindeerTestUI {
 
     @Override

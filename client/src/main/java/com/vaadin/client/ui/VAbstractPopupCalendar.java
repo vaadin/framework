@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
@@ -43,7 +44,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VAbstractCalendarPanel.SubmitListener;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
@@ -395,7 +395,7 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
 
             checkGroupFocus(true);
         } else {
-            VConsole.error("Cannot reopen popup, it is already open!");
+            getLogger().severe("Cannot reopen popup, it is already open!");
         }
     }
 
@@ -723,5 +723,9 @@ public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPane
     @Override
     protected boolean hasChildFocus() {
         return open;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VAbstractPopupCalendar.class.getName());
     }
 }
