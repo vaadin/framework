@@ -23,7 +23,6 @@ import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -60,7 +59,7 @@ import com.vaadin.shared.ui.datefield.TextualDateFieldState;
  */
 public abstract class VAbstractPopupCalendar<PANEL extends VAbstractCalendarPanel<R>, R extends Enum<R>>
         extends VAbstractTextualDate<R>
-        implements ClickHandler, CloseHandler<PopupPanel>, Orphanable {
+        implements CloseHandler<PopupPanel>, Orphanable {
 
     /** For internal use only. May be removed or replaced in the future. */
     public final Button calendarToggle = new Button();
