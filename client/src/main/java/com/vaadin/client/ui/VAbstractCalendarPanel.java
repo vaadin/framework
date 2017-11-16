@@ -1841,17 +1841,13 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
             com.google.gwt.user.client.Element subElement) {
         if (contains(nextMonth, subElement)) {
             return SUBPART_NEXT_MONTH;
-        }
-        if (contains(prevMonth, subElement)) {
+        } else if (contains(prevMonth, subElement)) {
             return SUBPART_PREV_MONTH;
-        }
-        if (contains(nextYear, subElement)) {
+        } else if (contains(nextYear, subElement)) {
             return SUBPART_NEXT_YEAR;
-        }
-        if (contains(prevYear, subElement)) {
+        } else if (contains(prevYear, subElement)) {
             return SUBPART_PREV_YEAR;
-        }
-        if (contains(days, subElement)) {
+        } else if (contains(days, subElement)) {
             // Day, find out which dayOfMonth and use that as the identifier
             Day day = WidgetUtil.findWidget(subElement, Day.class);
             if (day != null) {

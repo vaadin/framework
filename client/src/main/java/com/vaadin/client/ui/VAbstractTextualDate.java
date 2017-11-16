@@ -445,8 +445,8 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /**
      * Returns whether any of the child components has focus.
      *
-     * @return {@code} if any of the child component has focus, {@code false}
-     *         otherwise
+     * @return {@code true} if any of the child component has focus,
+     *         {@code false} otherwise
      * @since
      */
     protected boolean hasChildFocus() {

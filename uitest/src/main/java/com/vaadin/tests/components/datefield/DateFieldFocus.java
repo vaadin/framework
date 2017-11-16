@@ -36,7 +36,7 @@ public class DateFieldFocus extends AbstractTestUIWithLog {
 
     @Override
     protected String getTestDescription() {
-        return "DatField should not trigger events when nagivating between sub-components.";
+        return "DateField should not trigger events when nagivating between sub-components.";
     }
 
     @Override
