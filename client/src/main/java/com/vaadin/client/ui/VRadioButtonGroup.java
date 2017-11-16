@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.widgets.FocusableFlowPanelComposite;
 import com.vaadin.shared.Registration;
@@ -155,6 +156,10 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
         button.setEnabled(enabled);
+        // #9258 apply the v-disabled class when disabled for UX
+        button.setStyleName(StyleConstants.DISABLED,
+                !isEnabled() || !optionEnabled);
+
         String key = item.getString(DataCommunicatorConstants.KEY);
 
         if (requireInitialization) {
@@ -205,9 +210,12 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
                 .entrySet()) {
             RadioButton radioButton = entry.getKey();
             JsonObject value = entry.getValue();
-            Boolean isOptionEnabled = !value
+            boolean optionEnabled = !value
                     .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
-            radioButton.setEnabled(radioButtonEnabled && isOptionEnabled);
+            radioButton.setEnabled(radioButtonEnabled && optionEnabled);
+            // #9258 apply the v-disabled class when disabled for UX
+            radioButton.setStyleName(StyleConstants.DISABLED,
+                    !isEnabled() || !optionEnabled);
         }
     }
 
