@@ -43,7 +43,7 @@ import elemental.json.JsonObject;
  *            The Grid bean type.
  * @author Vaadin Ltd.
  * @since 8.1
- * @see GridDragger
+ * @see GridRowDragger
  */
 public class GridDragSource<T> extends DragSourceExtension<Grid<T>> {
 

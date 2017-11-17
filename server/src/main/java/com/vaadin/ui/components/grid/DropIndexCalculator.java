@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  * @since 8.2
- * @see GridDragger
+ * @see GridRowDragger
  * @param <T>
  *            the bean type
  */

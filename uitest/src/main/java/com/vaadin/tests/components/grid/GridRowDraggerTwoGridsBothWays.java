@@ -23,11 +23,11 @@ import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.components.grid.GridDragger;
+import com.vaadin.ui.components.grid.GridRowDragger;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridDraggerTwoGridsBothWays extends AbstractGridDnD {
+public class GridRowDraggerTwoGridsBothWays extends AbstractGridDnD {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -36,8 +36,8 @@ public class GridDraggerTwoGridsBothWays extends AbstractGridDnD {
         Grid<Person> left = createGridAndFillWithData(25);
         Grid<Person> right = createGridAndFillWithData(25);
 
-        GridDragger<Person> leftToRight = new GridDragger<>(left, right);
-        GridDragger<Person> rightToLeft = new GridDragger<>(right, left);
+        GridRowDragger<Person> leftToRight = new GridRowDragger<>(left, right);
+        GridRowDragger<Person> rightToLeft = new GridRowDragger<>(right, left);
 
         leftToRight.getGridDragSource()
                 .addDragStartListener(event -> rightToLeft.getGridDropTarget()
