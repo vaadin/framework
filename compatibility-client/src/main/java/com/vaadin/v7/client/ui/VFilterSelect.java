@@ -151,7 +151,7 @@ public class VFilterSelect extends Composite
             } else {
                 content = WidgetUtil.escapeHTML(caption);
             }
-            sb.append("<span>").append(content).append("</span>");
+            sb.append("<span>" + content + "</span>");
             return sb.toString();
         }
 

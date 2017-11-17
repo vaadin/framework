@@ -213,32 +213,31 @@ public class VMenuBar extends SimpleFocusablePanel
      */
     public String buildItemHTML(UIDL item) {
         // Construct html from the text and the optional icon
-        StringBuilder itemHTML = new StringBuilder();
+        String itemHTML = "";
         if (item.hasAttribute("separator")) {
-            itemHTML.append("<span>---</span>");
+            itemHTML += "<span>---</span>";
         } else {
             // Add submenu indicator
             if (item.getChildCount() > 0) {
                 String bgStyle = "";
-                itemHTML.append("<span class=\"").append(getStylePrimaryName())
-                        .append("-submenu-indicator\"").append(bgStyle)
-                        .append(">&#x25BA;</span>");
+                itemHTML += "<span class=\"" + getStylePrimaryName()
+                        + "-submenu-indicator\"" + bgStyle + ">&#x25BA;</span>";
             }
 
-            itemHTML.append("<span class=\"").append(getStylePrimaryName())
-                    .append("-menuitem-caption\">");
+            itemHTML += "<span class=\"" + getStylePrimaryName()
+                    + "-menuitem-caption\">";
             Icon icon = client.getIcon(item.getStringAttribute("icon"));
             if (icon != null) {
-                itemHTML.append(icon.getElement().getString());
+                itemHTML += icon.getElement().getString();
             }
             String itemText = item.getStringAttribute("text");
             if (!htmlContentAllowed) {
                 itemText = WidgetUtil.escapeHTML(itemText);
             }
-            itemHTML.append(itemText);
-            itemHTML.append("</span>");
+            itemHTML += itemText;
+            itemHTML += "</span>";
         }
-        return itemHTML.toString();
+        return itemHTML;
     }
 
     /**

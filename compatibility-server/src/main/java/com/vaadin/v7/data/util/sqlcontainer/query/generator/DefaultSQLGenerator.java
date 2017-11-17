@@ -104,7 +104,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
         toSelect = toSelect == null ? "*" : toSelect;
         StatementHelper sh = getStatementHelper();
         StringBuffer query = new StringBuffer();
-        query.append("SELECT ").append(toSelect).append(" FROM ")
+        query.append("SELECT " + toSelect + " FROM ")
                 .append(SQLUtil.escapeSQL(tableName));
         if (filters != null) {
             query.append(QueryBuilder.getWhereStringForFilters(filters, sh));
@@ -147,11 +147,9 @@ public class DefaultSQLGenerator implements SQLGenerator {
         boolean first = true;
         for (String column : columnToValueMap.keySet()) {
             if (first) {
-                query.append(' ').append(QueryBuilder.quote(column))
-                        .append(" = ?");
+                query.append(" " + QueryBuilder.quote(column) + " = ?");
             } else {
-                query.append(", ").append(QueryBuilder.quote(column))
-                        .append(" = ?");
+                query.append(", " + QueryBuilder.quote(column) + " = ?");
             }
             sh.addParameterValue(columnToValueMap.get(column),
                     item.getItemProperty(column).getType());
@@ -161,11 +159,9 @@ public class DefaultSQLGenerator implements SQLGenerator {
         first = true;
         for (String column : rowIdentifiers.keySet()) {
             if (first) {
-                query.append(" WHERE ").append(QueryBuilder.quote(column))
-                        .append(" = ?");
+                query.append(" WHERE " + QueryBuilder.quote(column) + " = ?");
             } else {
-                query.append(" AND ").append(QueryBuilder.quote(column))
-                        .append(" = ?");
+                query.append(" AND " + QueryBuilder.quote(column) + " = ?");
             }
             sh.addParameterValue(rowIdentifiers.get(column),
                     item.getItemProperty(column).getType());
@@ -264,7 +260,7 @@ public class DefaultSQLGenerator implements SQLGenerator {
                 query.append(" AND ");
             }
             if (item.getItemProperty(keyColName).getValue() != null) {
-                query.append(QueryBuilder.quote(keyColName)).append(" = ?");
+                query.append(QueryBuilder.quote(keyColName) + " = ?");
                 sh.addParameterValue(
                         item.getItemProperty(keyColName).getValue(),
                         item.getItemProperty(keyColName).getType());

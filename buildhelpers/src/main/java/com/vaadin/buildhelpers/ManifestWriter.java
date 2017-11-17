@@ -51,7 +51,7 @@ public class ManifestWriter {
             remainingValue = remainingValue.substring(fitsLine);
             linelen = 1;
         }
-        buffer.append(remainingValue).append("\n");
+        buffer.append(remainingValue).append('\n');
     }
 
     /**

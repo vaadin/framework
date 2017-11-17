@@ -97,14 +97,14 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
         }
 
         if (caption != null && time != null) {
-            html.append("<span class=\"").append(STYLENAME).append("-time\">");
+            html.append("<span class=\"" + STYLENAME + "-time\">");
             html.append(calendar.getTimeFormat().format(time));
             html.append("</span> ");
             html.append(textOrHtml);
         } else if (caption != null) {
             html.append(textOrHtml);
         } else if (time != null) {
-            html.append("<span class=\"").append(STYLENAME).append("-time\">");
+            html.append("<span class=\"" + STYLENAME + "-time\">");
             html.append(calendar.getTimeFormat().format(time));
             html.append("</span>");
         }

@@ -136,12 +136,12 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
         @Override
         public String getDisplayString() {
-            final StringBuilder sb = new StringBuilder();
             ApplicationConnection client = connector.getConnection();
             final Icon icon = client
                     .getIcon(client.translateVaadinUri(untranslatedIconUri));
+            String iconString = "";
             if (icon != null) {
-                sb.append(icon.getElement().getString());
+                iconString += icon.getElement().getString();
             }
             String content;
             if ("".equals(caption)) {
@@ -151,8 +151,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             } else {
                 content = WidgetUtil.escapeHTML(caption);
             }
-            sb.append("<span>").append(content).append("</span>");
-            return sb.toString();
+            return iconString + "<span>" + content + "</span>";
         }
 
         /**

@@ -131,15 +131,15 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
 
         // Set data generator
         dragSource.setDragDataGenerator("application/json", person -> {
-            StringBuilder builder = new StringBuilder();
-            builder.append('{');
-            builder.append("\"First Name\":");
-            builder.append("\"").append(person.getFirstName()).append("\"");
-            builder.append(',');
-            builder.append("\"Last Name\":");
-            builder.append("\"").append(person.getLastName()).append("\"");
-            builder.append('}');
-            return builder.toString();
+            String str = "";
+            str += '{';
+            str += "\"First Name\":";
+            str += '"' + person.getFirstName() + '"';
+            str += ',';
+            str += "\"Last Name\":";
+            str += '"' + person.getLastName() + '"';
+            str += '}';
+            return str;
         });
 
         // Add drag start listener

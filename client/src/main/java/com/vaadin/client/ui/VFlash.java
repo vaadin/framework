@@ -165,10 +165,9 @@ public class VFlash extends HTML {
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
          * inside it a EMBED for all other browsers.
          */
-        StringBuilder html = new StringBuilder();
 
         // Start the object tag
-        html.append("<object ");
+        String html = "<object ";
 
         /*
          * Add classid required for ActiveX to recognize the flash. This is a
@@ -178,11 +177,9 @@ public class VFlash extends HTML {
          * this by setting his own classid.
          */
         if (classId != null) {
-            html.append(
-                    "classid=\"" + WidgetUtil.escapeAttribute(classId) + "\" ");
+            html += "classid=\"" + WidgetUtil.escapeAttribute(classId) + "\" ";
         } else {
-            html.append(
-                    "classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ");
+            html +="classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" ";
         }
 
         /*
@@ -194,40 +191,35 @@ public class VFlash extends HTML {
          * codebase
          */
         if (codebase != null) {
-            html.append("codebase=\"")
-                    .append(WidgetUtil.escapeAttribute(codebase)).append("\" ");
+            html += "codebase=\"" + WidgetUtil.escapeAttribute(codebase)
+                    + "\" ";
         } else {
-            html.append(
-                    "codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ");
+            html += "codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0\" ";
         }
 
         // Add width and height
-        html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
-                .append("\" ");
-        html.append("height=\"").append(WidgetUtil.escapeAttribute(height))
-                .append("\" ");
-        html.append("type=\"application/x-shockwave-flash\" ");
+        html += "width=\"" + WidgetUtil.escapeAttribute(width) + "\" ";
+        html += "height=\"" + WidgetUtil.escapeAttribute(height) + "\" ";
+        html += "type=\"application/x-shockwave-flash\" ";
 
         // Codetype
         if (codetype != null) {
-            html.append("codetype=\"")
-                    .append(WidgetUtil.escapeAttribute(codetype)).append("\" ");
+            html += "codetype=\"" + WidgetUtil.escapeAttribute(codetype)
+                    + "\" ";
         }
 
         // Standby
         if (standby != null) {
-            html.append(
-                    "standby=\"" + WidgetUtil.escapeAttribute(standby) + "\" ");
+            html += "standby=\"" + WidgetUtil.escapeAttribute(standby) + "\" ";
         }
 
         // Archive
         if (archive != null) {
-            html.append(
-                    "archive=\"" + WidgetUtil.escapeAttribute(archive) + "\" ");
+            html += "archive=\"" + WidgetUtil.escapeAttribute(archive) + "\" ";
         }
 
         // End object tag
-        html.append('>');
+        html += '>';
 
         // Ensure we have an movie parameter
         if (embedParams.get("movie") == null) {
@@ -236,58 +228,49 @@ public class VFlash extends HTML {
 
         // Add parameters to OBJECT
         for (String name : embedParams.keySet()) {
-            html.append("<param ");
-            html.append("name=\"").append(WidgetUtil.escapeAttribute(name))
-                    .append("\" ");
-            html.append("value=\""
-            ).append(WidgetUtil.escapeAttribute(embedParams.get(name)))
-                    .append("\" ");
-            html.append("/>");
+            html += "<param ";
+            html += "name=\"" + WidgetUtil.escapeAttribute(name) + "\" ";
+            html += "value=\""
+                    + WidgetUtil.escapeAttribute(embedParams.get(name)) + "\" ";
+            html += "/>";
         }
 
         // Build inner EMBED tag
-        html.append("<embed ");
-        html.append("src=\"").append(WidgetUtil.escapeAttribute(source))
-                .append("\" ");
+        html += "<embed ";
+        html += "src=\"" + WidgetUtil.escapeAttribute(source) + "\" ";
         if (hasPercentageWidth() && slotOffsetWidth >= 0) {
-            html.append("width=\"").append(getRelativePixelWidth())
-                    .append("\" ");
+            html += "width=\"" + getRelativePixelWidth() + "\" ";
         } else {
-            html.append("width=\"").append(WidgetUtil.escapeAttribute(width))
-                    .append("\" ");
+            html += "width=\"" + WidgetUtil.escapeAttribute(width) + "\" ";
         }
 
         if (hasPercentageHeight() && slotOffsetHeight >= 0) {
-            html.append("height=\"").append(getRelativePixelHeight())
-                    .append("px\" ");
+            html += "height=\"" + getRelativePixelHeight() + "px\" ";
         } else {
-            html.append(
-                    "height=\"").append(WidgetUtil.escapeAttribute(height))
-                    .append("\" ");
+            html += "height=\"" + WidgetUtil.escapeAttribute(height) + "\" ";
         }
 
-        html.append("type=\"application/x-shockwave-flash\" ");
+        html += "type=\"application/x-shockwave-flash\" ";
 
         // Add the parameters to the Embed
         for (String name : embedParams.keySet()) {
-            html.append(WidgetUtil.escapeAttribute(name));
-            html.append('=');
-            html.append("\"")
-                    .append(WidgetUtil.escapeAttribute(embedParams.get(name)))
-                    .append("\"");
+            html += WidgetUtil.escapeAttribute(name);
+            html += '=';
+            html += '"' + WidgetUtil.escapeAttribute(embedParams.get(name))
+                    + '"';
         }
 
         // End embed tag
-        html.append("></embed>");
+        html += "></embed>";
 
         if (altText != null) {
-            html.append("<noembed>");
-            html.append(altText);
-            html.append("</noembed>");
+            html += "<noembed>";
+            html += altText;
+            html += "</noembed>";
         }
 
         // End object tag
-        html.append("</object>");
+        html += "</object>";
 
         return html.toString();
     }
