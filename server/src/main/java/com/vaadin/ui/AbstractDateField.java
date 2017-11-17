@@ -822,10 +822,10 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * </p>
      *
      * @param date
-     *            determines which date cell to modify
+     *            which date cell to modify
      * @param styleName
-     *            determines which custom style name to set to the date cell, if
-     *            any ({@code null} removes)
+     *            the custom style name(s) for given date, {@code null} to clear
+     *            custom style name(s)
      */
     @SuppressWarnings("deprecation")
     public void setDateStyle(Date date, String styleName) {
@@ -846,8 +846,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * styling logic.
      *
      * @param date
-     *            determines which date cell's custom style name to return
-     * @return the corresponding style name, if any, {@code null} otherwise
+     *            which date cell's custom style name(s) to return
+     * @return the corresponding style name(s), if any, {@code null} otherwise
      *
      * @see {@link #setDateStyle(Date, String)}
      */
