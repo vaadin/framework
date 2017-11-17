@@ -16,14 +16,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.components.grid.GridDragSource;
-import com.vaadin.ui.components.grid.GridDragger;
+import com.vaadin.ui.components.grid.GridRowDragger;
 import com.vaadin.ui.components.grid.GridDropTarget;
 
 public abstract class AbstractGridDnD extends AbstractTestUIWithLog {
 
     protected final Layout controls = new HorizontalLayout();
 
-    protected void initializeTestFor(GridDragger<Person> gridDragger) {
+    protected void initializeTestFor(GridRowDragger<Person> gridDragger) {
         initializeTestFor(gridDragger.getGridDragSource().getGrid(),
                 gridDragger.getGridDropTarget().getGrid(),
                 gridDragger.getGridDragSource(),

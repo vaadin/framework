@@ -58,7 +58,7 @@ import com.vaadin.ui.Grid.Column;
  * @author Vaadin Ltd
  * @since 8.2
  */
-public class GridDragger<T> implements Serializable {
+public class GridRowDragger<T> implements Serializable {
 
     private final GridDropTarget<T> gridDropTarget;
     private final GridDragSource<T> gridDragSource;
@@ -95,7 +95,7 @@ public class GridDragger<T> implements Serializable {
      * @param grid
      *            Grid to be extended.
      */
-    public GridDragger(Grid<T> grid) {
+    public GridRowDragger(Grid<T> grid) {
         this(grid, DropMode.BETWEEN);
     }
 
@@ -122,7 +122,7 @@ public class GridDragger<T> implements Serializable {
      * @param dropMode
      *            DropMode to be used.
      */
-    public GridDragger(Grid<T> grid, DropMode dropMode) {
+    public GridRowDragger(Grid<T> grid, DropMode dropMode) {
         this(grid, grid, dropMode);
     }
 
@@ -142,7 +142,7 @@ public class GridDragger<T> implements Serializable {
      * @param target
      *            the target grid dropped to.
      */
-    public GridDragger(Grid<T> source, Grid<T> target) {
+    public GridRowDragger(Grid<T> source, Grid<T> target) {
         this(source, target, DropMode.BETWEEN);
     }
 
@@ -161,7 +161,7 @@ public class GridDragger<T> implements Serializable {
      * @param sourceDataProviderUpdater
      *            handler for updating source grid data provider
      */
-    public GridDragger(Grid<T> source, Grid<T> target,
+    public GridRowDragger(Grid<T> source, Grid<T> target,
             TargetDataProviderUpdater<T> targetDataProviderUpdater,
             SourceDataProviderUpdater<T> sourceDataProviderUpdater) {
         this(source, target, DropMode.BETWEEN);
@@ -186,7 +186,7 @@ public class GridDragger<T> implements Serializable {
      * @param dropMode
      *            the drop mode to use
      */
-    public GridDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
+    public GridRowDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
         gridDragSource = new GridDragSource<>(source);
 
         gridDropTarget = new GridDropTarget<>(target, dropMode);
@@ -493,7 +493,7 @@ public class GridDragger<T> implements Serializable {
                 new StringBuilder().append(sourceGrid ? "Source " : "Target ")
                         .append("grid does not have a ListDataProvider, cannot automatically ")
                         .append(sourceGrid ? "remove " : "add ")
-                        .append("items. Use GridDragger.set")
+                        .append("items. Use GridRowDragger.set")
                         .append(sourceGrid ? "Source" : "Target")
                         .append("DataProviderUpdater(...) ")
                         .append(sourceGrid ? ""
@@ -508,7 +508,7 @@ public class GridDragger<T> implements Serializable {
                 .append(sourceGrid ? "Source " : "Target ")
                 .append("grid's ListDataProvider is not backed by a List-collection, cannot ")
                 .append(sourceGrid ? "remove " : "add ")
-                .append("items. Use a ListDataProvider backed by a List, or use GridDragger.set")
+                .append("items. Use a ListDataProvider backed by a List, or use GridRowDragger.set")
                 .append(sourceGrid ? "Source" : "Target")
                 .append("DataProviderUpdater(...) ")
                 .append(sourceGrid ? "" : "and setDropIndexCalculator(...) ")
