@@ -616,11 +616,11 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
             .bind(Person::getAge, Person::setAge);
 
         binder.setReadOnly(true);
-        assertFalse("Name field should be ignored and not be readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored but should be readonly", nameField.isReadOnly());
         assertTrue("Age field should be readonly", ageField.isReadOnly());
 
         binder.setReadOnly(false);
-        assertFalse("Name field should be ignored and remain not readonly", nameField.isReadOnly());
+        assertTrue("Name field should be ignored and should remain readonly", nameField.isReadOnly());
         assertFalse("Age field should not be readonly", ageField.isReadOnly());
 
         nameField.setReadOnly(false);
@@ -1043,5 +1043,16 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         Binding<Person, String> binding = anotherBinder.bind(nameField,
                 Person::getFirstName, Person::setFirstName);
         binder.removeBinding(binding);
+    }
+
+    @Test
+    public void bindWithNullSetterShouldMarkFieldAsReadonly() {
+        binder.bind(nameField, Person::getFirstName, null);
+        binder.forField(ageField)
+            .withConverter(new StringToIntegerConverter(""))
+            .bind(Person::getAge, Person::setAge);
+
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+        assertFalse("Name field should be readonly", ageField.isReadOnly());
     }
 }
