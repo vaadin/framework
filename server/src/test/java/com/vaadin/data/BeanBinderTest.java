@@ -311,6 +311,28 @@ public class BeanBinderTest
     }
 
     @Test
+    public void bindReadOnlyPropertyShouldMarkFieldAsReadonly() {
+        binder.bind(nameField, "readOnlyProperty");
+
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+    }
+
+    @Test
+    public void setReadonlyShouldIgnoreBindingsForReadOnlyProperties() {
+        binder.bind(nameField, "readOnlyProperty");
+
+        binder.setReadOnly(true);
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+
+        binder.setReadOnly(false);
+        assertTrue("Name field should be readonly", nameField.isReadOnly());
+
+        nameField.setReadOnly(false);
+        binder.setReadOnly(true);
+        assertFalse("Name field should not be readonly", nameField.isReadOnly());
+    }
+
+    @Test
     public void beanBound_setInvalidFieldValue_validationError() {
         binder.setBean(item);
         binder.bind(nameField, "firstname");

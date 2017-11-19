@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -226,6 +227,10 @@ public class Binder<BEAN> implements Serializable {
          * TextField nameField = new TextField();
          * binder.forField(nameField).bind(Person::getName, Person::setName);
          * </pre>
+         *
+         * <p>
+         * <strong>Note:</strong> when a {@code null} setter is given the field will be
+         * marked as readonly by invoking ({@link HasValue::setReadOnly}.
          *
          * @param getter
          *            the function to get the value of the property to the
@@ -740,6 +745,9 @@ public class Binder<BEAN> implements Serializable {
             if (getBinder().getBean() != null) {
                 binding.initFieldValue(getBinder().getBean());
             }
+            if (setter == null) {
+                binding.getField().setReadOnly(true);
+            }
             getBinder().fireStatusChangeEvent(false);
 
             bound = true;
@@ -762,10 +770,11 @@ public class Binder<BEAN> implements Serializable {
                                     + " from " + getBinder().propertySet));
 
             ValueProvider<BEAN, ?> getter = definition.getGetter();
-            Setter<BEAN, ?> setter = definition.getSetter()
-                    .orElse((bean, value) -> {
-                        // Setter ignores value
-                    });
+            Setter<BEAN, ?> setter = definition.getSetter().orElse(null);
+            if (setter == null) {
+                Logger.getLogger(Binder.class.getName())
+                    .fine(() -> propertyName + " does not have an accessible setter");
+            }
 
             BindingBuilder<BEAN, ?> finalBinding = withConverter(
                     createConverter(definition.getType()), false);
@@ -1442,6 +1451,10 @@ public class Binder<BEAN> implements Serializable {
      * TextField nameField = new TextField();
      * binder.bind(nameField, Person::getName, Person::setName);
      * </pre>
+     *
+     * <p>
+     * <strong>Note:</strong> when a {@code null} setter is given the field will be
+     * marked as readonly by invoking ({@link HasValue::setReadOnly}.
      *
      * @param <FIELDVALUE>
      *            the value type of the field
@@ -2287,7 +2300,9 @@ public class Binder<BEAN> implements Serializable {
      *            write
      */
     public void setReadOnly(boolean fieldsReadOnly) {
-        getBindings().stream().map(BindingImpl::getField)
+        getBindings().stream()
+            .filter(binding -> Objects.nonNull(binding.setter))
+            .map(BindingImpl::getField)
                 .forEach(field -> field.setReadOnly(fieldsReadOnly));
     }
 
