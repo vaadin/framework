@@ -531,10 +531,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
 
         Widget widget = getWidget();
 
-        if (widget instanceof Orphanable && caption == null
-                && (captionText != null || icon != null || error != null
-                        || required)) {
-
+        if (widget instanceof Orphanable) {
             ((Orphanable) widget).beforeOrphaned();
 
             Scheduler.get().scheduleFixedDelay(() -> {
