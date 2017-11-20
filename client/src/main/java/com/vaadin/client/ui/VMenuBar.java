@@ -1732,11 +1732,7 @@ public class VMenuBar extends FocusableFlowPanel
         }
     }
 
-<<<<<<< HEAD
     private static final String SUBPART_PREFIX = "item";
-=======
-    private final static String SUBPART_PREFIX = "item";
->>>>>>> branch 'issue3922' of https://github.com/Ansku/framework.git
 
     @Override
     public com.google.gwt.user.client.Element getSubPartElement(
