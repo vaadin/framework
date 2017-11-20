@@ -120,9 +120,11 @@ public class EventRouter implements MethodEventSource {
                 .addRegisteredEventListener(state, eventIdentifier);
 
         return () -> {
-            registration.remove();
-
             listenerList.remove(listenerMethod);
+            if (!hasListeners(eventType)) {
+                registration.remove();
+                return;
+            }
         };
     }
 
@@ -313,5 +315,4 @@ public class EventRouter implements MethodEventSource {
         }
         return listeners;
     }
-
 }
