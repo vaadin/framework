@@ -72,7 +72,8 @@ public class FileResource implements ConnectorResource {
             ds.setParameter("Content-Length",
                     String.valueOf(sourceFile.length()));
 
-            ds.setCacheTime(cacheTime);
+            ds.setBufferSize(getBufferSize());
+            ds.setCacheTime(getCacheTime());
             return ds;
         } catch (final FileNotFoundException e) {
             throw new RuntimeException(
