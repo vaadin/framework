@@ -21,7 +21,7 @@ import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.util.ReflectTools;
 
 /**
- * TODO
+ * Abstract base class for PropertyDefinition implementations for beans.
  *
  * @author Vaadin Ltd
  * @since 8.2
@@ -33,16 +33,21 @@ import com.vaadin.util.ReflectTools;
  */
 public abstract class AbstractBeanPropertyDefinition<T, V>
         implements PropertyDefinition<T, V> {
+
     private final PropertyDescriptor descriptor;
     private final BeanPropertySet<T> propertySet;
     private final Class<?> propertyHolderType;
 
     /**
-     * TODO
+     * Constructor for setting the immutable descriptor, property set and
+     * property holder type used by this instance.
      *
      * @param propertySet
-     * @param propertyHolderType
+     *            property set this property belongs to
+     * @param parent
+     *            parent property for this nested property
      * @param descriptor
+     *            property descriptor
      */
     public AbstractBeanPropertyDefinition(BeanPropertySet<T> propertySet,
             Class<?> propertyHolderType, PropertyDescriptor descriptor) {
@@ -80,6 +85,11 @@ public abstract class AbstractBeanPropertyDefinition<T, V>
         return propertySet;
     }
 
+    /**
+     * Gets the property descriptor of this instance.
+     *
+     * @return the property descriptor
+     */
     protected PropertyDescriptor getDescriptor() {
         return descriptor;
     }

@@ -32,7 +32,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition;
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
 
@@ -184,7 +183,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          * Create nested property definition. Allows use of a long form name.
          *
          * @param propertySet
-         *            property set this property belongs is.
+         *            property set this property belongs to
          * @param parent
          *            parent property for this nested property
          * @param descriptor
