@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.provider;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -58,8 +59,13 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     // childMap is only used for finding parents of items and clean up on
     // removing children of expanded nodes.
+    // TODO: 27/11/2017 Get rid of child map
     private Map<T, Set<T>> childMap = new HashMap<>();
-    private Map<Object, T> parentIdMap = new HashMap<>();
+
+    /**
+     *
+     */
+    private Map<Object, T> parentMap = new HashMap<>();
 
     private final HierarchicalDataProvider<T, F> provider;
     private F filter;
@@ -68,6 +74,13 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     private ItemCollapseAllowedProvider<T> itemCollapseAllowedProvider = t -> true;
 
     private Set<Object> expandedItemIds = new HashSet<>();
+
+    /**
+     * Maps items' ID to their order among siblings.
+     */
+    private Map<Object, Integer> siblingIndex = new HashMap<>();
+    private T referenceItem = null;
+    private int referenceItemIndex = -1;
 
     /**
      * Constructs a new HierarchyMapper.
@@ -134,6 +147,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             if (position.isPresent()) {
                 rows = Range.withLength(position.get() + 1,
                         (int) getHierarchy(item, false).count());
+
+                // Move reference forward if an item was expanded before it
+                if (rows.getStart() <= referenceItemIndex) {
+                    shiftReferenceItem(rows.length());
+                }
             }
         }
         return rows;
@@ -157,6 +175,14 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 long childCount = getHierarchy(item, false).count();
                 removedRows = Range.withLength(position.get() + 1,
                         (int) childCount);
+
+                if (removedRows.contains(referenceItemIndex)) {
+                    // Remove reference if ancestor was collapsed
+                    resetReferenceItem();
+                } else if (removedRows.getStart() < referenceItemIndex) {
+                    // Move reference up if an item was collapsed before it
+                    shiftReferenceItem(-removedRows.length());
+                }
             }
             expandedItemIds.remove(id);
         }
@@ -232,6 +258,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setInMemorySorting(Comparator<T> inMemorySorting) {
         this.inMemorySorting = inMemorySorting;
+        resetReferenceItem();
     }
 
     /**
@@ -252,6 +279,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setBackEndSorting(List<QuerySortOrder> backEndSorting) {
         this.backEndSorting = backEndSorting;
+        resetReferenceItem();
     }
 
     /**
@@ -272,6 +300,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setFilter(Object filter) {
         this.filter = (F) filter;
+        resetReferenceItem();
     }
 
     /**
@@ -306,7 +335,34 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of items
      */
     public Stream<T> fetchItems(Range range) {
-        return getHierarchy(null).skip(range.getStart()).limit(range.length());
+        List<T> items = new ArrayList<>(range.length());
+
+        if (referenceItem != null) {
+            // Fetch items before the reference
+            items.addAll(fetchItemsBefore(referenceItem,
+                    referenceItemIndex - range.getStart()).stream()
+                    .limit(range.length()).collect(Collectors.toList()));
+
+            // Add the reference item to the list
+            if (range.contains(referenceItemIndex)) {
+                items.add(referenceItem);
+            }
+
+            // Fetch items after the reference
+            items.addAll(fetchItemsAfter(referenceItem,
+                    range.getEnd() - referenceItemIndex - 1).stream()
+                    .skip(Math.max(0, range.getStart() - referenceItemIndex - 1))
+                    .collect(Collectors.toList()));
+        } else {
+            // Get complete flattened hierarchy when there is no reference
+            items = getHierarchy(null).skip(range.getStart())
+                    .limit(range.length()).collect(Collectors.toList());
+        }
+
+        // Set reference as top of the fetched list
+        setReferenceItem(items.get(0), range.getStart());
+
+        return items.stream();
     }
 
     /**
@@ -320,8 +376,131 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of items
      */
     public Stream<T> fetchItems(T parent, Range range) {
+        // TODO: 27/11/2017 perhaps optimize as well
         return getHierarchy(parent, false).skip(range.getStart())
                 .limit(range.length());
+    }
+
+    /**
+     * Returns {@code limit} number of items that are after {@code item} in the
+     * flattened hierarchy.
+     * @param item
+     * @param limit
+     * @return
+     */
+    private List<T> fetchItemsAfter(T item, int limit) {
+        if (limit <= 0) {
+            return Collections.emptyList();
+        }
+
+        List<T> items = new ArrayList<>(limit);
+
+        int skipChildren = 0;
+        boolean needsFetchingAncestors = false;
+
+        while (limit > 0 && item != null) {
+            if (needsFetchingAncestors) {
+                skipChildren = getSiblingIndex(item) + 1;
+                item = getParentOfItem(item);
+            }
+
+            List<T> fetchedItems = fetchChildrenRecursively(item, false,
+                    skipChildren, limit);
+            items.addAll(fetchedItems);
+            limit -= fetchedItems.size();
+
+            needsFetchingAncestors = true;
+        }
+
+        return items;
+    }
+
+    /**
+     * Fetches children of {@code parent} recursively.
+     * @param parent
+     * @param includeParent
+     * @param skipChildren
+     * @param limit
+     * @return
+     */
+    private List<T> fetchChildrenRecursively(T parent, boolean includeParent,
+            int skipChildren, int limit) {
+        List<T> items = new ArrayList<>(limit);
+        if (includeParent && limit-- > 0) {
+            items.add(parent);
+        }
+
+        if (limit > 0 && isExpanded(parent)) {
+            Iterator<T> children = getDirectChildren(parent,
+                    Range.withLength(skipChildren, limit)).iterator();
+            while (children.hasNext() && limit > 0) {
+                List<T> childrenRecursive = fetchChildrenRecursively(
+                        children.next(), true, 0, limit);
+                items.addAll(childrenRecursive);
+                limit -= childrenRecursive.size();
+            }
+        }
+        return items;
+    }
+
+    /**
+     * Fetches {@code limit} number of items that are before {@code item} in the
+     * flattened hierarchy.
+     * @param item
+     * @param limit
+     * @return
+     */
+    private List<T> fetchItemsBefore(T item, int limit) {
+        if (limit <= 0) {
+            return Collections.emptyList();
+        }
+
+        List<T> items = new ArrayList<>(limit);
+        while (limit > 0 && item != null) {
+            int siblingIndex = getSiblingIndex(item);
+            item = getParentOfItem(item);
+            List<T> fetchedItems = fetchChildrenRecursivelyReverse(item, true,
+                    doGetChildCount(item) - siblingIndex, limit);
+            items.addAll(fetchedItems);
+            limit -= fetchedItems.size();
+        }
+
+        Collections.reverse(items);
+        return items;
+    }
+
+    /**
+     * Fetches children of {@code parent} recursively in reverse order.
+     * @param parent
+     * @param includeParent
+     * @param offset
+     * @param limit
+     * @return
+     */
+    private List<T> fetchChildrenRecursivelyReverse(T parent,
+            boolean includeParent, int offset, int limit) {
+        List<T> items = new ArrayList<>(limit);
+
+        if (limit > 0 && isExpanded(parent)) {
+
+            int childCount = doGetChildCount(parent);
+            List<T> children = getDirectChildren(parent,
+                    Range.between(Math.max(0, childCount - offset - limit),
+                            childCount - offset));
+
+            for (int i = children.size() - 1; i >= 0 && limit > 0; i--) {
+                List<T> childrenRecursive = fetchChildrenRecursivelyReverse(
+                        children.get(i), true, 0, limit);
+                items.addAll(childrenRecursive);
+                limit -= childrenRecursive.size();
+            }
+        }
+
+        if (limit > 0) {
+            items.add(parent);
+        }
+
+        return items;
     }
 
     /* Methods for providing information on the hierarchy. */
@@ -359,7 +538,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     protected T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
-        return parentIdMap.get(getDataProvider().getId(item));
+        return parentMap.get(getDataProvider().getId(item));
     }
 
     /**
@@ -386,7 +565,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         expandedItemIds.remove(id);
         invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
             removeChildren(x);
-            parentIdMap.remove(x);
+            parentMap.remove(x);
         });
     }
 
@@ -443,8 +622,24 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of direct children
      */
     private Stream<T> getDirectChildren(T parent) {
-        return doFetchDirectChildren(parent, Range.between(0, getDataProvider()
-                .getChildCount(new HierarchicalQuery<>(filter, parent))));
+        return getDirectChildren(parent,
+                Range.between(0, doGetChildCount(parent))).stream();
+    }
+
+    private List<T> getDirectChildren(T parent, Range range) {
+        List<T> items = doFetchDirectChildren(parent, range)
+                .collect(Collectors.toList());
+
+        // TODO: 22/11/2017 see if registering should be elsewhere
+        // Keep index of sibling and parents for later use
+        int index = range.getStart();
+        for (T item : items) {
+            Object id = getDataProvider().getId(item);
+            siblingIndex.put(id, index++);
+            parentMap.put(id, parent);
+        }
+
+        return items;
     }
 
     /**
@@ -488,6 +683,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 includeParent);
     }
 
+    private int doGetChildCount(T parent) {
+        return getDataProvider()
+                .getChildCount(new HierarchicalQuery<>(getFilter(), parent));
+    }
+
     /**
      * Register parent and children items into inner structures.
      * May be overridden in subclasses.
@@ -497,7 +697,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     protected void registerChildren(T parent, List<T> childList) {
         childMap.put(parent, new HashSet<>(childList));
-        childList.forEach(x -> parentIdMap.put(getDataProvider().getId(x), parent));
+        childList.forEach(x -> parentMap.put(getDataProvider().getId(x), parent));
     }
 
     /**
@@ -522,9 +722,27 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         return Stream.concat(parentStream, children);
     }
 
+    private int getSiblingIndex(T item) {
+        return siblingIndex.get(getDataProvider().getId(item));
+    }
+
+    private void setReferenceItem(T item, int index) {
+        referenceItem = item;
+        referenceItemIndex = index;
+    }
+
+    private void resetReferenceItem() {
+        referenceItem = null;
+        referenceItemIndex = -1;
+    }
+
+    private void shiftReferenceItem(int offset) {
+        referenceItemIndex += offset;
+    }
+
     @Override
     public void destroyAllData() {
         childMap.clear();
-        parentIdMap.clear();
+        parentMap.clear();
     }
 }
