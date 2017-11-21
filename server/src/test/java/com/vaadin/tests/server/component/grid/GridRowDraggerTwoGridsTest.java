@@ -255,7 +255,7 @@ public class GridRowDraggerTwoGridsTest {
     public void dropOnSortedGrid_byDefault_dropsToTheEnd() {
         Assert.assertFalse(
                 "Default drops on sorted grid rows should not be allowed",
-                dragger.getGridDropTarget().isDropAllowedOnSortedGridRows());
+                dragger.getGridDropTarget().isDropAllowedOnRowsWhenSorted());
 
         source.setItems("0", "1", "2");
         target.setItems("4", "5");

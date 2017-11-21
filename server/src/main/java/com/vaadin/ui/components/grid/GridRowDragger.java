@@ -190,7 +190,7 @@ public class GridRowDragger<T> implements Serializable {
         gridDragSource = new GridDragSource<>(source);
 
         gridDropTarget = new GridDropTarget<>(target, dropMode);
-        gridDropTarget.setDropAllowedOnSortedGridRows(false);
+        gridDropTarget.setDropAllowedOnRowsWhenSorted(false);
 
         gridDragSource.addGridDragStartListener(event -> {
             draggedItems = event.getDraggedItems();
