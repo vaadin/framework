@@ -15,8 +15,8 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.DropIndexCalculator;
-import com.vaadin.ui.components.grid.GridRowDragger;
 import com.vaadin.ui.components.grid.GridDropEvent;
+import com.vaadin.ui.components.grid.GridRowDragger;
 import com.vaadin.ui.components.grid.SourceDataProviderUpdater;
 
 public class GridRowDraggerOneGridTest {
@@ -143,7 +143,7 @@ public class GridRowDraggerOneGridTest {
     public void alwaysDropToEndCalculator() {
         source.setItems("0", "1", "2");
 
-        dragger.setDropIndexCalculator(DropIndexCalculator.ALWAYS_DROP_TO_END);
+        dragger.setDropIndexCalculator(DropIndexCalculator.alwaysDropToEnd());
 
         drop("1", DropLocation.ABOVE, "0");
 
@@ -208,7 +208,7 @@ public class GridRowDraggerOneGridTest {
     public void dropOnSortedGrid_byDefault_dropsToTheEnd() {
         Assert.assertFalse(
                 "Default drops on sorted grid rows should not be allowed",
-                dragger.getGridDropTarget().isDropAllowedOnSortedGridRows());
+                dragger.getGridDropTarget().isDropAllowedOnRowsWhenSorted());
 
         source.setItems("0", "1", "2", "3", "4");
 

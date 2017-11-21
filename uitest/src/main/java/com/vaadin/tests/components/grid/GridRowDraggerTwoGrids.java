@@ -44,7 +44,7 @@ public class GridRowDraggerTwoGrids extends AbstractGridDnD {
         CheckBox addItemsToEnd = new CheckBox("Add Items To End", false);
         addItemsToEnd.addValueChangeListener(
                 event -> gridDragger.setDropIndexCalculator(event.getValue()
-                        ? DropIndexCalculator.ALWAYS_DROP_TO_END : null));
+                        ? DropIndexCalculator.alwaysDropToEnd() : null));
         CheckBox removeItemsFromSource = new CheckBox(
                 "Remove items from source grid", true);
         removeItemsFromSource.addValueChangeListener(event -> gridDragger

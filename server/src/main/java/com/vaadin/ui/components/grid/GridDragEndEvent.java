@@ -43,7 +43,7 @@ public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
      * @param dropEffect
      *            Drop effect from {@code DataTransfer.dropEffect} object.
      * @param draggedItems
-     *            Set of items having been dragged.
+     *            List of items having been dragged.
      */
     public GridDragEndEvent(Grid<T> source, DropEffect dropEffect,
             List<T> draggedItems) {
