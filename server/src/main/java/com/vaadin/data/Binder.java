@@ -1695,7 +1695,9 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Restores the state of the bean from the given values.
+     * Restores the state of the bean from the given values. This method is used
+     * together with {@link #getBeanState(Object, Collection)} to provide a way
+     * to revert changes in case the bean validation fails after save.
      *
      * @param bean
      *            the bean
@@ -1717,7 +1719,9 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Stores the state of the given bean.
+     * Stores the state of the given bean. This method is used together with
+     * {@link #restoreBeanState(Object, Map)} to provide a way to revert changes
+     * in case the bean validation fails after save.
      *
      * @param bean
      *            the bean to store the state of
