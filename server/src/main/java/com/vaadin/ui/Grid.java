@@ -1414,7 +1414,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param cellDescriptionGenerator
          *            the cell description generator to set, or {@code null} to
          *            remove a previously set generator
-         * @param contentMode
+         * @param tooltipContentMode
          *            the content mode for tooltips
          * @return this column
          *
@@ -1422,9 +1422,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setDescriptionGenerator(
                 DescriptionGenerator<T> cellDescriptionGenerator,
-                ContentMode contentMode) {
+                ContentMode tooltipContentMode) {
             this.descriptionGenerator = cellDescriptionGenerator;
-            getState().contentMode = contentMode;
+            getState().tooltipContentMode = tooltipContentMode;
             getGrid().getDataCommunicator().reset();
             return this;
         }
