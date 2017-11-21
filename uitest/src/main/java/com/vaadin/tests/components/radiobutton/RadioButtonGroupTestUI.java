@@ -20,9 +20,9 @@ import java.util.stream.IntStream;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractListingTestUI;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.RadioButtonGroup;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for RadioButtonGroup component
