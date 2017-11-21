@@ -58,7 +58,7 @@ public abstract class AbstractBeanPropertyDefinition<T, V>
         if (descriptor.getReadMethod() == null) {
             throw new IllegalArgumentException(
                     "Bean property has no accessible getter: "
-                            + propertySet.beanType + "."
+                            + propertySet.getBeanType() + "."
                             + descriptor.getName());
         }
     }

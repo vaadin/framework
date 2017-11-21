@@ -328,7 +328,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     private static final ConcurrentMap<InstanceKey, BeanPropertySet<?>> INSTANCES = new ConcurrentHashMap<>();
 
-    final Class<T> beanType;
+    private final Class<T> beanType;
 
     private final Map<String, PropertyDefinition<T, ?>> definitions;
 
@@ -494,6 +494,16 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             }
         }
         return definition;
+    }
+
+    /**
+     * Gets the bean type of this bean property set.
+     * 
+     * @since 8.2
+     * @return the bean type of this bean property set
+     */
+    public Class<T> getBeanType() {
+        return beanType;
     }
 
     private static boolean hasNonObjectReadMethod(
