@@ -38,6 +38,7 @@ import com.vaadin.client.ui.HasErrorIndicatorElement;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ImageIcon;
 import com.vaadin.client.ui.Orphanable;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.ErrorLevel;
@@ -705,6 +706,7 @@ public class Slot extends SimplePanel implements HasErrorIndicatorElement {
                 focusTimer.run();
             }
         }
+        AriaHelper.bindCaption(getWidget(), getCaptionElement());
     }
 
     /**

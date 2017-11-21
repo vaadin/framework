@@ -268,7 +268,6 @@ public abstract class AbstractOrderedLayoutConnector
 
         AriaHelper.handleInputRequired(child.getWidget(), required);
         AriaHelper.handleInputInvalid(child.getWidget(), showError);
-        AriaHelper.bindCaption(child.getWidget(), slot.getCaptionElement());
 
         if (slot.hasCaption()) {
             CaptionPosition pos = slot.getCaptionPosition();
