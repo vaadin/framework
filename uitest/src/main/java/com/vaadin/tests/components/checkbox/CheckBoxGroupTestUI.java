@@ -20,8 +20,8 @@ import java.util.LinkedHashMap;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.tests.components.abstractlisting.AbstractMultiSelectTestUI;
 import com.vaadin.ui.CheckBoxGroup;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.IconGenerator;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 
 /**
  * Test UI for CheckBoxGroup component

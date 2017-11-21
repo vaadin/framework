@@ -109,9 +109,15 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // The response was produced without errors so write it to the client
         response.setContentType(JsonConstants.JSON_CONTENT_TYPE);
 
-        // Ensure that the browser does not cache UIDL responses.
-        // iOS 6 Safari requires this (#9732)
-        response.setHeader("Cache-Control", "no-cache");
+        // Response might contain sensitive information, so prevent caching
+        // no-store to disallow storing even if cache would be revalidated
+        // must-revalidate to not use stored value even if someone asks for it
+        response.setHeader("Cache-Control",
+                "no-cache, no-store, must-revalidate");
+
+        // Also set legacy values in case of old proxies in between
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
 
         byte[] b = json.getBytes(UTF_8);
         response.setContentLength(b.length);

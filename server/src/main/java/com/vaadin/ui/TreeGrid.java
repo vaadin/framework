@@ -27,7 +27,6 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;
@@ -85,8 +84,8 @@ public class TreeGrid<T> extends Grid<T>
      *            the bean type to use, not {@code null}
      */
     public TreeGrid(Class<T> beanType) {
-        this(BeanPropertySet.get(beanType),
-                new HierarchicalDataCommunicator<>());
+        super(beanType, new HierarchicalDataCommunicator<>());
+        registerTreeGridRpc();
     }
 
     /**
@@ -120,30 +119,7 @@ public class TreeGrid<T> extends Grid<T>
     protected TreeGrid(PropertySet<T> propertySet,
             HierarchicalDataCommunicator<T> dataCommunicator) {
         super(propertySet, dataCommunicator);
-
-        registerRpc((NodeCollapseRpc) (rowKey, rowIndex, collapse,
-                userOriginated) -> {
-            T item = getDataCommunicator().getKeyMapper().get(rowKey);
-            if (collapse && getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
-                fireCollapseEvent(
-                        getDataCommunicator().getKeyMapper().get(rowKey),
-                        userOriginated);
-            } else if (!collapse && !getDataCommunicator().isExpanded(item)) {
-                getDataCommunicator().doExpand(item, Optional.of(rowIndex));
-                fireExpandEvent(
-                        getDataCommunicator().getKeyMapper().get(rowKey),
-                        userOriginated);
-            }
-        });
-
-        registerRpc((FocusParentRpc) (rowKey, cellIndex) -> {
-            Integer parentIndex = getDataCommunicator().getParentIndex(
-                    getDataCommunicator().getKeyMapper().get(rowKey));
-            if (parentIndex != null) {
-                getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
-            }
-        });
+        registerTreeGridRpc();
     }
 
     /**
@@ -192,6 +168,32 @@ public class TreeGrid<T> extends Grid<T>
             PropertySet<BEAN> propertySet) {
         return new TreeGrid<BEAN>(propertySet,
                 new HierarchicalDataCommunicator<>());
+    }
+
+    private void registerTreeGridRpc() {
+        registerRpc((NodeCollapseRpc) (rowKey, rowIndex, collapse,
+                userOriginated) -> {
+            T item = getDataCommunicator().getKeyMapper().get(rowKey);
+            if (collapse && getDataCommunicator().isExpanded(item)) {
+                getDataCommunicator().doCollapse(item, Optional.of(rowIndex));
+                fireCollapseEvent(
+                        getDataCommunicator().getKeyMapper().get(rowKey),
+                        userOriginated);
+            } else if (!collapse && !getDataCommunicator().isExpanded(item)) {
+                getDataCommunicator().doExpand(item, Optional.of(rowIndex));
+                fireExpandEvent(
+                        getDataCommunicator().getKeyMapper().get(rowKey),
+                        userOriginated);
+            }
+        });
+
+        registerRpc((FocusParentRpc) (rowKey, cellIndex) -> {
+            Integer parentIndex = getDataCommunicator().getParentIndex(
+                    getDataCommunicator().getKeyMapper().get(rowKey));
+            if (parentIndex != null) {
+                getRpcProxy(FocusRpc.class).focusCell(parentIndex, cellIndex);
+            }
+        });
     }
 
     /**

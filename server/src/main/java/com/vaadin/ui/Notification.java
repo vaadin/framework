@@ -69,14 +69,6 @@ import com.vaadin.shared.ui.notification.NotificationState;
  */
 public class Notification extends AbstractExtension {
 
-    /**
-     * The server RPC.
-     *
-     * @since 8.2
-     */
-    protected NotificationServerRpc rpc = () -> fireEvent(
-            new CloseEvent(Notification.this));
-
     public enum Type {
         HUMANIZED_MESSAGE("humanized"), WARNING_MESSAGE(
                 "warning"), ERROR_MESSAGE("error"), TRAY_NOTIFICATION("tray"),
@@ -127,6 +119,14 @@ public class Notification extends AbstractExtension {
 
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
+
+    /**
+     * The server RPC.
+     *
+     * @since 8.2
+     */
+    private NotificationServerRpc rpc = () -> fireEvent(
+            new CloseEvent(Notification.this));
 
     /**
      * Creates a "humanized" notification message.

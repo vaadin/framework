@@ -26,7 +26,6 @@ import com.vaadin.server.BootstrapResponse;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 
 public class BootstrapModifyUI extends AbstractReindeerTestUI {

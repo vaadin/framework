@@ -15,10 +15,11 @@
  */
 package com.vaadin.tests.widgetset.client.helloworldfeature;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.extensions.HelloWorldExtension;
@@ -45,9 +46,13 @@ public class HelloWorldExtensionConnector extends AbstractExtensionConnector {
         String msg = getState().getGreeting() + " from "
                 + Util.getConnectorString(this) + " attached to "
                 + Util.getConnectorString(getParent());
-        VConsole.log(msg);
+        getLogger().info(msg);
 
         String response = Window.prompt(msg, "");
         getRpcProxy(HelloWorldRpc.class).onMessageSent(response);
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(HelloWorldExtensionConnector.class.getName());
     }
 }

@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.aria.client.Roles;
@@ -71,7 +72,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.DeferredWorker;
 import com.vaadin.client.Focusable;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.client.ui.aria.HandlesAriaCaption;
@@ -2197,7 +2197,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
 
     private void debug(String string) {
         if (enableDebug) {
-            VConsole.error(string);
+            getLogger().severe(string);
         }
     }
 
@@ -2916,5 +2916,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         if (selectedOptionKey == null) {
             setText(emptySelectionCaption);
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(VComboBox.class.getName());
     }
 }

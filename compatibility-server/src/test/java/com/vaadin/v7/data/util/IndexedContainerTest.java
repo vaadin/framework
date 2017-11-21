@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.v7.data.Container.Indexed.ItemAddEvent;

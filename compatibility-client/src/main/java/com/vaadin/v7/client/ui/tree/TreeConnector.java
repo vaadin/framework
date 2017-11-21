@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
@@ -28,7 +30,6 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.MouseEventDetails;
@@ -211,7 +212,8 @@ public class TreeConnector extends AbstractLegacyComponentConnector
                 levelProperty = Integer.valueOf(levelPropertyString);
             } catch (NumberFormatException e) {
                 levelProperty = 1;
-                VConsole.error(e);
+                getLogger().log(Level.SEVERE,
+                        e.getMessage() == null ? "" : e.getMessage(), e);
             }
 
             renderChildNodes(rootNode, (Iterator) uidl.iterator(),
@@ -391,5 +393,9 @@ public class TreeConnector extends AbstractLegacyComponentConnector
         getRpcProxy(TreeServerRpc.class).contextClick(key, details);
 
         WidgetUtil.clearTextSelection();
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(TreeConnector.class.getName());
     }
 }

@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
 
+import com.vaadin.testbench.elements.LabelElement;
 import com.vaadin.testbench.elements.MenuBarElement;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
@@ -85,11 +86,38 @@ public class MenuBarNavigationKeyboardTest extends MultiBrowserTest {
                 isElementPresent(By.className("v-menubar-popup")));
     }
 
+    @Test
+    public void testNavigatingToDisabled() throws InterruptedException {
+        openTestURL();
+
+        openMenu("File");
+
+        getMenuBar().sendKeys(Keys.ARROW_RIGHT, Keys.ARROW_RIGHT,
+                Keys.ARROW_RIGHT, Keys.ARROW_RIGHT, Keys.ENTER);
+
+        assertTrue("Disabled menu not selected",
+                getFocusedElement().getText().contains("Disabled"));
+
+        assertFalse("Disabled menu was triggered",
+                logContainsText("MenuItem Disabled selected"));
+
+        getMenuBar().sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
+
+        assertFalse("Disabled submenu was opened",
+                logContainsText("MenuItem Disabled/Can't reach selected"));
+
+        assertTrue("Disabled menu not selected",
+                getFocusedElement().getText().contains("Disabled"));
+    }
+
     public MenuBarElement getMenuBar() {
         return $(MenuBarElement.class).first();
     }
 
     public void openMenu(String name) {
+        // move hover focus outside the MenuBar to keep the behaviour stable
+        new Actions(driver).moveToElement($(LabelElement.class).first(), 10, 10)
+                .perform();
         getMenuBar().clickItem(name);
     }
 }

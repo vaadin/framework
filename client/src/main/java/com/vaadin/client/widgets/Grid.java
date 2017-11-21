@@ -4840,7 +4840,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *            The header aria-label for this column
          * @return the column itself
          *
-         * @since
+         * @since 8.2
          */
         public Column<C, T> setAssistiveCaption(String caption) {
             if (!Objects.equals(this.assistiveCaption, caption)) {
@@ -4857,7 +4857,7 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          *
          * @return the header aria-label string
          *
-         * @since
+         * @since 8.2
          */
         public String getAssistiveCaption() {
             return assistiveCaption;

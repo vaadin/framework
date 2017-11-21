@@ -20,6 +20,6 @@ public enum Position {
     /**
      * Position that is only accessible for assistive devices, invisible for
      * visual users.
-     **/
+     */
     ASSISTIVE;
 }

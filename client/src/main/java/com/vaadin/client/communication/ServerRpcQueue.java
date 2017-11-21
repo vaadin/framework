@@ -21,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.metadata.Method;
@@ -43,6 +42,9 @@ import elemental.json.JsonValue;
  * @author Vaadin Ltd
  */
 public class ServerRpcQueue {
+    private static final Runnable NO_OP = () -> {
+        // NOOP
+    };
 
     /**
      * The pending method invocations that will be send to the server by
@@ -60,7 +62,7 @@ public class ServerRpcQueue {
     protected ApplicationConnection connection;
     private boolean flushPending = false;
 
-    private boolean flushScheduled = false;
+    private Runnable doFlushStrategy = NO_OP;
 
     public ServerRpcQueue() {
 
@@ -147,6 +149,7 @@ public class ServerRpcQueue {
         // Keep tag string short
         lastInvocationTag = 0;
         flushPending = false;
+        doFlushStrategy = NO_OP;
     }
 
     /**
@@ -182,23 +185,27 @@ public class ServerRpcQueue {
      * Triggers a send of server RPC and legacy variable changes to the server.
      */
     public void flush() {
-        if (flushScheduled || isEmpty()) {
+        if (isFlushScheduled() || isEmpty()) {
             return;
         }
 
         flushPending = true;
-        flushScheduled = true;
-        Scheduler.get().scheduleFinally(scheduledFlushCommand);
+        doFlushStrategy = this::doFlush;
+        Scheduler.get().scheduleFinally(() -> doFlushStrategy.run());
     }
 
-    private final ScheduledCommand scheduledFlushCommand = () -> {
-        flushScheduled = false;
+    private void doFlush() {
+        doFlushStrategy = NO_OP;
         if (!isFlushPending()) {
             // Somebody else cleared the queue before we had the chance
             return;
         }
         connection.getMessageSender().sendInvocationsToServer();
-    };
+    }
+
+    private boolean isFlushScheduled() {
+        return NO_OP != doFlushStrategy;
+    }
 
     /**
      * Checks if a flush operation is pending.
