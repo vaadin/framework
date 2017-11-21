@@ -97,7 +97,6 @@ import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
