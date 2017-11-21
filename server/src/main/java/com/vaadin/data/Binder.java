@@ -1078,7 +1078,7 @@ public class Binder<BEAN> implements Serializable {
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
             // Inform binder of changes; if setBean: writeIfValid
-            getBinder().handleFieldValueChange(this);
+            getBinder().handleFieldValueChange(this, event);
             getBinder().fireValueChangeEvent(event);
         }
 
@@ -1246,9 +1246,12 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param binding
      *            the binding whose value has been changed
+     * @param event
+     *            the value change event
      * @since 8.2
      */
-    protected void handleFieldValueChange(Binding<BEAN, ?> binding) {
+    protected void handleFieldValueChange(Binding<BEAN, ?> binding,
+            ValueChangeEvent<?> event) {
         changedBindings.add(binding);
         if (getBean() != null) {
             doWriteIfValid(getBean(), changedBindings);
@@ -1842,8 +1845,7 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Validates the values of all bound fields and returns the validation
-     * status. This method can skip firing the event, based on the given
-     * {@code boolean}.
+     * status. This method firing the event, based on the given {@code boolean}.
      *
      * @param fireEvent
      *            {@code true} to fire validation status events; {@code false}
