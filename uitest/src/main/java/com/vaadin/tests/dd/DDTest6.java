@@ -40,8 +40,6 @@ import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.event.DataBoundTransferable;

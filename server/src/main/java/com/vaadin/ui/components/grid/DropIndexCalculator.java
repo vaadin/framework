@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @author Vaadin Ltd
  * @since 8.2
- * @see GridDragger
+ * @see GridRowDragger
  * @param <T>
  *            the bean type
  */
@@ -31,11 +31,14 @@ import java.io.Serializable;
 public interface DropIndexCalculator<T> extends Serializable {
 
     /**
-     * Calculator for always dropping items to the end of the target grid,
-     * regardless of drop position.
+     * Returns a calculator for always dropping items to the end of the target
+     * grid, regardless of drop position.
+     *
+     * @return the created drop index calculator
      */
-    @SuppressWarnings("rawtypes")
-    static DropIndexCalculator ALWAYS_DROP_TO_END = (event -> Integer.MAX_VALUE);
+    static <T> DropIndexCalculator<T> alwaysDropToEnd() {
+        return (GridDropEvent<T> event) -> Integer.MAX_VALUE;
+    }
 
     /**
      * Called when Items are dropped onto a target grid.

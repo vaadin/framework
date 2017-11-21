@@ -35,12 +35,13 @@ import com.vaadin.ui.dnd.DropTargetExtension;
  *            Type of the Grid bean.
  * @author Vaadin Ltd
  * @since 8.1
+ * @see GridRowDragger
  */
 public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
 
     private Registration sortListenerRegistration;
     private DropMode cachedDropMode;
-    private boolean dropAllowedOnSortedGridRows = true;
+    private boolean dropAllowedOnRowsWhenSorted = true;
 
     /**
      * Extends a Grid and makes it's rows drop targets for HTML5 drag and drop.
@@ -87,18 +88,18 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      * in this case.
      * <p>
      * <em>NOTE: {@link DropMode#ON_GRID} is used automatically when the grid
-     * has been sorted and {@link #setDropAllowedOnSortedGridRows(boolean)} is
+     * has been sorted and {@link #setDropAllowedOnRowsWhenSorted(boolean)} is
      * {@code false} - since the drop location would not necessarily match the
      * correct row because of the sorting. During the sorting, any calls to this
      * method don't have any effect until the sorting has been removed, or
-     * {@link #setDropAllowedOnSortedGridRows(boolean)} is set back to
+     * {@link #setDropAllowedOnRowsWhenSorted(boolean)} is set back to
      * {@code true}.</em>
      *
      * @param dropMode
      *            Drop mode that describes the allowed drop locations within the
      *            Grid's row.
      * @see GridDropEvent#getDropLocation()
-     * @see #setDropAllowedOnSortedGridRows(boolean)
+     * @see #setDropAllowedOnRowsWhenSorted(boolean)
      */
     public void setDropMode(DropMode dropMode) {
         if (dropMode == null) {
@@ -146,10 +147,10 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      *            drops on sorted grid rows
      * @since 8.2
      */
-    public void setDropAllowedOnSortedGridRows(
+    public void setDropAllowedOnRowsWhenSorted(
             boolean dropAllowedOnSortedGridRows) {
-        if (this.dropAllowedOnSortedGridRows != dropAllowedOnSortedGridRows) {
-            this.dropAllowedOnSortedGridRows = dropAllowedOnSortedGridRows;
+        if (this.dropAllowedOnRowsWhenSorted != dropAllowedOnSortedGridRows) {
+            this.dropAllowedOnRowsWhenSorted = dropAllowedOnSortedGridRows;
 
             if (!dropAllowedOnSortedGridRows) {
 
@@ -193,8 +194,8 @@ public class GridDropTarget<T> extends DropTargetExtension<Grid<T>> {
      *         the grid
      * @since 8.2
      */
-    public boolean isDropAllowedOnSortedGridRows() {
-        return dropAllowedOnSortedGridRows;
+    public boolean isDropAllowedOnRowsWhenSorted() {
+        return dropAllowedOnRowsWhenSorted;
     }
 
     /**

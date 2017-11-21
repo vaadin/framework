@@ -121,12 +121,10 @@
         <li>Error indicators are now <tt>&lt;span class="v-errorindicator"&gt;&lt;/span&gt;</tt> elements.</li>
         <li><tt>Embedded</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
         <li><tt>Notification</tt> method <tt>show</tt> returns <tt>Notification</tt>, instead of <tt>void</tt>.</li>
-        <li><tt>SharedState</tt> field <tt>registeredEventListeners</tt> is a <tt>Map</tt> instead of <tt>Set</tt>.</li>
         <li>The client side <tt>SelectionModel</tt> interface has a new method <tt>isMultiSelectionAllowed</tt>.</li>
         <li><tt>AbstractDateField</tt> is not a <tt>LegacyComponent</tt> anymore.</li>
         <li><tt>AbstractDateField</tt>.<tt>formatDate</tt> is now abstract.</li>
         <li><tt>VAbstractTextualDate</tt>.<tt>updateDateVariables()</tt> is now <tt>updateBufferedResolutions()</tt> and <tt>updateAndSendBufferedValues()</tt>.</li>
-        <li><tt></tt></li>
         <li>For <tt>GridDragStartEvent</tt> and <tt>GridDragEndEvent</tt> classes, the method <tt>getDraggedItems</tt> now returns a <tt>List</tt> instead of a <tt>Set</tt>, with the first-to-last item ordering from client side.</li>
 
         <h2>For incompatible or behavior-altering changes in 8.1, please see <a href="https://vaadin.com/download/release/8.1/8.1.0/release-notes.html#incompatible">8.1 release notes</a></h2>
@@ -134,6 +132,9 @@
                 
         <h3 id="knownissues">Known Issues and Limitations</h3>
         <ul>
+            <li><tt>@PushStateNavigation</tt> can cause browser to load resources from wrong URLs
+                (<a href="https://github.com/vaadin/framework/issues/10329">#10329</a>)
+            </li>
             <li>Drag'n'drop in a Table doesn't work on touch devices running
                 Internet Explorer (Windows Phone, Surface)
                 (<a href="https://github.com/vaadin/framework/issues/5170">#5170</a>)

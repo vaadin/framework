@@ -27,7 +27,6 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;

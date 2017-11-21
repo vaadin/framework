@@ -26,12 +26,21 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.Column;
 
 /**
- * Allows dragging rows for reordering within a Grid and between separate Grids.
+ * Allows dragging rows for reordering within a Grid and between two separate
+ * Grids when the item type is the same.
  * <p>
  * When dragging a selected row, all the visible selected rows are dragged. Note
- * that ONLY currently visible rows are taken into account.
+ * that ONLY currently visible rows are taken into account. The drop mode for
+ * the target grid is by default {@link DropMode#BETWEEN}.
+ * <p>
+ * To customize the settings for either the source or the target grid, use
+ * {@link #getGridDragSource()} and {@link #getGridDropTarget()}.The drop target
+ * grid has been set to not allow drops for a target row when the grid has been
+ * sorted, since the visual drop target location would not match where the item
+ * would actually be dropped into.
  * <p>
  * <em>NOTE: this helper works only with {@link ListDataProvider} on both grids.
  * If you have another data provider, you should customize data provider
@@ -49,7 +58,7 @@ import com.vaadin.ui.Grid;
  * @author Vaadin Ltd
  * @since 8.2
  */
-public class GridDragger<T> implements Serializable {
+public class GridRowDragger<T> implements Serializable {
 
     private final GridDropTarget<T> gridDropTarget;
     private final GridDragSource<T> gridDragSource;
@@ -68,11 +77,25 @@ public class GridDragger<T> implements Serializable {
      * Enables DnD reordering for the rows in the given grid.
      * <p>
      * {@link DropMode#BETWEEN} is used.
+     * <p>
+     * <em>NOTE:</em> this only works when the grid has a
+     * {@link ListDataProvider}. Use the custom handlers
+     * {@link #setSourceDataProviderUpdater(SourceDataProviderUpdater)} and
+     * {@link #setTargetDataProviderUpdater(TargetDataProviderUpdater)} for
+     * other data providers.
+     * <p>
+     * <em>NOTE:</em> When allowing the user to DnD reorder a grid's rows, you
+     * should not allow the user to sort the grid since when the grid is sorted,
+     * as the reordering doens't make any sense since the drop target cannot be
+     * shown for the correct place due to the sorting. Sorting columns is
+     * enabled by default for in-memory data provider grids. Sorting can be
+     * disabled for columns with {@link Grid#getColumns()} and
+     * {@link Column#setSortable(boolean)}.
      *
      * @param grid
      *            Grid to be extended.
      */
-    public GridDragger(Grid<T> grid) {
+    public GridRowDragger(Grid<T> grid) {
         this(grid, DropMode.BETWEEN);
     }
 
@@ -80,18 +103,26 @@ public class GridDragger<T> implements Serializable {
      * Enables DnD reordering the rows in the given grid with the given drop
      * mode.
      * <p>
-     * <em>NOTE: this only works when the grid has a
-     * {@link ListDataProvider}.</em> Use the custom handlers
+     * <em>NOTE:</em> this only works when the grid has a
+     * {@link ListDataProvider}. Use the custom handlers
      * {@link #setSourceDataProviderUpdater(SourceDataProviderUpdater)} and
      * {@link #setTargetDataProviderUpdater(TargetDataProviderUpdater)} for
      * other data providers.
+     * <p>
+     * <em>NOTE:</em> When allowing the user to DnD reorder a grid's rows, you
+     * should not allow the user to sort the grid since when the grid is sorted,
+     * as the reordering doens't make any sense since the drop target cannot be
+     * shown for the correct place due to the sorting. Sorting columns is
+     * enabled by default for in-memory data provider grids. Sorting can be
+     * disabled for columns with {@link Grid#getColumns()} and
+     * {@link Column#setSortable(boolean)}.
      *
      * @param grid
      *            the grid to enable row DnD reordering on
      * @param dropMode
      *            DropMode to be used.
      */
-    public GridDragger(Grid<T> grid, DropMode dropMode) {
+    public GridRowDragger(Grid<T> grid, DropMode dropMode) {
         this(grid, grid, dropMode);
     }
 
@@ -111,7 +142,7 @@ public class GridDragger<T> implements Serializable {
      * @param target
      *            the target grid dropped to.
      */
-    public GridDragger(Grid<T> source, Grid<T> target) {
+    public GridRowDragger(Grid<T> source, Grid<T> target) {
         this(source, target, DropMode.BETWEEN);
     }
 
@@ -130,7 +161,7 @@ public class GridDragger<T> implements Serializable {
      * @param sourceDataProviderUpdater
      *            handler for updating source grid data provider
      */
-    public GridDragger(Grid<T> source, Grid<T> target,
+    public GridRowDragger(Grid<T> source, Grid<T> target,
             TargetDataProviderUpdater<T> targetDataProviderUpdater,
             SourceDataProviderUpdater<T> sourceDataProviderUpdater) {
         this(source, target, DropMode.BETWEEN);
@@ -155,10 +186,11 @@ public class GridDragger<T> implements Serializable {
      * @param dropMode
      *            the drop mode to use
      */
-    public GridDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
+    public GridRowDragger(Grid<T> source, Grid<T> target, DropMode dropMode) {
         gridDragSource = new GridDragSource<>(source);
 
         gridDropTarget = new GridDropTarget<>(target, dropMode);
+        gridDropTarget.setDropAllowedOnRowsWhenSorted(false);
 
         gridDragSource.addGridDragStartListener(event -> {
             draggedItems = event.getDraggedItems();
@@ -277,7 +309,7 @@ public class GridDragger<T> implements Serializable {
      * Returns the currently dragged items captured from the source grid no drag
      * start event, or {@code null} if no drag active.
      *
-     * @return the currenytly dragged items or {@code null}
+     * @return the currently dragged items or {@code null}
      */
     protected List<T> getDraggedItems() {
         return draggedItems;
@@ -374,6 +406,10 @@ public class GridDragger<T> implements Serializable {
         // instead of using setItems or creating a new data provider,
         // refresh the existing one to keep filters etc. in place
         listDataProvider.refreshAll();
+
+        // if dropped to the end of the grid, the grid should scroll there so
+        // that the dropped row is visible, but that is just recommended in
+        // documentation and left for the users to take into use
     }
 
     private int calculateDropIndex(GridDropEvent<T> event) {
@@ -457,7 +493,7 @@ public class GridDragger<T> implements Serializable {
                 new StringBuilder().append(sourceGrid ? "Source " : "Target ")
                         .append("grid does not have a ListDataProvider, cannot automatically ")
                         .append(sourceGrid ? "remove " : "add ")
-                        .append("items. Use GridDragger.set")
+                        .append("items. Use GridRowDragger.set")
                         .append(sourceGrid ? "Source" : "Target")
                         .append("DataProviderUpdater(...) ")
                         .append(sourceGrid ? ""
@@ -472,7 +508,7 @@ public class GridDragger<T> implements Serializable {
                 .append(sourceGrid ? "Source " : "Target ")
                 .append("grid's ListDataProvider is not backed by a List-collection, cannot ")
                 .append(sourceGrid ? "remove " : "add ")
-                .append("items. Use a ListDataProvider backed by a List, or use GridDragger.set")
+                .append("items. Use a ListDataProvider backed by a List, or use GridRowDragger.set")
                 .append(sourceGrid ? "Source" : "Target")
                 .append("DataProviderUpdater(...) ")
                 .append(sourceGrid ? "" : "and setDropIndexCalculator(...) ")

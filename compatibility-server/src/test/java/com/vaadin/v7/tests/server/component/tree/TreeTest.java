@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

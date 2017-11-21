@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
@@ -490,8 +490,8 @@ public abstract class AbstractConnector
      */
     @Override
     public boolean hasEventListener(String eventIdentifier) {
-        Map<String, Integer> reg = getState().registeredEventListeners;
-        return reg != null && reg.containsKey(eventIdentifier);
+        Set<String> reg = getState().registeredEventListeners;
+        return reg != null && reg.contains(eventIdentifier);
     }
 
     /**

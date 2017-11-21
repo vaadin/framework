@@ -2,8 +2,6 @@ package com.vaadin.tests.server.component.treegrid;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.junit.Assert;
-
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.HierarchicalQuery;
 import com.vaadin.data.provider.TreeDataProvider;
