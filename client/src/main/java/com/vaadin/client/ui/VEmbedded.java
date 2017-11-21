@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
@@ -29,7 +30,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.shared.ui.embedded.EmbeddedState;
 
@@ -249,9 +249,12 @@ public class VEmbedded extends HTML {
     public void onBrowserEvent(Event event) {
         super.onBrowserEvent(event);
         if (DOM.eventGetType(event) == Event.ONLOAD) {
-            VConsole.log("Embeddable onload");
+            getLogger().info("Embeddable onload");
             Util.notifyParentOfSizeChange(this, true);
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VEmbedded.class.getName());
+    }
 }

@@ -15,20 +15,23 @@
  */
 package com.vaadin.tests.components.window;
 
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.components.AbstractReindeerTestUI;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class BackspaceKeyWithModalOpened extends AbstractReindeerTestUI {
+@Theme("valo")
+@Widgetset("com.vaadin.DefaultWidgetSet")
+public class BackspaceKeyWithModalOpened extends AbstractTestUI {
 
     private static final String DEFAULT_VIEW_ID = "";
     private static final String SECOND_VIEW_ID = "second";
@@ -44,13 +47,8 @@ public class BackspaceKeyWithModalOpened extends AbstractReindeerTestUI {
 
         @Override
         public void enter(ViewChangeEvent event) {
-            Button btnNext = new Button("Next", new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    navigator.navigateTo(SECOND_VIEW_ID);
-                }
-            });
+            Button btnNext = new Button("Next",
+                    clickEvent -> navigator.navigateTo(SECOND_VIEW_ID));
 
             btnNext.setId(BTN_NEXT_ID);
             addComponent(btnNext);
@@ -62,29 +60,25 @@ public class BackspaceKeyWithModalOpened extends AbstractReindeerTestUI {
         @Override
         public void enter(ViewChangeEvent event) {
             Button btnOpenModal = new Button("Open modal",
-                    new Button.ClickListener() {
+                    clickEvent -> {
+                        Window window = new Window("Caption");
+                        window.setId(MODAL_ID);
 
-                        @Override
-                        public void buttonClick(ClickEvent event) {
-                            Window window = new Window("Caption");
-                            window.setId(MODAL_ID);
+                        VerticalLayout layout = new VerticalLayout();
+                        layout.setWidth("300px");
+                        layout.setHeight("300px");
 
-                            VerticalLayout layout = new VerticalLayout();
-                            layout.setWidth("300px");
-                            layout.setHeight("300px");
+                        TextField textField = new TextField();
+                        textField.setId(TEXT_FIELD_IN_MODAL);
 
-                            TextField textField = new TextField();
-                            textField.setId(TEXT_FIELD_IN_MODAL);
+                        layout.addComponent(textField);
+                        window.setContent(layout);
 
-                            layout.addComponent(textField);
-                            window.setContent(layout);
+                        addWindow(window);
 
-                            addWindow(window);
+                        window.setModal(true);
 
-                            window.setModal(true);
-
-                            setFocusedComponent(window);
-                        }
+                        setFocusedComponent(window);
                     });
 
             btnOpenModal.setId(BTN_OPEN_MODAL_ID);

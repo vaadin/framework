@@ -2,8 +2,6 @@ package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.v7.data.util.MethodProperty;
 import com.vaadin.v7.ui.Table;
@@ -45,13 +43,7 @@ public class TablePageLengthUpdate extends TestBase {
         addComponent(pageLengthLabel);
 
         Button updateButton = new Button("Update pageLength",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        updatePageLengthLabel();
-                    }
-                });
+                event -> updatePageLengthLabel());
         addComponent(updateButton);
 
         TextField tableHeight = new TextField("Table height",

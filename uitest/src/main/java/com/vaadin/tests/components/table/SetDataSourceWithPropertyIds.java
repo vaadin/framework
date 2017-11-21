@@ -43,12 +43,7 @@ public class SetDataSourceWithPropertyIds extends AbstractReindeerTestUI {
 
         Button button = new Button("Toggle editability");
         button.setId("button");
-        button.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                refreshTable();
-            }
-        });
+        button.addClickListener(event -> refreshTable());
 
         label.setSizeUndefined();
         label.setId("label");

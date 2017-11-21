@@ -21,8 +21,6 @@ import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.tests.widgetset.server.RoundTripTester;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.v7.ui.TextField;
 
 @Widgetset(TestingWidgetSet.NAME)
@@ -47,15 +45,9 @@ public class RoundTripTest extends AbstractReindeerTestUI {
         }
 
         Button start = new Button("Start test");
-        start.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                roundTripTester.start(
-                        (Integer) testDuration.getConvertedValue(),
-                        (Integer) payloadSize.getConvertedValue());
-            }
-        });
+        start.addClickListener(event -> roundTripTester.start(
+                (Integer) testDuration.getConvertedValue(),
+                (Integer) payloadSize.getConvertedValue()));
         addComponent(roundTripTester);
         addComponent(start);
 

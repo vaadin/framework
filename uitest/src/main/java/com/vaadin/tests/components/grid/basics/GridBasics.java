@@ -23,11 +23,13 @@ import com.vaadin.event.selection.SingleSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
@@ -256,8 +258,7 @@ public class GridBasics extends AbstractTestUIWithLog {
     private void onSingleSelect(SingleSelectionEvent<DataObject> event) {
         log("SingleSelectionEvent: Selected: "
                 + (event.getSelectedItem().isPresent()
-                        ? event.getSelectedItem().get().toString()
-                        : "none"));
+                        ? event.getSelectedItem().get().toString() : "none"));
     }
 
     private void onMultiSelect(MultiSelectionEvent<DataObject> event) {
@@ -268,8 +269,7 @@ public class GridBasics extends AbstractTestUIWithLog {
         String addedRow = firstAdded.isPresent() ? firstAdded.get().toString()
                 : "none";
         String removedRow = firstRemoved.isPresent()
-                ? firstRemoved.get().toString()
-                : "none";
+                ? firstRemoved.get().toString() : "none";
         log("SelectionEvent: Added " + addedRow + ", Removed " + removedRow);
     }
 
@@ -363,11 +363,9 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         columnsMenu.addItem("Clear sort", item -> grid.clearSortOrder());
 
-        columnsMenu
-                .addItem("Simple resize mode",
-                        item -> grid.setColumnResizeMode(
-                                item.isChecked() ? ColumnResizeMode.SIMPLE
-                                        : ColumnResizeMode.ANIMATED))
+        columnsMenu.addItem("Simple resize mode",
+                item -> grid.setColumnResizeMode(item.isChecked()
+                        ? ColumnResizeMode.SIMPLE : ColumnResizeMode.ANIMATED))
                 .setCheckable(true);
     }
 
@@ -405,18 +403,10 @@ public class GridBasics extends AbstractTestUIWithLog {
         }
         createRowStyleMenu(stateMenu.addItem("Row style generator", null));
         createCellStyleMenu(stateMenu.addItem("Cell style generator", null));
-        stateMenu.addItem("Row description generator",
-                item -> grid.setDescriptionGenerator(item.isChecked()
-                        ? t -> "Row tooltip for row " + t.getRowNumber()
-                        : null))
-                .setCheckable(true);
-        stateMenu.addItem("Cell description generator",
-                item -> grid.getColumns().stream().findFirst().ifPresent(
-                        c -> c.setDescriptionGenerator(item.isChecked()
-                                ? t -> "Cell tooltip for row "
-                                        + t.getRowNumber() + ", Column 0"
-                                : null)))
-                .setCheckable(true);
+        createRowDescriptionMenu(
+                stateMenu.addItem("Row description generator", null));
+        createCellDescriptionMenu(
+                stateMenu.addItem("Cell description generator", null));
         stateMenu.addItem("Item click listener", new Command() {
 
             private Registration registration = null;
@@ -430,8 +420,7 @@ public class GridBasics extends AbstractTestUIWithLog {
                                 !grid.isDetailsVisible(event.getItem()));
                         log("Item click on row "
                                 + event.getItem().getRowNumber() + ", Column '"
-                                + event.getColumn().getCaption()
-                                + "'");
+                                + event.getColumn().getCaption() + "'");
                     });
                     log("Registered an item click listener.");
                 }
@@ -479,6 +468,43 @@ public class GridBasics extends AbstractTestUIWithLog {
         createSelectionMenu(stateMenu);
 
         stateMenu.addItem("Set focus", item -> grid.focus());
+    }
+
+    private void createRowDescriptionMenu(MenuItem rowDescriptionMenu) {
+        DescriptionGenerator<DataObject> description = t -> "Row tooltip for row <b>"
+                + t.getRowNumber() + "</b>";
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(rowDescriptionMenu, "Remove descriptions", null,
+                g -> grid.setDescriptionGenerator(null));
+        addGridMethodMenu(rowDescriptionMenu, "Preformatted", description,
+                generator -> grid.setDescriptionGenerator(generator));
+        addGridMethodMenu(rowDescriptionMenu, "HTML", description,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(rowDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> grid.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+    }
+
+    private void createCellDescriptionMenu(MenuItem cellDescriptionMenu) {
+        Column<DataObject, ?> column = grid.getColumns().get(0);
+        DescriptionGenerator<DataObject> description = t -> "Cell tooltip for row <b>"
+                + t.getRowNumber() + "</b>, " + column.getCaption();
+        DescriptionGenerator<DataObject> halfEmpty = t -> t.getRowNumber()
+                % 2 == 0 ? description.apply(t) : null;
+
+        addGridMethodMenu(cellDescriptionMenu, "Remove descriptions", null,
+                g -> column.setDescriptionGenerator(null));
+        addGridMethodMenu(cellDescriptionMenu, "Preformatted", description,
+                generator -> column.setDescriptionGenerator(generator));
+        addGridMethodMenu(cellDescriptionMenu, "HTML", description,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
+        addGridMethodMenu(cellDescriptionMenu, "Even rows HTML", halfEmpty,
+                generator -> column.setDescriptionGenerator(generator,
+                        ContentMode.HTML));
     }
 
     private void createRowStyleMenu(MenuItem rowStyleMenu) {

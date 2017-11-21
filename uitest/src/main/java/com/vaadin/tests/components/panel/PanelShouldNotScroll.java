@@ -3,8 +3,6 @@ package com.vaadin.tests.components.panel;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
@@ -23,13 +21,10 @@ public class PanelShouldNotScroll extends TestBase {
         p.setHeight("600px");
         pl.addComponent(foo());
         addMore = new Button("Add");
-        addMore.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                pl.removeComponent(addMore);
-                pl.addComponent(foo());
-                pl.addComponent(addMore);
-            }
+        addMore.addClickListener(event -> {
+            pl.removeComponent(addMore);
+            pl.addComponent(foo());
+            pl.addComponent(addMore);
         });
         pl.addComponent(addMore);
         addComponent(p);

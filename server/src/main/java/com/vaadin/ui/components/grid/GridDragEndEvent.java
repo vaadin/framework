@@ -16,7 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.ui.Grid;
@@ -33,7 +33,7 @@ import com.vaadin.ui.dnd.event.DragEndEvent;
  */
 public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
 
-    private final Set<T> draggedItems;
+    private final List<T> draggedItems;
 
     /**
      * Creates a drag end event.
@@ -43,10 +43,10 @@ public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
      * @param dropEffect
      *            Drop effect from {@code DataTransfer.dropEffect} object.
      * @param draggedItems
-     *            Set of items having been dragged.
+     *            List of items having been dragged.
      */
     public GridDragEndEvent(Grid<T> source, DropEffect dropEffect,
-            Set<T> draggedItems) {
+            List<T> draggedItems) {
         super(source, dropEffect);
 
         this.draggedItems = draggedItems;
@@ -57,7 +57,7 @@ public class GridDragEndEvent<T> extends DragEndEvent<Grid<T>> {
      *
      * @return an unmodifiable set of items that were being dragged.
      */
-    public Set<T> getDraggedItems() {
-        return Collections.unmodifiableSet(draggedItems);
+    public List<T> getDraggedItems() {
+        return Collections.unmodifiableList(draggedItems);
     }
 }

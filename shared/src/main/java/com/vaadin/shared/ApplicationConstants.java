@@ -211,7 +211,7 @@ public class ApplicationConstants implements Serializable {
      * identifiers from UI. This can be set by custom UI providers.
      *
      * @since 8.2
-     **/
+     */
     public static final String UI_ROOT_PATH = "com.vaadin.server.UI_ROOT_PATH";
 
     /**

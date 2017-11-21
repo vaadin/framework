@@ -11,10 +11,6 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.Table.ColumnReorderEvent;
-import com.vaadin.v7.ui.Table.ColumnReorderListener;
-import com.vaadin.v7.ui.Table.HeaderClickEvent;
-import com.vaadin.v7.ui.Table.HeaderClickListener;
 
 @SuppressWarnings("serial")
 public class TableSortingStopsWorkingOnChrome extends AbstractTestUI {
@@ -63,21 +59,11 @@ public class TableSortingStopsWorkingOnChrome extends AbstractTestUI {
             }
         });
 
-        table.addColumnReorderListener(new ColumnReorderListener() {
+        table.addColumnReorderListener(
+                event -> System.out.println("columnReorder"));
 
-            @Override
-            public void columnReorder(ColumnReorderEvent event) {
-                System.out.println("columnReorder");
-            }
-        });
-
-        table.addHeaderClickListener(new HeaderClickListener() {
-
-            @Override
-            public void headerClick(HeaderClickEvent event) {
-                System.out.println("Header was clicked");
-            }
-        });
+        table.addHeaderClickListener(
+                event -> System.out.println("Header was clicked"));
 
         layout.addComponent(table);
 

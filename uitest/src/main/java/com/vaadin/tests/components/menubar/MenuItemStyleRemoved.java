@@ -4,7 +4,6 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.MenuBar;
 
@@ -24,21 +23,16 @@ public class MenuItemStyleRemoved extends AbstractReindeerTestUI {
         second.addItem("second sub-item 2", null, null);
 
         addComponent(menuBar);
-        addButton("Add styles", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                String method = "getElementsByClassName('" + MENUITEM_CLASS
-                        + "')";
-                WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
-                if (webBrowser.isIE()
-                        && webBrowser.getBrowserMajorVersion() == 8) {
-                    method = "querySelectorAll('." + MENUITEM_CLASS + "')";
-                }
-                JavaScript.getCurrent()
-                        .execute("var x=document." + method + ";"
-                                + " var i; for (i=0; i < x.length; i++)"
-                                + " {x[i].className += ' custom-menu-item'};");
+        addButton("Add styles", event -> {
+            String method = "getElementsByClassName('" + MENUITEM_CLASS + "')";
+            WebBrowser webBrowser = Page.getCurrent().getWebBrowser();
+            if (webBrowser.isIE() && webBrowser.getBrowserMajorVersion() == 8) {
+                method = "querySelectorAll('." + MENUITEM_CLASS + "')";
             }
+            JavaScript.getCurrent()
+                    .execute("var x=document." + method + ";"
+                            + " var i; for (i=0; i < x.length; i++)"
+                            + " {x[i].className += ' custom-menu-item'};");
         });
     }
 

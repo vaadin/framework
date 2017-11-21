@@ -23,8 +23,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
@@ -44,13 +42,7 @@ public class LegacyComponentThemeChange extends AbstractTestUIWithLog {
         for (final String theme : new String[] { "reindeer", "runo" }) {
             Button b = new Button(theme);
             b.setId(theme + "");
-            b.addClickListener(new ClickListener() {
-
-                @Override
-                public void buttonClick(ClickEvent event) {
-                    getUI().setTheme(theme);
-                }
-            });
+            b.addClickListener(event -> getUI().setTheme(theme));
             hl.addComponent(b);
         }
         vl.addComponent(hl);

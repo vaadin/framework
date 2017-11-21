@@ -14,8 +14,6 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.StringToDoubleConverter;
@@ -111,14 +109,8 @@ public class DoublesInTable extends TestBase {
         }
         t.setSelectable(true);
         t.setImmediate(true);
-        t.addListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                log.log("Value is now: " + event.getProperty().getValue());
-
-            }
-        });
+        t.addValueChangeListener(event -> log
+                .log("Value is now: " + event.getProperty().getValue()));
         return t;
     }
 

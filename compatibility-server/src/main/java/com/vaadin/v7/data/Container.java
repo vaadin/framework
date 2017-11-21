@@ -1167,7 +1167,7 @@ public interface Container extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addItemSetChangeListener(ItemSetChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Container.ItemSetChangeListener listener);
 
@@ -1183,7 +1183,7 @@ public interface Container extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removeItemSetChangeListener(ItemSetChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(Container.ItemSetChangeListener listener);
     }
@@ -1272,7 +1272,7 @@ public interface Container extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #addPropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void addListener(Container.PropertySetChangeListener listener);
 
@@ -1288,7 +1288,7 @@ public interface Container extends Serializable {
         /**
          * @deprecated As of 7.0, replaced by
          *             {@link #removePropertySetChangeListener(PropertySetChangeListener)}
-         **/
+         */
         @Deprecated
         public void removeListener(
                 Container.PropertySetChangeListener listener);

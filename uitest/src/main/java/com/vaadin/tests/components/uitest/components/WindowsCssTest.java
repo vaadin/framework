@@ -2,7 +2,6 @@ package com.vaadin.tests.components.uitest.components;
 
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -25,46 +24,23 @@ public class WindowsCssTest extends VerticalLayout {
         parent.registerComponent(this);
 
         Button defWindow = new Button("Default window",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        createWindowWith(caption, null, styleName);
-                    }
-                });
+                event -> createWindowWith(caption, null, styleName));
         defWindow.setId("windButton" + debugIdCounter++);
-        Button light = new Button("Light window", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createWindowWith(caption, Reindeer.WINDOW_LIGHT, styleName);
-            }
-        });
+        Button light = new Button("Light window",
+                event -> createWindowWith(caption, Reindeer.WINDOW_LIGHT,
+                        styleName));
         light.setId("windButton" + debugIdCounter++);
-        Button black = new Button("Black window", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createWindowWith(caption, Reindeer.WINDOW_BLACK, styleName);
-            }
-        });
+        Button black = new Button("Black window",
+                event -> createWindowWith(caption, Reindeer.WINDOW_BLACK,
+                        styleName));
         black.setId("windButton" + debugIdCounter++);
-        Button dialog = new Button("Dialog window", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createWindowWith(caption, Runo.WINDOW_DIALOG, styleName);
-            }
-        });
+        Button dialog = new Button("Dialog window",
+                event -> createWindowWith(caption, Runo.WINDOW_DIALOG,
+                        styleName));
         dialog.setId("windButton" + debugIdCounter++);
-        Button opaque = new Button("Opaque window", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                createWindowWith(caption, ChameleonTheme.WINDOW_OPAQUE,
-                        styleName);
-            }
-        });
+        Button opaque = new Button("Opaque window",
+                event -> createWindowWith(caption, ChameleonTheme.WINDOW_OPAQUE,
+                        styleName));
         opaque.setId("windButton" + debugIdCounter++);
 
         addComponent(defWindow);
@@ -72,7 +48,6 @@ public class WindowsCssTest extends VerticalLayout {
         addComponent(black);
         addComponent(dialog);
         addComponent(opaque);
-
     }
 
     /**
@@ -106,7 +81,6 @@ public class WindowsCssTest extends VerticalLayout {
         }
 
         parent.getUI().addWindow(window);
-
     }
 
     @Override

@@ -4,8 +4,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
-import com.vaadin.v7.ui.Tree.ExpandEvent;
-import com.vaadin.v7.ui.Tree.ExpandListener;
 import com.vaadin.v7.ui.TreeTable;
 
 @SuppressWarnings("serial")
@@ -26,18 +24,14 @@ public class TreeTableContainerHierarchicalWrapper
         treetable.setPageLength(0);
         treetable.setContainerDataSource(hierarchicalWrapper);
 
-        treetable.addExpandListener(new ExpandListener() {
-            @Override
-            public void nodeExpand(ExpandEvent event) {
-                Bean parent = ((Bean) event.getItemId());
-                if (!hierarchicalWrapper.hasChildren(parent)) {
-                    for (int i = 1; i <= 5; i++) {
-                        Bean newChild = new Bean(parent.getId() + "-" + i);
-                        beanContainer.addBean(newChild);
-                        hierarchicalWrapper.setParent(newChild, parent);
-                    }
+        treetable.addExpandListener(event -> {
+            Bean parent = ((Bean) event.getItemId());
+            if (!hierarchicalWrapper.hasChildren(parent)) {
+                for (int i = 1; i <= 5; i++) {
+                    Bean newChild = new Bean(parent.getId() + "-" + i);
+                    beanContainer.addBean(newChild);
+                    hierarchicalWrapper.setParent(newChild, parent);
                 }
-
             }
         });
 

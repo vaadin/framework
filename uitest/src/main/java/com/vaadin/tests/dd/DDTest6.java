@@ -40,8 +40,6 @@ import com.vaadin.ui.Html5File;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
 import com.vaadin.v7.event.DataBoundTransferable;
@@ -148,17 +146,14 @@ public class DDTest6 extends TestBase {
         };
         tree1.addActionHandler(actionHandler);
 
-        tree1.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Object value = event.getProperty().getValue();
-                if (value != null && !(value instanceof Folder)) {
-                    value = tree1.getParent(value);
-                }
-                FolderView folderView = FolderView.get((Folder) value);
-                sp.setSecondComponent(folderView);
-                folderView.reload();
+        tree1.addValueChangeListener(event->{
+            Object value = event.getProperty().getValue();
+            if (value != null && !(value instanceof Folder)) {
+                value = tree1.getParent(value);
             }
+            FolderView folderView = FolderView.get((Folder) value);
+            sp.setSecondComponent(folderView);
+            folderView.reload();
         });
 
         l.addComponent(tree1);

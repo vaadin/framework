@@ -8,7 +8,6 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.Table;
-import com.vaadin.v7.ui.Table.HeaderClickEvent;
 
 public class HeaderClick extends AbstractReindeerTestUI {
 
@@ -25,12 +24,8 @@ public class HeaderClick extends AbstractReindeerTestUI {
                 "ProperyId of clicked column");
 
         // Add a header click listener
-        table.addHeaderClickListener(new Table.HeaderClickListener() {
-            @Override
-            public void headerClick(HeaderClickEvent event) {
-                columnField.setValue(String.valueOf(event.getPropertyId()));
-            }
-        });
+        table.addHeaderClickListener(event -> columnField
+                .setValue(String.valueOf(event.getPropertyId())));
 
         CheckBox immediateCheckbox = new CheckBox("Immediate");
         immediateCheckbox.setValue(table.isImmediate());

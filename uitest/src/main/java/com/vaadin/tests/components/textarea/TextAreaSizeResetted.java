@@ -15,12 +15,9 @@
  */
 package com.vaadin.tests.components.textarea;
 
-import com.vaadin.event.UIEvents;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
@@ -78,21 +75,10 @@ public class TextAreaSizeResetted extends AbstractReindeerTestUI {
         Label text = new Label();
         textArea.addValueChangeListener(
                 event -> text.setValue(event.getValue()));
-        Button hbutton = new Button("check height", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                serverHeight.setValue(textArea.getHeight() + " ");
-            }
-        });
-        Button button = new Button("Change Height", new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-
-                textArea.setHeight(textField.getValue());
-            }
-        });
+        Button hbutton = new Button("check height",
+                event -> serverHeight.setValue(textArea.getHeight() + " "));
+        Button button = new Button("Change Height",
+                event -> textArea.setHeight(textField.getValue()));
 
         addComponent(layout);
 
@@ -104,13 +90,8 @@ public class TextAreaSizeResetted extends AbstractReindeerTestUI {
         layout.addComponent(serverHeight);
         layout.addComponent(text);
 
-        addPollListener(new UIEvents.PollListener() {
-            @Override
-            public void poll(UIEvents.PollEvent event) {
-                pollIndicator
-                        .setValue(String.valueOf(System.currentTimeMillis()));
-            }
-        });
+        addPollListener(event -> pollIndicator
+                .setValue(String.valueOf(System.currentTimeMillis())));
     }
 
     @Override

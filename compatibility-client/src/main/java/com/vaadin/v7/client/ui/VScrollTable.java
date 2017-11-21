@@ -90,7 +90,6 @@ import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.Action;
@@ -1033,7 +1032,7 @@ public class VScrollTable extends FlowPanel
                 if (prev != null) {
                     return setRowFocus(prev);
                 } else {
-                    VConsole.log("no previous available");
+                    getLogger().info("no previous available");
                 }
             }
         }
@@ -2634,7 +2633,7 @@ public class VScrollTable extends FlowPanel
 
             if (client.getMessageSender().hasActiveRequest() || navKeyDown) {
                 // if client connection is busy, don't bother loading it more
-                VConsole.log("Postponed rowfetch");
+                getLogger().info("Postponed rowfetch");
                 schedule(250);
             } else if (allRenderedRowsAreNew() && !updatedReqRows) {
 
@@ -4789,7 +4788,7 @@ public class VScrollTable extends FlowPanel
 
         public void setLastRendered(int lastRendered) {
             if (totalRows >= 0 && lastRendered > totalRows) {
-                VConsole.log("setLastRendered: " + this.lastRendered + " -> "
+                getLogger().info("setLastRendered: " + this.lastRendered + " -> "
                         + lastRendered);
                 this.lastRendered = totalRows - 1;
             } else {
@@ -8183,7 +8182,7 @@ public class VScrollTable extends FlowPanel
                 if (currentlyFocusedRow != null) {
                     setRowFocus(currentlyFocusedRow);
                 } else {
-                    VConsole.log("no row?");
+                    getLogger().info("no row?");
                     focusRowFromBody();
                 }
                 scrollBody.ensureFocus();
@@ -8258,7 +8257,7 @@ public class VScrollTable extends FlowPanel
 
     private void debug(String msg) {
         if (enableDebug) {
-            VConsole.error(msg);
+            getLogger().severe(msg);
         }
     }
 

@@ -6,7 +6,6 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 
 public class NonExistingFileResource extends TestBase {
 
@@ -21,16 +20,11 @@ public class NonExistingFileResource extends TestBase {
 
     private Button createButton(final String filename) {
         Button b = new Button("Download " + filename);
-        b.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                FileResource res = new FileResource(
-                        new File(VaadinService.getCurrent().getBaseDirectory()
-                                + "/" + filename));
-                getMainWindow().open(res);
-
-            }
+        b.addClickListener(event -> {
+            FileResource res = new FileResource(
+                    new File(VaadinService.getCurrent().getBaseDirectory() + "/"
+                            + filename));
+            getMainWindow().open(res);
         });
         return b;
     }

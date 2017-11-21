@@ -15,7 +15,6 @@
  */
 package com.vaadin.v7.tests.server.component.table;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.server.ExternalResource;

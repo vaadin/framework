@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.BeanItemContainer;
 import com.vaadin.v7.ui.Table;
 
@@ -31,13 +29,10 @@ public class TableSorting extends TestBase {
         testTable.setVisibleColumns("testName");
 
         // Handle selection change.
-        testTable.addListener(new Property.ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                System.out.println(
-                        "ValueChanged: " + testTable.getValue().toString());
-                showID.setCaption("ID: " + testTable.getValue().toString());
-            }
+        testTable.addValueChangeListener(event -> {
+            System.out.println(
+                    "ValueChanged: " + testTable.getValue().toString());
+            showID.setCaption("ID: " + testTable.getValue().toString());
         });
         addComponent(testTable);
         addComponent(showID);

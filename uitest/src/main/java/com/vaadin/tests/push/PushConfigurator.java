@@ -28,15 +28,11 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PushConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.ui.NativeSelect;
 import com.vaadin.v7.ui.TextField;
 
@@ -111,41 +107,28 @@ public class PushConfigurator extends VerticalLayout {
      * @since
      */
     private void listeners() {
-        pushMode.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                ui.getPushConfiguration()
-                        .setPushMode((PushMode) pushMode.getValue());
-                refreshStatus();
-            }
+        pushMode.addValueChangeListener(event -> {
+            ui.getPushConfiguration()
+                    .setPushMode((PushMode) pushMode.getValue());
+            refreshStatus();
         });
 
-        transport.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Transport t = (Transport) transport.getValue();
-                ui.getPushConfiguration().setTransport(t);
-                refreshStatus();
-            }
+        transport.addValueChangeListener(event -> {
+            Transport t = (Transport) transport.getValue();
+            ui.getPushConfiguration().setTransport(t);
+            refreshStatus();
         });
 
-        fallbackTransport.addValueChangeListener(new ValueChangeListener() {
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                Transport t = (Transport) fallbackTransport.getValue();
-                ui.getPushConfiguration().setFallbackTransport(t);
-                refreshStatus();
-            }
+        fallbackTransport.addValueChangeListener(event -> {
+            Transport t = (Transport) fallbackTransport.getValue();
+            ui.getPushConfiguration().setFallbackTransport(t);
+            refreshStatus();
         });
 
-        set.addClickListener(new ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                ui.getPushConfiguration().setParameter(parameter.getValue(),
-                        value.getValue());
-                refreshStatus();
-            }
+        set.addClickListener(event -> {
+            ui.getPushConfiguration().setParameter(parameter.getValue(),
+                    value.getValue());
+            refreshStatus();
         });
-
     }
 }

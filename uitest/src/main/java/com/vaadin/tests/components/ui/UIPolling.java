@@ -18,8 +18,6 @@ package com.vaadin.tests.components.ui;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Log;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.Property.ValueChangeListener;
 import com.vaadin.v7.data.util.MethodProperty;
 import com.vaadin.v7.ui.TextField;
 
@@ -39,12 +37,8 @@ public class UIPolling extends AbstractTestUIWithLog {
                 } catch (InterruptedException e) {
                 }
                 final int iteration = i;
-                access(new Runnable() {
-                    @Override
-                    public void run() {
-                        log.log((iteration * SLEEP_TIME) + "ms has passed");
-                    }
-                });
+                access(() -> log
+                        .log((iteration * SLEEP_TIME) + "ms has passed"));
             }
         }
     }
@@ -59,18 +53,14 @@ public class UIPolling extends AbstractTestUIWithLog {
                 new MethodProperty<Integer>(this, "pollInterval"));
         pollingInterval.setImmediate(true);
         pollingInterval.setValue("-1");
-        pollingInterval.addValueChangeListener(new ValueChangeListener() {
-
-            @Override
-            public void valueChange(ValueChangeEvent event) {
-                if (logger != null) {
-                    logger.stop();
-                    logger = null;
-                }
-                if (getPollInterval() >= 0) {
-                    logger = new BackgroundLogger();
-                    logger.start();
-                }
+        pollingInterval.addValueChangeListener(event -> {
+            if (logger != null) {
+                logger.stop();
+                logger = null;
+            }
+            if (getPollInterval() >= 0) {
+                logger = new BackgroundLogger();
+                logger.start();
             }
         });
         addComponent(pollingInterval);

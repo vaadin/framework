@@ -23,7 +23,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.tests.components.AbstractReindeerTestUI;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
@@ -60,13 +59,9 @@ public class BasicPush extends AbstractReindeerTestUI {
         addComponent(lbl);
 
         Button incrementButton = new Button("Increment",
-                new Button.ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        clientCounter++;
-                        lbl.setValue(String.valueOf(clientCounter));
-                    }
+                event -> {
+                    clientCounter++;
+                    lbl.setValue(String.valueOf(clientCounter));
                 });
         incrementButton.setId(INCREMENT_BUTTON_ID);
         addComponent(incrementButton);
@@ -104,13 +99,10 @@ public class BasicPush extends AbstractReindeerTestUI {
         startTimer.setId(START_TIMER_ID);
         addComponent(startTimer);
 
-        Button stopTimer = new Button("Stop timer", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (task != null) {
-                    task.cancel();
-                    task = null;
-                }
+        Button stopTimer = new Button("Stop timer", event -> {
+            if (task != null) {
+                task.cancel();
+                task = null;
             }
         });
         stopTimer.setId(STOP_TIMER_ID);

@@ -15,12 +15,8 @@
  */
 package com.vaadin.tests.components.grid;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
@@ -30,22 +26,16 @@ import com.vaadin.shared.ui.dnd.DropEffect;
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
-import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.tests.util.Person;
-import com.vaadin.tests.util.TestDataGenerator;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.RadioButtonGroup;
 import com.vaadin.ui.components.grid.GridDragSource;
 import com.vaadin.ui.components.grid.GridDropTarget;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridDragAndDrop extends AbstractTestUIWithLog {
+public class GridDragAndDrop extends AbstractGridDnD {
 
-    private Set<Person> draggedItems;
+    private List<Person> draggedItems;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -59,69 +49,7 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         Grid<Person> right = createGridAndFillWithData(0);
         GridDropTarget<Person> dropTarget = applyDropTarget(right);
 
-        // Layout the two grids
-        Layout grids = new HorizontalLayout();
-
-        grids.addComponents(left, right);
-        grids.setWidth("100%");
-
-        // Selection modes
-        List<Grid.SelectionMode> selectionModes = Arrays
-                .asList(Grid.SelectionMode.SINGLE, Grid.SelectionMode.MULTI);
-        RadioButtonGroup<Grid.SelectionMode> selectionModeSelect = new RadioButtonGroup<>(
-                "Selection mode", selectionModes);
-        selectionModeSelect.setSelectedItem(Grid.SelectionMode.SINGLE);
-        selectionModeSelect.addValueChangeListener(
-                event -> left.setSelectionMode(event.getValue()));
-
-        // Drop locations
-        List<DropMode> dropLocations = Arrays.asList(DropMode.values());
-        RadioButtonGroup<DropMode> dropLocationSelect = new RadioButtonGroup<>(
-                "Allowed drop location", dropLocations);
-        dropLocationSelect.setSelectedItem(DropMode.BETWEEN);
-        dropLocationSelect.addValueChangeListener(
-                event -> dropTarget.setDropMode(event.getValue()));
-
-        CheckBox transitionCheckBox = new CheckBox("Transition layout", false);
-        transitionCheckBox.addValueChangeListener(event -> {
-            if (event.getValue()) {
-                grids.addStyleName("transitioned");
-            } else {
-                grids.removeStyleName("transitioned");
-            }
-        });
-
-        RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
-                "Frozen columns", Arrays.asList(new Integer[] { -1, 0, 1 }));
-        frozenColumnSelect.setValue(left.getFrozenColumnCount());
-        frozenColumnSelect.addValueChangeListener(event -> {
-            left.setFrozenColumnCount(event.getValue());
-            right.setFrozenColumnCount(event.getValue());
-        });
-
-        Layout controls = new HorizontalLayout(selectionModeSelect,
-                dropLocationSelect, transitionCheckBox, frozenColumnSelect);
-
-        addComponents(controls, grids);
-
-        getPage().getStyles()
-                .add(".transitioned { transform: translate(-30px, 30px);}");
-    }
-
-    private Grid<Person> createGridAndFillWithData(int numberOfItems) {
-        Grid<Person> grid = new Grid<>();
-        grid.setWidth("100%");
-
-        grid.setItems(generateItems(numberOfItems));
-        grid.addColumn(
-                person -> person.getFirstName() + " " + person.getLastName())
-                .setCaption("Name");
-        grid.addColumn(person -> person.getAddress().getStreetAddress())
-                .setCaption("Street Address");
-        grid.addColumn(person -> person.getAddress().getCity())
-                .setCaption("City");
-
-        return grid;
+        initializeTestFor(left, right, dragSource, dropTarget);
     }
 
     private GridDragSource<Person> applyDragSource(Grid<Person> grid) {
@@ -213,17 +141,4 @@ public class GridDragAndDrop extends AbstractTestUIWithLog {
         return dropTarget;
     }
 
-    private List<Person> generateItems(int num) {
-        return Stream.generate(() -> generateRandomPerson(new Random()))
-                .limit(num).collect(Collectors.toList());
-    }
-
-    private Person generateRandomPerson(Random r) {
-        return new Person(TestDataGenerator.getFirstName(r),
-                TestDataGenerator.getLastName(r), "foo@bar.com",
-                TestDataGenerator.getPhoneNumber(r),
-                TestDataGenerator.getStreetAddress(r),
-                TestDataGenerator.getPostalCode(r),
-                TestDataGenerator.getCity(r));
-    }
 }

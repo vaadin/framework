@@ -448,7 +448,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void addListener(Container.ItemSetChangeListener listener) {
@@ -470,7 +470,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     /**
      * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(Container.ItemSetChangeListener)}
-     **/
+     */
     @Deprecated
     @Override
     public void removeListener(Container.ItemSetChangeListener listener) {

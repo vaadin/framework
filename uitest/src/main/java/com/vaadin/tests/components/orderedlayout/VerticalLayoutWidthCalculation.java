@@ -2,7 +2,6 @@ package com.vaadin.tests.components.orderedlayout;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
@@ -43,13 +42,7 @@ public class VerticalLayoutWidthCalculation extends AbstractTestCase {
         Window wnd = new Window("Test", layout);
         layout.addComponent(hl);
         Button btn = new Button("Show/hide");
-        btn.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                tf2.setVisible(!tf2.isVisible());
-            }
-        });
+        btn.addClickListener(event -> tf2.setVisible(!tf2.isVisible()));
         layout.addComponent(btn);
 
         return wnd;

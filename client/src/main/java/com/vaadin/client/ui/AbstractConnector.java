@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
@@ -35,7 +36,6 @@ import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
@@ -310,7 +310,7 @@ public abstract class AbstractConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         Profiler.enter("AbstractConnector.onStateChanged");
         if (debugLogging) {
-            VConsole.log("State change event for "
+            getLogger().info("State change event for "
                     + Util.getConnectorString(stateChangeEvent.getConnector())
                     + " received by " + Util.getConnectorString(this));
         }
@@ -356,7 +356,7 @@ public abstract class AbstractConnector
     @Override
     public void onUnregister() {
         if (debugLogging) {
-            VConsole.log(
+            getLogger().info(
                     "Unregistered connector " + Util.getConnectorString(this));
         }
     }
@@ -490,8 +490,8 @@ public abstract class AbstractConnector
      */
     @Override
     public boolean hasEventListener(String eventIdentifier) {
-        Map<String, Integer> reg = getState().registeredEventListeners;
-        return reg != null && reg.containsKey(eventIdentifier);
+        Set<String> reg = getState().registeredEventListeners;
+        return reg != null && reg.contains(eventIdentifier);
     }
 
     /**
@@ -529,5 +529,9 @@ public abstract class AbstractConnector
                     "Tag already set for this " + getClass().getSimpleName());
         }
         this.tag = tag;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractConnector.class.getName());
     }
 }

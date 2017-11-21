@@ -16,6 +16,7 @@
 package com.vaadin.client.ui.dd;
 
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -37,7 +38,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.extensions.DragSourceExtensionConnector;
@@ -704,7 +704,7 @@ public class VDragAndDropManager {
             ApplicationConnection connection = getCurrentDragApplicationConnection();
             Element dragImageParent;
             if (connection == null) {
-                VConsole.error(
+                getLogger().severe(
                         "Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
                 dragImageParent = RootPanel.getBodyElement();
             } else {
@@ -763,4 +763,7 @@ public class VDragAndDropManager {
         }
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(VDragAndDropManager.class.getName());
+    }
 }
