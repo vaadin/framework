@@ -104,12 +104,22 @@ public interface Editor<T> extends Serializable {
     public void cancel();
 
     /**
-     * Edits the selected row
+     * Opens the editor interface for the provided row. Scrolls the Grid to
+     * bring the row to view if it is not already visible.
+     *
+     * Note that any cell content rendered by a WidgetRenderer will not be
+     * visible in the editor row.
+     *
+     * @see #setEnabled(boolean)
+     * @since 8.2
      *
      * @param rowNumber
-     *          the row to edit
-     *
-     * @since 8.2
+     *            the row number of the edited item
+     * @throws IllegalStateException
+     *             if the editor is not enabled or already editing a different
+     *             item in buffered mode
+     * @throws IllegalArgumentException
+     *             if the {@code rowNumber} is not in the backing data provider
      */
     public void editRow(int rowNumber);
 

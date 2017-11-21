@@ -80,6 +80,6 @@ public class ColumnState extends AbstractGridExtensionState {
      *
      * @since 8.2
      */
-    public ContentMode contentMode;
+    public ContentMode tooltipContentMode;
 
 }

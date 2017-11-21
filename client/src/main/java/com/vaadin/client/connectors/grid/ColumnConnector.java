@@ -42,7 +42,7 @@ public class ColumnConnector extends AbstractExtensionConnector {
             extends Column<Object, JsonObject> {
 
         private final String connectorId;
-        private ContentMode contentMode;
+        private ContentMode tooltipContentMode;
 
         CustomColumn(String connectorId) {
             this.connectorId = connectorId;
@@ -64,20 +64,20 @@ public class ColumnConnector extends AbstractExtensionConnector {
          *
          * @since 8.2
          */
-        public ContentMode getContentMode() {
-            return contentMode;
+        public ContentMode getTooltipContentMode() {
+            return tooltipContentMode;
         }
 
         /**
          * Sets the content mode for tooltips in this column.
          *
-         * @param contentMode
+         * @param tooltipContentMode
          *            the content mode for tooltips
          *
          * @since 8.2
          */
-        public void setContentMode(ContentMode contentMode) {
-            this.contentMode = contentMode;
+        public void setTooltipContentMode(ContentMode tooltipContentMode) {
+            this.tooltipContentMode = tooltipContentMode;
         }
     }
 
@@ -189,9 +189,9 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setEditable(getState().editable);
     }
 
-    @OnStateChange("contentMode")
-    void updateContentMode() {
-        column.setContentMode(getState().contentMode);
+    @OnStateChange("tooltipContentMode")
+    void updateTooltipContentMode() {
+        column.setTooltipContentMode(getState().tooltipContentMode);
     }
 
     @Override

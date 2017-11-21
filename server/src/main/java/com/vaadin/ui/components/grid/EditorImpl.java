@@ -267,22 +267,6 @@ public class EditorImpl<T> extends AbstractGridExtension<T>
         rpc.cancel();
     }
 
-    /**
-     * Opens the editor interface for the provided row. Scrolls the Grid to
-     * bring the row to view if it is not already visible.
-     *
-     * Note that any cell content rendered by a WidgetRenderer will not be
-     * visible in the editor row.
-     *
-     * @param rowNumber
-     *             the row number of the edited item
-     * @throws IllegalStateException
-     *             if the editor is not enabled or already editing a different item
-     *             in buffered mode
-     * @throws IllegalArgumentException
-     *             if the {@code rowNumber} is not in the backing data provider
-     * @see #setEnabled(boolean)
-     */
     @Override
     public void editRow(int rowNumber)
             throws IllegalStateException, IllegalArgumentException {

@@ -634,7 +634,7 @@ public class GridConnector extends AbstractListingConnector
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
                         return new TooltipInfo(cellDescriptions.getString(id),
-                                ((CustomColumn) column).getContentMode());
+                                ((CustomColumn) column).getTooltipContentMode());
                     } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
                         return new TooltipInfo(
                                 row.getString(GridState.JSONKEY_ROWDESCRIPTION),
