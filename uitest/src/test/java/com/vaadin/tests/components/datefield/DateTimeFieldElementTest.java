@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -60,7 +59,6 @@ public class DateTimeFieldElementTest extends SingleBrowserTest {
                 DateTimeFieldElementUI.ANOTHER_TEST_DATE_TIME);
     }
 
-    @SuppressWarnings("deprecation")
     @Test
     public void testDateStyles() {
         openTestURL();
@@ -71,7 +69,7 @@ public class DateTimeFieldElementTest extends SingleBrowserTest {
 
         WebElement styledDateCell = $(InlineDateTimeFieldElement.class).first()
                 .findElement(By.className("teststyle"));
-        assertEquals(String.valueOf(new Date().getDate()),
+        assertEquals(String.valueOf(LocalDateTime.now().getDayOfMonth()),
                 styledDateCell.getText());
 
         DateTimeFieldElement fi = $(DateTimeFieldElement.class).id("fi");

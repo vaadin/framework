@@ -1,10 +1,8 @@
 package com.vaadin.tests.components.datefield;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Locale;
 
-import com.ibm.icu.util.Calendar;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractReindeerTestUIWithLog;
@@ -19,7 +17,6 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
     public static final LocalDate ANOTHER_TEST_DATE_TIME = DateTimeFieldElementUI.ANOTHER_TEST_DATE_TIME
             .toLocalDate();
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void setup(VaadinRequest request) {
         getPage().getStyles()
@@ -53,11 +50,10 @@ public class DateFieldElementUI extends AbstractReindeerTestUIWithLog {
         addComponent(usDatefield);
 
         addComponent(new Button("Add date styles", e -> {
-            inlineDateField.setDateStyle(new Date(), "teststyle");
-            finnishDatefield.setDateStyle(
-                    new Date(2017 - 1900, Calendar.DECEMBER, 1), "teststyle");
-            usDatefield.setDateStyle(
-                    new Date(2017 - 1900, Calendar.DECEMBER, 1), "teststyle");
+            inlineDateField.setDateStyle(LocalDate.now(), "teststyle");
+            finnishDatefield.setDateStyle(LocalDate.of(2017, 12, 1),
+                    "teststyle");
+            usDatefield.setDateStyle(LocalDate.of(2017, 12, 1), "teststyle");
         }));
     }
 

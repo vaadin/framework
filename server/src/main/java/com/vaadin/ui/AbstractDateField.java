@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -828,10 +829,11 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            custom style name(s)
      */
     @SuppressWarnings("deprecation")
-    public void setDateStyle(Date date, String styleName) {
+    public void setDateStyle(T date, String styleName) {
         if (date != null) {
-            Date midnightDate = new Date(date.getYear(), date.getMonth(),
-                    date.getDate());
+            Date convertedDate = convertToDate(date);
+            Date midnightDate = new Date(convertedDate.getYear(),
+                    convertedDate.getMonth(), convertedDate.getDate());
             if (styleName != null) {
                 getState().dateStyles.put(midnightDate, styleName);
             } else {
@@ -849,12 +851,13 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            which date cell's custom style name(s) to return
      * @return the corresponding style name(s), if any, {@code null} otherwise
      *
-     * @see {@link #setDateStyle(Date, String)}
+     * @see {@link #setDateStyle(T, String)}
      */
     @SuppressWarnings("deprecation")
-    public String getDateStyle(Date date) {
-        return getState(false).dateStyles
-                .get(new Date(date.getYear(), date.getMonth(), date.getDate()));
+    public String getDateStyle(T date) {
+        Date convertedDate = convertToDate(date);
+        return getState(false).dateStyles.get(new Date(convertedDate.getYear(),
+                convertedDate.getMonth(), convertedDate.getDate()));
     }
 
     /**
@@ -863,9 +866,14 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *
      * @return map from dates to custom style names in each date's calendar cell
      *
-     * @see {@link #setDateStyle(Date, String)}
+     * @see {@link #setDateStyle(T, String)}
      */
-    public Map<Date, String> getDateStyles() {
-        return new HashMap<>(getState(false).dateStyles);
+    public Map<T, String> getDateStyles() {
+        HashMap<T, String> hashMap = new HashMap<>();
+        for (Entry<Date, String> entry : getState(false).dateStyles
+                .entrySet()) {
+            hashMap.put(convertFromDate(entry.getKey()), entry.getValue());
+        }
+        return hashMap;
     }
 }
