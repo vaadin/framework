@@ -450,7 +450,7 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             // only one page
             setPagingEnabled(
                     getTotalSuggestionsIncludingNullSelectionItem() > pageLength
-                            && pageLength != 0);
+                            && pageLength > 0);
             setPrevButtonActive(first > 1);
             setNextButtonActive(last < matches);
 
@@ -2709,11 +2709,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
         String[] parts = subPart.split("/");
         if ("textbox".equals(parts[0])) {
             return tb.getElement();
-        }
-        if ("button".equals(parts[0])) {
+        } else if ("button".equals(parts[0])) {
             return popupOpener.getElement();
-        }
-        if ("popup".equals(parts[0]) && suggestionPopup.isAttached()) {
+        } else if ("popup".equals(parts[0]) && suggestionPopup.isAttached()) {
             if (parts.length == 2) {
                 return suggestionPopup.menu.getSubPartElement(parts[1]);
             }
@@ -2727,11 +2725,9 @@ public class VComboBox extends Composite implements Field, KeyDownHandler,
             com.google.gwt.user.client.Element subElement) {
         if (tb.getElement().isOrHasChild(subElement)) {
             return "textbox";
-        }
-        if (popupOpener.getElement().isOrHasChild(subElement)) {
+        } else if (popupOpener.getElement().isOrHasChild(subElement)) {
             return "button";
-        }
-        if (suggestionPopup.getElement().isOrHasChild(subElement)) {
+        } else if (suggestionPopup.getElement().isOrHasChild(subElement)) {
             return "popup";
         }
         return null;
