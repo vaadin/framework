@@ -17,7 +17,6 @@ package com.vaadin.v7.tests.server.component.grid.declarative;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.shared.ui.ContentMode;

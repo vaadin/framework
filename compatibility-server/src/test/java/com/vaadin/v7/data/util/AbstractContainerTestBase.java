@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
-
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.Filterable;
 import com.vaadin.v7.data.Container.ItemSetChangeEvent;
