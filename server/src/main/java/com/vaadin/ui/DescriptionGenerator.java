@@ -13,21 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.ui.components.grid;
+package com.vaadin.ui;
+
+import com.vaadin.server.SerializableFunction;
 
 /**
  * A callback interface for generating description texts for an item.
  *
  * @author Vaadin Ltd
- * @since 8.0
+ * @since 8.2
  *
  * @param <T>
- *            the grid bean type
- * @deprecated as of 8.2, use the DescriptionGenerator found in package
- *             com.vaadin.ui instead.
+ *            the item type
  */
 @FunctionalInterface
-@Deprecated
 public interface DescriptionGenerator<T>
-        extends com.vaadin.ui.DescriptionGenerator<T> {
+        extends SerializableFunction<T, String> {
 }
