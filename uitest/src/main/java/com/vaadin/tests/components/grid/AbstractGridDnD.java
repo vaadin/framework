@@ -66,9 +66,9 @@ public abstract class AbstractGridDnD extends AbstractTestUIWithLog {
             }
         });
         CheckBox dropOnSortedGridRows = new CheckBox("Drop on Sorted Grid Rows",
-                dropTarget.isDropAllowedOnSortedGridRows());
+                dropTarget.isDropAllowedOnRowsWhenSorted());
         dropOnSortedGridRows.addValueChangeListener(event -> {
-            dropTarget.setDropAllowedOnSortedGridRows(event.getValue());
+            dropTarget.setDropAllowedOnRowsWhenSorted(event.getValue());
         });
 
         RadioButtonGroup<Integer> frozenColumnSelect = new RadioButtonGroup<>(
