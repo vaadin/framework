@@ -1845,7 +1845,8 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Validates the values of all bound fields and returns the validation
-     * status. This method firing the event, based on the given {@code boolean}.
+     * status. This method can fire validation status events. Firing the events
+     * depends on the given {@code boolean}.
      *
      * @param fireEvent
      *            {@code true} to fire validation status events; {@code false}
@@ -2685,9 +2686,17 @@ public class Binder<BEAN> implements Serializable {
      *            the binding to remove
      *
      * @since 8.2
+     *
+     * @throws IllegalArgumentException
+     *             if the given Binding is not in this Binder
      */
-    public void removeBinding(Binding<BEAN, ?> binding) {
+    public void removeBinding(Binding<BEAN, ?> binding)
+            throws IllegalArgumentException {
         Objects.requireNonNull(binding, "Binding can not be null");
+        if (!bindings.contains(binding)) {
+            throw new IllegalArgumentException(
+                    "Provided Binding is not in this Binder");
+        }
         binding.unbind();
     }
 
