@@ -17,7 +17,6 @@ package com.vaadin.tests.server.component.button;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
