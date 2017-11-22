@@ -16,7 +16,7 @@
 package com.vaadin.ui.components.grid;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import com.vaadin.shared.ui.dnd.EffectAllowed;
 import com.vaadin.ui.Grid;
@@ -33,7 +33,7 @@ import com.vaadin.ui.dnd.event.DragStartEvent;
  */
 public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
 
-    private final Set<T> draggedItems;
+    private final List<T> draggedItems;
 
     /**
      * Creates a drag start event.
@@ -43,10 +43,10 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
      * @param effectAllowed
      *            Allowed effect from {@code DataTransfer.effectAllowed} object.
      * @param draggedItems
-     *            Set of items being dragged.
+     *            List of items being dragged.
      */
     public GridDragStartEvent(Grid<T> source, EffectAllowed effectAllowed,
-            Set<T> draggedItems) {
+            List<T> draggedItems) {
         super(source, effectAllowed);
 
         this.draggedItems = draggedItems;
@@ -54,10 +54,14 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
 
     /**
      * Get the dragged row items.
+     * <p>
+     * The ordering of the list is the following: first the item that the drag
+     * started from, optionally followed by all the other selected rows in
+     * first-to-last order on the client side.
      *
-     * @return an unmodifiable set of items that are being dragged.
+     * @return an unmodifiable list of items that are being dragged.
      */
-    public Set<T> getDraggedItems() {
-        return Collections.unmodifiableSet(draggedItems);
+    public List<T> getDraggedItems() {
+        return Collections.unmodifiableList(draggedItems);
     }
 }

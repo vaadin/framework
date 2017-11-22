@@ -102,16 +102,14 @@ public class FocusUtil {
         return focusableChildren;
     }-*/;
 
-    public static void focusOnFirstFocusableElement(Element parent)
-    {
+    public static void focusOnFirstFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[0].focus();
         }
     }
 
-    public static void focusOnLastFocusableElement(Element parent)
-    {
+    public static void focusOnLastFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[focusableChildren.length - 1].focus();

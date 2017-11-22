@@ -990,4 +990,33 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertNull("Age field should still be ok.",
                 ageField.getComponentError());
     }
+
+    @Test
+    public void refreshValueFromBean() {
+        Binding<Person, String> binding = binder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+
+        binder.readBean(item);
+
+        assertEquals("Name should be read from the item", item.getFirstName(),
+                nameField.getValue());
+
+        nameField.setValue("foo");
+
+        assertNotEquals("Name should be different from the item",
+                item.getFirstName(), nameField.getValue());
+
+        binding.read(item);
+
+        assertEquals("Name should be read again from the item",
+                item.getFirstName(), nameField.getValue());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void remove_binding_from_different_binder() {
+        Binder<Person> anotherBinder = new Binder<>();
+        Binding<Person, String> binding = anotherBinder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+        binder.removeBinding(binding);
+    }
 }

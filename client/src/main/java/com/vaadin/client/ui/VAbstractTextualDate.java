@@ -263,7 +263,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Updates the {@link VDateField#bufferedResolutions bufferedResolutions},
      * then {@link #sendBufferedValues() sends} the values to the server.
      *
-     * @since
+     * @since 8.2
      */
     protected final void updateAndSendBufferedValues() {
         updateBufferedResolutions();
@@ -282,7 +282,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
      * Note that this method should not send the buffered values, but use
      * {@link #updateAndSendBufferedValues()} instead
      *
-     * @since
+     * @since 8.2
      */
     protected void updateBufferedResolutions() {
         Date currentDate = getDate();

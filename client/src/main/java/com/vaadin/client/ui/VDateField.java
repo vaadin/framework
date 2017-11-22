@@ -60,7 +60,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
     /**
      * The RPC send calls to the server.
      *
-     * @since
+     * @since 8.2
      */
     public AbstractDateFieldServerRpc rpc;
 
@@ -72,7 +72,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      *
      * The value can be {@code null}.
      *
-     * @since
+     * @since 8.2
      */
     protected Map<R, Integer> bufferedResolutions = new HashMap<>();
 
@@ -80,7 +80,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * A temporary holder of the date string, which would be sent to the server
      * through {@link #sendBufferedValues()}.
      *
-     * @since
+     * @since 8.2
      */
     protected String bufferedDateString;
 
@@ -266,7 +266,7 @@ public abstract class VDateField<R extends Enum<R>> extends FlowPanel
      * Sends the {@link #bufferedDateString} and {@link #bufferedResolutions} to
      * the server, and clears their values.
      *
-     * @since
+     * @since 8.2
      */
     public void sendBufferedValues() {
         rpc.update(bufferedDateString,

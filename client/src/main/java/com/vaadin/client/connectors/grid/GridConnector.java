@@ -256,8 +256,7 @@ public class GridConnector extends AbstractListingConnector
         grid.setRowStyleGenerator(rowRef -> {
             JsonObject json = rowRef.getRow();
             return json.hasKey(GridState.JSONKEY_ROWSTYLE)
-                    ? json.getString(GridState.JSONKEY_ROWSTYLE)
-                    : null;
+                    ? json.getString(GridState.JSONKEY_ROWSTYLE) : null;
         });
         grid.setCellStyleGenerator(cellRef -> {
             JsonObject row = cellRef.getRow();
@@ -631,12 +630,15 @@ public class GridConnector extends AbstractListingConnector
                             .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
                     String id = ((CustomColumn) column).getConnectorId();
+
                     if (cellDescriptions != null
                             && cellDescriptions.hasKey(id)) {
-                        return new TooltipInfo(cellDescriptions.getString(id));
+                        return new TooltipInfo(cellDescriptions.getString(id),
+                                ((CustomColumn) column).getTooltipContentMode());
                     } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
-                        return new TooltipInfo(row
-                                .getString(GridState.JSONKEY_ROWDESCRIPTION));
+                        return new TooltipInfo(
+                                row.getString(GridState.JSONKEY_ROWDESCRIPTION),
+                                getState().rowDescriptionContentMode);
                     }
                 }
             }
