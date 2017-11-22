@@ -20,11 +20,11 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.components.grid.GridDragger;
+import com.vaadin.ui.components.grid.GridRowDragger;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridDraggerOneGrid extends AbstractGridDnD {
+public class GridRowDraggerOneGrid extends AbstractGridDnD {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -32,7 +32,7 @@ public class GridDraggerOneGrid extends AbstractGridDnD {
 
         Grid<Person> grid = createGridAndFillWithData(50);
 
-        GridDragger<Person> gridDragger = new GridDragger<>(grid);
+        GridRowDragger<Person> gridDragger = new GridRowDragger<>(grid);
 
         initializeTestFor(gridDragger);
     }

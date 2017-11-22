@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +34,6 @@ import java.util.stream.Stream;
 
 import com.vaadin.data.util.BeanUtil;
 import com.vaadin.server.Setter;
-import com.vaadin.shared.util.SharedUtil;
-import com.vaadin.util.ReflectTools;
 
 /**
  * A {@link PropertySet} that uses reflection to find bean properties.
@@ -106,58 +103,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         }
     }
 
-    private abstract static class AbstractBeanPropertyDefinition<T, V>
-            implements PropertyDefinition<T, V> {
-        private final PropertyDescriptor descriptor;
-        private final BeanPropertySet<T> propertySet;
-        private final Class<?> propertyHolderType;
-
-        public AbstractBeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                Class<?> propertyHolderType, PropertyDescriptor descriptor) {
-            this.propertySet = propertySet;
-            this.propertyHolderType = propertyHolderType;
-            this.descriptor = descriptor;
-
-            if (descriptor.getReadMethod() == null) {
-                throw new IllegalArgumentException(
-                        "Bean property has no accessible getter: "
-                                + propertySet.beanType + "."
-                                + descriptor.getName());
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Class<V> getType() {
-            return (Class<V>) ReflectTools
-                    .convertPrimitiveType(descriptor.getPropertyType());
-        }
-
-        @Override
-        public String getName() {
-            return descriptor.getName();
-        }
-
-        @Override
-        public String getCaption() {
-            return SharedUtil.propertyIdToHumanFriendly(getName());
-        }
-
-        @Override
-        public BeanPropertySet<T> getPropertySet() {
-            return propertySet;
-        }
-
-        protected PropertyDescriptor getDescriptor() {
-            return descriptor;
-        }
-
-        @Override
-        public Class<?> getPropertyHolderType() {
-            return propertyHolderType;
-        }
-    }
-
     private static class BeanPropertyDefinition<T, V>
             extends AbstractBeanPropertyDefinition<T, V> {
 
@@ -223,66 +168,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
          */
         protected static final int MAX_PROPERTY_NESTING_DEPTH = 10;
 
-        /**
-         * Class containing the constraints for filtering nested properties.
-         *
-         * @since 8.2
-         *
-         */
-        protected static class PropertyFilterDefinition
-                implements Serializable {
-            private int maxNestingDepth;
-            private List<String> ignorePackageNamesStartingWith;
-
-            /**
-             * Create a property filter with max nesting depth and package names
-             * to ignore.
-             *
-             * @param maxNestingDepth
-             *            The maximum amount of nesting levels for
-             *            sub-properties.
-             * @param ignorePackageNamesStartingWith
-             *            Ignore package names that start with this string, for
-             *            example "java.lang".
-             */
-            public PropertyFilterDefinition(int maxNestingDepth,
-                    List<String> ignorePackageNamesStartingWith) {
-                this.maxNestingDepth = maxNestingDepth;
-                this.ignorePackageNamesStartingWith = ignorePackageNamesStartingWith;
-            }
-
-            /**
-             * Returns the maximum amount of nesting levels for sub-properties.
-             *
-             * @return maximum nesting depth
-             */
-            public int getMaxNestingDepth() {
-                return maxNestingDepth;
-            }
-
-            /**
-             * Returns a list of package name prefixes to ignore.
-             *
-             * @return list of strings that
-             */
-            public List<String> getIgnorePackageNamesStartingWith() {
-                return ignorePackageNamesStartingWith;
-            }
-
-            /**
-             * Get the default nested property filtering conditions.
-             *
-             * @return default property filter
-             */
-            public static PropertyFilterDefinition getDefaultFilter() {
-                return new PropertyFilterDefinition(MAX_PROPERTY_NESTING_DEPTH,
-                        Arrays.asList("java"));
-            }
-        }
-
         private final PropertyDefinition<T, ?> parent;
-
-        private boolean useLongFormName = false;
 
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
@@ -290,29 +176,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             super(propertySet, parent.getType(), descriptor);
             this.parent = parent;
         }
-
-        /**
-         * Create nested property definition. Allows use of a long form name.
-         *
-         * @param propertySet
-         *            property set this property belongs is.
-         * @param parent
-         *            parent property for this nested property
-         * @param descriptor
-         *            property descriptor
-         * @param useLongFormName
-         *            use format grandparent.parent.property for name if
-         *            {@code true}, needed when creating nested definitions
-         *            recursively like in findNestedDefinitions
-         * @since 8.2
-         */
-        public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                PropertyDefinition<T, ?> parent, PropertyDescriptor descriptor,
-                boolean useLongFormName) {
-            this(propertySet, parent, descriptor);
-            this.useLongFormName = useLongFormName;
-        }
-
+      
         @Override
         public ValueProvider<T, V> getGetter() {
             return bean -> {
@@ -341,6 +205,16 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             return Optional.of(setter);
         }
 
+        @Override
+        public String getName() {
+            return parent.getName() + "." + super.getName();
+        }
+        
+        @Override
+        public String getTopLevelName() {
+            return super.getName();
+        }
+        
         private Object writeReplace() {
             /*
              * Instead of serializing this actual property definition, only
@@ -348,8 +222,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * property definition from the cache.
              */
             return new SerializedPropertyDefinition(getPropertySet().beanType,
-                    parent.getName() + "." + super.getName());
+                    getName());
         }
+        
 
         /**
          * Gets the parent property definition.
@@ -359,15 +234,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         public PropertyDefinition<T, ?> getParent() {
             return parent;
         }
-
-        @Override
-        public String getName() {
-            if (useLongFormName) {
-                return parent.getName() + "." + super.getName();
-            }
-            return super.getName();
-        }
-
     }
 
     /**
@@ -463,7 +329,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     }
 
     private BeanPropertySet(Class<T> beanType, boolean checkNestedDefinitions,
-            NestedBeanPropertyDefinition.PropertyFilterDefinition propertyFilterDefinition) {
+            PropertyFilterDefinition propertyFilterDefinition) {
         this(beanType);
         if (checkNestedDefinitions) {
             Objects.requireNonNull(propertyFilterDefinition,
@@ -474,7 +340,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
     private void findNestedDefinitions(
             Map<String, PropertyDefinition<T, ?>> parentDefinitions, int depth,
-            NestedBeanPropertyDefinition.PropertyFilterDefinition filterCallback) {
+            PropertyFilterDefinition filterCallback) {
         if (depth >= filterCallback.getMaxNestingDepth()) {
             return;
         }
@@ -506,7 +372,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                     PropertyDescriptor subDescriptor = BeanUtil
                             .getPropertyDescriptor(beanType, name);
                     moreProps.put(name, new NestedBeanPropertyDefinition<>(this,
-                            parentProperty, subDescriptor, true));
+                            parentProperty, subDescriptor));
 
                 }
             } catch (IntrospectionException e) {
@@ -554,7 +420,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
     @SuppressWarnings("unchecked")
     public static <T> PropertySet<T> get(Class<? extends T> beanType,
             boolean checkNestedDefinitions,
-            NestedBeanPropertyDefinition.PropertyFilterDefinition filterDefinition) {
+            PropertyFilterDefinition filterDefinition) {
         Objects.requireNonNull(beanType, "Bean type cannot be null");
         InstanceKey key = new InstanceKey(beanType, false,
                 filterDefinition.getMaxNestingDepth(),
@@ -606,6 +472,16 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             }
         }
         return definition;
+    }
+
+    /**
+     * Gets the bean type of this bean property set.
+     * 
+     * @since 8.2
+     * @return the bean type of this bean property set
+     */
+    public Class<T> getBeanType() {
+        return beanType;
     }
 
     private static boolean hasNonObjectReadMethod(

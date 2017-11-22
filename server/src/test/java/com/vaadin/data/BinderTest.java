@@ -1011,4 +1011,12 @@ public class BinderTest extends BinderTestBase<Binder<Person>, Person> {
         assertEquals("Name should be read again from the item",
                 item.getFirstName(), nameField.getValue());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void remove_binding_from_different_binder() {
+        Binder<Person> anotherBinder = new Binder<>();
+        Binding<Person, String> binding = anotherBinder.bind(nameField,
+                Person::getFirstName, Person::setFirstName);
+        binder.removeBinding(binding);
+    }
 }

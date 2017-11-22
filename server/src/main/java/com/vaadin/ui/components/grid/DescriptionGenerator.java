@@ -15,8 +15,6 @@
  */
 package com.vaadin.ui.components.grid;
 
-import com.vaadin.server.SerializableFunction;
-
 /**
  * A callback interface for generating description texts for an item.
  *
@@ -25,8 +23,11 @@ import com.vaadin.server.SerializableFunction;
  *
  * @param <T>
  *            the grid bean type
+ * @deprecated as of 8.2, use the DescriptionGenerator found in package
+ *             com.vaadin.ui instead.
  */
 @FunctionalInterface
+@Deprecated
 public interface DescriptionGenerator<T>
-        extends SerializableFunction<T, String> {
+        extends com.vaadin.ui.DescriptionGenerator<T> {
 }
