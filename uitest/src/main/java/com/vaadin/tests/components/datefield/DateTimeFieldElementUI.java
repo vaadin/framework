@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.datefield;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
@@ -50,10 +51,10 @@ public class DateTimeFieldElementUI extends AbstractReindeerTestUIWithLog {
         addComponent(usDateTimeField);
 
         addComponent(new Button("Add date styles", e -> {
-            inlineDateTimeField.setDateStyle(LocalDateTime.now(), "teststyle");
-            finnishDateTimeField.setDateStyle(
-                    LocalDateTime.of(2017, 12, 1, 0, 0), "teststyle");
-            usDateTimeField.setDateStyle(LocalDateTime.of(2017, 12, 1, 0, 0),
+            inlineDateTimeField.setDateStyle(LocalDate.now(), "teststyle");
+            finnishDateTimeField.setDateStyle(LocalDate.of(2017, 12, 1),
+                    "teststyle");
+            usDateTimeField.setDateStyle(LocalDate.of(2017, 12, 1),
                     "teststyle");
         }));
     }

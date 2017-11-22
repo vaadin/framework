@@ -46,6 +46,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -193,7 +194,8 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         onSubmit();
     };
 
-    private Map<Date, String> dateStyles = new HashMap<Date, String>();
+    private Map<String, String> dateStyles = new HashMap<String, String>();
+    private DateTimeFormat df = DateTimeFormat.getFormat("yyyy-MM-dd");
 
     public VAbstractCalendarPanel() {
         getElement().setId(DOM.createUniqueId());
@@ -450,7 +452,7 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
         }
     }
 
-    public void setDateStyles(Map<Date, String> dateStyles) {
+    public void setDateStyles(Map<String, String> dateStyles) {
         this.dateStyles.clear();
         if (dateStyles != null) {
             this.dateStyles.putAll(dateStyles);
@@ -844,8 +846,9 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 if (curr.getMonth() != displayedMonth.getMonth()) {
                     day.addStyleDependentName(CN_OFFMONTH);
                 }
-                if (dateStyles.containsKey(dayDate)) {
-                    day.addStyleName(dateStyles.get(dayDate));
+                String dayDateString = df.format(dayDate);
+                if (dateStyles.containsKey(dayDateString)) {
+                    day.addStyleName(dateStyles.get(dayDateString));
                 }
 
                 days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek,

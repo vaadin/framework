@@ -806,10 +806,9 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
 
     /**
      * <p>
-     * Sets a custom style name for the given date's calendar cell. The date is
-     * converted to use midnight values for the styling logic. Setting the style
-     * name will override any previous style names that have been set for that
-     * date, but can contain several actual style names separated by space.
+     * Sets a custom style name for the given date's calendar cell. Setting the
+     * style name will override any previous style names that have been set for
+     * that date, but can contain several actual style names separated by space.
      * Setting the custom style name {@code null} will only remove the previous
      * custom style name.
      * </p>
@@ -818,8 +817,8 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      * </p>
      * <p>
      * Usage examples: <br>
-     * {@code setDateStyle(new Date(), "teststyle");} <br>
-     * {@code setDateStyle(new Date(), "teststyle1 teststyle2");}
+     * {@code setDateStyle(LocalDate.now(), "teststyle");} <br>
+     * {@code setDateStyle(LocalDate.now(), "teststyle1 teststyle2");}
      * </p>
      *
      * @param date
@@ -828,51 +827,46 @@ public abstract class AbstractDateField<T extends Temporal & TemporalAdjuster & 
      *            the custom style name(s) for given date, {@code null} to clear
      *            custom style name(s)
      */
-    @SuppressWarnings("deprecation")
-    public void setDateStyle(T date, String styleName) {
+    public void setDateStyle(LocalDate date, String styleName) {
         if (date != null) {
-            Date convertedDate = convertToDate(date);
-            Date midnightDate = new Date(convertedDate.getYear(),
-                    convertedDate.getMonth(), convertedDate.getDate());
             if (styleName != null) {
-                getState().dateStyles.put(midnightDate, styleName);
+                getState().dateStyles.put(date.toString(), styleName);
             } else {
-                getState().dateStyles.remove(midnightDate);
+                getState().dateStyles.remove(date.toString());
             }
         }
     }
 
     /**
      * Returns the custom style name that corresponds with the given date's
-     * calendar cell. The date is converted to use midnight values for the
-     * styling logic.
+     * calendar cell.
      *
      * @param date
      *            which date cell's custom style name(s) to return
      * @return the corresponding style name(s), if any, {@code null} otherwise
      *
-     * @see {@link #setDateStyle(T, String)}
+     * @see {@link #setDateStyle(LocalDate, String)}
      */
-    @SuppressWarnings("deprecation")
-    public String getDateStyle(T date) {
-        Date convertedDate = convertToDate(date);
-        return getState(false).dateStyles.get(new Date(convertedDate.getYear(),
-                convertedDate.getMonth(), convertedDate.getDate()));
+    public String getDateStyle(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return getState(false).dateStyles.get(date.toString());
     }
 
     /**
      * Returns a map from dates to custom style names in each date's calendar
-     * cell. All dates use midnight values for the styling logic.
+     * cell.
      *
      * @return map from dates to custom style names in each date's calendar cell
      *
-     * @see {@link #setDateStyle(T, String)}
+     * @see {@link #setDateStyle(LocalDate, String)}
      */
-    public Map<T, String> getDateStyles() {
-        HashMap<T, String> hashMap = new HashMap<>();
-        for (Entry<Date, String> entry : getState(false).dateStyles
+    public Map<LocalDate, String> getDateStyles() {
+        HashMap<LocalDate, String> hashMap = new HashMap<>();
+        for (Entry<String, String> entry : getState(false).dateStyles
                 .entrySet()) {
-            hashMap.put(convertFromDate(entry.getKey()), entry.getValue());
+            hashMap.put(LocalDate.parse(entry.getKey()), entry.getValue());
         }
         return hashMap;
     }
