@@ -409,10 +409,7 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
             text.removeStyleName(styleName);
         }
 
-        Scheduler.get().scheduleFixedDelay(() -> {
-            checkGroupFocus(focus);
-            return false;
-        }, 100);
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(focus));
 
         // Needed for tooltip event handling
         fireEvent(event);
