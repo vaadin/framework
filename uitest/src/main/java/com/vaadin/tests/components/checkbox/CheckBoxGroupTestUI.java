@@ -15,7 +15,12 @@
  */
 package com.vaadin.tests.components.checkbox;
 
+
+import java.util.LinkedHashMap;
+import java.util.Objects;
+
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.SerializablePredicate;
 import com.vaadin.tests.components.abstractlisting.AbstractMultiSelectTestUI;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.IconGenerator;
@@ -49,11 +54,25 @@ public class CheckBoxGroupTestUI
     protected void createActions() {
         super.createActions();
         createItemIconGenerator();
+        createItemEnabledProviderMenu();
     }
 
     private void createItemIconGenerator() {
         createBooleanAction("Use Item Icon Generator", "Item Generator", false,
                 this::useItemIconProvider);
+    }
+
+    private void createItemEnabledProviderMenu() {
+        LinkedHashMap<String, SerializablePredicate<Object>> options = new LinkedHashMap<>();
+        options.put("Disable Item 0", o -> !Objects.equals(o, "Item 0"));
+        options.put("Disable Item 3", o -> !Objects.equals(o, "Item 3"));
+        options.put("Disable Item 5", o -> !Objects.equals(o, "Item 5"));
+
+        createSelectAction("Item Enabled Provider", "Item Enabled Provider",
+                options, "None", (checkBoxGroup, generator, data) -> {
+                    checkBoxGroup.setItemEnabledProvider(generator);
+                    checkBoxGroup.getDataProvider().refreshAll();
+                }, true);
     }
 
     private void useItemIconProvider(CheckBoxGroup<Object> group,
