@@ -792,9 +792,8 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
-         * Analogous method to {@link AbstractComponent#setDescription(String)}
-         *
-         * Sets the items's description. See {@link #getDescription()} for more
+         * Analogous method to {@link AbstractComponent#setDescription(String)}.
+         * Sets the item's description. See {@link #getDescription()} for more
          * information on what the description is.
          *
          * @param description
@@ -805,22 +804,24 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
-         *
-         * Analogous method to {@link AbstractComponent#setDescription(String, ContentMode)}
-         *
-         * Sets the component's description using given content {@code mode}. See
-         * {@link #getDescription()} for more information on what the description
-         * is.
+         * Analogous method to
+         * {@link AbstractComponent#setDescription(String, ContentMode)}. Sets
+         * the item's description using given content mode. See
+         * {@link #getDescription()} for more information on what the
+         * description is.
          * <p>
          * If the content {@code mode} is {@literal ContentMode.HTML} the
          * description is displayed as HTML in tooltips or directly in certain
-         * components so care should be taken to avoid creating the possibility for
-         * HTML injection and possibly XSS vulnerabilities.
+         * components so care should be taken to avoid creating the possibility
+         * for HTML injection and possibly XSS vulnerabilities.
+         *
+         * @see ContentMode
          *
          * @param description
          *            the new description string for the component.
          * @param mode
          *            the content mode for the description
+         * @since 8.2
          */
         public void setDescription(String description, ContentMode mode) {
             this.description = description;
@@ -830,7 +831,7 @@ public class MenuBar extends AbstractComponent
 
         /**
          * <p>
-         * Gets the items's description. The description can be used to briefly
+         * Gets the item's description. The description can be used to briefly
          * describe the state of the item to the user. The description string
          * may contain certain XML tags:
          * </p>
@@ -889,12 +890,12 @@ public class MenuBar extends AbstractComponent
         }
 
         /**
-         * Gets the content mode of the description of the menu item.
-         * The description is displayed as the tooltip of the menu item in the UI.
-         *
+         * Gets the content mode of the description of the menu item. The
+         * description is displayed as the tooltip of the menu item in the UI.
          * <p>
-         * If no content mode was explicitly set using the {@link #setDescription(String, ContentMode)} method,
-         * the content mode will be {@link ContentMode#PREFORMATTED}
+         * If no content mode was explicitly set using the
+         * {@link #setDescription(String, ContentMode)} method, the content mode
+         * will be {@link ContentMode#PREFORMATTED}
          * </p>
          *
          * @return the {@link ContentMode} of the description of this menu item
