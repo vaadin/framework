@@ -821,7 +821,7 @@ public class MenuBar extends AbstractComponent
          *            the new description string for the component.
          * @param mode
          *            the content mode for the description
-         * @since 8.2
+         * @since
          */
         public void setDescription(String description, ContentMode mode) {
             this.description = description;
@@ -900,7 +900,7 @@ public class MenuBar extends AbstractComponent
          *
          * @return the {@link ContentMode} of the description of this menu item
          * @see ContentMode
-         * @since 8.2
+         * @since
          */
         public ContentMode getContentMode() {
             return contentMode;
