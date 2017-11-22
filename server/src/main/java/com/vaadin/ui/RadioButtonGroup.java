@@ -300,7 +300,7 @@ public class RadioButtonGroup<T> extends AbstractSingleSelect<T>
         Element elem = super.writeItem(design, item, context);
 
         if (!getItemEnabledProvider().test(item)) {
-            elem.attr("disabled", "");
+            elem.attr("disabled", true);
         }
 
         if (isHtmlContentAllowed()) {

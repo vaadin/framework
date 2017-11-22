@@ -474,7 +474,7 @@ public class TreeGrid<T> extends Grid<T>
             tableRow.attr("parent", serializeDeclarativeRepresentation(parent));
         }
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.getValueProvider().apply(item);

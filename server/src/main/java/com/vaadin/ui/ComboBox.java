@@ -747,7 +747,7 @@ public class ComboBox<T> extends AbstractSingleSelect<T>
         }
 
         if (isSelected(item)) {
-            element.attr("selected", "");
+            element.attr("selected", true);
         }
 
         return element;
