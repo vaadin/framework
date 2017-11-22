@@ -125,7 +125,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Enabled");
 
         List<WebElement> options = getSelect().findElements(By.tagName("span"));
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(className -> verifyRadioButtonDisabledClassNames(
                         className, true));
@@ -133,7 +133,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "State", "Enabled");
 
         options = getSelect().findElements(By.tagName("span"));
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(className -> verifyRadioButtonDisabledClassNames(
                         className, false));
@@ -145,7 +145,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
         List<WebElement> options = getSelect().findElements(By.tagName("span"));
 
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
 
@@ -171,7 +171,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
         options = getSelect().findElements(By.tagName("span"));
 
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
 
@@ -180,7 +180,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
         options = getSelect().findElements(By.tagName("span"));
 
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
 
@@ -189,7 +189,7 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         options = getSelect().findElements(By.tagName("span"));
         className = options.remove(5).getAttribute("className");
 
-        Assert.assertTrue(options.size() > 0);
+        assertTrue(options.size() > 0);
         options.stream().map(element -> element.getAttribute("className"))
                 .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
         verifyRadioButtonDisabledClassNames(className, true);
@@ -330,12 +330,12 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
 
     private static void verifyRadioButtonDisabledClassNames(String className,
             boolean disabled) {
-        Assert.assertEquals(
+        assertEquals(
                 disabled ? "No"
                         : "Extra" + " v-radiobutton-disabled class, was "
                                 + className,
                 disabled, className.contains("v-radiobutton-disabled"));
-        Assert.assertEquals(
+        assertEquals(
                 disabled ? "No"
                         : "Extra" + " v-disabled class, was " + className,
                 disabled, className.contains("v-disabled"));
