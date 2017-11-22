@@ -170,37 +170,13 @@ public class BeanPropertySet<T> implements PropertySet<T> {
 
         private final PropertyDefinition<T, ?> parent;
 
-        private boolean useLongFormName = false;
-
         public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
                 PropertyDefinition<T, ?> parent,
                 PropertyDescriptor descriptor) {
             super(propertySet, parent.getType(), descriptor);
             this.parent = parent;
         }
-
-        /**
-         * Create nested property definition. Allows use of a long form name.
-         *
-         * @param propertySet
-         *            property set this property belongs to
-         * @param parent
-         *            parent property for this nested property
-         * @param descriptor
-         *            property descriptor
-         * @param useLongFormName
-         *            use format grandparent.parent.property for name if
-         *            {@code true}, needed when creating nested definitions
-         *            recursively like in findNestedDefinitions
-         * @since 8.2
-         */
-        public NestedBeanPropertyDefinition(BeanPropertySet<T> propertySet,
-                PropertyDefinition<T, ?> parent, PropertyDescriptor descriptor,
-                boolean useLongFormName) {
-            this(propertySet, parent, descriptor);
-            this.useLongFormName = useLongFormName;
-        }
-
+      
         @Override
         public ValueProvider<T, V> getGetter() {
             return bean -> {
@@ -229,6 +205,16 @@ public class BeanPropertySet<T> implements PropertySet<T> {
             return Optional.of(setter);
         }
 
+        @Override
+        public String getName() {
+            return parent.getName() + "." + super.getName();
+        }
+        
+        @Override
+        public String getTopLevelName() {
+            return super.getName();
+        }
+        
         private Object writeReplace() {
             /*
              * Instead of serializing this actual property definition, only
@@ -236,8 +222,9 @@ public class BeanPropertySet<T> implements PropertySet<T> {
              * property definition from the cache.
              */
             return new SerializedPropertyDefinition(getPropertySet().beanType,
-                    parent.getName() + "." + super.getName());
+                    getName());
         }
+        
 
         /**
          * Gets the parent property definition.
@@ -247,15 +234,6 @@ public class BeanPropertySet<T> implements PropertySet<T> {
         public PropertyDefinition<T, ?> getParent() {
             return parent;
         }
-
-        @Override
-        public String getName() {
-            if (useLongFormName) {
-                return parent.getName() + "." + super.getName();
-            }
-            return super.getName();
-        }
-
     }
 
     /**
@@ -394,7 +372,7 @@ public class BeanPropertySet<T> implements PropertySet<T> {
                     PropertyDescriptor subDescriptor = BeanUtil
                             .getPropertyDescriptor(beanType, name);
                     moreProps.put(name, new NestedBeanPropertyDefinition<>(this,
-                            parentProperty, subDescriptor, true));
+                            parentProperty, subDescriptor));
 
                 }
             } catch (IntrospectionException e) {
