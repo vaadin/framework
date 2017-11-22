@@ -90,6 +90,11 @@ public class MenuBarsWithNesting extends AbstractReindeerTestUI {
         edit.addItem("Paste", selectionCommand);
 
         menuBar.addItem("Help", selectionCommand);
+
+        MenuItem disabled = menuBar.addItem("Disabled", null);
+        disabled.setEnabled(false);
+        disabled.addItem("Can't reach", selectionCommand);
+
         return menuBar;
     }
 
