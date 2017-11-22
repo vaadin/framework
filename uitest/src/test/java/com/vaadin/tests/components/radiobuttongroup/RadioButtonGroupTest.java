@@ -119,6 +119,82 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
         Assert.assertEquals(lastLogRow, getLogRow(0));
     }
 
+    @Test // #9258
+    public void disabled_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+        selectMenuPath("Component", "State", "Enabled");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyRadioButtonDisabledClassNames(
+                        className, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(className -> verifyRadioButtonDisabledClassNames(
+                        className, false));
+    }
+
+    @Test // #9258
+    public void itemDisabledWithEnabledProvider_correctClassNamesApplied() {
+        openTestURL("theme=valo");
+
+        List<WebElement> options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 0");
+
+        String className = getSelect().findElements(By.tagName("span")).get(0)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, true);
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 3");
+
+        className = getSelect().findElements(By.tagName("span")).get(0)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, false);
+
+        className = getSelect().findElements(By.tagName("span")).get(3)
+                .getAttribute("className");
+        verifyRadioButtonDisabledClassNames(className, true);
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "Item Enabled Provider",
+                "Item Enabled Provider", "Disable Item 5");
+
+        options = getSelect().findElements(By.tagName("span"));
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, true));
+
+        selectMenuPath("Component", "State", "Enabled");
+
+        options = getSelect().findElements(By.tagName("span"));
+        className = options.remove(5).getAttribute("className");
+
+        Assert.assertTrue(options.size() > 0);
+        options.stream().map(element -> element.getAttribute("className"))
+                .forEach(cs -> verifyRadioButtonDisabledClassNames(cs, false));
+        verifyRadioButtonDisabledClassNames(className, true);
+    }
+
     @Test
     public void itemIconGenerator() {
         selectMenuPath("Component", "Item Icon Generator",
@@ -222,5 +298,18 @@ public class RadioButtonGroupTest extends MultiBrowserTest {
             i++;
         }
         assertEquals("Number of items", count, i);
+    }
+
+    private static void verifyRadioButtonDisabledClassNames(String className,
+            boolean disabled) {
+        Assert.assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-radiobutton-disabled class, was "
+                                + className,
+                disabled, className.contains("v-radiobutton-disabled"));
+        Assert.assertEquals(
+                disabled ? "No"
+                        : "Extra" + " v-disabled class, was " + className,
+                disabled, className.contains("v-disabled"));
     }
 }
