@@ -9,15 +9,9 @@ public class NestedPropertyGridCreation extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest vaadinRequest) {
-        Person person = new Person("the dude", new Address("testStreet"));
         Grid<Person> grid = new Grid<>(Person.class);
-
-        if (INIT) {
-            grid.addColumn("address.street");
-            INIT = false;
-        }
+        grid.addColumn("address.street");
         addComponent(grid);
-
     }
 
     private class Person {
