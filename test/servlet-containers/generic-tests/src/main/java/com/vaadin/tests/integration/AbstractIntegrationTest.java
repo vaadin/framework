@@ -116,10 +116,13 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
      *
      * @param condition
      *            the condition to wait for to become true
+     * @return The condition's return value if it returned something different
+     *         from null or false before the timeout expired.
      */
-    protected <T> void waitUntil(ExpectedCondition<T> condition,
+    @Override
+    protected <T> T waitUntil(ExpectedCondition<T> condition,
             long timeoutInSeconds) {
-        new WebDriverWait(driver, timeoutInSeconds).until(condition);
+        return new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
 
     /**
