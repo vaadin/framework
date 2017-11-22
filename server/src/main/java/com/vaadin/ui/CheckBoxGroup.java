@@ -236,7 +236,7 @@ public class CheckBoxGroup<T> extends AbstractMultiSelect<T>
         Element elem = super.writeItem(design, item, context);
 
         if (!getItemEnabledProvider().test(item)) {
-            elem.attr("disabled", "");
+            elem.attr("disabled", true);
         }
 
         if (isHtmlContentAllowed()) {
