@@ -70,7 +70,7 @@ public class OptionGroupDeclarativeTest
                 "<vaadin7-option-group>"
                 + "<option>foo</option>"
                 + "<option>bar</option>"
-                + "<option disabled>baz</option>"
+                + "<option disabled=''>baz</option>"
                 + "<option>bang</option>"
                 + "</vaadin7-option-group>";
         //@formatter:on

@@ -317,7 +317,7 @@ public abstract class AbstractSingleSelect<T> extends AbstractListing<T>
         Element element = super.writeItem(design, item, context);
 
         if (isSelected(item)) {
-            element.attr("selected", "");
+            element.attr("selected", true);
         }
 
         return element;

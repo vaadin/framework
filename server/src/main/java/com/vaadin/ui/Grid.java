@@ -4539,7 +4539,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Element tableRow = container.appendElement("tr");
         tableRow.attr("item", serializeDeclarativeRepresentation(item));
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
