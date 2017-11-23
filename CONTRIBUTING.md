@@ -82,7 +82,7 @@ If you are touching old files and want to update them to current style conventio
 
 # Example of a good commit message
 
-    Create a Valo icon font for icons used in Valo (#18472)
+    Create a Valo icon font for icons used in Valo
 
     Valo uses only a handful of icons from Font Awesome. This change introduces a separate icon font for valo (9KB instead of 80KB) and decouples Valo from Font Awesome to enable updating Font Awesome without taking Valo into account.
 
@@ -90,11 +90,13 @@ If you are touching old files and want to update them to current style conventio
 
     For backwards compatibility, Font Awesome is loaded by default
 
+    Closes #123456
+
 ## Example breakdown
 
-Start with a good Commit message in imperative form. Reference a ticket number if applicable:
+Start with a good Commit message in imperative form.
 
-    Create a Valo icon font for icons used in Valo (#18472)
+    Create a Valo icon font for icons used in Valo
 
 ### Describe the problem:
 
@@ -107,6 +109,14 @@ Start with a good Commit message in imperative form. Reference a ticket number i
     This change also makes it easy to not load Font Awesome when using Valo by setting $v-font-awesome:false
 
     For backwards compatibility, Font Awesome is loaded by default
+
+### Reference an Issue:
+
+If applicable, reference an open issue that your pull request resolves as described in [this article](https://help.github.com/articles/closing-issues-using-keywords/). In the example given above this corresponds to the line
+
+    Closes #123456
+
+where `123456` is the hypothetical issue number.
 
 # Include a test
 
