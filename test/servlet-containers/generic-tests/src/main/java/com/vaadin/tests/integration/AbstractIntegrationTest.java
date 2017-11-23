@@ -12,8 +12,6 @@ import javax.imageio.ImageIO;
 
 import org.junit.After;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.testbench.annotations.RunLocally;
 import com.vaadin.testbench.elements.UIElement;
@@ -107,19 +105,6 @@ public abstract class AbstractIntegrationTest extends ParallelTest {
         if (screenshotErrors) {
             throw new RuntimeException("Screenshots failed.");
         }
-    }
-
-    /**
-     * Waits the given number of seconds for the given condition to become true.
-     * Use e.g. as
-     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
-     *
-     * @param condition
-     *            the condition to wait for to become true
-     */
-    protected <T> void waitUntil(ExpectedCondition<T> condition,
-            long timeoutInSeconds) {
-        new WebDriverWait(driver, timeoutInSeconds).until(condition);
     }
 
     /**
