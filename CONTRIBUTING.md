@@ -89,7 +89,7 @@ If you are touching old files and want to update them to current style conventio
     This change also makes it easy to not load Font Awesome when using Valo by setting $v-font-awesome:false
 
     For backwards compatibility, Font Awesome is loaded by default
-    
+
     Closes #123456
 
 ## Example breakdown
@@ -109,7 +109,7 @@ Start with a good Commit message in imperative form.
     This change also makes it easy to not load Font Awesome when using Valo by setting $v-font-awesome:false
 
     For backwards compatibility, Font Awesome is loaded by default
-    
+
 ### Reference an Issue:
 
 If applicable, reference an open issue that your pull request resolves as described in [this article](https://help.github.com/articles/closing-issues-using-keywords/). In the example given above this corresponds to the line
