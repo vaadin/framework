@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -762,10 +763,10 @@ public class Binder<BEAN> implements Serializable {
                                     + " from " + getBinder().propertySet));
 
             ValueProvider<BEAN, ?> getter = definition.getGetter();
-            Setter<BEAN, ?> setter = definition.getSetter()
-                    .orElse((bean, value) -> {
-                        // Setter ignores value
-                    });
+            Setter<BEAN, ?> setter = definition.getSetter().orElse(null);
+            if (setter == null) {
+                getLogger().fine(() -> propertyName + " does not have an accessible setter");
+            }
 
             BindingBuilder<BEAN, ?> finalBinding = withConverter(
                     createConverter(definition.getType()), false);
@@ -2287,7 +2288,9 @@ public class Binder<BEAN> implements Serializable {
      *            write
      */
     public void setReadOnly(boolean fieldsReadOnly) {
-        getBindings().stream().map(BindingImpl::getField)
+        getBindings().stream()
+            .filter(binding -> Objects.nonNull(binding.setter))
+            .map(BindingImpl::getField)
                 .forEach(field -> field.setReadOnly(fieldsReadOnly));
     }
 
@@ -2740,4 +2743,9 @@ public class Binder<BEAN> implements Serializable {
         Optional.ofNullable(boundProperties.get(propertyName))
                 .ifPresent(Binding::unbind);
     }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(Binder.class.getName());
+    }
+
 }
