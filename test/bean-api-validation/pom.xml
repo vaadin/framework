@@ -9,6 +9,19 @@
     </parent>
     <artifactId>vaadin-test-bean-api-validation</artifactId>
     <packaging>jar</packaging>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-testbench-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -37,5 +50,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
