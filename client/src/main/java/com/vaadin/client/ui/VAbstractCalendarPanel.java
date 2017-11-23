@@ -1997,7 +1997,6 @@ public abstract class VAbstractCalendarPanel<R extends Enum<R>>
                 renderCalendar();
             }
         }
-
     }
 
     /**
