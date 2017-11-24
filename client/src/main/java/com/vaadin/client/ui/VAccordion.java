@@ -117,6 +117,7 @@ public class VAccordion extends VTabsheetBase {
      *
      * @param tabIndex
      *            tabulator index for the open stack item
+     * @since 8.1.7
      */
     public void setTabIndex(int tabIndex) {
         tabulatorIndex = tabIndex;
