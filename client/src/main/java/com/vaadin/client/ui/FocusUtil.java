@@ -97,22 +97,42 @@ public class FocusUtil {
         return focusable.getElement().getTabIndex();
     }
 
+    /**
+     * Finds all the focusable children of given parent element.
+     * 
+     * @param parent
+     *            the parent element
+     * @return array of focusable children
+     * @since 8.1.7
+     */
     public static native Element[] getFocusableChildren(Element parent)
     /*-{
         var focusableChildren = parent.querySelectorAll('[type][tabindex]:not([tabindex="-1"]), [role=button][tabindex]:not([tabindex="-1"])');
         return focusableChildren;
     }-*/;
 
-    public static void focusOnFirstFocusableElement(Element parent)
-    {
+    /**
+     * Moves the focus to the first focusable child of given parent element.
+     * 
+     * @param parent
+     *            the parent element
+     * @since 8.1.7
+     */
+    public static void focusOnFirstFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[0].focus();
         }
     }
 
-    public static void focusOnLastFocusableElement(Element parent)
-    {
+    /**
+     * Moves the focus to the last focusable child of given parent element.
+     * 
+     * @param parent
+     *            the parent element
+     * @since 8.1.7
+     */
+    public static void focusOnLastFocusableElement(Element parent) {
         Element[] focusableChildren = getFocusableChildren(parent);
         if (focusableChildren.length > 0) {
             focusableChildren[focusableChildren.length - 1].focus();

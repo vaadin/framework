@@ -793,6 +793,7 @@ public class VTabsheet extends VTabsheetBase
      *
      * @param tabIndex
      *            tabulator index for the active tab of the tab sheet
+     * @since 8.1.7
      */
     public void setTabIndex(int tabIndex) {
         tabulatorIndex = tabIndex;
