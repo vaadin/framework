@@ -60,6 +60,6 @@ public class TreeGridTest {
     @Test
     public void testBeanTypeConstructor() {
         TreeGrid<Person> treeGrid = new TreeGrid<>(Person.class);
-        assertEquals(Person.class, treeGrid.getBeanType());
+        Assert.assertEquals(Person.class, treeGrid.getBeanType());
     }
 }
