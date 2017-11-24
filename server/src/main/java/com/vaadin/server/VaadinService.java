@@ -1369,7 +1369,11 @@ public abstract class VaadinService implements Serializable {
         Lock lockInstance = ui.getSession().getLockInstance();
         if (lockInstance instanceof ReentrantLock) {
             if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
-                // UI has queued threads.
+                /*
+                 * Someone is trying to access the session. Leaving all UIs
+                 * alive for now. A possible kill decision will be made at a
+                 * later time when the session access has ended.
+                 */
                 return true;
             }
         }
