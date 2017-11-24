@@ -1363,12 +1363,23 @@ public abstract class VaadinService implements Serializable {
     public boolean isUIActive(UI ui) {
         if (ui.isClosing()) {
             return false;
-        } else {
-            long now = System.currentTimeMillis();
-            int timeout = 1000 * getHeartbeatTimeout();
-            return timeout < 0
-                    || now - ui.getLastHeartbeatTimestamp() < timeout;
         }
+
+        // Check for long running tasks
+        if (ui.getSession().hasLock()) {
+            Lock lockInstance = ui.getSession().getLockInstance();
+            if (lockInstance instanceof ReentrantLock) {
+                if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
+                    // UI has queued threads.
+                    return true;
+                }
+            }
+        }
+
+        // Check timeout
+        long now = System.currentTimeMillis();
+        int timeout = 1000 * getHeartbeatTimeout();
+        return timeout < 0 || now - ui.getLastHeartbeatTimestamp() < timeout;
     }
 
     /**
