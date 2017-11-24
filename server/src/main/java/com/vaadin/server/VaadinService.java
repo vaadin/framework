@@ -1366,13 +1366,11 @@ public abstract class VaadinService implements Serializable {
         }
 
         // Check for long running tasks
-        if (ui.getSession().hasLock()) {
-            Lock lockInstance = ui.getSession().getLockInstance();
-            if (lockInstance instanceof ReentrantLock) {
-                if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
-                    // UI has queued threads.
-                    return true;
-                }
+        Lock lockInstance = ui.getSession().getLockInstance();
+        if (lockInstance instanceof ReentrantLock) {
+            if (((ReentrantLock) lockInstance).hasQueuedThreads()) {
+                // UI has queued threads.
+                return true;
             }
         }
 
