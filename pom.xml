@@ -10,7 +10,7 @@
     <artifactId>vaadin-root</artifactId>
     <name>vaadin-root</name>
     <packaging>pom</packaging>
-    <version>8.2-SNAPSHOT</version>
+    <version>8.3-SNAPSHOT</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -31,7 +31,7 @@
 
         <!-- Used in OSGi manifests -->
         <javax.validation.version>1.0.0.GA</javax.validation.version>
-        <jsoup.version>1.8.3</jsoup.version>
+        <jsoup.version>1.11.2</jsoup.version>
         <javax.portlet.version>2.0</javax.portlet.version>
         <vaadin.sass.version>0.9.13</vaadin.sass.version>
         <!-- Note that this should be kept in sync with the class Constants -->
@@ -61,7 +61,7 @@
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
 
         <vaadin.icons.version>3.0.1</vaadin.icons.version>
-        <vaadin.testbench.version>5.0.0</vaadin.testbench.version>
+        <vaadin.testbench.version>5.1.0</vaadin.testbench.version>
     </properties>
 
     <!-- TODO: remove this after maven plugin has been released -->

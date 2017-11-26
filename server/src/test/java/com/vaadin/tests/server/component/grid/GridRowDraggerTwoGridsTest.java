@@ -15,15 +15,15 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.DropIndexCalculator;
-import com.vaadin.ui.components.grid.GridDragger;
 import com.vaadin.ui.components.grid.GridDropEvent;
+import com.vaadin.ui.components.grid.GridRowDragger;
 import com.vaadin.ui.components.grid.SourceDataProviderUpdater;
 
-public class GridDraggerTwoGridsTest {
+public class GridRowDraggerTwoGridsTest {
 
-    public class TestGridDragger extends GridDragger<String> {
+    public class TestGridRowDragger extends GridRowDragger<String> {
 
-        public TestGridDragger(Grid<String> source, Grid<String> target) {
+        public TestGridRowDragger(Grid<String> source, Grid<String> target) {
             super(source, target);
         }
 
@@ -40,7 +40,7 @@ public class GridDraggerTwoGridsTest {
 
     private Grid<String> source;
     private Grid<String> target;
-    private TestGridDragger dragger;
+    private TestGridRowDragger dragger;
     private List<String> draggedItems;
 
     @Before
@@ -48,7 +48,7 @@ public class GridDraggerTwoGridsTest {
         source = new Grid<>();
         target = new Grid<>();
         target.addColumn(s -> s).setId("1");
-        dragger = new TestGridDragger(source, target);
+        dragger = new TestGridRowDragger(source, target);
 
         target.setItems(); // setup to use list data provider
     }
@@ -186,7 +186,7 @@ public class GridDraggerTwoGridsTest {
         source.setItems("0");
         target.setItems("1", "2");
 
-        dragger.setDropIndexCalculator(DropIndexCalculator.ALWAYS_DROP_TO_END);
+        dragger.setDropIndexCalculator(DropIndexCalculator.alwaysDropToEnd());
 
         drop("1", DropLocation.ABOVE, "0");
 
@@ -255,7 +255,7 @@ public class GridDraggerTwoGridsTest {
     public void dropOnSortedGrid_byDefault_dropsToTheEnd() {
         Assert.assertFalse(
                 "Default drops on sorted grid rows should not be allowed",
-                dragger.getGridDropTarget().isDropAllowedOnSortedGridRows());
+                dragger.getGridDropTarget().isDropAllowedOnRowsWhenSorted());
 
         source.setItems("0", "1", "2");
         target.setItems("4", "5");

@@ -38,7 +38,6 @@ import java.util.stream.Stream;
 
 import com.googlecode.gentyref.GenericTypeReflector;
 import com.vaadin.annotations.PropertyId;
-import com.vaadin.data.BeanPropertySet.NestedBeanPropertyDefinition.PropertyFilterDefinition;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.converter.StringToIntegerConverter;
@@ -1079,7 +1078,7 @@ public class Binder<BEAN> implements Serializable {
         private void handleFieldValueChange(
                 ValueChangeEvent<FIELDVALUE> event) {
             // Inform binder of changes; if setBean: writeIfValid
-            getBinder().handleFieldValueChange(this);
+            getBinder().handleFieldValueChange(this, event);
             getBinder().fireValueChangeEvent(event);
         }
 
@@ -1247,9 +1246,12 @@ public class Binder<BEAN> implements Serializable {
      *
      * @param binding
      *            the binding whose value has been changed
+     * @param event
+     *            the value change event
      * @since 8.2
      */
-    protected void handleFieldValueChange(Binding<BEAN, ?> binding) {
+    protected void handleFieldValueChange(Binding<BEAN, ?> binding,
+            ValueChangeEvent<?> event) {
         changedBindings.add(binding);
         if (getBean() != null) {
             doWriteIfValid(getBean(), changedBindings);
@@ -1693,7 +1695,9 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Restores the state of the bean from the given values.
+     * Restores the state of the bean from the given values. This method is used
+     * together with {@link #getBeanState(Object, Collection)} to provide a way
+     * to revert changes in case the bean validation fails after save.
      *
      * @param bean
      *            the bean
@@ -1715,7 +1719,9 @@ public class Binder<BEAN> implements Serializable {
     }
 
     /**
-     * Stores the state of the given bean.
+     * Stores the state of the given bean. This method is used together with
+     * {@link #restoreBeanState(Object, Map)} to provide a way to revert changes
+     * in case the bean validation fails after save.
      *
      * @param bean
      *            the bean to store the state of
@@ -1843,8 +1849,8 @@ public class Binder<BEAN> implements Serializable {
 
     /**
      * Validates the values of all bound fields and returns the validation
-     * status. This method can skip firing the event, based on the given
-     * {@code boolean}.
+     * status. This method can fire validation status events. Firing the events
+     * depends on the given {@code boolean}.
      *
      * @param fireEvent
      *            {@code true} to fire validation status events; {@code false}
@@ -2684,9 +2690,17 @@ public class Binder<BEAN> implements Serializable {
      *            the binding to remove
      *
      * @since 8.2
+     *
+     * @throws IllegalArgumentException
+     *             if the given Binding is not in this Binder
      */
-    public void removeBinding(Binding<BEAN, ?> binding) {
+    public void removeBinding(Binding<BEAN, ?> binding)
+            throws IllegalArgumentException {
         Objects.requireNonNull(binding, "Binding can not be null");
+        if (!bindings.contains(binding)) {
+            throw new IllegalArgumentException(
+                    "Provided Binding is not in this Binder");
+        }
         binding.unbind();
     }
 

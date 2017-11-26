@@ -230,11 +230,11 @@ More details can be found from the link:https://github.com/timruffles/ios-html5-
 
 It is possible to drag and drop the rows of a Grid component. This allows reordering of rows, dragging rows between different Grids, dragging rows outside of a Grid or dropping data onto rows.
 
-In Vaadin Framework 8.2, a `GridDragger` helper has been added to make it easier for the simple cases to enable drag-and-drop support for reordering one grid's rows and moving rows between two grids with the same data type.
+In Vaadin Framework 8.2, a `GridRowDragger` helper has been added to make it easier for the simple cases to enable drag-and-drop support for reordering one grid's rows and moving rows between two grids with the same data type.
 
 === Drag and Drop Reordering Items of a Grid (since 8.2)
 
-To allow the user to reorder the rows in a grid, you can use the `GridDragger` extension. It will handle configuring the grid as a drag source and drop target, and insert the dropped rows to the dropped index in the data provider, when a `ListDataProvider` is used.
+To allow the user to reorder the rows in a grid, you can use the `GridRowDragger` extension. It will handle configuring the grid as a drag source and drop target, and insert the dropped rows to the dropped index in the data provider, when a `ListDataProvider` is used.
 
 [source,java]
 ----
@@ -244,21 +244,21 @@ Grid<Task> taskGrid = new Grid<>("Priority Tasks", service.getTasks());
 // grid column etc. setup omitted
 
 // enable DnD reordering within the grid
-GridDragger<Task> gridDragger = new GridDragger<>(taskGrid);
+GridRowDragger<Task> gridRowDragger = new GridRowDragger<>(taskGrid);
 
 // disable all columns sorting so DnD reordering is always used
 grid.getColumns().stream().forEach(col -> col.setSortable(false));
 ----
 
-The `GridDragger` uses the `DropMode.BETWEEN` by default. It doesn't not allow the user to drop data on top of a sorted grid's rows by automatically switching to `DropMode.ON_GRID` if the grid has been sorted by the user. This is because the shown drop location would not be correct due to the sorting. It is recommended that you disable the sorting for the grid, by using the `Column.setSortable` method (like above). By default, all columns are sortable when a in-memory data provider is used. If you allow the user to drop on top of a sorted grid's rows, you should scroll the dropped data to be visible with `grid.scrollToRow(index);` after drop for good UX - the `GridDragger` does not do this!
+The `GridRowDragger` uses the `DropMode.BETWEEN` by default. It doesn't not allow the user to drop data on top of a sorted grid's rows by automatically switching to `DropMode.ON_GRID` if the grid has been sorted by the user. This is because the shown drop location would not be correct due to the sorting. It is recommended that you disable the sorting for the grid, by using the `Column.setSortable` method (like above). By default, all columns are sortable when a in-memory data provider is used. If you allow the user to drop on top of a sorted grid's rows, you should scroll the dropped data to be visible with `grid.scrollToRow(index);` after drop for good UX - the `GridRowDragger` does not do this!
 
-If you want to customize the setup for the grid as a drag source or drop target, you can access and customize the handlers with the `getGridDragSource` and the `getGridDropTarget()` methods.
+If you want to customize the setup for the grid as a drag source or drop target, you can access and customize the handlers with the `getGridDragSource()` and `getGridDropTarget()` methods.
 
 For supporting other data providers, you can customize data provider updating on drop event with `setSourceDataProviderUpdater(SourceDataProviderUpdater<T> updater)` (for the source grid row removal) and `setTargetDataProviderUpdater(TargetDataProviderUpdater<T> updater)` (for the target grid row adding). The drop index calculation can be customized via `setDropIndexCalculator(DropIndexCalculator<T> dropIndexCalculator)`.
 
 === Drag and Drop between two Grids (since 8.2)
 
-The `GridDragger` extension enables you to easily setup drag and drop moving of data between two grids. The same features apply as with the single grid reordering case in previous chapter.
+The `GridRowDragger` extension enables you to easily setup drag and drop moving of data between two grids. The same features apply as with the single grid reordering case in previous chapter.
 
 The following code snippet shows an example of allowing dragging items both ways between two grids. Note that it does not allow the user to drop the data on the same grid where the drag was started from, by setting the drop effect to `NONE` and thus the drop indicator is not shown.
 
@@ -268,8 +268,8 @@ The following code snippet shows an example of allowing dragging items both ways
 Grid<Person> left = createGrid();
 Grid<Person> right = createGrid();
 
-GridDragger<Person> leftToRight = new GridDragger<>(left, right);
-GridDragger<Person> rightToLeft = new GridDragger<>(right, left);
+GridRowDragger<Person> leftToRight = new GridRowDragger<>(left, right);
+GridRowDragger<Person> rightToLeft = new GridRowDragger<>(right, left);
 
 // Don't show the drop indicator for drags over the same grid where the drag started
 leftToRight.getGridDragSource()

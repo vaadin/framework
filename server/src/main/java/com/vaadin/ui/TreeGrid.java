@@ -27,7 +27,6 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.vaadin.data.BeanPropertySet;
 import com.vaadin.data.HasHierarchicalDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertyDefinition;
@@ -475,7 +474,7 @@ public class TreeGrid<T> extends Grid<T>
             tableRow.attr("parent", serializeDeclarativeRepresentation(parent));
         }
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.getValueProvider().apply(item);

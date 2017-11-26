@@ -22,12 +22,12 @@ import com.vaadin.tests.util.Person;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.DropIndexCalculator;
-import com.vaadin.ui.components.grid.GridDragger;
+import com.vaadin.ui.components.grid.GridRowDragger;
 import com.vaadin.ui.components.grid.SourceDataProviderUpdater;
 
 @Theme("valo")
 @Widgetset("com.vaadin.DefaultWidgetSet")
-public class GridDraggerTwoGrids extends AbstractGridDnD {
+public class GridRowDraggerTwoGrids extends AbstractGridDnD {
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -39,12 +39,12 @@ public class GridDraggerTwoGrids extends AbstractGridDnD {
         // Drop target Grid
         Grid<Person> right = createGridAndFillWithData(0);
 
-        GridDragger<Person> gridDragger = new GridDragger<>(left, right);
+        GridRowDragger<Person> gridDragger = new GridRowDragger<>(left, right);
 
         CheckBox addItemsToEnd = new CheckBox("Add Items To End", false);
         addItemsToEnd.addValueChangeListener(
                 event -> gridDragger.setDropIndexCalculator(event.getValue()
-                        ? DropIndexCalculator.ALWAYS_DROP_TO_END : null));
+                        ? DropIndexCalculator.alwaysDropToEnd() : null));
         CheckBox removeItemsFromSource = new CheckBox(
                 "Remove items from source grid", true);
         removeItemsFromSource.addValueChangeListener(event -> gridDragger

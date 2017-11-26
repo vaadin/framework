@@ -22,7 +22,7 @@ import com.vaadin.data.provider.DataProvider;
 import com.vaadin.shared.ui.dnd.DropEffect;
 
 /**
- * A handler for source grid data provider updater for {@link GridDragger}.
+ * A handler for source grid data provider updater for {@link GridRowDragger}.
  *
  * Used to handle updates to the source grid's {@link DataProvider} after a
  * drop.

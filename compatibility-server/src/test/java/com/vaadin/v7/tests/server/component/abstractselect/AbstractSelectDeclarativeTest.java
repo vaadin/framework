@@ -158,7 +158,7 @@ public class AbstractSelectDeclarativeTest
     private String getDesignForInlineData() {
         return "<vaadin7-list-select>\n"
                 + "        <option icon='http://some.url/icon.png'>Value 1</option>\n" //
-                + "        <option selected>Value 2</option>\n"//
+                + "        <option selected=''>Value 2</option>\n"//
                 + "</vaadin7-list-select>";
     }
 

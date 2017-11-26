@@ -43,7 +43,7 @@ public class GridDragStartEvent<T> extends DragStartEvent<Grid<T>> {
      * @param effectAllowed
      *            Allowed effect from {@code DataTransfer.effectAllowed} object.
      * @param draggedItems
-     *            Set of items being dragged.
+     *            List of items being dragged.
      */
     public GridDragStartEvent(Grid<T> source, EffectAllowed effectAllowed,
             List<T> draggedItems) {

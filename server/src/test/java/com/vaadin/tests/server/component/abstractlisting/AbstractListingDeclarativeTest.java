@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.provider.Query;

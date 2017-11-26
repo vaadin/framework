@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.aria.client.Roles;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -76,14 +77,19 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     /** For internal use only. May be removed or replaced in the future. */
     private TimeZone timeZone;
 
+    /**
+     * Specifies whether the group of components has focus or not.
+     */
+    private boolean groupFocus;
+
     public VAbstractTextualDate(R resoluton) {
         super(resoluton);
         text = new TextBox();
         text.addChangeHandler(this);
         text.addFocusHandler(
-                event -> fireBlurFocusEvent(event, true, EventId.FOCUS));
+                event -> fireBlurFocusEvent(event, true));
         text.addBlurHandler(
-                event -> fireBlurFocusEvent(event, false, EventId.BLUR));
+                event -> fireBlurFocusEvent(event, false));
         if (BrowserInfo.get().isIE()) {
             addDomHandler(this, KeyDownEvent.getType());
         }
@@ -394,27 +400,54 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     }
 
     private void fireBlurFocusEvent(DomEvent<?> event,
-            boolean addFocusStyleName, String eventId) {
+            boolean focus) {
         String styleName = VTextField.CLASSNAME + "-"
                 + VTextField.CLASSNAME_FOCUS;
-        if (addFocusStyleName) {
+        if (focus) {
             text.addStyleName(styleName);
         } else {
             text.removeStyleName(styleName);
         }
-        if (getClient() != null && connector.hasEventListener(eventId)) {
-            // may excessively send events if if focus went to another
-            // sub-component
-            if (EventId.FOCUS.equals(eventId)) {
+
+        Scheduler.get().scheduleDeferred(() -> checkGroupFocus(focus));
+
+        // Needed for tooltip event handling
+        fireEvent(event);
+    }
+
+    /**
+     * Checks if the group focus has changed, and sends to the server if needed.
+     *
+     * @param textFocus
+     *            the focus of the {@link #text}
+     * @since
+     */
+    protected void checkGroupFocus(boolean textFocus) {
+        boolean newGroupFocus = textFocus | hasChildFocus();
+        if (getClient() != null
+                && connector.hasEventListener(
+                        textFocus ? EventId.FOCUS : EventId.BLUR)
+                && groupFocus != newGroupFocus) {
+
+            if (newGroupFocus) {
                 rpc.focus();
             } else {
                 rpc.blur();
             }
             sendBufferedValues();
+            groupFocus = newGroupFocus;
         }
+    }
 
-        // Needed for tooltip event handling
-        fireEvent(event);
+    /**
+     * Returns whether any of the child components has focus.
+     *
+     * @return {@code true} if any of the child component has focus,
+     *         {@code false} otherwise
+     * @since
+     */
+    protected boolean hasChildFocus() {
+        return false;
     }
 
     /**
@@ -479,4 +512,5 @@ public abstract class VAbstractTextualDate<R extends Enum<R>>
     private static Logger getLogger() {
         return Logger.getLogger(VAbstractTextualDate.class.getName());
     }
+
 }

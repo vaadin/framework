@@ -24,14 +24,14 @@ public class GridDropTargetTest {
     @Test
     public void dropAllowedOnSortedGridRows_defaultValue_isTrue() {
         Assert.assertTrue("Default drop allowed should be backwards compatible",
-                target.isDropAllowedOnSortedGridRows());
+                target.isDropAllowedOnRowsWhenSorted());
     }
 
     @Test
     public void dropAllowedOnSortedGridRows_notAllowed_changesDropModeWhenSorted() {
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
@@ -64,11 +64,11 @@ public class GridDropTargetTest {
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(true);
+        target.setDropAllowedOnRowsWhenSorted(true);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
     }
@@ -77,7 +77,7 @@ public class GridDropTargetTest {
     public void dropAllowedOnSortedGridRows_notAllowedBackToAllowed_changesBackToUserDefinedMode() {
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
@@ -85,7 +85,7 @@ public class GridDropTargetTest {
 
         Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(true);
+        target.setDropAllowedOnRowsWhenSorted(true);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
@@ -98,19 +98,19 @@ public class GridDropTargetTest {
     public void dropAllowedOnSortedGridRows_swappingAllowedDropOnSortedOffAndOn() {
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(true);
+        target.setDropAllowedOnRowsWhenSorted(true);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(true);
+        target.setDropAllowedOnRowsWhenSorted(true);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
     }
@@ -119,7 +119,7 @@ public class GridDropTargetTest {
     public void dropAllowedOnSortedGridRows_changingDropModeWhileSorted_replacesPreviouslyCachedButDoesntOverride() {
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(false);
+        target.setDropAllowedOnRowsWhenSorted(false);
 
         Assert.assertEquals(DropMode.BETWEEN, target.getDropMode());
 
@@ -131,7 +131,7 @@ public class GridDropTargetTest {
 
         Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
         Assert.assertFalse("Changing drop mode should not have any effect here",
-                target.isDropAllowedOnSortedGridRows());
+                target.isDropAllowedOnRowsWhenSorted());
 
         grid.clearSortOrder();
 
@@ -145,7 +145,7 @@ public class GridDropTargetTest {
 
         Assert.assertEquals(DropMode.ON_GRID, target.getDropMode());
 
-        target.setDropAllowedOnSortedGridRows(true);
+        target.setDropAllowedOnRowsWhenSorted(true);
 
         Assert.assertEquals(DropMode.ON_TOP_OR_BETWEEN, target.getDropMode());
     }

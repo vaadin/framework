@@ -97,7 +97,6 @@ import com.vaadin.shared.ui.grid.SectionState;
 import com.vaadin.ui.components.grid.ColumnReorderListener;
 import com.vaadin.ui.components.grid.ColumnResizeListener;
 import com.vaadin.ui.components.grid.ColumnVisibilityChangeListener;
-import com.vaadin.ui.components.grid.DescriptionGenerator;
 import com.vaadin.ui.components.grid.DetailsGenerator;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.EditorImpl;
@@ -1414,7 +1413,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          * @param cellDescriptionGenerator
          *            the cell description generator to set, or {@code null} to
          *            remove a previously set generator
-         * @param contentMode
+         * @param tooltipContentMode
          *            the content mode for tooltips
          * @return this column
          *
@@ -1422,9 +1421,9 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
          */
         public Column<T, V> setDescriptionGenerator(
                 DescriptionGenerator<T> cellDescriptionGenerator,
-                ContentMode contentMode) {
+                ContentMode tooltipContentMode) {
             this.descriptionGenerator = cellDescriptionGenerator;
-            getState().contentMode = contentMode;
+            getState().tooltipContentMode = tooltipContentMode;
             getGrid().getDataCommunicator().reset();
             return this;
         }
@@ -4540,7 +4539,7 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         Element tableRow = container.appendElement("tr");
         tableRow.attr("item", serializeDeclarativeRepresentation(item));
         if (getSelectionModel().isSelected(item)) {
-            tableRow.attr("selected", "");
+            tableRow.attr("selected", true);
         }
         for (Column<T, ?> column : getColumns()) {
             Object value = column.valueProvider.apply(item);
