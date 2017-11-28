@@ -142,13 +142,9 @@ def removeDir(subdir):
 	rmtree(join(resultPath, subdir))
 
 def dockerWrap(imageVersion, imageName = "demo-validation"):
-	dockerFileContent = """FROM jetty:jre8-alpine
+	dockerFileContent = """FROM jtomass/alpine-jre-bash:latest
 MAINTAINER FrameworkTeam
 
-RUN apk add --update sed
-
-#Autodeploy folder:
-#/var/lib/jetty/webapps/
 
 COPY ./*.war /var/lib/jetty/webapps/
 COPY ./index-generate.sh /opt/
