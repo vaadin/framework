@@ -69,7 +69,9 @@ import com.vaadin.ui.declarative.DesignException;
  * share UI state in the container.
  * <p>
  * <strong>Note:</strong> Constructing a big hierarchical data set using the
- * methods in {@link TreeTable} may cause a decrease in performance.
+ * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+ * {@link Container.Hierarchical} container should be populated before setting it
+ * to the {@code TreeTable}.
  */
 @SuppressWarnings({ "serial" })
 public class TreeTable extends Table implements Hierarchical {
@@ -723,7 +725,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public Object addItem() throws UnsupportedOperationException {
@@ -734,7 +738,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public Item addItem(Object itemId) throws UnsupportedOperationException {
@@ -745,7 +751,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public Object addItem(Object[] cells, Object itemId)
@@ -757,7 +765,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public Item addItemAfter(Object previousItemId, Object newItemId)
@@ -769,7 +779,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public Object addItemAfter(Object previousItemId)
@@ -781,7 +793,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public void addItems(Collection<?> itemIds)
@@ -793,7 +807,9 @@ public class TreeTable extends Table implements Hierarchical {
      * {@inheritDoc}
      * <p>
      * <strong>Note:</strong> Constructing a big hierarchical data set using the
-     * methods in {@link TreeTable} may cause a decrease in performance.
+     * methods in {@link TreeTable} may cause a decrease in performance. Instead a
+     * {@link Container.Hierarchical} container should be populated before setting it
+     * to the {@code TreeTable}.
      */
     @Override
     public void addItems(Object... itemId)
