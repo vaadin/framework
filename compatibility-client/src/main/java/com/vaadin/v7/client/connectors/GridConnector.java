@@ -55,6 +55,7 @@ import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.v7.client.connectors.RpcDataSourceConnector.DetailsListener;
 import com.vaadin.v7.client.connectors.RpcDataSourceConnector.RpcDataSource;
 import com.vaadin.v7.client.widget.escalator.events.RowHeightChangedEvent;
@@ -855,8 +856,7 @@ public class GridConnector extends AbstractHasComponentsConnector
 
         grid.setEditorHandler(editorHandler);
         grid.addColumnReorderHandler(columnReorderHandler);
-        grid.addColumnVisibilityChangeHandler(
-                columnVisibilityChangeHandler);
+        grid.addColumnVisibilityChangeHandler(columnVisibilityChangeHandler);
         grid.addColumnResizeHandler(columnResizeHandler);
 
         ConnectorFocusAndBlurHandler.addHandlers(this);
@@ -1301,10 +1301,12 @@ public class GridConnector extends AbstractHasComponentsConnector
                     .getObject(GridState.JSONKEY_CELLDESCRIPTION);
 
             if (cellDescriptions != null && cellDescriptions.hasKey(c.id)) {
-                return new TooltipInfo(cellDescriptions.getString(c.id));
+                return new TooltipInfo(cellDescriptions.getString(c.id),
+                        ContentMode.HTML);
             } else if (row.hasKey(GridState.JSONKEY_ROWDESCRIPTION)) {
                 return new TooltipInfo(
-                        row.getString(GridState.JSONKEY_ROWDESCRIPTION));
+                        row.getString(GridState.JSONKEY_ROWDESCRIPTION),
+                        ContentMode.HTML);
             } else {
                 return null;
             }
