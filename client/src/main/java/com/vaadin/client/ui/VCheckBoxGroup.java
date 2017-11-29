@@ -50,6 +50,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
 
     public static final String CLASSNAME = "v-select-optiongroup";
     public static final String CLASSNAME_OPTION = "v-select-option";
+    public static final String CLASSNAME_OPTION_SELECTED = "v-select-option-selected";
 
     private final Map<VCheckBox, JsonObject> optionsToItems;
 
@@ -135,6 +136,7 @@ public class VCheckBoxGroup extends FocusableFlowPanelComposite
         widget.setValue(
                 item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         setOptionEnabled(widget, item);
+        widget.setStyleName(CLASSNAME_OPTION_SELECTED, widget.getValue());
 
         if (requireInitialization) {
             widget.addStyleName(CLASSNAME_OPTION);
