@@ -1659,10 +1659,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
                 grid.refreshBody();
                 HeaderCell cell = grid.getDefaultHeaderRow()
                         .getCell(grid.selectionColumn);
-                if (cell.getType() == GridStaticCellType.WIDGET) { // if lazy
-                                                                   // provider,
-                                                                   // then no
-                                                                   // checkbox
+                // if lazy provider, then no checkbox
+                if (cell.getType() == GridStaticCellType.WIDGET) {
                     CheckBox checkBox = (CheckBox) grid.getDefaultHeaderRow()
                             .getCell(grid.selectionColumn).getWidget();
                     checkBox.setEnabled(isEnabled);
