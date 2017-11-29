@@ -61,8 +61,15 @@
         <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
 
         <vaadin.icons.version>3.0.1</vaadin.icons.version>
-        <vaadin.testbench.version>5.1.0</vaadin.testbench.version>
+        <vaadin.testbench.version>5.1-SNAPSHOT</vaadin.testbench.version>
     </properties>
+    
+    <repositories>
+        <repository>
+            <id>vaadin-snapshots</id>
+            <url>http://oss.sonatype.org/content/repositories/vaadin-snapshots</url>
+        </repository>
+    </repositories>
 
     <!-- TODO: remove this after maven plugin has been released -->
     <pluginRepositories>
