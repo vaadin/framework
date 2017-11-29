@@ -136,7 +136,7 @@ you should check that the bootstrap script was loaded properly.
 
 [subs="normal"]
 ----
-&lt;script type="text/javascript"&gt;//&lt;![CDATA[
+&lt;script type="text/javascript"&gt;//&lt;!\[CDATA[
   if (!window.vaadin)
       alert("[replaceable]#Failed to load the bootstrap JavaScript:#"+
             "[replaceable]#VAADIN/vaadinBootstrap.js#");
