@@ -22,6 +22,7 @@ import java.util.List;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.label.ContentMode;
 
 /**
  * The shared state for the {@link com.vaadin.ui.components.grid.Grid} component
@@ -208,5 +209,29 @@ public class GridState extends TabIndexState {
     /** Whether the columns can be reordered */
     @DelegateToWidget
     public boolean columnReorderingAllowed;
+
+    /**
+     * The content mode used for cell tooltips.
+     * 
+     * @since
+     */
+    /*
+     * When porting this to the v7 version in Framework 8, the default should be
+     * changed to PREFORMATTED to preserve the more secure default that has
+     * accidentally been used there.
+     */
+    public ContentMode cellTooltipContentMode = ContentMode.HTML;
+
+    /**
+     * The content mode used for row tooltips.
+     * 
+     * @since
+     */
+    /*
+     * When porting this to the v7 version in Framework 8, the default should be
+     * changed to PREFORMATTED to preserve the more secure default that has
+     * accidentally been used there.
+     */
+    public ContentMode rowTooltipContentMode = ContentMode.HTML;
 
 }
