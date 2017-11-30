@@ -150,8 +150,6 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         }
 
         button.setHTML(itemHtml);
-        button.setValue(
-                item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
         boolean optionEnabled = !item
                 .getBoolean(ListingJsonConstants.JSONKEY_ITEM_DISABLED);
         boolean enabled = optionEnabled && !isReadonly() && isEnabled();
@@ -159,7 +157,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         // #9258 apply the v-disabled class when disabled for UX
         button.setStyleName(StyleConstants.DISABLED,
                 !isEnabled() || !optionEnabled);
-        updateItemSelection(button, button.getValue());
+        updateItemSelection(button, item.getBoolean(ListingJsonConstants.JSONKEY_ITEM_SELECTED));
 
         String key = item.getString(DataCommunicatorConstants.KEY);
 
@@ -266,8 +264,7 @@ public class VRadioButtonGroup extends FocusableFlowPanelComposite
         if (selectedItemKey != null) {
             RadioButton radioButton = keyToOptions.get(selectedItemKey);
             if (radioButton != null) { // Items might not be loaded yet
-                radioButton.setValue(true);
-                radioButton.setStyleName(CLASSNAME_OPTION_SELECTED, true);
+                updateItemSelection(radioButton, true);
             }
         }
     }

@@ -381,15 +381,11 @@ public class CheckBoxGroupTest extends MultiBrowserTest {
         selectMenuPath("Component", "Selection", "Toggle Item 5");
 
         String className = getSelect().getOptionElements().get(5).getAttribute("className");
-        assertEquals("No v-select-option-selected class, was " + className,
-            true, className.contains("v-select-option-selected")
-        );
+        assertTrue("No v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
 
         selectMenuPath("Component", "Selection", "Toggle Item 5");
         className = getSelect().getOptionElements().get(5).getAttribute("className");
-        assertEquals("Extra v-select-option-selected class, was " + className,
-            false, className.contains("v-select-option-selected")
-        );
+        assertFalse("Extra v-select-option-selected class, was " + className, className.contains("v-select-option-selected"));
     }
     // needed to make tooltips work in IE tests
     @Override
