@@ -354,9 +354,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                     .skip(Math.max(0, range.getStart() - referenceItemIndex - 1))
                     .collect(Collectors.toList()));
         } else {
-            // Get complete flattened hierarchy when there is no reference
-            items = getHierarchy(null).skip(range.getStart())
-                    .limit(range.length()).collect(Collectors.toList());
+            // When there is no reference, fetch items starting from the root
+            items.addAll(fetchItemsAfter(null, range.getEnd()).stream()
+                    .skip(range.getStart()).collect(Collectors.toList()));
         }
 
         // Set reference as top of the fetched list
@@ -396,20 +396,20 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         List<T> items = new ArrayList<>(limit);
 
         int skipChildren = 0;
-        boolean needsFetchingAncestors = false;
+        boolean reachedRootItems = false;
 
-        while (limit > 0 && item != null) {
-            if (needsFetchingAncestors) {
-                skipChildren = getSiblingIndex(item) + 1;
-                item = getParentOfItem(item);
-            }
-
+        while (limit > 0 && !reachedRootItems) {
             List<T> fetchedItems = fetchChildrenRecursively(item, false,
                     skipChildren, limit);
             items.addAll(fetchedItems);
             limit -= fetchedItems.size();
 
-            needsFetchingAncestors = true;
+            if (item != null) {
+                skipChildren = getSiblingIndex(item) + 1;
+                item = getParentOfItem(item);
+            } else {
+                reachedRootItems = true;
+            }
         }
 
         return items;
