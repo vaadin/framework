@@ -59,12 +59,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     // childMap is only used for finding parents of items and clean up on
     // removing children of expanded nodes.
-    // TODO: 27/11/2017 Get rid of child map
     private Map<T, Set<T>> childMap = new HashMap<>();
-
-    /**
-     *
-     */
     private Map<Object, T> parentMap = new HashMap<>();
 
     private final HierarchicalDataProvider<T, F> provider;
@@ -79,7 +74,15 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * Maps items' ID to their order among siblings.
      */
     private Map<Object, Integer> siblingIndex = new HashMap<>();
+
+    /**
+     * Keeps a reference point which is used for fetching data.
+     */
     private T referenceItem = null;
+
+    /**
+     * The reference item's index for fetching data.
+     */
     private int referenceItemIndex = -1;
 
     /**
@@ -258,7 +261,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setInMemorySorting(Comparator<T> inMemorySorting) {
         this.inMemorySorting = inMemorySorting;
+
         resetReferenceItem();
+        siblingIndex.clear();
     }
 
     /**
@@ -279,7 +284,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setBackEndSorting(List<QuerySortOrder> backEndSorting) {
         this.backEndSorting = backEndSorting;
+
         resetReferenceItem();
+        siblingIndex.clear();
     }
 
     /**
@@ -300,7 +307,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      */
     public void setFilter(Object filter) {
         this.filter = (F) filter;
+
         resetReferenceItem();
+        siblingIndex.clear();
     }
 
     /**
@@ -341,7 +350,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             // Fetch items before the reference
             items.addAll(fetchItemsBefore(referenceItem,
                     referenceItemIndex - range.getStart()).stream()
-                    .limit(range.length()).collect(Collectors.toList()));
+                            .limit(range.length())
+                            .collect(Collectors.toList()));
 
             // Add the reference item to the list
             if (range.contains(referenceItemIndex)) {
@@ -351,8 +361,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             // Fetch items after the reference
             items.addAll(fetchItemsAfter(referenceItem,
                     range.getEnd() - referenceItemIndex - 1).stream()
-                    .skip(Math.max(0, range.getStart() - referenceItemIndex - 1))
-                    .collect(Collectors.toList()));
+                            .skip(Math.max(0,
+                                    range.getStart() - referenceItemIndex - 1))
+                            .collect(Collectors.toList()));
         } else {
             // When there is no reference, fetch items starting from the root
             items.addAll(fetchItemsAfter(null, range.getEnd()).stream()
@@ -376,17 +387,20 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of items
      */
     public Stream<T> fetchItems(T parent, Range range) {
-        // TODO: 27/11/2017 perhaps optimize as well
-        return getHierarchy(parent, false).skip(range.getStart())
-                .limit(range.length());
+        return fetchChildrenRecursively(parent, false, range.getStart(),
+                range.length()).stream();
     }
 
     /**
      * Returns {@code limit} number of items that are after {@code item} in the
      * flattened hierarchy.
+     * 
      * @param item
+     *            item after which to fetch items
      * @param limit
-     * @return
+     *            number of items to fetch
+     * @return list of items after {@code item} in the flattened hierarchy with
+     *         size {@code limit}
      */
     private List<T> fetchItemsAfter(T item, int limit) {
         if (limit <= 0) {
@@ -416,15 +430,22 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Fetches children of {@code parent} recursively.
+     * Fetches children of {@code parent} recursively, until {@code limit}
+     * number of items are reached.
+     * 
      * @param parent
+     *            item, whoes children to be fetched
      * @param includeParent
-     * @param skipChildren
+     *            whether to include the parent item in the returned list
+     * @param offset
+     *            number of items to leave out of the beginning of the list
      * @param limit
-     * @return
+     *            the maximum number of items
+     * @return list of recursive children of {@code parent} with given offset
+     *         and limit
      */
     private List<T> fetchChildrenRecursively(T parent, boolean includeParent,
-            int skipChildren, int limit) {
+            int offset, int limit) {
         List<T> items = new ArrayList<>(limit);
         if (includeParent && limit-- > 0) {
             items.add(parent);
@@ -432,7 +453,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
         if (limit > 0 && isExpanded(parent)) {
             Iterator<T> children = getDirectChildren(parent,
-                    Range.withLength(skipChildren, limit)).iterator();
+                    Range.withLength(offset, limit)).iterator();
             while (children.hasNext() && limit > 0) {
                 List<T> childrenRecursive = fetchChildrenRecursively(
                         children.next(), true, 0, limit);
@@ -446,9 +467,13 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Fetches {@code limit} number of items that are before {@code item} in the
      * flattened hierarchy.
+     * 
      * @param item
+     *            item before which to fetch items
      * @param limit
-     * @return
+     *            number of items to fetch
+     * @return list of items before {@code item} in the flattened hierarchy with
+     *         size {@code limit}
      */
     private List<T> fetchItemsBefore(T item, int limit) {
         if (limit <= 0) {
@@ -470,12 +495,22 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Fetches children of {@code parent} recursively in reverse order.
+     * Fetches children of {@code parent} recursively in reverse order, until
+     * {@code limit} number of items are reached.
+     * <p>
+     * Parent item is only included in the returned list if the following is
+     * true: {@code includeParent == true && offset + limit > # all descendants}
+     * 
      * @param parent
+     *            item, whoes children to be fetched
      * @param includeParent
+     *            whether to include the parent in the returned list
      * @param offset
+     *            number of items to leave out of the beginning of the list
      * @param limit
-     * @return
+     *            the maximum number of items
+     * @return list of recursive children of {@code parent} in reverse order
+     *         with given offset and limit
      */
     private List<T> fetchChildrenRecursivelyReverse(T parent,
             boolean includeParent, int offset, int limit) {
@@ -533,8 +568,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
     /**
      * Find parent for the given item among open folders.
-     * @param item the item
-     * @return parent item or {@code null} for root items or if the parent is closed
+     * 
+     * @param item
+     *            the item
+     * @return parent item or {@code null} for root items or if the parent is
+     *         closed
      */
     protected T getParentOfItem(T item) {
         Objects.requireNonNull(item, "Can not find the parent of null");
@@ -544,8 +582,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     /**
      * Removes all children of an item identified by a given id. Items removed
      * by this method as well as the original item are all marked to be
-     * collapsed.
-     * May be overridden in subclasses for removing obsolete data to avoid memory leaks.
+     * collapsed. May be overridden in subclasses for removing obsolete data to
+     * avoid memory leaks.
      *
      * @param id
      *            the item id
@@ -630,7 +668,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         List<T> items = doFetchDirectChildren(parent, range)
                 .collect(Collectors.toList());
 
-        // TODO: 22/11/2017 see if registering should be elsewhere
         // Keep index of sibling and parents for later use
         int index = range.getStart();
         for (T item : items) {
@@ -689,15 +726,18 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Register parent and children items into inner structures.
-     * May be overridden in subclasses.
+     * Register parent and children items into inner structures. May be
+     * overridden in subclasses.
      *
-     * @param parent the parent item
-     * @param childList list of parents children to be registered.
+     * @param parent
+     *            the parent item
+     * @param childList
+     *            list of parents children to be registered.
      */
     protected void registerChildren(T parent, List<T> childList) {
         childMap.put(parent, new HashSet<>(childList));
-        childList.forEach(x -> parentMap.put(getDataProvider().getId(x), parent));
+        childList.forEach(
+                x -> parentMap.put(getDataProvider().getId(x), parent));
     }
 
     /**
@@ -722,20 +762,44 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         return Stream.concat(parentStream, children);
     }
 
+    /**
+     * Returns the index of the given item among its siblings.
+     * 
+     * @param item
+     *            item of which to get the sibling index
+     * @return index of the given item among its siblings
+     */
     private int getSiblingIndex(T item) {
         return siblingIndex.get(getDataProvider().getId(item));
     }
 
+    /**
+     * Sets a reference point for fetching items.
+     * 
+     * @param item
+     *            the reference item
+     * @param index
+     *            index of {@code item} in the flattened hierarchy
+     */
     private void setReferenceItem(T item, int index) {
         referenceItem = item;
         referenceItemIndex = index;
     }
 
+    /**
+     * Resets the reference item and its index.
+     */
     private void resetReferenceItem() {
         referenceItem = null;
         referenceItemIndex = -1;
     }
 
+    /**
+     * Shifts the reference item's index by {@code offset}.
+     * 
+     * @param offset
+     *            the amount with which to shift the index
+     */
     private void shiftReferenceItem(int offset) {
         referenceItemIndex += offset;
     }
