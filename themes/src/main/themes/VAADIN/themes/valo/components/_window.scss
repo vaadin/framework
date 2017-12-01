@@ -71,7 +71,7 @@ $v-window-modality-curtain-background-color: #222 !default;
     min-height: $v-unit-size !important;
     white-space: nowrap;
     overflow: hidden !important;
-
+    position: absolute !important;
     @if $v-animations-enabled {
       @include transition(width 200ms, height 200ms, top 200ms, left 200ms);
 
@@ -99,7 +99,7 @@ $v-window-modality-curtain-background-color: #222 !default;
   }
 
   .#{$primary-stylename}-draggingCurtain {
-    position: fixed !important;
+    /*background: element;*/
   }
 
   .#{$primary-stylename}-resizingCurtain + .v-window,

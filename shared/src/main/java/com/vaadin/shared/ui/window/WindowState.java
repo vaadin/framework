@@ -56,4 +56,7 @@ public class WindowState extends PanelState {
     public String assistiveTabStopTopText = "Top of dialog";
     @NoLayout
     public String assistiveTabStopBottomText = "Bottom of Dialog";
+    
+    @NoLayout
+    public boolean topWindow = true;
 }

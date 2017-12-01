@@ -282,6 +282,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void bringToFront(boolean notifyListeners) {
+        
         int curIndex = getWindowOrder();
         if (curIndex + 1 < windowOrder.size()) {
             windowOrder.remove(this);
@@ -353,7 +354,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * @since 8.0
      */
     public final int getWindowOrder() {
-        return windowOrder.indexOf(this);
+        int order = windowOrder.indexOf(this);
+        return order<0?0:order;
     }
 
     @Override
@@ -780,6 +782,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private Element getDraggingCurtain() {
         if (draggingCurtain == null) {
             draggingCurtain = createCurtain();
+            if (connector.getState().topWindow) {
+                draggingCurtain.getStyle().setPosition(Position.FIXED);
+            }
             draggingCurtain.setClassName(CLASSNAME + "-draggingCurtain");
         }
 
@@ -1256,8 +1261,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             dragging = true;
             startX = WidgetUtil.getTouchOrMouseClientX(event);
             startY = WidgetUtil.getTouchOrMouseClientY(event);
-            origX = DOM.getAbsoluteLeft(getElement());
-            origY = DOM.getAbsoluteTop(getElement());
+            origX = DOM.getAbsoluteLeft(getElement()) - draggingCurtain.getAbsoluteLeft();
+            origY = DOM.getAbsoluteTop(getElement()) - draggingCurtain.getAbsoluteTop();
             DOM.setCapture(getElement());
             DOM.eventPreventDefault(event);
         }
