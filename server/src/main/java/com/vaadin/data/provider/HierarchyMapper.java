@@ -57,21 +57,24 @@ import elemental.json.JsonObject;
  */
 public class HierarchyMapper<T, F> implements DataGenerator<T> {
 
-    // childMap is only used for finding parents of items and clean up on
-    // removing children of expanded nodes.
-    private Map<T, Set<T>> childMap = new HashMap<>();
-    private Map<Object, T> parentMap = new HashMap<>();
-
     private final HierarchicalDataProvider<T, F> provider;
     private F filter;
     private List<QuerySortOrder> backEndSorting;
     private Comparator<T> inMemorySorting;
     private ItemCollapseAllowedProvider<T> itemCollapseAllowedProvider = t -> true;
 
+    /**
+     * Keeps relation between an item's ID and its parent item.
+     */
+    private Map<Object, T> parentMap = new HashMap<>();
+
+    /**
+     * Keeps IDs of expanded items.
+     */
     private Set<Object> expandedItemIds = new HashSet<>();
 
     /**
-     * Maps items' ID to their order among siblings.
+     * Maps item IDs to their order among siblings.
      */
     private Map<Object, Integer> siblingIndex = new HashMap<>();
 
@@ -188,6 +191,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 }
             }
             expandedItemIds.remove(id);
+
+            // Remove unneeded items from the cache
+            removeDescendantsFromCache(id);
         }
         return removedRows;
     }
@@ -371,7 +377,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         }
 
         // Set reference as top of the fetched list
-        setReferenceItem(items.get(0), range.getStart());
+        if (!items.isEmpty()) {
+            setReferenceItem(items.get(0), range.getStart());
+        }
 
         return items.stream();
     }
@@ -589,22 +597,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      *            the item id
      */
     protected void removeChildren(Object id) {
-        // Clean up removed nodes from child map
-        Iterator<Entry<T, Set<T>>> iterator = childMap.entrySet().iterator();
-        Set<T> invalidatedChildren = new HashSet<>();
-        while (iterator.hasNext()) {
-            Entry<T, Set<T>> entry = iterator.next();
-            T key = entry.getKey();
-            if (key != null && getDataProvider().getId(key).equals(id)) {
-                invalidatedChildren.addAll(entry.getValue());
-                iterator.remove();
-            }
-        }
+        Set<Object> removedIds = removeDescendantsFromCache(id);
+        expandedItemIds.removeAll(removedIds);
         expandedItemIds.remove(id);
-        invalidatedChildren.stream().map(getDataProvider()::getId).forEach(x -> {
-            removeChildren(x);
-            parentMap.remove(x);
-        });
     }
 
     /**
@@ -668,12 +663,20 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         List<T> items = doFetchDirectChildren(parent, range)
                 .collect(Collectors.toList());
 
-        // Keep index of sibling and parents for later use
-        int index = range.getStart();
-        for (T item : items) {
-            Object id = getDataProvider().getId(item);
-            siblingIndex.put(id, index++);
-            parentMap.put(id, parent);
+        if (isExpanded(parent)){
+            if (items.isEmpty()) {
+                if (range.getStart() == 0 && range.length() > 0
+                        || doGetChildCount(parent) == 0) {
+                    removeChildren(getDataProvider().getId(parent));
+                }
+            } else {
+                int index = range.getStart();
+                for (T item : items) {
+                    Object id = getDataProvider().getId(item);
+                    siblingIndex.put(id, index++);
+                }
+                registerChildren(parent, items);
+            }
         }
 
         return items;
@@ -709,8 +712,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         if (isExpanded(parent)) {
             childList = getDirectChildren(parent).collect(Collectors.toList());
             if (childList.isEmpty()) {
-                removeChildren(parent == null ? null
-                        : getDataProvider().getId(parent));
+                removeChildren(getItemId(parent));
             } else {
                 registerChildren(parent, childList);
             }
@@ -735,7 +737,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      *            list of parents children to be registered.
      */
     protected void registerChildren(T parent, List<T> childList) {
-        childMap.put(parent, new HashSet<>(childList));
         childList.forEach(
                 x -> parentMap.put(getDataProvider().getId(x), parent));
     }
@@ -760,6 +761,39 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         Stream<T> parentStream = parentIncluded ? Stream.of(parent)
                 : Stream.empty();
         return Stream.concat(parentStream, children);
+    }
+
+    /**
+     * Removes all descendants of the item with the given ID from {@link HierarchyMapper#parentMap} and {@link HierarchyMapper#siblingIndex}.
+     * @param parentId ID of the item whose descendants to remove
+     * @return set of IDs of removed items
+     */
+    private Set<Object> removeDescendantsFromCache(Object parentId) {
+        Map<Object, Object> childIdToParentId = new HashMap<>(parentMap.size());
+        for (Entry<Object, T> entry : parentMap.entrySet()) {
+            childIdToParentId.put(entry.getKey(), getItemId(entry.getValue()));
+        }
+        Set<Object> idsToRemove = new HashSet<>();
+        boolean itemsAdded;
+        do {
+            itemsAdded = false;
+            Iterator<Entry<Object, Object>> iterator = childIdToParentId
+                    .entrySet().iterator();
+            while (iterator.hasNext()) {
+                Entry<Object, Object> entry = iterator.next();
+                if (Objects.equals(parentId, entry.getValue()) || idsToRemove
+                        .contains(entry.getValue())) {
+                    idsToRemove.add(entry.getKey());
+                    iterator.remove();
+                    itemsAdded = true;
+                }
+            }
+        } while (itemsAdded);
+
+        parentMap.keySet().removeAll(idsToRemove);
+        siblingIndex.keySet().removeAll(idsToRemove);
+
+        return idsToRemove;
     }
 
     /**
@@ -804,9 +838,19 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         referenceItemIndex += offset;
     }
 
+    /**
+     * Gets an item's ID from the data provider. For root items, returns {@code null}.
+     * @param item item of which to get the ID
+     * @return the item's ID or {@code null} for root items
+     */
+    private Object getItemId(T item) {
+        return item == null ? null : getDataProvider().getId(item);
+    }
+
     @Override
     public void destroyAllData() {
-        childMap.clear();
         parentMap.clear();
+        siblingIndex.clear();
+        resetReferenceItem();
     }
 }
