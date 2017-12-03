@@ -409,7 +409,7 @@ public abstract class UI extends AbstractSingleComponentContainer
     /**
      * Fire a click event to all click listeners.
      *
-     * @param object
+     * @param parameters
      *            The raw "value" of the variable change from the client side.
      */
     private void fireClick(Map<String, Object> parameters) {
@@ -868,8 +868,12 @@ public abstract class UI extends AbstractSingleComponentContainer
         page.updateLocation(oldLocation.toString(), false, false);
         page.updateBrowserWindowSize(oldWidth, oldHeight, false);
 
-        page.updateLocation(newLocation.toString(), true, false);
+        page.updateLocation(newLocation.toString(), true, firePopStateEventOnRefresh());
         page.updateBrowserWindowSize(newWidth, newHeight, true);
+    }
+
+    private boolean firePopStateEventOnRefresh() {
+        return getClass().getAnnotation(PushStateNavigation.class) != null;
     }
 
     /**
@@ -1052,7 +1056,7 @@ public abstract class UI extends AbstractSingleComponentContainer
 
     /**
      * Remove a click listener from the UI. The listener should earlier have
-     * been added using {@link #addListener(ClickListener)}.
+     * been added using {@link #addClickListener(ClickListener)}.
      *
      * @param listener
      *            The listener to remove
@@ -1255,9 +1259,9 @@ public abstract class UI extends AbstractSingleComponentContainer
      *
      * @see Notification
      * @see #showNotification(String)
-     * @see #showNotification(String, int)
+     * @see #showNotification(String, com.vaadin.ui.Notification.Type)
      * @see #showNotification(String, String)
-     * @see #showNotification(String, String, int)
+     * @see #showNotification(String, String, com.vaadin.ui.Notification.Type)
      *
      * @param notification
      *            The notification message to show
