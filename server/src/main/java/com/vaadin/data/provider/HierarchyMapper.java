@@ -659,11 +659,22 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 Range.between(0, doGetChildCount(parent))).stream();
     }
 
+    /**
+     * Gets a list of direct children of the given item in given range. Also
+     * registers children in local cache and removes them if they have been
+     * removed from the data source.
+     * 
+     * @param parent
+     *            the parent item
+     * @param range
+     *            the range of direct children to return
+     * @return list of direct children of {@code parent} within the given range
+     */
     private List<T> getDirectChildren(T parent, Range range) {
-        List<T> items = doFetchDirectChildren(parent, range)
-                .collect(Collectors.toList());
-
-        if (isExpanded(parent)){
+        List<T> items = Collections.emptyList();
+        if (isExpanded(parent)) {
+            items = doFetchDirectChildren(parent, range)
+                    .collect(Collectors.toList());
             if (items.isEmpty()) {
                 if (range.getStart() == 0 && range.length() > 0
                         || doGetChildCount(parent) == 0) {
@@ -678,7 +689,6 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                 registerChildren(parent, items);
             }
         }
-
         return items;
     }
 
@@ -764,8 +774,12 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Removes all descendants of the item with the given ID from {@link HierarchyMapper#parentMap} and {@link HierarchyMapper#siblingIndex}.
-     * @param parentId ID of the item whose descendants to remove
+     * Removes all descendants of the item with the given ID from
+     * {@link HierarchyMapper#parentMap} and
+     * {@link HierarchyMapper#siblingIndex}.
+     * 
+     * @param parentId
+     *            ID of the item whose descendants to remove
      * @return set of IDs of removed items
      */
     private Set<Object> removeDescendantsFromCache(Object parentId) {
@@ -781,8 +795,8 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
                     .entrySet().iterator();
             while (iterator.hasNext()) {
                 Entry<Object, Object> entry = iterator.next();
-                if (Objects.equals(parentId, entry.getValue()) || idsToRemove
-                        .contains(entry.getValue())) {
+                if (Objects.equals(parentId, entry.getValue())
+                        || idsToRemove.contains(entry.getValue())) {
                     idsToRemove.add(entry.getKey());
                     iterator.remove();
                     itemsAdded = true;
@@ -839,8 +853,11 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Gets an item's ID from the data provider. For root items, returns {@code null}.
-     * @param item item of which to get the ID
+     * Gets an item's ID from the data provider. For root items, returns
+     * {@code null}.
+     * 
+     * @param item
+     *            item of which to get the ID
      * @return the item's ID or {@code null} for root items
      */
     private Object getItemId(T item) {
