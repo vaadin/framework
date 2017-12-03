@@ -648,15 +648,15 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
     }
 
     /**
-     * Gets the stream of direct children for given node.
+     * Gets the list of direct children for given node.
      *
      * @param parent
      *            the parent node
      * @return the stream of direct children
      */
-    private Stream<T> getDirectChildren(T parent) {
+    private List<T> getDirectChildren(T parent) {
         return getDirectChildren(parent,
-                Range.between(0, doGetChildCount(parent))).stream();
+                Range.between(0, doGetChildCount(parent)));
     }
 
     /**
@@ -718,18 +718,9 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
      * @return the stream of all children under the parent
      */
     private Stream<T> getChildrenStream(T parent, boolean includeParent) {
-        List<T> childList = Collections.emptyList();
-        if (isExpanded(parent)) {
-            childList = getDirectChildren(parent).collect(Collectors.toList());
-            if (childList.isEmpty()) {
-                removeChildren(getItemId(parent));
-            } else {
-                registerChildren(parent, childList);
-            }
-        }
         return combineParentAndChildStreams(parent,
-                childList.stream().flatMap(this::getChildrenStream),
-                includeParent);
+                getDirectChildren(parent).stream()
+                        .flatMap(this::getChildrenStream), includeParent);
     }
 
     private int doGetChildCount(T parent) {
