@@ -678,7 +678,7 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
             if (items.isEmpty()) {
                 if (range.getStart() == 0 && range.length() > 0
                         || doGetChildCount(parent) == 0) {
-                    removeChildren(getDataProvider().getId(parent));
+                    removeChildren(getItemId(parent));
                 }
             } else {
                 int index = range.getStart();
