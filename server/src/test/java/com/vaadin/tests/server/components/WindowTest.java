@@ -39,15 +39,17 @@ public class WindowTest {
         Registration windowCloseListenerRegistration = window
                 .addCloseListener(cl);
         sendClose(window);
-
+        System.out.println("window: " + window);
         // Ensure listener was called once
         EasyMock.verify(cl);
 
+        System.out.println("window: " + window);
         // Remove the listener and send close event -> should not end up in
         // listener
         windowCloseListenerRegistration.remove();
+        System.out.println("window: " + window);
         sendClose(window);
-
+        System.out.println("end.");
         // Ensure listener still has been called only once
         EasyMock.verify(cl);
 
@@ -90,6 +92,7 @@ public class WindowTest {
     }
 
     private static void sendClose(Window window) {
+        System.out.println("sendClose: w: "+window.getClass());
         Map<String, Object> variables = new HashMap<>();
         variables.put("close", true);
         window.changeVariables(window, variables);

@@ -168,10 +168,14 @@ public class Window extends Panel
      */
     @Override
     public void setParent(HasComponents parent) {
-        if (parent == null || parent instanceof UI || parent.getParent() instanceof WindowDesktop) {
+        if (parent == null 
+                || parent instanceof UI 
+                || (parent instanceof CssLayout && parent.getParent() instanceof WindowDesktop) ) {
             super.setParent(parent);
+//            System.out.println("Windows parent: "+parent.getClass());
             // set the Window behavior
-            getState().topWindow = parent instanceof UI;
+            if (parent instanceof WindowDesktop)
+                getState().topWindow = false;
         } else {
             throw new IllegalArgumentException(
                     "A Window can only be added to a UI using UI.addWindow(Window window)");
