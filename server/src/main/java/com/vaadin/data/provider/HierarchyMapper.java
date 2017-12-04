@@ -674,12 +674,13 @@ public class HierarchyMapper<T, F> implements DataGenerator<T> {
         List<T> items = Collections.emptyList();
         if (isExpanded(parent)) {
             // Restrict range to available children
-            range = range
-                    .restrictTo(Range.withLength(0, doGetChildCount(parent)));
+            Range availableRange = Range.withLength(0, doGetChildCount(parent));
+            range = range.restrictTo(availableRange);
+
             items = doFetchDirectChildren(parent, range)
                     .collect(Collectors.toList());
             if (items.isEmpty()) {
-                if (range.getStart() == 0 && !range.isEmpty()) {
+                if (availableRange.isEmpty()) {
                     // Remove children from cache if none exist in data source
                     removeChildren(getItemId(parent));
                 }
