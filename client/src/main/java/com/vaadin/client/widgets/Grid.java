@@ -2323,15 +2323,23 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
         protected void dispatch(HANDLER handler) {
             EventTarget target = getNativeEvent().getEventTarget();
             Grid<?> grid = getGrid();
-            if (Element.is(target) && grid != null
-                    && !grid.isElementInChildWidget(Element.as(target))) {
-
+            if (Element.is(target) && grid != null) {
                 Section section = Section.FOOTER;
                 final RowContainer container = grid.cellFocusHandler.containerWithFocus;
                 if (container == grid.escalator.getHeader()) {
                     section = Section.HEADER;
                 } else if (container == getGrid().escalator.getBody()) {
                     section = Section.BODY;
+                }
+
+                // Handle event in widget in grid if column allows it
+                if (grid.isElementInChildWidget(Element.as(target))) {
+                    Cell cell = container.getCell(target.cast());
+                    Column<?, ?> column = grid
+                            .getVisibleColumn(cell.getColumn());
+                    if (!column.isWidgetEventsAllowed()) {
+                        return;
+                    }
                 }
 
                 doDispatch(handler, section);
@@ -2441,8 +2449,13 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         protected boolean ignoreEventFromTarget(Grid<?> grid,
                 Element targetElement) {
-            // Target is some widget inside of Grid
-            return grid.isElementInChildWidget(targetElement);
+            RowContainer container = grid.getEscalator()
+                    .findRowContainer(targetElement);
+            Column<?, ?> column = grid.getVisibleColumn(
+                    container.getCell(targetElement).getColumn());
+            boolean childWidget = grid.isElementInChildWidget(targetElement);
+            boolean handleWidgetEvent = column.isWidgetEventsAllowed();
+            return childWidget && !handleWidgetEvent;
         }
 
         protected abstract void doDispatch(HANDLER handler, Section section);
@@ -4735,6 +4748,8 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
 
         private String hidingToggleCaption = null;
 
+        private boolean widgetEventsAllowed = false;
+
         private double minimumWidthPx = GridConstants.DEFAULT_MIN_WIDTH;
         private double maximumWidthPx = GridConstants.DEFAULT_MAX_WIDTH;
         private int expandRatio = GridConstants.DEFAULT_EXPAND_RATIO;
@@ -5511,6 +5526,28 @@ public class Grid<T> extends ResizeComposite implements HasSelectionHandlers<T>,
          */
         protected void setDefaultHeaderContent(HeaderCell cell) {
             cell.setText(headerCaption);
+        }
+
+        /**
+         * Returns whether Grid should handle events from Widgets in this
+         * Column.
+         * 
+         * @return {@code true} to handle events from widgets; {@code false} to
+         *         not
+         */
+        public boolean isWidgetEventsAllowed() {
+            return widgetEventsAllowed;
+        }
+
+        /**
+         * Sets whether Grid should handle events from Widgets in this Column.
+         * 
+         * @param widgetEventsAllowed
+         *            {@code true} to let grid handle events from widgets;
+         *            {@code false} to not
+         */
+        public void setWidgetEventsAllowed(boolean widgetEventsAllowed) {
+            this.widgetEventsAllowed = widgetEventsAllowed;
         }
 
     }

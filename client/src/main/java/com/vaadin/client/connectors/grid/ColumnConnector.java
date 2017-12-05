@@ -195,6 +195,11 @@ public class ColumnConnector extends AbstractExtensionConnector {
         column.setTooltipContentMode(getState().tooltipContentMode);
     }
 
+    @OnStateChange("widgetEventsAllowed")
+    void updateWidgetEventsAllowed() {
+        column.setWidgetEventsAllowed(getState().widgetEventsAllowed);
+    }
+
     @Override
     public void onUnregister() {
         super.onUnregister();

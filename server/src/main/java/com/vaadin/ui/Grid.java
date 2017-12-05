@@ -2056,6 +2056,39 @@ public class Grid<T> extends AbstractListing<T> implements HasComponents,
         }
 
         /**
+         * Sets whether Grid should handle events in this Column from Components
+         * and Widgets rendered by certain Renderers.
+         * <p>
+         * <strong>Note:</strong> Enabling this feature will for example select
+         * a row when a component is clicked. For example in the case of a
+         * {@link ComboBox} or {@link TextField} it might be problematic as the
+         * component gets re-rendered and might lose focus.
+         * 
+         * @param widgetEventsAllowed
+         *            {@code true} to handle events; {@code false} to not
+         * @return this column
+         */
+        public Column<T, V> setWidgetEventsAllowed(
+                boolean widgetEventsAllowed) {
+            if (getState(false).widgetEventsAllowed != widgetEventsAllowed) {
+                getState().widgetEventsAllowed = widgetEventsAllowed;
+            }
+            return this;
+        }
+
+        /**
+         * Gets whether Grid is handling the events in this Column from
+         * Component and Widgets.
+         * 
+         * @see #setWidgetEventsAllowed(boolean)
+         * 
+         * @return {@code true} if handling events; {@code false} if not
+         */
+        public boolean isWidgetEventsAllowed() {
+            return getState(false).widgetEventsAllowed;
+        }
+
+        /**
          * Gets the grid that this column belongs to.
          *
          * @return the grid that this column belongs to, or <code>null</code> if
