@@ -416,6 +416,26 @@ public class BeanBinderTest
     }
 
     @Test
+    public void lastName_isNotNullConstraint_fieldIsRequired() {
+        BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
+                RequiredConstraints.class);
+        RequiredConstraints bean = new RequiredConstraints();
+
+        TextField field = new TextField();
+        binder.bind(field, "lastname");
+        binder.setBean(bean);
+        field.setValue("");
+
+        assertTrue(field.isRequiredIndicatorVisible());
+        testSerialization(binder);
+        assertFalse(binder.validate().isOk());
+        field.setValue("test");
+        assertTrue(binder.validate().isOk());
+        field.setValue("");
+        assertFalse(binder.validate().isOk());
+    }
+
+    @Test
     public void age_minSizeConstraint_fieldIsRequired() {
         BeanValidationBinder<RequiredConstraints> binder = new BeanValidationBinder<>(
                 RequiredConstraints.class);
@@ -441,6 +461,9 @@ public class BeanBinderTest
 
         assertTrue(field.isRequiredIndicatorVisible());
         testSerialization(binder);
+        assertFalse(binder.validate().isOk());
+        field.setValue("overfive");
+        assertTrue(binder.validate().isOk());
     }
 
     @Test
@@ -503,9 +526,12 @@ public class BeanBinderTest
         subfield.setSubsub(new SubSubConstraint());
         binder.setBean(bean);
 
-        assertFalse(binder.validate().isOk());
+        // field is null and null is valid for @Size(min = 10)
+        assertTrue(binder.validate().isOk());
         field.setValue("overtencharacters");
         assertTrue(binder.validate().isOk());
+        field.setValue("5chars");
+        assertFalse(binder.validate().isOk());
     }
 
     private void assertInvalid(HasValue<?> field, String message) {

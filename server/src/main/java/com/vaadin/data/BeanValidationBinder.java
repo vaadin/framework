@@ -99,6 +99,7 @@ public class BeanValidationBinder<BEAN> extends Binder<BEAN> {
                 definition.getTopLevelName());
         if (requiredConfigurator != null) {
             configureRequired(binding, definition, validator);
+            validator.setEmptyValue(binding.getField().getEmptyValue());
         }
         return binding.withValidator(validator);
     }

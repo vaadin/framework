@@ -73,6 +73,7 @@ public class BeanValidator implements Validator<Object> {
 
     private String propertyName;
     private Class<?> beanType;
+    private Object emptyValue;
 
     /**
      * Creates a new JSR-303 {@code BeanValidator} that validates values of the
@@ -117,8 +118,9 @@ public class BeanValidator implements Validator<Object> {
      */
     @Override
     public ValidationResult apply(final Object value, ValueContext context) {
+        Object valueToValidate = Objects.equals(emptyValue,value)?null:value;
         Set<? extends ConstraintViolation<?>> violations = getJavaxBeanValidator()
-                .validateValue(beanType, propertyName, value);
+                .validateValue(beanType, propertyName, valueToValidate);
 
         Locale locale = context.getLocale().orElse(Locale.getDefault());
 
@@ -127,6 +129,15 @@ public class BeanValidator implements Validator<Object> {
                         .error(getMessage(violation, locale)))
                 .findFirst();
         return result.orElse(ValidationResult.ok());
+    }
+
+    /**
+     * Set value that represents an empty value
+     *
+     * @param emptyValue the new empty value
+     */
+    public void setEmptyValue(Object emptyValue) {
+        this.emptyValue = emptyValue;
     }
 
     @Override
